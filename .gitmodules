@@ -1,0 +1,3 @@
+[submodule "CoolPropWrapper"]
+	path = @CoolPropWrapper
+	url = git@github.com:mfval/CoolPropWrapper.git
