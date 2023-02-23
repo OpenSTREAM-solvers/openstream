@@ -3,7 +3,7 @@ classdef TwoPhaseSolver
     % TODO detailed summary goes here
 
     properties
-        
+        Input
     end
 
     methods
@@ -11,6 +11,7 @@ classdef TwoPhaseSolver
         function obj = TwoPhaseSolver()
             %TWOPHASESOLVER Construct and instance of this class
             %   
+            obj.Input = Input();
         end
     
     end
