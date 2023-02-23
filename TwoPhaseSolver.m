@@ -1,4 +1,4 @@
-classdef TwoPhaseSolver
+classdef TwoPhaseSolver < handle
     %TWOPHASESOLVER A two-phase flow simulation program
     % TODO detailed summary goes here
 
