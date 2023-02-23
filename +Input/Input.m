@@ -1,16 +1,18 @@
-classdef Input
-    %INPUT Summary of this class goes here
+classdef (Abstract) Input
+    %INPUT Su
     %   Detailed explanation goes here
     
     properties
-        Property1
+        inputStruct struct                                                  % structure that stores input file contents            
     end
     
     methods
-        function obj = Input()
-            %MODEL Construct an instance of this class
+        function obj = Input(inputFile)
+            %INPUT Parse inputFile to construct this class
             %   Detailed explanation goes here
-            obj=obj;
+            
+            % Parse and store the input file
+            obj.inputStruct = obj.readInputFile(inputFile);
         end
     end
 
@@ -18,10 +20,10 @@ classdef Input
         
         function inputStruct = readInputFile(filePath)
             %READINPUTFILE input file parser
-            % This function accepts the uniform input file format of this
-            % class and converts it to a struct array for each entry. 
+            % This function accepts the uniform input file format and 
+            % converts it to a struct array for each entry. 
             arguments
-                filePath {isfile}
+                filePath {mustBeFile}
             end
             
             % Try to open and read the file
@@ -29,9 +31,9 @@ classdef Input
                 fileContent = readlines(filePath);
             catch ME
                 % TODO: decide whether to just set the output to -1 or
-                % throw and error. The error message needs improvement.
+                % throw an error. The error message needs improvement.
                 % inputStruct = -1;
-                error('Reading file at %s resulted in an error.', filepath);
+                error('Reading file at %s resulted in an error.', filePath);
             end
             
             % Regex expression for parsing the input file.
@@ -41,8 +43,9 @@ classdef Input
             %   Capture comments, indicated by '#' symbol
             entryExpr{2} = '#(?<PARAMETER>.*)';
             %   Capture PARAMETER ! DESCRIPTION > VALUE
-            entryExpr{3} = '(?<PARAMETER>[A-Z0-9]+)?[\s]*\!{1}[\s]*(?<DESC>[\w\s\-\[\]]*)?>{1}[\s]*(?<VALUE>[\w\f\s\-\.]*)?';
-            entryExpr = strjoin(entryExpr,'|');
+            entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>[\w\s\-\[\]]*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\.]*)?';
+            %   Join parts together and remove spaces (use \s instead).
+            entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
             
             % Parse file using regex
             fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names");

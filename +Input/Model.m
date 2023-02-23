@@ -7,7 +7,7 @@ classdef Model < Input
     end
     
     methods
-        function obj = Model(inputArg1,inputArg2)
+        function obj = Model(file,inputArg2)
             %MODEL Construct an instance of this class
             %   Detailed explanation goes here
             obj.Property1 = inputArg1 + inputArg2;
