@@ -1,4 +1,4 @@
-classdef (Abstract) Input
+classdef (Abstract) Input < handle
     %INPUT Su
     %   Detailed explanation goes here
     
@@ -7,13 +7,39 @@ classdef (Abstract) Input
     end
     
     methods
-        function obj = Input(inputFile)
+        function obj = Input(inputFilePath, key, val)
             %INPUT Parse inputFile to construct this class
             %   Detailed explanation goes here
-            
+            arguments
+                inputFilePath {mustBeText}
+                key {mustBeText}                      = ""
+                val {mustBeA(val,["string","char","double"])}                 = ""
+            end
+
             % Parse and store the input file
-            obj.inputStruct = obj.readInputFile(inputFile);
+            obj.inputStruct = obj.readInputFile(inputFilePath);
+
+            % limit input struct to entry specified by {key, val} pair
+            if strlength(key) > 1
+                
+                % Find matching entry with key having val
+                entryIdx = find([obj.inputStruct.(key)] == val);
+
+                % Throw error if none was found
+                if isempty(entryIdx)
+                    throw( ...
+                        MException( ...
+                            sprintf('INPUT:entryNotFoundError'), ...
+                            'Entry with key %s=%s was not found', key, num2str(val)) ...
+                    );
+                else
+                    obj.inputStruct = obj.inputStruct(entryIdx);
+                end
+
+            end
+
         end
+
     end
 
     methods(Static)
@@ -35,7 +61,7 @@ classdef (Abstract) Input
                 % throw an error. The error message needs improvement.
                 % inputStruct = -1;
                 ME_local = MException( ...
-                             sprintf('%s:openFileError',strrep(dbstack().name,'.','_')), ...
+                             sprintf('INPUT:openFileError'), ...
                              'Reading file at %s resulted in an error.', filePath ...
                              );
                 rethrow(addCause(ME, ME_local));
@@ -47,7 +73,7 @@ classdef (Abstract) Input
                     %TODO: Implement JSON parser
                     throw( ...
                         MException( ...
-                            sprintf('%s:fileTypeError',strrep(dbstack().name,'.','_')), ...
+                            sprintf('INPUT:fileTypeError'), ...
                             'Input file with extension %s is not supported.', fileExt) ...
                     );
 
@@ -71,7 +97,7 @@ classdef (Abstract) Input
                     % supported.
                     throw( ...
                         MException( ...
-                            sprintf('%s:fileTypeError',strrep(dbstack().name,'.','_')), ...
+                            sprintf('INPUT:fileTypeError'), ...
                             'Input file with extension %s is not supported.', fileExt) ...
                     );
             end
@@ -124,7 +150,7 @@ classdef (Abstract) Input
 
         end
 
-      
+
     end
 end
 
