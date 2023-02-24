@@ -4,15 +4,15 @@ classdef Model < Input.Input
     
     properties (SetAccess=immutable)
         
-        ID         (1,1) string  {mustBeTextScalar,mustBeNonempty}         = 'NA'                  % Model ID 
+        ID         (1,1) string  {mustBeTextScalar,mustBeNonempty}                                 % Model ID 
         NNODES     (1,1) double  {mustBeInteger,mustBePositive}            = 100                   % Number of axial nodes 
         FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid ID
         PROPERTIES (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
                                                                            = 'SATURATED'           % Fluid property assumptions
         FRICTION   (1,3) double  {mustBeNumeric}                           = [0.2 -0.2 0]          % Wall friction coefficients
         TPFM       (1,1) string  {mustBeTextScalar}                        = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
-        KLOC       (1,:) double  {mustBeNumeric}                           = 0                     % Elevation of local perturbations [m] 
-        KLOSS      (1,:) double  {mustBeNumeric}                           = 0                     % corresponding pressure loss coefficients [-]
+        KLOC       (1,:) double  {mustBeNumeric,mustBeNonempty}            = [0 0 0]               % Elevation of local perturbations [m] 
+        KLOSS      (1,:) double  {mustBeNumeric,mustBeNonempty}            = [0 0 0]               % corresponding pressure loss coefficients [-]
         TPKM       (1,1) string  {mustBeTextScalar}                        = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
         SCBOIL     (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
                                                                            = 'NONE'                % Subcooled boiling mode
@@ -33,28 +33,68 @@ classdef Model < Input.Input
             
             %
             % List of properties set in inputStruct 
-            inputStructfieldnames = fieldnames(obj.inputStruct);
+            inputStructFieldnames = fieldnames(obj.inputStruct);
 
-            % Iterate each fieldname to set as property 
-            for idx = 1:length(inputStructfieldnames)
-                % Fieldname to process
-                inputStructfieldname = inputStructfieldnames{idx};
+            % List of obj properties
+            objPropnames = string({metaclass(obj).PropertyList.Name}.');
+            
+            % Iterate through obj properties
+            for idx = 1:length(objPropnames)
+                
+                % Retrieve idx-item in objPropnames
+                objPropname = objPropnames(idx);
 
-                % Try to set the struct field value to property is the
-                % property exists
-                if isprop(obj, inputStructfieldname)
-                    try
-                        obj.(inputStructfieldname) = ...
-                                upper(obj.inputStruct.(inputStructfieldname));
-    
-                    catch ME
-                        warning(getReport(ME))
+                % Is the objProp required
+                propProps = findprop(obj,objPropname);
+                propIsRequired = ~propProps.HasDefault;
+                
+                % Find propname in inputStructFieldnames
+                if find(inputStructFieldnames == objPropname)
+                    
+                    % assign field entry as inputField
+                    inputField = obj.inputStruct.(objPropname);
+
+                    % Is inputField value empty
+                    inputFieldIsEmpty = isempty(inputField) || (isstring(inputField) && strlength(inputField)==0);
+
+                    % Check requirements
+                    if propIsRequired && inputFieldIsEmpty
+                    % Throw exception if property is required, yet a
+                    % value was not specified
+                        throw( ...
+                            MException( ...
+                                sprintf('MODEL:missingRequiredValueError'), ...
+                                'Entry with key %s in model %s was empty', objPropname, modelID) ...
+                        );
+                    elseif ~propIsRequired && inputFieldIsEmpty
+                    % Provide warning if property is optional and a
+                    % value was not specified. Use default instead.
+                        warning('MODEL: Value for entry %s was not set. Default value used: %s', ...
+                            objPropname, num2str(propProps.DefaultValue));
+                    else
+                        % Assign specified non-empty value to property
+                        % Let MATLAB throw errors from parameter validation
+                        obj.(objPropname) = ...
+                                upper(obj.inputStruct.(objPropname));
                     end
                 else
-                    warning('%s is not a property of %s.', inputStructfieldname, class(obj));
+                    if propIsRequired
+                    % A required property was not specified
+                    % COMMENT: Just let MATLAB handle this error through 
+                    % property validation    
+                    else
+                    % An optional property was not specified
+                        warning('MODEL: Value for optional property %s was not set. Default value used: %s', ...
+                            objPropname, num2str(propProps.DefaultValue));
+                    end
                 end
+
             end
-           
+
+            % Remove dynamic property inputStruct
+            inputStructProp = obj.findprop('inputStruct');
+            delete(inputStructProp)
+
         end
         
 

@@ -1,9 +1,9 @@
-classdef (Abstract) Input < handle
+classdef (Abstract) Input < dynamicprops
     %INPUT Su
     %   Detailed explanation goes here
     
     properties
-        inputStruct struct                                                  % structure that stores input file contents            
+        %inputStruct struct                                                  % structure that stores input file contents            
     end
     
     methods
@@ -15,6 +15,9 @@ classdef (Abstract) Input < handle
                 key {mustBeText}                      = ""
                 val {mustBeA(val,["string","char","double"])}                 = ""
             end
+            
+            % Add temporary property inputStruct
+            inputStructH = obj.addprop('inputStruct');
 
             % Parse and store the input file
             obj.inputStruct = obj.readInputFile(inputFilePath);
@@ -22,8 +25,8 @@ classdef (Abstract) Input < handle
             % limit input struct to entry specified by {key, val} pair
             if strlength(key) > 1
                 
-                % Find matching entry with key having val
-                entryIdx = find([obj.inputStruct.(key)] == val);
+                % Find 1st matching entry with key having val
+                entryIdx = find([obj.inputStruct.(key)] == val, 1);
 
                 % Throw error if none was found
                 if isempty(entryIdx)
@@ -35,11 +38,9 @@ classdef (Abstract) Input < handle
                 else
                     obj.inputStruct = obj.inputStruct(entryIdx);
                 end
-
             end
-
         end
-
+        
     end
 
     methods(Static)
