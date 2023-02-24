@@ -1,0 +1,23 @@
+ID          !                                                              > DEFAULT
+TSTEP       ! [s] Time step                                                > 0.1
+MAXITER     ! Max number of inner (point) iterations                       > 100
+ERRORW      ! Mass flow rate error target in inner iterations [kg/s]       > 1E-3
+ERRORP      ! Pressure error target in inner ierations [Pa]                > 1E+1
+ERRORH      ! Enthalpy error target in inner ierations [J/kg]              > 1E+0
+SSMAXITER   ! Max number of steady-state iterations                        > 10
+SSCONVW     ! Mass flow rate steady-state convergence criterion [kg/s]     > 2E-4
+SSCONVP     ! Pressure steady-state convergence criterion [Pa]             > 1E-0
+SSCONVH     ! Enthalpy steady-state convergence criterion [J/kg]           > 1E-0
+END
+
+ID          !                                                              > STEADY
+TSTEP       ! [s] Time step                                                > 1
+MAXITER     ! Max number of inner (point) iterations                       > 100
+ERRORW      ! Mass flow rate error target in inner iterations [kg/s]       > 1E-3
+ERRORP      ! Pressure error target in inner ierations [Pa]                > 1E+1
+ERRORH      ! Enthalpy error target in inner ierations [J/kg]              > 1E+0
+SSMAXITER   ! Max number of steady-state iterations                        > 10
+SSCONVW     ! Mass flow rate steady-state convergence criterion [kg/s]     > 2E-4
+SSCONVP     ! Pressure steady-state convergence criterion [Pa]             > 1E-0
+SSCONVH     ! Enthalpy steady-state convergence criterion [J/kg]           > 1E-0
+END

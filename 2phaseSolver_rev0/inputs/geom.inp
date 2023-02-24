@@ -1,0 +1,13 @@
+ID        ! Channel ID                     > TEST
+LENGTH    ! Axial length [m]               > 4
+AREA      ! Coolant area [m^2]             > 7.8540e-05
+PERIM     ! Perimeters [m]                 > 0.0314
+ANGLE     ! Angle [rad]                    > 0
+END
+
+ID        ! Channel ID                     > MFVAL
+LENGTH    ! Axial length (2.7+0.525)) [m]  > 3.225
+AREA      ! Coolant area [m^2]             > 4.3200e-04
+PERIM     ! Perimeters [m]                 > 0.036 0.036 0.024
+ANGLE     ! Angle [rad]                    > 0
+END
