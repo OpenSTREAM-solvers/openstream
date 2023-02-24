@@ -29,26 +29,52 @@ classdef (Abstract) Input
             % Try to open and read the file
             try
                 fileContent = readlines(filePath);
+                [~,~,fileExt] = fileparts(filePath);
             catch ME
                 % TODO: decide whether to just set the output to -1 or
                 % throw an error. The error message needs improvement.
                 % inputStruct = -1;
-                error('Reading file at %s resulted in an error.', filePath);
+                ME_local = MException( ...
+                             sprintf('%s:openFileError',strrep(dbstack().name,'.','_')), ...
+                             'Reading file at %s resulted in an error.', filePath ...
+                             );
+                rethrow(addCause(ME, ME_local));
             end
             
-            % Regex expression for parsing the input file.
-            entryExpr = {};
-            %   Capture the "END" tag
-            entryExpr{1} = '(?<PARAMETER>(end|END))';
-            %   Capture comments, indicated by '#' symbol
-            entryExpr{2} = '#(?<PARAMETER>.*)';
-            %   Capture PARAMETER ! DESCRIPTION > VALUE
-            entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>[\w\s\-\[\]]*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\.]*)?';
-            %   Join parts together and remove spaces (use \s instead).
-            entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
-            
-            % Parse file using regex
-            fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names");
+            % Choose parser depending on file extenstion
+            switch lower(fileExt)
+                case '.json'
+                    %TODO: Implement JSON parser
+                    throw( ...
+                        MException( ...
+                            sprintf('%s:fileTypeError',strrep(dbstack().name,'.','_')), ...
+                            'Input file with extension %s is not supported.', fileExt) ...
+                    );
+
+                case '.inp'
+
+                    % Regex expression for parsing the input file.
+                    entryExpr = {};
+                    %   Capture the "END" tag
+                    entryExpr{1} = '(?<PARAMETER>(end|END))';
+                    %   Capture comments, indicated by '#' symbol
+                    entryExpr{2} = '#(?<PARAMETER>.*)';
+                    %   Capture PARAMETER ! DESCRIPTION > VALUE
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>[\w\s\-\[\]]*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\.]*)?';
+                    %   Join parts together and remove spaces (use \s instead).
+                    entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
+                    
+                    % Parse file using regex
+                    fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names");
+                otherwise
+                    % Unknown or unspecified file extensions are not
+                    % supported.
+                    throw( ...
+                        MException( ...
+                            sprintf('%s:fileTypeError',strrep(dbstack().name,'.','_')), ...
+                            'Input file with extension %s is not supported.', fileExt) ...
+                    );
+            end
 
             % Initalize output struct
             inputStruct = struct();
@@ -96,10 +122,9 @@ classdef (Abstract) Input
 
             end
 
-
-            % 
         end
 
+      
     end
 end
 
