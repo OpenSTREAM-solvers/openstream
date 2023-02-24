@@ -15,6 +15,7 @@ classdef models
         FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid ID
         PROPERTIES (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
                                                                            = 'SATURATED'           % Fluid property assumptions
+        G          (1,1) double  {mustBeNumeric}                           = 9.81                  % [m/s^2] Gravitational acceleration
         FRICTION   (1,3) double  {mustBeNumeric}                           = [0.2 -0.2 0]          % Wall friction coefficients
         TPFM       (1,1) string  {mustBeTextScalar}                        = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
         KLOC       (1,:) double  {mustBeNumeric}                           = 0                     % Elevation of local perturbations [m] 
@@ -22,7 +23,7 @@ classdef models
         TPKM       (1,1) string  {mustBeTextScalar}                        = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
         SCBOIL     (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
                                                                            = 'NONE'                % Subcooled boiling mode
-        VOID       (1,1) string  {mustBeMember(VOID, ["HOMOGENEOUS","SLIP"])} ...
+        VOID       (1,1) string  {mustBeMember(VOID, ["HOMOGENEOUS","SLIP","BESTION"])} ...
                                                                            = 'HOMOGENEOUS'         % Void fraction model 
         SLIP       (1,1) double  {mustBePositive}                          = 1                     % Phase velocity ratio [-]
     

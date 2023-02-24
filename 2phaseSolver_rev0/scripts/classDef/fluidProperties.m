@@ -21,6 +21,7 @@ classdef fluidProperties
         MUG        (1,1) double  {mustBeNumeric}                           = 1                     % [Pa.s] Saturated liquid viscosity
         HF         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated liquid enthalpy
         HG         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated vapor enthalpy
+        SIGMA      (1,1) double  {mustBeNumeric}                           = 1                     % [N/m] Surface tension
         
     end
         
@@ -42,13 +43,14 @@ classdef fluidProperties
                 obj(k).PROPERTIES = model.PROPERTIES;                      % Fluid property assumptions
                 obj(k).PRESSURE = P(k);                                    % [Pa] System pressure
                 
-                obj(k).TSAT = py.CoolProp.CoolProp.PropsSI('T','P',P(k),'Q',1,fluid); % [K] Saturated fluid temperature
-                obj(k).RHOF = py.CoolProp.CoolProp.PropsSI('D','P',P(k),'Q',0,fluid); % [kg/m^3] Saturated liquid mass density
-                obj(k).RHOG = py.CoolProp.CoolProp.PropsSI('D','P',P(k),'Q',1,fluid); % [kg/m^3] Saturated vapor mass density
-                obj(k).MUF  = py.CoolProp.CoolProp.PropsSI('V','P',P(k),'Q',0,fluid); % [Pa.s] Saturated liquid viscosity
-                obj(k).MUG  = py.CoolProp.CoolProp.PropsSI('V','P',P(k),'Q',1,fluid); % [Pa.s] Saturated vapor viscosity
-                obj(k).HF   = py.CoolProp.CoolProp.PropsSI('H','P',P(k),'Q',0,fluid); % [J/kg] Saturated liquid enthalpy
-                obj(k).HG   = py.CoolProp.CoolProp.PropsSI('H','P',P(k),'Q',1,fluid); % [J/kg] Saturated vapor enthalpy
+                obj(k).TSAT  = py.CoolProp.CoolProp.PropsSI('T','P',P(k),'Q',1,fluid); % [K] Saturated fluid temperature
+                obj(k).RHOF  = py.CoolProp.CoolProp.PropsSI('D','P',P(k),'Q',0,fluid); % [kg/m^3] Saturated liquid mass density
+                obj(k).RHOG  = py.CoolProp.CoolProp.PropsSI('D','P',P(k),'Q',1,fluid); % [kg/m^3] Saturated vapor mass density
+                obj(k).MUF   = py.CoolProp.CoolProp.PropsSI('V','P',P(k),'Q',0,fluid); % [Pa.s] Saturated liquid viscosity
+                obj(k).MUG   = py.CoolProp.CoolProp.PropsSI('V','P',P(k),'Q',1,fluid); % [Pa.s] Saturated vapor viscosity
+                obj(k).HF    = py.CoolProp.CoolProp.PropsSI('H','P',P(k),'Q',0,fluid); % [J/kg] Saturated liquid enthalpy
+                obj(k).HG    = py.CoolProp.CoolProp.PropsSI('H','P',P(k),'Q',1,fluid); % [J/kg] Saturated vapor enthalpy
+                obj(k).SIGMA = py.CoolProp.CoolProp.PropsSI('T','P',P(k),'Q',1,fluid); % [N/m] Surface tension
                 
             end
             

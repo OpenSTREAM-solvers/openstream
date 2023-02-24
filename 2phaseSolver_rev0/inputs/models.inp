@@ -4,8 +4,8 @@ FLUID      ! Fluid ID                                                       > wa
 PROPERTIES ! Fluid property assumptions                                     > saturated
 FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
 TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           >
-KLOSS      ! corresponding pressure loss coefficients [-]                   >
+KLOC       ! Elevation of local perturbations [m]                           > 1   2   3
+KLOSS      ! corresponding pressure loss coefficients [-]                   > 0.5 0.5 0.5
 TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > slip
@@ -18,8 +18,8 @@ FLUID      ! Fluid ID                                                       > wa
 PROPERTIES ! Fluid property assumptions                                     > psystem
 FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
 TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           > 
-KLOSS      ! corresponding pressure loss coefficients [-]                   > 
+KLOC       ! Elevation of local perturbations [m]                           > 1   2   3
+KLOSS      ! corresponding pressure loss coefficients [-]                   > 0.5 0.5 0.5
 TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > homogeneous
