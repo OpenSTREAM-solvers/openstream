@@ -1,4 +1,4 @@
-classdef FluidProperties < Input.Input
+classdef FluidProperties < Inputs.Input
     %FLUIDPROPERTIES Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -34,7 +34,7 @@ classdef FluidProperties < Input.Input
 
             % Call superclass constructor to parse file and select
             % specified modelID
-            obj = obj@Input.Input(filePath)
+            obj = obj@Inputs.Input(filePath)
 
             % Setup CoolProp
             obj.coolpropH = CoolPropWrapper();

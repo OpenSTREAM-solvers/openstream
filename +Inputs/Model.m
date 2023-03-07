@@ -43,7 +43,7 @@ classdef Model < Inputs.Input
                 objPropname = objPropnames(idx);
                 
                 % Check if the objPropname entry is valid
-                if obj.validateInputEntry(objPropname,modelID=modelID)
+                if obj.validateInputEntry(objPropname,id=modelID)
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
                 end
