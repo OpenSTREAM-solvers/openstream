@@ -4,6 +4,7 @@ HIN       ! Inlet enthalpy [J/kg]                                          > 3.7
 MFLOW     ! Mass flow rate [kg/s]                                          > 0.0721
 POWER     ! Total power [W]                                                > 1088.6
 WMESH     ! Relative power node size distribution [m]                      > 2.7 0.525
+TEST      ! ABC                                                            > 123
 WPOWER    ! Relative power distribution(s) [-]                             > 0.0 1.0 0.0 1.0 0.0 0.0
 END
 

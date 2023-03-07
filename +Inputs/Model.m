@@ -46,9 +46,22 @@ classdef Model < Inputs.Input
                 if obj.validateInputEntry(objPropname,id=modelID)
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
+                    
+                    % Remove objPropname from inputStruct
+                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
+
                 end
             end
 
+            % If extra fields in obj.inputStruct remain, warn user
+            remainingInputStructFields = fieldnames(obj.inputStruct);
+            if ~isempty(remainingInputStructFields)
+                warning( ...
+                    'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
+                    remainingInputStructFields{:} ...
+                    );
+            end
+            
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
