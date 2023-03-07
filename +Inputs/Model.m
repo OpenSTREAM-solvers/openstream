@@ -4,23 +4,29 @@ classdef Model < Inputs.Input
     
     properties (SetAccess=immutable)
         
-        ID         (1,1) string  {mustBeTextScalar,mustBeNonempty}                                 % Model ID 
+        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                 % Model ID 
         NNODES           double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
                                                                            = []                       % Number of axial nodes 
-        FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid ID
-        PROPERTIES (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
+        FLUID       (1,1) string  {mustBeTextScalar}                        = "WATER"               % Fluid ID
+        PROPERTIES  (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
                                                                            = 'SATURATED'           % Fluid property assumptions
-        FRICTION   (1,3) double  {mustBeNumeric}                           = [0.2 -0.2 0]          % Wall friction coefficients
-        TPFM       (1,1) string  {mustBeTextScalar}                        = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
-        KLOC       (1,:) double  {mustBeNumeric,mustBeNonempty}            = [0 0 0]               % Elevation of local perturbations [m] 
-        KLOSS      (1,:) double  {mustBeNumeric,mustBeNonempty}            = [0 0 0]               % corresponding pressure loss coefficients [-]
-        TPKM       (1,1) string  {mustBeTextScalar}                        = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
-        SCBOIL     (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
+        FRICTION    (1,3) double  {mustBeNumeric}                          = [0.2 -0.2 0]          % Wall friction coefficients
+        TPFM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
+        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0 0]               % Elevation of local perturbations [m] 
+        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0 0]               % corresponding pressure loss coefficients [-]
+        TPKM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
+        SCBOIL      (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
                                                                            = 'NONE'                % Subcooled boiling mode
-        VOID       (1,1) string  {mustBeMember(VOID, ["HOMOGENEOUS","SLIP"])} ...
+        VOID        (1,1) string  {mustBeMember(VOID, ["HOMOGENEOUS","SLIP"])} ...
                                                                            = 'HOMOGENEOUS'         % Void fraction model 
-        SLIP       (1,1) double  {mustBePositive}                          = 1                     % Phase velocity ratio [-]
+        SLIP        (1,1) double  {mustBePositive}                         = 1                     % Phase velocity ratio [-]
     
+    end
+
+    properties (SetAccess = private)
+        
+        fluid       (1,1)
+ 
     end
 
     methods
@@ -33,8 +39,10 @@ classdef Model < Inputs.Input
             obj = obj@Inputs.Input(filePath, 'ID', modelID)
             
             %
-            % List of obj property names
+            % List of immutable obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
+            objPropnames = objPropnames( ...
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
             
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -57,14 +65,16 @@ classdef Model < Inputs.Input
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
                 warning( ...
-                    'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
+                    'MODEL: These inputs were not used: %s ', ...
                     remainingInputStructFields{:} ...
                     );
             end
-            
+
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
+
+            % Create
 
         end
         

@@ -1,4 +1,4 @@
-classdef FluidProperties < Inputs.Input
+classdef FluidProperties
     %FLUIDPROPERTIES Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -20,24 +20,24 @@ classdef FluidProperties < Inputs.Input
 
     properties (SetAccess=private)
 
-        coolpropH   CoolPropWrapper
+        coolpropH   CoolPropWrapper.CoolPropWrapper
     
     end
     
     methods
-        function obj = FluidProperties(filePath)
+        function obj = FluidProperties(P, modelObj)
             %FLUIDPROPERTIES Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                P (:,1) double {mustBeNumeric}
+                modelObj (1,1) {isa(modelObj, 'Model')}
+            end
             
             % Import the CoolPropWrapper class
             import CoolPropWrapper.CoolPropWrapper
 
-            % Call superclass constructor to parse file and select
-            % specified modelID
-            obj = obj@Inputs.Input(filePath)
-
             % Setup CoolProp
-            obj.coolpropH = CoolPropWrapper();
+            obj.coolpropH = CoolPropWrapper(modelObj.FLUID);
 
             
 

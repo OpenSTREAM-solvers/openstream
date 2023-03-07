@@ -15,7 +15,7 @@ classdef BoundaryConditions < Inputs.Input
     end
 
     methods
-        function obj = BoundaryConditions(filePath, geometryInput)
+        function obj = BoundaryConditions(filePath, geometryInput, fluidPropertiesInput)
             %MODEL Construct an instance of this class
             %   Detailed explanation goes here
 
@@ -23,8 +23,10 @@ classdef BoundaryConditions < Inputs.Input
             obj = obj@Inputs.Input(filePath)
             
             %
-            % List of obj property names
+            % List of immutable obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
+            objPropnames = objPropnames( ...
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
             
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -53,6 +55,15 @@ classdef BoundaryConditions < Inputs.Input
             
             % Transpose WMESH
             obj.WMESH = obj.WMESH.';
+            obj.WPOWER = obj.WPOWER.';
+            
+            % check if WPOWER size is consistent with geometry
+            if size(obj.WPOWER,2) ~= size(obj.WMESH,2)*size(geometryInput.PERIM,2)
+                throw( ...
+                    MException('InputError:BoundaryCondtionsInconsistency', ...
+                               'Inconsistent WPOWER array size.') ...
+                     );
+            end
 
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');

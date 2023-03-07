@@ -1,5 +1,5 @@
 classdef Geometry < Inputs.Input
-    %OPTIONS Summary of this class goes here
+    %GEOMETRY Summary of this class goes here
     %   Detailed explanation goes here
     
     properties (SetAccess=immutable)
@@ -22,8 +22,10 @@ classdef Geometry < Inputs.Input
             obj = obj@Inputs.Input(filePath, 'ID', optionsID)
             
             %
-            % List of obj property names
+            % List of immutable obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
+            objPropnames = objPropnames( ...
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
             
             % Iterate through obj property names
             for idx = 1:length(objPropnames)

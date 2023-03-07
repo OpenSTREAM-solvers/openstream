@@ -33,8 +33,10 @@ classdef Options < Inputs.Input
             obj = obj@Inputs.Input(filePath, 'ID', optionsID)
             
             %
-            % List of obj property names
+            % List of immutable obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
+            objPropnames = objPropnames( ...
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
             
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
