@@ -51,8 +51,12 @@ classdef Input < dynamicprops
             arguments
                 obj
                 objPropname
-                opts.modelID = 'INPUT'
+                opts.id = 'INPUT'
             end
+            
+            % Warning setup
+            previousWarnStruct = warning('query');
+            warning('off','backtrace')
 
             % Default false isValidEntry
             isValidEntry = false;
@@ -81,7 +85,7 @@ classdef Input < dynamicprops
                     throwAsCaller( ...
                         MException( ...
                             sprintf('INPUT:missingRequiredValueError'), ...
-                            'Required entry with key %s for %s is empty', objPropname, opts.modelID) ...
+                            'Required entry with key %s for %s is empty', objPropname, opts.id) ...
                     );
                 elseif ~propIsRequired && inputFieldIsEmpty
                 % Provide warning if property is optional and a
@@ -99,7 +103,7 @@ classdef Input < dynamicprops
                 throwAsCaller( ...
                         MException( ...
                             sprintf('INPUT:missingRequiredValueError'), ...
-                            'Required entry with key %s for %s is missing', objPropname, opts.modelID) ...
+                            'Required entry with key %s for %s is missing', objPropname, opts.id) ...
                     );
                 else
                 % An optional property was not specified
@@ -107,6 +111,9 @@ classdef Input < dynamicprops
                         objPropname, num2str(propProps.DefaultValue));
                 end
             end
+
+            % Reset warning state
+            warning(previousWarnStruct);
         end
         
     end
@@ -154,7 +161,7 @@ classdef Input < dynamicprops
                     %   Capture the "END" tag
                     entryExpr{1} = '(?<PARAMETER>(end|END))';
                     %   Capture comments, indicated by '#' symbol
-                    entryExpr{2} = '#(?<PARAMETER>.*)';
+                    entryExpr{2} = '(?<PARAMETER>(#|\/\/)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
                     entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>[\w\s\-\[\]]*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\.]*)?';
                     %   Join parts together and remove spaces (use \s instead).
@@ -184,7 +191,7 @@ classdef Input < dynamicprops
                                 % Increment inputStructEntries
                                 inputStructEntries = inputStructEntries + 1;
         
-                            case "COMMENT"
+                            case {"COMMENT", '#' ,'//'}
                                 % Ignore comments for now
         
                             otherwise
