@@ -1,5 +1,5 @@
 classdef FluidProperties < Input.Input
-    %FluidProperties Summary of this class goes here
+    %FLUIDPROPERTIES Summary of this class goes here
     %   Detailed explanation goes here
     
     properties (SetAccess=immutable)
@@ -29,6 +29,7 @@ classdef FluidProperties < Input.Input
             %FLUIDPROPERTIES Construct an instance of this class
             %   Detailed explanation goes here
             
+            % Import the CoolPropWrapper class
             import CoolPropWrapper.CoolPropWrapper
 
             % Call superclass constructor to parse file and select
