@@ -76,8 +76,82 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
 
         end
 
+        function MF = MFLUX(obj,geometryObj)
+            %MFLUX [kg/m^2-s] Mass flux given geomertyObj
+            MF = obj.MFLOW/geometryObj.AREA;            
+        end
+        
+        function  tsat = TSAT(obj,fluidObj)
+            %TSAT [K] Saturation temperature given fluidObj
+            tsat = fluidObj.coolpropH.TsatP(obj.PRESSURE);
+        end
+        
+        function hf = HF(obj,fluidObj)
+            %HF [J/kg] Liquid saturation given fluidObj
+            hf = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',0);
+        end
+        
+        function hg = HG(obj,fluidObj)
+            %HF [J/kg] Vapor saturation given fluidObj
+            hg = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',1);
+        end
+        
+        function tin = TIN(obj,fluidObj)
+            %TIN [K] Inlet temperature
+            tin = fluidObj.coolpropH.temperature('P',obj.PRESSURE,'H', obj.HIN);
+        end
+        
+        function dtin = DTIN(obj,fluidObj)
+            %DTIN [K] Inlet subcooling temperature difference given fluidObj    
+            dtin = obj.TSAT(fluidObj)-obj.TIN(fluidObj);
+        end
+        
+        % Inlet subcooling, usage: obj.DHIN(model)
+        function dhin = DHIN(obj,fluidObj)
+            %DHIN [J/kg] Inlet subcooling enthalpy difference given fluidObj    
+            dhin = obj.HF(fluidObj)-obj.HIN;
+        end
+        
+        % Inlet equilibrium quality, usage: obj.XIN(model)
+        function xin = XIN(obj,fluidObj)
+            %XIN [-] Inlet equilibrium quality
+            xin = -obj.DHIN(fluidObj)./(obj.HG(fluidObj)-obj.HF(fluidObj));
+        end
+
         function varargout = size(obj,varargin)
             [varargout{1:nargout}] = size(obj.TIME,varargin{:});
+        end
+
+        function plot(obj,fluidObj)
+            %PLOT Plot boundary conditions
+            % usage: bc.plot(fluidObj)
+
+            figure('name','Boundary conditions plots')
+            bcplot('PRESSURE','System pressure [Pa]',{},0)
+            bcplot('HIN','Inlet enthalpy [J/kg]',{'HF','HG'},0)
+            bcplot('MFLOW','Mass flow rate [kg/s]',{},0)
+            bcplot('POWER','Power [W]',{},0)
+            bcplot('TIN','Inlet temperature [K]',{'TSAT'},1)
+            bcplot('XIN','Inlet quality [-]',{},1)
+            bcplot('DTIN','Inlet subcooling [K]',{},1)
+            bcplot('DHIN','Inlet subcooling [J/kg]',{},1)
+            
+            function bcplot(param,label,sat,flag)
+
+                nexttile; hold all; grid on;
+                t = obj.TIME;
+                switch flag
+                    case 0
+                        plot(t,[obj.(param)],'.-')
+                    case 1
+                        plot(t,[obj.(param)(fluidObj)],'.-')
+                end
+                cellfun(@(x) plot(t,obj.(x)(fluidObj),'k--'),sat);
+                xlabel('Time [s]'); xlim([min(t)-.01 max(t)+.01])
+                ylabel(label)
+                set(gca,'fontSize',14)
+            end
+
         end
 
     end
