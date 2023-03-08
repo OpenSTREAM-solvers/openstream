@@ -1,22 +1,27 @@
-classdef BoundaryConditions < Inputs.Input
+classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
     %BOUNDARYCONDITIONS Summary of this class goes here
     %   Detailed explanation goes here
     
     properties (SetAccess=immutable)
         
-        TIME       (:,1) double  {mustBeNumeric,mustBeNonempty}            = 0                     % Time [s]
-        PRESSURE   (:,1) double  {mustBePositive,mustBeNonempty}           = 1                     % System pressure [Pa]
-        HIN        (:,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Inlet enthalpy [J/kg]
-        MFLOW      (:,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Mass flow rate [kg/s]
-        POWER      (:,1) double  {mustBeNonnegative,mustBeNonempty}        = 1                     % Total power [W]
-        WMESH      (:,:) double  {mustBePositive,mustBeNonempty}           = 1                     % Relative power node size distribution [m]
-        WPOWER     (:,:) double  {mustBeNonnegative,mustBeNonempty}        = 1                     % Relative power distribution(s) [-] 
+        TIME       (:,1) double  {mustBeNumeric}                           = 0                     % Time [s]
+        PRESSURE   (:,1) double  {mustBePositive}                          = 1                     % System pressure [Pa]
+        HIN        (:,1) double  {mustBePositive}                          = 1                     % Inlet enthalpy [J/kg]
+        MFLOW      (:,1) double  {mustBePositive}                          = 1                     % Mass flow rate [kg/s]
+        POWER      (:,1) double  {mustBeNonnegative}                       = 1                     % Total power [W]
+        WMESH      (:,:) double  {mustBePositive}                          = 1                     % Relative power node size distribution [m]
+        WPOWER     (:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-] 
         
     end
 
-    methods
-        function obj = BoundaryConditions(filePath, geometryInput, fluidPropertiesInput)
-            %MODEL Construct an instance of this class
+    properties (SetAccess=private)
+
+    end
+
+    methods (Access=public)
+        
+        function obj = BoundaryConditions(filePath, geometryInput)
+            %BOUNDARYCONDITIONS Construct an instance of this class
             %   Detailed explanation goes here
 
             % Call superclass constructor to parse file
@@ -70,9 +75,16 @@ classdef BoundaryConditions < Inputs.Input
             delete(inputStructProp)
 
         end
-        
+
+        function varargout = size(obj,varargin)
+            [varargout{1:nargout}] = size(obj.TIME,varargin{:});
+        end
 
     end
+
+    
+    
+    
 
 end
 

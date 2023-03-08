@@ -1,4 +1,4 @@
-classdef FluidProperties
+classdef FluidProperties < Inputs.IndexableInput
     %FLUIDPROPERTIES Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -161,7 +161,10 @@ classdef FluidProperties
             end
             
         end
-
+        
+        function varargout = size(obj,varargin)
+            [varargout{1:nargout}] = size(obj.PRESSURE,varargin{:});
+        end
         
         function plot(obj, H, idx)
             %PLOT Plot properties for given enthalpy vector

@@ -1,4 +1,4 @@
-classdef Input < dynamicprops
+classdef (HandleCompatible) Input < dynamicprops
     %INPUT Su
     %   Detailed explanation goes here
     
