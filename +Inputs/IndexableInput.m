@@ -23,8 +23,17 @@ classdef (Abstract,HandleCompatible) IndexableInput < matlab.mixin.indexing.Rede
                 varargout{1} = out;
                 return
             end
-
-            [varargout{1:nargout}] = out.(indexOp(2:end));
+            if matlab.indexing.IndexingOperationType.Dot== indexOp(2).Type && ismethod(obj, indexOp(2).Name)
+                out = obj.(indexOp(2).Name)(indexOp(3).Indices{:});
+                out = out.(indexOp(1));
+                if isempty(indexOp(4:end))
+                    [varargout{1:nargout}] = out;
+                else
+                    [varargout{1:nargout}] = out.(indexOp(4:end));
+                end
+            else
+                [varargout{1:nargout}] = out.(indexOp(2:end));
+            end
         end
 
         function obj = parenAssign(obj,indexOp,varargin)
