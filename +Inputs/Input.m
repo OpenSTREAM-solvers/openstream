@@ -158,7 +158,7 @@ classdef (HandleCompatible) Input < dynamicprops
                     %   Capture comments, indicated by '#' symbol
                     entryExpr{2} = '(?<PARAMETER>(#|\/\/)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
-                    entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>.*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\.]*)?';
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>.*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\+\.]*)?';
                     %   Join parts together and remove spaces (use \s instead).
                     entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
                     
