@@ -12,8 +12,8 @@ classdef Model < Inputs.Input
                                                                            = 'SATURATED'           % Fluid property assumptions
         FRICTION    (1,3) double  {mustBeNumeric}                          = [0.2 -0.2 0]          % Wall friction coefficients
         TPFM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
-        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0 0]               % Elevation of local perturbations [m] 
-        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0 0]               % corresponding pressure loss coefficients [-]
+        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]               % Elevation of local perturbations [m] 
+        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]               % corresponding pressure loss coefficients [-]
         TPKM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
         SCBOIL      (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
                                                                            = 'NONE'                % Subcooled boiling mode
@@ -25,7 +25,6 @@ classdef Model < Inputs.Input
 
     properties (SetAccess = private)
         
-        fluid       (1,1)
  
     end
 
@@ -44,6 +43,9 @@ classdef Model < Inputs.Input
             objPropnames = objPropnames( ...
                 strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
             
+            % Array of fieldnames using default values
+            defaultValueFieldNames = string().empty();
+
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
                 
@@ -51,13 +53,17 @@ classdef Model < Inputs.Input
                 objPropname = objPropnames(idx);
                 
                 % Check if the objPropname entry is valid
-                if obj.validateInputEntry(objPropname,id=modelID)
+                [isValid, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
+                if isValid && ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
                     
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
-
+                elseif useDefault
+                    defaultValueFieldNames(end+1) = objPropname;
+                    % Remove objPropname from inputStruct
+                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
             end
 
@@ -65,8 +71,16 @@ classdef Model < Inputs.Input
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
                 warning( ...
-                    'MODEL: These inputs were not used: \n\t %s ', ...
-                    sprintf('%s ',remainingInputStructFields{:}) ...
+                    '%s: These entries were not used: \n\t %s ', ...
+                    upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
+                    );
+            end
+
+            % If default values were used, warn user
+            if ~isempty(defaultValueFieldNames)
+                warning( ...
+                    '%s: Default values were used for these entries: \n\t %s ', ...
+                    upper(class(obj)), sprintf('%s ',defaultValueFieldNames{:}) ...
                     );
             end
 

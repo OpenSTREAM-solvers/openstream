@@ -22,6 +22,8 @@ classdef (HandleCompatible) Input < dynamicprops
             % Parse and store the input file
             obj.inputStruct = obj.readInputFile(inputFilePath);
 
+            % 
+
             % limit input struct to entry specified by {key, val} pair
             if strlength(key) > 1
                 
@@ -45,7 +47,7 @@ classdef (HandleCompatible) Input < dynamicprops
             end
         end
 
-        function isValidEntry = validateInputEntry(obj, objPropname, opts)
+        function [isValidEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
             % VALIDATEINPUTENTRY 
             %   Description
             arguments
@@ -57,9 +59,11 @@ classdef (HandleCompatible) Input < dynamicprops
             % Warning setup
             previousWarnStruct = warning('query');
             warning('off','backtrace')
+            objClassName = upper(class(obj));
 
-            % Default false isValidEntry
+            % Default false isValidEntry and defaultUsed
             isValidEntry = false;
+            defaultUsed = false;
 
             % List of properties set in inputStruct 
             inputStructFieldnames = fieldnames(obj.inputStruct);
@@ -84,14 +88,15 @@ classdef (HandleCompatible) Input < dynamicprops
                 % value was not specified
                     throwAsCaller( ...
                         MException( ...
-                            sprintf('INPUT:missingRequiredValueError'), ...
+                            sprintf('%s:missingRequiredValueError',objClassName), ...
                             'Required entry with key %s for %s is empty', objPropname, opts.id) ...
                     );
                 elseif ~propIsRequired && inputFieldIsEmpty
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
-                    warning('INPUT: Value for entry %s was not set. Default value used: %s', ...
-                        objPropname, num2str(propProps.DefaultValue));
+                    warning('%s: Value for entry %s was not set. Default value used: %s', ...
+                        objClassName, objPropname, num2str(propProps.DefaultValue));
+                    defaultUsed = true;
                 else
                     % Assign specified non-empty value to property
                     % Let MATLAB throw errors from parameter validation
@@ -102,13 +107,14 @@ classdef (HandleCompatible) Input < dynamicprops
                 % A required property was not specified
                 throwAsCaller( ...
                         MException( ...
-                            sprintf('INPUT:missingRequiredValueError'), ...
+                            sprintf('%s:missingRequiredValueError',objClassName), ...
                             'Required entry with key %s for %s is missing', objPropname, opts.id) ...
                     );
                 else
                 % An optional property was not specified
-                    warning('INPUT: Value for optional property %s was not set. Default value used: %s', ...
-                        objPropname, num2str(propProps.DefaultValue));
+                    warning('%s: Value for optional property %s was not set. Default value used: %s', ...
+                        objClassName, objPropname, num2str(propProps.DefaultValue));
+                    defaultUsed = true;
                 end
             end
 
@@ -131,7 +137,7 @@ classdef (HandleCompatible) Input < dynamicprops
             % Try to open and read the file
             try
                 fileContent = readlines(filePath);
-                [~,~,fileExt] = fileparts(filePath);
+                [~,fileName,fileExt] = fileparts(filePath);
             catch ME
                 % TODO: decide whether to just set the output to -1 or
                 % throw an error. The error message needs improvement.
@@ -146,8 +152,37 @@ classdef (HandleCompatible) Input < dynamicprops
             % Choose parser depending on file extenstion
             switch lower(fileExt)
                 case '.json'
-                    %TODO: Implement JSON parser
-                    inputStruct = jsondecode(strjoin(fileContent));
+                    % Read the json file
+                    inputStructJson = jsondecode(strjoin(fileContent));
+                    
+                    % jsondecode outputs a cell array of structs when extra
+                    % or missing fields are present
+                    if iscell(inputStructJson)
+                        
+                        % Compile the full array of fieldnames
+                        fullFieldnames = {};
+                        
+                        % 
+                        for i = 1:length(inputStructJson)
+                            fullFieldnames = unique([fullFieldnames; fieldnames(inputStructJson{i})]);
+                        end
+
+                        % Convert each cell to a struct with the
+                        % fullFieldNames
+                        inputStruct(length(inputStructJson),1) = ...
+                            cell2struct(cell(length(fullFieldnames),1),fullFieldnames,1);
+                        for i = 1:length(inputStructJson)
+                            for j = 1:length(fullFieldnames)
+                                fullFieldname = fullFieldnames{j};
+                                if isfield(inputStructJson{i},fullFieldname)
+                                    inputStruct(i).(fullFieldname) = inputStructJson{i}.(fullFieldname);
+                                end
+                            end
+                        end
+                        
+                    else
+                        inputStruct = inputStructJson;
+                    end
 
                 case '.inp'
 
@@ -167,13 +202,14 @@ classdef (HandleCompatible) Input < dynamicprops
 
                     % Initalize output struct
                     inputStruct = struct();
-                    inputStructEntries = 0;
+                    inputStructEntriesCount = 0;
+                    inputStructEntryFields = string().empty();
         
                     % Loops through each row of fileStruct
-                    for idx = 1:length(fileStruct)
+                    for fileLineIdx = 1:length(fileStruct)
         
                         % Index into fileStruct
-                        fileRow = fileStruct{idx};
+                        fileRow = fileStruct{fileLineIdx};
                         
                         % Skip if fileRow is empty
                         if isempty(fileRow)
@@ -184,12 +220,26 @@ classdef (HandleCompatible) Input < dynamicprops
                         switch fileRow.PARAMETER
                             case "END"
                                 % Increment inputStructEntries
-                                inputStructEntries = inputStructEntries + 1;
+                                inputStructEntriesCount = inputStructEntriesCount + 1;
+                                % Reset EntryFields
+                                inputStructEntryFields = inputStructEntryFields.empty();
         
                             case {"COMMENT", '#' ,'//'}
                                 % Ignore comments for now
         
                             otherwise
+                                % if parameter was already specified, throw
+                                % error
+                                if ~isempty(inputStructEntryFields) && ismember(fileRow.PARAMETER,inputStructEntryFields)
+                                    throw( ...
+                                        MException( ...
+                                            sprintf('INPUT:duplicateEntryError'), ...
+                                            'A duplicate of parameter %s was detected on line %d in file %s%s', ...
+                                                fileRow.PARAMETER, fileLineIdx, fileName, fileExt) ...
+                                    ); 
+                                else
+                                    inputStructEntryFields(end+1) = fileRow.PARAMETER;
+                                end
                                 % Throw warning if field value is empty
                                 valueToSave = '';
                                 if strlength(fileRow.VALUE) == 0
@@ -206,7 +256,7 @@ classdef (HandleCompatible) Input < dynamicprops
                                     end
                                 end
                                 % Save entry values
-                                inputStruct(inputStructEntries+1).(fileRow.PARAMETER) = valueToSave;
+                                inputStruct(inputStructEntriesCount+1).(fileRow.PARAMETER) = valueToSave;
                         end
         
                     end

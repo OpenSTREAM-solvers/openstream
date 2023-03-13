@@ -52,4 +52,5 @@ TPKM       ! Two-phase local loss multiplier [-]                            > ho
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > homogeneous
 SLIP       ! Phase velocity ratio [-]                                       > 1
+FLUID      ! hmm                > water
 END

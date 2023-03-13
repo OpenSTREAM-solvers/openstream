@@ -18,7 +18,7 @@ classdef Geometry < Inputs.Input
             %   Detailed explanation goes here
 
             % Call superclass constructor to parse file and select
-            % specified modelID using "ID" key
+            % specified optionsID using "ID" key
             obj = obj@Inputs.Input(filePath, 'ID', optionsID)
             
             %
@@ -27,6 +27,9 @@ classdef Geometry < Inputs.Input
             objPropnames = objPropnames( ...
                 strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
             
+            % Array of fieldnames using default values
+            defaultValueFieldNames = string().empty();
+
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
                 
@@ -34,10 +37,15 @@ classdef Geometry < Inputs.Input
                 objPropname = objPropnames(idx);
                 
                 % Check if the objPropname entry is valid
-                if obj.validateInputEntry(objPropname,id=optionsID)
+                [isValid, useDefault] = obj.validateInputEntry(objPropname,id=optionsID);
+                if isValid && ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
-
+                    
+                    % Remove objPropname from inputStruct
+                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
+                elseif useDefault
+                    defaultValueFieldNames(end+1) = objPropname;
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
@@ -47,8 +55,16 @@ classdef Geometry < Inputs.Input
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
                 warning( ...
-                    'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
-                    remainingInputStructFields{:} ...
+                    '%s: These entries were not used: \n\t %s ', ...
+                    upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
+                    );
+            end
+
+            % If default values were used, warn user
+            if ~isempty(defaultValueFieldNames)
+                warning( ...
+                    '%s: Default values were used for these entries: \n\t %s ', ...
+                    upper(class(obj)), sprintf('%s ',defaultValueFieldNames{:}) ...
                     );
             end
 

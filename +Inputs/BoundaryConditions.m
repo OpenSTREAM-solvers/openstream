@@ -15,35 +15,47 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
     end
 
     properties (SetAccess=private)
-
+        geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}
+        MFLUX       (:,1)
     end
 
     methods (Access=public)
         
-        function obj = BoundaryConditions(filePath, geometryInput)
+        function obj = BoundaryConditions(filePath, geometryObjInput)
             %BOUNDARYCONDITIONS Construct an instance of this class
             %   Detailed explanation goes here
 
             % Call superclass constructor to parse file
             obj = obj@Inputs.Input(filePath)
+
+            % Save geometryObj
+            obj.geometryObj = geometryObjInput;
             
             %
             % List of immutable obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
                 strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
-            
+           
+            % Array of fieldnames using default values
+            defaultValueFieldNames = string().empty();
+
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
                 
-                % Retrieve idx-th item in objPropnames
+                 % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
                 % Check if the objPropname entry is valid
-                if obj.validateInputEntry(objPropname)
+                [isValid, useDefault] = obj.validateInputEntry(objPropname);
+                if isValid && ~useDefault
                     obj.(objPropname) = ...
                                     [obj.inputStruct.(objPropname)];
                     
+                    % Remove objPropname from inputStruct
+                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
+                elseif useDefault
+                    defaultValueFieldNames(end+1) = objPropname;
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
@@ -53,32 +65,42 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
                 warning( ...
-                    'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
-                    remainingInputStructFields{:} ...
+                    '%s: These entries were not used: \n\t %s ', ...
+                    upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
+                    );
+            end
+
+            % If default values were used, warn user
+            if ~isempty(defaultValueFieldNames)
+                warning( ...
+                    '%s: Default values were used for these entries: \n\t %s ', ...
+                    upper(class(obj)), sprintf('%s ',defaultValueFieldNames{:}) ...
                     );
             end
             
             % Transpose WMESH
+            % COMMENT: Not sure why this is necessary
             obj.WMESH = obj.WMESH.';
             obj.WPOWER = obj.WPOWER.';
             
             % check if WPOWER size is consistent with geometry
-            if size(obj.WPOWER,2) ~= size(obj.WMESH,2)*size(geometryInput.PERIM,2)
+            if size(obj.WPOWER,2) ~= size(obj.WMESH,2)*size(geometryObjInput.PERIM,2)
                 throw( ...
                     MException('InputError:BoundaryCondtionsInconsistency', ...
                                'Inconsistent WPOWER array size.') ...
                      );
             end
+            
+            %
+            % Calculate private properties
+            % MFLUX [kg/m^2-s] Mass flux given geomertyObj
+            obj.MFLUX = obj.MFLOW/obj.geometryObj.AREA;
 
+            %
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
 
-        end
-
-        function MF = MFLUX(obj,geometryObj)
-            %MFLUX [kg/m^2-s] Mass flux given geomertyObj
-            MF = obj.MFLOW/geometryObj.AREA;            
         end
         
         function  tsat = TSAT(obj,fluidObj)
@@ -118,9 +140,9 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
             xin = -obj.DHIN(fluidObj)./(obj.HG(fluidObj)-obj.HF(fluidObj));
         end
 
-        function varargout = size(obj,varargin)
-            [varargout{1:nargout}] = size(obj.TIME,varargin{:});
-        end
+%         function varargout = size(obj,varargin)
+%             [varargout{1:nargout}] = size(obj.TIME,varargin{:});
+%         end
 
         function plot(obj,fluidObj)
             %PLOT Plot boundary conditions

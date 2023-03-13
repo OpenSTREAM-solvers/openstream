@@ -85,6 +85,7 @@
     "TPKM": "homogeneous",
     "SCBOIL": "none",
     "VOID": "homogeneous",
-    "SLIP": 1
+    "SLIP": 1,
+    "FLUID": "WATER"
   }
 ]
