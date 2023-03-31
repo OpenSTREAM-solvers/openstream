@@ -62,8 +62,15 @@ classdef FluidProperties < Inputs.IndexableInput
             obj.MUG   = obj.coolpropH.viscosity('P',obj.PRESSURE,'Q',1);               % [Pa.s] Saturated vapor viscosity
             obj.HF    = obj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',0);                % [J/kg] Saturated liquid enthalpy
             obj.HG    = obj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',1);                % [J/kg] Saturated vapor enthalpy
+            
+            
+            % set AbstractState to HEOS
+            obj.coolpropH.setAbstractStateSrc(obj.coolpropH.EOS.HEOS);
             obj.SIGMA = obj.coolpropH.surfaceTension('P',obj.PRESSURE,'Q',1);          % [N/m] Surface tension        
+            obj.coolpropH.setAbstractStateSrc(obj.coolpropH.EOS.HEOS);
+
             obj.coolpropH.setSpecifyPhase('');
+            
         end
         
         
