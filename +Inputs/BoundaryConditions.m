@@ -16,7 +16,6 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
 
     properties (SetAccess=private)
         geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}
-        MFLUX       (:,1)
     end
 
     methods (Access=public)
@@ -84,7 +83,7 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
             obj.WPOWER = obj.WPOWER.';
             
             % check if WPOWER size is consistent with geometry
-            if size(obj.WPOWER,2) ~= size(obj.WMESH,2)*size(geometryObjInput.PERIM,2)
+            if size(obj.WPOWER,2) ~= size(obj.WMESH,2)*size(obj.geometryObj.PERIM,2)
                 throw( ...
                     MException('InputError:BoundaryCondtionsInconsistency', ...
                                'Inconsistent WPOWER array size.') ...
@@ -93,8 +92,7 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
             
             %
             % Calculate private properties
-            % MFLUX [kg/m^2-s] Mass flux given geomertyObj
-            obj.MFLUX = obj.MFLOW/obj.geometryObj.AREA;
+            % NOTE: Nothing here for now
 
             %
             % Remove dynamic property inputStruct
