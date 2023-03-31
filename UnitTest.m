@@ -3,7 +3,7 @@ close all; clearvars
 import Inputs.*
 
 testID='MFVAL';
-modelFile = 'inputs/models.inp';
+modelFile = './inputs/models.inp';
 N   = 10000;                                                               % Number of run time iterations
 
 switch testID
@@ -26,6 +26,12 @@ prop_sat  = FluidProperties(P,model_sat);
 
 model_p   = Model(modelFile,modelID{2});
 prop_p    = FluidProperties(P,model_p);
+
+inputSet = InputSet( ...
+            modelFilePath='./inputs/models.inp', modelID=modelID{1}, ...
+            optionsFilePath='./inputs/options.inp', optionsID='DEFAULT', ...
+            geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
+            bcFilePath='./inputs/bc_mfval.inp');
 
 %% Tests
 
