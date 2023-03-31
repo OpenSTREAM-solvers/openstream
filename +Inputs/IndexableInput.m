@@ -4,7 +4,6 @@ classdef (Abstract,HandleCompatible)  IndexableInput
     
     methods
         function varargout = subsref(obj,s)
-            disp('a')
            switch s(1).type
               case '.'
                  [varargout{1:nargout}] = builtin('subsref',obj,s);
