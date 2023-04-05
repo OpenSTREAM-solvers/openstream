@@ -23,9 +23,7 @@ classdef Geometry < Inputs.Input
             
             %
             % List of immutable obj property names
-            objPropnames = string({metaclass(obj).PropertyList.Name}.');
-            objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
+            objPropnames = obj.listInputProperties();
             
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();
@@ -83,7 +81,7 @@ classdef Geometry < Inputs.Input
         
         function N = NWALL(obj)
             % NWALL Number of walls
-
+            
             N = length(obj.PERIM);
             
         end

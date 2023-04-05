@@ -39,9 +39,7 @@ classdef Model < Inputs.Input
             
             %
             % List of immutable obj property names
-            objPropnames = string({metaclass(obj).PropertyList.Name}.');
-            objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
+            objPropnames = obj.listInputProperties();
             
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();

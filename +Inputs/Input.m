@@ -122,6 +122,14 @@ classdef (HandleCompatible) Input < dynamicprops
             warning(previousWarnStruct);
         end
         
+        function objPropnames = listInputProperties(obj)
+            %
+            % List of immutable obj property names
+            objPropnames = string({metaclass(obj).PropertyList.Name}.');
+            objPropnames = objPropnames( ...
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
+        end
+
     end
 
     methods(Static)

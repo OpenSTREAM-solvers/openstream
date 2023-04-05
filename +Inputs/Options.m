@@ -19,7 +19,6 @@ classdef Options < Inputs.Input
         RELAXWM      (1,1) double  {mustBeInRange(RELAXWM,0,1)}            = 1                     % Relaxation factor for the mixture mass conservation equation
         RELAXPM      (1,1) double  {mustBeInRange(RELAXPM,0,1)}            = 1                     % Relaxation factor for the mixture momentum conservation equation
         RELAXHM      (1,1) double  {mustBeInRange(RELAXHM,0,1)}            = 1
-
         
     end
 
@@ -34,9 +33,7 @@ classdef Options < Inputs.Input
             
             %
             % List of immutable obj property names
-            objPropnames = string({metaclass(obj).PropertyList.Name}.');
-            objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
+            objPropnames = obj.listInputProperties();
             
             % Iterate through obj property names
             for idx = 1:length(objPropnames)

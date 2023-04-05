@@ -1,4 +1,4 @@
-classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
+classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
     %BOUNDARYCONDITIONS Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -10,7 +10,7 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
         MFLOW      (:,1) double  {mustBePositive}                          = 1                     % Mass flow rate [kg/s]
         POWER      (:,1) double  {mustBeNonnegative}                       = 1                     % Total power [W]
         WMESH      (:,:) double  {mustBePositive}                          = 1                     % Relative power node size distribution [m]
-        WPOWER     (:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-] 
+        WPOWER     (:,:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-] 
         
     end
 
@@ -32,9 +32,7 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
             
             %
             % List of immutable obj property names
-            objPropnames = string({metaclass(obj).PropertyList.Name}.');
-            objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
+            objPropnames = obj.listInputProperties();
            
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();
@@ -82,14 +80,26 @@ classdef BoundaryConditions < Inputs.Input & Inputs.IndexableInput
             obj.WMESH = obj.WMESH.';
             obj.WPOWER = obj.WPOWER.';
             
+            % check if WMESH size is consistent with geometry
+            if sum(obj.WMESH,2) ~= obj.geometryObj.LENGTH
+                throw( ...
+                    MException('InputError:BoundaryCondtionsInconsistency', ...
+                               'Inconsistent WMESH lengths.') ...
+                     );
+            end
+
             % check if WPOWER size is consistent with geometry
             if size(obj.WPOWER,2) ~= size(obj.WMESH,2)*size(obj.geometryObj.PERIM,2)
                 throw( ...
                     MException('InputError:BoundaryCondtionsInconsistency', ...
                                'Inconsistent WPOWER array size.') ...
                      );
+            else
+                obj.WPOWER = reshape(obj.WPOWER,size(obj.WMESH,1),[],size(obj.geometryObj.PERIM,2));
             end
             
+            
+
             %
             % Calculate private properties
             % NOTE: Nothing here for now

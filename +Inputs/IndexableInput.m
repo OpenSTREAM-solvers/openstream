@@ -6,7 +6,15 @@ classdef (Abstract,HandleCompatible)  IndexableInput
         function varargout = subsref(obj,s)
            switch s(1).type
               case '.'
-                 [varargout{1:nargout}] = builtin('subsref',obj,s);
+                  if ismethod(obj,s(1).subs)
+                      if isscalar(s)
+                        [varargout{1:nargout}] = obj.(s(1).subs);
+                      else
+                        [varargout{1:nargout}] = builtin('subsref',obj.(s(1).subs),s(2:end));
+                      end
+                  else
+                    [varargout{1:nargout}] = builtin('subsref',obj,s);
+                  end
               case '()'
                  out = obj.obj2struct(s(1).subs{1});
                  if length(s) == 1
@@ -42,7 +50,8 @@ classdef (Abstract,HandleCompatible)  IndexableInput
         end
 
         function n = numArgumentsFromSubscript(obj,s,indexingContext)
-           if indexingContext == matlab.mixin.util.IndexingContext.Expression
+           if indexingContext == matlab.mixin.util.IndexingContext.Expression || ...
+               indexingContext == matlab.mixin.util.IndexingContext.Statement
               n = 1;
            else
               n = length(s(1).subs);

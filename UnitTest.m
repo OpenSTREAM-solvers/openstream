@@ -1,6 +1,7 @@
 close all; clearvars
 
 import Inputs.*
+import Solvers.*
 
 testID='MFVAL';
 modelFile = './inputs/models.inp';
@@ -32,6 +33,7 @@ inputSet = InputSet( ...
             optionsFilePath='./inputs/options.inp', optionsID='DEFAULT', ...
             geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
             bcFilePath='./inputs/bc_mfval.inp');
+mix = Mixture(inputSet);
 
 %% Tests
 
@@ -46,9 +48,6 @@ plot(prop_p,h)
 % Runtime tests
 runtimetest(prop_sat,HIN,N)                                                % Saturation assumption only (fast)
 runtimetest(prop_p,HIN,N)                                                  % System pressure assumption (slow)
-
-% Test non available model ID
-%model   = models(modelf,'DUMMY');
 
 %% Sub-functions
 

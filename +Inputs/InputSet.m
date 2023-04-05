@@ -3,10 +3,10 @@ classdef InputSet
     %   Detailed explanation goes here
     
     properties
-        modelObj
-        optionsObj
-        geometryObj
-        bcObj
+        model
+        options
+        geometry
+        bc
         
     end
     
@@ -31,10 +31,10 @@ classdef InputSet
             import Inputs.*
             
             % Create input objects
-            obj.modelObj = Model(opts.modelFilePath,opts.modelID);
-            obj.optionsObj = Options(opts.optionsFilePath,opts.optionsID);
-            obj.geometryObj = Geometry(opts.geometryFilePath, opts.geometryID);
-            obj.bcObj = BoundaryConditions(opts.bcFilePath, obj.geometryObj);
+            obj.model = Model(opts.modelFilePath,opts.modelID);
+            obj.options = Options(opts.optionsFilePath,opts.optionsID);
+            obj.geometry = Geometry(opts.geometryFilePath, opts.geometryID);
+            obj.bc = BoundaryConditions(opts.bcFilePath, obj.geometry);
 
         end
         

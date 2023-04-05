@@ -11,15 +11,15 @@ geomf   = 'inputs/geom.inp';
 modelf  = 'inputs/models.inp';
 optionf = 'inputs/options.inp';
 
-bcf      = 'inputs/bc_test.inp';
-geomID   = 'TEST';
-modelID  = 'WATERS';
-optionID = 'DEFAULT';
+% bcf      = 'inputs/bc_test.inp';
+% geomID   = 'TEST';
+% modelID  = 'WATERS';
+% optionID = 'DEFAULT';
 
-%bcf      = 'inputs/bc_mfval.inp';
-%geomID   = 'MFVAL';
-%modelID  = 'MFVALS';
-%optionID = 'STEADY';
+bcf      = 'inputs/bc_mfval.inp';
+geomID   = 'MFVAL';
+modelID  = 'MFVALS';
+optionID = 'DEFAULT';
 
 tic
 
