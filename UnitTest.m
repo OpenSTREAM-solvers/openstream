@@ -35,6 +35,10 @@ inputSet = InputSet( ...
             bcFilePath='./inputs/bc_mfval.inp');
 mix = Mixture(inputSet);
 
+mix.initializeSolver; mix.solve
+
+return
+
 %% Tests
 
 % Example of fluid property plots with saturation properties

@@ -1,12 +1,16 @@
 function solve(mix, opts)
 %SOLVE  
-%
+% 
 arguments
     mix
     opts.verbose = true
 end
 
-fprintf('\nRun solver ...\n');
+if mix.SOLVED
+    error('This solver needs to be reinitialized before solving.');
+else
+    fprintf('\nRun solver ...\n');
+end
 
 % Shortcut to inputSet objects
 model = mix.inputSet.model;
@@ -23,6 +27,7 @@ for tIdx = 2:length(mix.TIME)                                                  %
     
     % Axial sweep
     for zIdx = 2:mix.NZ                                                        % Loop over axial nodes
+%     zIdx = 2:mix.NZ;
         
         % Inner (point) iterations
         for itr = 1:options.MAXITER
@@ -46,16 +51,16 @@ for tIdx = 2:length(mix.TIME)                                                  %
             
             % Momentum conservation
             dpGrav  = -model.G*RHO*mix.DZ;                                  % [Pa] Gravitational pressure drop
-            dpWall  = -sum(geom.PERIM)*TAUW/geom.AREA*mix.DZ;               % [Pa] Wall friction pressure drop
-            dpAcc_z = -mix.W(tIdx,zIdx)/geom.AREA*(U-Uups);                 % [Pa] Spatial acceleration pressure drop
-            dpAcc_t = -mix.W(tIdx,zIdx)/geom.AREA*(1-Uold/U)*mix.DZ/mix.DT; % [pa] Temporal acceleration pressure drop
+            dpWall  = -sum(geom.PERIM)*TAUW./geom.AREA.*mix.DZ;               % [Pa] Wall friction pressure drop
+            dpAcc_z = -mix.W(tIdx,zIdx)./geom.AREA.*(U-Uups);                 % [Pa] Spatial acceleration pressure drop
+            dpAcc_t = -mix.W(tIdx,zIdx)./geom.AREA.*(1-Uold/U).*mix.DZ./mix.DT; % [pa] Temporal acceleration pressure drop
             dpK     = -mix.DPK(tIdx,zIdx);                                  % [Pa] Local pressure drop
             Pnew    = mix.P(tIdx,zIdx-1)+dpGrav+dpWall+dpAcc_z+dpAcc_t+dpK; % [Pa] Update pressure
             mix.P(tIdx,zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
 
             % Energy conservation
-            Hnew = (mix.H(tIdx,zIdx-1)+mix.DZ/mix.W(tIdx,zIdx)*sum(geom.PERIM.*HFLUX,'all')+ ...
-                   mix.H(tIdx-1,zIdx)/U*mix.DZ/mix.DT)/(1+mix.DZ/U/mix.DT); % [J/kg] Update mixture enthalpy
+            Hnew = (mix.H(tIdx,zIdx-1)+mix.DZ./mix.W(tIdx,zIdx).*sum(geom.PERIM.'.*reshape(HFLUX,length(zIdx),[]).',1)+ ...
+                   mix.H(tIdx-1,zIdx)./U.*mix.DZ./mix.DT)/(1+mix.DZ./U./mix.DT); % [J/kg] Update mixture enthalpy
             mix.H(tIdx,zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew;    % [J/kg] Apply relaxation
             
             % Check convergence
@@ -93,6 +98,9 @@ fprintf('\n---------------------- Two-phase flow solver run completed ----------
 
 % End timer
 toc
+
+% set SOLVED flag to true
+mix.SOLVED = true;
 
 function fprintf(varargin)
     if opts.verbose, builtin('fprintf',varargin{:}); end

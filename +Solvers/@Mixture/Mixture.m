@@ -11,9 +11,7 @@ classdef Mixture < Solvers.AbstractSolver
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
         HFLUX        (:,:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
-     end
 
-    properties
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         P            (:,:) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
@@ -22,6 +20,8 @@ classdef Mixture < Solvers.AbstractSolver
 
         inputSet    {isa(inputSet,'Inputs.InputSet')}
         boundaryConditions
+
+        SOLVED      (1,1) logical                                          = true                 % Flag to indicate solved
     end
     
     methods
@@ -36,11 +36,20 @@ classdef Mixture < Solvers.AbstractSolver
                 inputSet {isa(inputSet,'Inputs.InputSet')}
             end
 
-            import Inputs.*
-
             % Store inputSet as object property
             obj.inputSet = inputSet;
             
+            % Initizlize solver parameters
+            obj.initializeSolver();
+            
+        end
+        
+        function initializeSolver(obj)
+        %INITIALIZESOLVER Initialize solver using the stored inputSet
+        %
+            
+            import Inputs.*
+
             % Calculate time steps
             obj.NZ = obj.inputSet.model.NNODES+1;                           % Total number of axial nodes (add one for inlet conditions)
             obj.DT = obj.inputSet.options.TSTEP;                            % [s] Time interval
@@ -86,9 +95,12 @@ classdef Mixture < Solvers.AbstractSolver
             ITRCell = cell(numel(ITRFields),1);                             % Cell structure to convert into struct
             ITRCell(:) = {zeros(obj.NTIME,obj.NZ)};                         % Initialize with zeros
             obj.ITR = cell2struct(ITRCell, ITRFields, 1);                   % Convert cell to struct with fieldnames
-            
+
+            % set SOLVED flag to false
+            obj.SOLVED = false;
+
         end
-        
+
         function obj = interpBoundaryConditions(obj)
             %INTERPBOUNDARYCONDITIONS Expand specified boundary conditions
             %to every node and timestep defined by the model and geometry.
@@ -169,7 +181,7 @@ classdef Mixture < Solvers.AbstractSolver
         end
 
         function x = X(obj, tIdx, zIdx)
-        %XEQ Vapor quality [-]
+        %X Vapor quality [-]
         %
             if nargin < 2, tIdx = 1:obj.NTIME; end
             if nargin < 3, zIdx = 1:obj.NZ; end
@@ -182,7 +194,7 @@ classdef Mixture < Solvers.AbstractSolver
 
         function vf =VF(obj, tIdx, zIdx)
         %VF Void fraction [-]
-        %
+        %   
             if nargin < 2, tIdx = 1:obj.NTIME; end
             if nargin < 3, zIdx = 1:obj.NZ; end
             

@@ -168,7 +168,7 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             end
             switch obj.PROPERTIES
                 case 'SATURATED'
-                    muv = repmat(obj.MUF(idx),1,size(H,2));
+                    muv = repmat(obj.MUG(idx),1,size(H,2));
                 case 'PSYSTEM'
                     muv = obj.coolpropH.viscosity('P',obj.PRESSURE(idx),'H',max(H,obj.HG));
             end
