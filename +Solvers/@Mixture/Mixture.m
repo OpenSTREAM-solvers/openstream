@@ -6,7 +6,7 @@ classdef Mixture < Solvers.AbstractSolver
         
         NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (:,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
+        TIME         (1,:) double  {mustBeNumeric}                         = 0                    % [s] Time series
         DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
@@ -55,7 +55,7 @@ classdef Mixture < Solvers.AbstractSolver
             obj.DT = obj.inputSet.options.TSTEP;                            % [s] Time interval
             obj.TIME = colon(obj.inputSet.bc.TIME(1), ...
                              obj.DT, ...
-                             obj.inputSet.bc.TIME(end));                    % [s] Computational time array
+                             obj.inputSet.bc.TIME(end));                  % [s] Computational time array
             obj.NTIME = length(obj.TIME);
 
             % Calculate axial steps
@@ -72,11 +72,11 @@ classdef Mixture < Solvers.AbstractSolver
             % Setup HFLUX heat flux [W/m^2]
             obj.HFLUX = obj.boundaryConditions.HFLUX;
             % Setup W mass flow rate [kg/s]
-            obj.W = repmat(obj.boundaryConditions.MFLOW,1,obj.NZ);
+            obj.W = repmat(obj.boundaryConditions.MFLOW,obj.NZ,1);
             % Setup P, pressure [Pa]
-            obj.P = repmat(obj.boundaryConditions.PRESSURE,1,obj.NZ);
+            obj.P = repmat(obj.boundaryConditions.PRESSURE,obj.NZ,1);
             % Setup H enthalpy [J/kg]
-            obj.H = repmat(obj.boundaryConditions.HIN,1,obj.NZ);
+            obj.H = repmat(obj.boundaryConditions.HIN,obj.NZ,1);
             
             % Setup DP and ITR
             % Grav:     [Pa] Gravitational pressure drop
@@ -87,13 +87,13 @@ classdef Mixture < Solvers.AbstractSolver
             % Tot:      [Pa] Total pressure drop
             DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];          % Fieldnames for DP struct
             DPCell = cell(numel(DPFields),1);                               % Cell structure to convert into struct
-            DPCell(:) = {zeros(obj.NTIME,obj.NZ)};                          % Initialize with zeros
+            DPCell(:) = {zeros(obj.NZ,obj.NTIME)};                          % Initialize with zeros
             obj.DP = cell2struct(DPCell, DPFields, 1);                      % Convert cell to struct with fieldnames
             
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DH"];
             ITRCell = cell(numel(ITRFields),1);                             % Cell structure to convert into struct
-            ITRCell(:) = {zeros(obj.NTIME,obj.NZ)};                         % Initialize with zeros
+            ITRCell(:) = {zeros(obj.NZ,obj.NTIME)};                         % Initialize with zeros
             obj.ITR = cell2struct(ITRCell, ITRFields, 1);                   % Convert cell to struct with fieldnames
 
             % set SOLVED flag to false
@@ -121,23 +121,23 @@ classdef Mixture < Solvers.AbstractSolver
 
             % Interpolate wall power in time
             WPOWERT = obj.timeInterpolate(obj.inputSet.bc.WPOWER);
-            obj.boundaryConditions.WPOWER = zeros(obj.NTIME,obj.NZ,obj.inputSet.geometry.NWALL);
+            obj.boundaryConditions.WPOWER = pagetranspose(zeros(obj.NTIME,obj.NZ,obj.inputSet.geometry.NWALL));
             
             % Interpolate wall power in axial space 
             %   Index order: (NTIME, NZ, NWALL)
             % NOTE: only the 1st row of WMESH is used
             obj.boundaryConditions.WPOWER = ...
-                pagetranspose( ...
+                ( ...
                     obj.axialInterpolate(cumsum(obj.inputSet.bc.WMESH(1,:).'), ...
                                      pagetranspose(WPOWERT)...
                                      ) ...
                 );
 
             % Calculate wall heat flux at each node in space & time
-            % NOTE: This is very covoluted
+            % NOTE: This is very convoluted
             obj.boundaryConditions.HFLUX = ...
                 obj.boundaryConditions.WPOWER .* obj.boundaryConditions.POWER ...
-                ./ sum(reshape(obj.inputSet.geometry.PERIM .* obj.DZ,1,1,3).*obj.boundaryConditions.WPOWER,[2,3]);
+                ./ sum(reshape(obj.inputSet.geometry.PERIM .* obj.DZ,1,1,3).*obj.boundaryConditions.WPOWER,[1,3]);
 
             function validParams = checkParams(params)
             %CHECKPARAMS Ensure interpolation parameters are valid
@@ -162,41 +162,41 @@ classdef Mixture < Solvers.AbstractSolver
 
         end
 
-        function mflux = MFLUX(obj, tIdx, zIdx)
+        function mflux = MFLUX(obj, zIdx, tIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
 
-            mflux = obj.W(tIdx,zIdx)./obj.inputSet.geometry.AREA;
+            mflux = obj.W(zIdx, tIdx)./obj.inputSet.geometry.AREA;
         end
 
-        function xeq = XEQ(obj, tIdx, zIdx)
+        function xeq = XEQ(obj, zIdx, tIdx)
         %XEQ Equilibrium quality [-]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
         
-            xeq = (obj.H(tIdx,zIdx)-obj.inputSet.fluid.HF(tIdx)) ./ obj.inputSet.fluid.HFG(tIdx);
+            xeq = (obj.H(zIdx, tIdx)-obj.inputSet.fluid.HF(tIdx)) ./ obj.inputSet.fluid.HFG(tIdx);
         end
 
-        function x = X(obj, tIdx, zIdx)
+        function x = X(obj, zIdx, tIdx)
         %X Vapor quality [-]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
         
             switch obj.inputSet.model.SCBOIL
                 case 'NONE'
-                    x=min(max(obj.XEQ(tIdx,zIdx),0),1);
+                    x=min(max(obj.XEQ(zIdx, tIdx),0),1);
             end
         end
 
-        function vf =VF(obj, tIdx, zIdx)
+        function vf =VF(obj, zIdx, tIdx)
         %VF Void fraction [-]
         %   
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
             model = obj.inputSet.model;
@@ -205,10 +205,10 @@ classdef Mixture < Solvers.AbstractSolver
             switch model.VOID
                 case 'HOMOGENEOUS'
                     % [-] Homogeneous void model
-                    vf = vfslip(obj.X(tIdx, zIdx),1);
+                    vf = vfslip(obj.X(zIdx, tIdx),1);
                 case 'SLIP'
                     % [-] Slip void model
-                    vf = vfslip(obj.X(tIdx, zIdx),model.SLIP);
+                    vf = vfslip(obj.X(zIdx, tIdx),model.SLIP);
                 case 'BESTION'
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
@@ -226,97 +226,97 @@ classdef Mixture < Solvers.AbstractSolver
             %VFDRIFT Void fraction based on drift flux model
             % C0    [-]     Distribution parameter
             % ugj   [m/s]   Drift velocity
-                vf  = obj.JG(tIdx, zIdx)./(C0.*(obj.JG(tIdx, zIdx)+obj.JL(tIdx, zIdx))+ugj);
+                vf  = obj.JG(zIdx, tIdx)./(C0.*(obj.JG(zIdx, tIdx)+obj.JL(zIdx, tIdx))+ugj);
             end
             
         end
 
-        function rho = RHO(obj, tIdx, zIdx)
+        function rho = RHO(obj, zIdx, tIdx)
         %RHO Density [kg/m^3]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
-            rho = obj.VF(tIdx, zIdx).*fluid.RHOV(obj.H(tIdx, zIdx), tIdx)+ ...
-                    (1-obj.VF(tIdx, zIdx)).*fluid.RHOL(obj.H(tIdx, zIdx), tIdx);
+            rho = obj.VF(zIdx, tIdx).*fluid.RHOV(obj.H(zIdx, tIdx), tIdx)+ ...
+                    (1-obj.VF(zIdx, tIdx)).*fluid.RHOL(obj.H(zIdx, tIdx), tIdx);
         end
 
-        function mu = MU(obj, tIdx, zIdx)
+        function mu = MU(obj, zIdx, tIdx)
         %MU Dynamic viscosity [Pa-s]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
-            mu = obj.X(tIdx, zIdx).*fluid.MUV(obj.H(tIdx, zIdx), tIdx) + ...
-                    (1-obj.X(tIdx, zIdx)).*fluid.MUL(obj.H(tIdx, zIdx), tIdx);
+            mu = obj.X(zIdx, tIdx).*fluid.MUV(obj.H(zIdx, tIdx), tIdx) + ...
+                    (1-obj.X(zIdx, tIdx)).*fluid.MUL(obj.H(zIdx, tIdx), tIdx);
         end
 
-        function u = U(obj, tIdx, zIdx)
+        function u = U(obj, zIdx, tIdx)
         %U Velocity [m/s]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
-            u = obj.W(tIdx, zIdx)./obj.RHO(tIdx, zIdx)./obj.inputSet.geometry.AREA; 
+            u = obj.W(zIdx, tIdx)./obj.RHO(zIdx, tIdx)./obj.inputSet.geometry.AREA; 
         end
 
-        function jl = JL(obj, tIdx, zIdx)
+        function jl = JL(obj, zIdx, tIdx)
         %JL Superfacial liquid velocity [m/s]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
-            jl = (1-obj.X(tIdx, zIdx)).*obj.MFLUX(tIdx, zIdx)./fluid.RHOL(obj.H(tIdx, zIdx), tIdx);
+            jl = (1-obj.X(zIdx, tIdx)).*obj.MFLUX(zIdx, tIdx)./fluid.RHOL(obj.H(zIdx, tIdx), tIdx);
         end
 
-        function jg = JG(obj, tIdx, zIdx)
+        function jg = JG(obj, zIdx, tIdx)
         %JG Superfacial vapor velocity [m/s]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
-            jg = (1-obj.X(tIdx, zIdx)).*obj.MFLUX(tIdx, zIdx)./fluid.RHOV(obj.H(tIdx, zIdx), tIdx);
+            jg = (1-obj.X(zIdx, tIdx)).*obj.MFLUX(zIdx, tIdx)./fluid.RHOV(obj.H(zIdx, tIdx), tIdx);
         end
 
-        function re = RE(obj, tIdx, zIdx)
+        function re = RE(obj, zIdx, tIdx)
         %RE Reynolds number [-]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
-            re = 4.*obj.W(tIdx, zIdx)./obj.MU(tIdx, zIdx)./sum(obj.inputSet.geometry.PERIM);
+            re = 4.*obj.W(zIdx, tIdx)./obj.MU(zIdx, tIdx)./sum(obj.inputSet.geometry.PERIM);
         end
 
-        function rel = REL(obj, tIdx, zIdx)
+        function rel = REL(obj, zIdx, tIdx)
         %REL Liquid-equivalent Reynolds number [-]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
-            re = 4.*obj.W(tIdx, zIdx)./obj.MUL(tIdx, zIdx)./sum(obj.inputSet.geometry.PERIM);
+            re = 4.*obj.W(zIdx, tIdx)./obj.MUL(zIdx, tIdx)./sum(obj.inputSet.geometry.PERIM);
         end
 
-        function fw = FW(obj, tIdx, zIdx)
+        function fw = FW(obj, zIdx, tIdx)
         %FW Wall friction factor [-]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
             model = obj.inputSet.model;
-            fw = model.FRICTION(1).*obj.RE(tIdx, zIdx).^model.FRICTION(2)+model.FRICTION(3);
+            fw = model.FRICTION(1).*obj.RE(zIdx, tIdx).^model.FRICTION(2)+model.FRICTION(3);
         end
 
-        function tauw = TAUW(obj, tIdx, zIdx)
+        function tauw = TAUW(obj, zIdx, tIdx)
         %TAUW wall shear stress [Pa]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
-            tauw = 0.5.*(obj.FW(tIdx, zIdx)./4)./obj.RHO(tIdx, zIdx).*(obj.W(tIdx, zIdx)./obj.inputSet.geometry.AREA).^2;
+            tauw = 0.5.*(obj.FW(zIdx, tIdx)./4)./obj.RHO(zIdx, tIdx).*(obj.W(zIdx, tIdx)./obj.inputSet.geometry.AREA).^2;
         end
 
         function kloss = KLOSS(obj, zIdx)
@@ -333,22 +333,22 @@ classdef Mixture < Solvers.AbstractSolver
             
         end
 
-        function dpk = DPK(obj, tIdx, zIdx)
+        function dpk = DPK(obj, zIdx, tIdx)
         %DPK Local pressure loss [Pa]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
-            dpk = 0.5.*obj.KLOSS(zIdx)./obj.RHO(tIdx, zIdx).*(obj.W(tIdx, zIdx)./obj.inputSet.geometry.AREA).^2;
+            dpk = 0.5.*obj.KLOSS(zIdx)./obj.RHO(zIdx, tIdx).*(obj.W(zIdx, tIdx)./obj.inputSet.geometry.AREA).^2;
         end
 
-        function t = T(obj, tIdx, zIdx)
+        function t = T(obj, zIdx, tIdx)
         %T Temperature [K]
         %
-            if nargin < 2, tIdx = 1:obj.NTIME; end
-            if nargin < 3, zIdx = 1:obj.NZ; end
+            if nargin < 2, tIdx = 1:obj.NZ; end
+            if nargin < 3, zIdx = 1:obj.NTIME; end
             
-            t = obj.inputSet.fluid.T(obj.H(tIdx, zIdx), tIdx);
+            t = obj.inputSet.fluid.T(obj.H(zIdx, tIdx), tIdx);
         end
         
         function plotz
