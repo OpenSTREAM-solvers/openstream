@@ -24,8 +24,7 @@ classdef Model < Inputs.Input
     end
 
     properties (SetAccess = private)
-        
- 
+        G          (1,1) double  {mustBeNumeric}                           = 9.81                  % [m/s^2] Gravitational acceleration
     end
 
     methods

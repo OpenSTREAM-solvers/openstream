@@ -74,9 +74,13 @@ classdef FluidProperties < handle %Inputs.IndexableInput
         end
         
         
-        function hfg = HFG(obj)
+        function hfg = HFG(obj,idx)
             %HFG Latent heat of evaporation
-            hfg = obj.HG-obj.HF;                                           % [J/kg] Latent heat of evaporation
+            arguments
+                obj
+                idx = 1:length(obj.PRESSURE)
+            end
+            hfg = obj.HG(idx)-obj.HF(idx);                                           % [J/kg] Latent heat of evaporation
             
         end
         
@@ -113,7 +117,8 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             
             switch obj.PROPERTIES
                 case 'SATURATED'
-                    rhol = repmat(obj.RHOF(idx),numel(H),1);
+                    % TODO: Verify this is correct
+                    rhol = repmat(obj.RHOF(idx),1,size(H,2));
                 case 'PSYSTEM'
                     rhol = obj.coolpropH.density('P',obj.PRESSURE(idx),'H',min(H,obj.HF));
             end
@@ -130,7 +135,8 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             
             switch obj.PROPERTIES
                 case 'SATURATED'
-                    rhov = repmat(obj.RHOG(idx),numel(H),1);
+                    % TODO: Verify this is correct
+                    rhov = repmat(obj.RHOG(idx),1,size(H,2));
                 case 'PSYSTEM'
                     rhov = obj.coolpropH.density('P',obj.PRESSURE(idx),'H',max(H,obj.HG));
             end
@@ -146,7 +152,7 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             end
             switch obj.PROPERTIES
                 case 'SATURATED'
-                    mul = repmat(obj.MUF(idx),numel(H),1);
+                    mul = repmat(obj.MUF(idx),1,size(H,2));
                 case 'PSYSTEM'
                     mul = obj.coolpropH.viscosity('P',obj.PRESSURE(idx),'H',min(H,obj.HF));
             end
@@ -162,7 +168,7 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             end
             switch obj.PROPERTIES
                 case 'SATURATED'
-                    muv = repmat(obj.MUF(idx),numel(H),1);
+                    muv = repmat(obj.MUF(idx),1,size(H,2));
                 case 'PSYSTEM'
                     muv = obj.coolpropH.viscosity('P',obj.PRESSURE(idx),'H',max(H,obj.HG));
             end
