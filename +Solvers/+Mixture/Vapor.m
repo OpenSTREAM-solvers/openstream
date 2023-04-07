@@ -44,7 +44,7 @@ classdef Vapor < Solvers.AbstractPhase
         function x = get.X(vapor)
             %X Mass fraction [-]
             %
-            x = 1-vapor.mix.X();
+            x = vapor.mix.X();
         end
         
         function vf = get.VF(vapor)
@@ -62,7 +62,7 @@ classdef Vapor < Solvers.AbstractPhase
         function u = get.U(vapor)
             %U Velocity [m/a]
             %   NOTE: need to be verified
-            u = vapor.MFLUX ./ vapor.VF ./ vapor.mix.inputSet.fluid.RHOV(vapor.mix.H.').';
+            u = vapor.MFLUX ./ vapor.VF ./ vapor.mix.inputSet.fluid.RHOV(vapor.mix.H);
         end
 
         function h = get.H(vapor)

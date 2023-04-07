@@ -62,7 +62,7 @@ classdef Liquid < Solvers.AbstractPhase
         function u = get.U(liquid)
             %U Velocity [m/a]
             %   NOTE: need to be verified
-            u = liquid.MFLUX ./ liquid.VF ./ liquid.mix.inputSet.fluid.RHOL(liquid.mix.H.').';
+            u = liquid.MFLUX ./ liquid.VF ./ liquid.mix.inputSet.fluid.RHOL(liquid.mix.H);
         end
 
         function h = get.H(liquid)

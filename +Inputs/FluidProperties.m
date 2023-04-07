@@ -118,7 +118,7 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             switch obj.PROPERTIES
                 case 'SATURATED'
                     % TODO: Verify this is correct
-                    rhol = repmat(obj.RHOF(idx),1,size(H,2));
+                    rhol = repmat(obj.RHOF(idx).',size(H,1),1);
                 case 'PSYSTEM'
                     rhol = obj.coolpropH.density('P',obj.PRESSURE(idx),'H',min(H,obj.HF));
             end
@@ -136,7 +136,7 @@ classdef FluidProperties < handle %Inputs.IndexableInput
             switch obj.PROPERTIES
                 case 'SATURATED'
                     % TODO: Verify this is correct
-                    rhov = repmat(obj.RHOG(idx),1,size(H,2));
+                    rhov = repmat(obj.RHOG(idx).',size(H,1),1);
                 case 'PSYSTEM'
                     rhov = obj.coolpropH.density('P',obj.PRESSURE(idx),'H',max(H,obj.HG));
             end
