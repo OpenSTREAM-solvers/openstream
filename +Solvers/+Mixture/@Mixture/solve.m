@@ -10,6 +10,9 @@ if mix.SOLVED
     error('This solver needs to be reinitialized before solving.');
 else
     fprintf('\nRun solver ...\n');
+    
+    % set SOLVED flag to true
+    mix.SOLVED = true;
 end
 
 % Shortcut to inputSet objects
@@ -98,9 +101,6 @@ fprintf('\n---------------------- Two-phase flow solver run completed ----------
 
 % End timer
 toc
-
-% set SOLVED flag to true
-mix.SOLVED = true;
 
 function fprintf(varargin)
     if opts.verbose, builtin('fprintf',varargin{:}); end
