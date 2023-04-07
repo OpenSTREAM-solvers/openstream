@@ -20,8 +20,11 @@ classdef Mixture < Solvers.AbstractSolver
 
         inputSet    {isa(inputSet,'Inputs.InputSet')}
         boundaryConditions
-
+        liquid
+        vapor
+        
         SOLVED      (1,1) logical                                          = true                 % Flag to indicate solved
+
     end
     
     methods
@@ -41,7 +44,7 @@ classdef Mixture < Solvers.AbstractSolver
             
             % Initizlize solver parameters
             obj.initializeSolver();
-            
+
         end
         
         function initializeSolver(obj)
@@ -49,13 +52,14 @@ classdef Mixture < Solvers.AbstractSolver
         %
             
             import Inputs.*
+            import Solvers.Mixture.*
 
             % Calculate time steps
             obj.NZ = obj.inputSet.model.NNODES+1;                           % Total number of axial nodes (add one for inlet conditions)
             obj.DT = obj.inputSet.options.TSTEP;                            % [s] Time interval
             obj.TIME = colon(obj.inputSet.bc.TIME(1), ...
                              obj.DT, ...
-                             obj.inputSet.bc.TIME(end));                  % [s] Computational time array
+                             obj.inputSet.bc.TIME(end));                    % [s] Computational time array
             obj.NTIME = length(obj.TIME);
 
             % Calculate axial steps
@@ -98,6 +102,10 @@ classdef Mixture < Solvers.AbstractSolver
 
             % set SOLVED flag to false
             obj.SOLVED = false;
+
+            % set phases
+            obj.liquid = Liquid(obj);
+            obj.vapor  = Vapor(obj);
 
         end
 
@@ -177,7 +185,7 @@ classdef Mixture < Solvers.AbstractSolver
             if nargin < 2, zIdx = 1:obj.NZ; end
             if nargin < 3, tIdx = 1:obj.NTIME; end
         
-            xeq = (obj.H(zIdx, tIdx)-obj.inputSet.fluid.HF(tIdx)) ./ obj.inputSet.fluid.HFG(tIdx);
+            xeq = (obj.H(zIdx, tIdx)-obj.inputSet.fluid.HF(tIdx).') ./ obj.inputSet.fluid.HFG(tIdx).';
         end
 
         function x = X(obj, zIdx, tIdx)
@@ -219,7 +227,7 @@ classdef Mixture < Solvers.AbstractSolver
             
             function vf = vfslip(x,S)
             %VFSLIP Void fraction based on slip model
-                vf = x.*fluid.RHOF(tIdx)./(x.*fluid.RHOF(tIdx)+S.*(1-x).*fluid.RHOG(tIdx));
+                vf = x.*fluid.RHOF(tIdx).'./(x.*fluid.RHOF(tIdx).'+S.*(1-x).*fluid.RHOG(tIdx).');
             end
             
             function vf = vfdrift(C0,ugj)

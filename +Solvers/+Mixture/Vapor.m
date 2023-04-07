@@ -1,5 +1,5 @@
-classdef Liquid < Solvers.AbstractPhase
-    %LIQUID Summary of this class goes here
+classdef Vapor < Solvers.AbstractPhase
+    %VAPOR Summary of this class goes here
     %   Detailed explanation goes here
     
     properties (Dependent, SetAccess=private)
@@ -19,69 +19,69 @@ classdef Liquid < Solvers.AbstractPhase
     end
     
     methods
-        function liquid = Liquid(mix)
-            %LIQUID Construct an instance of this class
+        function vapor = Vapor(mix)
+            %VAPOR Construct an instance of this class
             %   Detailed explanation goes here
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
             end
 
-            liquid.mix = mix;
+            vapor.mix = mix;
         end
         
-        function time = get.TIME(liquid)
+        function time = get.TIME(vapor)
             %TIME Time series [s]
             %   Detailed explanation goes here
-            time = liquid.mix.TIME;
+            time = vapor.mix.TIME;
         end
 
-        function z = get.Z(liquid)
+        function z = get.Z(vapor)
             %Z Axial nodes [m]
             %   Detailed explanation goes here
-            z = liquid.mix.Z;
+            z = vapor.mix.Z;
         end
         
-        function x = get.X(liquid)
+        function x = get.X(vapor)
             %X Mass fraction [-]
             %
-            x = 1-liquid.mix.X();
+            x = 1-vapor.mix.X();
         end
         
-        function vf = get.VF(liquid)
+        function vf = get.VF(vapor)
             %VF Void fraction [-]
             %
-            vf = 1-liquid.mix.VF();
+            vf = vapor.mix.VF();
         end
 
-        function w = get.W(liquid)
+        function w = get.W(vapor)
             %W Mass flow rate [kg/s]
             %
-            w = liquid.X .* liquid.mix.W;
+            w = vapor.X .* vapor.mix.W;
         end
 
-        function u = get.U(liquid)
+        function u = get.U(vapor)
             %U Velocity [m/a]
             %   NOTE: need to be verified
-            u = liquid.MFLUX ./ liquid.VF ./ liquid.mix.inputSet.fluid.RHOL(liquid.mix.H.').';
+            u = vapor.MFLUX ./ vapor.VF ./ vapor.mix.inputSet.fluid.RHOV(vapor.mix.H.').';
         end
 
-        function h = get.H(liquid)
+        function h = get.H(vapor)
             %H Enthalpy [J/kg]
             %
-            h = max(liquid.mix.H, liquid.mix.inputSet.fluid.HF.');
+            h = min(vapor.mix.H, vapor.mix.inputSet.fluid.HG.');
         end
 
-        function mflux = get.MFLUX(liquid)
+        function mflux = get.MFLUX(vapor)
             %MFLUX Mass flux [kg/m^2-s]
             %
-            mflux = liquid.W./liquid.mix.inputSet.geometry.AREA;
+            mflux = vapor.W./vapor.mix.inputSet.geometry.AREA;
         end
 
-        function re = get.RE(liquid)
+        function re = get.RE(vapor)
             %RE Reynolds number [-]
             %
-            re = 4.*liquid.W./liquid.mix.inputSet.fluid.MUL(liquid.mix.H.').'...
-                    ./sum(liquid.mix.inputSet.geometry.PERIM);
+            re = 4.*vapor.W./vapor.mix.inputSet.fluid.MUG(vapor.mix.H.').'...
+                    ./sum(vapor.mix.inputSet.geometry.PERIM);
         end
 
     end
