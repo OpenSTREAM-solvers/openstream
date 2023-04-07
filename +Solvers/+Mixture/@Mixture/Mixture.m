@@ -165,8 +165,8 @@ classdef Mixture < Solvers.AbstractSolver
         function mflux = MFLUX(obj, zIdx, tIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
 
             mflux = obj.W(zIdx, tIdx)./obj.inputSet.geometry.AREA;
         end
@@ -174,8 +174,8 @@ classdef Mixture < Solvers.AbstractSolver
         function xeq = XEQ(obj, zIdx, tIdx)
         %XEQ Equilibrium quality [-]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
         
             xeq = (obj.H(zIdx, tIdx)-obj.inputSet.fluid.HF(tIdx)) ./ obj.inputSet.fluid.HFG(tIdx);
         end
@@ -183,8 +183,8 @@ classdef Mixture < Solvers.AbstractSolver
         function x = X(obj, zIdx, tIdx)
         %X Vapor quality [-]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
         
             switch obj.inputSet.model.SCBOIL
                 case 'NONE'
@@ -195,8 +195,8 @@ classdef Mixture < Solvers.AbstractSolver
         function vf =VF(obj, zIdx, tIdx)
         %VF Void fraction [-]
         %   
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
             model = obj.inputSet.model;
@@ -234,8 +234,8 @@ classdef Mixture < Solvers.AbstractSolver
         function rho = RHO(obj, zIdx, tIdx)
         %RHO Density [kg/m^3]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
             rho = obj.VF(zIdx, tIdx).*fluid.RHOV(obj.H(zIdx, tIdx), tIdx)+ ...
@@ -245,8 +245,8 @@ classdef Mixture < Solvers.AbstractSolver
         function mu = MU(obj, zIdx, tIdx)
         %MU Dynamic viscosity [Pa-s]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
             mu = obj.X(zIdx, tIdx).*fluid.MUV(obj.H(zIdx, tIdx), tIdx) + ...
@@ -256,8 +256,8 @@ classdef Mixture < Solvers.AbstractSolver
         function u = U(obj, zIdx, tIdx)
         %U Velocity [m/s]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             u = obj.W(zIdx, tIdx)./obj.RHO(zIdx, tIdx)./obj.inputSet.geometry.AREA; 
         end
@@ -265,8 +265,8 @@ classdef Mixture < Solvers.AbstractSolver
         function jl = JL(obj, zIdx, tIdx)
         %JL Superfacial liquid velocity [m/s]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
             jl = (1-obj.X(zIdx, tIdx)).*obj.MFLUX(zIdx, tIdx)./fluid.RHOL(obj.H(zIdx, tIdx), tIdx);
@@ -275,8 +275,8 @@ classdef Mixture < Solvers.AbstractSolver
         function jg = JG(obj, zIdx, tIdx)
         %JG Superfacial vapor velocity [m/s]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             fluid = obj.inputSet.fluid;
             jg = (1-obj.X(zIdx, tIdx)).*obj.MFLUX(zIdx, tIdx)./fluid.RHOV(obj.H(zIdx, tIdx), tIdx);
@@ -285,8 +285,8 @@ classdef Mixture < Solvers.AbstractSolver
         function re = RE(obj, zIdx, tIdx)
         %RE Reynolds number [-]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             re = 4.*obj.W(zIdx, tIdx)./obj.MU(zIdx, tIdx)./sum(obj.inputSet.geometry.PERIM);
         end
@@ -294,8 +294,8 @@ classdef Mixture < Solvers.AbstractSolver
         function rel = REL(obj, zIdx, tIdx)
         %REL Liquid-equivalent Reynolds number [-]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             re = 4.*obj.W(zIdx, tIdx)./obj.MUL(zIdx, tIdx)./sum(obj.inputSet.geometry.PERIM);
         end
@@ -303,8 +303,8 @@ classdef Mixture < Solvers.AbstractSolver
         function fw = FW(obj, zIdx, tIdx)
         %FW Wall friction factor [-]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             model = obj.inputSet.model;
             fw = model.FRICTION(1).*obj.RE(zIdx, tIdx).^model.FRICTION(2)+model.FRICTION(3);
@@ -313,8 +313,8 @@ classdef Mixture < Solvers.AbstractSolver
         function tauw = TAUW(obj, zIdx, tIdx)
         %TAUW wall shear stress [Pa]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             tauw = 0.5.*(obj.FW(zIdx, tIdx)./4)./obj.RHO(zIdx, tIdx).*(obj.W(zIdx, tIdx)./obj.inputSet.geometry.AREA).^2;
         end
@@ -336,8 +336,8 @@ classdef Mixture < Solvers.AbstractSolver
         function dpk = DPK(obj, zIdx, tIdx)
         %DPK Local pressure loss [Pa]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             dpk = 0.5.*obj.KLOSS(zIdx)./obj.RHO(zIdx, tIdx).*(obj.W(zIdx, tIdx)./obj.inputSet.geometry.AREA).^2;
         end
@@ -345,8 +345,8 @@ classdef Mixture < Solvers.AbstractSolver
         function t = T(obj, zIdx, tIdx)
         %T Temperature [K]
         %
-            if nargin < 2, tIdx = 1:obj.NZ; end
-            if nargin < 3, zIdx = 1:obj.NTIME; end
+            if nargin < 2, zIdx = 1:obj.NZ; end
+            if nargin < 3, tIdx = 1:obj.NTIME; end
             
             t = obj.inputSet.fluid.T(obj.H(zIdx, tIdx), tIdx);
         end

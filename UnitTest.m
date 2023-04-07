@@ -2,6 +2,7 @@ close all; clearvars
 
 import Inputs.*
 import Solvers.*
+import Solvers.Mixture.*
 
 testID='MFVAL';
 modelFile = './inputs/models.inp';
@@ -34,8 +35,9 @@ inputSet = InputSet( ...
             geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
             bcFilePath='./inputs/bc_mfval.inp');
 mix = Mixture(inputSet);
+% liq = Liquid(mix);
 
-mix.initializeSolver; mix.solve
+mix.initializeSolver(); mix.solve();
 
 return
 
@@ -46,7 +48,7 @@ dH=5E4;
 h = prop_sat.HF/2:dH:1.5*prop_sat.HG;
 plot(prop_sat,h)
 
-% Example of fluid property plots with enthalpy dependant properties
+% Example of fluid property plots with enthalpy dependesnt properties
 plot(prop_p,h)
 
 % Runtime tests
