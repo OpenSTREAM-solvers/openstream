@@ -23,19 +23,18 @@ end
 
 %% Initialize classes
 
-model_sat = Model(modelFile, modelID{1});
-prop_sat  = FluidProperties(P,model_sat);
-
-model_p   = Model(modelFile,modelID{2});
-prop_p    = FluidProperties(P,model_p);
+% model_sat = Model(modelFile, modelID{1});
+% prop_sat  = FluidProperties(P,model_sat);
+% 
+% model_p   = Model(modelFile,modelID{2});
+% prop_p    = FluidProperties(P,model_p);
 
 inputSet = InputSet( ...
-            modelFilePath='./inputs/models.inp', modelID=modelID{1}, ...
+            modelFilePath='./inputs/models.inp', modelID='MFVALS', ...
             optionsFilePath='./inputs/options.inp', optionsID='DEFAULT', ...
             geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
             bcFilePath='./inputs/bc_mfval.inp');
 mix = Mixture(inputSet);
-
 
 mix.initializeSolver(); mix.solve();
 
