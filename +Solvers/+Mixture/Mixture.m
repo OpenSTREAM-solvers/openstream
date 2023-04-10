@@ -2,12 +2,13 @@ classdef Mixture
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess=private)
+     properties (SetAccess=?Solvers.Mixture.MixtureSolver)
         
         NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
         TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
         DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
+        TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
@@ -19,7 +20,7 @@ classdef Mixture
         ITR          (1,1) struct 
 
         inputSet    {isa(inputSet,'Inputs.InputSet')}
-        boundaryCondition
+        boundaryConditions
         liquid
         vapor
         
@@ -30,16 +31,14 @@ classdef Mixture
     
 
     methods
-        function mix = Mixture(inputSet, boundaryCondition)
+        function mix = Mixture(inputSet)
             %MIXTURE Creates a Mixture solver mix
             %   Detailed explanation goes here
-            arguments
-                inputSet {isa(inputSet,'Inputs.InputSet')}
-            end
 
-            % Store inputSet as object property
-            mix.inputSet = inputSet;
-            
+            if nargin > 0
+                % Store inputSet as object property
+                mix.inputSet = inputSet;
+            end
 
         end
         

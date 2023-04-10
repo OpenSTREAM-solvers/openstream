@@ -1,4 +1,4 @@
-classdef FluidProperties < handle %Inputs.IndexableInput
+classdef FluidProperties
     %FLUIDPROPERTIES Summary of this class goes here
     %   Detailed explanation goes here
     

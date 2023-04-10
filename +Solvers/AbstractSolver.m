@@ -1,4 +1,4 @@
-classdef (Abstract) AbstractSolver
+classdef (Abstract) AbstractSolver < handle
     %ABSTRACTSOLVER Summary of this class goes here
     %   Detailed explanation goes here
     

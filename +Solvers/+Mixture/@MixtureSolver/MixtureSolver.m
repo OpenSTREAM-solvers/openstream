@@ -11,9 +11,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
 
-        DP           (1,1) struct                                                                 % [-] Detailed pressure drops
-        ITR          (1,1) struct 
-
         inputSet    {isa(inputSet,'Inputs.InputSet')}
         boundaryConditions
         mix
@@ -25,7 +22,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
     end
     
     methods
-        solve(mix, opts)
+        solve(mixSolver, opts)
     end
 
     methods
@@ -52,7 +49,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
             import Solvers.Mixture.*
 
             % Calculate time steps
-            mixSolver.NZ = mixSolver.inputSet.model.NNODES+1;                           % Total number of axial nodes (add one for inlet conditions)
             mixSolver.DT = mixSolver.inputSet.options.TSTEP;                            % [s] Time interval
             mixSolver.TIME = colon(mixSolver.inputSet.bc(1).TIME, ...
                              mixSolver.DT, ...
@@ -62,35 +58,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Calculate axial steps
             mixSolver.DZ = mixSolver.inputSet.geometry.LENGTH/mixSolver.inputSet.model.NNODES;    % [m] Uniform node length
             mixSolver.Z = (0:mixSolver.DZ:mixSolver.inputSet.geometry.LENGTH)';                   % [m] Node elevations
+            mixSolver.NZ = length(mixSolver.Z);                                                   % Total number of axial nodes (add one for inlet conditions)
             
             % Interpolate BCs in time and space (z)
             mixSolver.interpBoundaryConditions();
             
+            %
+            % Create mixture array (by timestep)
 
-            mixSolver.mixArray(1:length([mixSolver.TIME])) = Mixture(mixSolver.inputSet);
-
-            for tIdx = 1:length(mixArray)
-                mixArray(tIdx).NZ = mixSolver.inputSet.model.NNODES+1;
-                mixArray(tIdx).DT = mixSolver.inputSet.options.TSTEP;
-%                 mixArray(tIdx).TIME = mix.
-
-
-
-            end
-            
-            % Setup fluid property object
-            mixSolver.inputSet.fluid = FluidProperties( ...
-                                    mixSolver.boundaryConditions.PRESSURE, ...
-                                    mixSolver.inputSet.model);
-            % Setup HFLUX heat flux [W/m^2]
-            mixSolver.HFLUX = mixSolver.boundaryConditions.HFLUX;
-            % Setup W mass flow rate [kg/s]
-            mixSolver.W = repmat(mixSolver.boundaryConditions.MFLOW,mixSolver.NZ,1);
-            % Setup P, pressure [Pa]
-            mixSolver.P = repmat(mixSolver.boundaryConditions.PRESSURE,mixSolver.NZ,1);
-            % Setup H enthalpy [J/kg]
-            mixSolver.H = repmat(mixSolver.boundaryConditions.HIN,mixSolver.NZ,1);
-            
             % Setup DP and ITR
             % Grav:     [Pa] Gravitational pressure drop
             % Wall:     [Pa] Wall friction pressure drop
@@ -100,14 +75,60 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Tot:      [Pa] Total pressure drop
             DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];          % Fieldnames for DP struct
             DPCell = cell(numel(DPFields),1);                               % Cell structure to convert into struct
-            DPCell(:) = {zeros(mixSolver.NZ,mixSolver.NTIME)};                          % Initialize with zeros
-            mixSolver.DP = cell2struct(DPCell, DPFields, 1);                      % Convert cell to struct with fieldnames
-            
+            DPCell(:) = {zeros(mixSolver.NZ,1)};                            % Initialize with zeros
+            DP = cell2struct(DPCell, DPFields, 1);                          % Convert cell to struct with fieldnames
+
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DH"];
             ITRCell = cell(numel(ITRFields),1);                             % Cell structure to convert into struct
-            ITRCell(:) = {zeros(mixSolver.NZ,mixSolver.NTIME)};                         % Initialize with zeros
-            mixSolver.ITR = cell2struct(ITRCell, ITRFields, 1);                   % Convert cell to struct with fieldnames
+            ITRCell(:) = {zeros(mixSolver.NZ,1)};                           % Initialize with zeros
+            ITR = cell2struct(ITRCell, ITRFields, 1);             % Convert cell to struct with fieldnames
+
+            mixArr = Mixture.empty(0,mixSolver.NTIME);
+            for tIdx = 1:mixSolver.NTIME
+                
+                % Inputset
+                mixArr(tIdx).inputSet = mixSolver.inputSet;
+                
+                % Axial Steps
+                mixArr(tIdx).NZ = mixSolver.NZ;
+                mixArr(tIdx).DZ = mixSolver.DZ;
+                mixArr(tIdx).Z = mixSolver.Z;
+                
+                % Time step
+                mixArr(tIdx).NTIME = mixSolver.NTIME;
+                mixArr(tIdx).DT = mixSolver.DT;
+                mixArr(tIdx).TIME = mixSolver.TIME(tIdx);
+                mixArr(tIdx).TIDX = tIdx;
+
+                % Wall heat flux
+                mixArr(tIdx).HFLUX = ...
+                    reshape( ...
+                        mixSolver.boundaryConditions.HFLUX(:,:,tIdx), ...
+                        mixSolver.NZ,...
+                        [] ...
+                        );
+                
+                % Mass flow ratep [kg/s], pressure [Pa], enthalpy [J/kg]
+                mixArr(tIdx).W     = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
+                mixArr(tIdx).P     = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
+                mixArr(tIdx).H     = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
+                
+                % DP, ITR
+                mixArr(tIdx).DP = DP;
+                mixArr(tIdx).ITR = ITR;
+                
+
+            end
+
+            % Store mixture array
+            mixSolver.mix = mixArr;
+            
+            % Setup fluid property object
+            % TODO: fluid needs to be redesigned
+            mixSolver.inputSet.fluid = FluidProperties( ...
+                                    mixSolver.boundaryConditions.PRESSURE, ...
+                                    mixSolver.inputSet.model);
 
             % set SOLVED flag to false
             mixSolver.SOLVED = false;
