@@ -11,11 +11,16 @@ classdef (HandleCompatible) Input < dynamicprops
             %INPUT Parse inputFile to construct this class
             %   Detailed explanation goes here
             arguments
-                inputFilePath {mustBeText}
+                inputFilePath {mustBeText}                                  = ""
                 key {mustBeText}                                            = ""
                 val {mustBeA(val,["string","char","double"])}               = ""
             end
             
+            % Return if empty inputFilePath
+            if strlength(inputFilePath) == 0
+                return
+            end
+
             % Add temporary property inputStruct
             obj.addprop('inputStruct');
 
@@ -127,7 +132,7 @@ classdef (HandleCompatible) Input < dynamicprops
             % List of immutable obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'immutable'));
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected'));
         end
 
     end

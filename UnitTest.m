@@ -34,6 +34,10 @@ inputSet = InputSet( ...
             optionsFilePath='./inputs/options.inp', optionsID='DEFAULT', ...
             geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
             bcFilePath='./inputs/bc_mfval.inp');
+
+mixSolver = MixtureSolver(inputSet);
+return
+
 mix = Mixture(inputSet);
 
 mix.initializeSolver(); mix.solve();
@@ -41,7 +45,6 @@ mix.initializeSolver(); mix.solve();
 mix.plotz(mix.NTIME);
 mix.plott([1 floor(mix.NZ./8.*(2:8))])
 
-return
 
 %% Tests
 

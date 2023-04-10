@@ -2,7 +2,7 @@ classdef Model < Inputs.Input
     %MODEL Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=immutable)
+    properties (SetAccess=protected)
         
         ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                 % Model ID 
         NNODES           double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...

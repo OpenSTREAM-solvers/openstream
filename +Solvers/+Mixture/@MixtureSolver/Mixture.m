@@ -1,4 +1,4 @@
-classdef Mixture < Solvers.AbstractSolver
+classdef Mixture
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -6,20 +6,20 @@ classdef Mixture < Solvers.AbstractSolver
         
         NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (1,:) double  {mustBeNumeric}                         = 0                    % [s] Time series
+        TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
         DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        HFLUX        (:,:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
+        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
 
-        W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
-        P            (:,:) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
-        H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
+        W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
+        P            (:,1) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
+        H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
         DP           (1,1) struct                                                                 % [-] Detailed pressure drops
         ITR          (1,1) struct 
 
         inputSet    {isa(inputSet,'Inputs.InputSet')}
-        boundaryConditions
+        boundaryCondition
         liquid
         vapor
         
@@ -27,12 +27,10 @@ classdef Mixture < Solvers.AbstractSolver
 
     end
     
-    methods
-        solve(mix, opts)
-    end
+    
 
     methods
-        function mix = Mixture(inputSet)
+        function mix = Mixture(inputSet, boundaryCondition)
             %MIXTURE Creates a Mixture solver mix
             %   Detailed explanation goes here
             arguments
@@ -42,134 +40,9 @@ classdef Mixture < Solvers.AbstractSolver
             % Store inputSet as object property
             mix.inputSet = inputSet;
             
-            % Initizlize solver parameters
-            mix.initializeSolver();
 
         end
         
-        function initializeSolver(mix)
-        %INITIALIZESOLVER Initialize solver using the stored inputSet
-        %
-            
-            import Inputs.*
-            import Solvers.Mixture.*
-
-            % Calculate time steps
-            mix.NZ = mix.inputSet.model.NNODES+1;                           % Total number of axial nodes (add one for inlet conditions)
-            mix.DT = mix.inputSet.options.TSTEP;                            % [s] Time interval
-            mix.TIME = colon(mix.inputSet.bc.TIME(1), ...
-                             mix.DT, ...
-                             mix.inputSet.bc.TIME(end));                    % [s] Computational time array
-            mix.NTIME = length(mix.TIME);
-
-            % Calculate axial steps
-            mix.DZ = mix.inputSet.geometry.LENGTH/mix.inputSet.model.NNODES;    % [m] Uniform node length
-            mix.Z = (0:mix.DZ:mix.inputSet.geometry.LENGTH)';                   % [m] Node elevations
-
-            % Interpolate BCs in time and space (z)
-            mix.interpBoundaryConditions();
-
-            % Setup fluid property object
-            mix.inputSet.fluid = FluidProperties( ...
-                                    mix.boundaryConditions.PRESSURE, ...
-                                    mix.inputSet.model);
-            % Setup HFLUX heat flux [W/m^2]
-            mix.HFLUX = mix.boundaryConditions.HFLUX;
-            % Setup W mass flow rate [kg/s]
-            mix.W = repmat(mix.boundaryConditions.MFLOW,mix.NZ,1);
-            % Setup P, pressure [Pa]
-            mix.P = repmat(mix.boundaryConditions.PRESSURE,mix.NZ,1);
-            % Setup H enthalpy [J/kg]
-            mix.H = repmat(mix.boundaryConditions.HIN,mix.NZ,1);
-            
-            % Setup DP and ITR
-            % Grav:     [Pa] Gravitational pressure drop
-            % Wall:     [Pa] Wall friction pressure drop
-            % Acc_z:    [pa] Spatial acceleration pressure drop
-            % Acc_t:    [Pa] Temporal acceleration pressure drop
-            % K:        [Pa] Local pressure drop
-            % Tot:      [Pa] Total pressure drop
-            DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];          % Fieldnames for DP struct
-            DPCell = cell(numel(DPFields),1);                               % Cell structure to convert into struct
-            DPCell(:) = {zeros(mix.NZ,mix.NTIME)};                          % Initialize with zeros
-            mix.DP = cell2struct(DPCell, DPFields, 1);                      % Convert cell to struct with fieldnames
-            
-            % Setup inner iteration value struct
-            ITRFields = ["N","DW","DP","DH"];
-            ITRCell = cell(numel(ITRFields),1);                             % Cell structure to convert into struct
-            ITRCell(:) = {zeros(mix.NZ,mix.NTIME)};                         % Initialize with zeros
-            mix.ITR = cell2struct(ITRCell, ITRFields, 1);                   % Convert cell to struct with fieldnames
-
-            % set SOLVED flag to false
-            mix.SOLVED = false;
-
-            % set phases
-            mix.liquid = Liquid(mix);
-            mix.vapor  = Vapor(mix);
-
-        end
-
-        function mix = interpBoundaryConditions(mix)
-            %INTERPBOUNDARYCONDITIONS Expand specified boundary conditions
-            %to every node and timestep defined by the model and geometry.
-            %   Detailed explanation goes here
-            
-            % Retrieve list of boundary condition properties
-            bcFields = mix.inputSet.bc.listInputProperties();
-
-            % Interpolate bc properties in time
-            params = checkParams({'TIME','PRESSURE','HIN','MFLOW','POWER'});
-            mix.boundaryConditions = cell2struct( ...
-                                        arrayfun( ...
-                                            @(idx) mix.timeInterpolate(mix.inputSet.bc.(params(idx))), ...
-                                            1:length(params), ...
-                                            'UniformOutput',false),...
-                                        params,...
-                                        2);
-
-            % Interpolate wall power in time
-            WPOWERT = mix.timeInterpolate(mix.inputSet.bc.WPOWER);
-            mix.boundaryConditions.WPOWER = pagetranspose(zeros(mix.NTIME,mix.NZ,mix.inputSet.geometry.NWALL));
-            
-            % Interpolate wall power in axial space 
-            %   Index order: (NTIME, NZ, NWALL)
-            % NOTE: only the 1st row of WMESH is used
-            mix.boundaryConditions.WPOWER = ...
-                ( ...
-                    mix.axialInterpolate(cumsum(mix.inputSet.bc.WMESH(1,:).'), ...
-                                     pagetranspose(WPOWERT)...
-                                     ) ...
-                );
-
-            % Calculate wall heat flux at each node in space & time
-            % NOTE: This is very convoluted
-            mix.boundaryConditions.HFLUX = ...
-                mix.boundaryConditions.WPOWER .* mix.boundaryConditions.POWER ...
-                ./ sum(reshape(mix.inputSet.geometry.PERIM .* mix.DZ,1,1,3).*mix.boundaryConditions.WPOWER,[1,3]);
-
-            function validParams = checkParams(params)
-            %CHECKPARAMS Ensure interpolation parameters are valid
-            %parameters of the boundaryCondition mix.
-                
-                validParams = string().empty();
-                for idx = 1:length(params)
-                    if find(bcFields==params(idx))
-                        validParams(end+1) = params(idx);
-                    else
-                        throw( ...
-                            MException( ...
-                                'MixtureError:InvalidInterpolationParameter', ...
-                                'Parameter %s is not a valid boundary condition parameter', ...
-                                params{idx} ...
-                                ) ...
-                        );
-                    end
-                end
-
-            end
-
-        end
-
         function mflux = MFLUX(mix, zIdx, tIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
@@ -446,7 +319,7 @@ classdef Mixture < Solvers.AbstractSolver
         end
         
         function interpOut = timeInterpolate(mix, y)
-            interpOut = interp1(mix.inputSet.bc.TIME, ...
+            interpOut = interp1([mix.inputSet.bc.TIME], ...
                                 y, ...
                                 mix.TIME, ...
                                 mix.inputSet.options.TIMEINTERP);
