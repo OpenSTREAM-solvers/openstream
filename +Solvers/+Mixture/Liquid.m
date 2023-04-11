@@ -25,8 +25,11 @@ classdef Liquid < Solvers.AbstractPhase
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
             end
-
-            liquid.mix = mix;
+            
+            liquid(1:length(mix)) = liquid;
+            for i = 1:length(mix)
+                liquid(i).mix = mix(i);
+            end
         end
         
         function time = get.TIME(liquid)
@@ -62,13 +65,13 @@ classdef Liquid < Solvers.AbstractPhase
         function u = get.U(liquid)
             %U Velocity [m/a]
             %   NOTE: need to be verified
-            u = liquid.MFLUX ./ liquid.VF ./ liquid.mix.inputSet.fluid.RHOL(liquid.mix.H);
+            u = liquid.MFLUX ./ liquid.VF ./ liquid.mix.fluid.RHOL(liquid.mix.H);
         end
 
         function h = get.H(liquid)
             %H Enthalpy [J/kg]
             %
-            h = max(liquid.mix.H, liquid.mix.inputSet.fluid.HF.');
+            h = max(liquid.mix.H, liquid.mix.fluid.HF.');
         end
 
         function mflux = get.MFLUX(liquid)
@@ -80,7 +83,7 @@ classdef Liquid < Solvers.AbstractPhase
         function re = get.RE(liquid)
             %RE Reynolds number [-]
             %
-            re = 4.*liquid.W./liquid.mix.inputSet.fluid.MUL(liquid.mix.H.').'...
+            re = 4.*liquid.W./liquid.mix.fluid.MUL(liquid.mix.H.').'...
                     ./sum(liquid.mix.inputSet.geometry.PERIM);
         end
 

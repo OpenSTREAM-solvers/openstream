@@ -7,7 +7,6 @@ classdef InputSet
         options
         geometry
         bc
-        fluid
         
     end
     

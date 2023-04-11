@@ -4,25 +4,25 @@ classdef (Abstract) AbstractSolver < handle
     
 
     methods (Abstract)
-        mflux = MFLUX
-        xeq = XEQ
-        x = X
-        vf = VF
-        rho = RHO
-        mu = MU
-        u = U
-        jl = JL
-        jg = JG
-        re = RE
-        rel = REL
-        fw = FW
-        tauw = TAUW
-        kloss = KLOSS
-        dpk = DPK
-        t = T
+%         mflux = MFLUX
+%         xeq = XEQ
+%         x = X
+%         vf = VF
+%         rho = RHO
+%         mu = MU
+%         u = U
+%         jl = JL
+%         jg = JG
+%         re = RE
+%         rel = REL
+%         fw = FW
+%         tauw = TAUW
+%         kloss = KLOSS
+%         dpk = DPK
+%         t = T
 
         solve
-        plotz
+%         plotz
     end
 end
 

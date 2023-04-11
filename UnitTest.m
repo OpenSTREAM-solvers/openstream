@@ -36,15 +36,13 @@ inputSet = InputSet( ...
             bcFilePath='./inputs/bc_mfval.inp');
 
 mixSolver = MixtureSolver(inputSet);
+
+
+mixSolver.initializeSolver(); mixSolver.solve();
+
+mixSolver.plotz(mixSolver.NTIME);
+mixSolver.plott([1 floor(mixSolver.NZ./8.*(2:8))])
 return
-
-mix = Mixture(inputSet);
-
-mix.initializeSolver(); mix.solve();
-
-mix.plotz(mix.NTIME);
-mix.plott([1 floor(mix.NZ./8.*(2:8))])
-
 
 %% Tests
 

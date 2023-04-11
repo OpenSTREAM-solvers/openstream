@@ -1,4 +1,4 @@
-classdef Mixture
+classdef Mixture < handle
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -20,189 +20,171 @@ classdef Mixture
         ITR          (1,1) struct 
 
         inputSet    {isa(inputSet,'Inputs.InputSet')}
-        boundaryConditions
+        fluid       {isa(fluid,'Inputs.FluidProperties')}
+
+        % Phases
         liquid
         vapor
-        
-        SOLVED      (1,1) logical                                          = true                 % Flag to indicate solved
-
     end
     
     
 
     methods
-        function mix = Mixture(inputSet)
+        function mix = Mixture(inputSet, fluid)
             %MIXTURE Creates a Mixture solver mix
             %   Detailed explanation goes here
 
             if nargin > 0
                 % Store inputSet as object property
                 mix.inputSet = inputSet;
+                mix.fluid  = fluid;
             end
 
         end
         
-        function mflux = MFLUX(mix, zIdx, tIdx)
+        function mflux = MFLUX(mix, zIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
 
-            mflux = mix.W(zIdx, tIdx)./mix.inputSet.geometry.AREA;
+            mflux = mix.W(zIdx)./mix.inputSet.geometry.AREA;
         end
 
-        function xeq = XEQ(mix, zIdx, tIdx)
+        function xeq = XEQ(mix, zIdx)
         %XEQ Equilibrium quality [-]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
         
-            xeq = (mix.H(zIdx, tIdx)-mix.inputSet.fluid.HF(tIdx).') ./ mix.inputSet.fluid.HFG(tIdx).';
+            xeq = (mix.H(zIdx)-mix.fluid.HF) ./ mix.fluid.HFG;
         end
 
-        function x = X(mix, zIdx, tIdx)
+        function x = X(mix, zIdx)
         %X Vapor quality [-]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
         
             switch mix.inputSet.model.SCBOIL
                 case 'NONE'
-                    x=min(max(mix.XEQ(zIdx, tIdx),0),1);
+                    x=min(max(mix.XEQ(zIdx),0),1);
             end
         end
 
-        function vf =VF(mix, zIdx, tIdx)
+        function vf =VF(mix, zIdx)
         %VF Void fraction [-]
         %   
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            fluid = mix.inputSet.fluid;
             model = mix.inputSet.model;
             geom = mix.inputSet.geometry;
 
             switch model.VOID
                 case 'HOMOGENEOUS'
                     % [-] Homogeneous void model
-                    vf = vfslip(mix.X(zIdx, tIdx),1);
+                    vf = vfslip(mix.X(zIdx),1);
                 case 'SLIP'
                     % [-] Slip void model
-                    vf = vfslip(mix.X(zIdx, tIdx),model.SLIP);
+                    vf = vfslip(mix.X(zIdx),model.SLIP);
                 case 'BESTION'
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
-                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(fluid.RHOF(tIdx)-fluid.RHOG(tIdx))./fluid.RHOG(tIdx)); % [m/s] Drift velocity
+                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(mix.fluid.RHOF-mix.fluid.RHOG)./mix.fluid.RHOG); % [m/s] Drift velocity
                     vf = vfdrift(C0,ugj);            
             end
             
             
             function vf = vfslip(x,S)
             %VFSLIP Void fraction based on slip model
-                vf = x.*fluid.RHOF(tIdx).'./(x.*fluid.RHOF(tIdx).'+S.*(1-x).*fluid.RHOG(tIdx).');
+                vf = x.*mix.fluid.RHOF./(x.*mix.fluid.RHOF+S.*(1-x).*mix.fluid.RHOG);
             end
             
             function vf = vfdrift(C0,ugj)
             %VFDRIFT Void fraction based on drift flux model
             % C0    [-]     Distribution parameter
             % ugj   [m/s]   Drift velocity
-                vf  = mix.JG(zIdx, tIdx)./(C0.*(mix.JG(zIdx, tIdx)+mix.JL(zIdx, tIdx))+ugj);
+                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
             end
             
         end
 
-        function rho = RHO(mix, zIdx, tIdx)
+        function rho = RHO(mix, zIdx)
         %RHO Density [kg/m^3]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            fluid = mix.inputSet.fluid;
-            rho = mix.VF(zIdx, tIdx).*fluid.RHOV(mix.H(zIdx, tIdx), tIdx)+ ...
-                    (1-mix.VF(zIdx, tIdx)).*fluid.RHOL(mix.H(zIdx, tIdx), tIdx);
+            rho = mix.VF(zIdx).*mix.fluid.RHOV(mix.H(zIdx))+ ...
+                    (1-mix.VF(zIdx)).*mix.fluid.RHOL(mix.H(zIdx));
         end
 
-        function mu = MU(mix, zIdx, tIdx)
+        function mu = MU(mix, zIdx)
         %MU Dynamic viscosity [Pa-s]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            fluid = mix.inputSet.fluid;
-            mu = mix.X(zIdx, tIdx).*fluid.MUV(mix.H(zIdx, tIdx), tIdx) + ...
-                    (1-mix.X(zIdx, tIdx)).*fluid.MUL(mix.H(zIdx, tIdx), tIdx);
+            mu = mix.X(zIdx).*mix.fluid.MUV(mix.H(zIdx)) + ...
+                    (1-mix.X(zIdx)).*mix.fluid.MUL(mix.H(zIdx));
         end
 
-        function u = U(mix, zIdx, tIdx)
+        function u = U(mix, zIdx)
         %U Velocity [m/s]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            u = mix.W(zIdx, tIdx)./mix.RHO(zIdx, tIdx)./mix.inputSet.geometry.AREA; 
+            u = mix.W(zIdx)./mix.RHO(zIdx)./mix.inputSet.geometry.AREA; 
         end
 
-        function jl = JL(mix, zIdx, tIdx)
+        function jl = JL(mix, zIdx)
         %JL Superfacial liquid velocity [m/s]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            fluid = mix.inputSet.fluid;
-            jl = (1-mix.X(zIdx, tIdx)).*mix.MFLUX(zIdx, tIdx)./fluid.RHOL(mix.H(zIdx, tIdx), tIdx);
+            jl = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOL(mix.H(zIdx));
         end
 
-        function jg = JG(mix, zIdx, tIdx)
+        function jg = JG(mix, zIdx)
         %JG Superfacial vapor velocity [m/s]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            fluid = mix.inputSet.fluid;
-            jg = (1-mix.X(zIdx, tIdx)).*mix.MFLUX(zIdx, tIdx)./fluid.RHOV(mix.H(zIdx, tIdx), tIdx);
+            jg = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.H(zIdx));
         end
 
-        function re = RE(mix, zIdx, tIdx)
+        function re = RE(mix, zIdx)
         %RE Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            re = 4.*mix.W(zIdx, tIdx)./mix.MU(zIdx, tIdx)./sum(mix.inputSet.geometry.PERIM);
+            re = 4.*mix.W(zIdx)./mix.MU(zIdx)./sum(mix.inputSet.geometry.PERIM);
         end
 
-        function rel = REL(mix, zIdx, tIdx)
+        function rel = REL(mix, zIdx)
         %REL Liquid-equivalent Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            re = 4.*mix.W(zIdx, tIdx)./mix.MUL(zIdx, tIdx)./sum(mix.inputSet.geometry.PERIM);
+            re = 4.*mix.W(zIdx)./mix.MUL(zIdx)./sum(mix.inputSet.geometry.PERIM);
         end
 
-        function fw = FW(mix, zIdx, tIdx)
+        function fw = FW(mix, zIdx)
         %FW Wall friction factor [-]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
             model = mix.inputSet.model;
-            fw = model.FRICTION(1).*mix.RE(zIdx, tIdx).^model.FRICTION(2)+model.FRICTION(3);
+            fw = model.FRICTION(1).*mix.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3);
         end
 
-        function tauw = TAUW(mix, zIdx, tIdx)
+        function tauw = TAUW(mix, zIdx)
         %TAUW wall shear stress [Pa]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            tauw = 0.5.*(mix.FW(zIdx, tIdx)./4)./mix.RHO(zIdx, tIdx).*(mix.W(zIdx, tIdx)./mix.inputSet.geometry.AREA).^2;
+            tauw = 0.5.*(mix.FW(zIdx)./4)./mix.RHO(zIdx).*(mix.W(zIdx)./mix.inputSet.geometry.AREA).^2;
         end
 
         function kloss = KLOSS(mix, zIdx)
         %KLOSS Local pressure loss coefficient [-]
         % TODO: NEED TO BE VERIFIED
-            if nargin < 2, zIdx = 1:mix.NZ; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
             model = mix.inputSet.model;
 
@@ -213,108 +195,20 @@ classdef Mixture
             
         end
 
-        function dpk = DPK(mix, zIdx, tIdx)
+        function dpk = DPK(mix, zIdx)
         %DPK Local pressure loss [Pa]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            dpk = 0.5.*mix.KLOSS(zIdx)./mix.RHO(zIdx, tIdx).*(mix.W(zIdx, tIdx)./mix.inputSet.geometry.AREA).^2;
+            dpk = 0.5.*mix.KLOSS(zIdx)./mix.RHO(zIdx).*(mix.W(zIdx)./mix.inputSet.geometry.AREA).^2;
         end
 
-        function t = T(mix, zIdx, tIdx)
+        function t = T(mix, zIdx)
         %T Temperature [K]
         %
-            if nargin < 2, zIdx = 1:mix.NZ; end
-            if nargin < 3, tIdx = 1:mix.NTIME; end
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
-            t = mix.inputSet.fluid.T(mix.H(zIdx, tIdx), tIdx);
-        end
-        
-        function plotz(mix, tIdx)
-        %PLOTZ
-        %
-        arguments
-            mix
-            tIdx (1,1) double
-        end
-            figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME(tIdx)) ' [s]'])
-                
-            nexttile; hold all; grid on;
-            plot(mix.Z,mix.W(:, tIdx),'.-')
-            plot(mix.liquid.Z,mix.liquid.W(:, tIdx),'.-')
-            plot(mix.vapor.Z,mix.vapor.W(:, tIdx),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Mass flowrates [kg/s]')
-            legend({'Mixture','Liquid','Vapor'},'location','southEast')
-            set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on;
-            plot(mix.Z,cumsum(mix.DP.Tot(:,tIdx)),'.-')
-            plot(mix.Z,cumsum(mix.DP.Grav(:,tIdx)),'.-')
-            plot(mix.Z,cumsum(mix.DP.Wall(:,tIdx)),'.-')
-            plot(mix.Z,cumsum(mix.DP.Acc_z(:,tIdx)),'.-')
-            plot(mix.Z,cumsum(mix.DP.Acc_t(:,tIdx)),'.-')
-            plot(mix.Z,cumsum(mix.DP.K(:,tIdx)),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Pressure drop [Pa]')
-            legend({'Total','Gravitational','Wall','Acc z','Acc t','Local'},'location','northWest');
-            set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on;
-            plot(mix.Z,mix.XEQ(1:mix.NZ,tIdx),'.-')
-            plot(mix.Z,mix.X(1:mix.NZ,tIdx),'.-')
-            plot(mix.Z,mix.VF(1:mix.NZ,tIdx),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Quality / Void fraction [-]')
-            legend({'Equilibrium quality','Vapor mass quality','Void fraction'},'location','southEast')
-            set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on;
-            plot(mix.Z,mix.U(1:mix.NZ,tIdx),'.-')
-            plot(mix.liquid.Z,mix.liquid.U(1:mix.NZ,tIdx),'.-')
-            plot(mix.vapor.Z,mix.vapor.U(1:mix.NZ,tIdx),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Velocities [m/s]')
-            legend({'Mixture','Liquid','Vapor'},'location','southEast')
-            set(gca,'fontSize',14)
-
-        end
-    
-        function plott(mix, zIdx)
-            %PLOTT 
-            %
-            arguments
-                mix
-                zIdx (:,1) double
-            end
-
-            figure('name',['Time series of mixture parameters at ' num2str(mix.Z(zIdx(1))) ' [m]']);
-            
-            timeplot('W','Mass flowrates [kg/s]')
-            timeplot('P','Pressure [Pa]')
-            timeplot('XEQ','Equilibrium quality [-]')
-            timeplot('X','Steam mass quality [-]')
-            timeplot('VF','Void fraction [-]')
-            timeplot('U','Velocity [m/s]')
-
-            function timeplot(param,ylabelText)
-
-                nexttile; hold all; grid on;
-                if ismethod(mix,param)
-                    plot(mix.TIME,mix.(param)(zIdx),'.-');
-                else
-                    plot(mix.TIME,mix.(param)(zIdx,:),'.-');
-                end
-                legendStr = num2str(mix.Z(zIdx),'z=%0.4f m');
-                legend(legendStr,'Location','southeast');
-                
-                xlabel('Time [s]'); xlim([mix.TIME([1 end])]);
-                ylabel(ylabelText)
-                set(gca,'fontSize',14)
-            
-            end
-
+            t = mix.fluid.T(mix.H(zIdx));
         end
         
         function interpOut = timeInterpolate(mix, y)
