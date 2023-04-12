@@ -36,9 +36,11 @@ inputSet = InputSet( ...
             bcFilePath='./inputs/bc_mfval.inp');
 
 mixSolver = MixtureSolver(inputSet);
-
-
 mixSolver.initializeSolver(); 
+
+mixSolver.mixtureSteady(1).liquid
+mixSolver.mixtureSteady(1).vapor
+
 mixSolver.solve();
 
 mixSolver.plotz(mixSolver.NTIME);

@@ -111,6 +111,14 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 for idx = 1:length(objs)
                     
                     objs(idx).WPOWER = reshape(objs(idx).WPOWER, width(objs(idx).WMESH), []);
+                    % if all walls have 0 power, set all to 1, and throw
+                    % warning
+                    if all(objs(idx).WPOWER == 0,'all')
+                        objs(idx).WPOWER = objs(idx).WPOWER*0+1;
+                        warning('BoundaryConditionsWarning:AllZeroWPOWER', ...
+                                'All elements of WPOWER at time index %u is 0. Using 1 instead.', ...
+                                idx);
+                    end
 
                 end
             end
