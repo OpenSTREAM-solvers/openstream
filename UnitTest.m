@@ -31,14 +31,15 @@ end
 
 inputSet = InputSet( ...
             modelFilePath='./inputs/models.inp', modelID='MFVALS', ...
-            optionsFilePath='./inputs/options.inp', optionsID='DEFAULT', ...
+            optionsFilePath='./inputs/options.inp', optionsID='STEADY', ...
             geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
             bcFilePath='./inputs/bc_mfval.inp');
 
 mixSolver = MixtureSolver(inputSet);
 
 
-mixSolver.initializeSolver(); mixSolver.solve();
+mixSolver.initializeSolver(); 
+mixSolver.solve();
 
 mixSolver.plotz(mixSolver.NTIME);
 mixSolver.plott([1 floor(mixSolver.NZ./8.*(2:8))])

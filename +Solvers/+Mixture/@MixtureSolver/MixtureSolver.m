@@ -14,9 +14,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
         inputSet    {isa(inputSet,'Inputs.InputSet')}
         fluid       {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
-        mixture
-        liquid
-        vapor
+        
+        mixtureSteady
+        mixtureTransient
         
         SOLVED      (1,1) logical                                          = true                 % Flag to indicate solved
 
@@ -133,15 +133,21 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             end
 
-            % Store mixture array
-            mixSolver.mixture = mixArr;
+            % Store transient mixture array
+            mixSolver.mixtureTransient = mixArr;
+
+            % Create steady state mixture array
+            mixSolver.mixtureSteady = copy( ...
+                repmat(mixArr(1),1,mixSolver.inputSet.options.SSMAXITER));
+
+            % Update steady state mixture times and timesteps
+            steadyTIME = num2cell(0:mixSolver.DT:mixSolver.DT*(length(mixSolver.mixtureSteady)-1));
+            [mixSolver.mixtureSteady.TIME] = deal(steadyTIME{:});
+            steadyTIDX = num2cell(1:length(mixSolver.mixtureSteady));
+            [mixSolver.mixtureSteady.TIDX] = deal(steadyTIDX{:});
 
             % set SOLVED flag to false
             mixSolver.SOLVED = false;
-
-            % set phases
-%             mixSolver.liquid = Liquid(mixSolver.mixture);
-%             mixSolver.vapor  = Vapor(mixSolver.mixture);
 
         end
 
@@ -240,7 +246,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mixSolver
             tIdx    (1,1) double
         end
-            mix = mixSolver.mixture(tIdx);
+            mix = mixSolver.mixtureTransient(tIdx);
             figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME) ' [s]'])
                 
             nexttile; hold all; grid on;
@@ -305,15 +311,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
             function timeplot(param,ylabelText)
 
                 nexttile; hold all; grid on;
-                if ismethod(mixSolver.mixture,param)
+                if ismethod(mixSolver.mixtureTransient,param)
                     paramData = arrayfun( ...
-                                    @(i) mixSolver.mixture(i).(param), ...
+                                    @(i) mixSolver.mixtureTransient(i).(param), ...
                                     1:mixSolver.NTIME, ...
                                     'UniformOutput', false);
                     paramData = cell2mat(paramData);
 
                 else
-                    paramData = [mixSolver.mixture.(param)];
+                    paramData = [mixSolver.mixtureTransient.(param)];
                 end
                 
                 plot(mixSolver.TIME(tIdx),paramData(zIdx,tIdx),'.-');

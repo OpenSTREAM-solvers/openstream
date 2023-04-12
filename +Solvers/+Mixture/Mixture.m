@@ -1,4 +1,4 @@
-classdef Mixture < handle
+classdef Mixture < matlab.mixin.Copyable
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
