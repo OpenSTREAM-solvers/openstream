@@ -83,7 +83,7 @@ classdef Liquid < Solvers.AbstractPhase
         function re = get.RE(liquid)
             %RE Reynolds number [-]
             %
-            re = 4.*liquid.W./liquid.mix.fluid.MUL(liquid.mix.H.').'...
+            re = 4.*liquid.W./liquid.mix.fluid.MUL(liquid.mix.H)...
                     ./sum(liquid.mix.inputSet.geometry.PERIM);
         end
 
