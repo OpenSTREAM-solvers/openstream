@@ -5,6 +5,7 @@ classdef Film < matlab.mixin.Copyable
      properties %(SetAccess=?Solvers.ThreeField.ThreeFieldSolver)
         
         % Solver properties
+
         NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
         TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
@@ -30,16 +31,19 @@ classdef Film < matlab.mixin.Copyable
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
      end
+
     
     
 
     methods
         function film = Film(inputSet, fluid)
             %FILM Creates a Film ?solver? film
+
             %   Detailed explanation goes here
 
             if nargin > 0
                 % Store inputSet as object property
+<<<<<<< HEAD
                 film.inputSet = inputSet;
                 film.fluid  = fluid;
             end
