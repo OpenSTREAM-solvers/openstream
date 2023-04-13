@@ -58,12 +58,7 @@ classdef FluidProperties
             MUG   = coolpropH.viscosity('P',P,'Q',1);               % [Pa.s] Saturated vapor viscosity
             HF    = coolpropH.enthalpy('P',P,'Q',0);                % [J/kg] Saturated liquid enthalpy
             HG    = coolpropH.enthalpy('P',P,'Q',1);                % [J/kg] Saturated vapor enthalpy
-            
-            
-            % set AbstractState to HEOS
-            coolpropH.setAbstractStateSrc(coolpropH.EOS.HEOS);
-            SIGMA = coolpropH.surfaceTension('P',P,'Q',1);          % [N/m] Surface tension        
-            coolpropH.setAbstractStateSrc(coolpropH.EOS.HEOS);
+            SIGMA = coolpropH.surfaceTension('P',P,'Q',1);          % [N/m] Surface tension
 
             coolpropH.setSpecifyPhase('');
 
