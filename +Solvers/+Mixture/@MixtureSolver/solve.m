@@ -135,7 +135,7 @@ function solver(solveMode)
             mixSolver.mixtureSteady = mixSolver.mixtureSteady(1:tIdx);
     
             % Replace first transient time step with this tIdx
-            mixSolver.mixtureTransient(1) = mixSolver.mixtureSteady(tIdx);
+            mixSolver.mixtureTransient(1) = copy(mixSolver.mixtureSteady(tIdx));
             mixSolver.mixtureTransient(1).TIME = mixSolver.mixtureSteady(1).TIME;
             mixSolver.mixtureTransient(1).TIDX = mixSolver.mixtureSteady(1).TIDX;        
     
