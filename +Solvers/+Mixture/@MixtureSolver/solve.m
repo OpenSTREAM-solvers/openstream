@@ -118,10 +118,11 @@ function solver(solveMode)
         maxDW = max(mix(tIdx).ITR.DW);
         maxDP = max(mix(tIdx).ITR.DP);
         maxDH = max(mix(tIdx).ITR.DH);
-
-        timeDW = abs( max(mix(tIdx-1).ITR.DW) - maxDW);
-        timeDP = abs( max(mix(tIdx-1).ITR.DP) - maxDP);
-        timeDH = abs( max(mix(tIdx-1).ITR.DH) - maxDH);
+        
+        % Temporal deviations in W, P, and H
+        timeDW = max(abs((mix(tIdx).W - mix(tIdx-1).W)));
+        timeDP = max(abs((mix(tIdx).P - mix(tIdx-1).P)));
+        timeDH = max(abs((mix(tIdx).H - mix(tIdx-1).H)));
         fprintf('\t(Max iter = %d, Max errors W = %f [kg/s], %.2f [Pa], %.3f [J/kg])\r',maxN,maxDW,maxDP,maxDH)
     
         % Finish steady state solver when SS convergence criterions are met
