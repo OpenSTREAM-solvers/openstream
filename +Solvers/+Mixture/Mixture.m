@@ -226,5 +226,24 @@ classdef Mixture < matlab.mixin.Copyable
                                 "extrap");
         end
     end
+
+    methods(Access = protected)
+    
+    
+        function cpObj = copyElement(obj)
+        %COPYELEMENT Override copyElement method to create correct references
+        %with properties liquid and vapor 
+            
+            import Solvers.Mixture.*
+
+            % Make a shallow copy of all four properties
+            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            
+            % Update liquid and vapor 'mix' property
+            cpObj.liquid = Liquid(cpObj);
+            cpObj.vapor = Vapor(cpObj);
+        end
+    end
+
 end
 
