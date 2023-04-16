@@ -11,24 +11,25 @@ import Solvers.SolverState
 if mixSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
-    solver('STEADY');
-    solver('TRANSIENT');
+    solver(true);
+    solver(false);
     
     fprintf('\n---------------------- Two-phase flow solver run completed ----------------------\n\n')
 end
 
 
-function solver(solveMode)
+function solver(solveINIT)
 
-    switch upper(solveMode)
-        case 'TRANSIENT'
-            fprintf('\nRun transient solver ...\n');
-            mix = mixSolver.mixture;
-    
-        case 'STEADY'
-            fprintf('\nRun steady-state solver ...\n');
-            mix = mixSolver.mixtureInit;
-    end    
+    % check if solving mixtureINIT
+    if solveINIT
+        fprintf('\nRun steady-state solver ...\n');
+        mix = mixSolver.mixtureInit;
+        solveMODE = 'INITIAL';
+    else
+        fprintf('\nRun transient solver ...\n');
+        mix = mixSolver.mixture;
+        solveMODE = 'SPECIFIED';
+    end
     
     % set SOLVED flag to SOLVECONVERGED
     mixSolver.STATE = SolverState.SOLVEDCONVERGED;
@@ -134,7 +135,7 @@ function solver(solveMode)
         fprintf('\t(Max iter = %d, Max errors W = %f [kg/s], %.2f [Pa], %.3f [J/kg])\r',maxN,maxDW,maxDP,maxDH)
     
         
-        if strcmp(solveMode, 'STEADY')
+        if solveINIT
             % Finish steady state solver when SS convergence criterions are met
             if all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
     
@@ -159,7 +160,7 @@ function solver(solveMode)
     end
     
     
-    fprintf('\n---------------------- %s solver run completed ----------------------\n\n', solveMode)
+    fprintf('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
     
     % End timer
     toc
