@@ -14,7 +14,7 @@ classdef Liquid < Solvers.AbstractPhase
         RE
     end
 
-    properties (SetAccess=?Solvers.Mixture.Mixture)
+    properties (SetAccess=private, GetAccess=private)
         mix 
     end
     
