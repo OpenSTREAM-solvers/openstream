@@ -5,11 +5,12 @@ classdef Options < Inputs.Input
     properties (SetAccess=protected)
         
         ID           (1,1) string  {mustBeTextScalar,mustBeNonempty}                               % Option ID 
-        TSTEP        (1,1) double  {mustBeNumeric,mustBePositive}          = 0.1                   % [s] Time step
+        TSTEP        (1,1) double  {mustBeNumeric,mustBePositive}          = 0.1                   % Time step [s]
         MAXITER      (1,1) uint8   {mustBeInteger,mustBePositive}          = 100                   % Max number of inner (point) iterations
         ERRORW       (1,1) double  {mustBeNumeric}                         = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
         ERRORP       (1,1) double  {mustBeNumeric}                         = 1E-0                  % Pressure error target in inner ierations [Pa]
         ERRORH       (1,1) double  {mustBeNumeric}                         = 1E-0                  % Enthalpy error target in inner ierations [J/kg]
+        SSTSTEP      (1,1) double  {mustBeNumeric,mustBePositive}          = 1.0                   % Time step for steady-state iterations [s]
         SSMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}          = 10                    % Max number of steady-state iterations
         SSCONVW      (1,1) double  {mustBeNumeric}                         = 2E-4                  % Mass flow rate steady-state convergence criterion [kg/s]
         SSCONVP      (1,1) double  {mustBeNumeric}                         = 1E-0                  % Pressure steady-state convergence criterion [Pa]

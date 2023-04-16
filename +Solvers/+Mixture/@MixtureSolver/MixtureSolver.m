@@ -141,12 +141,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mixSolver.mixtureInit = copy( ...
                 repmat(mixArr(1),1,mixSolver.inputSet.options.SSMAXITER));
 
-            % Update steady state mixture times and timesteps
-            steadyTIME = num2cell(0:mixSolver.DT:mixSolver.DT*(length(mixSolver.mixtureInit)-1));
-            [mixSolver.mixtureInit.TIME] = deal(steadyTIME{:});
-            steadyTIDX = num2cell(1:length(mixSolver.mixtureInit));
-            [mixSolver.mixtureInit.TIDX] = deal(steadyTIDX{:});
-            
+            % Update mixtureInit times and timesteps
+            initTIMEDT = mixSolver.inputSet.options.SSTSTEP;
+            initNTIME = length(mixSolver.mixtureInit);
+            initTIME = 0:initTIMEDT:initTIMEDT*(initNTIME-1);
+            initTIDX = 1:length(mixSolver.mixtureInit);
+
+            for i = 1:length(mixSolver.mixtureInit)
+                mixSolver.mixtureInit(i).TIME = initTIME(i);
+                mixSolver.mixtureInit(i).DT = initTIMEDT;
+                mixSolver.mixtureInit(i).NTIME = initNTIME;
+                mixSolver.mixtureInit(i).TIDX = initTIDX(i);
+            end
 
             % set STATE to UNSOLVED
             mixSolver.STATE = SolverState.UNSOLVED;

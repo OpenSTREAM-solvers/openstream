@@ -39,9 +39,8 @@ function solver(solveMode)
     geom = mixSolver.inputSet.geometry;
     
     
-    % Uniform mesh and time step
+    % Uniform mesh size
     DZ = mixSolver.DZ;
-    DT = mixSolver.DT;
     
     % Start timer
     tic
@@ -50,6 +49,9 @@ function solver(solveMode)
     for tIdx = 2:length(mix)                                                     % Loop over time steps
         
         fprintf('Time %5.2f [s]',mix(tIdx).TIME)
+
+        % Current time step
+        DT = mix(tIdx).DT;
         
         % Axial sweep
         for zIdx = 2:mixSolver.NZ                                                        % Loop over axial nodes
@@ -138,11 +140,16 @@ function solver(solveMode)
 
             % Replace mixtureInit with subset up to this tIdx
             mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
+
+            % Make copy of original mixSolver.mixture(1)
+            firstMixture_copy = copy(mixSolver.mixture(1));
     
             % Replace first transient time step with this tIdx
             mixSolver.mixture(1) = copy(mixSolver.mixtureInit(tIdx));
-            mixSolver.mixture(1).TIME = mixSolver.mixtureInit(1).TIME;
-            mixSolver.mixture(1).TIDX = mixSolver.mixtureInit(1).TIDX;        
+            mixSolver.mixture(1).TIME = firstMixture_copy.TIME;
+            mixSolver.mixture(1).TIDX = firstMixture_copy.TIDX;
+            mixSolver.mixture(1).DT = firstMixture_copy.DT;
+            mixSolver.mixture(1).NTIME = firstMixture_copy.NTIME;
     
             break;
         end
