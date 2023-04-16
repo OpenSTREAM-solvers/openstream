@@ -141,15 +141,8 @@ function solver(solveMode)
             % Replace mixtureInit with subset up to this tIdx
             mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
 
-            % Make copy of original mixSolver.mixture(1)
-            firstMixture_copy = copy(mixSolver.mixture(1));
-    
-            % Replace first transient time step with this tIdx
-            mixSolver.mixture(1) = copy(mixSolver.mixtureInit(tIdx));
-            mixSolver.mixture(1).TIME = firstMixture_copy.TIME;
-            mixSolver.mixture(1).TIDX = firstMixture_copy.TIDX;
-            mixSolver.mixture(1).DT = firstMixture_copy.DT;
-            mixSolver.mixture(1).NTIME = firstMixture_copy.NTIME;
+            % Replace first transient time step flow data with this tIdx
+            mixSolver.mixtureInit(end).copyFlowProperties(mixSolver.mixture(1));
     
             break;
         end

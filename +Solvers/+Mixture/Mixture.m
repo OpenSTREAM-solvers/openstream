@@ -4,6 +4,7 @@ classdef Mixture < matlab.mixin.Copyable
     
      properties (SetAccess=?Solvers.Mixture.MixtureSolver)
         
+        % Solver properties
         NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
         TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
@@ -11,11 +12,14 @@ classdef Mixture < matlab.mixin.Copyable
         TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
-
+        
+        % Flow properties
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         P            (:,1) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
         DP           (1,1) struct                                                                 % [-] Detailed pressure drops
+
+        % Iteration properties
         ITR          (1,1) struct 
 
         % Phases
@@ -228,11 +232,41 @@ classdef Mixture < matlab.mixin.Copyable
                                 mix.inputSet.options.AXIALINTERP, ...
                                 "extrap");
         end
+
+        function copyFlowProperties(srcObj, targetObj)
+            arguments
+                srcObj
+                targetObj (1,:) Solvers.Mixture.Mixture
+            end
+
+            for i = 1:length(targetObj)
+                
+                % Make sure obj meshes match
+                if srcObj.Z ~= targetObj(1).Z
+                    throw( ...
+                        MException( ...
+                            'MixtureError:copyFlowPropertiesError', ...
+                            'Source and target objects have mismatched spatial meshes' ...
+                            ) ...
+                        );
+                end
+                
+                % Copy properties
+                propNames = {'W','P','H','DP'};
+                for j = 1:length(propNames)
+                    targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                end
+
+
+            end
+
+        end
+    
     end
 
     methods(Access = protected)
     
-    
+
         function cpObj = copyElement(obj)
         %COPYELEMENT Override copyElement method to create correct references
         %with properties liquid and vapor 
