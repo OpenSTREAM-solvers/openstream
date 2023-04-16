@@ -145,6 +145,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             [mixSolver.mixtureSteady.TIME] = deal(steadyTIME{:});
             steadyTIDX = num2cell(1:length(mixSolver.mixtureSteady));
             [mixSolver.mixtureSteady.TIDX] = deal(steadyTIDX{:});
+            
 
             % set SOLVED flag to false
             mixSolver.SOLVED = false;
@@ -290,14 +291,33 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         end
     
-        function plott(mixSolver, zIdx, tIdx)
+        function plott(mixSolver, zIdx, opt)
             %PLOTT 
             % TODO: paramData for methods may be a matrix instead of a vector
             arguments
                 mixSolver
                 zIdx (:,1) double
-                tIdx (:,1) double = 1:mixSolver.NTIME
+                opt.tIdx (:,1) double = -1
+                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opt.reverseTime (1,1) logical = false
             end
+            
+            switch opt.solveMode
+                case 'TRANSIENT'
+                    mix = mixSolver.mixtureTransient;
+                case 'STEADY'
+                    mix = mixSolver.mixtureSteady;
+            end
+
+            if isscalar(opt.tIdx) && (opt.tIdx < 0)
+                opt.tIdx = 1:length(mix);
+            end
+
+            % Time vector
+            plotTimeVector = [mix(opt.tIdx).TIME];
+            if opt.reverseTime
+                plotTimeVector = plotTimeVector - plotTimeVector(end);
+            end            
 
             figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
             
@@ -311,23 +331,23 @@ classdef MixtureSolver < Solvers.AbstractSolver
             function timeplot(param,ylabelText)
 
                 nexttile; hold all; grid on;
-                if ismethod(mixSolver.mixtureTransient,param)
+                if ismethod(mix,param)
                     paramData = arrayfun( ...
-                                    @(i) mixSolver.mixtureTransient(i).(param), ...
-                                    1:mixSolver.NTIME, ...
+                                    @(i) mix(i).(param), ...
+                                    1:length(plotTimeVector), ...
                                     'UniformOutput', false);
                     paramData = cell2mat(paramData);
 
                 else
-                    paramData = [mixSolver.mixtureTransient.(param)];
+                    paramData = [mix.(param)];
                 end
                 
-                plot(mixSolver.TIME(tIdx),paramData(zIdx,tIdx),'.-');
+                plot(plotTimeVector, paramData(zIdx,opt.tIdx),'.-');
 
                 legendStr = num2str(mixSolver.Z(zIdx),'z=%0.4f m');
                 legend(legendStr,'Location','southeast');
                 
-                xlabel('Time [s]'); xlim(mixSolver.TIME(tIdx([1 end])));
+                xlabel('Time [s]'); xlim(plotTimeVector([1 end]));
                 ylabel(ylabelText)
                 set(gca,'fontSize',14)
             
