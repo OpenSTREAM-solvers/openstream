@@ -14,7 +14,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         
     end
 
-    properties (SetAccess=private)
+    properties (SetAccess=private, GetAccess=private)
         geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}
     end
 

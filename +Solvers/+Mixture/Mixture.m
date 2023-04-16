@@ -10,7 +10,6 @@ classdef Mixture < matlab.mixin.Copyable
         DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
         TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
         Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
-        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
 
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
@@ -19,13 +18,17 @@ classdef Mixture < matlab.mixin.Copyable
         DP           (1,1) struct                                                                 % [-] Detailed pressure drops
         ITR          (1,1) struct 
 
-        inputSet    {isa(inputSet,'Inputs.InputSet')}
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
-
         % Phases
         liquid
         vapor
-    end
+     end
+
+     properties (SetAccess=?Solvers.Mixture.MixtureSolver, GetAccess=?Solvers.AbstractPhase)
+        
+        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
+        inputSet    {isa(inputSet,'Inputs.InputSet')}
+        fluid       {isa(fluid,'Inputs.FluidProperties')}
+     end
     
     
 
