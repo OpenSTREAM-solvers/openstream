@@ -313,6 +313,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.tIdx = 1:length(mix);
             end
 
+            % Cannot plot time series of one time step
+            if isscalar(mix) || isscalar(opt.tIdx)
+                throw( ...
+                    MException( ...
+                        'MixtureSolverPlottError:ScalarTimestepError', ...
+                        'Non-scalar time index required to plot time series'))
+            end
+
             % Time vector
             plotTimeVector = [mix(opt.tIdx).TIME];
             if opt.reverseTime
@@ -356,10 +364,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
         
         function interpOut = timeInterpolate(mix, y)
-            interpOut = interp1([mix.inputSet.bc.TIME].', ...
-                                y, ...
-                                mix.TIME, ...
-                                mix.inputSet.options.TIMEINTERP);
+            if isscalar(mix.inputSet.bc.TIME)
+                interpOut = y;
+            else
+                interpOut = interp1([mix.inputSet.bc.TIME].', ...
+                                    y, ...
+                                    mix.TIME, ...
+                                    mix.inputSet.options.TIMEINTERP);
+            end
         end
 
         function interpOut = axialInterpolate(mix, x, y)
