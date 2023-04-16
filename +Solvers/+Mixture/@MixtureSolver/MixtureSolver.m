@@ -18,7 +18,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         mixtureInit
         mixture
         
-        SOLVED      (1,1) logical                                          = true                 % Flag to indicate solved
+        STATE                                                              = Solvers.SolverState.UNSOLVED
 
     end
     
@@ -48,6 +48,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             
             import Inputs.*
             import Solvers.Mixture.*
+            import Solvers.*
 
             % Calculate time steps
             mixSolver.DT = mixSolver.inputSet.options.TSTEP;                            % [s] Time interval
@@ -147,8 +148,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             [mixSolver.mixtureInit.TIDX] = deal(steadyTIDX{:});
             
 
-            % set SOLVED flag to false
-            mixSolver.SOLVED = false;
+            % set STATE to UNSOLVED
+            mixSolver.STATE = SolverState.UNSOLVED;
 
         end
 

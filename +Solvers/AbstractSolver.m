@@ -2,6 +2,11 @@ classdef (Abstract) AbstractSolver < handle
     %ABSTRACTSOLVER Summary of this class goes here
     %   Detailed explanation goes here
     
+    properties (SetAccess=private, Abstract)
+
+        STATE (1,1) Solvers.SolverState                                           % Solver state defined by SolverState enum
+
+    end
 
     methods (Abstract)
 %         mflux = MFLUX

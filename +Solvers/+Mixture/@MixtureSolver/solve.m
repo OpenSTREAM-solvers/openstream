@@ -6,7 +6,9 @@ arguments
     opts.verbose = true
 end
 
-if mixSolver.SOLVED
+import Solvers.SolverState
+
+if mixSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
     solver('STEADY');
@@ -28,8 +30,8 @@ function solver(solveMode)
             mix = mixSolver.mixtureInit;
     end    
     
-    % set SOLVED flag to true
-    mixSolver.SOLVED = true;
+    % set SOLVED flag to SOLVECONVERGED
+    mixSolver.STATE = SolverState.SOLVEDCONVERGED;
     
     % Shortcut to inputSet objects
     model = mixSolver.inputSet.model;
@@ -93,6 +95,9 @@ function solver(solveMode)
                 dH = abs((mix(tIdx).H(zIdx)-Hiter));                             % [J/kg] Enthalpy error between inner iterations
                 if all([dW < options.ERRORW, dP < options.ERRORP, dH < options.ERRORH])   
                     break;
+                elseif itr == options.MAXITER
+                    % set SOLVED flag to SOLVEDNOTCONVERGED
+                    mixSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                 end
     
             end
