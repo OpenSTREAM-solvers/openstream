@@ -364,7 +364,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
         
         function interpOut = timeInterpolate(mix, y)
-            if isscalar(mix.inputSet.bc.TIME)
+            if isscalar([mix.inputSet.bc.TIME])
                 interpOut = y;
             else
                 interpOut = interp1([mix.inputSet.bc.TIME].', ...
