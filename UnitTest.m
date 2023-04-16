@@ -38,8 +38,8 @@ inputSet = InputSet( ...
 mixSolver = MixtureSolver(inputSet);
 mixSolver.initializeSolver(); 
 
-mixSolver.mixtureSteady(1).liquid
-mixSolver.mixtureSteady(1).vapor
+mixSolver.mixture(1).liquid
+mixSolver.mixture(1).vapor
 
 mixSolver.solve();
 

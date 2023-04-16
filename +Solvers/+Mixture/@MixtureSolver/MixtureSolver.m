@@ -15,8 +15,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
         fluid       {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
         
-        mixtureSteady
-        mixtureTransient
+        mixtureInit
+        mixture
         
         SOLVED      (1,1) logical                                          = true                 % Flag to indicate solved
 
@@ -134,17 +134,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Store transient mixture array
-            mixSolver.mixtureTransient = mixArr;
+            mixSolver.mixture = mixArr;
 
             % Create steady state mixture array
-            mixSolver.mixtureSteady = copy( ...
+            mixSolver.mixtureInit = copy( ...
                 repmat(mixArr(1),1,mixSolver.inputSet.options.SSMAXITER));
 
             % Update steady state mixture times and timesteps
-            steadyTIME = num2cell(0:mixSolver.DT:mixSolver.DT*(length(mixSolver.mixtureSteady)-1));
-            [mixSolver.mixtureSteady.TIME] = deal(steadyTIME{:});
-            steadyTIDX = num2cell(1:length(mixSolver.mixtureSteady));
-            [mixSolver.mixtureSteady.TIDX] = deal(steadyTIDX{:});
+            steadyTIME = num2cell(0:mixSolver.DT:mixSolver.DT*(length(mixSolver.mixtureInit)-1));
+            [mixSolver.mixtureInit.TIME] = deal(steadyTIME{:});
+            steadyTIDX = num2cell(1:length(mixSolver.mixtureInit));
+            [mixSolver.mixtureInit.TIDX] = deal(steadyTIDX{:});
             
 
             % set SOLVED flag to false
@@ -247,7 +247,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mixSolver
             tIdx    (1,1) double
         end
-            mix = mixSolver.mixtureTransient(tIdx);
+            mix = mixSolver.mixture(tIdx);
             figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME) ' [s]'])
                 
             nexttile; hold all; grid on;
@@ -304,9 +304,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             
             switch opt.solveMode
                 case 'TRANSIENT'
-                    mix = mixSolver.mixtureTransient;
+                    mix = mixSolver.mixture;
                 case 'STEADY'
-                    mix = mixSolver.mixtureSteady;
+                    mix = mixSolver.mixtureInit;
             end
 
             if isscalar(opt.tIdx) && (opt.tIdx < 0)

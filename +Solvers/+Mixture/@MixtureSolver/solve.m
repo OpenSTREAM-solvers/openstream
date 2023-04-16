@@ -21,11 +21,11 @@ function solver(solveMode)
     switch upper(solveMode)
         case 'TRANSIENT'
             fprintf('\nRun transient solver ...\n');
-            mix = mixSolver.mixtureTransient;
+            mix = mixSolver.mixture;
     
         case 'STEADY'
             fprintf('\nRun steady-state solver ...\n');
-            mix = mixSolver.mixtureSteady;
+            mix = mixSolver.mixtureInit;
     end    
     
     % set SOLVED flag to true
@@ -131,13 +131,13 @@ function solver(solveMode)
     
             fprintf('\t\tMax errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
 
-            % Replace mixtureSteady with subset up to this tIdx
-            mixSolver.mixtureSteady = mixSolver.mixtureSteady(1:tIdx);
+            % Replace mixtureInit with subset up to this tIdx
+            mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
     
             % Replace first transient time step with this tIdx
-            mixSolver.mixtureTransient(1) = copy(mixSolver.mixtureSteady(tIdx));
-            mixSolver.mixtureTransient(1).TIME = mixSolver.mixtureSteady(1).TIME;
-            mixSolver.mixtureTransient(1).TIDX = mixSolver.mixtureSteady(1).TIDX;        
+            mixSolver.mixture(1) = copy(mixSolver.mixtureInit(tIdx));
+            mixSolver.mixture(1).TIME = mixSolver.mixtureInit(1).TIME;
+            mixSolver.mixture(1).TIDX = mixSolver.mixtureInit(1).TIDX;        
     
             break;
         end
