@@ -42,6 +42,7 @@ function solver(solveMode)
     % Uniform mesh size
     DZ = mixSolver.DZ;
     
+    
     % Start timer
     tic
     
@@ -132,19 +133,25 @@ function solver(solveMode)
         timeDH = max(abs((mix(tIdx).H - mix(tIdx-1).H)));
         fprintf('\t(Max iter = %d, Max errors W = %f [kg/s], %.2f [Pa], %.3f [J/kg])\r',maxN,maxDW,maxDP,maxDH)
     
-        % Finish steady state solver when SS convergence criterions are met
-        if strcmp(solveMode, 'STEADY') && ...
-                all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
+        
+        if strcmp(solveMode, 'STEADY')
+            % Finish steady state solver when SS convergence criterions are met
+            if all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
     
-            fprintf('\t\tMax errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
-
-            % Replace mixtureInit with subset up to this tIdx
-            mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
-
-            % Replace first transient time step flow data with this tIdx
-            mixSolver.mixtureInit(end).copyFlowProperties(mixSolver.mixture(1));
+                fprintf('\t\tMax errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
     
-            break;
+                % Replace mixtureInit with subset up to this tIdx
+                mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
+    
+                % Replace first transient time step flow data with this tIdx
+                mixSolver.mixtureInit(end).copyFlowProperties(mixSolver.mixture(1));
+        
+                break;
+            
+            % otherwise, update next timestep with current flow properties
+            elseif tIdx < length(mix)-1
+                mixSolver.mixtureInit(tIdx).copyFlowProperties(mixSolver.mixtureInit(tIdx+1));
+            end
         end
     
         
