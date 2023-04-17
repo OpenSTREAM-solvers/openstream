@@ -30,20 +30,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
     end
 
     methods
-        function mixSolver = MixtureSolver(inputSet, opts)
+        function mixSolver = MixtureSolver(inputSet)
             %MIXTURESOLVER Creates a Mixture solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
-                opts.LOGMODE (1,1)  Solvers.LogMode                         = Solvers.LogMode.LOGTOCONSOLEONLY
             end
 
             % Call abstract class constructor
             mixSolver = mixSolver@Solvers.AbstractSolver(inputSet);
-
-            % Setup logging
-            mixSolver.LOGMODE = opts.LOGMODE;
-            mixSolver.setupLog();
             
             % Initialize solver parameters
             mixSolver.initializeSolver();
@@ -308,7 +303,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
     
         function plott(mixSolver, zIdx, opt)
             %PLOTT 
-            % TODO: paramData for methods may be a matrix instead of a vector
+            % 
             arguments
                 mixSolver
                 zIdx (:,1) double
@@ -330,10 +325,12 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             % Cannot plot time series of one time step
             if isscalar(mix) || isscalar(opt.tIdx)
-                throw( ...
-                    MException( ...
-                        'MixtureSolverPlottError:ScalarTimestepError', ...
-                        'Non-scalar time index required to plot time series'))
+                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+                return
+%                 throw( ...
+%                     MException( ...
+%                         'MixtureSolverPlottError:ScalarTimestepError', ...
+%                         'Non-scalar time index required to plot time series'))
             end
 
             % Time vector
@@ -385,17 +382,20 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mixSolver
             opts.saveFormat {mustBeMember(opts.saveFormat,["MAT"])}   = "MAT"
         end
+            session = mixSolver.inputSet.session;
             switch opts.saveFormat
                 case "MAT"
                     results = struct( ...
                                 'Z', mixSolver.Z, ...
                                 'TIME', mixSolver.TIME, ...
-                                'sessionName', mixSolver.inputSet.sessionName, ...
+                                'sessionName', session.name, ...
                                 'boundaryConditions', mixSolver.boundaryConditions, ...
                                 'mixtureInit', struct(mixSolver.mixtureInit), ...
                                 'mixture', struct(mixSolver.mixture));
+                    
                     save( ...
-                        fullfile(mixSolver.OUTPUTDIR,'results.mat'), ...
+                        fullfile( ...
+                            session.directory, strcat(session.name,'.mat')), ...
                         '-struct', ...
                         "results", ...
                         "-mat" ...
