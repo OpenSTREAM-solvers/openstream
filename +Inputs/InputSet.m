@@ -8,9 +8,7 @@ classdef InputSet
         geometry
         bc
 
-        sessionName
-        sessionDir
-        overwriteSessionFiles (1,1) logical
+        session                   (1,1) Session.Session
     end
     
     methods
@@ -29,79 +27,62 @@ classdef InputSet
                 
                 opts.bcFilePath         {isfile}            = ''        % Boundary condition input file (inp/json)
 
+                opts.LOGMODE (1,1)      Session.LogMode         = Session.LogMode.LOGTOCONSOLEONLY
                 opts.sessionName        {isStringScalar}    = ""        % Session name
+                opts.sessionDirName     {isStringScalar}    = ""        % Session directory name
                 opts.sessionParentDir   {isfolder}          = userpath  % Session parent directory
                 opts.overwriteSessionFiles ...
                                         {islogical}         = false     % Flag to overwrite existing session files
             end
 
-            % Import Inputs pacakge
+            % Import pacakges
             import Inputs.*
             
-            % Create input objects
-            obj.model = Model(opts.modelFilePath,opts.modelID);
-            obj.options = Options(opts.optionsFilePath,opts.optionsID);
-            obj.geometry = Geometry(opts.geometryFilePath, opts.geometryID);
-            obj.bc = BoundaryConditions(opts.bcFilePath, obj.geometry);
+            %
+            % Setup Log mechanism
+            % Build sessionName as needed
+            if opts.sessionName == ""
+                [~,sessionName] = fileparts(opts.bcFilePath);
+            else
+                sessionName = opts.sessionName;
+            end
+
+            % Build sessionDirName as needed
+            if opts.sessionDirName == ""
+                sessionDirName = strcat( ...
+                                    opts.geometryID,'-', ...
+                                    opts.modelID,'-', ...
+                                    opts.optionsID);
+            else
+                sessionDirName = opts.sessionDirName;
+            end
+
+            % Create Log
+            sessionParentDir = opts.sessionParentDir;
+            obj.session = Session.Session( ...
+                                "name",sessionName, ...
+                                "dirName",sessionDirName, ...
+                                "parentDir",sessionParentDir, ...
+                                "overwriteFiles", opts.overwriteSessionFiles);
+            obj.session.setupLog(opts.LOGMODE);
             
-            % Build session name as needed
-            if strlength(opts.sessionName) == 0
-                [~,bcFileName] = fileparts(opts.bcFilePath);
-                obj.sessionName = strcat( ...
-                                    obj.model.ID,'-', ...
-                                    obj.geometry.ID,'-', ...
-                                    obj.options.ID,'-', ...
-                                    bcFileName);
-            else
-                obj.sessionName = opts.sessionName;
-            end
-
-            % Check if session directory is legal and/or exists
-            obj.overwriteSessionFiles = opts.overwriteSessionFiles;
-            sessionDir = fullfile(opts.sessionParentDir, obj.sessionName);
-            if ~obj.isLegalPath(sessionDir)
-                throw( ...
-                    MException( ...
-                        'InputSetError:IllegalSessionDirectoryError', ...
-                        'Session directory %s is not a legal path', sessionDir ...
-                    ) ...
-                );
-            elseif isfolder(sessionDir)
-                if ~obj.overwriteSessionFiles
-                    throw( ...
-                        MException( ...
-                            'InputSetError:ExistingSessionDirectoryError', ...
-                            'Session directory %s already exists.', sessionDir ...
-                        ) ...
-                    );
-                else
-                    rmdir(sessionDir,'s');
-                end
-            end
-
-            % Make session directory
-            [status, msg, msgID] = mkdir(sessionDir);
-            if status ~= 1
-                throw( ...
-                    MException(msgID,msg) ...
-                );
-            else
-                obj.sessionDir = sessionDir;
-            end
-
-
-        end
-    end
-
-    methods (Access=private)
-        function bool = isLegalPath(obj,str)
-            bool = true;
+            
+            % Create input objects
+            obj.session.log.toggleDiary();
             try
-                java.io.File(str).toPath;
-            catch
-                bool = false;
+                obj.model = Model(opts.modelFilePath,opts.modelID);
+                obj.options = Options(opts.optionsFilePath,opts.optionsID);
+                obj.geometry = Geometry(opts.geometryFilePath, opts.geometryID);
+                obj.bc = BoundaryConditions(opts.bcFilePath, obj.geometry);
+            catch ME
+                getreport(ME)
+                obj.session.log.toggleDiary();
             end
+            obj.session.log.toggleDiary();
+
         end
     end
+
+    
 end
 
