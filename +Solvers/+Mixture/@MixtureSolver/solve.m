@@ -7,6 +7,8 @@ end
 
 import Solvers.SolverState
 
+mixSolver.inputSet.session.log.toggleDiary(true);
+
 if mixSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
@@ -15,6 +17,10 @@ else
     
     mixSolver.log('\n---------------------- Two-phase flow solver run completed ----------------------\n\n')
 end
+
+mixSolver.inputSet.session.log.toggleDiary();
+fprintf('Output directory: %s\n',mixSolver.inputSet.session.directory);
+mixSolver.inputSet.session.log.toggleDiary(true);
 
 
 function solver(solveINIT)
