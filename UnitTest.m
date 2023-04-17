@@ -29,22 +29,33 @@ end
 % model_p   = Model(modelFile,modelID{2});
 % prop_p    = FluidProperties(P,model_p);
 
+% The InputSet is used to organize all input files and session parameters.
+% A session is the unique combination of input files.
 inputSet = InputSet( ...
             modelFilePath='./inputs/models.inp', modelID='MFVALS', ...
             optionsFilePath='./inputs/options.inp', optionsID='STEADY', ...
             geometryFilePath='./inputs/geom.inp', geometryID='MFVAL', ...
-            bcFilePath='./inputs/bc_mfval.inp');
+            bcFilePath='./inputs/bc_mfval.inp', ...
+            sessionParentDir = fullfile(pwd,'outputs'), ...
+            overwriteSessionFiles = true);
 
-mixSolver = MixtureSolver(inputSet);
+% Create the mixture solver
+mixSolver = MixtureSolver(inputSet, "LOGMODE","BOTH");
+
+% mixSolver is initialized at construction. Here, it is explicitly
+% initialized for clarity.
 mixSolver.initializeSolver(); 
 
-mixSolver.mixture(1).liquid
-mixSolver.mixture(1).vapor
-
+% Solve does not accept any other arguments
 mixSolver.solve();
 
+% Axial and temporal plotting
 mixSolver.plotz(mixSolver.NTIME);
 mixSolver.plott([1 floor(mixSolver.NZ./8.*(2:8))])
+
+% Save results
+mixSolver.saveResults(saveFormat="MAT");
+
 return
 
 %% Tests

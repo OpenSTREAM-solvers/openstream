@@ -1,9 +1,8 @@
-function solve(mixSolver,  opts)
+function solve(mixSolver)
 %SOLVE  
 % 
 arguments
     mixSolver
-    opts.verbose = true
 end
 
 import Solvers.SolverState
@@ -14,7 +13,7 @@ else
     solver(true);
     solver(false);
     
-    fprintf('\n---------------------- Two-phase flow solver run completed ----------------------\n\n')
+    mixSolver.log('\n---------------------- Two-phase flow solver run completed ----------------------\n\n')
 end
 
 
@@ -22,11 +21,11 @@ function solver(solveINIT)
 
     % check if solving mixtureINIT
     if solveINIT
-        fprintf('\nRun steady-state solver ...\n');
+        mixSolver.log('\nRun steady-state solver ...\n');
         mix = mixSolver.mixtureInit;
         solveMODE = 'INITIAL';
     else
-        fprintf('\nRun transient solver ...\n');
+        mixSolver.log('\nRun transient solver ...\n');
         mix = mixSolver.mixture;
         solveMODE = 'SPECIFIED';
     end
@@ -50,9 +49,9 @@ function solver(solveINIT)
     % Time loop
     for tIdx = 2:length(mix)                                                     % Loop over time steps
         
-        fprintf('Time %5.2f [s]',mix(tIdx).TIME)
+        mixSolver.log('Time %5.2f [s]',mix(tIdx).TIME)
 
-        % Current time step
+        % Current time step size
         DT = mix(tIdx).DT;
         
         % Axial sweep
@@ -132,14 +131,14 @@ function solver(solveINIT)
         timeDW = max(abs((mix(tIdx).W - mix(tIdx-1).W)));
         timeDP = max(abs((mix(tIdx).P - mix(tIdx-1).P)));
         timeDH = max(abs((mix(tIdx).H - mix(tIdx-1).H)));
-        fprintf('\t(Max iter = %d, Max errors W = %f [kg/s], %.2f [Pa], %.3f [J/kg])\r',maxN,maxDW,maxDP,maxDH)
+        mixSolver.log('\t(Max iter = %d, Max errors W = %f [kg/s], %.2f [Pa], %.3f [J/kg])\r',maxN,maxDW,maxDP,maxDH)
     
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
             if all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
     
-                fprintf('\t\tMax errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
+                mixSolver.log('\t\tMax errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
     
                 % Replace mixtureInit with subset up to this tIdx
                 mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
@@ -160,14 +159,10 @@ function solver(solveINIT)
     end
     
     
-    fprintf('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
+    mixSolver.log('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
     
     % End timer
     toc
-end
-
-function fprintf(varargin)
-    if opts.verbose, builtin('fprintf',varargin{:}); end
 end
 
 end

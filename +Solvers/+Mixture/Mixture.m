@@ -233,7 +233,22 @@ classdef Mixture < matlab.mixin.Copyable
                                 "extrap");
         end
 
+        function out = struct(obj)
+        %STRUCT Converter to struct
+        %
+            for i = length(obj):-1:1
+                out(i) = struct('TIME', obj(i).TIME, ...
+                                'W',   obj(i).W, ...
+                                'P',   obj(i).P, ...
+                                'H',   obj(i).H, ...
+                                'DP',  obj(i).DP, ...
+                                'ITR', obj(i).ITR);
+            end
+        end
+
         function copyFlowProperties(srcObj, targetObj)
+        %COPYFLOWPROPERTIES
+        %
             arguments
                 srcObj
                 targetObj (1,:) Solvers.Mixture.Mixture

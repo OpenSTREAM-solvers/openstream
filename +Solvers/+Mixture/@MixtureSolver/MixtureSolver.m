@@ -4,38 +4,46 @@ classdef MixtureSolver < Solvers.AbstractSolver
     
      properties (SetAccess=private)
         
-        NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (:,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
-        Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
-        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
+        NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
+        NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
+        TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
+        DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
+        Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
+        DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
 
-        inputSet    {isa(inputSet,'Inputs.InputSet')}
         fluid       {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
         
         mixtureInit
         mixture
-        
-        STATE                                                              = Solvers.SolverState.UNSOLVED
 
-    end
-    
+     end
+
+     properties (SetAccess = protected)
+        inputSet
+        STATE                                                               = Solvers.SolverState.UNSOLVED
+     end
+
+
     methods
-        solve(mixSolver, opts)
+        solve(mixSolver)
     end
 
     methods
-        function mixSolver = MixtureSolver(inputSet)
-            %MIXTURESOLVER Creates a Mixture solver mix
+        function mixSolver = MixtureSolver(inputSet, opts)
+            %MIXTURESOLVER Creates a Mixture solver
             %   Detailed explanation goes here
             arguments
-                inputSet {isa(inputSet,'Inputs.InputSet')}
+                inputSet            {isa(inputSet,'Inputs.InputSet')}
+                opts.LOGMODE (1,1)  Solvers.LogMode                         = Solvers.LogMode.LOGTOCONSOLEONLY
             end
 
-            % Store inputSet as object property
-            mixSolver.inputSet = inputSet;
+            % Call abstract class constructor
+            mixSolver = mixSolver@Solvers.AbstractSolver(inputSet);
+
+            % Setup logging
+            mixSolver.LOGMODE = opts.LOGMODE;
+            mixSolver.setupLog();
             
             % Initialize solver parameters
             mixSolver.initializeSolver();
@@ -370,6 +378,33 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         end
         
+        function saveResults(mixSolver, opts)
+        %SAVERESULTS
+        %
+        arguments
+            mixSolver
+            opts.saveFormat {mustBeMember(opts.saveFormat,["MAT"])}   = "MAT"
+        end
+            switch opts.saveFormat
+                case "MAT"
+                    results = struct( ...
+                                'Z', mixSolver.Z, ...
+                                'TIME', mixSolver.TIME, ...
+                                'sessionName', mixSolver.inputSet.sessionName, ...
+                                'boundaryConditions', mixSolver.boundaryConditions, ...
+                                'mixtureInit', struct(mixSolver.mixtureInit), ...
+                                'mixture', struct(mixSolver.mixture));
+                    save( ...
+                        fullfile(mixSolver.OUTPUTDIR,'results.mat'), ...
+                        '-struct', ...
+                        "results", ...
+                        "-mat" ...
+                    );
+            end
+
+
+        end
+
         function interpOut = timeInterpolate(mix, y)
             if isscalar([mix.inputSet.bc.TIME])
                 interpOut = y;
