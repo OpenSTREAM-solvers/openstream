@@ -246,12 +246,13 @@ classdef Mixture < matlab.mixin.Copyable
             end
         end
 
-        function copyFlowProperties(srcObj, targetObj)
+        function copyFlowProperties(srcObj, targetObj, opts)
         %COPYFLOWPROPERTIES
         %
             arguments
                 srcObj
                 targetObj (1,:) Solvers.Mixture.Mixture
+                opts.all  (1,1) logical = false
             end
 
             for i = 1:length(targetObj)
@@ -269,7 +270,11 @@ classdef Mixture < matlab.mixin.Copyable
                 % Copy properties
                 propNames = {'W','P','H','DP'};
                 for j = 1:length(propNames)
-                    targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                    if opts.all
+                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                    else
+                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                    end
                 end
 
 

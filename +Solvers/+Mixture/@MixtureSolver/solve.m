@@ -54,6 +54,9 @@ function solver(solveINIT)
         % Current time step size
         DT = mix(tIdx).DT;
         
+        % Update flow property guesses from previous time step
+        mix(tIdx-1).copyFlowProperties(mix(tIdx))
+
         % Axial sweep
         for zIdx = 2:mixSolver.NZ                                                        % Loop over axial nodes
             
