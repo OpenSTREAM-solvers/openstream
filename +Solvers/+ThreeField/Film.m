@@ -30,7 +30,7 @@ classdef Film < matlab.mixin.Copyable
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
      end
-    
+   
 
     methods
         function film = Film(inputSet, fluid)
