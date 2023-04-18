@@ -232,6 +232,35 @@ classdef Mixture < matlab.mixin.Copyable
                                 mix.inputSet.options.AXIALINTERP, ...
                                 "extrap");
         end
+        
+        
+        function zIDoaf = onsetAnnularFlow(mix)
+        % Onset of annular flow node
+        %
+            model = mix.inputSet.model;
+            geom  = mix.inputSet.geometry;
+            
+            % Wallis
+            xoaf = (0.6+0.4.*sqrt(model.G*geom.HDIAM*(mix.fluid.RHOF-mix.fluid.RHOG)*mix.fluid.RHOF)./mix.MFLUX)./(0.6+sqrt(mix.fluid.RHOF/mix.fluid.RHOG)); % [-] Quality at onset of annular flow
+            zIDoaf = find(mix.X>=xoaf,1,'first');                          % Find node corresponding to onset of annular flow
+            if isempty(zIDoaf), zIDoaf = nan; end                          % Nan when annular flow region not found
+            
+        end
+        
+        function afFunction = annularFlowFunction(mix, zIdx)
+        % Annular flow function
+        %
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            
+            model = mix.inputSet.model;
+            geom  = mix.inputSet.geometry;
+
+            sigm=@(x,p) 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
+            p = [0.04 0.15];                                               % Sigmoid function parameters ([width center] located p(2) [m] upstream OAF) 
+            p = p.*(model.NNODES/geom.LENGTH);                             % In node length
+            afFunction =sigm(zIdx',[p(1) onsetAnnularFlow(mix)-p(2)]);
+        end
+        
 
         function out = struct(obj)
         %STRUCT Converter to struct
