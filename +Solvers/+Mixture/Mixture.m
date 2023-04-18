@@ -277,7 +277,6 @@ classdef Mixture < matlab.mixin.Copyable
             afDistr = (1-mix.AFFNC(zIdx)).*param1 + mix.AFFNC(zIdx).*param2;
         end
         
-
         function out = struct(obj)
         %STRUCT Converter to struct
         %
