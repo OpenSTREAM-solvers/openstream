@@ -73,14 +73,6 @@ classdef Model < Inputs.Input
                     );
             end
 
-            % If default values were used, warn user
-            if ~isempty(defaultValueFieldNames)
-                warning( ...
-                    '%s: Default values were used for these entries: \n\t %s ', ...
-                    upper(class(obj)), sprintf('%s ',defaultValueFieldNames{:}) ...
-                    );
-            end
-
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
