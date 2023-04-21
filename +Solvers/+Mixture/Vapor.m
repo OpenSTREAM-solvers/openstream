@@ -66,6 +66,11 @@ classdef Vapor < Solvers.AbstractPhase
             %U Velocity [m/a]
             %   NOTE: need to be verified
             u = vapor.MFLUX ./ vapor.VF ./ vapor.mix.fluid.RHOV(vapor.mix.H);
+            
+            % set to the mixture velocity in the single-phase liquid region
+            singlePhaseIdx = 1:(vapor.mix.onsetAnnularFlow-1);
+            u(singlePhaseIdx) = vapor.mix.U(singlePhaseIdx);
+            
         end
 
         function h = get.H(vapor)
