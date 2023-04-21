@@ -52,7 +52,7 @@ classdef Mixture < matlab.mixin.Copyable
         function mflux = MFLUX(mix, zIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             mflux = mix.W(zIdx)./mix.inputSet.geometry.AREA;
         end
@@ -60,7 +60,7 @@ classdef Mixture < matlab.mixin.Copyable
         function xeq = XEQ(mix, zIdx)
         %XEQ Equilibrium quality [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
         
             xeq = (mix.H(zIdx)-mix.fluid.HF) ./ mix.fluid.HFG;
         end
@@ -68,7 +68,7 @@ classdef Mixture < matlab.mixin.Copyable
         function x = X(mix, zIdx)
         %X Vapor quality [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
         
             switch mix.inputSet.model.SCBOIL
                 case 'NONE'
@@ -79,7 +79,7 @@ classdef Mixture < matlab.mixin.Copyable
         function vf =VF(mix, zIdx)
         %VF Void fraction [-]
         %   
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             geom = mix.inputSet.geometry;
@@ -116,7 +116,7 @@ classdef Mixture < matlab.mixin.Copyable
         function rho = RHO(mix, zIdx)
         %RHO Density [kg/m^3]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             rho = mix.VF(zIdx).*mix.fluid.RHOV(mix.H(zIdx))+ ...
                     (1-mix.VF(zIdx)).*mix.fluid.RHOL(mix.H(zIdx));
@@ -125,7 +125,7 @@ classdef Mixture < matlab.mixin.Copyable
         function mu = MU(mix, zIdx)
         %MU Dynamic viscosity [Pa-s]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             mu = mix.X(zIdx).*mix.fluid.MUV(mix.H(zIdx)) + ...
                     (1-mix.X(zIdx)).*mix.fluid.MUL(mix.H(zIdx));
@@ -134,7 +134,7 @@ classdef Mixture < matlab.mixin.Copyable
         function u = U(mix, zIdx)
         %U Velocity [m/s]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             u = mix.W(zIdx)./mix.RHO(zIdx)./mix.inputSet.geometry.AREA; 
         end
@@ -142,7 +142,7 @@ classdef Mixture < matlab.mixin.Copyable
         function jl = JL(mix, zIdx)
         %JL Superfacial liquid velocity [m/s]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             jl = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOL(mix.H(zIdx));
         end
@@ -150,7 +150,7 @@ classdef Mixture < matlab.mixin.Copyable
         function jg = JG(mix, zIdx)
         %JG Superfacial vapor velocity [m/s]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             jg = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.H(zIdx));
         end
@@ -158,7 +158,7 @@ classdef Mixture < matlab.mixin.Copyable
         function re = RE(mix, zIdx)
         %RE Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             re = 4.*mix.W(zIdx)./mix.MU(zIdx)./sum(mix.inputSet.geometry.PERIM);
         end
@@ -166,7 +166,7 @@ classdef Mixture < matlab.mixin.Copyable
         function rel = REL(mix, zIdx)
         %REL Liquid-equivalent Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             re = 4.*mix.W(zIdx)./mix.MUL(zIdx)./sum(mix.inputSet.geometry.PERIM);
         end
@@ -174,7 +174,7 @@ classdef Mixture < matlab.mixin.Copyable
         function fw = FW(mix, zIdx)
         %FW Wall friction factor [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             fw = model.FRICTION(1).*mix.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3);
@@ -183,7 +183,7 @@ classdef Mixture < matlab.mixin.Copyable
         function tauw = TAUW(mix, zIdx)
         %TAUW wall shear stress [Pa]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             tauw = 0.5.*(mix.FW(zIdx)./4)./mix.RHO(zIdx).*(mix.W(zIdx)./mix.inputSet.geometry.AREA).^2;
         end
@@ -191,7 +191,7 @@ classdef Mixture < matlab.mixin.Copyable
         function kloss = KLOSS(mix, zIdx)
         %KLOSS Local pressure loss coefficient [-]
         % TODO: NEED TO BE VERIFIED
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
 
@@ -205,7 +205,7 @@ classdef Mixture < matlab.mixin.Copyable
         function dpk = DPK(mix, zIdx)
         %DPK Local pressure loss [Pa]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             dpk = 0.5.*mix.KLOSS(zIdx)./mix.RHO(zIdx).*(mix.W(zIdx)./mix.inputSet.geometry.AREA).^2;
         end
@@ -213,28 +213,36 @@ classdef Mixture < matlab.mixin.Copyable
         function t = T(mix, zIdx)
         %T Temperature [K]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             t = mix.fluid.T(mix.H(zIdx));
         end      
         
-        function zIDoaf = onsetAnnularFlow(mix)
+        function zoafIdx = onsetAnnularFlow(mix)
         %ONSETANNULARFLOW Onset of annular flow node
         %
-            model = mix.inputSet.model;
-            geom  = mix.inputSet.geometry;
+
+            G = mix.inputSet.model.G;
+            HDIAM  = mix.inputSet.geometry.HDIAM;
+            MFLUX  = mix.MFLUX;
+
+            % Densities
+            RHOF = mix.fluid.RHOF;
+            RHOG = mix.fluid.RHOG;
+            DELTARHO = RHOF-RHOG;
             
             % Wallis
-            xoaf = (0.6+0.4.*sqrt(model.G*geom.HDIAM*(mix.fluid.RHOF-mix.fluid.RHOG)*mix.fluid.RHOF)./mix.MFLUX)./(0.6+sqrt(mix.fluid.RHOF/mix.fluid.RHOG)); % [-] Quality at onset of annular flow
-            zIDoaf = find(mix.X>=xoaf,1,'first');                          % Find node corresponding to onset of annular flow
-            if isempty(zIDoaf), zIDoaf = nan; end                          % Nan when annular flow region not found
+            xoaf = ( 0.6+0.4.*sqrt(G*HDIAM*(DELTARHO)*RHOF)./MFLUX) ./ (0.6+sqrt(RHOF/RHOG) ); % [-] Quality at onset of annular flow
+            zoafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
+            if isempty(zoafIdx), zoafIdx = NaN; end                         % NaN when annular flow region is not found
+
             
         end
         
-        function afFunction = annularFlowFunction(mix, zIdx)
+        function afFnc = annularFlowFunction(mix, zIdx)
         %ANNULARFLOWFUNCTION Annular flow function
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
@@ -242,7 +250,7 @@ classdef Mixture < matlab.mixin.Copyable
             sigm=@(x,p) 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
             p = [0.04 0.15];                                               % Sigmoid function parameters ([width center] located p(2) [m] upstream OAF) 
             p = p.*(model.NNODES/geom.LENGTH);                             % In node length
-            afFunction =sigm(zIdx',[p(1) onsetAnnularFlow(mix)-p(2)]);
+            afFnc =sigm(zIdx,[p(1) onsetAnnularFlow(mix)-p(2)]);
         end
         
 
