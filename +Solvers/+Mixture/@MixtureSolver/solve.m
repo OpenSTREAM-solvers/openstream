@@ -147,7 +147,7 @@ function solver(solveINIT)
             % Finish steady state solver when SS convergence criterions are met
             if all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
     
-                mixSolver.log('\t\tMax errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
+                mixSolver.log('\t\tCONVERGED: Max errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
     
                 % Replace mixtureInit with subset up to this tIdx
                 mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
@@ -160,6 +160,10 @@ function solver(solveINIT)
             % otherwise, update next timestep with current flow properties
             elseif tIdx < length(mix)-1
                 mixSolver.mixtureInit(tIdx).copyFlowProperties(mixSolver.mixtureInit(tIdx+1));
+            % otherwise, not converged
+            else
+                mixSolver.STATE = "INITIALSTEPNOTCONVERGED";
+                mixSolver.log('\t\tFAILED TO CONVERGE: Max errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
             end
         end
     
