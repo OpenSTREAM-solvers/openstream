@@ -283,10 +283,23 @@ classdef Mixture < matlab.mixin.Copyable
                 % Copy properties
                 propNames = {'W','P','H','DP'};
                 for j = 1:length(propNames)
+                    % Full copy
                     if opts.all
                         targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                    % Partial copy to preserve inlet conditions
                     else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                        % Scalar structs are copied per field
+                        if isstruct(targetObj(1).(propNames{j})) && isscalar(targetObj(1).(propNames{j}))
+                            structFields = fieldnames(targetObj(1).(propNames{j}));
+                            for ii = 1:length(structFields)
+                                targetObj(1).(propNames{j}).(structFields{ii})(2:end) = ...
+                                    srcObj.(propNames{j}).(structFields{ii})(2:end);
+                            end
+                        % Non-scalar properties are copied as a vector
+                        else
+                            targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                        end
+                        
                     end
                 end
 
