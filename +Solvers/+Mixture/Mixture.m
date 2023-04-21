@@ -216,26 +216,10 @@ classdef Mixture < matlab.mixin.Copyable
             if nargin < 2, zIdx = 1:mix(1).NZ; end
             
             t = mix.fluid.T(mix.H(zIdx));
-        end
-        
-        function interpOut = timeInterpolate(mix, y)
-            interpOut = interp1([mix.inputSet.bc.TIME], ...
-                                y, ...
-                                mix.TIME, ...
-                                mix.inputSet.options.TIMEINTERP);
-        end
-
-        function interpOut = axialInterpolate(mix, x, y)
-            interpOut = interp1(x, ...
-                                y, ...
-                                mix.Z, ...
-                                mix.inputSet.options.AXIALINTERP, ...
-                                "extrap");
-        end
-        
+        end      
         
         function zIDoaf = onsetAnnularFlow(mix)
-        % Onset of annular flow node
+        %ONSETANNULARFLOW Onset of annular flow node
         %
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
@@ -248,7 +232,7 @@ classdef Mixture < matlab.mixin.Copyable
         end
         
         function afFunction = annularFlowFunction(mix, zIdx)
-        % Annular flow function
+        %ANNULARFLOWFUNCTION Annular flow function
         %
             if nargin < 2, zIdx = 1:mix(1).NZ; end
             
@@ -318,7 +302,7 @@ classdef Mixture < matlab.mixin.Copyable
 
         function cpObj = copyElement(obj)
         %COPYELEMENT Override copyElement method to create correct references
-        %with properties liquid and vapor 
+        % with properties liquid and vapor 
             
             import Solvers.Mixture.*
 
@@ -328,6 +312,26 @@ classdef Mixture < matlab.mixin.Copyable
             % Update liquid and vapor 'mix' property
             cpObj.liquid = Liquid(cpObj);
             cpObj.vapor = Vapor(cpObj);
+        end
+
+
+        function interpOut = timeInterpolate(mix, y)
+        %TIMEINTERPOLATE Interpolate vector y in TIME
+        %
+            interpOut = interp1([mix.inputSet.bc.TIME], ...
+                                y, ...
+                                mix.TIME, ...
+                                mix.inputSet.options.TIMEINTERP);
+        end
+
+        function interpOut = axialInterpolate(mix, x, y)
+        %AXIALINTERPOLATE Interpolate vector y in x
+        %
+            interpOut = interp1(x, ...
+                                y, ...
+                                mix.Z, ...
+                                mix.inputSet.options.AXIALINTERP, ...
+                                "extrap");
         end
     end
 
