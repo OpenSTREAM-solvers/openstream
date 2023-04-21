@@ -59,7 +59,14 @@ classdef Log < handle
                             );
                         else
                             %TODO: add warning about deletion
-                            rmdir(opts.session.directory,'s');
+                            [status, msg, msgID] = rmdir(opts.session.directory,'s');
+                            if status ~= 1
+                                throw( ...
+                                    MException(msgID,msg) ...
+                                );
+                            else
+                                warning('%s was removed.', opts.session.directory);
+                            end
                         end
                     end
         
