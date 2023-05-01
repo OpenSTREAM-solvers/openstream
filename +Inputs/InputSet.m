@@ -75,7 +75,7 @@ classdef InputSet
                 obj.geometry = Geometry(opts.geometryFilePath, opts.geometryID);
                 obj.bc = BoundaryConditions(opts.bcFilePath, obj.geometry);
             catch ME
-                getreport(ME)
+                getReport(ME)
                 obj.session.log.toggleDiary();
             end
             obj.session.log.toggleDiary();
