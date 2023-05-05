@@ -76,7 +76,7 @@ classdef InputSet
                 obj.bc = BoundaryConditions(opts.bcFilePath, obj.geometry);
             catch ME
                 getReport(ME)
-                obj.session.log.toggleDiary();
+                obj.session.log.toggleDiary(true);
                 rethrow(ME)
             end
             obj.session.log.toggleDiary();
