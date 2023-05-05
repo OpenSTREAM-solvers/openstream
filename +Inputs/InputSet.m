@@ -77,6 +77,7 @@ classdef InputSet
             catch ME
                 getReport(ME)
                 obj.session.log.toggleDiary();
+                rethrow(ME)
             end
             obj.session.log.toggleDiary();
 
