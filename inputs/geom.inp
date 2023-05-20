@@ -11,3 +11,10 @@ AREA      ! Coolant area [m^2]             > 4.3200e-04
 PERIM     ! Perimeters [m]                 > 0.036 0.036 0.024
 ANGLE     ! Angle [rad]                    > 0
 END
+
+ID        ! Channel ID                     > BARC
+LENGTH    ! Axial length [m]               > 3.5
+AREA      ! Coolant area [m^2]             > 6.0821e-05
+PERIM     ! Perimeters [m]                 > 0.0276
+ANGLE     ! Angle [rad]                    > 0
+END
