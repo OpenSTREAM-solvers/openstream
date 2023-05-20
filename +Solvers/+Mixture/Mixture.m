@@ -168,7 +168,7 @@ classdef Mixture < matlab.mixin.Copyable
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            re = 4.*mix.W(zIdx)./mix.MUL(zIdx)./sum(mix.inputSet.geometry.PERIM);
+            rel = 4.*mix.W(zIdx)./mix.MUL(zIdx)./sum(mix.inputSet.geometry.PERIM);
         end
 
         function fw = FW(mix, zIdx)
@@ -218,39 +218,63 @@ classdef Mixture < matlab.mixin.Copyable
             t = mix.fluid.T(mix.H(zIdx));
         end      
         
-        function zoafIdx = onsetAnnularFlow(mix)
-        %ONSETANNULARFLOW Onset of annular flow node
-        %
-
-            G = mix.inputSet.model.G;
+        function oafIdx = OAFIDX(mix)
+            %OAFIDX Onset of annular flow node
+            %
+            
+            model = mix.inputSet.model;
             HDIAM  = mix.inputSet.geometry.HDIAM;
             MFLUX  = mix.MFLUX;
-
+            
             % Densities
             RHOF = mix.fluid.RHOF;
             RHOG = mix.fluid.RHOG;
             DELTARHO = RHOF-RHOG;
             
-            % Wallis
-            xoaf = ( 0.6+0.4.*sqrt(G*HDIAM*(DELTARHO)*RHOF)./MFLUX) ./ (0.6+sqrt(RHOF/RHOG) ); % [-] Quality at onset of annular flow
-            zoafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
-            if isempty(zoafIdx), zoafIdx = NaN; end                         % NaN when annular flow region is not found
-
-            
+            switch model.OAF
+                case 'WALLIS'
+                    % Wallis model
+                    xoaf = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
+                case 'WALLIS_SIMP'
+                    % Simplified Wallis model
+                    xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
+            end
+            oafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
+            if isempty(oafIdx), oafIdx = NaN; end                          % NaN when annular flow region is not found
         end
         
-        function afFnc = annularFlowFunction(mix, zIdx)
-        %ANNULARFLOWFUNCTION Annular flow function
+        function oafz = OAFZ(mix)
+        %OAFZ Onset of annular flow elevation
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            oafz = mix.Z(mix.OAFIDX);                                      % [m] Elevation at onset of annular flow
+        end
+        
+        function oafwl = OAFWL(mix)
+        %OAFWL Liquid mass flow rate at onset of annular flow
+        %
+            oafwl = mix.liquid.W(mix.OAFIDX);                    % [kg/s] Mixture liquid mass flow rate
+        end
+        
+        function afFnc = AFFNC(mix, zIdx)
+        %AFFNC Annular flow function
+        %
+            if nargin < 2, zIdx = 1:mix(1).NZ; end
             
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
 
             sigm=@(x,p) 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
-            p = [0.04 0.15];                                               % Sigmoid function parameters ([width center] located p(2) [m] upstream OAF) 
-            p = p.*(model.NNODES/geom.LENGTH);                             % In node length
-            afFnc =sigm(zIdx,[p(1) onsetAnnularFlow(mix)-p(2)]);
+            p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
+            p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
+            afFnc =sigm(zIdx(:),[p(1) OAFIDX(mix)+p(2)]);
+        end
+        
+        function afDistr = AFDISTR(mix,param1,param2,zIdx)
+        %AFDISTR Annular flow distribution function
+        %
+            if nargin < 4, zIdx = (1:mix(1).NZ).'; end
+            
+            afDistr = (1-mix.AFFNC(zIdx)).*param1 + mix.AFFNC(zIdx).*param2;
         end
         
 

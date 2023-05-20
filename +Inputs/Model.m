@@ -4,23 +4,40 @@ classdef Model < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                 % Model ID 
+        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                % Model ID 
         NNODES           double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
-                                                                           = []                       % Number of axial nodes 
-        FLUID       (1,1) string  {mustBeTextScalar}                        = "WATER"               % Fluid ID
+                                                                           = []                    % Number of axial nodes 
+        FLUID       (1,1) string  {mustBeTextScalar}                       = "WATER"               % Fluid ID
         PROPERTIES  (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
                                                                            = 'SATURATED'           % Fluid property assumptions
         FRICTION    (1,3) double  {mustBeNumeric}                          = [0.2 -0.2 0]          % Wall friction coefficients
         TPFM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
-        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]               % Elevation of local perturbations [m] 
-        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]               % corresponding pressure loss coefficients [-]
+        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % Elevation of local perturbations [m] 
+        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % corresponding pressure loss coefficients [-]
         TPKM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
         SCBOIL      (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
                                                                            = 'NONE'                % Subcooled boiling mode
         VOID        (1,1) string  {mustBeMember(VOID, ["HOMOGENEOUS","SLIP"])} ...
                                                                            = 'HOMOGENEOUS'         % Void fraction model 
         SLIP        (1,1) double  {mustBePositive}                         = 1                     % Phase velocity ratio [-]
-    
+        
+        OAF           (1,1) string  {mustBeTextScalar,mustBeMember(OAF, ["WALLIS","WALLIS_SIMP"])} ...
+                                                                           = 'WALLIS'              % Onset of annular flow model [-]
+        OAFDROPRATIO  (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}      = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
+        OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.04 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
+        DEPOSITION    (1,1) string  {mustBeTextScalar,mustBeMember(DEPOSITION, ["GOVAN","OKAWA"])} ...
+                                                                           = 'GOVAN'               % Drop deposition model [-]
+        ENTRAINMENT   (1,1) string  {mustBeTextScalar,mustBeMember(ENTRAINMENT, ["GOVAN","OKAWA"])} ...
+                                                                           = 'GOVAN'               % Film entrainment model [-]   
+        MOMENTFILM    (1,1) string  {mustBeTextScalar,mustBeMember(MOMENTFILM, ["ALGEBRAIC","EQUILIBRIUMS","EQUILIBRIUM","FULL"])} ...
+                                                                           = 'ALGEBRAIC'                % Film momentum conservation model [-]  
+        MOMENTDROP    (1,1) string  {mustBeTextScalar,mustBeMember(MOMENTDROP, ["SLIP"])} ...
+                                                                           = 'SLIP'                % Drop momentum conservation model [-]                                                                 
+        DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
+        THINFILMFRIC  (1,1) string  {mustBeTextScalar,mustBeMember(THINFILMFRIC, ["LAMINAR","TURBULENT"])} ...
+                                                                           = 'LAMINAR'             % Thin film friction model [-]  
+        THINFILMTHICK (1,1) double  {mustBePositive}                       = 1E-4                  % Thin film thickness [m]        
+        POSFILM       (1,1) logical                                        = true                  % Keep positive film flowrate/thickness
     end
 
     properties (SetAccess = private)
