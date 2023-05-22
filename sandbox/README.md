@@ -1,0 +1,1 @@
+Anything in this directory, except for this README file, is ignored by git.

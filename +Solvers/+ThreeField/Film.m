@@ -32,7 +32,6 @@ classdef Film < matlab.mixin.Copyable
      end
      
      
-
     methods
         function film = Film(inputSet, fluid)
             %FILM Creates a Film ?solver? film

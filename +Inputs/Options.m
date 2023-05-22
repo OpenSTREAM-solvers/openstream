@@ -33,10 +33,20 @@ classdef Options < Inputs.Input
         function obj = Options(filePath,optionsID)
             %MODEL Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                filePath = ""
+                optionsID = ""
+            end
 
             % Call superclass constructor to parse file and select
             % specified modelID using "ID" key
-            obj = obj@Inputs.Input(filePath, 'ID', optionsID)
+            obj = obj@Inputs.Input(filePath, 'ID', optionsID);
+
+            % Return default value if empty inputs are given
+            if strlength(filePath) == 0
+                obj.ID = "DEFAULT";
+                return
+            end
             
             %
             % List of immutable obj property names

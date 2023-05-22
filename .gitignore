@@ -1,3 +1,4 @@
 *.asv
 outputs/
+!sandbox/*.md
 
