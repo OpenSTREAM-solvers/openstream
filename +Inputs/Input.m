@@ -117,8 +117,17 @@ classdef (HandleCompatible) Input < dynamicprops
                     );
                 else
                 % An optional property was not specified
+                    
+                    % The default value
+                    defValue = propProps.DefaultValue;
+                    
+                    % Convert numeric default value to string
+                    if isnumeric(propProps.DefaultValue)
+                        defValue = num2str(propProps.DefaultValue);
+                    end
+
                     warning('%s: Value for optional property %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, num2str(propProps.DefaultValue));
+                        objClassName, objPropname, defValue);
                     defaultUsed = true;
                 end
             end

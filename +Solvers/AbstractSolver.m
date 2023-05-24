@@ -38,5 +38,19 @@ classdef (Abstract) AbstractSolver < handle
         end
         
     end
+
+    methods (Static)
+        function ITR = CreateITR(NZ, ITRFields)
+            % Create inner iteration value struct
+            arguments
+                NZ        (1,1) double  
+                ITRFields (1,:) string  = ["N","DW","DU"]                   % Cell structure to convert into struct
+            end
+
+            ITRCell = cell(numel(ITRFields),1);                            
+            ITRCell(:) = {zeros(NZ,1)};                                     % Initialize with zeros
+            ITR = cell2struct(ITRCell, ITRFields, 1);                       % Convert cell to struct with fieldnames
+        end
+    end
 end
 
