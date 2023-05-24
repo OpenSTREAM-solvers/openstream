@@ -56,7 +56,7 @@ tfSolver = ThreeFieldSolver(inputSet,mixSolver);
 tfSolver.plotz(1);                                                         % Plot initialization state (dep and ent set to 0 but calculated value is plotted instead)
 
 % tfSolver is initialized at construction. Here, it is explicitly initialized for clarity.
-tfSolver.initializeSolver(mixSolver); 
+tfSolver.initializeSolver(); 
 
 % Solve (does not accept any argument)
 tfSolver.solve();

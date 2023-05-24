@@ -5,8 +5,7 @@ classdef FluidProperties
     properties (SetAccess=immutable)
         
         FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid ID
-        PROPERTIES (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
-                                                                           = 'SATURATED'           % Fluid property assumptions
+        PROPERTIES (1,1) InputEnums.FLUIDPROPERTIES                        = 'SATURATED'           % Fluid property assumptions
         PRESSURE   (1,1) double  {mustBeNumeric}                           = 1                     % [Pa] System pressure
         TSAT       (1,1) double  {mustBeNumeric}                           = 1                     % [K] Saturated fluid temperature
         RHOF       (1,1) double  {mustBeNumeric}                           = 1                     % [kg/m^3] Saturated liquid mass density

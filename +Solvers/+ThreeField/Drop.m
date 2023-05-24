@@ -1,16 +1,16 @@
-classdef Drop < matlab.mixin.Copyable
+classdef Drop < Solvers.AbstractField
     %DROP Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties %(SetAccess=?Solvers.ThreeField.ThreeFieldSolver)
+     properties (SetAccess=?Solvers.AbstractSolver)
         
         % Solver properties
-        NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
-        TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
-        Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
+        NZ                                                                 = 0                    % [-] Number of axial steps
+        NTIME                                                              = 0                    % [-] Number of time steps
+        TIME                                                               = 0                    % [s] Time series
+        DT                                                                 = 0                    % [s] Time step size
+        TIDX                                                               = 1                    % [-] Time step index
+        Z                                                                  = 1.                   % [m] Elevation
         
         % Flow properties
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
@@ -18,11 +18,11 @@ classdef Drop < matlab.mixin.Copyable
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
 
         % Iteration properties
-        ITR          (1,1) struct 
+        ITR
 
      end
 
-     properties (SetAccess=?Solvers.ThreeField.ThreeFieldSolver, GetAccess=?Solvers.AbstractPhase)
+     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
         
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
@@ -91,14 +91,14 @@ classdef Drop < matlab.mixin.Copyable
             %Wd = abs(Wd);
             
             switch model.DEPOSITION
-                case 'GOVAN'
+                case InputEnums.DEPOSITION.GOVAN
                     % Govan & Hewitt drop deposition model
                     if conc/rhog < 0.3
                         mdep = 0.18.*conc./sqrt(rhog*hdiam/sig);            % [kg/m^2/s] Deposition mass flux
                     else
                         mdep = 0.083.*(conc./rhog).^(-0.65).*conc./sqrt(rhog*hdiam/sig); % [kg/m^2/s] Deposition mass flux
                     end
-                case 'OKAWA'
+                case InputEnums.DEPOSITION.OKAWA
                     % Okawa drop deposition model
                     kd = 0.0632.*(conc./rhog).^-0.5.*sqrt(sig./(rhog.*hdiam));% [m/s] Deposition mass transfer coefficient
                     mdep = kd.*conc;                                        % [kg/m^2/s] Deposition mass flux

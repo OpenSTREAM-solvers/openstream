@@ -12,6 +12,8 @@ tfSolver.inputSet.session.log.toggleDiary(true);
 if tfSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
+    tfSolver.log('\n---------------------- Three-field solver run initiated ----------------------\n\n')
+
     solver(true);
     solver(false);
     
@@ -25,7 +27,7 @@ tfSolver.inputSet.session.log.toggleDiary(true);
 
 function solver(solveINIT)
     
-    mix = tfSolver.mixture;
+    mix = tfSolver.mixSolver.mixture;
     nwall = tfSolver.inputSet.geometry.NWALL;
 
     % check if solving filmInit and dropInit
@@ -95,19 +97,19 @@ function solver(solveINIT)
                 
                 % Film momentum conservation
                 switch model.MOMENTFILM
-                    case 'ALGEBRAIC'
+                    case InputEnums.MOMENTFILM.ALGEBRAIC
                     % Simple algebraic model
                         film(tIdx).U(zIdx,:) = film(tIdx).UALGEBR(mix(tIdx),zIdx);                    % [m/s]
                         
-                    case 'EQUILIBRIUMS'
+                    case InputEnums.MOMENTFILM.EQUILIBRIUMS
                     % Simple equilibrium model (Fwall+ Fvapor = 0)
                         film(tIdx).U(zIdx,:) = film(tIdx).UEQUILS(mix(tIdx),zIdx);                    % [m/s]
                         
-                    case 'EQUILIBRIUM'
+                    case InputEnums.MOMENTFILM.EQUILIBRIUM
                     % Complete equilibrium model (Ftot = 0)
                         film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(mix(tIdx),drop(tIdx),zIdx);          % [m/s]
                         
-                    case 'FULL'
+                    case InputEnums.MOMENTFILM.FULL
                     % Full momentum conservation
                         %for i = 1:round(1/options.RELAXUF)
                         
@@ -132,7 +134,7 @@ function solver(solveINIT)
                 
                 % Drop momentum conservation
                 switch model.MOMENTDROP
-                    case 'SLIP'
+                    case InputEnums.MOMENTDROP.SLIP
                         drop(tIdx).U(zIdx,:) = model.DROPSLIP.*mix(tIdx).vapor.U(zIdx); % [m/s] Drop velocity
                 end
                 

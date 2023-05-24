@@ -1,16 +1,16 @@
-classdef Mixture < matlab.mixin.Copyable
+classdef Mixture < Solvers.AbstractField
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess=?Solvers.Mixture.MixtureSolver)
+    properties (SetAccess=?Solvers.AbstractSolver)
         
         % Solver properties
-        NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
-        TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
-        Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
+        NZ                                                                 = 0                    % [-] Number of axial steps
+        NTIME                                                              = 0                    % [-] Number of time steps
+        TIME                                                               = 0                    % [s] Time series
+        DT                                                                 = 0                    % [s] Time step size
+        TIDX                                                               = 1                    % [-] Time step index
+        Z                                                                  = 1.                   % [m] Elevation
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
         
         % Flow properties
@@ -20,25 +20,23 @@ classdef Mixture < matlab.mixin.Copyable
         DP           (1,1) struct                                                                 % [-] Detailed pressure drops
 
         % Iteration properties
-        ITR          (1,1) struct 
+        ITR
 
         % Phases
         liquid
         vapor
-     end
+    end
 
-     properties (SetAccess=?Solvers.Mixture.MixtureSolver, GetAccess=?Solvers.AbstractPhase)
+    properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
         
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        inputSet    {isa(inputSet,'Inputs.InputSet')}
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
-     end
+        inputSet                   {isa(inputSet,'Inputs.InputSet')}
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}
+    end
     
-    
-
     methods
         function mix = Mixture(inputSet, fluid)
-            %MIXTURE Creates a Mixture solver mix
+            %MIXTURE Creates a Mixture, mix
             %   Detailed explanation goes here
 
             if nargin > 0
@@ -85,13 +83,13 @@ classdef Mixture < matlab.mixin.Copyable
             geom = mix.inputSet.geometry;
 
             switch model.VOID
-                case 'HOMOGENEOUS'
+                case InputEnums.VOID.HOMOGENEOUS
                     % [-] Homogeneous void model
                     vf = vfslip(mix.X(zIdx),1);
-                case 'SLIP'
+                case InputEnums.VOID.SLIP
                     % [-] Slip void model
                     vf = vfslip(mix.X(zIdx),model.SLIP);
-                case 'BESTION'
+                case InputEnums.VOID.BESTION
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
                     ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(mix.fluid.RHOF-mix.fluid.RHOG)./mix.fluid.RHOG); % [m/s] Drift velocity
@@ -232,10 +230,10 @@ classdef Mixture < matlab.mixin.Copyable
             DELTARHO = RHOF-RHOG;
             
             switch model.OAF
-                case 'WALLIS'
+                case InputEnums.OAF.WALLIS
                     % Wallis model
                     xoaf = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
-                case 'WALLIS_SIMP'
+                case InputEnums.OAF.WALLIS_SIMP
                     % Simplified Wallis model
                     xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
             end
