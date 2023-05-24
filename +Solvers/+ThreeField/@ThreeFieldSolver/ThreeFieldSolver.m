@@ -22,7 +22,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
      end
 
      properties (SetAccess = protected)
-        mixture
+        mixSolver
         inputSet
         STATE                                                               = Solvers.SolverState.UNSOLVED
      end
@@ -38,20 +38,26 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
-                mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')}
+                mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
             end
 
             % Call abstract class constructor
             tfSolver = tfSolver@Solvers.AbstractSolver(inputSet);
             
-            tfSolver.mixture = mixSolver.mixture;
+            % Store mixSolver handle
+            tfSolver.mixSolver = mixSolver;
+
+            % Attempt to solve mixSolver if it is unsolved
+            if tfSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
+                tfSolver.mixSolver.solve();
+            end
             
             % Initialize solver parameters
-            tfSolver.initializeSolver(mixSolver);
+            tfSolver.initializeSolver();
 
         end
         
-        function initializeSolver(tfSolver,mixSolver)
+        function initializeSolver(tfSolver)
         %INITIALIZESOLVER Initialize solver using the stored inputSet
         %
             
@@ -62,19 +68,17 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Copy relevant properties from mixSolver
             props = {'NZ','NTIME','TIME','DT','Z','DZ','fluid','boundaryConditions'}; % mixSolver properties
             for p = props
-                tfSolver.(p{:}) = mixSolver.(p{:});
+                tfSolver.(p{:}) = tfSolver.mixSolver.(p{:});
             end
             
             % Local parameters
-            mix   = tfSolver.mixture;                                      % Mixture solution
+            mix   = tfSolver.mixSolver.mixture;                            % Mixture solution
             model = tfSolver.inputSet.model;                               % Models
             geom  = tfSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DU"];
-            ITRCell = cell(numel(ITRFields),1);                            % Cell structure to convert into struct
-            ITRCell(:) = {zeros(tfSolver.NZ,1)};                           % Initialize with zeros
-            ITR = cell2struct(ITRCell, ITRFields, 1);                      % Convert cell to struct with fieldnames
+            ITR = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
 
             % Create film and drop arrays (by timestep)
             flmArr = Film.empty(0,tfSolver.NTIME);
@@ -103,7 +107,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 flmArr(tIdx).TIME  = tfSolver.TIME(tIdx);
                 flmArr(tIdx).TIDX  = tIdx;
                 
-                % Copy remaining properties to drop
+                % Copy properties to drop
                 for p = props
                     drpArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
                 end
@@ -129,16 +133,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 % Note 2: other, maybe better, initialization states could be investigated
                 drpArr(tIdx).W = repmat(model.OAFDROPRATIO.*mix(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
                 
-                    % Transient mass gradient in film field
+                % Transient mass gradient in film field
                 %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
                 %flmArr(tIdx).W = flmArr(tIdx).W+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;  % [kg/s] Apply simple mass conservation
                 
-                    % ... or transient mass gradient in drop field
+                % ... or transient mass gradient in drop field
                 drpArr(tIdx).W = drpArr(tIdx).W+mix(tIdx).W-mix(tIdx).W(mix(tIdx).OAFIDX);                                % 
                 flmArr(tIdx).W(1,1:geom.NWALL) = (mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
                 flmArr(tIdx).W = flmArr(tIdx).W(1,:)+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;                 % [kg/s] Apply simple mass conservation
                 
-                    % Limit film flow rate by 0
+                % Limit film flow rate minimum to 0
                 flmArr(tIdx).W = max(0,flmArr(tIdx).W);
                 drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
                 
@@ -147,16 +151,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 drpArr(tIdx).U = model.DROPSLIP.*mix(tIdx).vapor.U;        % [m/s] Initialize drop velocity
                 
                 switch model.MOMENTFILM
-                    case 'ALGEBRAIC'
+                    case InputEnums.MOMENTFILM.ALGEBRAIC
                         flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));  % [m/s]
-                    case 'EQUILIBRIUMS'
+                    case InputEnums.MOMENTFILM.EQUILIBRIUMS
                         flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
-                    case {'EQUILIBRIUM','FULL'}
+                    case {InputEnums.MOMENTFILM.EQUILIBRIUM, InputEnums.MOMENTFILM.FULL}
                         flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s] Initialize
                         %flmArr(tIdx).U = flmArr(tIdx).UEQUIL(mix(tIdx),drpArr(tIdx)); % [m/s]
                 end
                                 
-                % Initialize enthalpy [J/kg]
+                % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drpArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
                 flmArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
                 
@@ -205,7 +209,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             tIdx    (1,1) double
         end
             bc  = tfSolver.boundaryConditions;
-            mix = tfSolver.mixture(tIdx);
+            mix = tfSolver.mixSolver.mixture(tIdx);
             flm = tfSolver.film(tIdx);
             drp = tfSolver.drop(tIdx);
             z   = tfSolver.Z;

@@ -1,11 +1,10 @@
-classdef Film < matlab.mixin.Copyable
+classdef Film < Solvers.AbstractField
     %FILM Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties %(SetAccess=?Solvers.ThreeField.ThreeFieldSolver)
+     properties (SetAccess=?Solvers.AbstractSolver)
         
         % Solver properties
-
         NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
         TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
@@ -21,11 +20,11 @@ classdef Film < matlab.mixin.Copyable
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
         
         % Iteration properties
-        ITR          (1,1) struct 
+        ITR
 
      end
 
-     properties (SetAccess=?Solvers.ThreeField.ThreeFieldSolver, GetAccess=?Solvers.AbstractPhase)
+     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
         
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
@@ -36,7 +35,6 @@ classdef Film < matlab.mixin.Copyable
      methods
         function film = Film(inputSet, fluid)
             %FILM Creates a Film ?solver? film
-
             %   Detailed explanation goes here
 
             if nargin > 0
@@ -47,7 +45,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function wl = WL(film,zIdx)
-        % Film mass flow rate per unit perimeter
+        %WL Film mass flow rate per unit perimeter
         %    
             if nargin < 2, zIdx = 1:film.NZ; end
             
@@ -57,7 +55,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function thick = THICK(film,zIdx)
-        % Film thickness
+        %THICK Film thickness
         %    
             if nargin < 2, zIdx = 1:film.NZ; end
             
@@ -67,7 +65,7 @@ classdef Film < matlab.mixin.Copyable
         end
 
         function re = RE(film,zIdx)
-        % RE Film Reynolds number [-]
+        %RE Film Reynolds number [-]
         %
             if nargin < 2, zIdx = 1:film.NZ; end
             
@@ -77,7 +75,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function ment = MENT(film,mix,zIdx)
-        % Film entrainment mass flux
+        %MENT Film entrainment mass flux
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -97,7 +95,7 @@ classdef Film < matlab.mixin.Copyable
             Wf = abs(Wf);
             
             switch model.ENTRAINMENT
-                case 'GOVAN'
+                case InputEnums.ENTRAINMENT.GOVAN
                     % Govan & Hewitt film entrainment model
                     k = 5.75e-5; n1 = 0.316; n2 = 0.632;                   % Model constants
                     Wfc = muf.*exp(5.8504+0.4249*mug/muf*sqrt(rhof/rhog)).*perim./4; % [kg/s] Critical film flow rate
@@ -111,7 +109,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Mtot = MTOT(film,mix,drop,zIdx)
-        % Total
+        %MTOT Total
         %
             if nargin < 4, zIdx = 1:film(1).NZ; end
             
@@ -119,7 +117,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Cw = CW(film,mix,zIdx)
-        % Wall friction factor
+        %CW Wall friction factor
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -127,11 +125,11 @@ classdef Film < matlab.mixin.Copyable
             C = 0.005;                                                     % Constant friction factor
             
             switch model.THINFILMFRIC
-                case "TURBULENT"
+                case InputEnums.THINFILMFRIC.TURBULENT
                     %
                     nwall = film.inputSet.geometry.NWALL;                  % Number of walls
                     Cw = repmat(C,length(zIdx),nwall);                     % [-]
-                case "LAMINAR"
+                case InputEnums.THINFILMFRIC.LAMINAR
                     %
                     RE = max(film.RE(zIdx),1E-6);
                     Cw = max(16./RE,C);                                    % [-]
@@ -142,7 +140,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Fwall = FWALL(film,mix,zIdx)
-        % Film wall shear stress
+        %FWALL Film wall shear stress
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -151,7 +149,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Cv = CV(film,mix,zIdx)
-        % Film/vapor interfacial friction factor
+        %CV Film/vapor interfacial friction factor
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -164,7 +162,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Fvapor = FVAPOR(film,mix,zIdx)
-        % Film vapor shear stress
+        %FVAPOR Film vapor shear stress
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -175,7 +173,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Fbuoy = FBUOY(film,mix,zIdx)
-        % Film buoyancy
+        %FBUOY Film buoyancy
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -189,7 +187,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Fgrav = FGRAV(film,mix,zIdx)
-        % Film gravity
+        %FGRAV Film gravity
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -203,7 +201,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Fdep = FDEP(film,mix,drop,zIdx)
-        % Drop deposition shear
+        %FDEP Drop deposition shear
         %
             if nargin < 4, zIdx = 1:film(1).NZ; end
             
@@ -215,7 +213,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Ftot = FTOT(film,mix,drop,zIdx)
-        % Total
+        %FTOT Total
         %
             if nargin < 4, zIdx = 1:film(1).NZ; end
             
@@ -225,7 +223,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Ualgebr = UALGEBR(film,mix,zIdx)
-        % Film velocity based on simple algebraic model
+        %UALGEBR Film velocity based on simple algebraic model
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -239,7 +237,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Uequil = UEQUILS(film,mix,zIdx)
-        % Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
+        %UEQUILS Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
         %
             if nargin < 3, zIdx = 1:film(1).NZ; end
             
@@ -253,7 +251,7 @@ classdef Film < matlab.mixin.Copyable
         end
         
         function Uequil = UEQUIL(film,mix,drop,zIdx)
-        % Film velocity based on complete equilibrium model (Ftot = 0)
+        %UEQUIL Film velocity based on complete equilibrium model (Ftot = 0)
         %
         if nargin < 4, zIdx = 1:film(1).NZ; end
         
@@ -330,12 +328,9 @@ classdef Film < matlab.mixin.Copyable
 
     methods(Access = protected)
     
-
         function cpObj = copyElement(obj)
         %COPYELEMENT Override copyElement method to create correct references
         %with properties liquid and vapor 
-            
-            import Solvers.ThreeField.*
 
             % Make a shallow copy of all four properties
             cpObj = copyElement@matlab.mixin.Copyable(obj);

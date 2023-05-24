@@ -85,10 +85,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DH"];
-            ITRCell = cell(numel(ITRFields),1);                             % Cell structure to convert into struct
-            ITRCell(:) = {zeros(mixSolver.NZ,1)};                           % Initialize with zeros
-            ITR = cell2struct(ITRCell, ITRFields, 1);             % Convert cell to struct with fieldnames
-
+            ITR = mixSolver.CreateITR(mixSolver.NZ, ITRFields);
 
             % Setup fluid property object
             mixSolver.fluid = FluidProperties( ...
@@ -327,10 +324,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
             if isscalar(mix) || isscalar(opt.tIdx)
                 mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
-%                 throw( ...
-%                     MException( ...
-%                         'MixtureSolverPlottError:ScalarTimestepError', ...
-%                         'Non-scalar time index required to plot time series'))
             end
 
             % Time vector

@@ -12,10 +12,13 @@ mixSolver.inputSet.session.log.toggleDiary(true);
 if mixSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
+    
+    mixSolver.log('\n---------------------- Mixture solver run initiated ----------------------\n\n')
+
     solver(true);
     solver(false);
     
-    mixSolver.log('\n---------------------- Two-phase flow solver run completed ----------------------\n\n')
+    mixSolver.log('\n---------------------- Mixture solver run completed ----------------------\n\n')
 end
 
 mixSolver.inputSet.session.log.toggleDiary();
