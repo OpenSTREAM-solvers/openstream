@@ -1,4 +1,4 @@
 [submodule "CoolPropWrapper"]
 	path = +CoolPropWrapper
-	url = git@github.com:mfval/CoolPropWrapper.git
+	url = https://github.com/mfval/CoolPropWrapper.git
 	ignore = dirty
