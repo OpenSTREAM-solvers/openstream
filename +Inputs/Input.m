@@ -100,7 +100,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
                     warning('%s: Value for entry %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, defaultValueString(propProps.DefaultValue));
+                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
                 else
                     % Assign specified non-empty value to property
@@ -119,7 +119,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 % An optional property was not specified
                     
                     warning('%s: Value for optional property %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, defaultValueString(propProps.DefaultValue));
+                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
                 end
             end
@@ -293,6 +293,8 @@ classdef (HandleCompatible) Input < dynamicprops
         %DEFAULTVALUESTRING Convert numeric default value to string
             if isnumeric(defVal)
                 defVal = num2str(defVal);
+            elseif islogical(defVal)
+                defVal = string(defVal);
             end
         end
 
