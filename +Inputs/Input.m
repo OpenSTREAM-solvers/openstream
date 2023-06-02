@@ -100,7 +100,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
                     warning('%s: Value for entry %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, num2str(propProps.DefaultValue));
+                        objClassName, objPropname, defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
                 else
                     % Assign specified non-empty value to property
@@ -118,16 +118,8 @@ classdef (HandleCompatible) Input < dynamicprops
                 else
                 % An optional property was not specified
                     
-                    % The default value
-                    defValue = propProps.DefaultValue;
-                    
-                    % Convert numeric default value to string
-                    if isnumeric(propProps.DefaultValue)
-                        defValue = num2str(propProps.DefaultValue);
-                    end
-
                     warning('%s: Value for optional property %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, defValue);
+                        objClassName, objPropname, defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
                 end
             end
@@ -294,6 +286,14 @@ classdef (HandleCompatible) Input < dynamicprops
 
             
 
+        end
+
+
+        function defVal = defaultValueString(defVal)
+        %DEFAULTVALUESTRING Convert numeric default value to string
+            if isnumeric(defVal)
+                defVal = num2str(defVal);
+            end
         end
 
         function jsonText = convert2JSON(inputFilePath)
