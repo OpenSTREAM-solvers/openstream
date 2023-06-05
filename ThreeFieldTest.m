@@ -6,8 +6,10 @@ addpath('/san/jobA/job1/2018p4151/mfval/Git/TwoPhaseSolver/')
 import Inputs.*
 import Solvers.*
 import Solvers.Mixture.*
+import Solvers.ThreeField.*
 
-%Inputs
+%% Inputs
+
 % inputSet = InputSet( ...
 %             modelFilePath         = './inputs/models.inp',  modelID    = 'MFVALS', ...
 %             optionsFilePath       = './inputs/options.inp', optionsID  = 'STEADY', ...
@@ -25,51 +27,46 @@ inputSet = InputSet( ...
             sessionParentDir      = fullfile(pwd,'outputs'), ...
             overwriteSessionFiles = true, ...
             LOGMODE               = 'BOTH');        
+ 
+%% Processing        
         
-% Create the mixture solver
+% Create the three-field solver
 mixSolver = MixtureSolver(inputSet);
+tfSolver = ThreeFieldSolver(inputSet,mixSolver);
 
-% mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.
-mixSolver.initializeSolver(); 
+% Plot initial axial and temporal distributions
+%mixSolver.plotz(1);
+%tfSolver.plotz(1);                                                         % dep and ent set to 0 but calculated value is plotted instead
+
+% mixSolver and tfSolver are initialized at construction. Here, they are explicitly initialized for clarity.
+%mixSolver.initializeSolver(); 
+%tfSolver.initializeSolver(); 
 
 % Solve (does not accept any argument)
-mixSolver.solve();
+%mixSolver.solve();                                                        % Solved by tfSolver if not solved here
+tfSolver.solve();
 
-% Axial and temporal plots
+% Save results
+mixSolver.saveResults(saveFormat="MAT");
+tfSolver.saveResults(saveFormat="MAT");
+
+%% Plots
+
+% Plot solved axial and temporal distributions
 mixSolver.plotz(1);
 mixSolver.plotz(mixSolver.NTIME);
 %mixSolver.plott(mixSolver.NZ,'solveMode','STEADY')
 %mixSolver.plott(mixSolver.NZ)
 %mixSolver.plott([1 floor(mixSolver.NZ./8.*(2:8))])
 
-% Save results
-mixSolver.saveResults(saveFormat="MAT");
-
-%return
-
-%% Three-field
-
-import Solvers.ThreeField.*
-
-% Create the three-field solver
-tfSolver = ThreeFieldSolver(inputSet,mixSolver);
-tfSolver.plotz(1);                                                         % Plot initialization state (dep and ent set to 0 but calculated value is plotted instead)
-
-% tfSolver is initialized at construction. Here, it is explicitly initialized for clarity.
-tfSolver.initializeSolver(); 
-
-% Solve (does not accept any argument)
-tfSolver.solve();
-
-% Axial and temporal plots
 tfSolver.plotz(1);
+%for k=11:10:tfSolver.NTIME, tfSolver.plotz(k); end
 tfSolver.plotz(tfSolver.NTIME);
 
-% Save results
-tfSolver.saveResults(saveFormat="MAT");
 
 
-% Check
+
+%% Check
 % mix  = tfSolver.mixture;
 % film = tfSolver.film;
 % drop = tfSolver.drop;
