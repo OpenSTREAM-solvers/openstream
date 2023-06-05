@@ -69,6 +69,7 @@ VOID       ! Void fraction model                                            > sl
 SLIP       ! Phase velocity ratio [-]                                       > 1.
 OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
+MOMENTFILM ! > FULL
 END
 
 ID         ! Model ID                                                       > BARCP

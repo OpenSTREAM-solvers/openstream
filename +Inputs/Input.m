@@ -52,7 +52,7 @@ classdef (HandleCompatible) Input < dynamicprops
             end
         end
 
-        function [isValidEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
+        function [isSpecifiedEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
             % VALIDATEINPUTENTRY 
             %   Description
             arguments
@@ -67,7 +67,7 @@ classdef (HandleCompatible) Input < dynamicprops
             objClassName = upper(class(obj));
 
             % Default false isValidEntry and defaultUsed
-            isValidEntry = false;
+            isSpecifiedEntry = false;
             defaultUsed = false;
 
             % List of properties set in inputStruct 
@@ -105,7 +105,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 else
                     % Assign specified non-empty value to property
                     % Let MATLAB throw errors from parameter validation
-                    isValidEntry = true;
+                    isSpecifiedEntry = true;
                 end
             else
                 if propIsRequired
