@@ -58,14 +58,19 @@ classdef Options < Inputs.Input
                 % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
-                % Check if the objPropname entry is valid
-                if obj.validateInputEntry(objPropname,id=optionsID)
+                % Check if the objPropname entry is specified, and if the
+                % default value should be used
+                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=optionsID);
+                if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
-
+                end
+                
+                if isSpecified
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
+                
             end
 
             % If extra fields in obj.inputStruct remain, warn user

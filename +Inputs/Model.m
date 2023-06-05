@@ -57,16 +57,17 @@ classdef Model < Inputs.Input
                 % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
-                % Check if the objPropname entry is valid
-                [isValid, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
-                if isValid && ~useDefault
+                % Check if the objPropname entry is specified, and if the
+                % default value should be used
+                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
+                if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
-                    
-                    % Remove objPropname from inputStruct
-                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                end
+                
+                if isSpecified
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
@@ -84,9 +85,7 @@ classdef Model < Inputs.Input
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
-
-            % Create
-
+            
         end
         
 

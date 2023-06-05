@@ -55,19 +55,21 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                  % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
-                % Check if the objPropname entry is valid
-                [isValid, useDefault] = obj.validateInputEntry(objPropname);
-                if isValid && ~useDefault
+                % Check if the objPropname entry is specified, and if the
+                % default value should be used
+                [isSpecified, useDefault] = obj.validateInputEntry(objPropname);
+                if ~useDefault
                     [objs.(objPropname)] = ...
                                     deal(obj.inputStruct.(objPropname));
-                    
-                    % Remove objPropname from inputStruct
-                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                end
+
+                if isSpecified
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
+
             end
 
             % If extra fields in obj.inputStruct remain, warn user
