@@ -13,13 +13,13 @@ classdef Geometry < Inputs.Input
     end
 
     methods
-        function obj = Geometry(filePath,optionsID)
+        function obj = Geometry(filePath,geometryID)
             %MODEL Construct an instance of this class
             %   Detailed explanation goes here
 
             % Call superclass constructor to parse file and select
             % specified optionsID using "ID" key
-            obj = obj@Inputs.Input(filePath, 'ID', optionsID)
+            obj = obj@Inputs.Input(filePath, 'ID', geometryID)
             
             %
             % List of immutable obj property names
@@ -34,16 +34,17 @@ classdef Geometry < Inputs.Input
                 % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
-                % Check if the objPropname entry is valid
-                [isValid, useDefault] = obj.validateInputEntry(objPropname,id=optionsID);
-                if isValid && ~useDefault
+                % Check if the objPropname entry is specified, and if the
+                % default value should be used
+                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=geometryID);
+                if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
-                    
-                    % Remove objPropname from inputStruct
-                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                end
+                
+                if isSpecified
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
