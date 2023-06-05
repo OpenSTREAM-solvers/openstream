@@ -27,7 +27,7 @@ tfSolver.inputSet.session.log.toggleDiary(true);
 
 function solver(solveINIT)
     
-    mix = tfSolver.mixSolver.mixture;
+    
     nwall = tfSolver.inputSet.geometry.NWALL;
 
     % check if solving filmInit and dropInit
@@ -35,11 +35,15 @@ function solver(solveINIT)
         tfSolver.log('\nRun three-field steady-state solver ...\n');
         film = tfSolver.filmInit;
         drop = tfSolver.dropInit;
+        fluid = tfSolver.fluidInit;
+        mix = tfSolver.mixSolver.mixtureInit;
         solveMODE = 'INITIAL';
     else
         tfSolver.log('\nRun three-field transient solver ...\n');
         film = tfSolver.film;
         drop = tfSolver.drop;
+        fluid = tfSolver.fluid;
+        mix = tfSolver.mixSolver.mixture;
         solveMODE = 'SPECIFIED';
     end
     
@@ -64,7 +68,7 @@ function solver(solveINIT)
         tfSolver.log('Time %5.2f [s]',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
-        RHOF = tfSolver.fluid(tIdx).RHOF;                                  % [kg/m^3] Satrurated liquid density
+        RHOF = fluid(tIdx).RHOF;                                  % [kg/m^3] Satrurated liquid density
 
         % Update three-field property guesses from previous time step
         film(tIdx-1).copyFlowProperties(film(tIdx));
@@ -87,7 +91,7 @@ function solver(solveINIT)
                 Uiter = film(tIdx).U(zIdx,:);                              % [m/s] Film velocity
                 
                 % Film mass conservation
-                Mtot = MTOT(film(tIdx),mix(tIdx),drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
+                Mtot = film(tIdx).MTOT(mix(tIdx),drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
                 Wnew = Uiter.*(Wups+Wold./Uold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Uiter+DZ./DT); % [kg/s] Update film mass flow rate
                 film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Witer+options.RELAXWF.*Wnew;      % [kg/s] Apply relaxation
                 
