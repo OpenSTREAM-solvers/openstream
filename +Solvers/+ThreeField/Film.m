@@ -11,7 +11,6 @@ classdef Film < Solvers.AbstractField
         DT                                                                 = 0                    % [s] Time step size
         TIDX                                                               = 1                    % [-] Time step index
         Z                                                                  = 1.                   % [m] Elevation
-        
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Film heat flux
         MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % [kg/s/m^2] Evaporation mass flux
         
@@ -31,7 +30,7 @@ classdef Film < Solvers.AbstractField
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
      end
-     
+
      
     methods
         function film = Film(inputSet, fluid)
