@@ -30,11 +30,11 @@ classdef Film < Solvers.AbstractField
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
      end
-   
-
-     methods
+     
+     
+    methods
         function film = Film(inputSet, fluid)
-            %FILM Creates a Film ?solver? film
+            %FILM Creates a Film, film
             %   Detailed explanation goes here
 
             if nargin > 0
