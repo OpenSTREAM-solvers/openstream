@@ -5,12 +5,12 @@ classdef Film < Solvers.AbstractField
      properties (SetAccess=?Solvers.AbstractSolver)
         
         % Solver properties
-        NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
-        TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
-        Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
+        NZ                                                                 = 0                    % [-] Number of axial steps
+        NTIME                                                              = 0                    % [-] Number of time steps
+        TIME                                                               = 0                    % [s] Time series
+        DT                                                                 = 0                    % [s] Time step size
+        TIDX                                                               = 1                    % [-] Time step index
+        Z                                                                  = 1.                   % [m] Elevation
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Film heat flux
         MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % [kg/s/m^2] Evaporation mass flux
         
@@ -30,7 +30,7 @@ classdef Film < Solvers.AbstractField
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
      end
-     
+
      
     methods
         function film = Film(inputSet, fluid)
