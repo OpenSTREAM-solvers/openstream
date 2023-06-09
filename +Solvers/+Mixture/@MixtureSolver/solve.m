@@ -12,13 +12,12 @@ mixSolver.inputSet.session.log.toggleDiary(true);
 if mixSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
-    
-    mixSolver.log('\n---------------------- Mixture solver run initiated ----------------------\n\n')
+    mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
 
     solver(true);
     solver(false);
     
-    mixSolver.log('\n---------------------- Mixture solver run completed ----------------------\n\n')
+    mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
 end
 
 mixSolver.inputSet.session.log.toggleDiary();
@@ -30,11 +29,11 @@ function solver(solveINIT)
 
     % check if solving mixtureINIT
     if solveINIT
-        mixSolver.log('\nRun steady-state solver ...\n');
+        mixSolver.log('\nRun steady-state ...\n');
         mix = mixSolver.mixtureInit;
         solveMODE = 'INITIAL';
     else
-        mixSolver.log('\nRun transient solver ...\n');
+        mixSolver.log('\nRun transient ...\n');
         mix = mixSolver.mixture;
         solveMODE = 'SPECIFIED';
     end
@@ -134,7 +133,7 @@ function solver(solveINIT)
     
         end
         
-        maxN = max(mix(tIdx).ITR.N);
+        [maxN,maxzIdx] = max(mix(tIdx).ITR.N);
         maxDW = max(mix(tIdx).ITR.DW);
         maxDP = max(mix(tIdx).ITR.DP);
         maxDH = max(mix(tIdx).ITR.DH);
@@ -143,14 +142,13 @@ function solver(solveINIT)
         timeDW = max(abs((mix(tIdx).W - mix(tIdx-1).W)));
         timeDP = max(abs((mix(tIdx).P - mix(tIdx-1).P)));
         timeDH = max(abs((mix(tIdx).H - mix(tIdx-1).H)));
-        mixSolver.log('\t(Max iter = %d, Max errors W = %f [kg/s], %.2f [Pa], %.3f [J/kg])\r',maxN,maxDW,maxDP,maxDH)
+        mixSolver.log('\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',maxN,maxzIdx,maxDW,maxDP,maxDH)
     
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
             if all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
-    
-                mixSolver.log('\t\tCONVERGED: Max errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
+                mixSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
     
                 % Replace mixtureInit with subset up to this tIdx
                 mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
@@ -166,7 +164,7 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 mixSolver.STATE = "INITIALSTEPNOTCONVERGED";
-                mixSolver.log('\t\tFAILED TO CONVERGE: Max errors W = %f [kg/s], %.6f [Pa], %.6f [J/kg])\r',timeDW,timeDP,timeDH)
+                mixSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
             end
         end
     
@@ -174,8 +172,8 @@ function solver(solveINIT)
     
     end
     
-    
-    mixSolver.log('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
+    %mixSolver.log('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
+    mixSolver.log('\n')
     
     % End timer
     toc

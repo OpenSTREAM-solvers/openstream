@@ -78,7 +78,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             geom  = tfSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
-            ITRFields = ["N","DW","DU"];
+            ITRFields = ["N","DWL","DU"];
             ITR = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
 
             % Create film and drop arrays (by timestep)

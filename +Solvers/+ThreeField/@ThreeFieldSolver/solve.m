@@ -12,12 +12,12 @@ tfSolver.inputSet.session.log.toggleDiary(true);
 if tfSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
-    tfSolver.log('\n---------------------- Three-field solver run initiated ----------------------\n\n')
+    tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
 
     solver(true);
     solver(false);
     
-    tfSolver.log('\n---------------------- Three-field solver run completed ----------------------\n\n')
+    tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
 end
 
 tfSolver.inputSet.session.log.toggleDiary();
@@ -32,14 +32,14 @@ function solver(solveINIT)
 
     % check if solving filmInit and dropInit
     if solveINIT
-        tfSolver.log('\nRun three-field steady-state solver ...\n');
+        tfSolver.log('\nSolve steady-state ...\n');
         film = tfSolver.filmInit;
         drop = tfSolver.dropInit;
         fluid = tfSolver.fluidInit;
         mix = tfSolver.mixSolver.mixtureInit;
         solveMODE = 'INITIAL';
     else
-        tfSolver.log('\nRun three-field transient solver ...\n');
+        tfSolver.log('\nSolve transient ...\n');
         film = tfSolver.film;
         drop = tfSolver.drop;
         fluid = tfSolver.fluid;
@@ -88,6 +88,7 @@ function solver(solveINIT)
                 
                 % Save primary parameters from previous point iteration
                 Witer = film(tIdx).W(zIdx,:);                              % [kg/s] Film mass flow rate
+                WLiter = film(tIdx).WL(zIdx);                              % [kg/s/m] Film mass flow rate per unit perimeter
                 Uiter = film(tIdx).U(zIdx,:);                              % [m/s] Film velocity
                 
                 % Film mass conservation
@@ -143,39 +144,40 @@ function solver(solveINIT)
                 end
                 
                 % Check convergence
-                dW = abs((film(tIdx).W(zIdx,:)-Witer));                    % [kg/s] Film mass flow rate error between inner iterations
-                dU = abs((film(tIdx).U(zIdx,:)-Uiter));                    % [m/s]  Film velocity error between inner iterations
-                if all([dW < options.ERRORWF, dU < options.ERRORUF])
-                    break;
-                    elseif itr == options.MAXITER
-                    % set SOLVED flag to SOLVEDNOTCONVERGED
-                        tfSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
+                dWL = abs((film(tIdx).WL(zIdx)-WLiter));                   % [kg/s/m] Film mass flow rate error between inner iterations
+                dU  = abs((film(tIdx).U(zIdx,:)-Uiter));                   % [m/s]    Film velocity error between inner iterations
+                %if all([solveINIT, dWL > 0.1, itr > 5])
+                %    break;                                                 % Proceed quickly in early steady-state iterations regardless of convergence
+                if all([dWL < options.ERRORWF, dU < options.ERRORUF])
+                    break;                                                 % Exit point iteration when converged
+                elseif itr == options.MAXITER
+                % set SOLVED flag to SOLVEDNOTCONVERGED
+                    tfSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                 end
                 
             end
             
             % Iteration parameters
             film(tIdx).ITR.N(zIdx)  = itr;
-            film(tIdx).ITR.DW(zIdx,1:nwall) = dW;
-            film(tIdx).ITR.DU(zIdx,1:nwall) = dU;
+            film(tIdx).ITR.DWL(zIdx,1:nwall) = dWL;
+            film(tIdx).ITR.DU(zIdx,1:nwall)  = dU;
             
         end
         
-        maxN  = max(film(tIdx).ITR.N);
-        maxDW = max(film(tIdx).ITR.DW,[],'all');
-        maxDU = max(film(tIdx).ITR.DU,[],'all');
+        [maxN,maxzIdx] = max(film(tIdx).ITR.N);
+        maxDWL = max(film(tIdx).ITR.DWL,[],'all');
+        maxDU  = max(film(tIdx).ITR.DU,[],'all');
+        tfSolver.log('\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s/m], U = %.5f [m/s]\r',maxN,maxzIdx,maxDWL,maxDU)
         
         % Temporal deviations in W and U
-        timeDW = max(abs((film(tIdx).W - film(tIdx-1).W)),[],'all');
-        timeDU = max(abs((film(tIdx).U - film(tIdx-1).U)),[],'all');
-        tfSolver.log('\t(Max iter = %2d, Max errors W = %.7f [kg/s], U = %.4f [m/s])\r',maxN,maxDW,maxDU)
-
+        timeDWL = max(abs((film(tIdx).WL - film(tIdx-1).WL)),[],'all');
+        timeDU  = max(abs((film(tIdx).U - film(tIdx-1).U)),[],'all');
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
-            if all([timeDW < options.SSCONVWF ,timeDU < options.SSCONVUF] )
+            if all([timeDWL < options.SSCONVWF ,timeDU < options.SSCONVUF] )
     
-                tfSolver.log('\t\tCONVERGED: Max errors W = %.7f [kg/s], U = %.4f [m/s])\r',timeDW,timeDU)
+                tfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: W = %.7f [kg/s/m], U = %.5f [m/s]\r',timeDWL,timeDU)
     
                 % Replace filmInit and dropInit with subset up to this tIdx
                 tfSolver.filmInit = tfSolver.filmInit(1:tIdx);
@@ -194,14 +196,14 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 tfSolver.STATE = "INITIALSTEPNOTCONVERGED";
-                tfSolver.log('\t\tFAILED TO CONVERGE: Max errors W = %.7f [kg/s], U = %.4f [m/s])\r',timeDW,timeDU)
+                tfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: W = %.7f [kg/s/m], U = %.5f [m/s])\r',timeDWL,timeDU)
             end
         end
     
     end
     
-    
-    tfSolver.log('\n---------------------- %s Three-field solver run completed ----------------------\n\n', solveMODE)
+    %tfSolver.log('\n------------------------------ %9s Three-field solver run completed ------------------------------\n\n', solveMODE)
+    tfSolver.log('\n')
     
     % End timer
     toc
