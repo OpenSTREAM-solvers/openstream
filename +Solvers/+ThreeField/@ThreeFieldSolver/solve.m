@@ -36,7 +36,7 @@ function solver(solveINIT)
         film = tfSolver.filmInit;
         drop = tfSolver.dropInit;
         fluid = tfSolver.fluidInit;
-        mix = tfSolver.mixSolver.mixtureInit;
+        mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
         solveMODE = 'INITIAL';
     else
         tfSolver.log('\nSolve transient ...\n');

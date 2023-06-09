@@ -27,7 +27,7 @@ mixSolver.inputSet.session.log.toggleDiary(true);
 
 function solver(solveINIT)
 
-    % check if solving mixtureINIT
+    % check if solving mixtureInit
     if solveINIT
         mixSolver.log('\nRun steady-state ...\n');
         mix = mixSolver.mixtureInit;
