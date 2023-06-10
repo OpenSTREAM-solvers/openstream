@@ -9,6 +9,7 @@ classdef Model < Inputs.Input
                                                                            = []                    % Number of axial nodes 
         FLUID       (1,1) string  {mustBeTextScalar}                       = "WATER"               % Fluid ID
         PROPERTIES  (1,1) InputEnums.FLUIDPROPERTIES                       = 'SATURATED'           % Fluid property assumptions
+        ANGLE       (1,1) double  {mustBeNumeric}                          = 0                     % Flow axis angle from vertical [deg]
         FRICTION    (1,3) double  {mustBeNumeric}                          = [0.2 -0.2 0]          % Wall friction coefficients
         TPFM        (1,1) InputEnums.TPFM                                  = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
         KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % Elevation of local perturbations [m] 

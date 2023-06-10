@@ -90,7 +90,7 @@ function solver(solveINIT)
                 mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew;     % [kg/s] Apply relaxation
                 
                 % Momentum conservation
-                dpGrav  = -model.G*RHO*DZ;                                      % [Pa] Gravitational pressure drop
+                dpGrav  = -model.G*cos(model.ANGLE*pi/180)*RHO*DZ;              % [Pa] Gravitational pressure drop
                 dpWall  = -sum(geom.PERIM)*TAUW./geom.AREA.*DZ;                 % [Pa] Wall friction pressure drop
                 dpAcc_z = -mix(tIdx).W(zIdx)./geom.AREA.*(U-Uups);              % [Pa] Spatial acceleration pressure drop
                 dpAcc_t = -mix(tIdx).W(zIdx)./geom.AREA.*(1-Uold/U).*DZ./DT;    % [Pa] Temporal acceleration pressure drop

@@ -194,7 +194,7 @@ classdef Film < Solvers.AbstractField
             model = film.inputSet.model;
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
             
-            Fgrav  = -thick.*(model.G*film.fluid.RHOF);
+            Fgrav  = -thick.*(model.G*cos(model.ANGLE*pi/180)*film.fluid.RHOF);
             
             Fgrav  = mix.AFDISTR(0,Fgrav,zIdx);   
             
