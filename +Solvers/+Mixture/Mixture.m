@@ -238,7 +238,7 @@ classdef Mixture < Solvers.AbstractField
                     xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
             end
             oafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
-            if isempty(oafIdx), oafIdx = NaN; end                          % NaN when annular flow region is not found
+            if isempty(oafIdx), oafIdx = mix.NZ; end                       % Most donstream node (NZ) when annular flow region is not found
         end
         
         function oafz = OAFZ(mix)
@@ -264,7 +264,7 @@ classdef Mixture < Solvers.AbstractField
             sigm=@(x,p) 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
             p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
             p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
-            afFnc =sigm(zIdx(:),[p(1) OAFIDX(mix)+p(2)]);
+            afFnc =sigm(zIdx(:),[p(1) mix.OAFIDX+p(2)]);
         end
         
         function afDistr = AFDISTR(mix,param1,param2,zIdx)
