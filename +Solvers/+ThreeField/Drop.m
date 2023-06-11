@@ -44,8 +44,18 @@ classdef Drop < Solvers.AbstractField
 
         end
         
-        function um = UM(drop,film,mix,zIdx)
-        % Drop velocity consistent with mixture model -> Should be a choice when resolving the drop momentum conservation
+        function uslip = USLIP(drop,mix,zIdx)
+        % Slip drop velocity model
+    
+            if nargin < 3, zIdx = 1:drop.NZ'; end
+            
+            model = drop.inputSet.model;
+            
+            uslip = model.DROPSLIP.*mix.vapor.U(zIdx);                     % [m/s] Drop velocity
+        end
+        
+        function ualgebr = UALGEBR(drop,film,mix,zIdx)
+        % Algebraic drop velocity model (consistent with mixture model)
     
             if nargin < 4, zIdx = 1:drop.NZ'; end
             
@@ -53,8 +63,8 @@ classdef Drop < Solvers.AbstractField
             area  = drop.inputSet.geometry.AREA;
             
             Ad = mix.liquid.VF(zIdx).*area-sum(perim.*film.THICK(zIdx),2); % [m^2] Drop cross-section area based on void fraction
-            um = drop.W(zIdx)/drop.fluid.RHOF./Ad;                         % [m/s] Corresponding drop velocity
-            um = mix.AFDISTR(mix.U,um);                                    % [m/s] 
+            ualgebr = drop.W(zIdx)/drop.fluid.RHOF./Ad;                    % [m/s] Corresponding drop velocity
+            ualgebr = mix.AFDISTR(mix.U(zIdx),ualgebr,zIdx);               % [m/s] 
         end
         
         function conc = CONC(drop,mix,zIdx)

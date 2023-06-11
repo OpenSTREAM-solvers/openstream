@@ -24,7 +24,7 @@ classdef Model < Inputs.Input
         OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.04 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION    (1,1) InputEnums.DEPOSITION                          = 'GOVAN'               % Drop deposition model [-]
         ENTRAINMENT   (1,1) InputEnums.ENTRAINMENT                         = 'GOVAN'               % Film entrainment model [-]   
-        MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'                % Film momentum conservation model [-]  
+        MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
         MOMENTDROP    (1,1) InputEnums.MOMENTDROP                          = 'SLIP'                % Drop momentum conservation model [-]                                                                 
         DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
         THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film friction model [-]  

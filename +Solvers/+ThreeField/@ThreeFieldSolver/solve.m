@@ -140,7 +140,12 @@ function solver(solveINIT)
                 % Drop momentum conservation
                 switch model.MOMENTDROP
                     case InputEnums.MOMENTDROP.SLIP
-                        drop(tIdx).U(zIdx,:) = model.DROPSLIP.*mix(tIdx).vapor.U(zIdx); % [m/s] Drop velocity
+                    % Velocity slip model
+                        drop(tIdx).U(zIdx,:) = drop(tIdx).USLIP(mix(tIdx),zIdx); % [m/s] Drop velocity
+                    
+                    case InputEnums.MOMENTDROP.ALGEBRAIC
+                    % Model consistent with mixture model
+                        drop(tIdx).U(zIdx,:) = drop(tIdx).UALGEBR(film(tIdx),mix(tIdx),zIdx); % [m/s] Drop velocity
                 end
                 
                 % Check convergence

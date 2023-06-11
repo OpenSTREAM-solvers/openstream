@@ -149,7 +149,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 
                 
                 % Initialize velocity [m/s]
-                drpArr(tIdx).U = model.DROPSLIP.*mix(tIdx).vapor.U;        % [m/s] Initialize drop velocity
+                switch model.MOMENTDROP
+                    case {InputEnums.MOMENTDROP.SLIP, InputEnums.MOMENTDROP.ALGEBRAIC}
+                        drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));    % [m/s] Drop velocity
+                end
                 
                 switch model.MOMENTFILM
                     case InputEnums.MOMENTFILM.ALGEBRAIC
@@ -250,14 +253,12 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             
             nexttile; hold all; grid on; title('Field velocities')
             plot(z,mix.liquid.U,'s')
-            %plot(z,drp.UM(flm,mix),'+')
             plot(z,drp.U,'o-')
             plot(z,flm.U,'.-')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Field velocity [m/s]')
             legend({'Mixture Liquid','Drop','Film'},'location','southEast')
-            %legend({'Mixture Liquid','Mixture drop','Drop','Film'},'location','southEast')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film thicknesses')
