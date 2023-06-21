@@ -257,8 +257,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mix = mixSolver.mixture(tIdx);
             figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME) ' [s]'])
                 
-            nexttile; hold all; grid on;
-            plot(mix.Z,mix.W,'.-')
+            nexttile; hold all; grid on; title('Mass flow rates')
+            plot(mix.Z,mix.W,'.-')  
             plot(mix.liquid.Z,mix.liquid.W,'.-')
             plot(mix.vapor.Z,mix.vapor.W,'.-')
             xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
@@ -266,8 +266,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             legend({'Mixture','Liquid','Vapor'},'location','southEast')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on;
-            plot(mix.Z,cumsum(mix.DP.Tot),'.-')
+            nexttile; hold all; grid on; title('Pressure drop')
+            plot(mix.Z,cumsum(mix.DP.Tot),'.-') 
             plot(mix.Z,cumsum(mix.DP.Grav),'.-')
             plot(mix.Z,cumsum(mix.DP.Wall),'.-')
             plot(mix.Z,cumsum(mix.DP.Acc_z),'.-')
@@ -278,8 +278,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             legend({'Total','Gravitational','Wall','Acc z','Acc t','Local'},'location','northWest');
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on;
-            plot(mix.Z,mix.XEQ(1:mix.NZ),'.-')
+            nexttile; hold all; grid on; title('Void fraction and quality')
+            plot(mix.Z,mix.XEQ(1:mix.NZ),'.-')  
             plot(mix.Z,mix.X(1:mix.NZ),'.-')
             plot(mix.Z,mix.VF(1:mix.NZ),'.-')
             xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
@@ -287,8 +287,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             legend({'Equilibrium quality','Vapor mass quality','Void fraction'},'location','southEast')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on;
-            plot(mix.Z,mix.U(1:mix.NZ),'.-')
+            nexttile; hold all; grid on; title('Field velocity')
+            plot(mix.Z,mix.U(1:mix.NZ),'.-')  
             plot(mix.liquid.Z,mix.liquid.U(1:mix.NZ),'.-')
             plot(mix.vapor.Z,mix.vapor.U(1:mix.NZ),'.-')
             xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
