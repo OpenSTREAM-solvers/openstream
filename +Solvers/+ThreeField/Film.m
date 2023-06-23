@@ -47,7 +47,7 @@ classdef Film < Solvers.AbstractField
         function wl = WL(film,zIdx)
         %WL Film mass flow rate per unit perimeter
         %    
-            if nargin < 2, zIdx = 1:film.NZ; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             perim  = film.inputSet.geometry.PERIM;
             
@@ -57,7 +57,7 @@ classdef Film < Solvers.AbstractField
         function thick = THICK(film,zIdx)
         %THICK Film thickness
         %    
-            if nargin < 2, zIdx = 1:film.NZ; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             rhof  = film.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
             
@@ -67,7 +67,7 @@ classdef Film < Solvers.AbstractField
         function re = RE(film,zIdx)
         %RE Film Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:film.NZ; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             muf   = film.fluid.MUF;                                        % [kg/m^3] Saturated liquid viscosity
             
@@ -77,7 +77,7 @@ classdef Film < Solvers.AbstractField
         function ment = MENT(film,mix,zIdx)
         %MENT Film entrainment mass flux
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
             vapor = mix.vapor;
@@ -111,7 +111,7 @@ classdef Film < Solvers.AbstractField
         function Mtot = MTOT(film,mix,drop,zIdx)
         %MTOT Total
         %
-            if nargin < 4, zIdx = 1:film(1).NZ; end
+            if nargin < 4, zIdx = (1:film(1).NZ).'; end
             
             Mtot  = film.MEVAP(zIdx,:)+film.MENT(mix,zIdx)+drop.MDEP(mix,zIdx);   
         end
@@ -119,7 +119,7 @@ classdef Film < Solvers.AbstractField
         function Cw = CW(film,mix,zIdx)
         %CW Wall friction factor
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
             C = 0.005;                                                     % Constant friction factor
@@ -142,7 +142,7 @@ classdef Film < Solvers.AbstractField
         function Fwall = FWALL(film,mix,zIdx)
         %FWALL Film wall shear stress
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             Fwall  = -0.5.*film.CW(mix,zIdx).*film.fluid.RHOF.*film.U(zIdx,:).^2; % [N/m^2]
             
@@ -151,7 +151,7 @@ classdef Film < Solvers.AbstractField
         function Cv = CV(film,mix,zIdx)
         %CV Film/vapor interfacial friction factor
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             nwall = film.inputSet.geometry.NWALL;                          % Number of walls
             
@@ -164,7 +164,7 @@ classdef Film < Solvers.AbstractField
         function Fvapor = FVAPOR(film,mix,zIdx)
         %FVAPOR Film vapor shear stress
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             UVAP = mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
             
@@ -175,7 +175,7 @@ classdef Film < Solvers.AbstractField
         function Fbuoy = FBUOY(film,mix,zIdx)
         %FBUOY Film buoyancy
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
             DPDZ = -mix.DP.Tot(zIdx)/film.DZ;                              % [Pa/m] Pressure gradient
@@ -189,7 +189,7 @@ classdef Film < Solvers.AbstractField
         function Fgrav = FGRAV(film,mix,zIdx)
         %FGRAV Film gravity
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
@@ -203,7 +203,7 @@ classdef Film < Solvers.AbstractField
         function Fdep = FDEP(film,mix,drop,zIdx)
         %FDEP Drop deposition shear
         %
-            if nargin < 4, zIdx = 1:film(1).NZ; end
+            if nargin < 4, zIdx = (1:film(1).NZ).'; end
             
             dep   = drop.MDEP(mix,zIdx);                                    % [kg/m^2/s] Drop deposition mass flux
             
@@ -215,7 +215,7 @@ classdef Film < Solvers.AbstractField
         function Ftot = FTOT(film,mix,drop,zIdx)
         %FTOT Total
         %
-            if nargin < 4, zIdx = 1:film(1).NZ; end
+            if nargin < 4, zIdx = (1:film(1).NZ).'; end
             
             %Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx);   
             Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx)+film.FBUOY(mix,zIdx)+film.FGRAV(mix,zIdx)+film.FDEP(mix,drop,zIdx);   
@@ -225,7 +225,7 @@ classdef Film < Solvers.AbstractField
         function Ualgebr = UALGEBR(film,mix,zIdx)
         %UALGEBR Film velocity based on simple algebraic model
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             TAUW  = mix.TAUW(zIdx);                                        % [Pa] Wall shear stress
             Cw = film.CW(mix,zIdx);
@@ -239,7 +239,7 @@ classdef Film < Solvers.AbstractField
         function Uequil = UEQUILS(film,mix,zIdx)
         %UEQUILS Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
         %
-            if nargin < 3, zIdx = 1:film(1).NZ; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             UVAP = mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
             Cw = film.CW(mix,zIdx);
@@ -253,7 +253,7 @@ classdef Film < Solvers.AbstractField
         function Uequil = UEQUIL(film,mix,drop,zIdx)
         %UEQUIL Film velocity based on complete equilibrium model (Ftot = 0)
         %
-        if nargin < 4, zIdx = 1:film(1).NZ; end
+        if nargin < 4, zIdx = (1:film(1).NZ).'; end
         
         iter(1).U = film.U(zIdx,:);
         iter(1).Ftot = film.FTOT(mix,drop,zIdx);

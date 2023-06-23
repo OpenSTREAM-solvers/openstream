@@ -47,30 +47,30 @@ classdef Drop < Solvers.AbstractField
         function uslip = USLIP(drop,mix,zIdx)
         % Slip drop velocity model
     
-            if nargin < 3, zIdx = 1:drop.NZ'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             
             uslip = model.DROPSLIP.*mix.vapor.U(zIdx);                     % [m/s] Drop velocity
         end
-        
-        function ualgebr = UALGEBR(drop,film,mix,zIdx)
-        % Algebraic drop velocity model (consistent with mixture model)
+
+        function um = UM(drop,film,mix,zIdx)
+        % Drop velocity consistent with mixture model -> Should be a choice when resolving the drop momentum conservation
     
-            if nargin < 4, zIdx = 1:drop.NZ'; end
+            if nargin < 4, zIdx = (1:drop(1).NZ).'; end
             
             perim = drop.inputSet.geometry.PERIM;
             area  = drop.inputSet.geometry.AREA;
             
             Ad = mix.liquid.VF(zIdx).*area-sum(perim.*film.THICK(zIdx),2); % [m^2] Drop cross-section area based on void fraction
-            ualgebr = drop.W(zIdx)/drop.fluid.RHOF./Ad;                    % [m/s] Corresponding drop velocity
-            ualgebr = mix.AFDISTR(mix.U(zIdx),ualgebr,zIdx);               % [m/s] 
+            um = drop.W(zIdx)/drop.fluid.RHOF./Ad;                         % [m/s] Corresponding drop velocity
+            um = mix.AFDISTR(mix.U,um);                                    % [m/s] 
         end
         
         function conc = CONC(drop,mix,zIdx)
         % Drop concentration
         
-            if nargin < 3, zIdx = 1:drop.NZ'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             vapor = mix.vapor;
             rhof  = drop.fluid.RHOF;
@@ -87,7 +87,7 @@ classdef Drop < Solvers.AbstractField
         function mdep = MDEP(drop,mix,zIdx)
         % Drop deposition mass flux
     
-            if nargin < 3, zIdx = 1:drop.NZ'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             rhog  = drop.fluid.RHOG;                                       % [kg/m^3] Saturated vapor density <-!!!To be modified to handle superheated vapor
@@ -118,12 +118,12 @@ classdef Drop < Solvers.AbstractField
             mdep = mix.AFDISTR(0,mdep,zIdx);                                 % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
-        function re = RE(mix, zIdx)
+        function re = RE(drop, zIdx)
         %RE Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            re = 4.*mix.W(zIdx)./mix.MU(zIdx)./sum(mix.inputSet.geometry.PERIM);
+            re = 4.*drop.W(zIdx)./drop.MU(zIdx)./sum(drop.inputSet.geometry.PERIM);
         end
 
         function out = struct(obj)
