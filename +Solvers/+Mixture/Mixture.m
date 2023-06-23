@@ -123,10 +123,16 @@ classdef Mixture < Solvers.AbstractField
             switch model.VOID
                 case InputEnums.VOID.HOMOGENEOUS
                     % [-] Homogeneous void model
-                    vf = vfslip(mix.X(zIdx),1);
+                    if nargin < 2, vf = vfslip(mix.X(),1); 
+                    else,          vf = vfslip(mix.X(zIdx),1); 
+                    end
+                    
                 case InputEnums.VOID.SLIP
                     % [-] Slip void model
-                    vf = vfslip(mix.X(zIdx),model.SLIP);
+                    if nargin < 2, vf = vfslip(mix.X(),model.SLIP); 
+                    else,          vf = vfslip(mix.X(zIdx),model.SLIP); 
+                    end
+
                 case InputEnums.VOID.BESTION
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
@@ -144,7 +150,9 @@ classdef Mixture < Solvers.AbstractField
             %VFDRIFT Void fraction based on drift flux model
             % C0    [-]     Distribution parameter
             % ugj   [m/s]   Drift velocity
-                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+                if nargin < 2, vf  = mix.JG./(C0.*(mix.JG+mix.JL)+ugj);
+                else,          vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+                end
             end
             
         end
