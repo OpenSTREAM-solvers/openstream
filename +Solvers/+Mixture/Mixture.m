@@ -33,6 +33,13 @@ classdef Mixture < Solvers.AbstractField
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
     end
+
+    properties (Access=private)
+        mflux        (:,1) double  {mustBeNumeric}                         = 1                  % [kg/m^2-s] Mass flux
+        xeq          (:,1) double  {mustBeNumeric}                         = 1                  % [-] Equilibrium quality
+        x            (:,1) double  {mustBeNumeric}                         = 1                  % [-] Vapor quality
+    end
+        
     
     methods
         function mix = Mixture(inputSet, fluid)
@@ -47,30 +54,60 @@ classdef Mixture < Solvers.AbstractField
 
         end
         
+        function set.W(mix, val)
+        %SET.W Setter for W, mass flow rate [kg/s]
+        %  mix.mflux is calculated upon setting mix.W
+
+            % Set mix.W value
+            mix.W = val;
+
+            % Calculate mix.mflux
+            mix.MFLUX_CALC();
+
+        end
+        
+        function set.H(mix, val)
+        %SET.H Setter for H, enthalpy [J/kg]
+        %  mix.x and mix.xeq are calculated upon setting mix.H
+            
+            % Set mix.H value
+            mix.H = val;
+
+            % Calculate mix.x (mix.x calls mix.xeq internally)
+            mix.X_CALC();
+    
+        end
+        
         function mflux = MFLUX(mix, zIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-
-            mflux = mix.W(zIdx)./mix.inputSet.geometry.AREA;
+            if nargin < 2, mflux = mix.mflux; 
+            else, mflux = mix.mflux(zIdx); end
         end
 
         function xeq = XEQ(mix, zIdx)
         %XEQ Equilibrium quality [-]
+        %   This function only retrieves the mix.xeq values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of requent function calls. The values
+        %   are calculated via mix.XEQ_CALC()
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-        
-            xeq = (mix.H(zIdx)-mix.fluid.HF) ./ mix.fluid.HFG;
+            if nargin < 2, xeq = mix.xeq; 
+            else, xeq = mix.xeq(zIdx); end
+
         end
 
         function x = X(mix, zIdx)
         %X Vapor quality [-]
+        %   This function only retrieves the mix.x values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of requent function calls. The values
+        %   are calculated via mix.X_CALC()
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-        
-            switch mix.inputSet.model.SCBOIL
-                case 'NONE'
-                    x=min(max(mix.XEQ(zIdx),0),1);
+            if nargin < 2
+                x = mix.x; 
+            else
+                x = mix.x(zIdx); 
             end
         end
 
@@ -81,32 +118,41 @@ classdef Mixture < Solvers.AbstractField
             
             model = mix.inputSet.model;
             geom = mix.inputSet.geometry;
+            fluidProp = mix.fluid;
 
             switch model.VOID
                 case InputEnums.VOID.HOMOGENEOUS
                     % [-] Homogeneous void model
-                    vf = vfslip(mix.X(zIdx),1);
+                    if nargin < 2, vf = vfslip(mix.X(),1); 
+                    else,          vf = vfslip(mix.X(zIdx),1); 
+                    end
+                    
                 case InputEnums.VOID.SLIP
                     % [-] Slip void model
-                    vf = vfslip(mix.X(zIdx),model.SLIP);
+                    if nargin < 2, vf = vfslip(mix.X(),model.SLIP); 
+                    else,          vf = vfslip(mix.X(zIdx),model.SLIP); 
+                    end
+
                 case InputEnums.VOID.BESTION
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
-                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(mix.fluid.RHOF-mix.fluid.RHOG)./mix.fluid.RHOG); % [m/s] Drift velocity
+                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(fluidProp.RHOF-fluidProp.RHOG)./fluidProp.RHOG); % [m/s] Drift velocity
                     vf = vfdrift(C0,ugj);            
             end
             
             
             function vf = vfslip(x,S)
             %VFSLIP Void fraction based on slip model
-                vf = x.*mix.fluid.RHOF./(x.*mix.fluid.RHOF+S.*(1-x).*mix.fluid.RHOG);
+                vf = x.*fluidProp.RHOF./(x.*fluidProp.RHOF+S.*(1-x).*fluidProp.RHOG);
             end
             
             function vf = vfdrift(C0,ugj)
             %VFDRIFT Void fraction based on drift flux model
             % C0    [-]     Distribution parameter
             % ugj   [m/s]   Drift velocity
-                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+                if nargin < 2, vf  = mix.JG./(C0.*(mix.JG+mix.JL)+ugj);
+                else,          vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+                end
             end
             
         end
@@ -116,8 +162,9 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            rho = mix.VF(zIdx).*mix.fluid.RHOV(mix.H(zIdx))+ ...
-                    (1-mix.VF(zIdx)).*mix.fluid.RHOL(mix.H(zIdx));
+            vf = mix.VF(zIdx);
+            rho = vf.*mix.fluid.RHOV(mix.H(zIdx))+ ...
+                    (1-vf).*mix.fluid.RHOL(mix.H(zIdx));
         end
 
         function mu = MU(mix, zIdx)
@@ -196,7 +243,7 @@ classdef Mixture < Solvers.AbstractField
             kloss = zeros(length(mix.Z),1);                                 % [-] Initialize local loss coefficient array to 0
             [~,ind]=min(abs(mix.Z-model.KLOC));                             % Find local loss elevation indexes (closest node)
             kloss(ind)=model.KLOSS;                                         % [-] Apply loss
-            kloss = kloss(zIdx).';                                            % [-] Restrict to selected nodes
+            kloss = kloss(zIdx).';                                          % [-] Restrict to selected nodes
             
         end
 
@@ -256,15 +303,14 @@ classdef Mixture < Solvers.AbstractField
         function afFnc = AFFNC(mix, zIdx)
         %AFFNC Annular flow function
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
 
-            sigm=@(x,p) 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
             p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
             p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
-            afFnc =sigm(zIdx(:),[p(1) mix.OAFIDX+p(2)]);
+            afFnc = mix.sigm(zIdx,[p(1), mix.OAFIDX+p(2)]);
         end
         
         function afDistr = AFDISTR(mix,param1,param2,zIdx)
@@ -272,7 +318,8 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 4, zIdx = (1:mix(1).NZ).'; end
             
-            afDistr = (1-mix.AFFNC(zIdx)).*param1 + mix.AFFNC(zIdx).*param2;
+            affnc = mix.AFFNC(zIdx);
+            afDistr = (1-affnc).*param1 + affnc.*param2;
         end
         
         function out = struct(obj)
@@ -374,6 +421,38 @@ classdef Mixture < Solvers.AbstractField
                                 mix.Z, ...
                                 mix.inputSet.options.AXIALINTERP, ...
                                 "extrap");
+        end
+
+        function MFLUX_CALC(mix)
+        %MFLUX_CALC Helper function to calculate Mass flux [kg/m^2-s]
+            mix.mflux = mix.W./mix.inputSet.geometry.AREA;
+        end
+
+        function XEQ_CALC(mix)
+        %XEQ_CALC Helper function to calculate Equilibrium quality [-]
+        %  
+            mix.xeq =(mix.H-mix.fluid.HF) ./ mix.fluid.HFG;
+        end
+
+        function X_CALC(mix)
+        %X_CALC Helper function to calculate Equilibrium quality [-]
+        %  
+            
+            % Call XEQ first
+            mix.XEQ_CALC();
+            
+            % Use mix.xeq to calculate x
+            switch mix.inputSet.model.SCBOIL
+                case 'NONE'
+                    mix.x=min(max(mix.xeq,0),1);
+            end
+        end
+
+    end
+
+    methods (Access=private)
+        function s = sigm(mix,x,p) 
+            s = 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
         end
     end
 

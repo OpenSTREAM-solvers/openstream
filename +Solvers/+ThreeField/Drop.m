@@ -47,17 +47,17 @@ classdef Drop < Solvers.AbstractField
         function uslip = USLIP(drop,mix,zIdx)
         % Slip drop velocity model
     
-            if nargin < 3, zIdx = 1:drop.NZ'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             
             uslip = model.DROPSLIP.*mix.vapor.U(zIdx);                     % [m/s] Drop velocity
         end
-        
+
         function ualgebr = UALGEBR(drop,film,mix,zIdx)
         % Algebraic drop velocity model (consistent with mixture model)
-    
-            if nargin < 4, zIdx = 1:drop.NZ'; end
+
+            if nargin < 4, zIdx = (1:drop(1).NZ).'; end
             
             perim = drop.inputSet.geometry.PERIM;
             area  = drop.inputSet.geometry.AREA;
@@ -70,7 +70,7 @@ classdef Drop < Solvers.AbstractField
         function conc = CONC(drop,mix,zIdx)
         % Drop concentration
         
-            if nargin < 3, zIdx = 1:drop.NZ'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             vapor = mix.vapor;
             rhof  = drop.fluid.RHOF;
@@ -87,7 +87,7 @@ classdef Drop < Solvers.AbstractField
         function mdep = MDEP(drop,mix,zIdx)
         % Drop deposition mass flux
     
-            if nargin < 3, zIdx = 1:drop.NZ'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             rhog  = drop.fluid.RHOG;                                       % [kg/m^3] Saturated vapor density <-!!!To be modified to handle superheated vapor
@@ -118,12 +118,12 @@ classdef Drop < Solvers.AbstractField
             mdep = mix.AFDISTR(0,mdep,zIdx);                                 % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
-        function re = RE(mix, zIdx)
+        function re = RE(drop, zIdx)
         %RE Reynolds number [-]
         %
-            if nargin < 2, zIdx = 1:mix(1).NZ; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            re = 4.*mix.W(zIdx)./mix.MU(zIdx)./sum(mix.inputSet.geometry.PERIM);
+            re = 4.*drop.W(zIdx)./drop.MU(zIdx)./sum(drop.inputSet.geometry.PERIM);
         end
 
         function out = struct(obj)

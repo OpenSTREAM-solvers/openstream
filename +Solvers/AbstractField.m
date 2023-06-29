@@ -19,9 +19,34 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         ITR          (1,1) struct
     end
 
+    properties (Access = protected)
+        memoizedFunctions = dictionary();
+    end
+
     methods
         
         function absField = AbstractField()
+            
+        end
+
+        function out = memoizeFunction(obj, methodStr, methodHandle, varargin)
+        %MEMOIZEDMETHOD Implement a mechanism for registering memoizeable
+        %functions
+        %
+        %  Adapted from https://stackoverflow.com/a/75037451
+        %
+            %For the first call with a particular method, create and
+            %memoize a function handle view of the method
+            if ~isConfigured(obj.memoizedFunctions) || ~obj.memoizedFunctions.isKey(methodStr)
+                fn_method = @(varargin)methodHandle(varargin{:});
+                fn = memoize(fn_method);
+                obj.memoizedFunctions(methodStr) = fn;
+            end
+            
+            %For all calls, get the store function handle out of
+            %storage, and use it.
+            fn = obj.memoizedFunctions(methodStr);
+            out = fn(varargin{:});
             
         end
 
