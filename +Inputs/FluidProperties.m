@@ -5,8 +5,7 @@ classdef FluidProperties
     properties (SetAccess=immutable)
         
         FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid ID
-        PROPERTIES (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
-                                                                           = 'SATURATED'           % Fluid property assumptions
+        PROPERTIES (1,1) InputEnums.FLUIDPROPERTIES                        = 'SATURATED'           % Fluid property assumptions
         PRESSURE   (1,1) double  {mustBeNumeric}                           = 1                     % [Pa] System pressure
         TSAT       (1,1) double  {mustBeNumeric}                           = 1                     % [K] Saturated fluid temperature
         RHOF       (1,1) double  {mustBeNumeric}                           = 1                     % [kg/m^3] Saturated liquid mass density
@@ -15,6 +14,7 @@ classdef FluidProperties
         MUG        (1,1) double  {mustBeNumeric}                           = 1                     % [Pa.s] Saturated liquid viscosity
         HF         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated liquid enthalpy
         HG         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated vapor enthalpy
+        HFG        (1,1) double  {mustBeNumeric}                           = 0                     % [J/kg] Latent heat of evaporation
         SIGMA      (1,1) double  {mustBeNumeric}                           = 1                     % [N/m] Surface tension
         
     end
@@ -81,16 +81,10 @@ classdef FluidProperties
                 obj(i).MUG   = MUG(i);                                      % [Pa.s] Saturated vapor viscosity
                 obj(i).HF    = HF(i);                                       % [J/kg] Saturated liquid enthalpy
                 obj(i).HG    = HG(i);                                       % [J/kg] Saturated vapor enthalpy
+                obj(i).HFG   = HG(i) - HF(i);                               % [J/kg] Latent heat of evaporation
                 obj(i).SIGMA = SIGMA(i);                                    % [N/m] Surface tension
 
             end
-            
-        end
-        
-        
-        function hfg = HFG(obj)
-            %HFG Latent heat of evaporation
-            hfg = obj.HG-obj.HF;                                           % [J/kg] Latent heat of evaporation
             
         end
         
@@ -115,10 +109,9 @@ classdef FluidProperties
             end
             
             switch obj.PROPERTIES
-                case 'SATURATED'
-                    % TODO: Verify this is correct
+                case InputEnums.FLUIDPROPERTIES.SATURATED
                     rhol = repmat(obj.RHOF,numel(H),1);
-                case 'PSYSTEM'
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     rhol = obj.coolpropH.density('P',obj.PRESSURE,'H',min(H,obj.HF));
             end
             
@@ -132,10 +125,9 @@ classdef FluidProperties
             end
             
             switch obj.PROPERTIES
-                case 'SATURATED'
-                    % TODO: Verify this is correct
+                case InputEnums.FLUIDPROPERTIES.SATURATED
                     rhov = repmat(obj.RHOG,numel(H),1);
-                case 'PSYSTEM'
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     rhov = obj.coolpropH.density('P',obj.PRESSURE,'H',max(H,obj.HG));
             end
             
@@ -148,9 +140,9 @@ classdef FluidProperties
                 H
             end
             switch obj.PROPERTIES
-                case 'SATURATED'
+                case InputEnums.FLUIDPROPERTIES.SATURATED
                     mul = repmat(obj.MUF,numel(H),1);
-                case 'PSYSTEM'
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     mul = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',min(H,obj.HF));
             end
             
@@ -163,9 +155,9 @@ classdef FluidProperties
                 H
             end
             switch obj.PROPERTIES
-                case 'SATURATED'
+                case InputEnums.FLUIDPROPERTIES.SATURATED
                     muv = repmat(obj.MUG,numel(H),1);
-                case 'PSYSTEM'
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     muv = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',max(H,obj.HG));
             end
             

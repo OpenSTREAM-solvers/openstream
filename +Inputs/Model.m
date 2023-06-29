@@ -4,23 +4,32 @@ classdef Model < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                 % Model ID 
+        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                % Model ID 
         NNODES           double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
-                                                                           = []                       % Number of axial nodes 
-        FLUID       (1,1) string  {mustBeTextScalar}                        = "WATER"               % Fluid ID
-        PROPERTIES  (1,1) string  {mustBeTextScalar,mustBeMember(PROPERTIES, ["SATURATED","PSYSTEM"])} ...
-                                                                           = 'SATURATED'           % Fluid property assumptions
+                                                                           = []                    % Number of axial nodes 
+        FLUID       (1,1) string  {mustBeTextScalar}                       = "WATER"               % Fluid ID
+        PROPERTIES  (1,1) InputEnums.FLUIDPROPERTIES                       = 'SATURATED'           % Fluid property assumptions
+        ANGLE       (1,1) double  {mustBeNumeric}                          = 0                     % Flow axis angle from vertical [deg]
         FRICTION    (1,3) double  {mustBeNumeric}                          = [0.2 -0.2 0]          % Wall friction coefficients
-        TPFM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
-        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]               % Elevation of local perturbations [m] 
-        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]               % corresponding pressure loss coefficients [-]
-        TPKM        (1,1) string  {mustBeTextScalar}                       = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
-        SCBOIL      (1,1) string  {mustBeMember(SCBOIL, ["NONE"])} ...
-                                                                           = 'NONE'                % Subcooled boiling mode
-        VOID        (1,1) string  {mustBeMember(VOID, ["HOMOGENEOUS","SLIP"])} ...
-                                                                           = 'HOMOGENEOUS'         % Void fraction model 
+        TPFM        (1,1) InputEnums.TPFM                                  = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
+        KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % Elevation of local perturbations [m] 
+        KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % corresponding pressure loss coefficients [-]
+        TPKM        (1,1) InputEnums.TPKM                                  = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
+        SCBOIL      (1,1) InputEnums.SCBOIL                                = 'NONE'                % Subcooled boiling mode
+        VOID        (1,1) InputEnums.VOID                                  = 'HOMOGENEOUS'         % Void fraction model 
         SLIP        (1,1) double  {mustBePositive}                         = 1                     % Phase velocity ratio [-]
-    
+        
+        OAF           (1,1) InputEnums.OAF                                 = 'WALLIS'              % Onset of annular flow model [-]
+        OAFDROPRATIO  (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}      = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
+        OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.04 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
+        DEPOSITION    (1,1) InputEnums.DEPOSITION                          = 'GOVAN'               % Drop deposition model [-]
+        ENTRAINMENT   (1,1) InputEnums.ENTRAINMENT                         = 'GOVAN'               % Film entrainment model [-]   
+        MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
+        MOMENTDROP    (1,1) InputEnums.MOMENTDROP                          = 'SLIP'                % Drop momentum conservation model [-]                                                                 
+        DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
+        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film friction model [-]  
+        THINFILMTHICK (1,1) double  {mustBePositive}                       = 1E-4                  % Thin film thickness [m]        
+        POSFILM       (1,1) logical                                        = true                  % Keep positive film flowrate/thickness
     end
 
     properties (SetAccess = private)
@@ -49,16 +58,17 @@ classdef Model < Inputs.Input
                 % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
-                % Check if the objPropname entry is valid
-                [isValid, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
-                if isValid && ~useDefault
+                % Check if the objPropname entry is specified, and if the
+                % default value should be used
+                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
+                if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
-                    
-                    % Remove objPropname from inputStruct
-                    obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                end
+                
+                if isSpecified
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
@@ -76,9 +86,7 @@ classdef Model < Inputs.Input
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
-
-            % Create
-
+            
         end
         
 

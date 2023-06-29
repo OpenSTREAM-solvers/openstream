@@ -52,7 +52,7 @@ classdef (HandleCompatible) Input < dynamicprops
             end
         end
 
-        function [isValidEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
+        function [isSpecifiedEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
             % VALIDATEINPUTENTRY 
             %   Description
             arguments
@@ -67,7 +67,7 @@ classdef (HandleCompatible) Input < dynamicprops
             objClassName = upper(class(obj));
 
             % Default false isValidEntry and defaultUsed
-            isValidEntry = false;
+            isSpecifiedEntry = false;
             defaultUsed = false;
 
             % List of properties set in inputStruct 
@@ -100,12 +100,12 @@ classdef (HandleCompatible) Input < dynamicprops
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
                     warning('%s: Value for entry %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, num2str(propProps.DefaultValue));
+                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
                 else
                     % Assign specified non-empty value to property
                     % Let MATLAB throw errors from parameter validation
-                    isValidEntry = true;
+                    isSpecifiedEntry = true;
                 end
             else
                 if propIsRequired
@@ -117,8 +117,9 @@ classdef (HandleCompatible) Input < dynamicprops
                     );
                 else
                 % An optional property was not specified
+                    
                     warning('%s: Value for optional property %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, num2str(propProps.DefaultValue));
+                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
                 end
             end
@@ -285,6 +286,16 @@ classdef (HandleCompatible) Input < dynamicprops
 
             
 
+        end
+
+
+        function defVal = defaultValueString(defVal)
+        %DEFAULTVALUESTRING Convert numeric default value to string
+            if isnumeric(defVal)
+                defVal = num2str(defVal);
+            elseif islogical(defVal)
+                defVal = string(defVal);
+            end
         end
 
         function jsonText = convert2JSON(inputFilePath)

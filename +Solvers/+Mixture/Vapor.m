@@ -2,20 +2,9 @@ classdef Vapor < Solvers.AbstractPhase
     %VAPOR Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (Dependent, SetAccess=private)
-        TIME          double  {mustBeNumeric}
-        Z             double  {mustBeNumeric}
-        X
-        VF
-        W
-        U
-        H
-        MFLUX
-        RE
-    end
-
     properties (SetAccess=private, GetAccess=private)
-        mix 
+        mix
+        NZ
     end
     
     methods
@@ -29,66 +18,77 @@ classdef Vapor < Solvers.AbstractPhase
             vapor(1:length(mix)) = vapor;
             for i = 1:length(mix)
                 vapor(i).mix = mix(i);
+                vapor(i).NZ = mix(i).NZ;
             end
         end
         
-        function time = get.TIME(vapor)
+        function time = TIME(vapor)
             %TIME Time series [s]
             %   Detailed explanation goes here
             time = vapor.mix.TIME;
         end
 
-        function z = get.Z(vapor)
+        function z = Z(vapor, zIdx)
             %Z Axial nodes [m]
             %   Detailed explanation goes here
-            z = vapor.mix.Z;
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            z = vapor.mix.Z(zIdx);
         end
         
-        function x = get.X(vapor)
+        function x = X(vapor, zIdx)
             %X Mass fraction [-]
             %
-            x = vapor.mix.X();
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            x = vapor.mix.X(zIdx);
         end
         
-        function vf = get.VF(vapor)
+        function vf = VF(vapor, zIdx)
             %VF Void fraction [-]
             %
-            vf = vapor.mix.VF();
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            vf = vapor.mix.VF(zIdx);
         end
 
-        function w = get.W(vapor)
+        function w = W(vapor, zIdx)
             %W Mass flow rate [kg/s]
             %
-            w = vapor.X .* vapor.mix.W;
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            w = vapor.X(zIdx) .* vapor.mix.W(zIdx);
         end
 
-        function u = get.U(vapor)
+        function u = U(vapor, zIdx)
             %U Velocity [m/a]
             %   NOTE: need to be verified
-            u = vapor.MFLUX ./ vapor.VF ./ vapor.mix.fluid.RHOV(vapor.mix.H);
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.mix.H(zIdx));
             
             % set to the mixture velocity in the single-phase liquid region
-            singlePhaseIdx = 1:(vapor.mix.onsetAnnularFlow-1);
-            u(singlePhaseIdx) = vapor.mix.U(singlePhaseIdx);
+            %singlePhaseIdx = 1:(vapor.mix.OAFIDX-1);
+            singlePhaseIdx = isnan(u);
+            mixU = vapor.mix.U(zIdx);
+            u(singlePhaseIdx) = mixU(singlePhaseIdx);
             
         end
 
-        function h = get.H(vapor)
+        function h = H(vapor, zIdx)
             %H Enthalpy [J/kg]
             %
-            h = min(vapor.mix.H, vapor.mix.fluid.HG.');
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            h = min(vapor.mix.H(zIdx), vapor.mix.fluid.HG.');
         end
 
-        function mflux = get.MFLUX(vapor)
+        function mflux = MFLUX(vapor, zIdx)
             %MFLUX Mass flux [kg/m^2-s]
             %
-            mflux = vapor.W./vapor.mix.inputSet.geometry.AREA;
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            mflux = vapor.W(zIdx)./vapor.mix.inputSet.geometry.AREA;
         end
 
-        function re = get.RE(vapor)
+        function re = RE(vapor, zIdx)
             %RE Reynolds number [-]
             %
-            re = 4.*vapor.W./vapor.mix.fluid.MUV(vapor.mix.H)...
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.mix.H(zIdx))...
                     ./sum(vapor.mix.inputSet.geometry.PERIM);
         end
 

@@ -1,16 +1,16 @@
-classdef Mixture < matlab.mixin.Copyable
+classdef Mixture < Solvers.AbstractField
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess=?Solvers.Mixture.MixtureSolver)
+    properties (SetAccess=?Solvers.AbstractSolver)
         
         % Solver properties
-        NZ           (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                         = 0                    % [-] Number of time steps
-        TIME         (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                         = 0                    % [s] Time step size
-        TIDX         (1,1) double  {mustBeNumeric}                         = 1                    % [-] Time step index
-        Z            (:,1) double  {mustBeNumeric}                         = 1.                   % [m] Elevation
+        NZ                                                                 = 0                    % [-] Number of axial steps
+        NTIME                                                              = 0                    % [-] Number of time steps
+        TIME                                                               = 0                    % [s] Time series
+        DT                                                                 = 0                    % [s] Time step size
+        TIDX                                                               = 1                    % [-] Time step index
+        Z                                                                  = 1.                   % [m] Elevation
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
         
         % Flow properties
@@ -20,25 +20,30 @@ classdef Mixture < matlab.mixin.Copyable
         DP           (1,1) struct                                                                 % [-] Detailed pressure drops
 
         % Iteration properties
-        ITR          (1,1) struct 
+        ITR
 
         % Phases
         liquid
         vapor
-     end
+    end
 
-     properties (SetAccess=?Solvers.Mixture.MixtureSolver, GetAccess=?Solvers.AbstractPhase)
+    properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
         
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        inputSet    {isa(inputSet,'Inputs.InputSet')}
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
-     end
-    
-    
+        inputSet                   {isa(inputSet,'Inputs.InputSet')}
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}
+    end
 
+    properties (Access=private)
+        mflux        (:,1) double  {mustBeNumeric}                         = 1                  % [kg/m^2-s] Mass flux
+        xeq          (:,1) double  {mustBeNumeric}                         = 1                  % [-] Equilibrium quality
+        x            (:,1) double  {mustBeNumeric}                         = 1                  % [-] Vapor quality
+    end
+        
+    
     methods
         function mix = Mixture(inputSet, fluid)
-            %MIXTURE Creates a Mixture solver mix
+            %MIXTURE Creates a Mixture, mix
             %   Detailed explanation goes here
 
             if nargin > 0
@@ -49,30 +54,60 @@ classdef Mixture < matlab.mixin.Copyable
 
         end
         
+        function set.W(mix, val)
+        %SET.W Setter for W, mass flow rate [kg/s]
+        %  mix.mflux is calculated upon setting mix.W
+
+            % Set mix.W value
+            mix.W = val;
+
+            % Calculate mix.mflux
+            mix.MFLUX_CALC();
+
+        end
+        
+        function set.H(mix, val)
+        %SET.H Setter for H, enthalpy [J/kg]
+        %  mix.x and mix.xeq are calculated upon setting mix.H
+            
+            % Set mix.H value
+            mix.H = val;
+
+            % Calculate mix.x (mix.x calls mix.xeq internally)
+            mix.X_CALC();
+    
+        end
+        
         function mflux = MFLUX(mix, zIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-
-            mflux = mix.W(zIdx)./mix.inputSet.geometry.AREA;
+            if nargin < 2, mflux = mix.mflux; 
+            else, mflux = mix.mflux(zIdx); end
         end
 
         function xeq = XEQ(mix, zIdx)
         %XEQ Equilibrium quality [-]
+        %   This function only retrieves the mix.xeq values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of requent function calls. The values
+        %   are calculated via mix.XEQ_CALC()
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-        
-            xeq = (mix.H(zIdx)-mix.fluid.HF) ./ mix.fluid.HFG;
+            if nargin < 2, xeq = mix.xeq; 
+            else, xeq = mix.xeq(zIdx); end
+
         end
 
         function x = X(mix, zIdx)
         %X Vapor quality [-]
+        %   This function only retrieves the mix.x values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of requent function calls. The values
+        %   are calculated via mix.X_CALC()
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-        
-            switch mix.inputSet.model.SCBOIL
-                case 'NONE'
-                    x=min(max(mix.XEQ(zIdx),0),1);
+            if nargin < 2
+                x = mix.x; 
+            else
+                x = mix.x(zIdx); 
             end
         end
 
@@ -83,32 +118,41 @@ classdef Mixture < matlab.mixin.Copyable
             
             model = mix.inputSet.model;
             geom = mix.inputSet.geometry;
+            fluidProp = mix.fluid;
 
             switch model.VOID
-                case 'HOMOGENEOUS'
+                case InputEnums.VOID.HOMOGENEOUS
                     % [-] Homogeneous void model
-                    vf = vfslip(mix.X(zIdx),1);
-                case 'SLIP'
+                    if nargin < 2, vf = vfslip(mix.X(),1); 
+                    else,          vf = vfslip(mix.X(zIdx),1); 
+                    end
+                    
+                case InputEnums.VOID.SLIP
                     % [-] Slip void model
-                    vf = vfslip(mix.X(zIdx),model.SLIP);
-                case 'BESTION'
+                    if nargin < 2, vf = vfslip(mix.X(),model.SLIP); 
+                    else,          vf = vfslip(mix.X(zIdx),model.SLIP); 
+                    end
+
+                case InputEnums.VOID.BESTION
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
-                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(mix.fluid.RHOF-mix.fluid.RHOG)./mix.fluid.RHOG); % [m/s] Drift velocity
+                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(fluidProp.RHOF-fluidProp.RHOG)./fluidProp.RHOG); % [m/s] Drift velocity
                     vf = vfdrift(C0,ugj);            
             end
             
             
             function vf = vfslip(x,S)
             %VFSLIP Void fraction based on slip model
-                vf = x.*mix.fluid.RHOF./(x.*mix.fluid.RHOF+S.*(1-x).*mix.fluid.RHOG);
+                vf = x.*fluidProp.RHOF./(x.*fluidProp.RHOF+S.*(1-x).*fluidProp.RHOG);
             end
             
             function vf = vfdrift(C0,ugj)
             %VFDRIFT Void fraction based on drift flux model
             % C0    [-]     Distribution parameter
             % ugj   [m/s]   Drift velocity
-                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+                if nargin < 2, vf  = mix.JG./(C0.*(mix.JG+mix.JL)+ugj);
+                else,          vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+                end
             end
             
         end
@@ -118,8 +162,9 @@ classdef Mixture < matlab.mixin.Copyable
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            rho = mix.VF(zIdx).*mix.fluid.RHOV(mix.H(zIdx))+ ...
-                    (1-mix.VF(zIdx)).*mix.fluid.RHOL(mix.H(zIdx));
+            vf = mix.VF(zIdx);
+            rho = vf.*mix.fluid.RHOV(mix.H(zIdx))+ ...
+                    (1-vf).*mix.fluid.RHOL(mix.H(zIdx));
         end
 
         function mu = MU(mix, zIdx)
@@ -168,7 +213,7 @@ classdef Mixture < matlab.mixin.Copyable
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            re = 4.*mix.W(zIdx)./mix.MUL(zIdx)./sum(mix.inputSet.geometry.PERIM);
+            rel = 4.*mix.W(zIdx)./mix.MUL(zIdx)./sum(mix.inputSet.geometry.PERIM);
         end
 
         function fw = FW(mix, zIdx)
@@ -198,7 +243,7 @@ classdef Mixture < matlab.mixin.Copyable
             kloss = zeros(length(mix.Z),1);                                 % [-] Initialize local loss coefficient array to 0
             [~,ind]=min(abs(mix.Z-model.KLOC));                             % Find local loss elevation indexes (closest node)
             kloss(ind)=model.KLOSS;                                         % [-] Apply loss
-            kloss = kloss(zIdx).';                                            % [-] Restrict to selected nodes
+            kloss = kloss(zIdx).';                                          % [-] Restrict to selected nodes
             
         end
 
@@ -218,42 +263,65 @@ classdef Mixture < matlab.mixin.Copyable
             t = mix.fluid.T(mix.H(zIdx));
         end      
         
-        function zoafIdx = onsetAnnularFlow(mix)
-        %ONSETANNULARFLOW Onset of annular flow node
-        %
-
-            G = mix.inputSet.model.G;
+        function oafIdx = OAFIDX(mix)
+            %OAFIDX Onset of annular flow node
+            %
+            
+            model = mix.inputSet.model;
             HDIAM  = mix.inputSet.geometry.HDIAM;
             MFLUX  = mix.MFLUX;
-
+            
             % Densities
             RHOF = mix.fluid.RHOF;
             RHOG = mix.fluid.RHOG;
             DELTARHO = RHOF-RHOG;
             
-            % Wallis
-            xoaf = ( 0.6+0.4.*sqrt(G*HDIAM*(DELTARHO)*RHOF)./MFLUX) ./ (0.6+sqrt(RHOF/RHOG) ); % [-] Quality at onset of annular flow
-            zoafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
-            if isempty(zoafIdx), zoafIdx = NaN; end                         % NaN when annular flow region is not found
-
-            
+            switch model.OAF
+                case InputEnums.OAF.WALLIS
+                    % Wallis model
+                    xoaf = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
+                case InputEnums.OAF.WALLIS_SIMP
+                    % Simplified Wallis model
+                    xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
+            end
+            oafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
+            if isempty(oafIdx), oafIdx = mix.NZ; end                       % Most donstream node (NZ) when annular flow region is not found
         end
         
-        function afFnc = annularFlowFunction(mix, zIdx)
-        %ANNULARFLOWFUNCTION Annular flow function
+        function oafz = OAFZ(mix)
+        %OAFZ Onset of annular flow elevation
+        %
+            oafz = mix.Z(mix.OAFIDX);                                      % [m] Elevation at onset of annular flow
+        end
+        
+        function oafwl = OAFWL(mix)
+        %OAFWL Liquid mass flow rate at onset of annular flow
+        %
+            oafwl = mix.liquid.W(mix.OAFIDX);                    % [kg/s] Mixture liquid mass flow rate
+        end
+        
+        function afFnc = AFFNC(mix, zIdx)
+        %AFFNC Annular flow function
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
 
-            sigm=@(x,p) 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
-            p = [0.04 0.15];                                               % Sigmoid function parameters ([width center] located p(2) [m] upstream OAF) 
-            p = p.*(model.NNODES/geom.LENGTH);                             % In node length
-            afFnc =sigm(zIdx,[p(1) onsetAnnularFlow(mix)-p(2)]);
+            p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
+            p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
+            afFnc = mix.sigm(zIdx,[p(1), mix.OAFIDX+p(2)]);
         end
         
-
+        function afDistr = AFDISTR(mix,param1,param2,zIdx)
+        %AFDISTR Annular flow distribution function
+        %
+            if nargin < 4, zIdx = (1:mix(1).NZ).'; end
+            
+            affnc = mix.AFFNC(zIdx);
+            afDistr = (1-affnc).*param1 + affnc.*param2;
+        end
+        
         function out = struct(obj)
         %STRUCT Converter to struct
         %
@@ -353,6 +421,38 @@ classdef Mixture < matlab.mixin.Copyable
                                 mix.Z, ...
                                 mix.inputSet.options.AXIALINTERP, ...
                                 "extrap");
+        end
+
+        function MFLUX_CALC(mix)
+        %MFLUX_CALC Helper function to calculate Mass flux [kg/m^2-s]
+            mix.mflux = mix.W./mix.inputSet.geometry.AREA;
+        end
+
+        function XEQ_CALC(mix)
+        %XEQ_CALC Helper function to calculate Equilibrium quality [-]
+        %  
+            mix.xeq =(mix.H-mix.fluid.HF) ./ mix.fluid.HFG;
+        end
+
+        function X_CALC(mix)
+        %X_CALC Helper function to calculate Equilibrium quality [-]
+        %  
+            
+            % Call XEQ first
+            mix.XEQ_CALC();
+            
+            % Use mix.xeq to calculate x
+            switch mix.inputSet.model.SCBOIL
+                case 'NONE'
+                    mix.x=min(max(mix.xeq,0),1);
+            end
+        end
+
+    end
+
+    methods (Access=private)
+        function s = sigm(mix,x,p) 
+            s = 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
         end
     end
 
