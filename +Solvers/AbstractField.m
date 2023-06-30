@@ -20,7 +20,9 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
     end
 
     properties (Access = protected)
-        memoizedFunctions = dictionary();
+        %memoizedFunctions = dictionary();
+        % Currently using containers.Map() for MATLAB version
+        memoizedFunctions = containers.Map();
     end
 
     methods
