@@ -485,6 +485,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             opts.saveFormat {mustBeMember(opts.saveFormat,["MAT"])}   = "MAT"
         end
             session = mixSolver.inputSet.session;
+
+            % Create session directory if needed
+            if ~isfolder(session.directory)
+                [status, msg, msgID] = mkdir(session.directory);
+                if status ~= 1
+                    throw( ...
+                        MException(msgID,msg) ...
+                    );
+                end
+            end
+
             switch opts.saveFormat
                 case "MAT"
                     results = struct( ...

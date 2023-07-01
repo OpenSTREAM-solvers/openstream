@@ -109,6 +109,7 @@ VOID       ! Void fraction model                                            > sl
 SLIP       ! Phase velocity ratio [-]                                       > 1.5
 OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
+<<<<<<< HEAD
 OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > EQUILIBRIUM
 END
 
@@ -123,5 +124,20 @@ KLOSS      ! corresponding pressure loss coefficients [-]                   >
 TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > slip
+=======
+END
+
+ID         ! Model ID                                                       > WATERAIR
+NNODES     ! Number of axial nodes                                          > 100
+FLUID      ! Fluid ID                                                       > water, air
+PROPERTIES ! Fluid property assumptions                                     > isothermal
+FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
+TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
+KLOC       ! Elevation of local perturbations [m]                           >
+KLOSS      ! corresponding pressure loss coefficients [-]                   >
+TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
+SCBOIL     ! Subcooled boiling model                                        > none
+VOID       ! Void fraction model                                            > homogeneous
+>>>>>>> 472aa33 (feat: add sample bc file for water-air mixture)
 SLIP       ! Phase velocity ratio [-]                                       > 1
 END
