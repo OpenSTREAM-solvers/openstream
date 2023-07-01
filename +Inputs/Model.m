@@ -6,7 +6,7 @@ classdef Model < Inputs.Input
         
         ID               (1,1) string  {mustBeTextScalar}                                               % Model ID 
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
-                                                                           = []                    % Number of axial nodes 
+             
         FLUID            (1,1) string  {mustBeTextScalar}                  = "WATER"               % Fluid ID
         PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'           % Fluid property assumptions
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                     % Flow axis angle from vertical [deg]
@@ -95,7 +95,7 @@ classdef Model < Inputs.Input
             end
             
             %
-            % List of immutable obj property names
+            % List of set-protected obj property names
             objPropnames = obj.listInputProperties();
             
             % Array of fieldnames using default values

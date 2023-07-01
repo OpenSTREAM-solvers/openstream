@@ -11,7 +11,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
         DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
 
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
         
         mixtureInit
@@ -89,7 +89,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             % Setup fluid property object
             mixSolver.fluid = FluidProperties( ...
-                                    mixSolver.boundaryConditions.PRESSURE, ...
+                                    mixSolver.boundaryConditions, ...
                                     mixSolver.inputSet.model);
 
             mixArr = Mixture.empty(0,mixSolver.NTIME);
@@ -168,7 +168,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             bcFields = mixSolver.inputSet.bc.listInputProperties();
 
             % Interpolate bc properties in time
-            params = checkParams({'TIME','PRESSURE','HIN','MFLOW','POWER'});
+            params = checkParams({'TIME','PRESSURE','HIN','MFLOW','POWER','TISO'});
             mixSolver.boundaryConditions = cell2struct( ...
                                         arrayfun( ...
                                             @(idx) mixSolver.timeInterpolate([mixSolver.inputSet.bc.(params(idx))]), ...

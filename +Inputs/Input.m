@@ -76,7 +76,7 @@ classdef (HandleCompatible) Input < dynamicprops
             % objProp is a required property if it doesn't have a default
             % value, or if default value is empty
             propProps = findprop(obj,objPropname);
-            propIsRequired = ~propProps.HasDefault || isempty(propProps.DefaultValue);
+            isRequiredProp = ~propProps.HasDefault || isempty(propProps.DefaultValue);
             
             % Find propname in inputStructFieldnames
             if find(strcmp(inputStructFieldnames, objPropname))
@@ -85,10 +85,10 @@ classdef (HandleCompatible) Input < dynamicprops
                 inputField = obj.inputStruct.(objPropname);
 
                 % Is inputField value empty
-                inputFieldIsEmpty = isempty(inputField) || (isstring(inputField) && strlength(inputField)==0);
+                isEmptyInputField = isempty(inputField) || (isstring(inputField) && strlength(inputField)==0);
 
                 % Check requirements
-                if propIsRequired && inputFieldIsEmpty
+                if isRequiredProp && isEmptyInputField
                 % Throw exception if property is required, yet a
                 % value was not specified
                     throwAsCaller( ...
@@ -96,7 +96,7 @@ classdef (HandleCompatible) Input < dynamicprops
                             sprintf('%s:missingRequiredValueError',objClassName), ...
                             'Required entry with key %s for %s is empty', objPropname, opts.id) ...
                     );
-                elseif ~propIsRequired && inputFieldIsEmpty
+                elseif ~isRequiredProp && isEmptyInputField
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
                     warning('%s: Value for entry %s was not set. Default value used: %s', ...
@@ -108,7 +108,7 @@ classdef (HandleCompatible) Input < dynamicprops
                     isSpecifiedEntry = true;
                 end
             else
-                if propIsRequired
+                if isRequiredProp
                 % A required property was not specified
                 throwAsCaller( ...
                         MException( ...
@@ -135,6 +135,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 obj
                 opts.exclude = {}   % Cell array of properties to exclude from the list
             end
+
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
                 strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected')...

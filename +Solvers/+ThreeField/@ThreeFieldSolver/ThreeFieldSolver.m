@@ -190,12 +190,19 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 repmat(flmArr(1),1,tfSolver.inputSet.options.SSMAXITER));
             tfSolver.dropInit = copy( ...
                 repmat(drpArr(1),1,tfSolver.inputSet.options.SSMAXITER));
-            tfSolver.fluidInit = FluidProperties( ...
-                                    repmat( ...
-                                        tfSolver.boundaryConditions.PRESSURE(1), ...
-                                        1, ...
-                                        tfSolver.inputSet.options.SSMAXITER), ...
-                                    tfSolver.inputSet.model);
+            
+            bcInit = tfSolver.boundaryConditions;
+            bcInitRepmat = @(val) repmat(val, tfSolver.inputSet.options.SSMAXITER, 1);
+            bcInit.TIME             = bcInitRepmat(bcInit.TIME(1));
+            bcInit.PRESSURE         = bcInitRepmat(bcInit.PRESSURE(1));
+            bcInit.HIN              = bcInitRepmat(bcInit.HIN(1));
+            bcInit.MFLOW            = bcInitRepmat(bcInit.MFLOW(1));
+            bcInit.POWER            = bcInitRepmat(bcInit.POWER(1));
+            bcInit.WPOWER   = repmat(bcInit.WPOWER(:,:,1), 1, 1, tfSolver.inputSet.options.SSMAXITER);
+            bcInit.HFLUX    =  repmat(bcInit.HFLUX(:,:,1), 1, 1, tfSolver.inputSet.options.SSMAXITER);
+
+            tfSolver.fluidInit = FluidProperties( bcInit, ...
+                                                  tfSolver.inputSet.model);
 
             % Update filmInit and dropInit times and timesteps
             initTIMEDT = tfSolver.inputSet.options.SSTSTEP;

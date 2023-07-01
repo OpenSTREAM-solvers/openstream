@@ -32,7 +32,7 @@ classdef Geometry < Inputs.Input
             end
             
             %
-            % List of immutable obj property names
+            % List of set-protected obj property names
             objPropnames = obj.listInputProperties();
             
             % Array of fieldnames using default values

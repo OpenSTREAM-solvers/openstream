@@ -4,11 +4,12 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
     
     properties (SetAccess=protected)
         
-        TIME             double  {mustBeNumeric, mustBeScalarOrEmpty}                              % Time [s]
-        PRESSURE         double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % System pressure [Pa]
-        HIN              double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Inlet enthalpy [J/kg]
-        MFLOW            double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Mass flow rate [kg/s]
-        POWER      (1,1) double  {mustBeNonnegative}                       = 0                     % Total power [W]
+        TIME       (1,1) double  {mustBeNumeric}                           = 0                     % Time [s]
+        PRESSURE   (1,1) double  {mustBePositive}                          = 1                     % System pressure [Pa]
+        HIN        (1,1) double  {mustBePositive}                          = 1                     % Inlet enthalpy [J/kg]
+        TISO       (1,1) double  {mustBePositive}                          = 293                   % Isothermal temperature [K], only for 2-spcies mixture
+        MFLOW      (1,1) double  {mustBePositive}                          = 1                     % Mass flow rate [kg/s]
+        POWER      (1,1) double  {mustBeNonnegative}                       = 1                     % Total power [W]
         WMESH      (1,:) double  {mustBePositive}                          = 1                     % Relative power node size distribution [m]
         WPOWER     (:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-] 
         
@@ -150,27 +151,52 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         
         function  tsat = TSAT(obj,fluidObj)
             %TSAT [K] Saturation temperature given fluidObj
-            tsat = fluidObj.coolpropH.TsatP(obj.PRESSURE);
+            switch obj.PROPERTIES
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.PSYSTEM}
+                    tsat = fluidObj.coolpropH.TsatP(obj.PRESSURE);
+                case InputEnums.FLUIDPROPERTIES.ISOTHERMAL
+                    tsat = obj.TISO;
+            end
         end
         
         function hf = HF(obj,fluidObj)
             %HF [J/kg] Liquid saturation given fluidObj
-            hf = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',0);
+            switch obj.PROPERTIES
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.PSYSTEM}
+                    hf = fluidObj.coolpropHLiq.enthalpy('P',obj.PRESSURE,'Q',0);
+                case InputEnums.FLUIDPROPERTIES.ISOTHERMAL
+                    hf = fluidObj.coolpropHLiq.enthalpy('P',obj.PRESSURE,'T',obj.TISO);
+            end
         end
         
         function hg = HG(obj,fluidObj)
             %HF [J/kg] Vapor saturation given fluidObj
-            hg = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',1);
+            switch obj.PROPERTIES
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.PSYSTEM}
+                    hg = fluidObj.coolpropHVap.enthalpy('P',obj.PRESSURE,'Q',1);
+                case InputEnums.FLUIDPROPERTIES.ISOTHERMAL
+                    hg = fluidObj.coolpropHVap.enthalpy('P',obj.PRESSURE,'T',obj.TISO);
+            end
         end
         
         function tin = TIN(obj,fluidObj)
             %TIN [K] Inlet temperature
-            tin = fluidObj.coolpropH.temperature('P',obj.PRESSURE,'H', obj.HIN);
+            switch obj.PROPERTIES
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.PSYSTEM}
+                    tin = fluidObj.coolpropH.temperature('P',obj.PRESSURE,'H', obj.HIN);
+                case InputEnums.FLUIDPROPERTIES.ISOTHERMAL
+                    tin = obj.TISO;
+            end
         end
         
         function dtin = DTIN(obj,fluidObj)
             %DTIN [K] Inlet subcooling temperature difference given fluidObj    
-            dtin = obj.TSAT(fluidObj)-obj.TIN(fluidObj);
+            switch obj.PROPERTIES
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.PSYSTEM}
+                    dtin = obj.TSAT(fluidObj)-obj.TIN(fluidObj);
+                case InputEnums.FLUIDPROPERTIES.ISOTHERMAL
+                    dtin = 0;
+            end
         end
         
         % Inlet subcooling, usage: obj.DHIN(model)
@@ -184,10 +210,6 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
             %XIN [-] Inlet equilibrium quality
             xin = -obj.DHIN(fluidObj)./(obj.HG(fluidObj)-obj.HF(fluidObj));
         end
-
-%         function varargout = size(obj,varargin)
-%             [varargout{1:nargout}] = size(obj.TIME,varargin{:});
-%         end
 
         function plot(obj,fluidObj)
             %PLOT Plot boundary conditions

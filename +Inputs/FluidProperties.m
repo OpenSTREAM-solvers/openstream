@@ -25,16 +25,19 @@ classdef FluidProperties
 
     properties (SetAccess=private)
 
-        coolpropH   CoolPropWrapper.CoolPropWrapper
-   
+        coolpropH      CoolPropWrapper.CoolPropWrapper
+        coolpropHLiq   CoolPropWrapper.CoolPropWrapper
+        coolpropHVap   CoolPropWrapper.CoolPropWrapper
+        TISO           (1,1) double  {mustBeNumeric}                          = 293                     % [K] Isothermal temperature for 2-species mixture
+    
     end
     
     methods
-        function obj = FluidProperties(P, modelObj)
+        function obj = FluidProperties(bcObj, modelObj)
             %FLUIDPROPERTIES Construct an instance of this class
             %   Detailed explanation goes here
             arguments
-                P        
+                bcObj        
                 modelObj (1,1)        {isa(modelObj, 'Model')}
             end
             
@@ -42,32 +45,67 @@ classdef FluidProperties
             import CoolPropWrapper.CoolPropWrapper
 
             % Create fluid property object array
-            obj(1:length(P)) = obj;
-            
+            obj(1:length(bcObj.PRESSURE)) = obj;
+
+            % Parse modelObj.FLUID for 1 or 2 species
+            fluids = regexp(modelObj.FLUID,'(?<f1>\w*)+(\s*,\s*)?(?<f2>\w*)?', 'names', 'once');
+            if fluids.f1 ~= "" && (fluids.f2 == "" || (fluids.f1 == fluids.f2))
+                numSpecies = 1;
+            elseif fluids.f1 ~= "" && (fluids.f1 ~= fluids.f2)
+                numSpecies = 2;
+            end
+
             % Setup CoolProp
-            coolpropH = CoolPropWrapper(modelObj.FLUID);
+            switch numSpecies
+                case 1
+                    % set to vector mode
+                    coolpropH.setOutputMode('vec');
+                    
+                    % Calculate properties at saturation
+                    coolpropH.setSpecifyPhase('twophase');
+                    TSAT     = coolpropH.temperature('P',P,'Q',1);                 % [K] Saturated fluid temperature
+                    RHOF     = coolpropH.density('P',P,'Q',0);                     % [kg/m^3] Saturated liquid mass density
+                    RHOG     = coolpropH.density('P',P,'Q',1);                     % [kg/m^3] Saturated vapor mass density
+                    MUF      = coolpropH.viscosity('P',P,'Q',0);                   % [Pa.s] Saturated liquid viscosity
+                    MUG      = coolpropH.viscosity('P',P,'Q',1);                   % [Pa.s] Saturated vapor viscosity
+                    HF       = coolpropH.enthalpy('P',P,'Q',0);                    % [J/kg] Saturated liquid enthalpy
+                    HG       = coolpropH.enthalpy('P',P,'Q',1);                    % [J/kg] Saturated vapor enthalpy
+                    SIGMA    = coolpropH.surfaceTension('P',P,'Q',1);              % [N/m] Surface tension
+                    KF       = coolpropH.conductivity('P',P,'Q',0);                % [W/m/K] Saturated liquid conductivity
+                    KG       = coolpropH.conductivity('P',P,'Q',1);                % [W/m/K] Saturated vapor conductivity
+                    PRANDTLF = coolpropH.prandtl('P',P,'Q',0);                     % [-] Saturated liquid Prandtl number
+                    PRANDTLG = coolpropH.prandtl('P',P,'Q',1);                     % [-] Saturated vapor Prandtl number
+                    coolpropH.setSpecifyPhase('');
 
-            % set AbstractState to HEOS
-            coolpropH.setAbstractStateSrc(coolpropH.EOS.BICUBIC_HEOS);
-
-            % set to vector mode
-            coolpropH.setOutputMode('vec');
-            
-            % Calculate properties at saturation
-            coolpropH.setSpecifyPhase('twophase');
-            TSAT     = coolpropH.temperature('P',P,'Q',1);                 % [K] Saturated fluid temperature
-            RHOF     = coolpropH.density('P',P,'Q',0);                     % [kg/m^3] Saturated liquid mass density
-            RHOG     = coolpropH.density('P',P,'Q',1);                     % [kg/m^3] Saturated vapor mass density
-            MUF      = coolpropH.viscosity('P',P,'Q',0);                   % [Pa.s] Saturated liquid viscosity
-            MUG      = coolpropH.viscosity('P',P,'Q',1);                   % [Pa.s] Saturated vapor viscosity
-            HF       = coolpropH.enthalpy('P',P,'Q',0);                    % [J/kg] Saturated liquid enthalpy
-            HG       = coolpropH.enthalpy('P',P,'Q',1);                    % [J/kg] Saturated vapor enthalpy
-            SIGMA    = coolpropH.surfaceTension('P',P,'Q',1);              % [N/m] Surface tension
-            KF       = coolpropH.conductivity('P',P,'Q',0);                % [W/m/K] Saturated liquid conductivity
-            KG       = coolpropH.conductivity('P',P,'Q',1);                % [W/m/K] Saturated vapor conductivity
-            PRANDTLF = coolpropH.prandtl('P',P,'Q',0);                     % [-] Saturated liquid Prandtl number
-            PRANDTLG = coolpropH.prandtl('P',P,'Q',1);                     % [-] Saturated vapor Prandtl number
-            coolpropH.setSpecifyPhase('');
+                case 2
+                    % Two isothermal species, not saturated
+                    coolpropHLiq = CoolPropWrapper(fluids.f1);
+                    coolpropH    = coolpropHLiq;
+                    coolpropHVap = CoolPropWrapper(fluids.f2);
+    
+                    % set AbstractState to HEOS
+                    coolpropHLiq.setAbstractStateSrc(coolpropH.EOS.BICUBIC_HEOS);
+                    coolpropHVap.setAbstractStateSrc(coolpropH.EOS.BICUBIC_HEOS);
+    
+                    % set to vector mode
+                    coolpropHLiq.setOutputMode('vec');
+                    coolpropHVap.setOutputMode('vec');
+    
+                    % Calculate subcooled and superheated properties
+                    coolpropHLiq.setSpecifyPhase('liquid');
+                    coolpropHLiq.setSpecifyPhase('gas');
+                    
+                    P = bcObj.PRESSURE;
+                    TISO = bcObj.TISO;
+                    TSAT  = coolpropHLiq.temperature('P',P,'Q',0);                % [K] Saturated fluid temperature (TODO: not sure what to use here)
+                    RHOF  = coolpropHLiq.density('P',P,'T', TISO);                 % [kg/m^3] Saturated liquid mass density
+                    RHOG  = coolpropHVap.density('P',P,'T', TISO);                 % [kg/m^3] Saturated vapor mass density
+                    MUF   = coolpropHLiq.viscosity('P',P,'T', TISO);               % [Pa.s] Saturated liquid viscosity
+                    MUG   = coolpropHVap.viscosity('P',P,'T', TISO);               % [Pa.s] Saturated vapor viscosity
+                    HF    = coolpropHLiq.enthalpy('P',P,'T', TISO);                % [J/kg] Saturated liquid enthalpy
+                    HG    = coolpropHVap.enthalpy('P',P,'T', TISO);                % [J/kg] Saturated vapor enthalpy
+                    SIGMA = coolpropHLiq.surfaceTension('P',P,'T', TISO);             % [N/m] Surface tension
+            end
 
             % Assign properties to each object
             for i = 1:length(obj)
@@ -77,7 +115,9 @@ classdef FluidProperties
                 obj(i).PROPERTIES = modelObj.PROPERTIES;
 
                 % Share the same coolPropH
-                obj(i).coolpropH = coolpropH;
+                obj(i).coolpropH    = coolpropH;
+                obj(i).coolpropHLiq = coolpropHLiq;
+                obj(i).coolpropHVap = coolpropHVap;
 
                 % Distribute properties
                 obj(i).PRESSURE = P(i);                                    % [Pa] Saturated fluid pressure
@@ -94,7 +134,10 @@ classdef FluidProperties
                 obj(i).KG       = KG(i);                                   % [W/m/K] Saturated vapor conductivity
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
-                
+
+                obj(i).TISO   = TISO;                                         % [K] Saturated fluid temperature, for 1-species mixture
+
+
             end
             
         end
@@ -120,7 +163,7 @@ classdef FluidProperties
             end
             
             switch obj.PROPERTIES
-                case InputEnums.FLUIDPROPERTIES.SATURATED
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.ISOTHERMAL}
                     rhol = repmat(obj.RHOF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     rhol = obj.coolpropH.density('P',obj.PRESSURE,'H',min(H,obj.HF));
@@ -136,7 +179,7 @@ classdef FluidProperties
             end
             
             switch obj.PROPERTIES
-                case InputEnums.FLUIDPROPERTIES.SATURATED
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.ISOTHERMAL}
                     rhov = repmat(obj.RHOG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     rhov = obj.coolpropH.density('P',obj.PRESSURE,'H',max(H,obj.HG));
@@ -151,7 +194,7 @@ classdef FluidProperties
                 H
             end
             switch obj.PROPERTIES
-                case InputEnums.FLUIDPROPERTIES.SATURATED
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.ISOTHERMAL}
                     mul = repmat(obj.MUF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     mul = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',min(H,obj.HF));
@@ -166,7 +209,7 @@ classdef FluidProperties
                 H
             end
             switch obj.PROPERTIES
-                case InputEnums.FLUIDPROPERTIES.SATURATED
+                case {InputEnums.FLUIDPROPERTIES.SATURATED, InputEnums.FLUIDPROPERTIES.ISOTHERMAL}
                     muv = repmat(obj.MUG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     muv = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',max(H,obj.HG));
