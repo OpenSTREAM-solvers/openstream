@@ -214,6 +214,12 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         end
 
     end
+    
+    methods (Static)
+        function writeInputFile(filePathName, varargin)
+            Inputs.Input.writeInputFile_inner(filePathName, "a+", varargin{:});
+        end
+    end
 
     
     

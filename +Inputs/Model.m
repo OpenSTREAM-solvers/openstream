@@ -91,6 +91,12 @@ classdef Model < Inputs.Input
         
 
     end
+    
+    methods (Static)
+        function writeInputFile(filePathName, varargin)
+            Inputs.Input.writeInputFile_inner(filePathName, "a+", varargin{:});
+        end
+    end
 
 end
 

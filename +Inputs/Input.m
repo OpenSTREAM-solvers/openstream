@@ -137,8 +137,12 @@ classdef (HandleCompatible) Input < dynamicprops
         end
 
     end
+    
+    methods(Static, Abstract)
+        writeInputFile
+    end
 
-    methods(Static)
+    methods(Static, Access=protected)
         
         function inputStruct = readInputFile(filePath)
             %READINPUTFILE input file parser
@@ -287,7 +291,42 @@ classdef (HandleCompatible) Input < dynamicprops
             
 
         end
+        
+        function writeInputFile_inner(filePathName, fidMode, varargin)
+            
+            if mod(length(varargin),2) == 1
+                error('An even number of inputs after filePath is required.');
+            end
 
+            % Create file to write
+            fid = fopen(filePathName,fidMode);
+            if fid == -1
+                error('An error occurred while creating %s', filePathName);
+            end
+
+            for idx = 1:length(varargin)/2
+                
+                % Odd idx refer to the names
+                varIdx = 2*idx-1;
+
+                % Force name to be upper case
+                varName = upper(string(varargin{varIdx}));
+                
+                % Force value to be a string
+                varValue = string(varargin{varIdx+1});
+                
+                % Print line in file
+                fprintf(fid, '%-11s!%64s> %s\n', varName, '', varValue);
+
+            end
+
+            % Print
+            fprintf(fid,'END\n\n');
+
+            % Close file
+            fclose(fid);
+
+        end
 
         function defVal = defaultValueString(defVal)
         %DEFAULTVALUESTRING Convert numeric default value to string
