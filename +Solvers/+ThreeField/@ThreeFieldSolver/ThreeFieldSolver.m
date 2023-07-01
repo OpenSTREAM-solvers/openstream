@@ -211,17 +211,26 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
         end
 
-        function plotz(tfSolver, tIdx)
+        function plotz(tfSolver, tIdx, opt)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
-        arguments
-            tfSolver
-            tIdx    (1,1) double
-        end
+            arguments
+                tfSolver
+                tIdx    (1,1) double
+                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+            end
+        
+            switch opt.solveMode
+                case 'TRANSIENT'
+                    flm = tfSolver.film(tIdx);
+                    drp = tfSolver.drop(tIdx);
+                case 'STEADY'
+                    flm = tfSolver.filmInit(tIdx);
+                    drp = tfSolver.dropInit(tIdx);
+            end
+            
             bc  = tfSolver.boundaryConditions;
             mix = tfSolver.mixSolver.mixture(tIdx);
-            flm = tfSolver.film(tIdx);
-            drp = tfSolver.drop(tIdx);
             z   = tfSolver.Z;
             figure('name',['Axial distributions of three-field parameters at ' num2str(flm.TIME) ' [s]'])
             

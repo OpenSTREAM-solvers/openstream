@@ -247,14 +247,22 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         end
 
-        function plotz(mixSolver, tIdx)
+        function plotz(mixSolver, tIdx, opt)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
-        arguments
-            mixSolver
-            tIdx    (1,1) double
-        end
-            mix = mixSolver.mixture(tIdx);
+            arguments
+                mixSolver
+                tIdx    (1,1) double
+                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+            end
+            
+            switch opt.solveMode
+                case 'TRANSIENT'
+                    mix = mixSolver.mixture(tIdx);
+                case 'STEADY'
+                    mix = mixSolver.mixtureInit(tIdx);
+            end
+            
             figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME) ' [s]'])
                 
             nexttile; hold all; grid on; title('Mass flow rates')
