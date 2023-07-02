@@ -4,7 +4,7 @@ classdef Options < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID           (1,1) string  {mustBeTextScalar,mustBeNonempty}                               % Option ID 
+        ID           (1,1) string  {mustBeTextScalar}                                              % Option ID 
         TSTEP        (1,1) double  {mustBeNumeric,mustBePositive}          = 0.1                   % Time step [s]
         MAXITER      (1,1) uint8   {mustBeInteger,mustBePositive}          = 100                   % Max number of inner (point) iterations
         ERRORW       (1,1) double  {mustBeNumeric}                         = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
@@ -92,8 +92,8 @@ classdef Options < Inputs.Input
     end
     
     methods (Static)
-        function writeInputFile(filePathName, varargin)
-            Inputs.Input.writeInputFile_inner(filePathName, "a+", varargin{:});
+        function writeInputFile(filePathName, ID, varargin)
+            Inputs.Input.writeInputFile_inner(filePathName, "a+", "ID", ID, varargin{:});
         end
     end
 

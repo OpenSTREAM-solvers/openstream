@@ -2,10 +2,6 @@ classdef (HandleCompatible) Input < dynamicprops
     %INPUT Su
     %   Detailed explanation goes here
     
-    properties
-        %inputStruct struct                                                  % structure that stores input file contents            
-    end
-    
     methods
         function obj = Input(inputFilePath, key, val)
             %INPUT Parse inputFile to construct this class
@@ -298,6 +294,15 @@ classdef (HandleCompatible) Input < dynamicprops
                 error('An even number of inputs after filePath is required.');
             end
 
+            % Gather calling class property names
+            callStack = dbstack();
+            [~,callClass] = fileparts(callStack(2).file);
+            callClass = ['Inputs.' callClass];
+            callClass = eval(['?' callClass]);
+            descriptionDict = containers.Map( ...
+                                {callClass.PropertyList.Name}, ...
+                                {callClass.PropertyList.Description});
+
             % Create file to write
             fid = fopen(filePathName,fidMode);
             if fid == -1
@@ -313,11 +318,32 @@ classdef (HandleCompatible) Input < dynamicprops
                 varName = upper(string(varargin{varIdx}));
                 
                 % Force value to be a string
-                varValue = string(varargin{varIdx+1});
+                varValue = varargin{varIdx+1};
+                if isnumeric(varValue)
+                    varValue = num2str(reshape(varValue,1,[]));
+                elseif islogical(varValue)
+                    varValue = string(varValue);
+                else
+                    varValue = upper(varValue);
+                end
                 
-                % Print line in file
-                fprintf(fid, '%-11s!%64s> %s\n', varName, '', varValue);
+                % Determine action given varName
+                switch varName
 
+                    % NOTE: Other options can be specified here
+
+                    otherwise
+                        
+                        % Find varName in descriptionDict
+                        if descriptionDict.isKey(varName)
+                            description = descriptionDict(varName);
+                        else
+                            description = '';
+                        end
+
+                        % Print line in file
+                        fprintf(fid, '%-11s! %-63s> %s\n', varName, description, varValue);
+                end
             end
 
             % Print

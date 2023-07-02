@@ -4,7 +4,7 @@ classdef Geometry < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID         (1,1) string  {mustBeTextScalar,mustBeNonempty}         = 'NA'                  % Channel ID
+        ID         (1,1) string  {mustBeTextScalar}                                                % Channel ID
         LENGTH     (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Axial length [m]
         AREA       (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Coolant area [m^2] 
         PERIM      (1,:) double  {mustBePositive,mustBeNonempty}           = 1                     % Perimeters [m]
@@ -91,8 +91,8 @@ classdef Geometry < Inputs.Input
     end
     
     methods (Static)
-        function writeInputFile(filePathName, varargin)
-            Inputs.Input.writeInputFile_inner(filePathName, "a+", varargin{:});
+        function writeInputFile(filePathName, ID, varargin)
+            Inputs.Input.writeInputFile_inner(filePathName, "a+", "ID", ID, varargin{:});
         end
     end
 
