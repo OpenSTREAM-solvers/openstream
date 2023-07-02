@@ -27,8 +27,10 @@ classdef Model < Inputs.Input
         MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
         MOMENTDROP    (1,1) InputEnums.MOMENTDROP                          = 'SLIP'                % Drop momentum conservation model [-]                                                                 
         DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
-        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film friction model [-]  
+        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film wall friction model [-]  
         THINFILMTHICK (1,1) double  {mustBePositive}                       = 1E-4                  % Thin film thickness [m]        
+        VAPORFRIC     (1,1) InputEnums.VAPORFRIC                           = 'WALLIS'              % Vapor friction model [-]  
+        VAPORFRICCST  (1,1) double  {mustBePositive}                       = 0.005                 % Vapor friction constant [-]
         POSFILM       (1,1) logical                                        = true                  % Keep positive film flowrate/thickness
     end
 

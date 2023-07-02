@@ -160,7 +160,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     case InputEnums.MOMENTFILM.EQUILIBRIUMS
                         flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
                     case {InputEnums.MOMENTFILM.EQUILIBRIUM, InputEnums.MOMENTFILM.FULL}
-                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s] Initialize
+                        %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
+                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
                         %flmArr(tIdx).U = flmArr(tIdx).UEQUIL(mix(tIdx),drpArr(tIdx)); % [m/s]
                 end
                                 
