@@ -2,10 +2,6 @@ classdef (HandleCompatible) Input < dynamicprops
     %INPUT Su
     %   Detailed explanation goes here
     
-    properties
-        %inputStruct struct                                                  % structure that stores input file contents            
-    end
-    
     methods
         function obj = Input(inputFilePath, key, val)
             %INPUT Parse inputFile to construct this class
@@ -137,8 +133,12 @@ classdef (HandleCompatible) Input < dynamicprops
         end
 
     end
+    
+    methods(Static, Abstract)
+        writeInputFile
+    end
 
-    methods(Static)
+    methods(Static, Access=protected)
         
         function inputStruct = readInputFile(filePath)
             %READINPUTFILE input file parser
@@ -287,7 +287,72 @@ classdef (HandleCompatible) Input < dynamicprops
             
 
         end
+        
+        function writeInputFile_inner(filePathName, fidMode, varargin)
+            
+            if mod(length(varargin),2) == 1
+                error('An even number of inputs after filePath is required.');
+            end
 
+            % Gather calling class property names
+            callStack = dbstack();
+            [~,callClass] = fileparts(callStack(2).file);
+            callClass = ['Inputs.' callClass];
+            callClass = eval(['?' callClass]);
+            descriptionDict = containers.Map( ...
+                                {callClass.PropertyList.Name}, ...
+                                {callClass.PropertyList.Description});
+
+            % Create file to write
+            fid = fopen(filePathName,fidMode);
+            if fid == -1
+                error('An error occurred while creating %s', filePathName);
+            end
+
+            for idx = 1:length(varargin)/2
+                
+                % Odd idx refer to the names
+                varIdx = 2*idx-1;
+
+                % Force name to be upper case
+                varName = upper(string(varargin{varIdx}));
+                
+                % Force value to be a string
+                varValue = varargin{varIdx+1};
+                if isnumeric(varValue)
+                    varValue = num2str(reshape(varValue,1,[]));
+                elseif islogical(varValue)
+                    varValue = string(varValue);
+                else
+                    varValue = upper(varValue);
+                end
+                
+                % Determine action given varName
+                switch varName
+
+                    % NOTE: Other options can be specified here
+
+                    otherwise
+                        
+                        % Find varName in descriptionDict
+                        if descriptionDict.isKey(varName)
+                            description = descriptionDict(varName);
+                        else
+                            description = '';
+                        end
+
+                        % Print line in file
+                        fprintf(fid, '%-11s! %-63s> %s\n', varName, description, varValue);
+                end
+            end
+
+            % Print
+            fprintf(fid,'END\n\n');
+
+            % Close file
+            fclose(fid);
+
+        end
 
         function defVal = defaultValueString(defVal)
         %DEFAULTVALUESTRING Convert numeric default value to string
