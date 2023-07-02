@@ -4,8 +4,8 @@ classdef Model < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                % Model ID 
-        NNODES           double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
+        ID          (1,1) string  {mustBeTextScalar}                                               % Model ID 
+        NNODES            double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
                                                                            = []                    % Number of axial nodes 
         FLUID       (1,1) string  {mustBeTextScalar}                       = "WATER"               % Fluid ID
         PROPERTIES  (1,1) InputEnums.FLUIDPROPERTIES                       = 'SATURATED'           % Fluid property assumptions
@@ -34,8 +34,8 @@ classdef Model < Inputs.Input
         POSFILM       (1,1) logical                                        = true                  % Keep positive film flowrate/thickness
     end
 
-    properties (SetAccess = private)
-        G          (1,1) double  {mustBeNumeric}                           = 9.81                  % [m/s^2] Gravitational acceleration
+    properties (Constant)
+        G             (1,1) double  {mustBeNumeric}                        = 9.81                  % [m/s^2] Gravitational acceleration
     end
 
     methods
@@ -92,6 +92,12 @@ classdef Model < Inputs.Input
         end
         
 
+    end
+    
+    methods (Static)
+        function writeInputFile(filePathName, ID, varargin)
+            Inputs.Input.writeInputFile_inner(filePathName, "a+", "ID", ID, varargin{:});
+        end
     end
 
 end
