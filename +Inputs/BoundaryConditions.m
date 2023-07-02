@@ -4,11 +4,11 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
     
     properties (SetAccess=protected)
         
-        TIME             double  {mustBeNumeric, mustBeScalarOrEmpty}                              % Time [s]
-        PRESSURE         double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % System pressure [Pa]
-        HIN              double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Inlet enthalpy [J/kg]
-        MFLOW            double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Mass flow rate [kg/s]
-        POWER      (1,1) double  {mustBeNonnegative}                       = 0                     % Total power [W]
+        TIME       (1,1) double  {mustBeNumeric}                           = 0                     % Time [s]
+        PRESSURE   (1,1) double  {mustBePositive}                          = 1                     % System pressure [Pa]
+        HIN        (1,1) double  {mustBePositive}                          = 1                     % Inlet enthalpy [J/kg]
+        MFLOW      (1,1) double  {mustBePositive}                          = 1                     % Mass flow rate [kg/s]
+        POWER      (1,1) double  {mustBeNonnegative}                       = 1                     % Total power [W]
         WMESH      (1,:) double  {mustBePositive}                          = 1                     % Relative power node size distribution [m]
         WPOWER     (:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-] 
         
@@ -213,21 +213,6 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
 
         end
 
-    end
-    
-    methods (Static)
-        function writeInputFile(filePathName, ...
-                                    TIME, PRESSURE, HIN, MFLOW, ...
-                                    varargin)
-            Inputs.Input.writeInputFile_inner( ...
-                filePathName, "a+", ...
-                "TIME", TIME, ...
-                "PRESSURE", PRESSURE, ...
-                "HIN", HIN, ...
-                "MFLOW", MFLOW, ...
-                varargin{:} ...
-            );
-        end
     end
 
     
