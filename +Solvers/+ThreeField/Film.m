@@ -153,9 +153,28 @@ classdef Film < Solvers.AbstractField
         %
             if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
+            model = film.inputSet.model;
             nwall = film.inputSet.geometry.NWALL;                          % Number of walls
+            C = model.VAPORFRICCST;                                        % [-] Friction constant
             
-            Cv = repmat(0.005,length(zIdx),nwall);                          % [-]
+            switch model.VAPORFRIC
+                case InputEnums.VAPORFRIC.CONSTANT
+                    %
+                    Cv = repmat(C,length(zIdx),nwall);                     % [-]
+                    
+                case InputEnums.VAPORFRIC.WALLIS
+                    %
+                    vf = mix.vapor.VF(zIdx);                               % [-]
+                    Cv = C.*(1+75.*(1-vf));                                % [-]
+                    Cv = repmat(Cv,1,nwall);                               % [-]
+                    
+                case InputEnums.VAPORFRIC.WALLISTHICK
+                    %
+                    area = film.inputSet.geometry.AREA;                    % [m^2] Cross-section area
+                    perim = film.inputSet.geometry.PERIM;                  % [m]   Perimeter(s)
+                    thick = abs(film.THICK(zIdx));                         % [m] Film thickness
+                    Cv = C.*(1+(75/area).*sum(perim.*thick,2));            % [-]
+            end
             
             Cv  = mix.AFDISTR(0,Cv,zIdx);   
             
@@ -180,9 +199,9 @@ classdef Film < Solvers.AbstractField
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
             DPDZ = -mix.DP.Tot(zIdx)/film.DZ;                              % [Pa/m] Pressure gradient
             
-            Fbuoy  = -thick.*(DPDZ);                                       % [N/m^2]
+            Fbuoy = -thick.*(DPDZ);                                        % [N/m^2]
             
-            Fbuoy  = mix.AFDISTR(0,Fbuoy,zIdx);   
+            Fbuoy = mix.AFDISTR(0,Fbuoy,zIdx);   
             
         end
         
@@ -194,10 +213,10 @@ classdef Film < Solvers.AbstractField
             model = film.inputSet.model;
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
             
-            Fgrav  = -thick.*(model.G*cos(model.ANGLE*pi/180)*film.fluid.RHOF);
+            Fgrav = -thick.*(model.G*cos(model.ANGLE*pi/180)*film.fluid.RHOF); % [N/m^2]
             
-            Fgrav  = mix.AFDISTR(0,Fgrav,zIdx);   
-            
+            Fgrav = mix.AFDISTR(0,Fgrav,zIdx);
+
         end
         
         function Fdep = FDEP(film,mix,drop,zIdx)
@@ -205,11 +224,12 @@ classdef Film < Solvers.AbstractField
         %
             if nargin < 4, zIdx = (1:film(1).NZ).'; end
             
-            dep   = drop.MDEP(mix,zIdx);                                    % [kg/m^2/s] Drop deposition mass flux
+            dep  = drop.MDEP(mix,zIdx);                                    % [kg/m^2/s] Drop deposition mass flux
             
-            Fdep   = (drop.U(zIdx)-film.U(zIdx,:)).*dep;                   % [N/m^2]
+            Fdep = (drop.U(zIdx)-film.U(zIdx,:)).*dep;                     % [N/m^2]
             
-            Fdep  = mix.AFDISTR(0,Fdep,zIdx);   
+            Fdep = mix.AFDISTR(0,Fdep,zIdx);   
+            
         end
         
         function Ftot = FTOT(film,mix,drop,zIdx)
@@ -217,7 +237,7 @@ classdef Film < Solvers.AbstractField
         %
             if nargin < 4, zIdx = (1:film(1).NZ).'; end
             
-            %Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx);   
+            %Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx)+film.FBUOY(mix,zIdx)+film.FDEP(mix,drop,zIdx);   
             Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx)+film.FBUOY(mix,zIdx)+film.FGRAV(mix,zIdx)+film.FDEP(mix,drop,zIdx);   
             
         end

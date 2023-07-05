@@ -4,8 +4,8 @@ classdef Model < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID          (1,1) string  {mustBeTextScalar,mustBeNonempty}                                % Model ID 
-        NNODES           double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
+        ID          (1,1) string  {mustBeTextScalar}                                               % Model ID 
+        NNODES            double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
                                                                            = []                    % Number of axial nodes 
         FLUID       (1,1) string  {mustBeTextScalar}                       = "WATER"               % Fluid ID
         PROPERTIES  (1,1) InputEnums.FLUIDPROPERTIES                       = 'SATURATED'           % Fluid property assumptions
@@ -27,13 +27,15 @@ classdef Model < Inputs.Input
         MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
         MOMENTDROP    (1,1) InputEnums.MOMENTDROP                          = 'SLIP'                % Drop momentum conservation model [-]                                                                 
         DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
-        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film friction model [-]  
+        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film wall friction model [-]  
         THINFILMTHICK (1,1) double  {mustBePositive}                       = 1E-4                  % Thin film thickness [m]        
+        VAPORFRIC     (1,1) InputEnums.VAPORFRIC                           = 'WALLIS'              % Vapor friction model [-]  
+        VAPORFRICCST  (1,1) double  {mustBePositive}                       = 0.005                 % Vapor friction constant [-]
         POSFILM       (1,1) logical                                        = true                  % Keep positive film flowrate/thickness
     end
 
-    properties (SetAccess = private)
-        G          (1,1) double  {mustBeNumeric}                           = 9.81                  % [m/s^2] Gravitational acceleration
+    properties (Constant)
+        G             (1,1) double  {mustBeNumeric}                        = 9.81                  % [m/s^2] Gravitational acceleration
     end
 
     methods
@@ -90,6 +92,12 @@ classdef Model < Inputs.Input
         end
         
 
+    end
+    
+    methods (Static)
+        function writeInputFile(filePathName, ID, varargin)
+            Inputs.Input.writeInputFile_inner(filePathName, "a+", "ID", ID, varargin{:});
+        end
     end
 
 end

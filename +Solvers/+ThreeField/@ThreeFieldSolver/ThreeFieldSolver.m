@@ -160,7 +160,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     case InputEnums.MOMENTFILM.EQUILIBRIUMS
                         flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
                     case {InputEnums.MOMENTFILM.EQUILIBRIUM, InputEnums.MOMENTFILM.FULL}
-                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s] Initialize
+                        %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
+                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
                         %flmArr(tIdx).U = flmArr(tIdx).UEQUIL(mix(tIdx),drpArr(tIdx)); % [m/s]
                 end
                                 
@@ -211,17 +212,26 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
         end
 
-        function plotz(tfSolver, tIdx)
+        function plotz(tfSolver, tIdx, opt)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
-        arguments
-            tfSolver
-            tIdx    (1,1) double
-        end
+            arguments
+                tfSolver
+                tIdx    (1,1) double
+                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+            end
+        
+            switch opt.solveMode
+                case 'TRANSIENT'
+                    flm = tfSolver.film(tIdx);
+                    drp = tfSolver.drop(tIdx);
+                case 'STEADY'
+                    flm = tfSolver.filmInit(tIdx);
+                    drp = tfSolver.dropInit(tIdx);
+            end
+            
             bc  = tfSolver.boundaryConditions;
             mix = tfSolver.mixSolver.mixture(tIdx);
-            flm = tfSolver.film(tIdx);
-            drp = tfSolver.drop(tIdx);
             z   = tfSolver.Z;
             figure('name',['Axial distributions of three-field parameters at ' num2str(flm.TIME) ' [s]'])
             
