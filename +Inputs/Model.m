@@ -20,6 +20,7 @@ classdef Model < Inputs.Input
         SLIP        (1,1) double  {mustBePositive}                         = 1                     % Phase velocity ratio [-]
         
         OAF           (1,1) InputEnums.OAF                                 = 'WALLIS'              % Onset of annular flow model [-]
+        OAFENTRAINED  (1,1) InputEnums.OAFENTRAINED                        = 'RATIO'               % Entrained model at onset of annular flow [-]
         OAFDROPRATIO  (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}      = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
         OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.04 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION    (1,1) InputEnums.DEPOSITION                          = 'GOVAN'               % Drop deposition model [-]
