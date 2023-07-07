@@ -154,16 +154,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));    % [m/s] Drop velocity
                 end
                 
-                switch model.MOMENTFILM
-                    case InputEnums.MOMENTFILM.ALGEBRAIC
-                        flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));  % [m/s]
-                    case InputEnums.MOMENTFILM.EQUILIBRIUMS
-                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
-                    case {InputEnums.MOMENTFILM.EQUILIBRIUM, InputEnums.MOMENTFILM.FULL}
-                        %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
-                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
-                        %flmArr(tIdx).U = flmArr(tIdx).UEQUIL(mix(tIdx),drpArr(tIdx)); % [m/s]
-                end
+                %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
+                flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));  % [m/s]
                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drpArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);

@@ -101,11 +101,40 @@ classdef Film < Solvers.AbstractField
                     Wfc = muf.*exp(5.8504+0.4249*mug/muf*sqrt(rhof/rhog)).*perim./4; % [kg/s] Critical film flow rate
                     ment = k*((Wf./perim-Wfc./perim).^2*16/(rhof*sig*hdiam)).^n1.*(rhof/rhog)^n2.*vapor.W(zIdx)./area; % [kg/m^2/s] Entrainment mass flux
                     ment(Wf<=Wfc) = 0;                                     % Set to 0 below critical film flowrate
+                case InputEnums.ENTRAINMENT.OKAWA2003
+                    % Okawa et al. 2003 film entrainment model
+                    ke = 4.79E-4; n  = 0.111; Refc = 320;                  % Model constants
+                    slip = ones(size(Wf)); err=1;                          % [-, -] Set initial guess and error for delta search
+
+                    % Wall friction factor (model consistent with entrainment correlation derivation)
+                    %Cw = film.CW(mix,zIdx);                                % Could use this simpler option instead if THINFILMFRIC=LAMINAR  with C = 0.005 could be selected specifically for this calculation
+                    Ref = max(film.RE(zIdx),1E-6);                         % Film Reynolds number
+                    Cw = max(16./Ref,0.005);                               % [-] Wall friction factor
+                    
+                    % Film thickness (model consistent with entrainment correlation derivation)
+                    %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;      % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
+                    for it = 1:100
+                        delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim;  % [m] Film thicknesse(s)
+                        %Cv = 0.005.*(1+(75/area).*perim.*delta);           % [-] Interfacial friction factor
+                        Cv = 0.005.*(1+(75/area).*sum(perim.*delta,2));    % [-] Interfacial friction factor
+                        newslip = sqrt(Cw./Cv.*(rhof/rhog));               % [-] Slip formulation
+                        err = max(abs((newslip)./(slip)-1));               % [-] Error
+                        slip = newslip;                                    % [-] Update slip
+                        if err < 0.01; break
+                        end
+                    end
+                    if err > 0.01
+                        disp('Okawa correlation : not converged')
+                    end
+                    
+                    entnum = Cv.*rhog.*mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
+                    ment = (ke*rhof).*entnum.*(rhof/rhog)^n;               % [kg/m^2/s] Entrainment mass flux
+                    ment(Ref<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
             end
             
             ment(negfilm)=-ment(negfilm);
             ment = -mix.AFDISTR(0,ment,zIdx);                              % [kg/m^2/s] Entrainment mass flux, in annular flow region only
-            
+
         end
         
         function Mtot = MTOT(film,mix,drop,zIdx)
@@ -257,42 +286,59 @@ classdef Film < Solvers.AbstractField
         end
         
         function Uequil = UEQUILS(film,mix,zIdx)
-        %UEQUILS Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
-        %
+            %UEQUILS Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
+            %
             if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
-            UVAP = mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
-            Cw = film.CW(mix,zIdx);
-            Cv = film.CV(mix,zIdx);
+            iter(1).U = film.U(zIdx,:);
+            iter(1).Ftot = film.FVAPOR(mix,zIdx)+film.FWALL(mix,zIdx);
             
-            Uequil = UVAP./(1+sqrt(Cw./Cv).*sqrt(film.fluid.RHOF/film.fluid.RHOG)); % [m/s]
+            iter(2).U = iter(1).U+0.1;
+            film.U(zIdx,:)=iter(2).U;
+            iter(2).Ftot = film.FVAPOR(mix,zIdx)+film.FWALL(mix,zIdx);
             
-            Uequil  = mix.AFDISTR(mix.liquid.U(zIdx),Uequil,zIdx);  
+            eps = 1.0;
+            for k = 3:100
+                Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
+                iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
+                film.U(zIdx,:)=iter(k).U;
+                iter(k).Ftot = film.FVAPOR(mix,zIdx)+film.FWALL(mix,zIdx);
+                err = max(abs(iter(k).Ftot),[],'all');
+                if err<1E-3, break; end
+            end
+            if err > 1E-3, disp('UEQUILS model : not converged')
+            end
+            
+            Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
+            
         end
         
         function Uequil = UEQUIL(film,mix,drop,zIdx)
-        %UEQUIL Film velocity based on complete equilibrium model (Ftot = 0)
-        %
-        if nargin < 4, zIdx = (1:film(1).NZ).'; end
-        
-        iter(1).U = film.U(zIdx,:);
-        iter(1).Ftot = film.FTOT(mix,drop,zIdx);
-        
-        iter(2).U = iter(1).U+0.1;
-        film.U(zIdx,:)=iter(2).U;
-        iter(2).Ftot = film.FTOT(mix,drop,zIdx);
-        
-        eps = 1.0;
-        for k = 3:20
-            Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
-            iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
-            film.U(zIdx,:)=iter(k).U;
-            iter(k).Ftot = film.FTOT(mix,drop,zIdx);
-            if max(abs(iter(k).Ftot),[],'all')<1E-3, break; end
-        end
-        
-        Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
-        
+            %UEQUIL Film velocity based on complete equilibrium model (Ftot = 0)
+            %
+            if nargin < 4, zIdx = (1:film(1).NZ).'; end
+            
+            iter(1).U = film.U(zIdx,:);
+            iter(1).Ftot = film.FTOT(mix,drop,zIdx);
+            
+            iter(2).U = iter(1).U+0.1;
+            film.U(zIdx,:)=iter(2).U;
+            iter(2).Ftot = film.FTOT(mix,drop,zIdx);
+            
+            eps = 1.0;
+            for k = 3:100
+                Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
+                iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
+                film.U(zIdx,:)=iter(k).U;
+                iter(k).Ftot = film.FTOT(mix,drop,zIdx);
+                err = max(abs(iter(k).Ftot),[],'all');
+                if err<1E-3, break; end
+            end
+            if err > 1E-3, disp('UEQUIL model : not converged')
+            end
+            
+            Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
+            
         end
         
         

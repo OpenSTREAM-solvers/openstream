@@ -197,7 +197,7 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            jg = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.H(zIdx));
+            jg = mix.X(zIdx).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.H(zIdx));
         end
 
         function re = RE(mix, zIdx)
