@@ -23,10 +23,12 @@ classdef Options < Inputs.Input
         
         ERRORWF      (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
         ERRORUF      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity error target in inner iterations [m/s]
+        ERRORUD      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity error target in inner iterations [m/s]
         SSCONVWF     (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate steady-state convergence criterion [kg/s/m]
         SSCONVUF     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity steady-state convergence criterion [m/s]
         RELAXWF      (1,1) double  {mustBeInRange(RELAXWF,0,1)}            = 0.5                   % Relaxation factor for the film mass conservation equation
         RELAXUF      (1,1) double  {mustBeInRange(RELAXUF,0,1)}            = 0.2                   % Relaxation factor for the film momentum conservation equation
+        RELAXUD      (1,1) double  {mustBeInRange(RELAXUD,0,1)}            = 0.2                   % Relaxation factor for the drop momentum conservation equation
     end
 
     methods

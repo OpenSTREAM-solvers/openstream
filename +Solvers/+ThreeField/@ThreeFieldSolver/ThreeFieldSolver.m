@@ -79,7 +79,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             
             % Setup inner iteration value struct
             ITRFields = ["N","DWL","DU"];
-            ITR = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRf = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRFields = ["N","DU"];
+            ITRd = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
 
             % Create film and drop arrays (by timestep)
             flmArr = Film.empty(0,tfSolver.NTIME);
@@ -157,20 +159,19 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 
                 
                 % Initialize velocity [m/s]
-                switch model.MOMENTDROP
-                    case {InputEnums.MOMENTDROP.SLIP, InputEnums.MOMENTDROP.ALGEBRAIC}
-                        drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));    % [m/s] Drop velocity
-                end
+                %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
+                drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));            % [m/s] Drop velocity
                 
                 %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
-                flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));  % [m/s]
+                flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));          % [m/s] Film velocity
                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drpArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
                 flmArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
                 
                 % ITR
-                flmArr(tIdx).ITR = ITR;
+                flmArr(tIdx).ITR = ITRf;
+                drpArr(tIdx).ITR = ITRd;
 
             end
 
@@ -331,6 +332,18 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Shear stress [N/m^2]')
             legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','northEast')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Drop momentum exchanges')
+            plot(z,drp.FENT(mix,flm),'o-')
+            plot(z,drp.FDRAG(mix),'.-')
+            plot(z,drp.FBUOY(mix),'.-')
+            plot(z,drp.FGRAV(mix),'.-')
+            plot(z,drp.FTOT(mix,flm),'k--')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Force density [N/m^3]')
+            legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','northEast')
             set(gca,'fontSize',14)
             
         end

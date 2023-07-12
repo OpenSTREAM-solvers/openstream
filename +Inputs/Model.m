@@ -33,6 +33,9 @@ classdef Model < Inputs.Input
         VAPORFRIC     (1,1) InputEnums.VAPORFRIC                           = 'WALLIS'              % Vapor friction model [-]  
         VAPORFRICCST  (1,1) double  {mustBePositive}                       = 0.005                 % Vapor friction constant [-]
         POSFILM       (1,1) logical                                        = true                  % Keep positive film flowrate/thickness
+        DROPDIAM      (1,1) double  {mustBePositive}                       = 1E-3                  % Drop diameter [mm]
+        DROPDRAG      (1,1) InputEnums.DROPDRAG                            = 'CONSTANT'            % Drop drag model
+        DROPDRAGCOEF  (1,1) double  {mustBePositive}                       = 0.45                  % Drop drag coefficient
     end
 
     properties (Constant)

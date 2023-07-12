@@ -306,7 +306,7 @@ classdef Film < Solvers.AbstractField
                 err = max(abs(iter(k).Ftot),[],'all');
                 if err<1E-3, break; end
             end
-            if err > 1E-3, disp('UEQUILS model : not converged')
+            if err > 1E-3, disp('Film UEQUILS model : not converged')
             end
             
             Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
@@ -334,7 +334,7 @@ classdef Film < Solvers.AbstractField
                 err = max(abs(iter(k).Ftot),[],'all');
                 if err<1E-3, break; end
             end
-            if err > 1E-3, disp('UEQUIL model : not converged')
+            if err > 1E-3, disp('Film UEQUIL model : not converged')
             end
             
             Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
