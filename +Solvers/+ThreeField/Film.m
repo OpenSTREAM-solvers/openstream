@@ -107,16 +107,13 @@ classdef Film < Solvers.AbstractField
                     slip = ones(size(Wf)); err=1;                          % [-, -] Set initial guess and error for delta search
 
                     % Wall friction factor (model consistent with entrainment correlation derivation)
-                    %Cw = film.CW(mix,zIdx);                                % Could use this simpler option instead if THINFILMFRIC=LAMINAR  with C = 0.005 could be selected specifically for this calculation
-                    Ref = max(film.RE(zIdx),1E-6);                         % Film Reynolds number
-                    Cw = max(16./Ref,0.005);                               % [-] Wall friction factor
+                    Cw = film.CW_LAM_CALC(zIdx, 0.005);                    % [-] Wall friction factor, C=0.005
                     
                     % Film thickness (model consistent with entrainment correlation derivation)
                     %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;      % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
                     for it = 1:100
                         delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim;  % [m] Film thicknesse(s)
-                        %Cv = 0.005.*(1+(75/area).*perim.*delta);           % [-] Interfacial friction factor
-                        Cv = 0.005.*(1+(75/area).*sum(perim.*delta,2));    % [-] Interfacial friction factor
+                        Cv = film.CV_WALLISTHICK_CALC(delta, 0.005);       % [-] Interfacial friction factor, thick=delta, C=0.005
                         newslip = sqrt(Cw./Cv.*(rhof/rhog));               % [-] Slip formulation
                         err = max(abs((newslip)./(slip)-1));               % [-] Error
                         slip = newslip;                                    % [-] Update slip
@@ -156,15 +153,14 @@ classdef Film < Solvers.AbstractField
             switch model.THINFILMFRIC
                 case InputEnums.THINFILMFRIC.TURBULENT
                     %
-                    nwall = film.inputSet.geometry.NWALL;                  % Number of walls
-                    Cw = repmat(C,length(zIdx),nwall);                     % [-]
+                    Cw = film.CW_TURB_CALC(zIdx, C);                        % Call private method
+
                 case InputEnums.THINFILMFRIC.LAMINAR
                     %
-                    RE = max(film.RE(zIdx),1E-6);
-                    Cw = max(16./RE,C);                                    % [-]
+                    Cw = film.CW_LAM_CALC(zIdx, C);                         % Call private method
             end
             
-            Cw  = mix.AFDISTR(0,Cw,zIdx);   
+            Cw  = mix.AFDISTR(0,Cw,zIdx);
             
         end
         
@@ -199,10 +195,8 @@ classdef Film < Solvers.AbstractField
                     
                 case InputEnums.VAPORFRIC.WALLISTHICK
                     %
-                    area = film.inputSet.geometry.AREA;                    % [m^2] Cross-section area
-                    perim = film.inputSet.geometry.PERIM;                  % [m]   Perimeter(s)
                     thick = abs(film.THICK(zIdx));                         % [m] Film thickness
-                    Cv = C.*(1+(75/area).*sum(perim.*thick,2));            % [-]
+                    Cv = film.CV_WALLISTHICK_CALC(thick,C);                 % Call private method
             end
             
             Cv  = mix.AFDISTR(0,Cv,zIdx);   
@@ -390,6 +384,36 @@ classdef Film < Solvers.AbstractField
 
         end
     
+    end
+
+    methods(Access = private)
+        
+        function Cw = CW_TURB_CALC(film,zIdx,C)
+        %CW_TURB_CALC Private method to calculate the turbulent wall
+        %friction factor
+
+            nwall = film.inputSet.geometry.NWALL;                  % Number of walls
+            Cw = repmat(C,length(zIdx),nwall);                     % [-]
+
+        end
+
+        function Cw = CW_LAM_CALC(film,zIdx,C)
+        %CW_LAM_CALC Private method to calculate the laminar wall%friction
+        %factor
+
+            RE = max(film.RE(zIdx),1E-6);
+            Cw = max(16./RE,C);                                    % [-]
+        end
+
+        function Cv = CV_WALLISTHICK_CALC(film, thick, C)
+        %CV_WALLISTHICK_CALC Private method to calculate the interfacial
+        %shear using the WALLISTHICK model
+
+            area = film.inputSet.geometry.AREA;                    % [m^2] Cross-section area
+            perim = film.inputSet.geometry.PERIM;                  % [m]   Perimeter(s)
+            Cv = C.*(1+(75/area).*sum(perim.*thick,2));            % [-]
+
+        end
     end
 
     methods(Access = protected)
