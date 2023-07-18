@@ -95,7 +95,8 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
 %             obj.WPOWER = obj.WPOWER.';
             
             % check if WMESH size is consistent with geometry
-            if any(cellfun(@sum,{objs.WMESH}) ~= obj.geometryObj.LENGTH)
+            %if any(cellfun(@sum,{objs.WMESH}) ~= obj.geometryObj.LENGTH)
+            if any(~ismembertol(cellfun(@sum,{objs.WMESH}),obj.geometryObj.LENGTH,1E-3))    
                 throw( ...
                     MException('InputError:BoundaryCondtionsInconsistency', ...
                                'Inconsistent WMESH lengths.') ...
