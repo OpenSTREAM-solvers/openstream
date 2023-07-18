@@ -4,6 +4,9 @@ classdef MOMENTDROP
     enumeration
         ALGEBRAIC
         SLIP
+        EQUILIBRIUMS
+        EQUILIBRIUM
+        FULL
     end
 end
     

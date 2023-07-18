@@ -3,6 +3,7 @@ classdef ENTRAINMENT
 %   Detailed explanation goes here
     enumeration
         GOVAN
+        OKAWA2003
     end
 end
     

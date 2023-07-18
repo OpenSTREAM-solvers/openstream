@@ -79,7 +79,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             
             % Setup inner iteration value struct
             ITRFields = ["N","DWL","DU"];
-            ITR = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRf = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRFields = ["N","DU"];
+            ITRd = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
 
             % Create film and drop arrays (by timestep)
             flmArr = Film.empty(0,tfSolver.NTIME);
@@ -129,10 +131,18 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 % Film evaporation (thermal equilibrium assumption)
                 flmArr(tIdx).MEVAP = -flmArr(tIdx).HFLUX./(tfSolver.fluid(tIdx).HG-tfSolver.fluid(tIdx).HF); % [kg/m^2/s] Evaporation mass flux
                 
+                % Entrained ratio at onset of annular flow
+                switch model.OAFENTRAINED
+                    case InputEnums.OAFENTRAINED.RATIO
+                        e0 = model.OAFDROPRATIO;
+                    case InputEnums.OAFENTRAINED.EQUILIBRIUM
+                        e0 = tfSolver.EQUIL(flmArr(tIdx),drpArr(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
+                end
+                
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                drpArr(tIdx).W = repmat(model.OAFDROPRATIO.*mix(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
+                drpArr(tIdx).W = repmat(e0.*mix(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
                 
                 % Transient mass gradient in film field
                 %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
@@ -149,28 +159,19 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 
                 
                 % Initialize velocity [m/s]
-                switch model.MOMENTDROP
-                    case {InputEnums.MOMENTDROP.SLIP, InputEnums.MOMENTDROP.ALGEBRAIC}
-                        drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));    % [m/s] Drop velocity
-                end
+                %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
+                drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));            % [m/s] Drop velocity
                 
-                switch model.MOMENTFILM
-                    case InputEnums.MOMENTFILM.ALGEBRAIC
-                        flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));  % [m/s]
-                    case InputEnums.MOMENTFILM.EQUILIBRIUMS
-                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
-                    case {InputEnums.MOMENTFILM.EQUILIBRIUM, InputEnums.MOMENTFILM.FULL}
-                        %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
-                        flmArr(tIdx).U = flmArr(tIdx).UEQUILS(mix(tIdx));  % [m/s]
-                        %flmArr(tIdx).U = flmArr(tIdx).UEQUIL(mix(tIdx),drpArr(tIdx)); % [m/s]
-                end
+                %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
+                flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));          % [m/s] Film velocity
                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drpArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
                 flmArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
                 
                 % ITR
-                flmArr(tIdx).ITR = ITR;
+                flmArr(tIdx).ITR = ITRf;
+                drpArr(tIdx).ITR = ITRd;
 
             end
 
@@ -209,7 +210,39 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             % set STATE to UNSOLVED
             tfSolver.STATE = SolverState.UNSOLVED;
-
+            
+        end
+        
+        function e0 = EQUIL(tfSolver,flm,drp,mix,zIdx)
+        %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
+        %
+            if nargin < 5, zIdx = (1:tfSolver.NZ); end
+            zIdx = zIdx(:);
+            
+            nwall = tfSolver.inputSet.geometry.NWALL;                      % Number of walls
+            perim = tfSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
+            W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
+            
+            for k = 1:100
+                if k == 1
+                    Wd(1) = 0.5.*W;                                        % [kg/s] 50% of liquid mass in droplet field
+                elseif k == 2
+                    Wd(k) = max(min(drp.W(zIdx).*(1-10*delta(k-1)),W),0);  % [kg/s] Next guess
+                else
+                    Wd(k) = interp1(delta,Wd,0,'spline','extrap');         % [kg/s] Next guess
+                end
+                drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet ass flowrate
+                flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
+                delta(k) = drp.MDEP(mix,zIdx).*sum(perim)+sum(flm.MENT(mix,zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
+                err = abs(delta(k));
+                if err < 1E-4, break; end
+            end
+            if err > 1E-4
+                disp('Film equilibrium state : not converged')
+            end
+            
+            e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
+            
         end
 
         function plotz(tfSolver, tIdx, opt)
@@ -299,6 +332,18 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Shear stress [N/m^2]')
             legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','northEast')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Drop momentum exchanges')
+            plot(z,drp.FENT(mix,flm),'o-')
+            plot(z,drp.FDRAG(mix),'.-')
+            plot(z,drp.FBUOY(mix),'.-')
+            plot(z,drp.FGRAV(mix),'.-')
+            plot(z,drp.FTOT(mix,flm),'k--')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Force density [N/m^3]')
+            legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','northEast')
             set(gca,'fontSize',14)
             
         end
