@@ -295,15 +295,6 @@ classdef (HandleCompatible) Input < dynamicprops
             end
         end
 
-        function jsonText = convert2JSON(inputFilePath)
-            
-%             import Input.*
-            % Read inputFilePath
-            inputStruct = Inputs.Input.readInputFile(inputFilePath);
-            
-            % convert inputObj.inputStruct to json format
-            jsonText = jsonencode(inputStruct,"PrettyPrint",true);
-        end
         
     end
 
@@ -373,6 +364,16 @@ classdef (HandleCompatible) Input < dynamicprops
             fclose(fid);
 
         end
+
+        function jsonText = convert2JSON(inputFilePath)
+            
+            % Read inputFilePath
+            inputStruct = Inputs.Input.readInputFile(inputFilePath);
+            
+            % convert inputObj.inputStruct to json format
+            jsonText = jsonencode(inputStruct,"PrettyPrint",true);
+        end
+        
     end
 
 end
