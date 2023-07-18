@@ -340,7 +340,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 % Force value to be a string
                 varValue = varargin{varIdx+1};
                 if isnumeric(varValue)
-                    varValue = num2str(reshape(varValue,1,[]));
+                    varValue = num2str(reshape(varValue,1,[]),'%.11f ');
                 elseif islogical(varValue)
                     varValue = string(varValue);
                 else
