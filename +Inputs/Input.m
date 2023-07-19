@@ -1,6 +1,10 @@
 classdef (HandleCompatible) Input < dynamicprops
     %INPUT Su
     %   Detailed explanation goes here
+
+    properties (SetAccess=protected)
+        extra   = struct.empty()
+    end
     
     methods
         function obj = Input(inputFilePath, key, val)
@@ -60,7 +64,7 @@ classdef (HandleCompatible) Input < dynamicprops
             % Warning setup
             previousWarnStruct = warning('query');
             warning('off','backtrace')
-            objClassName = upper(class(obj));
+            objClassName = strrep(upper(class(obj)),'.','_');
 
             % Default false isValidEntry and defaultUsed
             isSpecifiedEntry = false;
@@ -126,10 +130,11 @@ classdef (HandleCompatible) Input < dynamicprops
         
         function objPropnames = listInputProperties(obj)
             %
-            % List of immutable obj property names
+            % List of protected obj property names
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected'));
+                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected')...
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra'));
         end
 
     end

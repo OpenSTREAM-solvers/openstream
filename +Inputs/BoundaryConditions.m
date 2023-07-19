@@ -79,6 +79,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                     '%s: These entries were not used: \n\t %s ', ...
                     upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
                     );
+                obj.extra = obj.inputStruct;
             end
 
             % If default values were used, warn user
