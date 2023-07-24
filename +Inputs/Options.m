@@ -95,7 +95,7 @@ classdef Options < Inputs.Input
     
     methods (Static)
         function writeInputFile(filePathName, ID, varargin)
-            Inputs.Input.writeInputFile_inner(filePathName, "a+", "ID", ID, varargin{:});
+            Inputs.Input.writeInputFile(filePathName, "a+", "ID", ID, varargin{:});
         end
     end
 

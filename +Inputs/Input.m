@@ -134,10 +134,6 @@ classdef (HandleCompatible) Input < dynamicprops
 
     end
     
-    methods(Static, Abstract)
-        writeInputFile
-    end
-
     methods(Static, Access=protected)
         
         function inputStruct = readInputFile(filePath)
@@ -288,7 +284,22 @@ classdef (HandleCompatible) Input < dynamicprops
 
         end
         
-        function writeInputFile_inner(filePathName, fidMode, varargin)
+        
+
+        function defVal = defaultValueString(defVal)
+        %DEFAULTVALUESTRING Convert numeric default value to string
+            if isnumeric(defVal)
+                defVal = num2str(defVal);
+            elseif islogical(defVal)
+                defVal = string(defVal);
+            end
+        end
+
+        
+    end
+
+    methods(Static)
+        function writeInputFile(filePathName, fidMode, varargin)
             
             if mod(length(varargin),2) == 1
                 error('An even number of inputs after filePath is required.');
@@ -320,7 +331,7 @@ classdef (HandleCompatible) Input < dynamicprops
                 % Force value to be a string
                 varValue = varargin{varIdx+1};
                 if isnumeric(varValue)
-                    varValue = num2str(reshape(varValue,1,[]));
+                    varValue = num2str(reshape(varValue,1,[]),'%.11f ');
                 elseif islogical(varValue)
                     varValue = string(varValue);
                 else
@@ -354,18 +365,8 @@ classdef (HandleCompatible) Input < dynamicprops
 
         end
 
-        function defVal = defaultValueString(defVal)
-        %DEFAULTVALUESTRING Convert numeric default value to string
-            if isnumeric(defVal)
-                defVal = num2str(defVal);
-            elseif islogical(defVal)
-                defVal = string(defVal);
-            end
-        end
-
         function jsonText = convert2JSON(inputFilePath)
             
-%             import Input.*
             % Read inputFilePath
             inputStruct = Inputs.Input.readInputFile(inputFilePath);
             
@@ -374,5 +375,6 @@ classdef (HandleCompatible) Input < dynamicprops
         end
         
     end
+
 end
 
