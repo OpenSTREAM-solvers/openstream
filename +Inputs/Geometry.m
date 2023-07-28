@@ -16,10 +16,20 @@ classdef Geometry < Inputs.Input
         function obj = Geometry(filePath,geometryID)
             %MODEL Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                filePath = ""
+                geometryID = ""
+            end
 
             % Call superclass constructor to parse file and select
             % specified optionsID using "ID" key
             obj = obj@Inputs.Input(filePath, 'ID', geometryID)
+
+            % Return default value if empty inputs are given
+            if strlength(filePath) == 0
+                obj.ID = "DEFAULT";
+                return
+            end
             
             %
             % List of immutable obj property names

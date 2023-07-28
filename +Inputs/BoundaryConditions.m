@@ -23,6 +23,10 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         function obj = BoundaryConditions(filePath, geometryObjInput)
             %BOUNDARYCONDITIONS Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                filePath = ""
+                geometryObjInput = Inputs.Geometry();
+            end
 
             import Inputs.BoundaryConditions
 
