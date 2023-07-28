@@ -128,13 +128,24 @@ classdef (HandleCompatible) Input < dynamicprops
             warning(previousWarnStruct);
         end
         
-        function objPropnames = listInputProperties(obj)
-            %
+        function objPropnames = listInputProperties(obj, opts)
+            %LISTINPUTPROPERTIES 
             % List of protected obj property names
+            arguments
+                obj
+                opts.exclude = {}   % Cell array of properties to exclude from the list
+            end
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
                 strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected')...
                 & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra'));
+
+            % Exclude properties specified in opts.exclude
+            for idx = 1:length(opts.exclude)
+                objPropnames = objPropnames( ...
+                    ~strcmpi(objPropnames,opts.exclude{idx}));
+            end
+
         end
 
     end
