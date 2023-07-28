@@ -7,22 +7,32 @@ end
 
 import Solvers.SolverState
 
-tfSolver.inputSet.session.log.toggleDiary(true);
+% Enable diary
+tfSolver.inputSet.session.log.diaryOn();
+
+% Open log in presistent mode
+tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if tfSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
     tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
 
-    solver(true);
-    solver(false);
+    try
+        solver(true);
+        solver(false);
+    catch ME
+        tfSolver.inputSet.session.log.closeLog();
+        tfSolver.inputSet.session.log.diaryOff();
+        rethrow(ME)
+    end
     
     tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
 end
 
-tfSolver.inputSet.session.log.toggleDiary();
+tfSolver.inputSet.session.log.closeLog();
+tfSolver.inputSet.session.log.diaryOff();
 fprintf('Output directory: %s\n',tfSolver.inputSet.session.directory);
-tfSolver.inputSet.session.log.toggleDiary(true);
 
 
 function solver(solveINIT)

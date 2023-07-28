@@ -7,23 +7,32 @@ end
 
 import Solvers.SolverState
 
-mixSolver.inputSet.session.log.toggleDiary(true);
+% Enable diary
+mixSolver.inputSet.session.log.diaryOn();
+
+% Open log in presistent mode
+mixSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if mixSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
     mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
 
-    solver(true);
-    solver(false);
+    try
+        solver(true);
+        solver(false);
+    catch ME
+        mixSolver.inputSet.session.log.closeLog();
+        mixSolver.inputSet.session.log.diaryOff();
+        rethrow(ME)
+    end
     
     mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
 end
 
-mixSolver.inputSet.session.log.toggleDiary();
+mixSolver.inputSet.session.log.closeLog();
+mixSolver.inputSet.session.log.diaryOff();
 fprintf('Output directory: %s\n',mixSolver.inputSet.session.directory);
-mixSolver.inputSet.session.log.toggleDiary(true);
-
 
 function solver(solveINIT)
 
