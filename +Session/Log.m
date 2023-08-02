@@ -39,49 +39,21 @@ classdef Log < handle
                 obj.LOGFID = opts.LOGFID;
             end
 
+            % Store session
+            if isfield(opts, 'session')
+                obj.session = opts.session;
+            else
+                return;
+            end
+
             % Make logging filesystem as needed
             switch obj.LOGMODE
                 case {Session.LogMode.NONE, Session.LogMode.LOGTOCONSOLEONLY}
                     % Do nothing
                 case {Session.LogMode.LOGTOFILEONLY, Session.LogMode.BOTH}
-                    % Check if session directory is legal and/or exists
-                    if ~obj.isLegalPath(opts.session.directory)
-                        throw( ...
-                            MException( ...
-                                'LogError:IllegalSessionDirectoryError', ...
-                                'Session directory %s is not a legal path', opts.session.dir ...
-                            ) ...
-                        );
-                    elseif isfolder(opts.session.directory)
-                        if ~opts.session.overwriteFiles
-                            throw( ...
-                                MException( ...
-                                    'LogError:ExistingSessionDirectoryError', ...
-                                    'Session directory %s already exists.', opts.session.directory ...
-                                ) ...
-                            );
-                        else
-                            %TODO: add warning about deletion
-                            [status, msg, msgID] = rmdir(opts.session.directory,'s');
-                            if status ~= 1
-                                throw( ...
-                                    MException(msgID,msg) ...
-                                );
-                            else
-                                warning('%s was removed.', opts.session.directory);
-                            end
-                        end
-                    end
-        
+                    
                     % Make session directory
-                    [status, msg, msgID] = mkdir(opts.session.directory);
-                    if status ~= 1
-                        throw( ...
-                            MException(msgID,msg) ...
-                        );
-                    else
-                        obj.session = opts.session;
-                    end
+                    obj.session.makeSessionDirectory();
 
                     % Make log file
                     obj.openLog();
@@ -91,9 +63,9 @@ classdef Log < handle
                     
             end
 
-            
-
         end
+
+        
         
         function log(obj, varargin)
         %LOG Log events
@@ -199,23 +171,6 @@ classdef Log < handle
 
 
     end    
-        
-
-    methods (Access=protected)
-
-        
-
-
-
-        function bool = isLegalPath(obj,str)
-            bool = true;
-            try
-                java.io.File(str).toPath;
-            catch
-                bool = false;
-            end
-        end
-    end
 
 end
 
