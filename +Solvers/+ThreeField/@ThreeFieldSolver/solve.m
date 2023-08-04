@@ -19,8 +19,15 @@ else
     tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
 
     try
+        % Solve init
         solver(true);
-        solver(false);
+        
+        % Continue solving if init converged
+        if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
+            solver(false);
+        else
+            tfSolver.log('\t\tSkipping transient solver ...\n');
+        end
     catch ME
         tfSolver.inputSet.session.log.closeLog();
         tfSolver.inputSet.session.log.diaryOff();
@@ -32,7 +39,7 @@ end
 
 tfSolver.inputSet.session.log.closeLog();
 tfSolver.inputSet.session.log.diaryOff();
-fprintf('Output directory: %s\n',tfSolver.inputSet.session.directory);
+tfSolver.log('Output directory: %s\n',tfSolver.inputSet.session.directory);
 
 
 function solver(solveINIT)
@@ -66,11 +73,10 @@ function solver(solveINIT)
     geom    = tfSolver.inputSet.geometry;
     
     % Uniform mesh size
-    DZ = tfSolver.DZ;
-    
+    DZ = tfSolver.DZ;    
     
     % Start timer
-    tic
+    startTime = tic();
     
     % Time loop
     for tIdx = 2:length(film)                                              % Loop over time steps
@@ -182,9 +188,11 @@ function solver(solveINIT)
                 dUd = abs((drop(tIdx).U(zIdx,:)-Uditer));                  % [m/s]    Drop velocity error between inner iterations
                 if all([dWL < options.ERRORWF, dUf < options.ERRORUF, dUd < options.ERRORUD])
                     break;                                                 % Exit point iteration when converged
+                
                 elseif itr == options.MAXITER
                 % set SOLVED flag to SOLVEDNOTCONVERGED
                     tfSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
+                    break;
                 end
                 
             end
@@ -212,6 +220,9 @@ function solver(solveINIT)
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
             if all([timeDWL < options.SSCONVWF ,timeDUf < options.SSCONVUF] )
+
+                % Indicate init converged
+                tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
                 tfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
     
@@ -227,12 +238,19 @@ function solver(solveINIT)
             
             % otherwise, update next timestep with current flow properties
             elseif tIdx < length(film)-1
+                % unless non-convergence occurred
+                if tfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                    tfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                    break;
+                end
+
                 tfSolver.filmInit(tIdx).copyFlowProperties(tfSolver.filmInit(tIdx+1));
                 tfSolver.dropInit(tIdx).copyFlowProperties(tfSolver.dropInit(tIdx+1));
             % otherwise, not converged
             else
-                tfSolver.STATE = "INITIALSTEPNOTCONVERGED";
+                tfSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
                 tfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                break;
             end
         end
     
@@ -242,7 +260,7 @@ function solver(solveINIT)
     tfSolver.log('\n')
     
     % End timer
-    toc
+    tfSolver.log('Elapsed time: %0.2f sec\n', toc(startTime))
 end
 
 end

@@ -19,8 +19,16 @@ else
     mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
 
     try
+        % Solve init
         solver(true);
-        solver(false);
+    
+        % Continue solving if init converged
+        if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
+            solver(false);
+        else
+            mixSolver.log('\t\tSkipping transient solver ...\n');
+        end
+
     catch ME
         mixSolver.inputSet.session.log.closeLog();
         mixSolver.inputSet.session.log.diaryOff();
@@ -32,7 +40,7 @@ end
 
 mixSolver.inputSet.session.log.closeLog();
 mixSolver.inputSet.session.log.diaryOff();
-fprintf('Output directory: %s\n',mixSolver.inputSet.session.directory);
+mixSolver.log('Output directory: %s\n',mixSolver.inputSet.session.directory);
 
 function solver(solveINIT)
 
@@ -47,9 +55,6 @@ function solver(solveINIT)
         solveMODE = 'SPECIFIED';
     end
     
-    % set SOLVED flag to SOLVECONVERGED
-    mixSolver.STATE = SolverState.SOLVEDCONVERGED;
-    
     % Shortcut to inputSet objects
     model = mixSolver.inputSet.model;
     options = mixSolver.inputSet.options;
@@ -57,11 +62,10 @@ function solver(solveINIT)
     
     
     % Uniform mesh size
-    DZ = mixSolver.DZ;
-    
+    DZ = mixSolver.DZ;    
     
     % Start timer
-    tic
+    startTime = tic();
     
     % Time loop
     for tIdx = 2:length(mix)                                                     % Loop over time steps
@@ -117,6 +121,7 @@ function solver(solveINIT)
                 elseif itr == options.MAXITER
                     % set SOLVED flag to SOLVEDNOTCONVERGED
                     mixSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
+                    break;
                 end
     
             end
@@ -134,6 +139,11 @@ function solver(solveINIT)
             mix(tIdx).ITR.DW(zIdx) = dW;
             mix(tIdx).ITR.DP(zIdx) = dP;
             mix(tIdx).ITR.DH(zIdx) = dH;
+
+            % Stop running if solver did not converge
+            if mixSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                break;
+            end
     
     
         end
@@ -153,6 +163,10 @@ function solver(solveINIT)
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
             if all([timeDW < options.SSCONVW ,timeDP < options.SSCONVP ,timeDH < options.SSCONVH] )
+                
+                % Indicate init converged
+                mixSolver.STATE = SolverState.INITIALSTEPCONVERGED;
+                
                 mixSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
     
                 % Replace mixtureInit with subset up to this tIdx
@@ -181,7 +195,7 @@ function solver(solveINIT)
     mixSolver.log('\n')
     
     % End timer
-    toc
+    mixSolver.log('Elapsed time: %0.2f sec\n', toc(startTime))
 end
 
 end
