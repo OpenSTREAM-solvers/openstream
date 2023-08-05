@@ -82,6 +82,7 @@ classdef Options < Inputs.Input
                     'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
                     remainingInputStructFields{:} ...
                     );
+                obj.extra = obj.inputStruct;
             end
 
             % Remove dynamic property inputStruct

@@ -5,7 +5,7 @@ classdef Log < handle
     properties (SetAccess = protected)
 
         LOGMODE               (1,1) Session.LogMode
-        diaryOn               (1,1) logical         = false
+        diaryIsOn               (1,1) logical         = false
 
         % log file
         LOGFID                              = -1                                 % Logging file ID
@@ -13,7 +13,8 @@ classdef Log < handle
     end
 
     properties (Access = private)
-        session               (1,1)
+        session         (1,1)
+        keepLogOpen     (1,1) logical                     = false
     end
     
     properties (Dependent)
@@ -29,65 +30,42 @@ classdef Log < handle
                 LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
                                                                             % LogMode
                 opts.session   (1,1)    Session.Session      
-                opts.LOGFID    (1,1)    int32                = -1
+                opts.LOGFID    (1,1)    double                = -1
             end
 
             % Store LOGMODE and LOGFID
             obj.LOGMODE = LOGMODE;
-            obj.LOGFID = opts.LOGFID;   % TODO: verify is valid file
+            if ~isempty(fopen(opts.LOGFID))
+                obj.LOGFID = opts.LOGFID;
+            end
+
+            % Store session
+            if isfield(opts, 'session')
+                obj.session = opts.session;
+            else
+                return;
+            end
 
             % Make logging filesystem as needed
             switch obj.LOGMODE
                 case {Session.LogMode.NONE, Session.LogMode.LOGTOCONSOLEONLY}
                     % Do nothing
                 case {Session.LogMode.LOGTOFILEONLY, Session.LogMode.BOTH}
-                    % Check if session directory is legal and/or exists
-                    if ~obj.isLegalPath(opts.session.directory)
-                        throw( ...
-                            MException( ...
-                                'LogError:IllegalSessionDirectoryError', ...
-                                'Session directory %s is not a legal path', opts.session.dir ...
-                            ) ...
-                        );
-                    elseif isfolder(opts.session.directory)
-                        if ~opts.session.overwriteFiles
-                            throw( ...
-                                MException( ...
-                                    'LogError:ExistingSessionDirectoryError', ...
-                                    'Session directory %s already exists.', opts.session.directory ...
-                                ) ...
-                            );
-                        else
-                            %TODO: add warning about deletion
-                            [status, msg, msgID] = rmdir(opts.session.directory,'s');
-                            if status ~= 1
-                                throw( ...
-                                    MException(msgID,msg) ...
-                                );
-                            else
-                                warning('%s was removed.', opts.session.directory);
-                            end
-                        end
-                    end
-        
+                    
                     % Make session directory
-                    [status, msg, msgID] = mkdir(opts.session.directory);
-                    if status ~= 1
-                        throw( ...
-                            MException(msgID,msg) ...
-                        );
-                    else
-                        obj.session = opts.session;
-                    end
+                    obj.session.makeSessionDirectory();
 
                     % Make log file
-                    obj.setupLog();
+                    obj.openLog();
+
+                    % Close log
+                    obj.closeLog();
                     
             end
 
-            
-
         end
+
+        
         
         function log(obj, varargin)
         %LOG Log events
@@ -100,7 +78,11 @@ classdef Log < handle
                 if (obj.LOGMODE == LogMode.BOTH || ...
                         obj.LOGMODE == LogMode.LOGTOFILEONLY) ...
                     && obj.LOGFID >= 0
-                    builtin('fprintf',obj.LOGFID, varargin{:}); 
+                    obj.openLog();
+                    builtin('fprintf',obj.LOGFID, varargin{:});
+                    if ~obj.keepLogOpen
+                        obj.closeLog();
+                    end
                 end
                 if (obj.LOGMODE == LogMode.BOTH || ...
                         obj.LOGMODE == LogMode.LOGTOCONSOLEONLY)
@@ -109,27 +91,21 @@ classdef Log < handle
             end
         end
 
-        function toggleDiary(obj, off)
-        %TOGGLEDIARY Toggle diary keeping function
-        %
-        arguments
-            obj
-            off (1,1) logical     = false
+        function diaryOff(obj)
+        %DIARYOFF   Turn diary off
+            diary('off');
+            obj.diaryIsOn = false;
         end
-    
-            if nargin < 2
-                if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
-                    obj.LOGMODE == Session.LogMode.BOTH) && ~obj.diaryOn
-                    diary(obj.diaryFilePath)
-                    obj.diaryOn = true;
-                else
-                    diary off
-                    obj.diaryOn = false;
-                end
-            elseif off
-                diary('off');
-                obj.diaryOn = false;
+
+        function diaryOn(obj)
+        %DIARYON    Turn diary on
+            if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
+                obj.LOGMODE == Session.LogMode.BOTH) && ~obj.diaryIsOn
+                
+                diary(obj.diaryFilePath)
+                obj.diaryIsOn = true;
             end
+
         end
 
         function out = get.logFilePath(obj)
@@ -142,12 +118,6 @@ classdef Log < handle
                             strcat(obj.logFileName,'.diary'));
         end
 
-        function closeLog(obj)
-        %CLOSELOG Close log file reference
-        %
-            fclose(obj.LOGFID);
-        end
-
         function delete(obj)
         %DELETE Deconstructor of Log
         %
@@ -155,22 +125,20 @@ classdef Log < handle
             if obj.LOGFID >= 0
                 try
                     obj.closeLog();
-                    obj.toggleDiary('off');
+                    obj.diaryOff();
                 catch
                 end
             end
 
         end
 
-
-    end    
-        
-
-    methods (Access=protected)
-
-        function setupLog(obj)
-        %SETUPLOG Setup the logging file
+        function openLog(obj, opts)
+        %SETUPLOG Open/Setup the logging file
         %
+        arguments
+            obj
+            opts.keepLogOpen = false         % Keep log open
+        end
             % Update OUTPUTDIR using value from inputSet
             
             if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
@@ -181,18 +149,28 @@ classdef Log < handle
                 obj.logFileName = obj.session.name;
                 obj.LOGFID = fopen(obj.logFilePath(),"a+t");
 
+                % Update obj.keepLogOpen if specified
+                if opts.keepLogOpen
+                    obj.keepLogOpen = true;
+                end
+
             end
         end
 
-        function bool = isLegalPath(obj,str)
-            bool = true;
-            try
-                java.io.File(str).toPath;
-            catch
-                bool = false;
+        function closeLog(obj)
+        %CLOSELOG Close log file reference
+        %
+            if obj.LOGFID >= 0
+                fclose(obj.LOGFID);
+                obj.LOGFID = -1;
+
+                % Reset obj.keepLogOpen
+                obj.keepLogOpen = false;
             end
         end
-    end
+
+
+    end    
 
 end
 

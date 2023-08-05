@@ -68,7 +68,7 @@ classdef InputSet
             
             
             % Create input objects
-            obj.session.log.toggleDiary();
+            obj.session.log.diaryOn();
             try
                 obj.model = Model(opts.modelFilePath,opts.modelID);
                 obj.options = Options(opts.optionsFilePath,opts.optionsID);
@@ -76,10 +76,10 @@ classdef InputSet
                 obj.bc = BoundaryConditions(opts.bcFilePath, obj.geometry);
             catch ME
                 getReport(ME);
-                obj.session.log.toggleDiary(true);
+                obj.session.log.diaryOn();
                 rethrow(ME)
             end
-            obj.session.log.toggleDiary();
+            obj.session.log.diaryOff();
 
         end
     end

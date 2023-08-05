@@ -246,6 +246,45 @@ classdef Mixture < Solvers.AbstractField
             kloss = kloss(zIdx).';                                          % [-] Restrict to selected nodes
             
         end
+        
+        function dpGrav = DPGRAV(mix, zIdx)
+        %DPK Gravitational pressure loss [Pa]
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            dpGrav  = -mix.inputSet.model.G*cos(mix.inputSet.model.ANGLE*pi/180)*mix.RHO(zIdx)*mix.DZ;
+        end
+
+        function dpWall = DPWALL(mix, zIdx)
+        %DPWALL Wall friction pressure drop [Pa]
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            dpWall  = -sum(mix.inputSet.geometry.PERIM)*mix.TAUW(zIdx)./mix.inputSet.geometry.AREA.*mix.DZ;                
+        end
+
+        function dpAcc_z = DPACCZ(mix, zIdx)
+        %DPACCZ Spatial acceleration pressure drop [Pa]
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            VEL   = mix.U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array
+            U     = VEL(2); 
+            Uups  = VEL(1);
+
+            dpAcc_z = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(U-Uups);
+        end
+
+        function dpAcc_t = DPACCT(mix, Uold, zIdx)
+        %DPACCT Temporal acceleration pressure drop [Pa]
+        %
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            
+            VEL   = mix.U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array
+            U     = VEL(2);
+
+            dpAcc_t = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(1-Uold/U).*mix.DZ./mix.DT;
+        end
 
         function dpk = DPK(mix, zIdx)
         %DPK Local pressure loss [Pa]
@@ -253,6 +292,28 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             dpk = 0.5.*mix.KLOSS(zIdx)./mix.RHO(zIdx).*(mix.W(zIdx)./mix.inputSet.geometry.AREA).^2;
+        end
+
+        function dptot = DPTOT(mix, Uold, zIdx)
+        %DPTOT Total pressure loss [Pa]
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            dptot = mix.DPGRAV(zIdx) + mix.DPWALL(zIdx) + mix.DPACCZ(zIdx) + mix.DPACCT(Uold, zIdx) + mix.DPK(zIdx);
+        end
+
+        function dpparts = DPPARTS(mix, Uold, zIdx)
+        %DPPARTS Pressure loss components[Pa]
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            dpparts.GRAV = mix.DPGRAV(zIdx);
+            dpparts.WALL = mix.DPWALL(zIdx);
+            dpparts.ACCZ = mix.DPACCZ(zIdx);
+            dpparts.ACCT = mix.DPACCT(Uold, zIdx);
+            dpparts.K    = mix.DPK(zIdx);
+            dpparts.TOT  = dpparts.GRAV + dpparts.WALL + dpparts.ACCZ + dpparts.ACCT + dpparts.K;
+            
         end
 
         function t = T(mix, zIdx)

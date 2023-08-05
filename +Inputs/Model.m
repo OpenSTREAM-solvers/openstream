@@ -46,10 +46,20 @@ classdef Model < Inputs.Input
         function obj = Model(filePath,modelID)
             %MODEL Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                filePath = ""
+                modelID = ""
+            end
 
             % Call superclass constructor to parse file and select
             % specified modelID using "ID" key
             obj = obj@Inputs.Input(filePath, 'ID', modelID)
+
+            % Return default value if empty inputs are given
+            if strlength(filePath) == 0
+                obj.ID = "DEFAULT";
+                return
+            end
             
             %
             % List of immutable obj property names
@@ -87,6 +97,7 @@ classdef Model < Inputs.Input
                     '%s: These entries were not used: \n\t %s ', ...
                     upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
                     );
+                obj.extra = obj.inputStruct;
             end
 
             % Remove dynamic property inputStruct

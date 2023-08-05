@@ -23,6 +23,10 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         function obj = BoundaryConditions(filePath, geometryObjInput)
             %BOUNDARYCONDITIONS Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                filePath = ""
+                geometryObjInput = Inputs.Geometry();
+            end
 
             import Inputs.BoundaryConditions
 
@@ -79,6 +83,9 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                     '%s: These entries were not used: \n\t %s ', ...
                     upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
                     );
+                for i=1:length(obj.inputStruct)
+                    objs(i).extra=obj.inputStruct(i);
+                end
             end
 
             % If default values were used, warn user
