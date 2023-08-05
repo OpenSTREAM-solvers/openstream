@@ -38,7 +38,17 @@ TPKM       ! Two-phase local loss multiplier [-]                            > ho
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > homogeneous
 SLIP       ! Phase velocity ratio [-]                                       > 1
+OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
 OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.3
+OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > EQUILIBRIUM
+OAFTRANSITION !  % Annular flow transition function parameters  [m]         > [0.04 0.0]
+MOMENTFILM !                                                                > ALGEBRAIC
+MOMENTDROP !                                                                > FULL
+DROPSLIP !                                                                  > 1.0
+DEPOSITION !                                                                > OKAWA
+ENTRAINMENT !                                                               > OKAWA
+THINFILMFRIC ! % Thin film thickness [m]                                    > LAMINAR
+POSFILM !                                                                   > 0
 END
 
 ID         ! Model ID                                                       > MFVALP
@@ -53,7 +63,9 @@ TPKM       ! Two-phase local loss multiplier [-]                            > ho
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > homogeneous
 SLIP       ! Phase velocity ratio [-]                                       > 1
+MOMENTFILM !                                                                > FULL
 END
+
 
 ID         ! Model ID                                                       > BARCS
 NNODES     ! Number of axial nodes                                          > 100
@@ -69,7 +81,9 @@ VOID       ! Void fraction model                                            > sl
 SLIP       ! Phase velocity ratio [-]                                       > 1.
 OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
-MOMENTFILM ! > FULL
+OAFENTRAINED !                                                              > RATIO
+MOMENTFILM !                                                                > FULL
+MOMENTDROP !                                                                > FULL
 END
 
 ID         ! Model ID                                                       > BARCP
@@ -86,4 +100,5 @@ VOID       ! Void fraction model                                            > sl
 SLIP       ! Phase velocity ratio [-]                                       > 1.
 OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
+OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > EQUILIBRIUM
 END

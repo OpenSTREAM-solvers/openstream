@@ -1,11 +1,12 @@
 classdef MOMENTFILM
 %MOMENTFILM Film momentum conservation model
-%   Detailed explanation goes here
+%   Defines the type of momentum conservation used on the liquid film. The
+%   conservation equations are used to solve for liquid-film velocity
     enumeration
-        ALGEBRAIC
-        EQUILIBRIUM
-        EQUILIBRIUMS
-        FULL
+        ALGEBRAIC  % Consistent with mixture model (tau_wall = tau_f_wall)
+        EQUILIBRIUM % (tau_int = tau_wall)
+        EQUILIBRIUMS 
+        FULL 
     end
 end
     
