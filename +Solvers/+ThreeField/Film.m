@@ -126,7 +126,7 @@ classdef Film < Solvers.AbstractField
                     
                     entnum = Cv.*rhog.*mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
                     ment = (ke*rhof).*entnum.*(rhof/rhog)^n;               % [kg/m^2/s] Entrainment mass flux
-                    ment(Ref<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
+                    ment(film.RE(zIdx)<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
             end
             
             ment(negfilm)=-ment(negfilm);
@@ -139,6 +139,7 @@ classdef Film < Solvers.AbstractField
         %
             if nargin < 4, zIdx = (1:film(1).NZ).'; end
             
+            %TODO: incorporate mix as a property?
             Mtot  = film.MEVAP(zIdx,:)+film.MENT(mix,zIdx)+drop.MDEP(mix,zIdx);   
         end
         
