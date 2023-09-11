@@ -29,6 +29,8 @@ classdef Options < Inputs.Input
         RELAXWF      (1,1) double  {mustBeInRange(RELAXWF,0,1)}            = 0.5                   % Relaxation factor for the film mass conservation equation
         RELAXUF      (1,1) double  {mustBeInRange(RELAXUF,0,1)}            = 0.2                   % Relaxation factor for the film momentum conservation equation
         RELAXUD      (1,1) double  {mustBeInRange(RELAXUD,0,1)}            = 0.2                   % Relaxation factor for the drop momentum conservation equation
+        RELAXWB      (1,1) double  {mustBeInRange(RELAXWB,0,1)}            = 0.5                   % Relaxation factor for the base mass conservation equation
+        RELAXUB      (1,1) double  {mustBeInRange(RELAXUB,0,1)}            = 0.2                   % Relaxation factor for the base momentum conservation equation
     end
 
     methods

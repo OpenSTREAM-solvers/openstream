@@ -1,31 +1,31 @@
-classdef ThreeFieldSolver < Solvers.AbstractSolver
-    %THREEFIELDSOLVER Summary of this class goes here
+classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
+    %FOURFIELDSOLVER Summary of this class goes here
     %   Detailed explanation goes here
     
      properties (SetAccess=protected)
         
-        NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
-        TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
-        Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
-        DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
-
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
-        boundaryConditions
-        
-        filmInit
-        dropInit
-        fluidInit
-        film
-        drop
+        % NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
+        % NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
+        % TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
+        % DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
+        % Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
+        % DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
+        % 
+        % fluid       {isa(fluid,'Inputs.FluidProperties')}
+        % boundaryConditions
+        % 
+        % filmInit
+        % dropInit
+        % fluidInit
+        % film
+        % drop
 
      end
 
      properties (SetAccess = protected)
-        mixSolver
-        inputSet
-        STATE                                                               = Solvers.SolverState.UNSOLVED
+        % mixSolver
+        % inputSet
+        % STATE                                                               = Solvers.SolverState.UNSOLVED
      end
 
 
@@ -34,8 +34,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
     end
 
     methods
-        function tfSolver = ThreeFieldSolver(inputSet,mixSolver)
-            %THREEFIELDSOLVER Creates a ThreeField solver
+        function ffSolver = FourFieldSolver(inputSet,mixSolver)
+            %FOURFIELDSOLVER Creates a ThreeField solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
@@ -43,77 +43,86 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
 
             % Call abstract class constructor
-            tfSolver = tfSolver@Solvers.AbstractSolver(inputSet);
+            ffSolver = ffSolver@Solvers.ThreeField.ThreeFieldSolver(inputSet,mixSolver);
             
             % Store mixSolver handle
-            tfSolver.mixSolver = mixSolver;
+            ffSolver.mixSolver = mixSolver;
 
             % Attempt to solve mixSolver if it is unsolved
-            if tfSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
-                tfSolver.mixSolver.solve();
+            if ffSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
+                ffSolver.mixSolver.solve();
             end
             
             % Initialize solver parameters
-            tfSolver.initializeSolver();
+            ffSolver.initializeSolver();
 
         end
         
-        function initializeSolver(tfSolver)
+        function initializeSolver(ffSolver)
         %INITIALIZESOLVER Initialize solver using the stored inputSet
         %
             
             import Inputs.*
-            import Solvers.ThreeField.*
-            import Solvers.*
+            import Solvers.FourField.*
+            import Solvers.SolverState
             
             % Copy relevant properties from mixSolver
             props = {'NZ','NTIME','TIME','DT','Z','DZ','fluid','boundaryConditions'}; % mixSolver properties
             for p = props
-                tfSolver.(p{:}) = tfSolver.mixSolver.(p{:});
+                ffSolver.(p{:}) = ffSolver.mixSolver.(p{:});
             end
             
             % Local parameters
-            mix   = tfSolver.mixSolver.mixture;                            % Mixture solution
-            model = tfSolver.inputSet.model;                               % Models
-            geom  = tfSolver.inputSet.geometry;                            % Geometry
+            mix   = ffSolver.mixSolver.mixture;                            % Mixture solution
+            model = ffSolver.inputSet.model;                               % Models
+            geom  = ffSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
             ITRFields = ["N","DWL","DU"];
-            ITRf = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRf = ffSolver.CreateITR(ffSolver.NZ, ITRFields);
             ITRFields = ["N","DU"];
-            ITRd = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRd = ffSolver.CreateITR(ffSolver.NZ, ITRFields);
 
             % Create film and drop arrays (by timestep)
-            flmArr = Film.empty(0,tfSolver.NTIME);
-            drpArr = Drop.empty(0,tfSolver.NTIME);
-            props = {'NZ','Z','NTIME','DT','TIME','TIDX'};                 % film and drop properties
+            flmArr = Film.empty(0,ffSolver.NTIME);
+            baseArr = Base.empty(0,ffSolver.NTIME);
+            waveArr = Wave.empty(0,ffSolver.NTIME);
+            drpArr = Drop.empty(0,ffSolver.NTIME);
+            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid'};                 % film and drop properties
             
-            for tIdx = 1:tfSolver.NTIME
+            for tIdx = 1:ffSolver.NTIME
                 
                 % Inputset
-                drpArr(tIdx).inputSet = tfSolver.inputSet;
-                drpArr(tIdx).fluid    = tfSolver.fluid(tIdx);
+                drpArr(tIdx).inputSet = ffSolver.inputSet;
+                drpArr(tIdx).fluid    = ffSolver.fluid(tIdx);
                 
-                flmArr(tIdx).inputSet = tfSolver.inputSet;
-                flmArr(tIdx).fluid    = tfSolver.fluid(tIdx);
+                flmArr(tIdx).inputSet = ffSolver.inputSet;
+                flmArr(tIdx).fluid    = ffSolver.fluid(tIdx);
                 
                 % Axial Steps
-                drpArr(tIdx).DZ = tfSolver.DZ;
                 
-                flmArr(tIdx).NZ = tfSolver.NZ;
-                flmArr(tIdx).DZ = tfSolver.DZ;
-                flmArr(tIdx).Z  = tfSolver.Z;
+                flmArr(tIdx).NZ = ffSolver.NZ;
+                flmArr(tIdx).DZ = ffSolver.DZ;
+                flmArr(tIdx).Z  = ffSolver.Z;
                 
                 % Time step
-                flmArr(tIdx).NTIME = tfSolver.NTIME;
-                flmArr(tIdx).DT    = tfSolver.DT;
-                flmArr(tIdx).TIME  = tfSolver.TIME(tIdx);
+                flmArr(tIdx).NTIME = ffSolver.NTIME;
+                flmArr(tIdx).DT    = ffSolver.DT;
+                flmArr(tIdx).TIME  = ffSolver.TIME(tIdx);
                 flmArr(tIdx).TIDX  = tIdx;
                 
                 % Copy properties to drop
                 for p = props
                     drpArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
+                    baseArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
+                    waveArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
                 end
+
+                % Save base and wave into film (create references)
+                flmArr(tIdx).base = baseArr(tIdx);
+                flmArr(tIdx).wave = waveArr(tIdx);
+                baseArr(tIdx).film = flmArr(tIdx);
+                waveArr(tIdx).film = flmArr(tIdx);
                     
                 % Wall evaporation heat flux
                 HFLUX = mix(tIdx).HFLUX;                                   % [W/m^2] Wall heat flux
@@ -129,20 +138,26 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 flmArr(tIdx).HFLUX = mix(tIdx).AFDISTR(evapFn.*avgHFLUX,HFLUX); % [W/m^2] Film evaporation heat flux
                     
                 % Film evaporation (thermal equilibrium assumption)
-                flmArr(tIdx).MEVAP = -flmArr(tIdx).HFLUX./(tfSolver.fluid(tIdx).HG-tfSolver.fluid(tIdx).HF); % [kg/m^2/s] Evaporation mass flux
+                flmArr(tIdx).MEVAP = -flmArr(tIdx).HFLUX./(ffSolver.fluid(tIdx).HG-ffSolver.fluid(tIdx).HF); % [kg/m^2/s] Evaporation mass flux
                 
                 % Entrained ratio at onset of annular flow
                 switch model.OAFENTRAINED
                     case InputEnums.OAFENTRAINED.RATIO
                         e0 = model.OAFDROPRATIO;
                     case InputEnums.OAFENTRAINED.EQUILIBRIUM
-                        e0 = tfSolver.EQUIL(flmArr(tIdx),drpArr(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
+                        e0 = ffSolver.EQUIL(flmArr(tIdx),drpArr(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
+                end
+
+                % Film mass flow rate at onset of annular flow
+                switch model.OAFFILMSPLIT
+                    case InputEnums.OAFFILMSPLIT.RATIO
+                        eb = model.OAFBASERATIO;
                 end
                 
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                drpArr(tIdx).W = repmat(e0.*mix(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
+                drpArr(tIdx).W = repmat(e0.*mix(tIdx).OAFWL,ffSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
                 
                 % Transient mass gradient in film field
                 %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
@@ -150,66 +165,82 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 
                 % ... or transient mass gradient in drop field
                 drpArr(tIdx).W = drpArr(tIdx).W+mix(tIdx).W-mix(tIdx).W(mix(tIdx).OAFIDX);                                % 
-                flmArr(tIdx).W(1,1:geom.NWALL) = (mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
-                flmArr(tIdx).W = flmArr(tIdx).W(1,:)+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;                 % [kg/s] Apply simple mass conservation
-                
-                % Limit film flow rate minimum to 0
-                flmArr(tIdx).W = max(0,flmArr(tIdx).W);
+                baseArr(tIdx).W(1,1:geom.NWALL) = (mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
+                baseArr(tIdx).W = baseArr(tIdx).W(1,:)+cumsum(baseArr(tIdx).MEVAP).*geom.PERIM.*ffSolver.DZ;                 % [kg/s] Apply simple mass conservation
+
+                % Limit base flow rate minimum to 0
+                baseArr(tIdx).W = max(0,baseArr(tIdx).W);
                 drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
                 
+                % Base and wave flow rates
+                waveArr(tIdx).W = (1-eb) .* baseArr(tIdx).W;
+                baseArr(tIdx).W = eb .* baseArr(tIdx).W;
                 
                 % Initialize velocity [m/s]
                 %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
                 drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));            % [m/s] Drop velocity
                 
                 %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
-                flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));          % [m/s] Film velocity
+                baseArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));          % [m/s] Base velocity
+                waveArr(tIdx).U = baseArr(tIdx).U;                          % [m/s] Wave velocity
                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-                drpArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
-                flmArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
+                drpArr(tIdx).H = repmat(ffSolver.fluid(tIdx).HF,ffSolver.NZ,1);
+                baseArr(tIdx).H = repmat(ffSolver.fluid(tIdx).HF,ffSolver.NZ,1);
+                waveArr(tIdx).H = baseArr(tIdx).H;
                 
                 % ITR
-                flmArr(tIdx).ITR = ITRf;
+                % TODO: revisit, clean up
+                baseArr(tIdx).ITR = ITRf;
+                waveArr(tIdx).ITR = ITRf;
                 drpArr(tIdx).ITR = ITRd;
 
             end
 
             % Store transient mixture array
-            tfSolver.film = flmArr;
-            tfSolver.drop = drpArr;
+            ffSolver.film = flmArr;
+            ffSolver.drop = drpArr;
 
-            % Create steady state mixture array
-            tfSolver.filmInit = copy( ...
-                repmat(flmArr(1),1,tfSolver.inputSet.options.SSMAXITER));
-            tfSolver.dropInit = copy( ...
-                repmat(drpArr(1),1,tfSolver.inputSet.options.SSMAXITER));
-            tfSolver.fluidInit = FluidProperties( ...
+            % Create steady state arrays
+            % TODO: Copy bases and waves?
+            ffSolver.filmInit = copy( ...
+                repmat(flmArr(1),1,ffSolver.inputSet.options.SSMAXITER));
+            ffSolver.dropInit = copy( ...
+                repmat(drpArr(1),1,ffSolver.inputSet.options.SSMAXITER));
+            
+
+            ffSolver.fluidInit = FluidProperties( ...
                                     repmat( ...
-                                        tfSolver.boundaryConditions.PRESSURE(1), ...
+                                        ffSolver.boundaryConditions.PRESSURE(1), ...
                                         1, ...
-                                        tfSolver.inputSet.options.SSMAXITER), ...
-                                    tfSolver.inputSet.model);
+                                        ffSolver.inputSet.options.SSMAXITER), ...
+                                    ffSolver.inputSet.model);
 
             % Update filmInit and dropInit times and timesteps
-            initTIMEDT = tfSolver.inputSet.options.SSTSTEP;
-            initNTIME = length(tfSolver.filmInit);
+            initTIMEDT = ffSolver.inputSet.options.SSTSTEP;
+            initNTIME = length(ffSolver.filmInit);
             initTIME = 0:initTIMEDT:initTIMEDT*(initNTIME-1);
-            initTIDX = 1:length(tfSolver.filmInit);
+            initTIDX = 1:length(ffSolver.filmInit);
 
-            for i = 1:length(tfSolver.filmInit)
-                tfSolver.filmInit(i).TIME = initTIME(i);
-                tfSolver.filmInit(i).DT = initTIMEDT;
-                tfSolver.filmInit(i).NTIME = initNTIME;
-                tfSolver.filmInit(i).TIDX = initTIDX(i);
-                tfSolver.dropInit(i).TIME = initTIME(i);
-                tfSolver.dropInit(i).DT = initTIMEDT;
-                tfSolver.dropInit(i).NTIME = initNTIME;
-                tfSolver.dropInit(i).TIDX = initTIDX(i);
+            for i = 1:length(ffSolver.filmInit)
+                ffSolver.filmInit(i).TIME = initTIME(i);
+                ffSolver.filmInit(i).DT = initTIMEDT;
+                ffSolver.filmInit(i).NTIME = initNTIME;
+                ffSolver.filmInit(i).TIDX = initTIDX(i);
+
+                % Copy base and wave in each film
+                ffSolver.filmInit(i).base = copy(ffSolver.filmInit(i).base);
+                ffSolver.filmInit(i).wave = copy(ffSolver.filmInit(i).wave);
+                
+                ffSolver.dropInit(i).TIME = initTIME(i);
+                ffSolver.dropInit(i).DT = initTIMEDT;
+                ffSolver.dropInit(i).NTIME = initNTIME;
+                ffSolver.dropInit(i).TIDX = initTIDX(i);
+                
             end
 
             % set STATE to UNSOLVED
-            tfSolver.STATE = SolverState.UNSOLVED;
+            ffSolver.STATE = SolverState.UNSOLVED;
             
         end
         
