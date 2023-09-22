@@ -258,7 +258,7 @@ function solver(solveINIT)
             elseif tIdx < length(film)-1
                 % unless non-convergence occurred
                 if ffSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                    ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDUd)
                     break;
                 end
 
@@ -269,7 +269,7 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 ffSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDUd)
                 break;
             end
         end

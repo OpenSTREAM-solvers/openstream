@@ -35,7 +35,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
     methods
         function ffSolver = FourFieldSolver(inputSet,mixSolver)
-            %FOURFIELDSOLVER Creates a ThreeField solver
+            %FOURFIELDSOLVER Creates a FourField solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
@@ -297,7 +297,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             bc  = tfSolver.boundaryConditions;
             mix = tfSolver.mixSolver.mixture(tIdx);
             z   = tfSolver.Z;
-            figure('name',['Axial distributions of three-field parameters at ' num2str(flm.TIME) ' [s]'])
+            figure('name',['Axial distributions of four-field parameters at ' num2str(flm.TIME) ' [s]'])
             
             nexttile; hold all; grid on; title('Wall heat flux')
             plot(z,bc.HFLUX(:,:,tIdx),'s-')
