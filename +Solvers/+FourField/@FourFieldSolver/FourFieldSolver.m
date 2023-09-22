@@ -228,11 +228,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver.filmInit(i).NTIME = initNTIME;
                 ffSolver.filmInit(i).TIDX = initTIDX(i);
 
-                % Create base and wave in each film
+                % Copy and initialize base and wave in each film
+                ffSolver.filmInit(i).base = copy(ffSolver.filmInit(i).base);
                 ffSolver.filmInit(i).base.TIME = initTIME(i);
                 ffSolver.filmInit(i).base.DT = initTIMEDT;
                 ffSolver.filmInit(i).base.NTIME = initNTIME;
                 ffSolver.filmInit(i).base.TIDX = initTIDX(i);
+
+                ffSolver.filmInit(i).wave = copy(ffSolver.filmInit(i).wave);
                 ffSolver.filmInit(i).wave.TIME = initTIME(i);
                 ffSolver.filmInit(i).wave.DT = initTIMEDT;
                 ffSolver.filmInit(i).wave.NTIME = initNTIME;
@@ -318,10 +321,12 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plot(z,sum([drp.W flm.W],2),'r+-')
             plot(z,drp.W,'o-')
             plot(z,flm.W,'.-')
+            plot(z,flm.base.W,'.--')
+            plot(z,flm.wave.W,'s--')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Field mass flowrate [kg/s]')
-            legend({'Mixture Liquid','Drop + Film','Drop','Film'},'location','northEast')
+            legend({'Mixture Liquid','Drop + Film','Drop','Film','Base','Wave'},'location','northEast')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film mass flow rates per unit perimeter')
@@ -381,6 +386,29 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Force density [N/m^3]')
             legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','northEast')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Base mass exchanges')
+            plot(z,drp.MDEP(mix),'o-')
+            plot(z,flm.base.MENT(mix),'.-')
+            plot(z,flm.base.MEVAP,'+-')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Mass flux [kg/s/m^2]')
+            legend({'Drop deposition','Base entrainment','Base evaporation'},'location','northEast')
+            set(gca,'fontSize',14)
+
+            nexttile; hold all; grid on; title('Base momentum exchanges')
+            plot(z,flm.base.FDEP(mix,drp),'o-')
+            plot(z,flm.base.FWALL(mix),'.-')
+            plot(z,flm.base.FVAPOR(mix),'.-')
+            plot(z,flm.base.FBUOY(mix),'.-')
+            plot(z,flm.base.FGRAV(mix),'.-')
+            plot(z,flm.base.FTOT(mix,drp),'k--')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Shear stress [N/m^2]')
+            legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','northEast')
             set(gca,'fontSize',14)
             
         end

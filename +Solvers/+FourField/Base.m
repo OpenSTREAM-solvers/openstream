@@ -158,15 +158,15 @@ classdef Base < Solvers.AbstractFilm
                 end
                 
                 % TODO: copy film?
-                % % Copy properties
-                % propNames = {'W','U','H'};
-                % for j = 1:length(propNames)
-                %     if opts.all
-                %         targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                %     else
-                %         targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                %     end
-                % end
+                % Copy properties
+                propNames = {'W','U','H'};
+                for j = 1:length(propNames)
+                    if opts.all
+                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                    else
+                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                    end
+                end
 
 
             end
