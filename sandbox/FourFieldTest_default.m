@@ -1,5 +1,5 @@
 %close all;
-clearvars
+% clearvars
 
 import Inputs.*
 import Solvers.*
@@ -43,3 +43,4 @@ ffSolver.plotz(1);
 ffSolver.plotz(ffSolver.NTIME);
 
 % Save results
+ffSolver.saveResults(saveFormat="MAT");

@@ -1,7 +1,5 @@
 %close all;
-clearvars
-
-diary off
+% clearvars
 
 import Inputs.*
 import Solvers.*
