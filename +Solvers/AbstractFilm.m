@@ -2,7 +2,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
     %ABSTRACTFILM Summary of this class goes here
     %   Detailed explanation goes here
 
-    properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
+    properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
         
         DZ           (1,1) double  {mustBeNumeric}                          =0                   % [m] Axial step size
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
