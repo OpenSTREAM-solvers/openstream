@@ -170,11 +170,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
                 % Limit base flow rate minimum to 0
                 baseArr(tIdx).W = max(0,baseArr(tIdx).W);
-                drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
                 
                 % Base and wave flow rates
                 waveArr(tIdx).W = (1-eb) .* baseArr(tIdx).W;
                 baseArr(tIdx).W = eb .* baseArr(tIdx).W;
+                drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
                 
                 % Initialize velocity [m/s]
                 %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
@@ -228,10 +228,16 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver.filmInit(i).NTIME = initNTIME;
                 ffSolver.filmInit(i).TIDX = initTIDX(i);
 
-                % Copy base and wave in each film
-                ffSolver.filmInit(i).base = copy(ffSolver.filmInit(i).base);
-                ffSolver.filmInit(i).wave = copy(ffSolver.filmInit(i).wave);
-                
+                % Create base and wave in each film
+                ffSolver.filmInit(i).base.TIME = initTIME(i);
+                ffSolver.filmInit(i).base.DT = initTIMEDT;
+                ffSolver.filmInit(i).base.NTIME = initNTIME;
+                ffSolver.filmInit(i).base.TIDX = initTIDX(i);
+                ffSolver.filmInit(i).wave.TIME = initTIME(i);
+                ffSolver.filmInit(i).wave.DT = initTIMEDT;
+                ffSolver.filmInit(i).wave.NTIME = initNTIME;
+                ffSolver.filmInit(i).wave.TIDX = initTIDX(i);
+                                
                 ffSolver.dropInit(i).TIME = initTIME(i);
                 ffSolver.dropInit(i).DT = initTIMEDT;
                 ffSolver.dropInit(i).NTIME = initNTIME;
