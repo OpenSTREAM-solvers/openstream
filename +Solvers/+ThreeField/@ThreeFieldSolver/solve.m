@@ -154,7 +154,7 @@ function solver(solveINIT)
                 end
                 
                 % Drop mass conservation
-                drop(tIdx).W(zIdx,:) = mix(tIdx).liquid.W(zIdx)-sum(film(tIdx).W(zIdx,:)); % [kg/s] Drop flowrate
+                drop(tIdx).W(zIdx) = mix(tIdx).liquid.W(zIdx)-sum(film(tIdx).W(zIdx,:)); % [kg/s] Drop flowrate
                 
                 % Drop momentum conservation
                 switch model.MOMENTDROP
@@ -185,7 +185,7 @@ function solver(solveINIT)
                 % Check convergence
                 dWL = abs((film(tIdx).WL(zIdx)-WLiter));                   % [kg/s/m] Film mass flow rate error between inner iterations
                 dUf = abs((film(tIdx).U(zIdx,:)-Ufiter));                  % [m/s]    Film velocity error between inner iterations
-                dUd = abs((drop(tIdx).U(zIdx,:)-Uditer));                  % [m/s]    Drop velocity error between inner iterations
+                dUd = abs((drop(tIdx).U(zIdx)-Uditer));                    % [m/s]    Drop velocity error between inner iterations
                 if all([dWL < options.ERRORWF, dUf < options.ERRORUF, dUd < options.ERRORUD])
                     break;                                                 % Exit point iteration when converged
                 
@@ -219,7 +219,7 @@ function solver(solveINIT)
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
-            if all([timeDWL < options.SSCONVWF ,timeDUf < options.SSCONVUF] )
+            if all([timeDWL < options.SSCONVWF ,timeDUf < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;

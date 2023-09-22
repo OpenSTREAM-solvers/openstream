@@ -170,7 +170,7 @@ function solver(solveINIT)
                 end
                 
                 % Drop mass conservation
-                drop(tIdx).W(zIdx,:) = mix(tIdx).liquid.W(zIdx)-sum(film(tIdx).W(zIdx,:)); % [kg/s] Drop flowrate
+                drop(tIdx).W(zIdx) = mix(tIdx).liquid.W(zIdx)-sum(film(tIdx).W(zIdx,:)); % [kg/s] Drop flowrate
                 
                 % Drop momentum conservation
                 switch model.MOMENTDROP
@@ -199,9 +199,9 @@ function solver(solveINIT)
                 end
                 
                 % Check convergence
-                dWLb = abs((base(tIdx).WL(zIdx)-WLbiter));                   % [kg/s/m] Base mass flow rate error between inner iterations
-                dUb = abs((base(tIdx).U(zIdx,:)-Ubiter));                  % [m/s]    Base velocity error between inner iterations
-                dUd = abs((drop(tIdx).U(zIdx,:)-Uditer));                  % [m/s]    Drop velocity error between inner iterations
+                dWLb = abs((base(tIdx).WL(zIdx)-WLbiter));                 % [kg/s/m] Base mass flow rate error between inner iterations
+                dUb  = abs((base(tIdx).U(zIdx,:)-Ubiter));                 % [m/s]    Base velocity error between inner iterations
+                dUd  = abs((drop(tIdx).U(zIdx)-Uditer));                   % [m/s]    Drop velocity error between inner iterations
                 if all([dWLb < options.ERRORWF, dUb < options.ERRORUF, dUd < options.ERRORUD])
                     break;                                                 % Exit point iteration when converged
                 
@@ -235,7 +235,7 @@ function solver(solveINIT)
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
-            if all([timeDWLb < options.SSCONVWF ,timeDUb < options.SSCONVUF] )
+            if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;
