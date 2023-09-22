@@ -121,7 +121,7 @@ function solver(solveINIT)
                 Ubiter = base(tIdx).U(zIdx,:);                             % [m/s] Base velocity
 
                 Wwiter = wave(tIdx).W(zIdx,:);                             % [kg/s] Wave mass flow rate
-                WLbiter = wave(tIdx).WL(zIdx);                             % [kg/s/m] Wave mass flow rate per unit perimeter
+                WLwiter = wave(tIdx).WL(zIdx);                             % [kg/s/m] Wave mass flow rate per unit perimeter
                 Uwiter = wave(tIdx).U(zIdx,:);                             % [m/s] Wave velocity
                 
                 Uditer = drop(tIdx).U(zIdx);                               % [m/s] Drop velocity
