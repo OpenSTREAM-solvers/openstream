@@ -48,7 +48,7 @@ classdef Wave < Solvers.AbstractFilm
         end
         
         function wl = WL(wave,zIdx)
-        %WL Film mass flow rate per unit perimeter
+        %WL wave mass flow rate per unit perimeter
         %    
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
@@ -57,15 +57,15 @@ classdef Wave < Solvers.AbstractFilm
             wl = wave.W(zIdx,:)./perim;                                    % [kg/s/m] Film mass flow rate per unit perimeter
         end
         
-        % function thick = THICK(film,zIdx)
-        % %THICK Film thickness
-        % %    
-        %     if nargin < 2, zIdx = (1:film(1).NZ).'; end
-        % 
-        %     rhof  = film.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
-        % 
-        %     thick = film.WL(zIdx)./film.U(zIdx,:)./rhof;                   % [m] Film thickness
-        % end
+        function thick = THICK(wave,zIdx)
+        %THICK wave thickness
+        %    
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+        
+            rhof  = wave.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
+        
+            thick = wave.WL(zIdx)./wave.U(zIdx,:)./rhof;                   % [m] Film thickness
+        end
 
         function beta = BETA(wave)
         %BETA Wave film interfacial fraction
