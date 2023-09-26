@@ -374,7 +374,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             % Cannot plot time series of one time step
             if isscalar(flm) || isscalar(opt.tIdx)
-                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+                tfSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
 %                 throw( ...
 %                     MException( ...
@@ -388,7 +388,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time series of mixture parameters at ' num2str(tfSolver.Z(zIdx(1))) ' [m]']);
             
             timeplot('W','Mass flowrates [kg/s]')
             timeplot('U','Velocity [m/s]')

@@ -115,6 +115,11 @@ function solver(solveINIT)
                 Wfnew = Ufiter.*(Wfups+Wfold./Ufold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT); % [kg/s] Update film mass flow rate
                 film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;    % [kg/s] Apply relaxation
                 
+                % DEBUG
+                % fprintf('t:%d, z:%d, itr:%03d-> mtot:%0.8u, wbase:%0.8u, wdrop:%0.8u, ment: %0.8u\n', ...
+                %     tIdx, zIdx, itr, ...
+                %     Mtot, mean(film(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), film(tIdx).MENT(mix(tIdx),zIdx));
+
                 if model.POSFILM
                     film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);                       % [kg/s] 
                 end

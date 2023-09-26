@@ -20,8 +20,8 @@ classdef Film < Solvers.AbstractFilm
 
      properties (SetAccess=?Solvers.AbstractSolver)
         
-        wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = Solvers.FourField.Wave()
-        base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = Solvers.FourField.Base() 
+        wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN
+        base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN
      end
 
      properties (Dependent)
@@ -68,6 +68,66 @@ classdef Film < Solvers.AbstractFilm
             u(film.W==0) = film.base.U(film.W==0);
         end
         
+        function initializeBaseAndWave(film, MIX, WIN, ITR)
+        %INITIALIZEBASEANDWAVE Initialize base and wave arrays given WTOT
+            
+            %% Constant properties
+
+            % Create base, wave and set parent reference
+            if ~isobject(film.base), film.base = Solvers.FourField.Base(); end
+            film.base.film = film;
+            if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(); end
+            film.wave.film = film;
+
+            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid'};  
+              
+            % Copy properties to base and wave
+            for prop = props
+                film.base.(prop{:}) = film.(prop{:});
+                film.wave.(prop{:}) = film.(prop{:});
+            end
+
+            % Stop if no input arguments (except film)
+            if nargin == 1
+                return
+            end
+
+            %% Mass flow rate and velocity
+
+            model = film.inputSet.model;
+            geom = film.inputSet.geometry;
+
+            % [kg/s] Distribute film at inlet uniformly on all walls
+            film.base.W(1,1:geom.NWALL) = WIN.*geom.PERIM./sum(geom.PERIM);
+
+            % [kg/s] Apply simple mass conservation
+            film.base.W = film.base.W(1,:)+cumsum(film.base.MEVAP).*geom.PERIM.*film.DZ;
+            
+            % Limit film mass flux minimum to 0 [kg/s]
+            film.base.W = max(0, film.base.W);
+
+            % Distribute film between base and wave (order matters)
+            % Film mass flow rate at onset of annular flow
+            switch model.OAFFILMSPLIT
+                case InputEnums.OAFFILMSPLIT.RATIO
+                    eb = model.OAFBASERATIO;
+            end
+            film.wave.W = (1-eb) .* film.base.W;
+            film.base.W = eb .* film.base.W;
+
+            % Velocity
+            film.base.U = film.UALGEBR(MIX);                                % [m/s] Base velocity
+            film.wave.U = film.base.U;                                      % [m/s] Wave velocity
+
+            % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
+            film.base.H = repmat(film.fluid.HF,film.NZ,1);
+            film.wave.H = film.base.H;
+
+            % Setup iteration struct
+            film.base.ITR = ITR;
+            film.wave.ITR = ITR;
+
+        end
                
         function copyFlowProperties(srcObj, targetObj, opts)
         %COPYFLOWPROPERTIES
@@ -90,16 +150,12 @@ classdef Film < Solvers.AbstractFilm
                         );
                 end
                 
-                % TODO: copy wave and base?
-                % % Copy properties
-                % propNames = {'W','U','H'};
-                % for j = 1:length(propNames)
-                %     if opts.all
-                %         targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                %     else
-                %         targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                %     end
-                % end
+                % Copy base and wave
+                propNames = {'base', 'wave'};
+                for j = 1:length(propNames)
+                    % Copy base and wave flow properties
+                    srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}));
+                end
 
 
             end
@@ -107,6 +163,25 @@ classdef Film < Solvers.AbstractFilm
         end
     
     end
+
+    methods (Access = protected)
+      function cp = copyElement(film)
+      %COPYELEMENT Customized copy method to copy base and wave handles
+
+        % Shallow copy film
+        cp = copyElement@matlab.mixin.Copyable(film);
+        
+        % Deep copy of film base and wave
+        propNames = {'base', 'wave'};
+        for j = 1:length(propNames)
+            % Make shallow copy of base and wave
+            cp.(propNames{j}) = copy(cp.(propNames{j}));
+            % Reference film to srcObj
+            cp.(propNames{j}).film = cp;
+        end
+
+      end
+   end
 
     
 

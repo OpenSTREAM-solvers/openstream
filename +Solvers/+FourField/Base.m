@@ -24,7 +24,7 @@ classdef Base < Solvers.AbstractFilm
 
      end
 
-     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
+     properties (SetAccess=?Solvers.AbstractField, GetAccess=?Solvers.AbstractPhase)
 
         film
 

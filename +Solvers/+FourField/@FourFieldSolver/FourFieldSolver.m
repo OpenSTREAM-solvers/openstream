@@ -85,22 +85,18 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             % Create film and drop arrays (by timestep)
             flmArr = Film.empty(0,ffSolver.NTIME);
-            baseArr = Base.empty(0,ffSolver.NTIME);
-            waveArr = Wave.empty(0,ffSolver.NTIME);
             drpArr = Drop.empty(0,ffSolver.NTIME);
             props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid'};                 % film and drop properties
             
             for tIdx = 1:ffSolver.NTIME
                 
-                % Inputset
+                % Inputset and fluid
                 drpArr(tIdx).inputSet = ffSolver.inputSet;
                 drpArr(tIdx).fluid    = ffSolver.fluid(tIdx);
-                
                 flmArr(tIdx).inputSet = ffSolver.inputSet;
                 flmArr(tIdx).fluid    = ffSolver.fluid(tIdx);
                 
-                % Axial Steps
-                
+                % Axial Steps                
                 flmArr(tIdx).NZ = ffSolver.NZ;
                 flmArr(tIdx).DZ = ffSolver.DZ;
                 flmArr(tIdx).Z  = ffSolver.Z;
@@ -114,16 +110,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 % Copy properties to drop
                 for p = props
                     drpArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
-                    baseArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
-                    waveArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
                 end
-
-                % Save base and wave into film (create references)
-                flmArr(tIdx).base = baseArr(tIdx);
-                flmArr(tIdx).wave = waveArr(tIdx);
-                baseArr(tIdx).film = flmArr(tIdx);
-                waveArr(tIdx).film = flmArr(tIdx);
-                    
+                   
                 % Wall evaporation heat flux
                 HFLUX = mix(tIdx).HFLUX;                                   % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
@@ -148,51 +136,34 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         e0 = ffSolver.EQUIL(flmArr(tIdx),drpArr(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
                 end
 
-                % Film mass flow rate at onset of annular flow
-                switch model.OAFFILMSPLIT
-                    case InputEnums.OAFFILMSPLIT.RATIO
-                        eb = model.OAFBASERATIO;
-                end
-                
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
                 drpArr(tIdx).W = repmat(e0.*mix(tIdx).OAFWL,ffSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
-                
-                % Transient mass gradient in film field
-                %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
-                %flmArr(tIdx).W = flmArr(tIdx).W+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;  % [kg/s] Apply simple mass conservation
-                
-                % ... or transient mass gradient in drop field
-                drpArr(tIdx).W = drpArr(tIdx).W+mix(tIdx).W-mix(tIdx).W(mix(tIdx).OAFIDX);                                % 
-                baseArr(tIdx).W(1,1:geom.NWALL) = (mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
-                baseArr(tIdx).W = baseArr(tIdx).W(1,:)+cumsum(baseArr(tIdx).MEVAP).*geom.PERIM.*ffSolver.DZ;                 % [kg/s] Apply simple mass conservation
 
-                % Limit base flow rate minimum to 0
-                baseArr(tIdx).W = max(0,baseArr(tIdx).W);
+                % Transient mass gradient in drop field
+                drpArr(tIdx).W = drpArr(tIdx).W+mix(tIdx).W-mix(tIdx).W(mix(tIdx).OAFIDX);                                 %
                 
-                % Base and wave flow rates
-                waveArr(tIdx).W = (1-eb) .* baseArr(tIdx).W;
-                baseArr(tIdx).W = eb .* baseArr(tIdx).W;
+                % Transient mass gradient in film.base and film.wave
+                % and recalculate drop mass flow rate
+                flmArr(tIdx).initializeBaseAndWave( ...
+                                mix(tIdx), ...                                  % Corresponding Mixture
+                                mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1), ...    % Inlet flow rate (all walls)
+                                ITRf ...                                        % Iteration struct
+                             );             
                 drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
                 
                 % Initialize velocity [m/s]
                 %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
-                drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));            % [m/s] Drop velocity
+                drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));             % [m/s] Drop velocity
                 
                 %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
-                baseArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));          % [m/s] Base velocity
-                waveArr(tIdx).U = baseArr(tIdx).U;                          % [m/s] Wave velocity
-                                
+                                                
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drpArr(tIdx).H = repmat(ffSolver.fluid(tIdx).HF,ffSolver.NZ,1);
-                baseArr(tIdx).H = repmat(ffSolver.fluid(tIdx).HF,ffSolver.NZ,1);
-                waveArr(tIdx).H = baseArr(tIdx).H;
                 
                 % ITR
                 % TODO: revisit, clean up
-                baseArr(tIdx).ITR = ITRf;
-                waveArr(tIdx).ITR = ITRf;
                 drpArr(tIdx).ITR = ITRd;
 
             end
@@ -202,7 +173,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             ffSolver.drop = drpArr;
 
             % Create steady state arrays
-            % TODO: Copy bases and waves?
             ffSolver.filmInit = copy( ...
                 repmat(flmArr(1),1,ffSolver.inputSet.options.SSMAXITER));
             ffSolver.dropInit = copy( ...
@@ -223,24 +193,15 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             initTIDX = 1:length(ffSolver.filmInit);
 
             for i = 1:length(ffSolver.filmInit)
+
                 ffSolver.filmInit(i).TIME = initTIME(i);
                 ffSolver.filmInit(i).DT = initTIMEDT;
                 ffSolver.filmInit(i).NTIME = initNTIME;
                 ffSolver.filmInit(i).TIDX = initTIDX(i);
 
-                % Copy and initialize base and wave in each film
-                ffSolver.filmInit(i).base = copy(ffSolver.filmInit(i).base);
-                ffSolver.filmInit(i).base.TIME = initTIME(i);
-                ffSolver.filmInit(i).base.DT = initTIMEDT;
-                ffSolver.filmInit(i).base.NTIME = initNTIME;
-                ffSolver.filmInit(i).base.TIDX = initTIDX(i);
+                % Initialize base and wave in each film
+                ffSolver.filmInit(i).initializeBaseAndWave();
 
-                ffSolver.filmInit(i).wave = copy(ffSolver.filmInit(i).wave);
-                ffSolver.filmInit(i).wave.TIME = initTIME(i);
-                ffSolver.filmInit(i).wave.DT = initTIMEDT;
-                ffSolver.filmInit(i).wave.NTIME = initNTIME;
-                ffSolver.filmInit(i).wave.TIDX = initTIDX(i);
-                                
                 ffSolver.dropInit(i).TIME = initTIME(i);
                 ffSolver.dropInit(i).DT = initTIMEDT;
                 ffSolver.dropInit(i).NTIME = initNTIME;
@@ -447,7 +408,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             % Cannot plot time series of one time step
             if isscalar(flm) || isscalar(opt.tIdx)
-                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+                tfSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
 %                 throw( ...
 %                     MException( ...
@@ -461,7 +422,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time series of mixture parameters at ' num2str(tfSolver.Z(zIdx(1))) ' [m]']);
             
             timeplot('W','Mass flowrates [kg/s]')
             timeplot('U','Velocity [m/s]')

@@ -131,6 +131,11 @@ function solver(solveINIT)
                 Wbnew = Ubiter.*(Wbups+Wbold./Ubold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ubiter+DZ./DT); % [kg/s] Update film mass flow rate
                 base(tIdx).W(zIdx,:) = (1-options.RELAXWB).*Wbiter+options.RELAXWB.*Wbnew;    % [kg/s] Apply relaxation
                 
+                % DEBUG
+                % fprintf('t:%d, z:%d, itr:%03d-> mtot:%0.8u, wbase:%0.8u, wdrop:%0.8u, ment: %0.8u\n', ...
+                %     tIdx, zIdx, itr, ...
+                %     Mtot, mean(base(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), base(tIdx).MENT(mix(tIdx),zIdx));
+
                 if model.POSFILM
                     base(tIdx).W(zIdx,:) = max(base(tIdx).W(zIdx,:),0);                       % [kg/s] 
                 end
@@ -248,8 +253,6 @@ function solver(solveINIT)
                 
                 % Replace first transient time step flow data with this tIdx
                 ffSolver.filmInit(end).copyFlowProperties(ffSolver.film(1));
-                ffSolver.filmInit(end).base.copyFlowProperties(ffSolver.film(1).base);
-                ffSolver.filmInit(end).wave.copyFlowProperties(ffSolver.film(1).wave);
                 ffSolver.dropInit(end).copyFlowProperties(ffSolver.drop(1));
                 
                 break;
@@ -263,8 +266,6 @@ function solver(solveINIT)
                 end
 
                 ffSolver.filmInit(tIdx).copyFlowProperties(ffSolver.filmInit(tIdx+1));
-                ffSolver.filmInit(tIdx).base.copyFlowProperties(ffSolver.filmInit(tIdx+1).base);
-                ffSolver.filmInit(tIdx).wave.copyFlowProperties(ffSolver.filmInit(tIdx+1).wave);
                 ffSolver.dropInit(tIdx).copyFlowProperties(ffSolver.dropInit(tIdx+1));
             % otherwise, not converged
             else
