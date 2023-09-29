@@ -18,6 +18,7 @@ classdef Wave < Solvers.AbstractFilm
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         U            (:,:) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
+        PERIOD       (:,:) double  {mustBeNumeric}                         = 1                    % [s] Wave period
 
         % % Iteration properties
         ITR
@@ -126,6 +127,55 @@ classdef Wave < Solvers.AbstractFilm
             Mtot  = wave.MEVAP(zIdx)+wave.MENT(mix,zIdx)+wave.ETA(zIdx).*drop.MDEP(mix,zIdx);   
         end
 
+        function shapefactor = SHAPEFACTOR(wave, zIdx)
+        %SHAPEFACTOR 
+        %
+
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            coef = wave.inputSet.model.SHAPEFACTORCOEF;
+            shapefactor = (wave.RE(zIdx)./coef(1)).^coef(2);
+        end
+
+        function eqst = EQSTROUHAL(wave, mix, zIdx)
+        %STROUHAL Correlation of equilibrium Strouhal number
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+            
+            coef = wave.inputSet.model.EQSTROUHALCOEF;
+            re_v = mix.vapor.RE(zIdx);
+            eqst = coef(1) .* re_v.^coef(2);
+
+        end
+
+        function eqfreq = EQFREQ(wave, mix, zIdx)
+        %EQFREQ
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+
+            % Hydrualic diameter
+            d_h = wave.inputSet.geometry.HDIAM();
+            % Solve eqfreq using definition of St
+            eqfreq = wave.EQSTROUHAL(mix,zIdx).*mix.vapor.U(zIdx)./d_h;
+
+        end
+
+        function eqperiod = EQPERIOD(wave, mix, zIdx)
+        %EQPERIOD Inverse of EQFREQ
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+
+            eqperiod = 1./wave.EQSTROUHAL(mix, zIdx);
+        
+        end
+
+        function wwidth = WWIDTH(wave, mix, zIdx)
+        %WWIDTH Wave width
+        %
+            %TODO: implement
+            
+
+        end
         
         function out = struct(obj)
         %STRUCT Converter to struct

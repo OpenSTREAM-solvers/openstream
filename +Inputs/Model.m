@@ -41,6 +41,10 @@ classdef Model < Inputs.Input
         DROPDIAM      (1,1) double  {mustBePositive}                       = 1E-3                  % Drop diameter [mm]
         DROPDRAG      (1,1) InputEnums.DROPDRAG                            = 'CONSTANT'            % Drop drag model
         DROPDRAGCOEF  (1,1) double  {mustBePositive}                       = 0.45                  % Drop drag coefficient
+
+        SHAPEFACTORCOEF (:,1) double {mustBeNumeric}                       = [1.325E5 2]           % Wave shape factor coefficients
+        EQSTROUHALCOEF  (:,1) double {mustBeNumeric}                       = [1.1236 0.5]          % Wave equilibrium Strouhal coefficients
+
     end
 
     properties (Constant)

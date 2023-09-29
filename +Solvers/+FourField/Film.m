@@ -128,6 +128,10 @@ classdef Film < Solvers.AbstractFilm
             film.base.H = repmat(film.fluid.HF,film.NZ,1);
             film.wave.H = film.base.H;
 
+            % Initialize wave period using wave.EQPERIOD
+            %TODO: consider using wave number density
+            film.wave.PERIOD(1:film.NZ,1:geom.NWALL) = repmat(film.wave.EQPERIOD(MIX),1,geom.NWALL);
+
             % Setup iteration struct
             film.base.ITR = ITR;
             film.wave.ITR = ITR;
