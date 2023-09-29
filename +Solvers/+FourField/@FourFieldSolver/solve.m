@@ -101,16 +101,16 @@ function solver(solveINIT)
             
             Wbold = base(tIdx-1).W(zIdx,:);                                % [kg/s] Base mass flow rate at previous time step
             Ubold = base(tIdx-1).U(zIdx,:);                                % [m/s] Base velocity at previous time step
-            Wbups = base(tIdx).W(zIdx-1,:);                                % [kg/s] Base mass flow rate at previous time step
-            Ubups = base(tIdx).U(zIdx-1,:);                                % [m/s] Base velocity at previous time step
+            Wbups = base(tIdx).W(zIdx-1,:);                                % [kg/s] Base mass flow rate at previous node
+            Ubups = base(tIdx).U(zIdx-1,:);                                % [m/s] Base velocity at previous node
     
             Wwold = wave(tIdx-1).W(zIdx,:);                                % [kg/s] Wave mass flow rate at previous time step
             Uwold = wave(tIdx-1).U(zIdx,:);                                % [m/s] Wave velocity at previous time step
-            Wwups = wave(tIdx).W(zIdx-1,:);                                % [kg/s] Wave mass flow rate at previous time step
-            Uwups = wave(tIdx).U(zIdx-1,:);                                % [m/s] Wave velocity at previous time step
+            Wwups = wave(tIdx).W(zIdx-1,:);                                % [kg/s] Wave mass flow rate at previous node
+            Uwups = wave(tIdx).U(zIdx-1,:);                                % [m/s] Wave velocity at previous node
 
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
-            Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous time step
+            Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -126,11 +126,16 @@ function solver(solveINIT)
                 
                 Uditer = drop(tIdx).U(zIdx);                               % [m/s] Drop velocity
                 
-                % Film mass conservation
-                Mtot = base(tIdx).MTOT(mix(tIdx),drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
-                Wbnew = Ubiter.*(Wbups+Wbold./Ubold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ubiter+DZ./DT); % [kg/s] Update film mass flow rate
+                % Base film mass conservation
+                Mtot_b = base(tIdx).MTOT(mix(tIdx),drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with base
+                Wbnew = Ubiter.*(Wbups+Wbold./Ubold.*DZ./DT+geom.PERIM.*Mtot_b.*DZ)./(Ubiter+DZ./DT); % [kg/s] Update film mass flow rate
                 base(tIdx).W(zIdx,:) = (1-options.RELAXWB).*Wbiter+options.RELAXWB.*Wbnew;    % [kg/s] Apply relaxation
-                
+
+                % Wave mass conservation
+                Mtot_w = wave(tIdx).MTOT(mix(tIdx),drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with wave
+                Wwnew = Uwiter.*(Wwups+Wwold./Uwold.*DZ./DT+geom.PERIM.*Mtot_w.*DZ)./(Uwiter+DZ./DT); % [kg/s] Update film mass flow rate
+                wave(tIdx).W(zIdx,:) = (1-options.RELAXWW).*Wwiter+options.RELAXWW.*Wwnew;    % [kg/s] Apply relaxation
+
                 % DEBUG
                 % fprintf('t:%d, z:%d, itr:%03d-> mtot:%0.8u, wbase:%0.8u, wdrop:%0.8u, ment: %0.8u\n', ...
                 %     tIdx, zIdx, itr, ...
@@ -138,6 +143,7 @@ function solver(solveINIT)
 
                 if model.POSFILM
                     base(tIdx).W(zIdx,:) = max(base(tIdx).W(zIdx,:),0);                       % [kg/s] 
+                    wave(tIdx).W(zIdx,:) = max(wave(tIdx).W(zIdx,:),0);                       % [kg/s] 
                 end
                 
                 % Base momentum conservation

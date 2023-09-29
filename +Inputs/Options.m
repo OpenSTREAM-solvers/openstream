@@ -32,6 +32,8 @@ classdef Options < Inputs.Input
         RELAXUD      (1,1) double  {mustBeInRange(RELAXUD,0,1)}            = 0.2                   % Relaxation factor for the drop momentum conservation equation
         RELAXWB      (1,1) double  {mustBeInRange(RELAXWB,0,1)}            = 0.5                   % Relaxation factor for the base mass conservation equation
         RELAXUB      (1,1) double  {mustBeInRange(RELAXUB,0,1)}            = 0.2                   % Relaxation factor for the base momentum conservation equation
+        RELAXWW      (1,1) double  {mustBeInRange(RELAXWW,0,1)}            = 0.5                   % Relaxation factor for the wave mass conservation equation
+        RELAXUW      (1,1) double  {mustBeInRange(RELAXUW,0,1)}            = 0.2                   % Relaxation factor for the wave momentum conservation equation
     end
 
     methods

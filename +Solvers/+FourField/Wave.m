@@ -31,7 +31,7 @@ classdef Wave < Solvers.AbstractFilm
      end
 
      properties (Dependent)
-         MEVAP                                                                                    % [kg/s/m^2] Evaporation mass flux
+         %MEVAP                                                                                    % [kg/s/m^2] Evaporation mass flux
      end
      
     methods
@@ -67,45 +67,55 @@ classdef Wave < Solvers.AbstractFilm
             thick = wave.WL(zIdx)./wave.U(zIdx,:)./rhof;                   % [m] Film thickness
         end
 
-        function beta = BETA(wave)
+        function beta = BETA(wave, zIdx)
         %BETA Wave film interfacial fraction
         %
-            beta = 1-wave.film.base.BETA();
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            beta = 1-wave.film.base.BETA(zIdx);
         end
 
-        function epsilon = EPSILON(wave)
+        function epsilon = EPSILON(wave, zIdx)
         %BETA Wave mass flow fraction
         %
-            epsilon = wave.W ./ wave.film.W;
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            epsilon = wave.W(zIdx, :) ./ wave.film.W(zIDx, :);
         end
 
-        function betap = BETAP(wave)
+        function betap = BETAP(wave, zIdx)
         %BETAP Wave film heat flux fraction
         %
-            betap = 1-wave.film.base.BETAP();
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            betap = 1-wave.film.base.BETAP(zIdx);
         end
 
-        function ment = MENT(base,mix,zIdx)
+        function ment = MENT(wave,mix,zIdx)
         %MENT Base entrainment mass flux
         %
-            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
             % TODO: use coefficient later
             ment = wave.film.MENT(mix,zIdx) - wave.film.base.MENT(mix,zIdx);            
         end
 
-        function mevap = get.MEVAP(wave)
+        function mevap = MEVAP(wave, zIdx)
         %MEVAP Wave evaporation mass flux
         %            
-            mevap = wave.BETAP() .* wave.film.MEVAP;            
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            mevap = wave.BETAP(zIdx) .* wave.film.MEVAP(zIdx,:);            
         end
 
-        function eta = ETA(wave)
+        function eta = ETA(wave, zIdx)
         %ETA Wave film deposition fraction
         %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
             % TODO: for now, assume no wave
             % TODO: add as model option later
-            eta = 1-wave.film.base.ETA();
+            eta = 1-wave.film.base.ETA(zIdx);
         end
                 
         function Mtot = MTOT(wave,mix,drop,zIdx)
@@ -113,7 +123,7 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 4, zIdx = (1:wave(1).NZ).'; end
             
-            Mtot  = wave.MEVAP(zIdx,:)+wave.MENT(mix,zIdx)+wave.ETA().*drop.MDEP(mix,zIdx);   
+            Mtot  = wave.MEVAP(zIdx)+wave.MENT(mix,zIdx)+wave.ETA(zIdx).*drop.MDEP(mix,zIdx);   
         end
 
         

@@ -150,7 +150,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                                 mix(tIdx), ...                                  % Corresponding Mixture
                                 mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1), ...    % Inlet flow rate (all walls)
                                 ITRf ...                                        % Iteration struct
-                             );             
+                             );
                 drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
                 
                 % Initialize velocity [m/s]

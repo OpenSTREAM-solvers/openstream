@@ -7,12 +7,4 @@ WMESH     ! Relative power node size distribution [m]                      > 1.7
 WPOWER    ! Relative power distribution(s) [-]                             > 1.0  1.0
 END
 
-TIME      ! Time [s]                                                       > 10.0
-PRESSURE  ! System pressure [Pa]                                           > 6000000
-HIN       ! Inlet enthalpy [J/kg]                                          > 1.1394E6
-MFLOW     ! Mass flow rate [kg/s]                                          > 0.07
-POWER     ! Total power [W]                                                > 87500
-WMESH     ! Relative power node size distribution [m]                      > 1.75 1.75
-WPOWER    ! Relative power distribution(s) [-]                             > 1.0  1.0
-END
 

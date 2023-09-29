@@ -20,4 +20,7 @@ SSMAXITER   ! Max number of steady-state iterations                        > 100
 SSCONVW     ! Mass flow rate steady-state convergence criterion [kg/s]     > 1E-3
 SSCONVP     ! Pressure steady-state convergence criterion [Pa]             > 1E-1
 SSCONVH     ! Enthalpy steady-state convergence criterion [J/kg]           > 1E-1
+SSCONVWF    !                                                              > 1E-4
+RELAXWW     ! Wave relaxation                                              > 0.5
+RELAXWB     ! Wave relaxation                                              > 0.5
 END

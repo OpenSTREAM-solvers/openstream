@@ -82,8 +82,10 @@ SLIP       ! Phase velocity ratio [-]                                       > 1.
 OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
 OAFENTRAINED !                                                              > RATIO
-MOMENTFILM !                                                                > FULL
-MOMENTDROP !                                                                > FULL
+OAFBASERATIO !                                                              > 0.5
+MOMENTFILM !                                                                > ALGEBRAIC
+MOMENTDROP !                                                                > SLIP
+POSFILM !                                                                   > 1
 END
 
 ID         ! Model ID                                                       > BARCP

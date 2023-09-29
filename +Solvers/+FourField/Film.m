@@ -119,6 +119,11 @@ classdef Film < Solvers.AbstractFilm
             film.base.U = film.UALGEBR(MIX);                                % [m/s] Base velocity
             film.wave.U = film.base.U;                                      % [m/s] Wave velocity
 
+            % Set minimum of wave velocity to 1 m/s
+            % TODO: Maybe revisit in the future...
+            % film.wave.U(film.wave.U<1) = 1.0;
+            film.wave.U(:) = 1.0;
+
             % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
             film.base.H = repmat(film.fluid.HF,film.NZ,1);
             film.wave.H = film.base.H;

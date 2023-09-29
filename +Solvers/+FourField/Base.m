@@ -31,7 +31,7 @@ classdef Base < Solvers.AbstractFilm
      end
 
      properties (Dependent)
-         MEVAP                                                                                    % [kg/s/m^2] Evaporation mass flux
+         %MEVAP                                                                                    % [kg/s/m^2] Evaporation mass flux
      end
 
      
@@ -48,26 +48,37 @@ classdef Base < Solvers.AbstractFilm
             end
         end
 
-        function epsilon = EPSILON(base)
+        function epsilon = EPSILON(base, zIdx)
         %BETA Base film mass flow fraction
         %
-            epsilon = base.W ./ base.film.W;
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
+            epsilon = base.W(zIdx,:) ./ base.film.W(zIdx,:);
+
+            % epsilon is NaN iff film.W == 0, i.e. dry
+            % in this case, deposit on base
+            % TODO: In NEGFILM case ...
+            epsilon(isnan(epsilon)) = 1.0;
         end
         
-        function beta = BETA(base)
+        function beta = BETA(base, zIdx)
         %BETA Base film interfacial fraction
         %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
             % TODO: for now, assume no wave
             % TODO: add as model option later
-            beta = 1;
+            beta = 0.9;
         end
 
-        function betap = BETAP(base)
+        function betap = BETAP(base, zIdx)
         %BETAP Base film heat flux fraction
         %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
             % assuming split according to interfacial fraction, BETA
             % TODO: add as model option later
-            betap = base.BETA;
+            betap = base.BETA(zIdx);
         end
         
         function ment = MENT(base,mix,zIdx)
@@ -76,21 +87,25 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             % TODO: use coefficient later
-            ment =  1 .* base.film.MENT(mix,zIdx);            
+            ment =  0.0 .* base.film.MENT(mix,zIdx);            
         end
 
-        function mevap = get.MEVAP(base)
+        function mevap = MEVAP(base, zIdx)
         %MEVAP Base evaporation mass flux
-        %            
-            mevap = base.BETAP() .* base.film.MEVAP;            
+        %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
+            mevap = base.BETAP(zIdx) .* base.film.MEVAP(zIdx,:);
         end
 
-        function eta = ETA(base)
+        function eta = ETA(base, zIdx)
         %ETA Base film deposition fraction
         %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
             % TODO: for now, assume no wave
             % TODO: add as model option later
-            eta = 1;
+            eta = base.EPSILON(zIdx);
         end
         
         function Mtot = MTOT(base,mix,drop,zIdx)
@@ -99,7 +114,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 4, zIdx = (1:base(1).NZ).'; end
             
             % TODO: 
-            Mtot  = base.MEVAP(zIdx,:)+base.MENT(mix,zIdx)+ base.ETA().*drop.MDEP(mix,zIdx);
+            Mtot  = base.MEVAP(zIdx)+base.MENT(mix,zIdx)+ base.ETA(zIdx).*drop.MDEP(mix,zIdx);
         end
         
         function Fwave = FWAVE(base,mix,zIdx)
