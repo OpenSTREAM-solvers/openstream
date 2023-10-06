@@ -58,7 +58,7 @@ classdef Base < Solvers.AbstractFilm
             % epsilon is NaN iff film.W == 0, i.e. dry
             % in this case, deposit on base
             % TODO: In NEGFILM case ...
-            epsilon(isnan(epsilon)) = 1.0;
+            epsilon(isnan(epsilon)) = 1.0;makitatabl 
         end
         
         function beta = BETA(base, zIdx)
@@ -146,7 +146,19 @@ classdef Base < Solvers.AbstractFilm
             Ftot  = base.FWALL(mix,zIdx)+base.FWAVE(mix,zIdx)+base.FVAPOR(mix,zIdx)+base.FBUOY(mix,zIdx)+base.FGRAV(mix,zIdx)+base.FDEP(mix,drop,zIdx);   
             
         end
-        
+
+        function eqthick = EQTHICK(base,mix,zIdx)
+        %FTOT Total
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            
+            D_H = base.inputSet.geometry.HDIAM();
+            coefs = base.inputSet.model.BASEEQTHICKCOEF;
+            Re_v = mix.vapor.RE(zIdx);
+            Re_f = base.film.RE(zIdx);
+            eqthick = D_H .* coefs(1) .* (Re_v.^coefs(2)) .* (Re_f.^coefs(3));
+            
+        end     
         
         
         

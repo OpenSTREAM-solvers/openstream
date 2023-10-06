@@ -18,7 +18,7 @@ classdef Wave < Solvers.AbstractFilm
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         U            (:,:) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
-        PERIOD       (:,:) double  {mustBeNumeric}                         = 1                    % [s] Wave period
+        PERIOD       (:,:) double  {mustBeNumeric}                         = 1                    % [s] Wave time period
 
         % % Iteration properties
         ITR
@@ -120,7 +120,7 @@ classdef Wave < Solvers.AbstractFilm
         end
                 
         function Mtot = MTOT(wave,mix,drop,zIdx)
-        %MTOT Total
+        %MTOT Total mass flux
         %
             if nargin < 4, zIdx = (1:wave(1).NZ).'; end
             
@@ -142,9 +142,9 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
-            coef = wave.inputSet.model.EQSTROUHALCOEF;
+            coefs = wave.inputSet.model.EQSTROUHALCOEF;
             re_v = mix.vapor.RE(zIdx);
-            eqst = coef(1) .* re_v.^coef(2);
+            eqst = coefs(1) .* re_v.^coefs(2);
 
         end
 
@@ -169,11 +169,70 @@ classdef Wave < Solvers.AbstractFilm
         
         end
 
-        function wwidth = WWIDTH(wave, mix, zIdx)
-        %WWIDTH Wave width
+        function spacing = SPACING(wave, zIdx)
+        %SPACING Wave spacing
         %
-            %TODO: implement
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            spacing = wave.U(zIdx,:) ./ wave.FREQ(zIdx);            
+
+        end
+
+        function freq = FREQ(wave, zIdx)
+        %FREQ Wave freq
+        %   Inverse of wave time period
+
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            freq = 1./wave.PERIOD(zIdx, :);            
+
+        end
+
+        function n = N(wave, zIdx)
+        %N Wave number density
+        %   Inverse of wave spacing
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            n = 1./ wave.SPACING(zIdx);            
+
+        end
+        
+        function wwidth = WIDTH(wave, zIdx)
+        %WIDTH Wave width
+        %   Function of W, perimeter, rho, Shape factor, frequency
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
+            rhof  = wave.fluid.RHOF;
+            wwidth = wave.WL(zIdx)./(rhof .* wave.SHAPEFACTOR(zIdx) .* wave.FREQ(zIdx));
+            wwidth = sqrt(wwidth);            
+
+        end
+
+        function amp = AMP(wave, zIdx)
+        %AMP Wave amplitude
+        %   Function of W, perimeter, rho, Shape factor, frequency
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            rhof  = wave.fluid.RHOF;
+            amp = wave.WL(zIdx)./(rhof .* wave.WIDTH(zIdx) .* wave.FREQ(zIdx));
+            
+
+        end
+
+        function dragcoef = DRAGCOEF(wave, mix, zIdx)
+        %DRAGCOEF Wave drag coefficient
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+
+            % Vapor Reynolds number (Eq. 62)
+            rho_vs = wave.fluid.RHOG;
+            du = mix.vapor.U(zIdx) - wave.U(zIdx,:);
+            mu_vs = wave.fluid.MUG;
+            Re_vw = rho_vs .* du .* D_H ./mu_vs;
+
+            % Draf Coef
+            coefs = wave.inputSet.model.WAVEDRAGCOEF;
+            dragcoef = (coefs(1)./Re_vw).^2 + coefs(2);            
 
         end
         
