@@ -116,6 +116,17 @@ classdef Base < Solvers.AbstractFilm
             % TODO: 
             Mtot  = base.MEVAP(zIdx)+base.MENT(mix,zIdx)+ base.ETA(zIdx).*drop.MDEP(mix,zIdx);
         end
+
+        function Mwave = MWAVE(base,mix,drop,zIdx)
+        %MWAVE Mass flux interaction with wave
+        %
+            if nargin < 4, zIdx = (1:base(1).NZ).'; end
+
+            rho_ls = base.fluid.RHOF;
+            relaxWB = base.inputSet.options.RELAXWB;
+            Mwave = -base.ETA(zIdx).*drop.MDEP(mix,zIdx) + base.MEVAP(zIdx) + rho_ls.*(base.EQTHICK(mix,zIdx)-base.THICK(zIdx))./relaxWB;
+
+        end
         
         function Fwave = FWAVE(base,mix,zIdx)
         %FWAVE Wave force
