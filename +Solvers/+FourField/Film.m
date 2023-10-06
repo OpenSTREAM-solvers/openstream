@@ -19,7 +19,6 @@ classdef Film < Solvers.AbstractFilm
      end
 
      properties (SetAccess=?Solvers.AbstractSolver)
-        
         wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN
         base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN
      end
@@ -68,7 +67,7 @@ classdef Film < Solvers.AbstractFilm
             u(film.W==0) = film.base.U(film.W==0);
         end
         
-        function initializeBaseAndWave(film, MIX, WIN, ITR)
+        function initializeBaseAndWave(film, WIN, ITR)
         %INITIALIZEBASEANDWAVE Initialize base and wave arrays given WTOT
             
             %% Constant properties
@@ -79,7 +78,7 @@ classdef Film < Solvers.AbstractFilm
             if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(); end
             film.wave.film = film;
 
-            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid'};  
+            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid','mix'};  
               
             % Copy properties to base and wave
             for prop = props
@@ -116,21 +115,21 @@ classdef Film < Solvers.AbstractFilm
             film.base.W = eb .* film.base.W;
 
             % Velocity
-            film.base.U = film.UALGEBR(MIX);                                % [m/s] Base velocity
+            film.base.U = film.UALGEBR();                                   % [m/s] Base velocity
             film.wave.U = film.base.U;                                      % [m/s] Wave velocity
 
             % Set minimum of wave velocity to 1 m/s
             % TODO: Maybe revisit in the future...
             % film.wave.U(film.wave.U<1) = 1.0;
-            film.wave.U(:) = 1.0;
+            film.wave.U(:,:) = repmat(film.mix.vapor.U .* 0.5, 1, geom.NWALL);
 
             % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-            film.base.H = repmat(film.fluid.HF,film.NZ,1);
+            film.base.H = repmat(film.fluid.HF, film.NZ, 1);
             film.wave.H = film.base.H;
 
             % Initialize wave period using wave.EQPERIOD
             %TODO: consider using wave number density
-            film.wave.PERIOD(1:film.NZ,1:geom.NWALL) = repmat(film.wave.EQPERIOD(MIX),1,geom.NWALL);
+            film.wave.PERIOD(1:film.NZ,1:geom.NWALL) = repmat(film.wave.EQPERIOD(),1,geom.NWALL);
 
             % Setup iteration struct
             film.base.ITR = ITR;

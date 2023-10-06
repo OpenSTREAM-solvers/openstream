@@ -20,6 +20,9 @@ classdef Drop < Solvers.AbstractField
         % Iteration properties
         ITR
 
+        % Mixture
+        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN
+
      end
 
      properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
@@ -44,12 +47,12 @@ classdef Drop < Solvers.AbstractField
 
         end
         
-        function conc = CONC(drop,mix,zIdx)
+        function conc = CONC(drop,zIdx)
         % Drop concentration
         
-            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            vapor = mix.vapor;
+            vapor = drop.mix.vapor;
             rhof  = drop.fluid.RHOF;
             rhog  = drop.fluid.RHOG;
             
@@ -61,17 +64,17 @@ classdef Drop < Solvers.AbstractField
             conc(negdrop) = -conc(negdrop);
         end
         
-        function mdep = MDEP(drop,mix,zIdx)
+        function mdep = MDEP(drop,zIdx)
         % Drop deposition mass flux
     
-            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             rhog  = drop.fluid.RHOG;                                       % [kg/m^3] Saturated vapor density <-!!!To be modified to handle superheated vapor
             sig   = drop.fluid.SIGMA;                                      % [N/m] Surface tension
             hdiam = drop.inputSet.geometry.HDIAM;                          % [m] Hydraulic diameter
             
-            conc = abs(drop.CONC(mix,zIdx));                               % [kg/m^3] Drop concentration
+            conc = abs(drop.CONC(zIdx));                               % [kg/m^3] Drop concentration
             
             Wd = drop.W(zIdx);
             negdrop = find(Wd<0);
@@ -92,7 +95,7 @@ classdef Drop < Solvers.AbstractField
             end
             
             mdep(negdrop)=-mdep(negdrop);
-            mdep = mix.AFDISTR(0,mdep,zIdx);                               % [kg/m^2/s] Deposition mass flux, in annular flow region only
+            mdep = drop.mix.AFDISTR(0,mdep,zIdx);                               % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
         function re = RE(drop, zIdx)
@@ -164,38 +167,38 @@ classdef Drop < Solvers.AbstractField
             end
         end
         
-        function Fbuoy = FBUOY(drop,mix,zIdx)
+        function Fbuoy = FBUOY(drop,zIdx)
         %FBUOY Drop buoyancy
         %
-            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            DPDZ = -mix.DP.Tot(zIdx)/drop.DZ;                              % [Pa/m] Pressure gradient
+            DPDZ = -drop.mix.DP.Tot(zIdx)/drop.DZ;                              % [Pa/m] Pressure gradient
             
             Fbuoy = -DPDZ;                                                 % [N/m^3]
             
-            Fbuoy = mix.AFDISTR(0,Fbuoy,zIdx);   
+            Fbuoy = drop.mix.AFDISTR(0,Fbuoy,zIdx);   
         end
         
-        function Fgrav = FGRAV(drop,mix,zIdx)
+        function Fgrav = FGRAV(drop,zIdx)
         %FGRAV Drop gravity
         %
-            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             rhof = drop.fluid.RHOF;                                        % [kg/m^3] Liquid density
             
             Fgrav = -model.G*cos(model.ANGLE*pi/180)*rhof;                 % [N/m^3]
             
-            Fgrav = mix.AFDISTR(0,Fgrav,zIdx);
+            Fgrav = drop.mix.AFDISTR(0,Fgrav,zIdx);
 
         end   
         
-        function Fdrag = FDRAG(drop,mix,zIdx)
+        function Fdrag = FDRAG(drop,zIdx)
         %FVAPOR drop vapor drag
         %
-            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            UVAP = mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
+            UVAP = drop.mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
             rhog = drop.fluid.RHOG;                                        % [kg/m^3] Vapor density
             
             sgn = sign(UVAP-drop.U(zIdx));
@@ -203,88 +206,88 @@ classdef Drop < Solvers.AbstractField
             
             Fdrag = drop.AREA(zIdx)./drop.VOLUME(zIdx).*tau;               % [N/m^3]
             
-            Fdrag = mix.AFDISTR(0,Fdrag,zIdx);
+            Fdrag = drop.mix.AFDISTR(0,Fdrag,zIdx);
         end
         
-        function Fent = FENT(drop,mix,film,zIdx)
+        function Fent = FENT(drop,film,zIdx)
         %FENT Film entrainment shear
         %
-            if nargin < 4, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             perim = drop.inputSet.geometry.PERIM;                          % [m] Perimeter(s)
-            ent   = -film.MENT(mix,zIdx);                                  % [kg/m^2/s] Film entrainment mass flux
+            ent   = -film.MENT(zIdx);                                  % [kg/m^2/s] Film entrainment mass flux
             rhof = drop.fluid.RHOF;                                        % [kg/m^3] Liquid density
             
             Fent = sum(perim.*(film.U(zIdx,:)-drop.U(zIdx)).*ent,2).*rhof.*drop.U(zIdx)./drop.W(zIdx); % [N/m^3]
             
-            Fent = mix.AFDISTR(0,Fent,zIdx);   
+            Fent = drop.mix.AFDISTR(0,Fent,zIdx);   
         end
         
-        function Ftot = FTOT(drop,mix,film,zIdx,opt)
+        function Ftot = FTOT(drop,film,zIdx,opt)
         %FTOT Total
         %
-            if nargin < 4, zIdx = (1:drop(1).NZ).'; end
-            if nargin < 5, opt = 0; end                                    % Option for complete of simplified force balance
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 4, opt = 0; end                                    % Option for complete of simplified force balance
             
             if opt == 1
-                Ftot  = drop.FDRAG(mix,zIdx)+drop.FBUOY(mix,zIdx)+drop.FGRAV(mix,zIdx); % [N/m^3] Fdrag + Fbuoy only
+                Ftot  = drop.FDRAG(zIdx)+drop.FBUOY(zIdx)+drop.FGRAV(zIdx); % [N/m^3] Fdrag + Fbuoy only
             else
-                Ftot  = drop.FDRAG(mix,zIdx)+drop.FBUOY(mix,zIdx)+drop.FGRAV(mix,zIdx)+drop.FENT(mix,film,zIdx); % [N/m^3] Complete sum of forces
+                Ftot  = drop.FDRAG(zIdx)+drop.FBUOY(zIdx)+drop.FGRAV(zIdx)+drop.FENT(film,zIdx); % [N/m^3] Complete sum of forces
             end
         end
         
-        function uslip = USLIP(drop,mix,zIdx)
+        function uslip = USLIP(drop,zIdx)
         % Slip drop velocity model
     
-            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
             model = drop.inputSet.model;
             
-            uslip = model.DROPSLIP.*mix.vapor.U(zIdx);                     % [m/s] Drop velocity
+            uslip = model.DROPSLIP.*drop.mix.vapor.U(zIdx);                     % [m/s] Drop velocity
             
-            uslip = mix.AFDISTR(mix.liquid.U(zIdx),uslip,zIdx);            % [m/s] 
+            uslip = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),uslip,zIdx);            % [m/s] 
         end
         
-        function ualgebr = UALGEBR(drop,film,mix,zIdx)
+        function ualgebr = UALGEBR(drop,film,zIdx)
         % Algebraic drop velocity model (consistent with mixture model)
 
-            if nargin < 4, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             
             perim = drop.inputSet.geometry.PERIM;
             area  = drop.inputSet.geometry.AREA;
             
-            Ad = mix.liquid.VF(zIdx).*area-sum(perim.*film.THICK(zIdx),2); % [m^2] Drop cross-section area based on void fraction
+            Ad = drop.mix.liquid.VF(zIdx).*area-sum(perim.*film.THICK(zIdx),2); % [m^2] Drop cross-section area based on void fraction
             ualgebr = drop.W(zIdx)/drop.fluid.RHOF./Ad;                    % [m/s] Corresponding drop velocity
             
-            ualgebr = mix.AFDISTR(mix.liquid.U(zIdx),ualgebr,zIdx);        % [m/s] 
+            ualgebr = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),ualgebr,zIdx);        % [m/s] 
         end
         
-        function Uequil = UEQUIL(drop,mix,film,zIdx,opt)
+        function Uequil = UEQUIL(drop,film,zIdx,opt)
         %UEQUIL Drop velocity based on equilibrium model (Ftot = 0)
         %
-            if nargin < 4, zIdx = (1:drop(1).NZ).'; end
-            if nargin < 5, opt = 0; end                                    % Option for complete or simplified force balance
+            if nargin < 3, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 4, opt = 0; end                                    % Option for complete or simplified force balance
             
             iter(1).U = drop.U(zIdx);
-            iter(1).Ftot = drop.FTOT(mix,film,zIdx,opt);
+            iter(1).Ftot = drop.FTOT(film,zIdx,opt);
             
             iter(2).U = iter(1).U+0.1;
             drop.U(zIdx) = iter(2).U;
-            iter(2).Ftot = drop.FTOT(mix,film,zIdx,opt);
+            iter(2).Ftot = drop.FTOT(film,zIdx,opt);
             
             eps = 1.0;
             for k = 3:100
                 Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
                 iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
                 drop.U(zIdx) = iter(k).U;
-                iter(k).Ftot = drop.FTOT(mix,film,zIdx,opt);
+                iter(k).Ftot = drop.FTOT(film,zIdx,opt);
                 err = max(abs(iter(k).Ftot),[],'all');
                 if err<1E-3, break; end
             end
             if err > 1E-3, disp('Drop UEQUIL model : not converged')
             end
             
-            Uequil = mix.AFDISTR(mix.liquid.U(zIdx),drop.U(zIdx),zIdx);
+            Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),drop.U(zIdx),zIdx);
         end
 
         function out = struct(obj)

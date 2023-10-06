@@ -111,14 +111,14 @@ function solver(solveINIT)
                 Uditer = drop(tIdx).U(zIdx);                              % [m/s] Drop velocity
                 
                 % Film mass conservation
-                Mtot = film(tIdx).MTOT(mix(tIdx),drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
+                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
                 Wfnew = Ufiter.*(Wfups+Wfold./Ufold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT); % [kg/s] Update film mass flow rate
                 film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;    % [kg/s] Apply relaxation
                 
                 % DEBUG
                 % fprintf('t:%d, z:%d, itr:%03d-> mtot:%0.8u, wbase:%0.8u, wdrop:%0.8u, ment: %0.8u\n', ...
                 %     tIdx, zIdx, itr, ...
-                %     Mtot, mean(film(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), film(tIdx).MENT(mix(tIdx),zIdx));
+                %     Mtot, mean(film(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), film(tIdx).MENT(zIdx));
 
                 if model.POSFILM
                     film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);                       % [kg/s] 
@@ -128,15 +128,15 @@ function solver(solveINIT)
                 switch model.MOMENTFILM
                     case InputEnums.MOMENTFILM.ALGEBRAIC
                     % Simple algebraic model
-                        film(tIdx).U(zIdx,:) = film(tIdx).UALGEBR(mix(tIdx),zIdx);                    % [m/s]
+                        film(tIdx).U(zIdx,:) = film(tIdx).UALGEBR(zIdx);                    % [m/s]
                         
                     case InputEnums.MOMENTFILM.EQUILIBRIUMS
                     % Simple equilibrium model (Fwall+ Fvapor = 0)
-                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUILS(mix(tIdx),zIdx);                    % [m/s]
+                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUILS(zIdx);                    % [m/s]
                         
                     case InputEnums.MOMENTFILM.EQUILIBRIUM
                     % Complete equilibrium model (Ftot = 0)
-                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(mix(tIdx),drop(tIdx),zIdx);          % [m/s]
+                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);          % [m/s]
                         
                     case InputEnums.MOMENTFILM.FULL
                     % Full film momentum conservation
@@ -145,13 +145,13 @@ function solver(solveINIT)
                         thick = max(abs(film(tIdx).THICK(zIdx)),model.THINFILMTHICK);                 % [m] Film thickness
                         
                         if thick>model.THINFILMTHICK
-                            Fftot = film(tIdx).FTOT(mix(tIdx),drop(tIdx),zIdx);                        % [N/m^2] Momentum exchange terms with film
+                            Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                        % [N/m^2] Momentum exchange terms with film
                             Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
                             Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                         % [m/s] Keep within realistic bounds to help convergence
                             film(tIdx).U(zIdx,:) = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;  % [m/s] Apply relaxation
                             film(tIdx).U(zIdx,:) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),film(tIdx).U(zIdx,:),zIdx);
                         else
-                            film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(mix(tIdx),drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
+                            film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
                         end
                         
                         %Uiter = film(tIdx).U(zIdx,:);
@@ -165,23 +165,23 @@ function solver(solveINIT)
                 switch model.MOMENTDROP
                     case InputEnums.MOMENTDROP.SLIP
                     % Velocity slip model
-                        drop(tIdx).U(zIdx) = drop(tIdx).USLIP(mix(tIdx),zIdx);                    % [m/s] Drop velocity
+                        drop(tIdx).U(zIdx) = drop(tIdx).USLIP(zIdx);                    % [m/s] Drop velocity
                     
                     case InputEnums.MOMENTDROP.ALGEBRAIC
                     % Model consistent with mixture model
-                        drop(tIdx).U(zIdx) = drop(tIdx).UALGEBR(film(tIdx),mix(tIdx),zIdx);       % [m/s] Drop velocity
+                        drop(tIdx).U(zIdx) = drop(tIdx).UALGEBR(film(tIdx),zIdx);       % [m/s] Drop velocity
                         
                     case InputEnums.MOMENTDROP.EQUILIBRIUMS
                     % Simple equilibrium model (Fdrag + Fgrav + Fbuoy = 0)
-                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(mix(tIdx),film(tIdx),zIdx,1);      % [m/s] Drop velocity 
+                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(film(tIdx),zIdx,1);      % [m/s] Drop velocity 
                         
                     case InputEnums.MOMENTDROP.EQUILIBRIUM
                     % Complete equilibrium model (Ftot = 0)
-                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(mix(tIdx),film(tIdx),zIdx);        % [m/s] Drop velocity      
+                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(film(tIdx),zIdx);        % [m/s] Drop velocity      
                         
                     case InputEnums.MOMENTDROP.FULL
                     % Full drop momentum conservation
-                        Fdtot = drop(tIdx).FTOT(mix(tIdx),film(tIdx),zIdx);                       % [N/m^3] Momentum exchange terms with drop
+                        Fdtot = drop(tIdx).FTOT(film(tIdx),zIdx);                       % [N/m^3] Momentum exchange terms with drop
                         Udnew = (Udups.*Uditer+Udold.*DZ./DT+Fdtot.*DZ./RHOF)./(Uditer+DZ/DT);    % [m/s] Update velocity
                         drop(tIdx).U(zIdx) = (1-options.RELAXUD).*Uditer+options.RELAXUD.*Udnew;  % [m/s] Apply relaxation
                         drop(tIdx).U(zIdx) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),drop(tIdx).U(zIdx),zIdx);

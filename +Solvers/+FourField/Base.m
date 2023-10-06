@@ -58,7 +58,7 @@ classdef Base < Solvers.AbstractFilm
             % epsilon is NaN iff film.W == 0, i.e. dry
             % in this case, deposit on base
             % TODO: In NEGFILM case ...
-            epsilon(isnan(epsilon)) = 1.0;makitatabl 
+            epsilon(isnan(epsilon)) = 1.0; 
         end
         
         function beta = BETA(base, zIdx)
@@ -68,7 +68,8 @@ classdef Base < Solvers.AbstractFilm
 
             % TODO: for now, assume no wave
             % TODO: add as model option later
-            beta = 0.9;
+            % beta = 0.9;
+            beta = 1-base.film.wave.BETA(zIdx);
         end
 
         function betap = BETAP(base, zIdx)
@@ -81,13 +82,13 @@ classdef Base < Solvers.AbstractFilm
             betap = base.BETA(zIdx);
         end
         
-        function ment = MENT(base,mix,zIdx)
+        function ment = MENT(base, zIdx)
         %MENT Base entrainment mass flux
         %
-            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: use coefficient later
-            ment =  0.0 .* base.film.MENT(mix,zIdx);            
+            ment =  0.0 .* base.film.MENT(zIdx);            
         end
 
         function mevap = MEVAP(base, zIdx)
@@ -108,70 +109,70 @@ classdef Base < Solvers.AbstractFilm
             eta = base.EPSILON(zIdx);
         end
         
-        function Mtot = MTOT(base,mix,drop,zIdx)
+        function Mtot = MTOT(base,drop,zIdx)
         %MTOT Total
-        %
-            if nargin < 4, zIdx = (1:base(1).NZ).'; end
-            
-            % TODO: 
-            Mtot  = base.MEVAP(zIdx)+base.MENT(mix,zIdx)+ base.ETA(zIdx).*drop.MDEP(mix,zIdx);
-        end
-
-        function Mwave = MWAVE(base,mix,drop,zIdx)
-        %MWAVE Mass flux interaction with wave
-        %
-            if nargin < 4, zIdx = (1:base(1).NZ).'; end
-
-            rho_ls = base.fluid.RHOF;
-            relaxWB = base.inputSet.options.RELAXWB;
-            Mwave = -base.ETA(zIdx).*drop.MDEP(mix,zIdx) + base.MEVAP(zIdx) + rho_ls.*(base.EQTHICK(mix,zIdx)-base.THICK(zIdx))./relaxWB;
-
-        end
-        
-        function Fwave = FWAVE(base,mix,zIdx)
-        %FWAVE Wave force
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
+            % TODO: potentially move the MDEP method
+            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+ base.ETA(zIdx).*drop.MDEP(zIdx);
+        end
+
+        function Mwave = MWAVE(base,drop,zIdx)
+        %MWAVE Mass flux interaction with wave
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            rho_ls = base.fluid.RHOF;
+            relaxTB = base.inputSet.model.RELAXTB;
+            Mwave = -base.ETA(zIdx).*drop.MDEP(zIdx) + base.MEVAP(zIdx) + rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+
+        end
+        
+        function Fwave = FWAVE(base,zIdx)
+        %FWAVE Wave force
+        %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+            
             %TODO: add model option
-            Fwave = base.film.wave.BETA().*base.FVAPOR(mix,zIdx); % [N/m^2]
+            Fwave = base.film.wave.BETA().*base.FVAPOR(zIdx); % [N/m^2]
             
         end
 
-        function Fvapor = FVAPOR(base,mix,zIdx)
+        function Fvapor = FVAPOR(base,zIdx)
         %FVAPOR Film vapor shear stress
         %
             
-            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: debug syntax
-            Fvapor = base.BETA().* FVAPOR@Solvers.AbstractFilm(base,mix,zIdx); % [N/m^2]
+            Fvapor = base.BETA().* FVAPOR@Solvers.AbstractFilm(base,wave.film.mix,zIdx); % [N/m^2]
             
         end
 
-        function Ftot = FTOT(base,mix,drop,zIdx)
-        %FTOT Total
-        %
-            if nargin < 4, zIdx = (1:base(1).NZ).'; end
-            
-            Ftot  = base.FWALL(mix,zIdx)+base.FWAVE(mix,zIdx)+base.FVAPOR(mix,zIdx)+base.FBUOY(mix,zIdx)+base.FGRAV(mix,zIdx)+base.FDEP(mix,drop,zIdx);   
-            
-        end
-
-        function eqthick = EQTHICK(base,mix,zIdx)
+        function Ftot = FTOT(base,drop,zIdx)
         %FTOT Total
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            
+            Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);   
+            
+        end
+
+        function eqthick = EQTHICK(base,zIdx)
+        %EQTHICK Base equilibrium thickness
+        %   
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             D_H = base.inputSet.geometry.HDIAM();
             coefs = base.inputSet.model.BASEEQTHICKCOEF;
-            Re_v = mix.vapor.RE(zIdx);
+            Re_v = base.film.mix.vapor.RE(zIdx);
             Re_f = base.film.RE(zIdx);
             eqthick = D_H .* coefs(1) .* (Re_v.^coefs(2)) .* (Re_f.^coefs(3));
             
+            % Limit eqthick to 1/2 of D_H, at most
+            eqthick = min(eqthick, D_H/2);
         end     
-        
-        
         
 
         function copyFlowProperties(srcObj, targetObj, opts)

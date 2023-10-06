@@ -7,9 +7,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         DZ           (1,1) double  {mustBeNumeric}                          =0                   % [m] Axial step size
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
-     end
-
-    
+        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN
+    end
+   
 
     methods
         
@@ -54,13 +54,13 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             re = abs(4.*film.WL(zIdx)./muf);                               % [-] Film Reynolds number
         end
         
-        function ment = MENT(film,mix,zIdx)
+        function ment = MENT(film,zIdx)
         %MENT Film entrainment mass flux
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
-            vapor = mix.vapor;
+            vapor = film.mix.vapor;
             rhof  = film.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
             rhog  = film.fluid.RHOG;                                       % [kg/m^3] Saturated vapor density
             muf   = film.fluid.MUF;                                        % [kg/m^3] Saturated liquid viscosity
@@ -104,29 +104,29 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                         disp('Okawa correlation : not converged')
                     end
                     
-                    entnum = Cv.*rhog.*mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
+                    entnum = Cv.*rhog.*film.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
                     ment = (ke*rhof).*entnum.*(rhof/rhog)^n;               % [kg/m^2/s] Entrainment mass flux
                     ment(film.RE(zIdx)<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
             end
             
             ment(negfilm)=-ment(negfilm);
-            ment = -mix.AFDISTR(0,ment,zIdx);                              % [kg/m^2/s] Entrainment mass flux, in annular flow region only
+            ment = -film.mix.AFDISTR(0,ment,zIdx);                              % [kg/m^2/s] Entrainment mass flux, in annular flow region only
 
         end
         
-        function Mtot = MTOT(film,mix,drop,zIdx)
+        function Mtot = MTOT(film,drop,zIdx)
         %MTOT Total
         %
-            if nargin < 4, zIdx = (1:film(1).NZ).'; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             %TODO: incorporate mix as a property?
-            Mtot  = film.MEVAP(zIdx,:)+film.MENT(mix,zIdx)+drop.MDEP(mix,zIdx);   
+            Mtot  = film.MEVAP(zIdx,:)+film.MENT(zIdx)+drop.MDEP(zIdx);   
         end
         
-        function Cw = CW(film,mix,zIdx)
+        function Cw = CW(film,zIdx)
         %CW Wall friction factor
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
             C = 0.005;                                                     % Constant friction factor
@@ -141,23 +141,23 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                     Cw = film.CW_LAM_CALC(zIdx, C);                         % Call private method
             end
             
-            Cw  = mix.AFDISTR(0,Cw,zIdx);
+            Cw  = film.mix.AFDISTR(0,Cw,zIdx);
             
         end
         
-        function Fwall = FWALL(film,mix,zIdx)
+        function Fwall = FWALL(film,zIdx)
         %FWALL Film wall shear stress
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
-            Fwall  = -0.5.*film.CW(mix,zIdx).*film.fluid.RHOF.*film.U(zIdx,:).^2; % [N/m^2]
+            Fwall  = -0.5.*film.CW(zIdx).*film.fluid.RHOF.*film.U(zIdx,:).^2; % [N/m^2]
             
         end
         
-        function Cv = CV(film,mix,zIdx)
+        function Cv = CV(film,zIdx)
         %CV Film/vapor interfacial friction factor
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
             nwall = film.inputSet.geometry.NWALL;                          % Number of walls
@@ -170,7 +170,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                     
                 case InputEnums.VAPORFRIC.WALLIS
                     %
-                    vf = mix.vapor.VF(zIdx);                               % [-]
+                    vf = film.mix.vapor.VF(zIdx);                               % [-]
                     Cv = C.*(1+75.*(1-vf));                                % [-]
                     Cv = repmat(Cv,1,nwall);                               % [-]
                     
@@ -180,139 +180,139 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                     Cv = film.CV_WALLISTHICK_CALC(thick,C);                 % Call private method
             end
             
-            Cv  = mix.AFDISTR(0,Cv,zIdx);   
+            Cv  = film.mix.AFDISTR(0,Cv,zIdx);   
             
         end
         
-        function Fvapor = FVAPOR(film,mix,zIdx)
+        function Fvapor = FVAPOR(film,zIdx)
         %FVAPOR Film vapor shear stress
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
-            UVAP = mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
+            UVAP = film.mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
             
-            Fvapor = 0.5.*film.CV(mix,zIdx).*film.fluid.RHOG.*(UVAP-film.U(zIdx,:)).^2; % [N/m^2]
+            Fvapor = 0.5.*film.CV(zIdx).*film.fluid.RHOG.*(UVAP-film.U(zIdx,:)).^2; % [N/m^2]
             
         end
         
-        function Fbuoy = FBUOY(film,mix,zIdx)
+        function Fbuoy = FBUOY(film,zIdx)
         %FBUOY Film buoyancy
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
-            DPDZ = -mix.DP.Tot(zIdx)/film.DZ;                              % [Pa/m] Pressure gradient
+            DPDZ = -film.mix.DP.Tot(zIdx)/film.DZ;                              % [Pa/m] Pressure gradient
             
             Fbuoy = -thick.*(DPDZ);                                        % [N/m^2]
             
-            Fbuoy = mix.AFDISTR(0,Fbuoy,zIdx);   
+            Fbuoy = film.mix.AFDISTR(0,Fbuoy,zIdx);   
             
         end
         
-        function Fgrav = FGRAV(film,mix,zIdx)
+        function Fgrav = FGRAV(film,zIdx)
         %FGRAV Film gravity
         %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             model = film.inputSet.model;
             thick = abs(film.THICK(zIdx));                                 % [m] Film thickness
             
             Fgrav = -thick.*(model.G*cos(model.ANGLE*pi/180)*film.fluid.RHOF); % [N/m^2]
             
-            Fgrav = mix.AFDISTR(0,Fgrav,zIdx);
+            Fgrav = film.mix.AFDISTR(0,Fgrav,zIdx);
 
         end
         
-        function Fdep = FDEP(film,mix,drop,zIdx)
+        function Fdep = FDEP(film,drop,zIdx)
         %FDEP Drop deposition shear
         %
-            if nargin < 4, zIdx = (1:film(1).NZ).'; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
-            dep  = drop.MDEP(mix,zIdx);                                    % [kg/m^2/s] Drop deposition mass flux
+            dep  = drop.MDEP(zIdx);                                    % [kg/m^2/s] Drop deposition mass flux
             
             Fdep = (drop.U(zIdx)-film.U(zIdx,:)).*dep;                     % [N/m^2]
             
-            Fdep = mix.AFDISTR(0,Fdep,zIdx);   
+            Fdep = film.mix.AFDISTR(0,Fdep,zIdx);   
             
         end
         
-        function Ftot = FTOT(film,mix,drop,zIdx)
+        function Ftot = FTOT(film,drop,zIdx)
         %FTOT Total
-        %
-            if nargin < 4, zIdx = (1:film(1).NZ).'; end
-            
-            %Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx)+film.FBUOY(mix,zIdx)+film.FDEP(mix,drop,zIdx);   
-            Ftot  = film.FWALL(mix,zIdx)+film.FVAPOR(mix,zIdx)+film.FBUOY(mix,zIdx)+film.FGRAV(mix,zIdx)+film.FDEP(mix,drop,zIdx);   
-            
-        end
-        
-        function Ualgebr = UALGEBR(film,mix,zIdx)
-        %UALGEBR Film velocity based on simple algebraic model
         %
             if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
-            TAUW  = mix.TAUW(zIdx);                                        % [Pa] Wall shear stress
-            Cw = film.CW(mix,zIdx);
+            %Ftot  = film.FWALL(zIdx)+film.FVAPOR(zIdx)+film.FBUOY(zIdx)+film.FDEP(drop,zIdx);   
+            Ftot  = film.FWALL(zIdx)+film.FVAPOR(zIdx)+film.FBUOY(zIdx)+film.FGRAV(zIdx)+film.FDEP(drop,zIdx);   
+            
+        end
+        
+        function Ualgebr = UALGEBR(film,zIdx)
+        %UALGEBR Film velocity based on simple algebraic model
+        %
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
+            
+            TAUW  = film.mix.TAUW(zIdx);                                        % [Pa] Wall shear stress
+            Cw = film.CW(zIdx);
             
             Ualgebr = sqrt((2*TAUW/film.fluid.RHOF)./Cw);                  % [m/s] 
             
-            Ualgebr  = mix.AFDISTR(mix.liquid.U(zIdx),Ualgebr,zIdx);  
+            Ualgebr  = film.mix.AFDISTR(film.mix.liquid.U(zIdx),Ualgebr,zIdx);  
             
         end
         
-        function Uequil = UEQUILS(film,mix,zIdx)
+        function Uequil = UEQUILS(film,zIdx)
             %UEQUILS Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
             %
-            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 2, zIdx = (1:film(1).NZ).'; end
             
             iter(1).U = film.U(zIdx,:);
-            iter(1).Ftot = film.FVAPOR(mix,zIdx)+film.FWALL(mix,zIdx);
+            iter(1).Ftot = film.FVAPOR(zIdx)+film.FWALL(zIdx);
             
             iter(2).U = iter(1).U+0.1;
             film.U(zIdx,:)=iter(2).U;
-            iter(2).Ftot = film.FVAPOR(mix,zIdx)+film.FWALL(mix,zIdx);
+            iter(2).Ftot = film.FVAPOR(zIdx)+film.FWALL(zIdx);
             
             eps = 1.0;
             for k = 3:100
                 Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
                 iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
                 film.U(zIdx,:)=iter(k).U;
-                iter(k).Ftot = film.FVAPOR(mix,zIdx)+film.FWALL(mix,zIdx);
+                iter(k).Ftot = film.FVAPOR(zIdx)+film.FWALL(zIdx);
                 err = max(abs(iter(k).Ftot),[],'all');
                 if err<1E-3, break; end
             end
             if err > 1E-3, disp('Film UEQUILS model : not converged')
             end
             
-            Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
+            Uequil = film.mix.AFDISTR(film.mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
             
         end
         
-        function Uequil = UEQUIL(film,mix,drop,zIdx)
+        function Uequil = UEQUIL(film,drop,zIdx)
             %UEQUIL Film velocity based on complete equilibrium model (Ftot = 0)
             %
-            if nargin < 4, zIdx = (1:film(1).NZ).'; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
             
             iter(1).U = film.U(zIdx,:);
-            iter(1).Ftot = film.FTOT(mix,drop,zIdx);
+            iter(1).Ftot = film.FTOT(drop,zIdx);
             
             iter(2).U = iter(1).U+0.1;
             film.U(zIdx,:)=iter(2).U;
-            iter(2).Ftot = film.FTOT(mix,drop,zIdx);
+            iter(2).Ftot = film.FTOT(drop,zIdx);
             
             eps = 1.0;
             for k = 3:100
                 Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
                 iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
                 film.U(zIdx,:)=iter(k).U;
-                iter(k).Ftot = film.FTOT(mix,drop,zIdx);
+                iter(k).Ftot = film.FTOT(drop,zIdx);
                 err = max(abs(iter(k).Ftot),[],'all');
                 if err<1E-3, break; end
             end
             if err > 1E-3, disp('Film UEQUIL model : not converged')
             end
             
-            Uequil = mix.AFDISTR(mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
+            Uequil = film.mix.AFDISTR(film.mix.liquid.U(zIdx),film.U(zIdx,:),zIdx);
             
         end
 

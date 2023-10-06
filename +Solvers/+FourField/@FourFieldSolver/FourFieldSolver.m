@@ -45,16 +45,16 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % Call abstract class constructor
             ffSolver = ffSolver@Solvers.ThreeField.ThreeFieldSolver(inputSet,mixSolver);
             
-            % Store mixSolver handle
-            ffSolver.mixSolver = mixSolver;
-
-            % Attempt to solve mixSolver if it is unsolved
-            if ffSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
-                ffSolver.mixSolver.solve();
-            end
-            
-            % Initialize solver parameters
-            ffSolver.initializeSolver();
+            % % Store mixSolver handle
+            % ffSolver.mixSolver = mixSolver;
+            % 
+            % % Attempt to solve mixSolver if it is unsolved
+            % if ffSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
+            %     ffSolver.mixSolver.solve();
+            % end
+            % 
+            % % Initialize solver parameters
+            % ffSolver.initializeSolver();
 
         end
         
@@ -73,98 +73,104 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             end
             
             % Local parameters
-            mix   = ffSolver.mixSolver.mixture;                            % Mixture solution
-            model = ffSolver.inputSet.model;                               % Models
-            geom  = ffSolver.inputSet.geometry;                            % Geometry
+            mixArr = ffSolver.mixSolver.mixture;                            % Mixture solution
+            model  = ffSolver.inputSet.model;                               % Models
+            geom   = ffSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
-            ITRFields = ["N","DWL","DU"];
-            ITRf = ffSolver.CreateITR(ffSolver.NZ, ITRFields);
-            ITRFields = ["N","DU"];
-            ITRd = ffSolver.CreateITR(ffSolver.NZ, ITRFields);
+            ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU"]);
+            ITRd = ffSolver.CreateITR(ffSolver.NZ, ["N","DU"]);
 
             % Create film and drop arrays (by timestep)
-            flmArr = Film.empty(0,ffSolver.NTIME);
-            drpArr = Drop.empty(0,ffSolver.NTIME);
-            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid'};                 % film and drop properties
+            flmArr(ffSolver.NTIME) = Film();
+            drpArr(ffSolver.NTIME) = Drop();
+            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
             
             for tIdx = 1:ffSolver.NTIME
+
+                % Convenience variables (handles)
+                flm         = flmArr(tIdx);
+                drp         = drpArr(tIdx);
+                mix         = mixArr(tIdx);
+                fluid       = ffSolver.fluid(tIdx);
                 
                 % Inputset and fluid
-                drpArr(tIdx).inputSet = ffSolver.inputSet;
-                drpArr(tIdx).fluid    = ffSolver.fluid(tIdx);
-                flmArr(tIdx).inputSet = ffSolver.inputSet;
-                flmArr(tIdx).fluid    = ffSolver.fluid(tIdx);
+                flm.inputSet = ffSolver.inputSet;
+                flm.fluid    = fluid;
+
+                % Corresponding Mixture
+                flm.mix = mix;
                 
-                % Axial Steps                
-                flmArr(tIdx).NZ = ffSolver.NZ;
-                flmArr(tIdx).DZ = ffSolver.DZ;
-                flmArr(tIdx).Z  = ffSolver.Z;
+                % Axial step sizes             
+                flm.NZ = ffSolver.NZ;
+                flm.DZ = ffSolver.DZ;
+                flm.Z  = ffSolver.Z;
                 
                 % Time step
-                flmArr(tIdx).NTIME = ffSolver.NTIME;
-                flmArr(tIdx).DT    = ffSolver.DT;
-                flmArr(tIdx).TIME  = ffSolver.TIME(tIdx);
-                flmArr(tIdx).TIDX  = tIdx;
+                flm.NTIME = ffSolver.NTIME;
+                flm.DT    = ffSolver.DT;
+                flm.TIME  = ffSolver.TIME(tIdx);
+                flm.TIDX  = tIdx;
                 
                 % Copy properties to drop
                 for p = props
-                    drpArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
+                    drp.(p{:}) = flm.(p{:});
                 end
+
+                % ITR
+                drp.ITR = ITRd;
                    
                 % Wall evaporation heat flux
-                HFLUX = mix(tIdx).HFLUX;                                   % [W/m^2] Wall heat flux
+                HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
                 
-                evapFn = double(mix(tIdx).XEQ > 0);                        % Saturated evaporation function
+                evapFn = double(mix.XEQ > 0);                              % Saturated evaporation function
                 Nbo = find(evapFn > 0,1);                                  % Boiling transition node
                 if Nbo >1
-                    evapFn(Nbo) = mix(tIdx).XEQ(Nbo)/diff(mix(tIdx).XEQ(Nbo-1:Nbo)); % Adjust evaporation function in transition node (part toward subcooled liquid, part toward evaporation)
+                    % Adjust evaporation function in transition node 
+                    % (part toward subcooled liquid, part toward evaporation)
+                    evapFn(Nbo) = mix.XEQ(Nbo)/diff(mix.XEQ(Nbo-1:Nbo)); 
                 end
                 
-                flmArr(tIdx).HFLUX = mix(tIdx).AFDISTR(evapFn.*avgHFLUX,HFLUX); % [W/m^2] Film evaporation heat flux
+                flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX);           % [W/m^2] Film evaporation heat flux
                     
                 % Film evaporation (thermal equilibrium assumption)
-                flmArr(tIdx).MEVAP = -flmArr(tIdx).HFLUX./(ffSolver.fluid(tIdx).HG-ffSolver.fluid(tIdx).HF); % [kg/m^2/s] Evaporation mass flux
+                flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
                 
                 % Entrained ratio at onset of annular flow
                 switch model.OAFENTRAINED
                     case InputEnums.OAFENTRAINED.RATIO
                         e0 = model.OAFDROPRATIO;
                     case InputEnums.OAFENTRAINED.EQUILIBRIUM
-                        e0 = ffSolver.EQUIL(flmArr(tIdx),drpArr(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
+                        % TODO: this does not work yet.
+                        e0 = ffSolver.EQUIL(flm,drp,mix,mix.OAFIDX);
                 end
 
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                drpArr(tIdx).W = repmat(e0.*mix(tIdx).OAFWL,ffSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
+                drp.W = repmat(e0.*mix.OAFWL,ffSolver.NZ,1);               % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
 
                 % Transient mass gradient in drop field
-                drpArr(tIdx).W = drpArr(tIdx).W+mix(tIdx).W-mix(tIdx).W(mix(tIdx).OAFIDX);                                 %
+                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);
                 
                 % Transient mass gradient in film.base and film.wave
                 % and recalculate drop mass flow rate
-                flmArr(tIdx).initializeBaseAndWave( ...
-                                mix(tIdx), ...                                  % Corresponding Mixture
-                                mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1), ...    % Inlet flow rate (all walls)
-                                ITRf ...                                        % Iteration struct
+                flm.initializeBaseAndWave( ...
+                                mix.liquid.W(1)-drp.W(1), ...              % Inlet flow rate (all walls)
+                                ITRf ...                                   % Iteration struct
                              );
-                drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
+                drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
                 
                 % Initialize velocity [m/s]
-                %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
-                drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));             % [m/s] Drop velocity
+                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
+                drp.U = drp.USLIP();                                        % [m/s] Drop velocity
                 
-                %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
+                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
                                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-                drpArr(tIdx).H = repmat(ffSolver.fluid(tIdx).HF,ffSolver.NZ,1);
-                
-                % ITR
-                % TODO: revisit, clean up
-                drpArr(tIdx).ITR = ITRd;
+                drp.H = repmat(fluid.HF,ffSolver.NZ,1);                
 
             end
 
@@ -178,7 +184,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             ffSolver.dropInit = copy( ...
                 repmat(drpArr(1),1,ffSolver.inputSet.options.SSMAXITER));
             
-
+            % Steady state fluidProperties
             ffSolver.fluidInit = FluidProperties( ...
                                     repmat( ...
                                         ffSolver.boundaryConditions.PRESSURE(1), ...
@@ -199,13 +205,21 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver.filmInit(i).NTIME = initNTIME;
                 ffSolver.filmInit(i).TIDX = initTIDX(i);
 
+                % Make copy of last mixtureInit
+                ffSolver.filmInit(i).mix       = copy(ffSolver.mixSolver.mixtureInit(end));
+                ffSolver.filmInit(i).mix.TIME  = initTIME(i);
+                ffSolver.filmInit(i).mix.DT    = initTIMEDT;
+                ffSolver.filmInit(i).mix.NTIME = initNTIME;
+                ffSolver.filmInit(i).mix.TIDX  = initTIDX(i);
+
                 % Initialize base and wave in each film
                 ffSolver.filmInit(i).initializeBaseAndWave();
 
-                ffSolver.dropInit(i).TIME = initTIME(i);
-                ffSolver.dropInit(i).DT = initTIMEDT;
-                ffSolver.dropInit(i).NTIME = initNTIME;
-                ffSolver.dropInit(i).TIDX = initTIDX(i);
+                ffSolver.dropInit(i).mix    = ffSolver.filmInit(i).mix;
+                ffSolver.dropInit(i).TIME   = initTIME(i);
+                ffSolver.dropInit(i).DT     = initTIMEDT;
+                ffSolver.dropInit(i).NTIME  = initNTIME;
+                ffSolver.dropInit(i).TIDX   = initTIDX(i);
                 
             end
 
@@ -234,7 +248,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet ass flowrate
                 flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
-                delta(k) = drp.MDEP(mix,zIdx).*sum(perim)+sum(flm.MENT(mix,zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
+                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
                 err = abs(delta(k));
                 if err < 1E-4, break; end
             end
@@ -246,28 +260,29 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
         end
 
-        function plotz(tfSolver, tIdx, opt)
+        function plotz(ffSolver, tIdx, opt)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
             arguments
-                tfSolver
+                ffSolver
                 tIdx    (1,1) double
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
             end
         
             switch opt.solveMode
                 case 'TRANSIENT'
-                    flm = tfSolver.film(tIdx);
-                    drp = tfSolver.drop(tIdx);
+                    flm = ffSolver.film(tIdx);
+                    drp = ffSolver.drop(tIdx);
                 case 'STEADY'
-                    flm = tfSolver.filmInit(tIdx);
-                    drp = tfSolver.dropInit(tIdx);
+                    flm = ffSolver.filmInit(tIdx);
+                    drp = ffSolver.dropInit(tIdx);
+                    tIdx = 1;
             end
             
-            bc  = tfSolver.boundaryConditions;
-            mix = tfSolver.mixSolver.mixture(tIdx);
-            z   = tfSolver.Z;
-            figure('name',['Axial distributions of four-field parameters at ' num2str(flm.TIME) ' [s]'])
+            bc  = ffSolver.boundaryConditions;
+            mix = flm.mix;
+            z   = ffSolver.Z;
+            figure('name',sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode))
             
             nexttile; hold all; grid on; title('Wall heat flux')
             plot(z,bc.HFLUX(:,:,tIdx),'s-')
@@ -287,7 +302,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Field mass flowrate [kg/s]')
-            legend({'Mixture Liquid','Drop + Film','Drop','Film','Base','Wave'},'location','northEast')
+            legend({'Mixture Liquid','Drop + Film','Drop','Film','Base','Wave'},'location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film mass flow rates per unit perimeter')
@@ -297,7 +312,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Film mass flowrate [kg/s/m]')
-            legend({'Film','Base','Wave'},'location','northEast')
+            legend({'Film','Base','Wave'},'location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Field velocities')
@@ -309,52 +324,72 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Field velocity [m/s]')
-            legend({'Mixture Liquid','Drop','Film','Base','Wave'},'location','southEast')
+            legend({'Mixture Liquid','Drop','Film','Base','Wave'},'location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film thicknesses')
-            plot(z,flm.THICK,'.-')
-            plot(z,flm.base.THICK,'.--')
-            plot(z,flm.wave.THICK,'s--')
+            plot(z,flm.THICK,'.-', 'DisplayName', 'Film')
+            plot(z,flm.base.THICK,'.--', 'DisplayName', 'Base')
+            plot(z,flm.wave.THICK,'s--', 'DisplayName', 'Wave')
+            plot(z,flm.base.EQTHICK(),'.--', 'DisplayName', 'Base Eq')
+            plot(z,flm.wave.AMP(),'s--', 'DisplayName', 'Wave Amp')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Film thickness [m]')
-            legend({'Film','Base','Wave'},'location','northEast')
+            legend('show','location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film mass exchanges')
-            plot(z,drp.MDEP(mix),'o-')
-            plot(z,flm.MENT(mix),'.-')
+            plot(z,drp.MDEP(),'o-')
+            plot(z,flm.MENT(),'.-')
             plot(z,flm.MEVAP,'+-')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Mass flux [kg/s/m^2]')
-            legend({'Drop deposition','Film entrainment','Film evaporation'},'location','northEast')
+            legend({'Drop deposition','Film entrainment','Film evaporation'},'location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film momentum exchanges')
-            plot(z,flm.FDEP(mix,drp),'o-')
-            plot(z,flm.FWALL(mix),'.-')
-            plot(z,flm.FVAPOR(mix),'.-')
-            plot(z,flm.FBUOY(mix),'.-')
-            plot(z,flm.FGRAV(mix),'.-')
-            plot(z,flm.FTOT(mix,drp),'k--')
+            plot(z,flm.FDEP(drp),'o-')
+            plot(z,flm.FWALL(),'.-')
+            plot(z,flm.FVAPOR(),'.-')
+            plot(z,flm.FBUOY(),'.-')
+            plot(z,flm.FGRAV(),'.-')
+            plot(z,flm.FTOT(drp),'k--')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Shear stress [N/m^2]')
-            legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','northEast')
+            legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Drop momentum exchanges')
-            plot(z,drp.FENT(mix,flm),'o-')
-            plot(z,drp.FDRAG(mix),'.-')
-            plot(z,drp.FBUOY(mix),'.-')
-            plot(z,drp.FGRAV(mix),'.-')
-            plot(z,drp.FTOT(mix,flm),'k--')
+            plot(z,drp.FENT(flm),'o-')
+            plot(z,drp.FDRAG(),'.-')
+            plot(z,drp.FBUOY(),'.-')
+            plot(z,drp.FGRAV(),'.-')
+            plot(z,drp.FTOT(flm),'k--')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Force density [N/m^3]')
-            legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','northEast')
+            legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','best')
+            set(gca,'fontSize',14)
+
+            nexttile; hold all; grid on; title('Wave axial lengths')
+            plot(z,flm.wave.SPACING(),'o-', 'DisplayName', 'Spacing')
+            plot(z,flm.wave.WIDTH(),'.-', 'DisplayName', 'Width')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Axial length [m]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+
+            nexttile; hold all; grid on; title('Wave frequencies')
+            plot(z,flm.wave.FREQ(),'o-', 'DisplayName', 'Non-equilibrium')
+            plot(z,flm.wave.EQFREQ(),'.-', 'DisplayName', 'Equilibrium')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Frequency [Hz]')
+            legend('show','location','best')
             set(gca,'fontSize',14)
             
 %             nexttile; hold all; grid on; title('Base mass exchanges')
