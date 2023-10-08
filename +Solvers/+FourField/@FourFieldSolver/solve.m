@@ -283,12 +283,12 @@ function solver(solveINIT)
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
-            if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF, timeDUd < options.SSCONVUD] )
+            if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF,timeDWLw < options.SSCONVWF , timeDUw < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
-                ffSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
+                ffSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
     
                 % Replace filmInit and dropInit with subset up to this tIdx
                 ffSolver.filmInit = ffSolver.filmInit(1:tIdx);
@@ -307,7 +307,7 @@ function solver(solveINIT)
                     % Replace filmInit and dropInit with subset up to this tIdx
                     ffSolver.filmInit = ffSolver.filmInit(1:tIdx);
                     ffSolver.dropInit = ffSolver.dropInit(1:tIdx);
-                    ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE      max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
+                    ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE      max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
                     ffSolver.log('\t\tIncreasing max inner loop iterations (options.MAXITER) may help.\r');
                     break;
                 end
@@ -321,7 +321,7 @@ function solver(solveINIT)
                 ffSolver.dropInit = ffSolver.dropInit(1:tIdx);
 
                 ffSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE      max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
+                ffSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE      max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
                 ffSolver.log('\t\tIncreasing steady state iterations (options.SSMAXITER) may help.\r');
                 break;
             end
