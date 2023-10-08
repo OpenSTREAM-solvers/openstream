@@ -55,7 +55,7 @@ classdef Base < Solvers.AbstractFilm
 
             epsilon = base.W(zIdx,:) ./ base.film.W(zIdx,:);
 
-            % epsilon is NaN iff film.W == 0, i.e. dry
+            % epsilon is NaN if film.W == 0, i.e. dry
             % in this case, deposit on base
             % TODO: In NEGFILM case ...
             epsilon(isnan(epsilon)) = 1.0; 
@@ -80,6 +80,7 @@ classdef Base < Solvers.AbstractFilm
             % assuming split according to interfacial fraction, BETA
             % TODO: add as model option later
             betap = base.BETA(zIdx);
+
         end
         
         function ment = MENT(base, zIdx)
@@ -104,9 +105,20 @@ classdef Base < Solvers.AbstractFilm
         %
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            % TODO: for now, assume no wave
             % TODO: add as model option later
-            eta = base.EPSILON(zIdx);
+            eta = base.EPSILON(zIdx).*base.BETA(zIdx);
+        end
+        
+        function Mwave = MWAVE(base,drop,zIdx)
+        %MWAVE Mass flux interaction with wave
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            rho_ls = base.fluid.RHOF;
+            relaxTB = base.inputSet.model.RELAXTB;
+            Mwave = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.ETA(zIdx).*drop.MDEP(zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+            
+            Mwave = base.film.mix.AFDISTR(0,Mwave,zIdx);
         end
         
         function Mtot = MTOT(base,drop,zIdx)
@@ -115,17 +127,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             % TODO: potentially move the MDEP method
-            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+ base.ETA(zIdx).*drop.MDEP(zIdx);
-        end
-
-        function Mwave = MWAVE(base,drop,zIdx)
-        %MWAVE Mass flux interaction with wave
-        %
-            if nargin < 3, zIdx = (1:base(1).NZ).'; end
-
-            rho_ls = base.fluid.RHOF;
-            relaxTB = base.inputSet.model.RELAXTB;
-            Mwave = -base.ETA(zIdx).*drop.MDEP(zIdx) + base.MEVAP(zIdx) + rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.ETA(zIdx).*drop.MDEP(zIdx)+base.MWAVE(drop,zIdx);
 
         end
         

@@ -315,6 +315,86 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             legend({'Film','Base','Wave'},'location','best')
             set(gca,'fontSize',14)
             
+            fields = {'base','wave'};
+            names = cellfun(@(x) [upper(x(1)) x(2:end)],fields,'uni',0);
+            wrapN = @(x) (1 + mod(x-1, length(fields)));
+            for i = 1:length(fields)
+                
+                ax(i) = nexttile; hold all; grid on; title([names{i} ' film mass exchanges'])
+                plot(z,flm.(fields{i}).ETA.*drp.MDEP(),'.-', 'DisplayName',[names{i} ' drop deposition'])
+                plot(z,flm.(fields{i}).MENT(),'.-', 'DisplayName',[names{i} ' film entrainment'])
+                plot(z,flm.(fields{i}).MEVAP(),'.-', 'DisplayName',[names{i} ' film evaporation'])
+                plot(z,flm.(fields{i}).(['M' upper(fields{wrapN(i+1)})])(drp),'.-', 'DisplayName',['Exchange from ' names{wrapN(i+1)}])
+                h0 = scatter(z,flm.(fields{i}).MTOT(drp),5,'k+', 'DisplayName','Total'); h0.MarkerEdgeAlpha=0.5;
+%                 set(gca,'ColorOrderIndex',1)
+%                 h1 = plot(z,drp.MDEP(),'--', 'DisplayName','Drop deposition'); h1.Color(4) = 0.3;
+%                 h2 = plot(z,flm.MENT(),'--', 'DisplayName','Film entrainment'); h2.Color(4) = 0.3;
+%                 h3 = plot(z,flm.MEVAP(),'--', 'DisplayName','Film evaporation'); h3.Color(4) = 0.3;
+%                 h4 = plot(z,flm.MTOT(drp),'k--', 'DisplayName','Total'); h4.Color(4) = 0.3;
+                plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off');
+                xlabel('Axial position [m]'); xlim(z([1 end]));
+                ylabel('Mass flux [kg/s/m^2]')
+                legend('show','location','best')
+                set(gca,'fontSize',14)
+                
+            end
+            linkaxes(ax);
+            
+            nexttile; hold all; grid on; title('Wave frequencies')
+            plot(z,flm.wave.FREQ(),'o-', 'DisplayName', 'Non-equilibrium')
+            plot(z,flm.wave.EQFREQ(),'.-', 'DisplayName', 'Equilibrium')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Frequency [Hz]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Film thicknesses')
+            plot(z,flm.THICK,'.-', 'DisplayName', 'Film')
+            plot(z,flm.base.THICK,'.--', 'DisplayName', 'Base')
+            plot(z,flm.wave.THICK,'s--', 'DisplayName', 'Wave')
+            plot(z,flm.base.EQTHICK(),'.--', 'DisplayName', 'Base Eq')
+            plot(z,flm.wave.AMP(),'s--', 'DisplayName', 'Wave Amp')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Film thickness [m]'); ylim([0 1E-3]);
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Wave axial lengths')
+            plot(z,flm.wave.SPACING(),'o-', 'DisplayName', 'Spacing')
+            plot(z,flm.wave.WIDTH(),'.-', 'DisplayName', 'Width')
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Axial length [m]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Base film fractions')
+            plot(z,flm.base.BETA(),'.-', 'DisplayName', 'Interfacial')
+            plot(z,flm.base.EPSILON(),'.-', 'DisplayName', 'Mass')
+            plot(z,flm.base.BETAP(),'o-', 'DisplayName', 'Heat flux')
+            plot(z,flm.base.ETA(),'.-', 'DisplayName', 'Deposition')
+            
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Fraction [-]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Wave fractions')
+            plot(z,flm.wave.BETA(),'.-', 'DisplayName', 'Interfacial')
+            plot(z,flm.wave.EPSILON(),'.-', 'DisplayName', 'Mass')
+            plot(z,flm.wave.BETAP(),'o-', 'DisplayName', 'Heat flux')
+            plot(z,flm.wave.ETA(),'.-', 'DisplayName', 'Deposition')
+            plot(z,flm.wave.SHAPEFACTOR(),'.-', 'DisplayName', 'Shape factor')
+            
+            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Fraction [-]'); ylim([0 1]);
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+            
             nexttile; hold all; grid on; title('Field velocities')
             plot(z,mix.liquid.U,'s')
             plot(z,drp.U,'o-')
@@ -326,29 +406,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             ylabel('Field velocity [m/s]')
             legend({'Mixture Liquid','Drop','Film','Base','Wave'},'location','best')
             set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on; title('Film thicknesses')
-            plot(z,flm.THICK,'.-', 'DisplayName', 'Film')
-            plot(z,flm.base.THICK,'.--', 'DisplayName', 'Base')
-            plot(z,flm.wave.THICK,'s--', 'DisplayName', 'Wave')
-            plot(z,flm.base.EQTHICK(),'.--', 'DisplayName', 'Base Eq')
-            plot(z,flm.wave.AMP(),'s--', 'DisplayName', 'Wave Amp')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Film thickness [m]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on; title('Film mass exchanges')
-            plot(z,drp.MDEP(),'o-')
-            plot(z,flm.MENT(),'.-')
-            plot(z,flm.MEVAP,'+-')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Mass flux [kg/s/m^2]')
-            legend({'Drop deposition','Film entrainment','Film evaporation'},'location','best')
-            set(gca,'fontSize',14)
-            
+                        
             nexttile; hold all; grid on; title('Film momentum exchanges')
             plot(z,flm.FDEP(drp),'o-')
             plot(z,flm.FWALL(),'.-')
@@ -373,34 +431,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             ylabel('Force density [N/m^3]')
             legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','best')
             set(gca,'fontSize',14)
-
-            nexttile; hold all; grid on; title('Wave axial lengths')
-            plot(z,flm.wave.SPACING(),'o-', 'DisplayName', 'Spacing')
-            plot(z,flm.wave.WIDTH(),'.-', 'DisplayName', 'Width')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Axial length [m]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
-
-            nexttile; hold all; grid on; title('Wave frequencies')
-            plot(z,flm.wave.FREQ(),'o-', 'DisplayName', 'Non-equilibrium')
-            plot(z,flm.wave.EQFREQ(),'.-', 'DisplayName', 'Equilibrium')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Frequency [Hz]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
-            
-%             nexttile; hold all; grid on; title('Base mass exchanges')
-%             plot(z,drp.MDEP(mix),'o-')
-%             plot(z,flm.base.MENT(mix),'.-')
-%             plot(z,flm.base.MEVAP,'+-')
-%             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-%             xlabel('Axial position [m]'); xlim(z([1 end]));
-%             ylabel('Mass flux [kg/s/m^2]')
-%             legend({'Drop deposition','Base entrainment','Base evaporation'},'location','northEast')
-%             set(gca,'fontSize',14)
 % 
 %             nexttile; hold all; grid on; title('Base momentum exchanges')
 %             plot(z,flm.base.FDEP(mix,drp),'o-')

@@ -142,8 +142,9 @@ function solver(solveINIT)
                 %     Mtot, mean(base(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), base(tIdx).MENT(zIdx));
 
                 if model.POSFILM
-                    base(tIdx).W(zIdx,:) = max(base(tIdx).W(zIdx,:),0);                       % [kg/s] 
-                    wave(tIdx).W(zIdx,:) = max(wave(tIdx).W(zIdx,:),0);                       % [kg/s] 
+                    filmW = film(tIdx).W(zIdx,:);                             % [kg/s] Save film flow
+                    wave(tIdx).W(zIdx,:) = max(wave(tIdx).W(zIdx,:),0);       % [kg/s] Wave flow is limited by 0
+                    base(tIdx).W(zIdx,:) = max(filmW-wave(tIdx).W(zIdx,:),0); % [kg/s] Base flow compensate for wave mass source/sink when needed and is limited by 0
                 end
 
                 % Drop mass conservation

@@ -27,7 +27,7 @@ classdef Model < Inputs.Input
         OAFENTRAINED  (1,1) InputEnums.OAFENTRAINED                        = 'RATIO'               % Entrained model at onset of annular flow [-]
         OAFDROPRATIO  (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}      = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
         
-        OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.04 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
+        OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.10 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION    (1,1) InputEnums.DEPOSITION                          = 'GOVAN'               % Drop deposition model [-]
         ENTRAINMENT   (1,1) InputEnums.ENTRAINMENT                         = 'GOVAN'               % Film entrainment model [-]   
         MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
@@ -43,7 +43,7 @@ classdef Model < Inputs.Input
         DROPDRAGCOEF  (1,1) double  {mustBePositive}                       = 0.45                  % Drop drag coefficient
 
         BASEEQTHICKCOEF (:,1) double  {mustBeNumeric}                      = [5.37E-5 -0.64 1.21]  % Base equilibrium thickness coefficient
-        RELAXTB         (:,1) double  {mustBePositive}                     = 1.0                   % Wave drag coefficient
+        RELAXTB         (:,1) double  {mustBePositive}                     = 0.2                   % Base film relaxation time
 
         SHAPEFACTORCOEF (:,1) double {mustBeNumeric}                       = [1.325E5 2]           % Wave shape factor coefficients
         EQSTROUHALCOEF  (:,1) double {mustBeNumeric}                       = [1.1236E-4 0.5]       % Wave equilibrium Strouhal coefficients

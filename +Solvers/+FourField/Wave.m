@@ -84,8 +84,7 @@ classdef Wave < Solvers.AbstractFilm
                 % ...
                 epsilon = wave.EPSILON(zIdx);
                 beta(isnan(beta)) = epsilon(isnan(beta));
-                beta(wave.W(zIdx,:)<=0) = 0.0;
-                beta = 0.1;
+                %beta(:) = 0.6;
             end
 
             % Apply BETA to distribution
@@ -98,6 +97,7 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             epsilon = wave.W(zIdx, :) ./ wave.film.W(zIdx, :);
+            epsilon(wave.W(zIdx,:)<=0) = 0.0;
         end
 
         function betap = BETAP(wave, zIdx)
@@ -130,17 +130,25 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            % TODO: for now, assume no wave
-            % TODO: add as model option later
             eta = 1-wave.film.base.ETA(zIdx);
         end
-                
+        
+        function Mbase = MBASE(wave,drop,zIdx)
+        %MWAVE Mass flux interaction with wave
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+
+            Mbase = -wave.film.base.MWAVE(drop,zIdx);
+
+        end
+        
         function Mtot = MTOT(wave,drop,zIdx)
         %MTOT Total mass flux
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
-            Mtot  = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx);   
+            Mtot  = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx);
+            
         end
 
         function shapefactor = SHAPEFACTOR(wave, zIdx)
@@ -169,7 +177,7 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            % Hydrualic diameter
+            % Hydraulic diameter
             d_h = wave.inputSet.geometry.HDIAM();
             % Solve eqfreq using definition of St
             eqfreq = wave.EQSTROUHAL(zIdx).*wave.film.mix.vapor.U(zIdx)./d_h;
@@ -215,15 +223,14 @@ classdef Wave < Solvers.AbstractFilm
         
         function wwidth = WIDTH(wave, zIdx)
         %WIDTH Wave width
-        %   Function of W, perimeter, rho, Shape factor, frequency
+        %   Function of amplitude, Shape factor
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
-            rhof  = wave.fluid.RHOF;
-            wwidth = wave.WL(zIdx)./(rhof .* wave.SHAPEFACTOR(zIdx) .* wave.FREQ(zIdx));
-            wwidth = sqrt(abs(wwidth));
+            wwidth = wave.AMP(zIdx)./wave.SHAPEFACTOR(zIdx);
 
-            % if wwidth isnan, set to 0
-            wwidth(isnan(wwidth)) = 0.0;
+            % if wwidth isnan, set to wave spacing
+            spacing = wave.SPACING(zIdx);
+            wwidth(isnan(wwidth)) = spacing(isnan(wwidth));
 
             % Limit width to be no larger than the spacing
             wwidth = min(wwidth, wave.SPACING(zIdx));
@@ -232,10 +239,16 @@ classdef Wave < Solvers.AbstractFilm
 
         function amp = AMP(wave, zIdx)
         %AMP Wave amplitude
-        %   Function of W, perimeter, rho, Shape factor, frequency
+        %   Function of WL, rho, Shape factor, frequency
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            amp = wave.SHAPEFACTOR(zIdx) .* wave.WIDTH(zIdx);
+            rhof = wave.fluid.RHOF;
+            amp = (wave.WL(zIdx).* wave.SHAPEFACTOR(zIdx))./(rhof.* wave.FREQ(zIdx));
+            amp = sqrt(abs(amp));
+            
+            % Limit amp+base.thick to 1/2 of D_H, at most
+            D_H = wave.inputSet.geometry.HDIAM();
+            amp = min(amp, D_H/2-wave.film.base.THICK(zIdx));
 
         end
 
