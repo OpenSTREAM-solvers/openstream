@@ -106,9 +106,11 @@ function solver(solveINIT)
     
             Wwold = wave(tIdx-1).W(zIdx,:);                                % [kg/s] Wave mass flow rate at previous time step
             Uwold = wave(tIdx-1).U(zIdx,:);                                % [m/s] Wave velocity at previous time step
+            Fwold = wave(tIdx-1).FREQUENCY(zIdx,:);                        % [Hz] Wave frequency at previous time step
             Wwups = wave(tIdx).W(zIdx-1,:);                                % [kg/s] Wave mass flow rate at previous node
             Uwups = wave(tIdx).U(zIdx-1,:);                                % [m/s] Wave velocity at previous node
-
+            Fwups = wave(tIdx).FREQUENCY(zIdx-1,:);                        % [Hz] Wave frequency at previous node
+            
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
             
@@ -116,15 +118,16 @@ function solver(solveINIT)
             for itr = 1:options.MAXITER
                 
                 % Save primary parameters from previous point iteration
-                Wbiter = base(tIdx).W(zIdx,:);                             % [kg/s] Base mass flow rate
+                Wbiter  = base(tIdx).W(zIdx,:);                            % [kg/s] Base mass flow rate
                 WLbiter = base(tIdx).WL(zIdx);                             % [kg/s/m] Base mass flow rate per unit perimeter
-                Ubiter = base(tIdx).U(zIdx,:);                             % [m/s] Base velocity
+                Ubiter  = base(tIdx).U(zIdx,:);                            % [m/s] Base velocity
 
-                Wwiter = wave(tIdx).W(zIdx,:);                             % [kg/s] Wave mass flow rate
+                Wwiter  = wave(tIdx).W(zIdx,:);                            % [kg/s] Wave mass flow rate
                 WLwiter = wave(tIdx).WL(zIdx);                             % [kg/s/m] Wave mass flow rate per unit perimeter
-                Uwiter = wave(tIdx).U(zIdx,:);                             % [m/s] Wave velocity
+                Uwiter  = wave(tIdx).U(zIdx,:);                            % [m/s] Wave velocity
+                Fwiter  = wave(tIdx).FREQUENCY(zIdx,:);                    % [Hz] Wave frequency
                 
-                Uditer = drop(tIdx).U(zIdx);                               % [m/s] Drop velocity
+                Uditer  = drop(tIdx).U(zIdx);                              % [m/s] Drop velocity
                 
                 % Base film mass conservation
                 Mtot_b = base(tIdx).MTOT(drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with base
@@ -149,7 +152,22 @@ function solver(solveINIT)
 
                 % Drop mass conservation
                 drop(tIdx).W(zIdx) = mix(tIdx).liquid.W(zIdx)-sum(film(tIdx).W(zIdx,:)); % [kg/s] Drop flowrate
-                                
+                
+                % Wave number conservation
+                %TODO: consider using wave number density as option
+                switch model.WAVEFREQUENCY
+                    case InputEnums.WAVEFREQUENCY.EQUILIBRIUM
+                    % Equilibrium model
+                        wave(tIdx).FREQUENCY(zIdx,:) = wave(tIdx).EQFREQUENCY(zIdx); % [Hz]
+                        
+                    case InputEnums.WAVEFREQUENCY.RELAXATION
+                    % Wave number conservation based on relaxation time approximation    
+                        deltafreq = wave(tIdx).DELTAFREQ(zIdx);            % [Hz/m] Wave frequency exchange terms
+                        Fwnew = Uwiter.*(Fwups+Fwold./Uwold.*DZ./DT+deltafreq.*DZ)./(Uwiter+DZ./DT);         % [Hz] Update wave frequency
+                        wave(tIdx).FREQUENCY(zIdx,:) = (1-options.RELAXFW).*Fwiter+options.RELAXFW.*Fwnew;   % [Hz] Apply relaxation
+                        
+                end
+
                 % Base momentum conservation
                 switch model.MOMENTFILM
                     case InputEnums.MOMENTFILM.ALGEBRAIC
@@ -183,11 +201,6 @@ function solver(solveINIT)
                         %Uiter = film(tIdx).U(zIdx,:);
                         %end
                 end
-                
-                % Set wave period to wave.EQPERIOD for now
-                %TODO: consider using wave number density
-                wave(tIdx).PERIOD(zIdx,:) = repmat(wave(tIdx).EQPERIOD(zIdx),1,geom.NWALL);
-
 
                 % Drop momentum conservation
                 switch model.MOMENTDROP

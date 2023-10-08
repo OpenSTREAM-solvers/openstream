@@ -18,7 +18,7 @@ classdef Wave < Solvers.AbstractFilm
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         U            (:,:) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
-        PERIOD       (:,:) double  {mustBeNumeric}                         = 1                    % [s] Wave time period
+        FREQUENCY    (:,:) double  {mustBeNumeric}                         = 1                    % [Hz] Wave frequency
 
         % % Iteration properties
         ITR
@@ -172,15 +172,18 @@ classdef Wave < Solvers.AbstractFilm
 
         end
 
-        function eqfreq = EQFREQ(wave, zIdx)
-        %EQFREQ
+        function eqfreq = EQFREQUENCY(wave, zIdx)
+        %EQFREQUENCY
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             % Hydraulic diameter
             d_h = wave.inputSet.geometry.HDIAM();
+            nwall = wave.inputSet.geometry.NWALL();
+
             % Solve eqfreq using definition of St
             eqfreq = wave.EQSTROUHAL(zIdx).*wave.film.mix.vapor.U(zIdx)./d_h;
+            eqfreq = repmat(eqfreq,1,nwall);
 
         end
 
@@ -189,7 +192,7 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            eqperiod = 1./wave.EQFREQ(zIdx);
+            eqperiod = 1./wave.EQFREQUENCY(zIdx);
         
         end
 
@@ -198,17 +201,17 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            spacing = wave.U(zIdx,:) ./ wave.FREQ(zIdx);
+            spacing = wave.U(zIdx,:) ./ wave.FREQUENCY(zIdx,:);
 
         end
 
-        function freq = FREQ(wave, zIdx)
-        %FREQ Wave freq
-        %   Inverse of wave time period
+        function period = PERIOD(wave, zIdx)
+        %PERIOD Wave time period
+        %   Inverse of wave frequency
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            freq = 1./wave.PERIOD(zIdx, :);
+            period = 1./wave.FREQUENCY(zIdx, :);
 
         end
 
@@ -243,12 +246,22 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             rhof = wave.fluid.RHOF;
-            amp = (wave.WL(zIdx).* wave.SHAPEFACTOR(zIdx))./(rhof.* wave.FREQ(zIdx));
+            amp = (wave.WL(zIdx).* wave.SHAPEFACTOR(zIdx))./(rhof.* wave.FREQUENCY(zIdx,:));
             amp = sqrt(abs(amp));
             
             % Limit amp+base.thick to 1/2 of D_H, at most
             D_H = wave.inputSet.geometry.HDIAM();
             amp = min(amp, D_H/2-wave.film.base.THICK(zIdx));
+
+        end
+        
+        function deltafreq = DELTAFREQ(wave, zIdx)
+        %DELTAFREQ Wave frequency source/sink
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+            
+            relaxTW = wave.inputSet.model.RELAXTW;
+            deltafreq = (wave.EQFREQUENCY(zIdx)-wave.FREQUENCY(zIdx,:))./wave.U(zIdx,:)./relaxTW;  % [Hz/m] Wave frequency exchange terms
 
         end
 

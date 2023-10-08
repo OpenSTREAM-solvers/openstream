@@ -245,7 +245,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 elseif k == 2
                     Wd(k) = max(min(drp.W(zIdx).*(1-10*delta(k-1)),W),0);  % [kg/s] Next guess
                 else
-                    Wd(k) = interp1(delta,Wd,0,'spline','extrap');         % [kg/s] Next guess
+                    Wd(k) = interp1(delta,Wd,0,'linear','extrap');         % [kg/s] Next guess
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet ass flowrate
                 flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)

@@ -48,7 +48,9 @@ classdef Model < Inputs.Input
         SHAPEFACTORCOEF (:,1) double {mustBeNumeric}                       = [1.325E5 2]           % Wave shape factor coefficients
         EQSTROUHALCOEF  (:,1) double {mustBeNumeric}                       = [1.1236E-4 0.5]       % Wave equilibrium Strouhal coefficients
         WAVEDRAGCOEF    (:,1) double  {mustBeNumeric}                      = [0.02 1.350E5 0.437]  % Wave drag coefficient
-
+        WAVEFREQUENCY   (1,1) InputEnums.WAVEFREQUENCY                     = 'RELAXATION'          % Wave number conservation model   
+        RELAXTW         (:,1) double  {mustBePositive}                     = 0.2                   % Wave relaxation time
+        
     end
 
     properties (Constant)

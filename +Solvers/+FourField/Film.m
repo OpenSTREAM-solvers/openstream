@@ -129,7 +129,7 @@ classdef Film < Solvers.AbstractFilm
 
             % Initialize wave period using wave.EQPERIOD
             %TODO: consider using wave number density
-            film.wave.PERIOD(1:film.NZ,1:geom.NWALL) = repmat(film.wave.EQPERIOD(),1,geom.NWALL);
+            film.wave.FREQUENCY(1:film.NZ,1:geom.NWALL) = film.wave.EQFREQUENCY();
 
             % Setup iteration struct
             film.base.ITR = ITR;

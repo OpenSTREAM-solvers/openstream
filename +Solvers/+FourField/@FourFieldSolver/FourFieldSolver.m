@@ -341,8 +341,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             linkaxes(ax);
             
             nexttile; hold all; grid on; title('Wave frequencies')
-            plot(z,flm.wave.FREQ(),'o-', 'DisplayName', 'Non-equilibrium')
-            plot(z,flm.wave.EQFREQ(),'.-', 'DisplayName', 'Equilibrium')
+            plot(z,flm.wave.FREQUENCY(),'o-', 'DisplayName', 'Non-equilibrium')
+            plot(z,flm.wave.EQFREQUENCY(),'.-', 'DisplayName', 'Equilibrium')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Frequency [Hz]')
