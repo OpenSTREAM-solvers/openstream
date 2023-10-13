@@ -319,7 +319,7 @@ classdef Wave < Solvers.AbstractFilm
                 end
                 
                 % Copy properties
-                propNames = {'W','U','H'};
+                propNames = {'W','U','H','FREQUENCY'};
                 for j = 1:length(propNames)
                     if opts.all
                         targetObj(1).(propNames{j}) = srcObj.(propNames{j});
