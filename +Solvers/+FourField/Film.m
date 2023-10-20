@@ -101,17 +101,9 @@ classdef Film < Solvers.AbstractFilm
             
             %% Constant properties
 
-            % Create base, wave and set parent reference
+            % Create base, wave and set film reference
             if ~isobject(film.base), film.base = Solvers.FourField.Base(film); end
             if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(film); end
-
-            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid','mix'};  
-              
-            % Copy properties to base and wave
-            for prop = props
-                film.base.(prop{:}) = film.(prop{:});
-                film.wave.(prop{:}) = film.(prop{:});
-            end
 
             % Stop if no input arguments (except film)
             if nargin == 1

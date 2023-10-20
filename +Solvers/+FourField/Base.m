@@ -41,11 +41,16 @@ classdef Base < Solvers.AbstractFilm
             %   Detailed explanation goes here
 
             if nargin > 0
-                % Store inputSet as object property
-                base.inputSet = film.inputSet;
-                base.fluid  = film.fluid;
+                % Store film as object property
                 base.film  = film;
 
+                props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid','mix'};                
+                % Copy properties to base and wave
+                for prop = props
+                    base.(prop{:}) = film.(prop{:});
+                end
+
+                % Initialize W,U,H to proper size
                 base.W = repmat(base.W,film.NZ,base.inputSet.geometry.NWALL);
                 base.U = repmat(base.U,film.NZ,base.inputSet.geometry.NWALL);
                 base.H = repmat(base.H,film.NZ,base.inputSet.geometry.NWALL);
