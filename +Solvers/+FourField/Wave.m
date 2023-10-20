@@ -36,15 +36,20 @@ classdef Wave < Solvers.AbstractFilm
      end
      
     methods
-        function wave = Wave(inputSet, fluid, film)
+        function wave = Wave(film)
             %WAVE Creates a Wave, wave
             %   Detailed explanation goes here
 
             if nargin > 0
                 % Store inputSet as object property
-                wave.inputSet = inputSet;
-                wave.fluid  = fluid;
+                wave.inputSet = film.inputSet;
+                wave.fluid  = film.fluid;
                 wave.film  = film;
+                
+                wave.W = repmat(wave.W,film.NZ,wave.inputSet.geometry.NWALL);
+                wave.U = repmat(wave.U,film.NZ,wave.inputSet.geometry.NWALL);
+                wave.H = repmat(wave.H,film.NZ,wave.inputSet.geometry.NWALL);
+                wave.FREQUENCY = repmat(wave.FREQUENCY,film.NZ,film.inputSet.geometry.NWALL);
             end
         end
         
@@ -134,7 +139,7 @@ classdef Wave < Solvers.AbstractFilm
         end
         
         function Mbase = MBASE(wave,drop,zIdx)
-        %MWAVE Mass flux interaction with wave
+        %MWAVE Mass flux interaction with base
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 

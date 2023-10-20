@@ -66,6 +66,35 @@ classdef Film < Solvers.AbstractFilm
             u = film.W./(film.base.W./film.base.U + film.wave.W./film.wave.U);
             u(film.W==0) = film.base.U(film.W==0);
         end
+
+        function distributeOAFW(film, W, zIdx)
+        % DISTRIBUTEOAFW Distributes film mass flow rate at onset of 
+        % annular flow to base and wave, based on option: OAFFILMSPLIT
+
+        if nargin < 3, zIdx = (1:film(1).NZ).'; end
+
+        model = film.inputSet.model;
+
+        switch model.OAFFILMSPLIT
+            case InputEnums.OAFFILMSPLIT.RATIO
+                eb = model.OAFBASERATIO;
+        end
+        if isscalar(zIdx) && size(W,1)~=1
+            error('Film.DISTRIBUTEOAFW: Matrix W cannot be used with scalar zIdx');
+        elseif ~isscalar(zIdx) && size(W,1)~=length(zIdx)
+            error('Film.DISTRIBUTEOAFW: Matrix W and zIdx size mismatch');
+        elseif ~isscalar(zIdx) && size(W,1)==1
+            W = repmat(W,length(zIdx),1);
+        end
+        
+        if ~isobject(film.wave) || ~isobject(film.base)
+            error('Film.DISTRIBUTEOAFW: base or wave not initialized');
+        end
+
+        film.wave.W(zIdx,:) = (1-eb) .* W;
+        film.base.W(zIdx,:) = eb .* W;
+
+    end
         
         function initializeBaseAndWave(film, WIN, ITR)
         %INITIALIZEBASEANDWAVE Initialize base and wave arrays given WTOT
@@ -73,10 +102,8 @@ classdef Film < Solvers.AbstractFilm
             %% Constant properties
 
             % Create base, wave and set parent reference
-            if ~isobject(film.base), film.base = Solvers.FourField.Base(); end
-            film.base.film = film;
-            if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(); end
-            film.wave.film = film;
+            if ~isobject(film.base), film.base = Solvers.FourField.Base(film); end
+            if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(film); end
 
             props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid','mix'};  
               
@@ -107,12 +134,7 @@ classdef Film < Solvers.AbstractFilm
 
             % Distribute film between base and wave (order matters)
             % Film mass flow rate at onset of annular flow
-            switch model.OAFFILMSPLIT
-                case InputEnums.OAFFILMSPLIT.RATIO
-                    eb = model.OAFBASERATIO;
-            end
-            film.wave.W = (1-eb) .* film.base.W;
-            film.base.W = eb .* film.base.W;
+            film.distributeOAFW(film.base.W);
 
             % Velocity
             film.base.U = film.UALGEBR();                                   % [m/s] Base velocity

@@ -36,15 +36,19 @@ classdef Base < Solvers.AbstractFilm
 
      
     methods
-        function base = Base(inputSet, fluid, film)
+        function base = Base(film)
             %BASE Creates a Base, base
             %   Detailed explanation goes here
 
             if nargin > 0
                 % Store inputSet as object property
-                base.inputSet = inputSet;
-                base.fluid  = fluid;
+                base.inputSet = film.inputSet;
+                base.fluid  = film.fluid;
                 base.film  = film;
+
+                base.W = repmat(base.W,film.NZ,base.inputSet.geometry.NWALL);
+                base.U = repmat(base.U,film.NZ,base.inputSet.geometry.NWALL);
+                base.H = repmat(base.H,film.NZ,base.inputSet.geometry.NWALL);
             end
         end
 
