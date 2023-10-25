@@ -22,7 +22,7 @@ classdef Model < Inputs.Input
         OAF           (1,1) InputEnums.OAF                                 = 'WALLIS'              % Onset of annular flow model [-]
 
         OAFFILMSPLIT  (1,1) InputEnums.OAFFILMSPLIT                        = 'RATIO'               % Film mass flow rate at onset of annular flow [-]
-        OAFBASERATIO  (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}      = 1.0                   % Base/Film mass ratio at onset of annular flow [-]
+        OAFBASERATIO  (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}      = 0.1                % Base/Film mass ratio at onset of annular flow [-]
 
         OAFENTRAINED  (1,1) InputEnums.OAFENTRAINED                        = 'RATIO'               % Entrained model at onset of annular flow [-]
         OAFDROPRATIO  (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}      = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]

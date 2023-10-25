@@ -5,6 +5,13 @@ PERIM     ! Perimeters [m]                 > 0.0314
 ANGLE     ! Angle [rad]                    > 0
 END
 
+ID        ! Channel ID                     > MFVAL_star
+LENGTH    ! Axial length (2.7+0.525)) [m]  > 3.225
+AREA      ! Coolant area [m^2]             > 2.5447e-04
+PERIM     ! Perimeters [m]                 > 0.96
+ANGLE     ! Angle [rad]                    > 0
+END
+
 ID        ! Channel ID                     > MFVAL
 LENGTH    ! Axial length (2.7+0.525)) [m]  > 3.225
 AREA      ! Coolant area [m^2]             > 4.3200e-04

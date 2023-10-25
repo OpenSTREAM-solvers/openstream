@@ -296,7 +296,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim([0 z(end)]);
             ylabel('Wall heat flux [W/m^2]')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
                 
             nexttile; hold all; grid on; title('Mass flow rates')
             plot(z,mix.liquid.W,'s')
@@ -309,7 +309,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Field mass flowrate [kg/s]')
             legend({'Mixture Liquid','Drop + Film','Drop','Film','Base','Wave'},'location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Film mass flow rates per unit perimeter')
             plot(z,flm.WL,'.-')
@@ -319,7 +319,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Film mass flowrate [kg/s/m]')
             legend({'Film','Base','Wave'},'location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             fields = {'base','wave'};
             names = cellfun(@(x) [upper(x(1)) x(2:end)],fields,'uni',0);
@@ -340,8 +340,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off');
                 xlabel('Axial position [m]'); xlim(z([1 end]));
                 ylabel('Mass flux [kg/s/m^2]')
-                legend('show','location','best')
-                set(gca,'fontSize',14)
+                legend('show','location','best','fontsize',8)
+                set(gca,'fontsize',10)
                 
             end
             linkaxes(ax);
@@ -353,7 +353,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Frequency [Hz]')
             legend('show','location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Film thicknesses')
             plot(z,flm.THICK,'.-', 'DisplayName', 'Film')
@@ -365,7 +365,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Film thickness [m]'); ylim([0 1E-3]);
             legend('show','location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Wave axial lengths')
             plot(z,flm.wave.SPACING(),'o-', 'DisplayName', 'Spacing')
@@ -374,7 +374,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Axial length [m]')
             legend('show','location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Base film fractions')
             plot(z,flm.base.BETA(),'.-', 'DisplayName', 'Interfacial')
@@ -386,7 +386,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Fraction [-]')
             legend('show','location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Wave fractions')
             plot(z,flm.wave.BETA(),'.-', 'DisplayName', 'Interfacial')
@@ -399,7 +399,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Fraction [-]'); ylim([0 1]);
             legend('show','location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Field velocities')
             plot(z,mix.liquid.U,'s')
@@ -411,7 +411,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Field velocity [m/s]')
             legend({'Mixture Liquid','Drop','Film','Base','Wave'},'location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
                         
             nexttile; hold all; grid on; title('Film momentum exchanges')
             plot(z,flm.FDEP(drp),'o-')
@@ -424,7 +424,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Shear stress [N/m^2]')
             legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
             
             nexttile; hold all; grid on; title('Drop momentum exchanges')
             plot(z,drp.FENT(flm),'o-')
@@ -436,8 +436,22 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Force density [N/m^3]')
             legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','best')
-            set(gca,'fontSize',14)
+            set(gca,'fontsize',10)
 % 
+            nexttile; hold all; grid on; title('Reynolds numbers')
+            plot(z,mix.vapor.RE,'r.-')
+%             plot(z,mix.liquid.RE,'b.-')
+%             plot(z,flm.RE,'k.--')
+            ylabel('Mixutre Reynolds numbers')
+            set(gca,"ColorOrder",[0 0 0; 0 0 0])
+            yyaxis right
+            plot(z,flm.wave.RE,'b.-')
+            plot(z,flm.base.RE,'k.-')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Field Reynolds numbers')
+            legend({'Mixture Vapor','W','B'},'location','best')
+            set(gca,'fontsize',10)
+
 %             nexttile; hold all; grid on; title('Base momentum exchanges')
 %             plot(z,flm.base.FDEP(mix,drp),'o-')
 %             plot(z,flm.base.FWALL(mix),'.-')
@@ -449,7 +463,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 %             xlabel('Axial position [m]'); xlim(z([1 end]));
 %             ylabel('Shear stress [N/m^2]')
 %             legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','northEast')
-%             set(gca,'fontSize',14)
+%             set(gca,'fontsize',10)
             
         end
     
@@ -519,7 +533,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 
                 xlabel('Time [s]'); xlim(plotTimeVector([1 end]));
                 ylabel(ylabelText)
-                set(gca,'fontSize',14)
+                set(gca,'fontsize',10)
             
             end
 

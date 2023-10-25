@@ -39,16 +39,17 @@ SCBOIL     ! Subcooled boiling model                                        > no
 VOID       ! Void fraction model                                            > homogeneous
 SLIP       ! Phase velocity ratio [-]                                       > 1
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
-OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.3
-OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > EQUILIBRIUM
+OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
+OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > RATIO
 OAFTRANSITION !  % Annular flow transition function parameters  [m]         > [0.04 0.0]
-MOMENTFILM !                                                                > ALGEBRAIC
-MOMENTDROP !                                                                > FULL
+OAFBASERATIO !                                                              > 0.5
+MOMENTFILM !                                                                > FULL
+MOMENTDROP !                                                                > slip
 DROPSLIP !                                                                  > 1.0
 DEPOSITION !                                                                > OKAWA
 ENTRAINMENT !                                                               > OKAWA
-THINFILMFRIC ! % Thin film thickness [m]                                    > LAMINAR
-POSFILM !                                                                   > 0
+%THINFILMFRIC ! % Thin film thickness [m]                                    > LAMINAR
+POSFILM !                                                                   > 1
 END
 
 ID         ! Model ID                                                       > MFVALP
@@ -79,13 +80,13 @@ TPKM       ! Two-phase local loss multiplier [-]                            > ho
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > slip
 SLIP       ! Phase velocity ratio [-]                                       > 1.
-OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
+OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.3
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
 OAFENTRAINED !                                                              > EQUILIBRIUM
-#OAFENTRAINED !                                                              > RATIO
-OAFBASERATIO !                                                              > 0.5
+%OAFENTRAINED !                                                              > RATIO
+OAFBASERATIO !                                                              > 0.2
 MOMENTFILM !                                                                > ALGEBRAIC
-MOMENTDROP !                                                                > SLIP
+MOMENTDROP !                                                                > slip
 POSFILM !                                                                   > 1
 END
 
