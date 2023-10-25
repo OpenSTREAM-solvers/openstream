@@ -137,6 +137,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     
                 % Film evaporation (thermal equilibrium assumption)
                 flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
+
+                % Initialize base and wave
+                flm.initializeBaseAndWave();
                 
                 % Entrained ratio at onset of annular flow
                 switch model.OAFENTRAINED
@@ -228,14 +231,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
         end
         
-        function e0 = EQUIL(tfSolver,flm,drp,mix,zIdx)
+        function e0 = EQUIL(ffSolver,flm,drp,mix,zIdx)
         %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
         %
-            if nargin < 5, zIdx = (1:tfSolver.NZ); end
+            if nargin < 5, zIdx = (1:ffSolver.NZ); end
             zIdx = zIdx(:);
             
-            nwall = tfSolver.inputSet.geometry.NWALL;                      % Number of walls
-            perim = tfSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
+            nwall = ffSolver.inputSet.geometry.NWALL;                      % Number of walls
+            perim = ffSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
             W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
             
             for k = 1:100
@@ -243,11 +246,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     Wd(1) = 0.5.*W;                                        % [kg/s] 50% of liquid mass in droplet field
                 elseif k == 2
                     Wd(k) = max(min(drp.W(zIdx).*(1-10*delta(k-1)),W),0);  % [kg/s] Next guess
+                elseif sign(delta(k-1)) ~= sign(delta(k-2))                % Sign change occurred. Overshoot, try 0
+                    Wd(k) = 0;
                 else
                     Wd(k) = interp1(delta,Wd,0,'spline','extrap');         % [kg/s] Next guess
                 end
-                drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet ass flowrate
-                flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
+                drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
+                flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx);
+                %flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
                 delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
                 err = abs(delta(k));
                 if err < 1E-4, break; end

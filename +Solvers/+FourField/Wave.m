@@ -36,15 +36,25 @@ classdef Wave < Solvers.AbstractFilm
      end
      
     methods
-        function wave = Wave(inputSet, fluid, film)
+        function wave = Wave(film)
             %WAVE Creates a Wave, wave
             %   Detailed explanation goes here
 
             if nargin > 0
-                % Store inputSet as object property
-                wave.inputSet = inputSet;
-                wave.fluid  = fluid;
+                % Store film as object property
                 wave.film  = film;
+
+                props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid','mix'};                
+                % Copy properties to base and wave
+                for prop = props
+                    wave.(prop{:}) = film.(prop{:});
+                end
+
+                % Initialize W,U,H to proper size
+                wave.W = repmat(wave.W,film.NZ,wave.inputSet.geometry.NWALL);
+                wave.U = repmat(wave.U,film.NZ,wave.inputSet.geometry.NWALL);
+                wave.H = repmat(wave.H,film.NZ,wave.inputSet.geometry.NWALL);
+                wave.FREQUENCY = repmat(wave.FREQUENCY,film.NZ,film.inputSet.geometry.NWALL);
             end
         end
         
@@ -74,18 +84,11 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             %beta = 1-wave.film.base.BETA(zIdx);
-            % Use a constant if wave.W is a scalar. 
-            %   This occurs during the initialization phase only.
-            if isscalar(wave.W)
-                beta = 0.01;
-                epsilon = wave.EPSILON(1);
-            else
-                beta = wave.WIDTH(zIdx) ./ wave.SPACING(zIdx);
-                % ...
-                epsilon = wave.EPSILON(zIdx);
-                beta(isnan(beta)) = epsilon(isnan(beta));
-                %beta(:) = 0.6;
-            end
+            
+            beta = wave.WIDTH(zIdx) ./ wave.SPACING(zIdx);
+            epsilon = wave.EPSILON(zIdx);
+            beta(isnan(beta)) = epsilon(isnan(beta));
+            %beta(:) = 0.6;
 
             % Apply BETA to distribution
             beta = wave.film.mix.AFDISTR(epsilon,beta,zIdx);
@@ -134,7 +137,7 @@ classdef Wave < Solvers.AbstractFilm
         end
         
         function Mbase = MBASE(wave,drop,zIdx)
-        %MWAVE Mass flux interaction with wave
+        %MWAVE Mass flux interaction with base
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
