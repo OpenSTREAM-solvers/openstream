@@ -71,30 +71,48 @@ classdef Film < Solvers.AbstractFilm
         % DISTRIBUTEOAFW Distributes film mass flow rate at onset of 
         % annular flow to base and wave, based on option: OAFFILMSPLIT
 
-        if nargin < 3, zIdx = (1:film(1).NZ).'; end
+            if nargin < 3, zIdx = (1:film(1).NZ).'; end
+    
+            model = film.inputSet.model;
+    
+            switch model.OAFFILMSPLIT
+                case InputEnums.OAFFILMSPLIT.RATIO
+                    eb = model.OAFBASERATIO;
+                case InputEnums.OAFFILMSPLIT.EQUILIBRIUM
+                    eb = film.EQUIL(W, zIdx);
+            end
+            if isscalar(zIdx) && size(W,1)~=1
+                error('Film.DISTRIBUTEOAFW: Matrix W cannot be used with scalar zIdx');
+            elseif ~isscalar(zIdx) && size(W,1)~=length(zIdx)
+                error('Film.DISTRIBUTEOAFW: Matrix W and zIdx size mismatch');
+            elseif ~isscalar(zIdx) && size(W,1)==1
+                W = repmat(W,length(zIdx),1);
+            end
+            
+            if ~isobject(film.wave) || ~isobject(film.base)
+                error('Film.DISTRIBUTEOAFW: base or wave not initialized');
+            end
+    
+            film.wave.W(zIdx,:) = (1-eb) .* W;
+            film.base.W(zIdx,:) = eb .* W;
 
-        model = film.inputSet.model;
-
-        switch model.OAFFILMSPLIT
-            case InputEnums.OAFFILMSPLIT.RATIO
-                eb = model.OAFBASERATIO;
         end
-        if isscalar(zIdx) && size(W,1)~=1
-            error('Film.DISTRIBUTEOAFW: Matrix W cannot be used with scalar zIdx');
-        elseif ~isscalar(zIdx) && size(W,1)~=length(zIdx)
-            error('Film.DISTRIBUTEOAFW: Matrix W and zIdx size mismatch');
-        elseif ~isscalar(zIdx) && size(W,1)==1
-            W = repmat(W,length(zIdx),1);
-        end
-        
-        if ~isobject(film.wave) || ~isobject(film.base)
-            error('Film.DISTRIBUTEOAFW: base or wave not initialized');
-        end
 
-        film.wave.W(zIdx,:) = (1-eb) .* W;
-        film.base.W(zIdx,:) = eb .* W;
+        function eb = EQUIL(film, Wf, zIdx)
+        %EQUIL calculate base/wave split ratio in equilibrium
+        %
+            if nargin < 3, zIdx = (1:film(1).NZ); end
+            zIdx = zIdx(:);
+            
+            perim = film.inputSet.geometry.PERIM;                          % [m] Perimeter
+            eqthick_b = film.base.EQTHICK(zIdx);                           % [kg/s] Base equilibrium thickness
 
-    end
+            Wb = eqthick_b .* film.base.U(zIdx) .* perim .* film.base.fluid.RHOF;
+                                                                           % [kg/s] Base mass flow rate
+            eb = Wb./Wf;
+            eb = min(eb,1);
+            
+        end
         
         function initializeBaseAndWave(film, WIN, ITR)
         %INITIALIZEBASEANDWAVE Initialize base and wave arrays given WTOT
@@ -143,6 +161,7 @@ classdef Film < Solvers.AbstractFilm
 
             % Initialize wave period using wave.EQPERIOD
             %TODO: consider using wave number density
+            %TODO: consi
             film.wave.FREQUENCY(1:film.NZ,1:geom.NWALL) = film.wave.EQFREQUENCY();
 
             % Setup iteration struct
