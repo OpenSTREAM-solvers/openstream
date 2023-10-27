@@ -146,7 +146,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             %TODO: add model option
-            Fwave = base.film.wave.BETA().*base.FVAPOR(zIdx); % [N/m^2]
+            Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx); % [N/m^2]
             
         end
 
@@ -157,7 +157,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: debug syntax
-            Fvapor = base.BETA().* FVAPOR@Solvers.AbstractFilm(base,wave.film.mix,zIdx); % [N/m^2]
+            Fvapor = base.BETA(zIdx).* FVAPOR@Solvers.AbstractFilm(base,zIdx); % [N/m^2]
             
         end
 
