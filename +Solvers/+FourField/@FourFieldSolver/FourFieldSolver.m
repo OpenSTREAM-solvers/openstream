@@ -146,7 +146,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     case InputEnums.OAFENTRAINED.RATIO
                         e0 = model.OAFDROPRATIO;
                     case InputEnums.OAFENTRAINED.EQUILIBRIUM
-                        % TODO: this does not work yet.
                         e0 = ffSolver.EQUIL(flm,drp,mix,mix.OAFIDX);
                 end
 
@@ -246,10 +245,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     Wd(1) = 0.5.*W;                                        % [kg/s] 50% of liquid mass in droplet field
                 elseif k == 2
                     Wd(k) = max(min(drp.W(zIdx).*(1-10*delta(k-1)),W),0);  % [kg/s] Next guess
-                elseif sign(delta(k-1)) ~= sign(delta(k-2))                % Sign change occurred. Overshoot, try 0
-                    Wd(k) = 0;
                 else
-                    Wd(k) = interp1(delta,Wd,0,'spline','extrap');         % [kg/s] Next guess
+                    Wd(k) = interp1(delta,Wd,0,'linear','extrap');         % [kg/s] Next guess
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
                 flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx);
