@@ -285,182 +285,196 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             bc  = ffSolver.boundaryConditions;
             mix = flm.mix;
             z   = ffSolver.Z;
-            figure('name',sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode))
-            
-            nexttile; hold all; grid on; title('Wall heat flux')
-            plot(z,bc.HFLUX(:,:,tIdx),'s-')
-            plot(z,flm.HFLUX,'.--')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim([0 z(end)]);
-            ylabel('Wall heat flux [W/m^2]')
-            set(gca,'fontsize',10)
-                
-            nexttile; hold all; grid on; title('Mass flow rates')
-            plot(z,mix.liquid.W,'s')
-            plot(z,sum([drp.W flm.W],2),'r+-')
-            plot(z,drp.W,'o-')
-            plot(z,flm.W,'.-')
-            plot(z,flm.base.W,'.--')
-            plot(z,flm.wave.W,'s--')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Field mass flowrate [kg/s]')
-            legend({'Mixture Liquid','Drop + Film','Drop','Film','Base','Wave'},'location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Film mass flow rates per unit perimeter')
-            plot(z,flm.WL,'.-')
-            plot(z,flm.base.WL,'.--')
-            plot(z,flm.wave.WL,'s--')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Film mass flowrate [kg/s/m]')
-            legend({'Film','Base','Wave'},'location','best')
-            set(gca,'fontsize',10)
-            
-            fields = {'base','wave'};
-            names = cellfun(@(x) [upper(x(1)) x(2:end)],fields,'uni',0);
-            wrapN = @(x) (1 + mod(x-1, length(fields)));
-            for i = 1:length(fields)
-                
-                ax(i) = nexttile; hold all; grid on; title([names{i} ' film mass exchanges'])
-                plot(z,flm.(fields{i}).ETA.*drp.MDEP(),'.-', 'DisplayName',[names{i} ' drop deposition'])
-                plot(z,flm.(fields{i}).MENT(),'.-', 'DisplayName',[names{i} ' film entrainment'])
-                plot(z,flm.(fields{i}).MEVAP(),'.-', 'DisplayName',[names{i} ' film evaporation'])
-                plot(z,flm.(fields{i}).(['M' upper(fields{wrapN(i+1)})])(drp),'.-', 'DisplayName',['Exchange from ' names{wrapN(i+1)}])
-                h0 = scatter(z,flm.(fields{i}).MTOT(drp),5,'k+', 'DisplayName','Total'); h0.MarkerEdgeAlpha=0.5;
-%                 set(gca,'ColorOrderIndex',1)
-%                 h1 = plot(z,drp.MDEP(),'--', 'DisplayName','Drop deposition'); h1.Color(4) = 0.3;
-%                 h2 = plot(z,flm.MENT(),'--', 'DisplayName','Film entrainment'); h2.Color(4) = 0.3;
-%                 h3 = plot(z,flm.MEVAP(),'--', 'DisplayName','Film evaporation'); h3.Color(4) = 0.3;
-%                 h4 = plot(z,flm.MTOT(drp),'k--', 'DisplayName','Total'); h4.Color(4) = 0.3;
-                plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off');
-                xlabel('Axial position [m]'); xlim(z([1 end]));
-                ylabel('Mass flux [kg/s/m^2]')
-                legend('show','location','best','fontsize',8)
-                set(gca,'fontsize',10)
-                
-            end
-            linkaxes(ax);
-            
-            nexttile; hold all; grid on; title('Wave frequencies')
-            plot(z,flm.wave.FREQUENCY(),'o-', 'DisplayName', 'Non-equilibrium')
-            plot(z,flm.wave.EQFREQUENCY(),'.-', 'DisplayName', 'Equilibrium')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Frequency [Hz]')
-            legend('show','location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Film thicknesses')
-            plot(z,flm.THICK,'.-', 'DisplayName', 'Film')
-            plot(z,flm.base.THICK,'.--', 'DisplayName', 'Base')
-            plot(z,flm.wave.THICK,'s--', 'DisplayName', 'Wave')
-            plot(z,flm.base.EQTHICK(),'.--', 'DisplayName', 'Base Eq')
-            plot(z,flm.wave.AMP(),'s--', 'DisplayName', 'Wave Amp')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Film thickness [m]'); ylim([0 1E-3]);
-            legend('show','location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Wave axial lengths')
-            plot(z,flm.wave.SPACING(),'o-', 'DisplayName', 'Spacing')
-            plot(z,flm.wave.WIDTH(),'.-', 'DisplayName', 'Width')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Axial length [m]')
-            legend('show','location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Base film fractions')
-            plot(z,flm.base.BETA(),'.-', 'DisplayName', 'Interfacial')
-            plot(z,flm.base.EPSILON(),'.-', 'DisplayName', 'Mass')
-            plot(z,flm.base.BETAP(),'o-', 'DisplayName', 'Heat flux')
-            plot(z,flm.base.ETA(),'.-', 'DisplayName', 'Deposition')
-            
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Fraction [-]')
-            legend('show','location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Wave fractions')
-            plot(z,flm.wave.BETA(),'.-', 'DisplayName', 'Interfacial')
-            plot(z,flm.wave.EPSILON(),'.-', 'DisplayName', 'Mass')
-            plot(z,flm.wave.BETAP(),'o-', 'DisplayName', 'Heat flux')
-            plot(z,flm.wave.ETA(),'.-', 'DisplayName', 'Deposition')
-            plot(z,flm.wave.SHAPEFACTOR(),'.-', 'DisplayName', 'Shape factor')
-            
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Fraction [-]'); ylim([0 1]);
-            legend('show','location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Field velocities')
-            plot(z,mix.liquid.U,'s')
-            plot(z,drp.U,'o-')
-            plot(z,flm.U,'.-')
-            plot(z,flm.base.U,'.--')
-            plot(z,flm.wave.U,'s--')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Field velocity [m/s]')
-            legend({'Mixture Liquid','Drop','Film','Base','Wave'},'location','best')
-            set(gca,'fontsize',10)
-                        
-            nexttile; hold all; grid on; title('Film momentum exchanges')
-            plot(z,flm.FDEP(drp),'o-')
-            plot(z,flm.FWALL(),'.-')
-            plot(z,flm.FVAPOR(),'.-')
-            plot(z,flm.FBUOY(),'.-')
-            plot(z,flm.FGRAV(),'.-')
-            plot(z,flm.FTOT(drp),'k--')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Shear stress [N/m^2]')
-            legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','best')
-            set(gca,'fontsize',10)
-            
-            nexttile; hold all; grid on; title('Drop momentum exchanges')
-            plot(z,drp.FENT(flm),'o-')
-            plot(z,drp.FDRAG(),'.-')
-            plot(z,drp.FBUOY(),'.-')
-            plot(z,drp.FGRAV(),'.-')
-            plot(z,drp.FTOT(flm),'k--')
-            plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Force density [N/m^3]')
-            legend({'Film entrainment','Drag','Buoyancy','Gravity','Total'},'location','best')
-            set(gca,'fontsize',10)
-% 
-            nexttile; hold all; grid on; title('Reynolds numbers')
-            plot(z,mix.vapor.RE,'r.-')
-%             plot(z,mix.liquid.RE,'b.-')
-%             plot(z,flm.RE,'k.--')
-            ylabel('Mixutre Reynolds numbers')
-            set(gca,"ColorOrder",[0 0 0; 0 0 0])
-            yyaxis right
-            plot(z,flm.wave.RE,'b.-')
-            plot(z,flm.base.RE,'k.-')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Field Reynolds numbers')
-            legend({'Mixture Vapor','W','B'},'location','best')
-            set(gca,'fontsize',10)
+            oafZ = repmat(mix.OAFZ,1,2);
 
-%             nexttile; hold all; grid on; title('Base momentum exchanges')
-%             plot(z,flm.base.FDEP(mix,drp),'o-')
-%             plot(z,flm.base.FWALL(mix),'.-')
-%             plot(z,flm.base.FVAPOR(mix),'.-')
-%             plot(z,flm.base.FBUOY(mix),'.-')
-%             plot(z,flm.base.FGRAV(mix),'.-')
-%             plot(z,flm.base.FTOT(mix,drp),'k--')
-%             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
-%             xlabel('Axial position [m]'); xlim(z([1 end]));
-%             ylabel('Shear stress [N/m^2]')
-%             legend({'Drop deposition','Wall','Vapor','Buoyancy','Gravity','Total'},'location','northEast')
-%             set(gca,'fontsize',10)
+            NWALL = ffSolver.inputSet.geometry.NWALL();
+
+            plotters = Solvers.SolverPlotter( ...
+                                sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
+                                1:NWALL);
+            plotters.setZs(z);
+
+            % Wall heat flux
+            plotters.newTile( ...
+                "tileTitle", 'Wall heat flux', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Wall heat flux [W/m^2]');
+            plotters.plotz(bc.HFLUX(:,:,tIdx), 'BC', 'DisplayName', 'Boundary Condition');
+            plotters.plotz(flm.HFLUX, 'FILM', 'DisplayName', 'Film');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Mass flow rates
+            plotters.newTile( ...
+                "tileTitle", 'Mass flow rate', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Field mass flow rate [kg/s]');
+            plotters.plotz(mix.liquid.W, 'MIXLIQ', 'DisplayName', 'Mixture Liquid');
+            plotters.plotz(sum([drp.W flm.W],2), 'DROP+FILM', 'DisplayName', 'Drop + Film');
+            plotters.plotz(drp.W, 'Drop');
+            plotters.plotz(flm.W, 'Film');
+            plotters.plotz(flm.base.W, 'Base');
+            plotters.plotz(flm.wave.W,'Wave');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Film WL
+            plotters.newTile( ...
+                "tileTitle", 'Film mass flow rate per unit perimeter', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Film mass flow rate [kg/s-m]');
+            plotters.plotz(flm.WL, 'Film')
+            plotters.plotz(flm.base.WL, 'Base')
+            plotters.plotz(flm.wave.WL,'Wave')
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Base-Wave Exchange
+            ah_base = plotters.newTile( ...
+                        "tileTitle", 'Base film mass exchange', ...
+                        'xlabel', 'Axial position [m]', ...
+                        'ylabel', 'Mass flux [kg/s/m^2]');
+            plotters.plotz(flm.base.ETA.*drp.MDEP(), 'DEPOSITION', 'DisplayName', 'Drop deposition');
+            plotters.plotz(flm.base.MENT(), 'Entrainment');
+            plotters.plotz(flm.base.MEVAP(), 'Evaporation');
+            plotters.plotz(flm.base.MWAVE(drp), 'Wave', 'DisplayName', 'Exchange from wave');
+            plotters.plotz(flm.base.MTOT(drp), 'Total');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Wave-Base Exchange
+            ah_wave = plotters.newTile( ...
+                        "tileTitle", 'Wave mass exchange', ...
+                        'xlabel', 'Axial position [m]', ...
+                        'ylabel', 'Mass flux [kg/s/m^2]');
+            plotters.plotz(flm.wave.ETA.*drp.MDEP(), 'DEPOSITION', 'DisplayName', 'Drop deposition');
+            plotters.plotz(flm.wave.MENT(), 'Entrainment');
+            plotters.plotz(flm.wave.MEVAP(), 'Evaporation');
+            plotters.plotz(flm.wave.MBASE(drp), 'Base', 'DisplayName', 'Exchange from base');
+            plotters.plotz(flm.wave.MTOT(drp), 'Total');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Link exchange axes 
+            % TODO: this can be a plotter method
+            for wallIdx = 1:length(ah_base)
+                linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
+            end
+
+            % Wave frequencies
+            plotters.newTile( ...
+                "tileTitle", 'Wave frequency', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Frequency [Hz]');
+            plotters.plotz(flm.wave.FREQUENCY(), 'Non-Equilibrium');
+            plotters.plotz(flm.wave.EQFREQUENCY(), 'Equilibrium');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Film thickness
+            plotters.newTile( ...
+                "tileTitle", 'Film thickness', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Film thickness [m]');
+            plotters.plotz(flm.THICK, 'Film');
+            plotters.plotz(flm.base.THICK, 'Base');
+            plotters.plotz(flm.wave.THICK, 'Wave');
+            plotters.plotz(flm.base.EQTHICK(), 'Base Eq');
+            plotters.plotz(flm.wave.AMP(), 'Wave Amp');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+            plotters.ylim([0 1E-3]);
+
+            % Wave axial lengths
+            plotters.newTile( ...
+                "tileTitle", 'Wave axial length', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Axial length [m]');
+            plotters.plotz(flm.wave.SPACING(), 'Spacing');
+            plotters.plotz(flm.wave.WIDTH(), 'Width');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Base film fractions
+            plotters.newTile( ...
+                "tileTitle", 'Base film fractions', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Fraction [-]');
+            plotters.plotz(flm.base.BETA(), 'Interfacial');
+            plotters.plotz(flm.base.EPSILON(), 'Mass');
+            plotters.plotz(flm.base.BETAP(), 'Heat flux');
+            plotters.plotz(flm.base.ETA(), 'Deposition');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+            plotters.ylim([0 1]);
+
+            % Wave fractions
+            plotters.newTile( ...
+                "tileTitle", 'Wave fractions', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Fraction [-]');
+            plotters.plotz(flm.wave.BETA(), 'Interfacial');
+            plotters.plotz(flm.wave.EPSILON(), 'Mass');
+            plotters.plotz(flm.wave.BETAP(), 'Heat flux');
+            plotters.plotz(flm.wave.ETA(), 'Deposition');
+            plotters.plotz(flm.wave.SHAPEFACTOR(), 'Shape factor');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+            plotters.ylim([0 1]);
+
+            % Field velocities
+            plotters.newTile( ...
+                "tileTitle", 'Field velocities', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Field velocities [m/s]');
+            plotters.plotz(mix.liquid.U, 'Mixture');
+            plotters.plotz(drp.U, 'Drop');
+            plotters.plotz(flm.U, 'Film');
+            plotters.plotz(flm.base.U, 'Base');
+            plotters.plotz(flm.wave.U, 'Wave');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+            
+            % Film momentum exchanges
+            plotters.newTile( ...
+                "tileTitle", 'Film momentum exchanges', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Shear stress [N/m^2]');
+            plotters.plotz(flm.FDEP(drp), 'Drop deposition');
+            plotters.plotz(flm.FWALL(),  'Wall');
+            plotters.plotz(flm.FVAPOR(),  'Vapor');
+            plotters.plotz(flm.FBUOY(),   'Buoyancy');
+            plotters.plotz(flm.FGRAV(),   'Gravity');
+            plotters.plotz(flm.FTOT(drp), 'Total');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Drop momentum exchanges
+            plotters.newTile( ...
+                "tileTitle", 'Drop momentum exchanges', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Shear stress [N/m^2]');
+            plotters.plotz(drp.FENT(flm),  'Film entrainment');
+            plotters.plotz(drp.FDRAG(),    'Drag');
+            plotters.plotz(drp.FBUOY(),   'Buoyancy');
+            plotters.plotz(drp.FGRAV(),   'Gravity');
+            plotters.plotz(drp.FTOT(flm), 'Total');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+            
+ 
+            % Reynolds number
+            plotters.newTile( ...
+                "tileTitle", 'Reynolds number', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', {'Vapor Re [-]', 'Liquid Re [-]'});
+            plotters.plotz(mix.vapor.RE(), 'Vapor', 'yyaxis', 'left');
+            plotters.plotz(flm.base.RE(),  'Base', 'yyaxis', 'left');
+            plotters.plotz(flm.wave.RE(),  'Wave', 'yyaxis', 'right');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            
             
         end
     
