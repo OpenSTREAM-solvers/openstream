@@ -434,18 +434,35 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.wave.U, 'Wave');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
-            
-            % Film momentum exchanges
+
+            % Base momentum exchanges
             plotters.newTile( ...
-                "tileTitle", 'Film momentum exchanges', ...
+                "tileTitle", 'Base momentum exchanges', ...
                 'xlabel', 'Axial position [m]', ...
                 'ylabel', 'Shear stress [N/m^2]');
-            plotters.plotz(flm.FDEP(drp), 'Drop deposition');
-            plotters.plotz(flm.FWALL(),  'Wall');
-            plotters.plotz(flm.FVAPOR(),  'Vapor');
-            plotters.plotz(flm.FBUOY(),   'Buoyancy');
-            plotters.plotz(flm.FGRAV(),   'Gravity');
-            plotters.plotz(flm.FTOT(drp), 'Total');
+            plotters.plotz(flm.base.FDEP(drp), 'Drop deposition');
+            plotters.plotz(flm.base.FWALL(),  'Wall');
+            plotters.plotz(flm.base.FVAPOR(),  'Vapor');
+            plotters.plotz(flm.base.FWAVE(),  'Wave');
+            plotters.plotz(flm.base.FWAVEMASS(drp),  'WaveMass');
+            plotters.plotz(flm.base.FBUOY(),   'Buoyancy');
+            plotters.plotz(flm.base.FGRAV(),   'Gravity');
+            %plotters.plotz(flm.base.FTOT(drp), 'Total');
+            plotters.legend("show", 'Location', 'best');
+            plotters.plotOAF(oafZ);
+
+            % Wave momentum exchanges
+            plotters.newTile( ...
+                "tileTitle", 'Wave momentum exchanges', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Shear stress [N/m^2]');
+            plotters.plotz(flm.wave.FDEP(drp), 'Drop deposition');
+            plotters.plotz(flm.wave.FVAPOR(),  'Vapor');
+            plotters.plotz(flm.wave.FBASE(),  'Base');
+            plotters.plotz(flm.wave.FBASEMASS(drp),  'BaseMass');
+            plotters.plotz(flm.wave.FBUOY(),   'Buoyancy');
+            plotters.plotz(flm.wave.FGRAV(),   'Gravity');
+            %plotters.plotz(flm.wave.FTOT(drp), 'Total');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
 
@@ -473,6 +490,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.wave.RE(),  'Wave', 'yyaxis', 'right');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
+
 
             
             

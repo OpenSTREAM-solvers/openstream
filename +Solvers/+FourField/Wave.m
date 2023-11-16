@@ -136,13 +136,60 @@ classdef Wave < Solvers.AbstractFilm
             eta = 1-wave.film.base.ETA(zIdx);
         end
         
+        function mturb = MTURB(wave, zIdx)
+        %MTURB Turbulent mass exchange
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            mturb = wave.film.base.MTURB(zIdx);
+
+        end
+        
         function Mbase = MBASE(wave,drop,zIdx)
         %MWAVE Mass flux interaction with base
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
-            Mbase = -wave.film.base.MWAVE(drop,zIdx);
+            Mbase = max(0, -wave.film.base.MWAVE(drop,zIdx)) + wave.MTURB(zIdx);
 
+        end
+
+        function Fwall = FWALL(wave,zIdx)
+        %FWALL Film wall shear stress
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+            
+            error('Wave does not implement wall shear stress');
+            
+        end
+
+        function Fbase = FBASE(wave,zIdx)
+        %FBASE Base interfacial force
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+            
+            Fbase = -wave.film.base.FWAVE(zIdx); % [N/m^2]
+            
+        end
+
+        function Fbasemass = FBASEMASS(wave,drop,zIdx)
+        %FBASEMASS Wave mass exchange force
+        %
+            if nargin <3, zIdx = (1:wave(1).NZ).'; end
+            
+            %TODO:
+            deltaU = wave.film.base.U(zIdx) - wave.U(zIdx);
+            Fbasemass = wave.MBASE(drop,zIdx).*deltaU; % [N/m^2]
+            
+        end
+
+        function Ftot = FTOT(wave,drop,zIdx)
+        %FTOT Total
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+            
+            Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(zIdx)+wave.FBASEMASS(drop,zIdx);   
+            
         end
         
         function Mtot = MTOT(wave,drop,zIdx)
@@ -150,7 +197,11 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
-            Mtot  = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx);
+            % Net mass exchange
+            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx);
+
+            % Add turbulent exchange term (eq.8)
+            Mtot = Mtot + wave.MTURB(zIdx);
             
         end
 
@@ -169,9 +220,21 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
-            coefs = wave.inputSet.model.EQSTROUHALCOEF;
-            re_v = wave.film.mix.vapor.RE(zIdx);
-            eqst = coefs(1) .* re_v.^coefs(2);
+            switch wave.inputSet.model.EQSTROUHAL
+                case 'DEFAULT'
+                    coefs = [1.1236E-4 0.5];
+                    re_v = wave.film.mix.vapor.RE(zIdx);
+                    eqst = coefs(1) .* re_v.^coefs(2);
+                case 'MFVAL'
+                    coefs = [4.1E-8 0.5 0.5];
+                    re_v = wave.film.mix.vapor.RE(zIdx);
+                    re_l = wave.film.mix.liquid.RE(zIdx);
+                    eqst = coefs(1) .* re_v.^coefs(2) .* re_l.^coefs(3);
+                otherwise
+                    coefs = wave.inputSet.model.EQSTROUHALCOEF;
+                    re_v = wave.film.mix.vapor.RE(zIdx);
+                    eqst = coefs(1) .* re_v.^coefs(2);
+            end
 
         end
 

@@ -117,17 +117,35 @@ classdef Base < Solvers.AbstractFilm
             % TODO: add as model option later
             eta = base.EPSILON(zIdx).*base.BETA(zIdx);
         end
+
+        function Mturb = MTURB(base, zIdx)
+        %MTURB Turbulent mass exchange
+        %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
+            wave = base.film.wave;
+            Kw_recp = base.inputSet.model.WAVEMIXCOEF;
+            Mturb = min(base.WL(zIdx), wave.WL(zIdx)) .* Kw_recp ./ wave.WIDTH(zIdx);
+
+            Mturb = base.film.mix.AFDISTR(0,Mturb,zIdx);
+
+        end
         
         function Mwave = MWAVE(base,drop,zIdx)
         %MWAVE Mass flux interaction with wave
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
+            % Saturated liquid density
             rho_ls = base.fluid.RHOF;
+            % Relaxation term
             relaxTB = base.inputSet.model.RELAXTB;
+
+            % Net exchange term
             Mwave = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.ETA(zIdx).*drop.MDEP(zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+            % Add turbuluent mixing term (eq.7)
+            Mwave = max(0, Mwave) + base.MTURB(zIdx);
             
-            Mwave = base.film.mix.AFDISTR(0,Mwave,zIdx);
         end
         
         function Mtot = MTOT(base,drop,zIdx)
@@ -141,12 +159,23 @@ classdef Base < Solvers.AbstractFilm
         end
         
         function Fwave = FWAVE(base,zIdx)
-        %FWAVE Wave force
+        %FWAVE Wave interfacial force
         %
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             %TODO: add model option
             Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx); % [N/m^2]
+            
+        end
+
+        function Fwavemass = FWAVEMASS(base,drop,zIdx)
+        %FWAVEMASS Base mass exchange force
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            
+            %TODO:
+            deltaU = base.film.wave.U(zIdx) - base.U(zIdx);
+            Fwavemass = base.MWAVE(drop,zIdx).*deltaU; % [N/m^2]
             
         end
 
@@ -161,12 +190,22 @@ classdef Base < Solvers.AbstractFilm
             
         end
 
+        function Fdep = FDEP(base,drop,zIdx)
+        %FWAVE Droplet
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            
+            deltaU = drop.U(zIdx) - base.U(zIdx,:);
+            Fdep = base.ETA(zIdx).*drop.MDEP(zIdx) .* deltaU;   % [N/m^2]
+            
+        end
+
         function Ftot = FTOT(base,drop,zIdx)
         %FTOT Total
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
-            Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);   
+            Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FWAVEMASS(zIdx)+base.FVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);   
             
         end
 
@@ -175,8 +214,16 @@ classdef Base < Solvers.AbstractFilm
         %   
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
+            switch base.inputSet.model.BASEEQTHICK
+                case 'DEFAULT'
+                    coefs = [5.37E-5 -0.64 1.21];
+                case 'MFVAL'
+                    coefs = [1.8E-5 -0.5 1.5];
+                otherwise
+                    coefs = base.inputSet.model.BASEEQTHICKCOEF;
+            end
+
             D_H = base.inputSet.geometry.HDIAM();
-            coefs = base.inputSet.model.BASEEQTHICKCOEF;
             Re_v = base.film.mix.vapor.RE(zIdx);
             Re_f = base.film.RE(zIdx);
             eqthick = D_H .* coefs(1) .* (Re_v.^coefs(2)) .* (Re_f.^coefs(3));
