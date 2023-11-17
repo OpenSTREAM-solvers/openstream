@@ -94,7 +94,7 @@ classdef Base < Solvers.AbstractFilm
         
         function ment = MENT(base, zIdx)
         %MENT Base entrainment mass flux
-        %
+        %   TODO: use coefficient later
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: use coefficient later
@@ -149,7 +149,7 @@ classdef Base < Solvers.AbstractFilm
         end
         
         function Mtot = MTOT(base,drop,zIdx)
-        %MTOT Total
+        %MTOT Total mass flux of the base film
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             

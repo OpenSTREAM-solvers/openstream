@@ -169,20 +169,20 @@ function solver(solveINIT)
                 end
 
                 % Base momentum conservation
-                switch model.MOMENTFILM
-                    case InputEnums.MOMENTFILM.ALGEBRAIC
+                switch model.MOMENTBASE
+                    case InputEnums.MOMENTBASE.ALGEBRAIC
                     % Simple algebraic model
                         base(tIdx).U(zIdx,:) = base(tIdx).UALGEBR(zIdx);                    % [m/s]
                         
-                    case InputEnums.MOMENTFILM.EQUILIBRIUMS
+                    case InputEnums.MOMENTBASE.EQUILIBRIUMS
                     % Simple equilibrium model (Fwall+ Fvapor = 0)
                         base(tIdx).U(zIdx,:) = base(tIdx).UEQUILS(zIdx);                    % [m/s]
                         
-                    case InputEnums.MOMENTFILM.EQUILIBRIUM
+                    case InputEnums.MOMENTBASE.EQUILIBRIUM
                     % Complete equilibrium model (Ftot = 0)
                         base(tIdx).U(zIdx,:) = base(tIdx).UEQUIL(drop(tIdx),zIdx);          % [m/s]
                         
-                    case InputEnums.MOMENTFILM.FULL
+                    case InputEnums.MOMENTBASE.FULL
                     % Full film momentum conservation
                         %for i = 1:round(1/options.RELAXUF)
                         
@@ -196,6 +196,40 @@ function solver(solveINIT)
                             base(tIdx).U(zIdx,:) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),base(tIdx).U(zIdx,:),zIdx);
                         else
                             base(tIdx).U(zIdx,:) = base(tIdx).UEQUIL(drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
+                        end
+                        
+                        %Uiter = film(tIdx).U(zIdx,:);
+                        %end
+                end
+
+                % Wave momentum conservation
+                switch model.MOMENTWAVE
+%                     case InputEnums.MOMENTFILM.ALGEBRAIC
+%                     % Simple algebraic model
+%                         wave(tIdx).U(zIdx,:) = wave(tIdx).UALGEBR(zIdx);                    % [m/s]
+%                         
+%                     case InputEnums.MOMENTFILM.EQUILIBRIUMS
+%                     % Simple equilibrium model (Fwall+ Fvapor = 0)
+%                         wave(tIdx).U(zIdx,:) = wave(tIdx).UEQUILS(zIdx);                    % [m/s]
+%                         
+%                     case InputEnums.MOMENTFILM.EQUILIBRIUM
+%                     % Complete equilibrium model (Ftot = 0)
+%                         wave(tIdx).U(zIdx,:) = wave(tIdx).UEQUIL(drop(tIdx),zIdx);          % [m/s]
+                        
+                    case InputEnums.MOMENTFILM.FULL
+                    % Full film momentum conservation
+                        %for i = 1:round(1/options.RELAXUF)
+                        
+                        thick = max(abs(wave(tIdx).THICK(zIdx)),model.THINFILMTHICK);                 % [m] Film thickness
+                        
+                        if thick>model.THINFILMTHICK
+                            Fbtot = wave(tIdx).FTOT(drop(tIdx),zIdx);                        % [N/m^2] Momentum exchange terms with base
+                            Unew = (Ubups.*Ubiter+Ubold.*DZ./DT+Fbtot.*DZ./(RHOF.*thick))./(Ubiter+DZ/DT); % [m/s] Update velocity
+                            Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                         % [m/s] Keep within realistic bounds to help convergence
+                            wave(tIdx).U(zIdx,:) = (1-options.RELAXUB).*Ubiter+options.RELAXUB.*Unew;  % [m/s] Apply relaxation
+                            wave(tIdx).U(zIdx,:) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),base(tIdx).U(zIdx,:),zIdx);
+                        else
+                            wave(tIdx).U(zIdx,:) = wave(tIdx).UEQUIL(drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
                         end
                         
                         %Uiter = film(tIdx).U(zIdx,:);
