@@ -80,12 +80,14 @@ TPKM       ! Two-phase local loss multiplier [-]                            > ho
 SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > slip
 SLIP       ! Phase velocity ratio [-]                                       > 1.
-OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.3
+OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
-OAFENTRAINED !                                                              > EQUILIBRIUM
-%OAFENTRAINED !                                                              > RATIO
+%OAFENTRAINED !                                                              > EQUILIBRIUM
+OAFENTRAINED !                                                              > RATIO
 OAFBASERATIO !                                                              > 0.2
 MOMENTFILM !                                                                > ALGEBRAIC
+MOMENTBASE !                                                                > EQUILIBRIUM
+MOMENTWAVE !                                                                > FULL
 MOMENTDROP !                                                                > slip
 POSFILM !                                                                   > 1
 END
