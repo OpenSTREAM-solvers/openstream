@@ -3,8 +3,10 @@ classdef EQSTROUHAL
 %   Defines which base film equilibrium model to use
 %
     enumeration
-        DEFAULT     % Default from Le Corre (2022)
+        RISO        % RISO Dataset from Le Corre (2022)
+        SAWAI       % SAWAI Dataset from Le Corre (2022)
         MFVAL       % MFVAL, in progress (20XX)
+        CUSTOM      % Custom option using EQSTROUHALCOEF
     end
 end
     

@@ -442,7 +442,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 'ylabel', 'Shear stress [N/m^2]');
             plotters.plotz(flm.base.FDEP(drp), 'Drop deposition');
             plotters.plotz(flm.base.FWALL(),  'Wall');
-            plotters.plotz(flm.base.FVAPOR(),  'Vapor');
+            plotters.plotz(flm.base.FBASEVAPOR(),  'Vapor');
             plotters.plotz(flm.base.FWAVE(),  'Wave');
             plotters.plotz(flm.base.FWAVEMASS(drp),  'WaveMass');
             plotters.plotz(flm.base.FBUOY(),   'Buoyancy');
@@ -457,12 +457,13 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 'xlabel', 'Axial position [m]', ...
                 'ylabel', 'Shear stress [N/m^2]');
             plotters.plotz(flm.wave.FDEP(drp), 'Drop deposition');
-            plotters.plotz(flm.wave.FVAPOR(),  'Vapor');
+            plotters.plotz(flm.wave.FDRAG(),  'Vapor drag');
+            plotters.plotz(flm.wave.FSHEAR(),  'Vapor shear');
             plotters.plotz(flm.wave.FBASE(),  'Base');
             plotters.plotz(flm.wave.FBASEMASS(drp),  'BaseMass');
             plotters.plotz(flm.wave.FBUOY(),   'Buoyancy');
             plotters.plotz(flm.wave.FGRAV(),   'Gravity');
-            %plotters.plotz(flm.wave.FTOT(drp), 'Total');
+            % plotters.plotz(flm.wave.FTOT(drp), 'Total');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
 

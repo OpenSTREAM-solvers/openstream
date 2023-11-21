@@ -269,6 +269,8 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(6), '-', '.'};
                 case {'GRAVITY'}
                     plotStyle = {colors(7), '-', '.'};
+                case {'INTERFACIAL'}
+                    plotStyle = {colors(1), '-', 'O'};
 
                 otherwise
                     plotStyle = {'black', '--', '.'};

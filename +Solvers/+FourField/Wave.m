@@ -73,9 +73,7 @@ classdef Wave < Solvers.AbstractFilm
         %    
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
         
-            rhof  = wave.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
-        
-            thick = wave.WL(zIdx)./wave.U(zIdx,:)./rhof;                   % [m] Film thickness
+            thick = wave.AMP(zIdx) .* wave.BETA(zIdx);                     % [m] Film thickness
         end
 
         function beta = BETA(wave, zIdx)
@@ -183,12 +181,60 @@ classdef Wave < Solvers.AbstractFilm
             
         end
 
+        function Fvapor = FVAPOR(wave,zIdx)
+        %FVAPOR Film vapor shear stress
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+            
+            Fvapor = wave.FDRAG(zIdx) + wave.FSHEAR(zIdx);
+            
+        end
+
+        function Fdrag = FDRAG(wave,zIdx)
+        %FDRAG Film vapor shear stress due to drag
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+            
+            % Saturated vapor density
+            rho_vs = wave.fluid.RHOG;
+            
+            % Difference in wave and vapor velocities
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);
+
+            % Eq. 45
+            Fdrag = 0.5 .* wave.SHAPEFACTOR(zIdx) .* wave.DRAGCOEF(zIdx) .* rho_vs .* dU.^2;
+
+            Fdrag = wave.mix.AFDISTR(0,Fdrag,zIdx);
+            
+        end
+
+        function Fshear = FSHEAR(wave,zIdx)
+        %FSHEAR Film vapor shear stress
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            % Friction factor
+            f_v_w = wave.CV(zIdx);
+            
+            % Saturated vapor density
+            rho_vs = wave.fluid.RHOG;
+            
+            % Difference in wave and vapor velocities
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);
+
+            % Eq. 46
+            Fshear = 0.5 .* f_v_w .* rho_vs .* dU.^2;
+            
+        end
+        
+
         function Ftot = FTOT(wave,drop,zIdx)
         %FTOT Total
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
-            Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(zIdx)+wave.FBASEMASS(drop,zIdx);   
+            Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(zIdx)+wave.FBASEMASS(drop,zIdx);
+            %Ftot = wave.FVAPOR(zIdx)+wave.FBASE(zIdx);
             
         end
         
@@ -221,20 +267,19 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
             switch wave.inputSet.model.EQSTROUHAL
-                case 'DEFAULT'
-                    coefs = [1.1236E-4 0.5];
-                    re_v = wave.film.mix.vapor.RE(zIdx);
-                    eqst = coefs(1) .* re_v.^coefs(2);
+                case 'RISO'
+                    coefs = [1.1236E-4 0.5 0.0];                            % Eq. 59
+                case 'SAWAI'
+                    coefs = [77.67    -1.3 0.46];                           % Eq. 70
                 case 'MFVAL'
-                    coefs = [4.1E-8 0.5 0.5];
-                    re_v = wave.film.mix.vapor.RE(zIdx);
-                    re_l = wave.film.mix.liquid.RE(zIdx);
-                    eqst = coefs(1) .* re_v.^coefs(2) .* re_l.^coefs(3);
-                otherwise
+                    coefs = [4.1E-8    0.5 0.5];
+                case 'CUSTOM'
                     coefs = wave.inputSet.model.EQSTROUHALCOEF;
-                    re_v = wave.film.mix.vapor.RE(zIdx);
-                    eqst = coefs(1) .* re_v.^coefs(2);
             end
+
+            re_v = wave.film.mix.vapor.RE(zIdx);
+            re_l = wave.film.mix.liquid.RE(zIdx);
+            eqst = coefs(1) .* re_v.^coefs(2) .* re_l.^coefs(3);
 
         end
 

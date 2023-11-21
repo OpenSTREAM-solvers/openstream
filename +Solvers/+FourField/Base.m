@@ -127,7 +127,7 @@ classdef Base < Solvers.AbstractFilm
             Kw_recp = base.inputSet.model.WAVEMIXCOEF;
             Mturb = min(base.WL(zIdx), wave.WL(zIdx)) .* Kw_recp ./ wave.WIDTH(zIdx);
 
-            Mturb = base.film.mix.AFDISTR(0,Mturb,zIdx);
+            Mturb = base.mix.AFDISTR(0,Mturb,zIdx);
 
         end
         
@@ -135,6 +135,8 @@ classdef Base < Solvers.AbstractFilm
         %MWAVE Mass flux interaction with wave
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            %TODO: implement model selection options
 
             % Saturated liquid density
             rho_ls = base.fluid.RHOF;
@@ -145,6 +147,8 @@ classdef Base < Solvers.AbstractFilm
             Mwave = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.ETA(zIdx).*drop.MDEP(zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
             % Add turbuluent mixing term (eq.7)
             Mwave = max(0, Mwave) + base.MTURB(zIdx);
+
+            Mwave = base.mix.AFDISTR(0,Mwave,zIdx);
             
         end
         
@@ -164,6 +168,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             %TODO: add model option
+            %TODO: 
             Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx); % [N/m^2]
             
         end
@@ -176,17 +181,19 @@ classdef Base < Solvers.AbstractFilm
             %TODO:
             deltaU = base.film.wave.U(zIdx) - base.U(zIdx);
             Fwavemass = base.MWAVE(drop,zIdx).*deltaU; % [N/m^2]
+
+            Fwavemass = base.mix.AFDISTR(0,Fwavemass,zIdx);
             
         end
 
-        function Fvapor = FVAPOR(base,zIdx)
-        %FVAPOR Film vapor shear stress
-        %
+        function Fbasevapor = FBASEVAPOR(base,zIdx)
+        %FBASEVAPOR Film base vapor shear stress
+        %   TODO: consider different way of doing this...
             
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: debug syntax
-            Fvapor = base.BETA(zIdx).* FVAPOR@Solvers.AbstractFilm(base,zIdx); % [N/m^2]
+            Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx); % [N/m^2]
             
         end
 
@@ -205,8 +212,8 @@ classdef Base < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
-            Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FWAVEMASS(zIdx)+base.FVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);   
-            
+            Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);   
+            %Ftot = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);
         end
 
         function eqthick = EQTHICK(base,zIdx)

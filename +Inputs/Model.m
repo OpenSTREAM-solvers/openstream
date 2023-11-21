@@ -22,7 +22,7 @@ classdef Model < Inputs.Input
         OAF           (1,1) InputEnums.OAF                                 = 'WALLIS'              % Onset of annular flow model [-]
 
         OAFFILMSPLIT  (1,1) InputEnums.OAFFILMSPLIT                        = 'RATIO'               % Film mass flow rate at onset of annular flow [-]
-        OAFBASERATIO  (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}      = 0.5                % Base/Film mass ratio at onset of annular flow [-]
+        OAFBASERATIO  (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}      = 0.5                   % Base/Film mass ratio at onset of annular flow [-]
 
         OAFENTRAINED  (1,1) InputEnums.OAFENTRAINED                        = 'RATIO'               % Entrained model at onset of annular flow [-]
         OAFDROPRATIO  (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}      = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
@@ -45,10 +45,10 @@ classdef Model < Inputs.Input
         BASEEQTHICK     (1,1) InputEnums.BASEEQTHICK                       = 'DEFAULT'
         BASEEQTHICKCOEF (:,1) double  {mustBeNumeric}                      = [5.37E-5 -0.64 1.21]  % Base equilibrium thickness coefficient
         RELAXTB         (:,1) double  {mustBeNonnegative}                     = 0.2                   % Base film relaxation time
-        MOMENTBASE      (1,1) InputEnums.MOMENTBASE                        = 'ALGEBRAIC'           % Film momentum conservation model [-]  
+        MOMENTBASE      (1,1) InputEnums.MOMENTBASE                        = 'ALGEBRAIC'           % Base Film momentum conservation model [-]  
         
         SHAPEFACTORCOEF (:,1) double {mustBeNumeric}                       = [1.325E5 2]           % Wave shape factor coefficients
-        EQSTROUHAL      (1,1) InputEnums.EQSTROUHAL                        = 'DEFAULT'
+        EQSTROUHAL      (1,1) InputEnums.EQSTROUHAL                        = 'RISO'
         EQSTROUHALCOEF  (:,1) double {mustBeNumeric}                       = [1.1236E-4 0.5]       % Wave equilibrium Strouhal coefficients
         WAVEDRAGCOEF    (:,1) double  {mustBeNumeric}                      = [0.02 1.350E5 0.437]  % Wave drag coefficient
         WAVEFREQUENCY   (1,1) InputEnums.WAVEFREQUENCY                     = 'RELAXATION'          % Wave number conservation model   
