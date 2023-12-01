@@ -109,8 +109,16 @@ classdef Wave < Solvers.AbstractFilm
             betap = 1-wave.film.base.BETAP(zIdx);
         end
 
+        function eta = ETA(wave, zIdx)
+        %ETA Wave film deposition fraction
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            eta = 1-wave.film.base.ETA(zIdx);
+        end
+
         function ment = MENT(wave,zIdx)
-        %MENT Base entrainment mass flux
+        %MENT Wave entrainment mass flux
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
@@ -124,14 +132,6 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             mevap = wave.BETAP(zIdx) .* wave.film.MEVAP(zIdx,:);            
-        end
-
-        function eta = ETA(wave, zIdx)
-        %ETA Wave film deposition fraction
-        %
-            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
-
-            eta = 1-wave.film.base.ETA(zIdx);
         end
         
         function mturb = MTURB(wave, zIdx)
@@ -150,6 +150,19 @@ classdef Wave < Solvers.AbstractFilm
 
             Mbase = max(0, -wave.film.base.MWAVE(drop,zIdx)) + wave.MTURB(zIdx);
 
+        end
+        
+        function Mtot = MTOT(wave,drop,zIdx)
+        %MTOT Total mass flux
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+            
+            % Net mass exchange
+            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx);
+
+            % Add turbulent exchange term (eq.8)
+            Mtot = Mtot + wave.MTURB(zIdx);
+            
         end
 
         function Fwall = FWALL(wave,zIdx)
@@ -235,19 +248,6 @@ classdef Wave < Solvers.AbstractFilm
             
             Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(zIdx)+wave.FBASEMASS(drop,zIdx);
             %Ftot = wave.FVAPOR(zIdx)+wave.FBASE(zIdx);
-            
-        end
-        
-        function Mtot = MTOT(wave,drop,zIdx)
-        %MTOT Total mass flux
-        %
-            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
-            
-            % Net mass exchange
-            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx);
-
-            % Add turbulent exchange term (eq.8)
-            Mtot = Mtot + wave.MTURB(zIdx);
             
         end
 

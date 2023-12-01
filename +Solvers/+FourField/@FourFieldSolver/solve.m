@@ -129,30 +129,38 @@ function solver(solveINIT)
                 
                 Uditer  = drop(tIdx).U(zIdx);                              % [m/s] Drop velocity
                 
-                % Base film mass conservation
-                Mtot_b = base(tIdx).MTOT(drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with base
-                Wbnew = Ubiter.*(Wbups+Wbold./Ubold.*DZ./DT+geom.PERIM.*Mtot_b.*DZ)./(Ubiter+DZ./DT); % [kg/s] Update film mass flow rate
-                base(tIdx).W(zIdx,:) = (1-options.RELAXWB).*Wbiter+options.RELAXWB.*Wbnew;    % [kg/s] Apply relaxation
+                % Film mass conservation
+                %   When non-negative film (POSFILM) is enforced, the
+                %   conservation equations are run twice. The first time
+                %   results in potentially negative film flow, while for
+                %   the second time, base and wave flow rates are forced to
+                %   be non-neg while conserving film mass. 
+                %
+                %   The calculations are performed at most 2 times for now,
+                %   but more may be needed.
+                %   TODO: determine if more iterations are needed.
+                %
+                for filmMassConsItr = 1:2
+                    % Base film mass conservation
+                    Mtot_b = base(tIdx).MTOT(drop(tIdx),zIdx);                                              % [kg/s/m^2] Mass exchange terms with base
+                    Wbnew = Ubiter.*(Wbups+Wbold./Ubold.*DZ./DT+geom.PERIM.*Mtot_b.*DZ)./(Ubiter+DZ./DT);   % [kg/s] Update film mass flow rate
+                    base(tIdx).W(zIdx,:) = (1-options.RELAXWB).*Wbiter+options.RELAXWB.*Wbnew;              % [kg/s] Apply relaxation
+    
+                    % Wave mass conservation
+                    Mtot_w = wave(tIdx).MTOT(drop(tIdx),zIdx);                                              % [kg/s/m^2] Mass exchange terms with wave
+                    Wwnew = Uwiter.*(Wwups+Wwold./Uwold.*DZ./DT+geom.PERIM.*Mtot_w.*DZ)./(Uwiter+DZ./DT);   % [kg/s] Update film mass flow rate
+                    wave(tIdx).W(zIdx,:) = (1-options.RELAXWW).*Wwiter+options.RELAXWW.*Wwnew;              % [kg/s] Apply relaxation
+    
+                    % Enforce non-negative film (POSFILM)
+                    if filmMassConsItr == 1 && model.POSFILM
+                        filmW = film(tIdx).W(zIdx,:);                             % [kg/s] Save film flow
+                        wave(tIdx).W(zIdx,:) = max(wave(tIdx).W(zIdx,:),0);       % [kg/s] Wave flow is limited by 0
+                        base(tIdx).W(zIdx,:) = max(filmW-wave(tIdx).W(zIdx,:),0); % [kg/s] Base flow compensate for wave mass source/sink when needed and is limited by 0
+                    else 
+                        break;
+                    end
 
-                % Wave mass conservation
-                Mtot_w = wave(tIdx).MTOT(drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with wave
-                Wwnew = Uwiter.*(Wwups+Wwold./Uwold.*DZ./DT+geom.PERIM.*Mtot_w.*DZ)./(Uwiter+DZ./DT); % [kg/s] Update film mass flow rate
-                wave(tIdx).W(zIdx,:) = (1-options.RELAXWW).*Wwiter+options.RELAXWW.*Wwnew;    % [kg/s] Apply relaxation
-
-                % DEBUG
-                % fprintf('t:%d, z:%d, itr:%03d-> mtot:%0.8u, wbase:%0.8u, wdrop:%0.8u, ment: %0.8u\n', ...
-                %     tIdx, zIdx, itr, ...
-                %     Mtot, mean(base(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), base(tIdx).MENT(zIdx));
-
-                if model.POSFILM
-                    filmW = film(tIdx).W(zIdx,:);                             % [kg/s] Save film flow
-                    wave(tIdx).W(zIdx,:) = max(wave(tIdx).W(zIdx,:),0);       % [kg/s] Wave flow is limited by 0
-                    base(tIdx).W(zIdx,:) = max(filmW-wave(tIdx).W(zIdx,:),0); % [kg/s] Base flow compensate for wave mass source/sink when needed and is limited by 0
-                    % TODO: (!!) The enforced mass transfer here needs to be
-                    % captured in the MWAVE, MBASE 
                 end
-
-
 
                 % Drop mass conservation
                 drop(tIdx).W(zIdx) = mix(tIdx).liquid.W(zIdx)-sum(film(tIdx).W(zIdx,:)); % [kg/s] Drop flowrate

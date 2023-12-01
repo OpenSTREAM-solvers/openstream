@@ -91,6 +91,15 @@ classdef Base < Solvers.AbstractFilm
             betap = base.BETA(zIdx);
 
         end
+
+        function eta = ETA(base, zIdx)
+        %ETA Base film deposition fraction
+        %
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
+            % TODO: add as model option later
+            eta = base.EPSILON(zIdx).*base.BETA(zIdx);
+        end
         
         function ment = MENT(base, zIdx)
         %MENT Base entrainment mass flux
@@ -107,15 +116,6 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
             mevap = base.BETAP(zIdx) .* base.film.MEVAP(zIdx,:);
-        end
-
-        function eta = ETA(base, zIdx)
-        %ETA Base film deposition fraction
-        %
-            if nargin < 2, zIdx = (1:base(1).NZ).'; end
-
-            % TODO: add as model option later
-            eta = base.EPSILON(zIdx).*base.BETA(zIdx);
         end
 
         function Mturb = MTURB(base, zIdx)
