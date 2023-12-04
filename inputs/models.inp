@@ -85,8 +85,10 @@ OAF        ! Onset of annular flow model                                    > WA
 %OAFENTRAINED !                                                              > EQUILIBRIUM
 OAFENTRAINED !                                                              > RATIO
 OAFBASERATIO !                                                              > 0.2
+OAFFILMSPLIT !                                                              > RATIO
+THINFILMFRIC !                                                              > TURBULENT
 MOMENTFILM !                                                                > ALGEBRAIC
-MOMENTBASE !                                                                > EQUILIBRIUM
+MOMENTBASE !                                                                > FULL
 MOMENTWAVE !                                                                > FULL
 MOMENTDROP !                                                                > slip
 POSFILM !                                                                   > 1

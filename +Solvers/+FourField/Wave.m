@@ -143,12 +143,14 @@ classdef Wave < Solvers.AbstractFilm
 
         end
         
-        function Mbase = MBASE(wave,drop,zIdx)
+        function [Mbase, Mturb] = MBASE(wave,drop,zIdx)
         %MWAVE Mass flux interaction with base
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
-            Mbase = max(0, -wave.film.base.MWAVE(drop,zIdx)) + wave.MTURB(zIdx);
+            [Mwave, Mturb_base] = wave.film.base.MWAVE(drop,zIdx);
+            Mturb = wave.MTURB(zIdx);
+            Mbase = max(0, -(Mwave-Mturb_base)) + Mturb;
 
         end
         
@@ -158,7 +160,7 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
             % Net mass exchange
-            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx);
+            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx)-wave.film.base.MWAVE(drop,zIdx);
 
             % Add turbulent exchange term (eq.8)
             Mtot = Mtot + wave.MTURB(zIdx);

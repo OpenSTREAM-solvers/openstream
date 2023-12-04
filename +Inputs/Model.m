@@ -33,7 +33,7 @@ classdef Model < Inputs.Input
         MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
         MOMENTDROP    (1,1) InputEnums.MOMENTDROP                          = 'SLIP'                % Drop momentum conservation model [-]                                                                 
         DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
-        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'LAMINAR'             % Thin film wall friction model [-]  
+        THINFILMFRIC  (1,1) InputEnums.THINFILMFRIC                        = 'TURBULENT'           % Thin film wall friction model [-]  
         THINFILMTHICK (1,1) double  {mustBePositive}                       = 1E-4                  % Thin film thickness [m]        
         VAPORFRIC     (1,1) InputEnums.VAPORFRIC                           = 'WALLIS'              % Vapor friction model [-]  
         VAPORFRICCST  (1,1) double  {mustBePositive}                       = 0.005                 % Vapor friction constant [-]
@@ -44,7 +44,7 @@ classdef Model < Inputs.Input
 
         BASEEQTHICK     (1,1) InputEnums.BASEEQTHICK                       = 'DEFAULT'
         BASEEQTHICKCOEF (:,1) double  {mustBeNumeric}                      = [5.37E-5 -0.64 1.21]  % Base equilibrium thickness coefficient
-        RELAXTB         (:,1) double  {mustBeNonnegative}                     = 0.2                   % Base film relaxation time
+        RELAXTB         (:,1) double  {mustBeNonnegative}                  = 0.2                   % Base film relaxation time
         MOMENTBASE      (1,1) InputEnums.MOMENTBASE                        = 'ALGEBRAIC'           % Base Film momentum conservation model [-]  
         
         SHAPEFACTORCOEF (:,1) double {mustBeNumeric}                       = [1.325E5 2]           % Wave shape factor coefficients
@@ -52,7 +52,7 @@ classdef Model < Inputs.Input
         EQSTROUHALCOEF  (:,1) double {mustBeNumeric}                       = [1.1236E-4 0.5]       % Wave equilibrium Strouhal coefficients
         WAVEDRAGCOEF    (:,1) double  {mustBeNumeric}                      = [0.02 1.350E5 0.437]  % Wave drag coefficient
         WAVEFREQUENCY   (1,1) InputEnums.WAVEFREQUENCY                     = 'RELAXATION'          % Wave number conservation model   
-        RELAXTW         (:,1) double  {mustBeNonnegative}                     = 0.2                   % Wave relaxation time
+        RELAXTW         (:,1) double  {mustBeNonnegative}                  = 0.2                   % Wave relaxation time
         MOMENTWAVE      (1,1) InputEnums.MOMENTWAVE                        = 'FULL'                % Film momentum conservation model [-]  
         WAVEMIXCOEF     (:,1) double  {mustBeNonnegative}                  = 0.0                   % Wave mixing coefficient
         

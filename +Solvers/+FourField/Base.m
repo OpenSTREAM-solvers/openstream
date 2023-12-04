@@ -131,9 +131,9 @@ classdef Base < Solvers.AbstractFilm
 
         end
         
-        function Mwave = MWAVE(base,drop,zIdx)
-        %MWAVE Mass flux interaction with wave
-        %
+        function [Mwave, Mturb] = MWAVE(base,drop,zIdx)
+        %MWAVE Net Mass flux interaction with wave
+        %   Defined as a source term, Mwave is the 
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
             %TODO: implement model selection options
@@ -145,12 +145,31 @@ classdef Base < Solvers.AbstractFilm
 
             % Net exchange term
             Mwave = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.ETA(zIdx).*drop.MDEP(zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+
             % Add turbuluent mixing term (eq.7)
-            Mwave = max(0, Mwave) + base.MTURB(zIdx);
+            Mturb = base.MTURB(zIdx);
+            Mwave = max(0, Mwave) + Mturb;
+
+            % TODO: requires further investigation
+            % if base.inputSet.model.POSFILM
+            %     DeltaWLwave = max(0-base.film.wave.WL(zIdx),0);             % [kg/m-s] Wave flow is limited by 0
+            %     DeltaMwave = DeltaWLwave ./ base.DZ;                        % [kg/m^2-s] Wave mass flux
+            %     Mwave = Mwave - DeltaMwave;                                 % Apply to Mwave
+            % end
 
             Mwave = base.mix.AFDISTR(0,Mwave,zIdx);
             
         end
+
+        % function Mwave = MWAVE(base, drop, zIdx)
+        % %MWAVE Base to wave mass flux
+        % %    
+        %     if nargin < 3, zIdx = (1:base(1).NZ).'; end
+        % 
+        %     % Add turbuluent mixing term (eq.7)
+        %     Mwave = max(0, base.MWAVENET(drop, zIdx)) + base.MTURB(zIdx);
+        % 
+        % end
         
         function Mtot = MTOT(base,drop,zIdx)
         %MTOT Total mass flux of the base film
@@ -158,7 +177,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             % TODO: potentially move the MDEP method
-            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.ETA(zIdx).*drop.MDEP(zIdx)+base.MWAVE(drop,zIdx);
+            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.ETA(zIdx).*drop.MDEP(zIdx)+base.MWAVE(drop,zIdx)-base.film.wave.MBASE(drop,zIdx);
 
         end
         
@@ -168,7 +187,6 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             %TODO: add model option
-            %TODO: 
             Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx); % [N/m^2]
             
         end
