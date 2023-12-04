@@ -38,8 +38,9 @@ classdef Mixture < Solvers.AbstractField
         mflux        (:,1) double  {mustBeNumeric}                         = 1                  % [kg/m^2-s] Mass flux
         xeq          (:,1) double  {mustBeNumeric}                         = 1                  % [-] Equilibrium quality
         x            (:,1) double  {mustBeNumeric}                         = 1                  % [-] Vapor quality
-    end
-        
+        oafidx_const       double  {mustBeNumeric}                         = []                 % [-] Solved index for onset of annular flow
+        sigm_const   (:,1) double  {mustBeNumeric}                         = []                 % [-] Solved sigmoid fnc value
+    end       
     
     methods
         function mix = Mixture(inputSet, fluid)
@@ -327,6 +328,12 @@ classdef Mixture < Solvers.AbstractField
         function oafIdx = OAFIDX(mix)
             %OAFIDX Onset of annular flow node
             %
+
+            % Use saved value if it has been calculated already
+            if ~isempty(mix.oafidx_const)
+                oafIdx = mix.oafidx_const;
+                return
+            end
             
             model = mix.inputSet.model;
             HDIAM  = mix.inputSet.geometry.HDIAM;
@@ -347,6 +354,9 @@ classdef Mixture < Solvers.AbstractField
             end
             oafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
             if isempty(oafIdx), oafIdx = mix.NZ; end                       % Most donstream node (NZ) when annular flow region is not found
+
+            % Save value
+            mix.oafidx_const = oafIdx;
         end
         
         function oafz = OAFZ(mix)
@@ -371,7 +381,7 @@ classdef Mixture < Solvers.AbstractField
 
             p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
             p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
-            afFnc = mix.sigm(zIdx,[p(1), mix.OAFIDX+p(2)]);
+            afFnc = mix.sigm(zIdx,[p(1), mix.OAFIDX()+p(2)]);
         end
         
         function afDistr = AFDISTR(mix,param1,param2,zIdx)
@@ -512,8 +522,16 @@ classdef Mixture < Solvers.AbstractField
     end
 
     methods (Access=private)
-        function s = sigm(mix,x,p) 
-            s = 1./(1+exp(-p(1).*(x-p(2))));                       % Define sigmoid function
+        function s = sigm(mix, zIdx, pCoefs)
+            
+            % Calculate sigmoid function once
+            % NOTE: changing pCoefs after first call will not result in
+            % update of this function values.
+            if isempty(mix.sigm_const)
+                zIdxs = (1:mix(1).NZ).';
+                mix.sigm_const = 1./(1+exp(-pCoefs(1).*(zIdxs-pCoefs(2)))); % Define sigmoid function
+            end
+            s = mix.sigm_const(zIdx);
         end
     end
 
