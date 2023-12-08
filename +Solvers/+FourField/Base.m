@@ -160,16 +160,6 @@ classdef Base < Solvers.AbstractFilm
             Mwave = base.mix.AFDISTR(0,Mwave,zIdx);
             
         end
-
-        % function Mwave = MWAVE(base, drop, zIdx)
-        % %MWAVE Base to wave mass flux
-        % %    
-        %     if nargin < 3, zIdx = (1:base(1).NZ).'; end
-        % 
-        %     % Add turbuluent mixing term (eq.7)
-        %     Mwave = max(0, base.MWAVENET(drop, zIdx)) + base.MTURB(zIdx);
-        % 
-        % end
         
         function Mtot = MTOT(base,drop,zIdx)
         %MTOT Total mass flux of the base film
@@ -255,7 +245,98 @@ classdef Base < Solvers.AbstractFilm
             
             % Limit eqthick to 1/2 of D_H, at most
             eqthick = min(eqthick, D_H/2);
-        end     
+        end
+
+        function tbase = TBASE(base, zIdx)
+        %TBASE Base film exposed time
+        %   The time in which the base film is exposed to the vapor (eq.24)
+
+            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
+            wave = base.film.wave;
+            lambda_w = wave.SPACING(zIdx);
+            DeltaU = wave.U(zIdx,:) - base.U(zIdx,:);
+            tbase = base.BETA(zIdx).*lambda_w./DeltaU;
+
+            % If the wave and base speeds are the same, the period can be
+            % set to 0.
+            tbase(isinf(tbase)) = 0;
+
+            % TODO: Handle deltaU tending to 0 near OAF.
+            % tbaseMax = max(0.1 ./ wave.U(zIdx,:));
+            % tbase(abs(tbase) > tbaseMax) = 0;
+
+            tbase = base.mix.AFDISTR(0, tbase, zIdx);
+
+        end
+
+        function tdry = TDRY(base, drop, zIdx)
+        %TDRY Time duration in which the base is expected to dry out.
+        %   Not included in the reference paper.
+
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            per = base.inputSet.geometry.PERIM();
+            Wb = base.W(zIdx,:);
+            Ub = base.U(zIdx,:);
+            DeltaM=-base.MEVAP(zIdx) - base.ETA(zIdx).*drop.MDEP(zIdx);
+            betaB = base.BETA(zIdx);
+            
+            tdry = base.TBASE(zIdx) - Wb.*betaB./per./Ub./DeltaM;
+            tdry(DeltaM<=0) = 0;
+            % If dry out doesn't occur, set to 0.
+            tdry = max(tdry, 0);
+
+        end
+
+        function fdry = FDRY(base, drop, zIdx)
+        %FDRY Dry fraction
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            tbase = base.TBASE(zIdx);
+            fdry = base.TDRY(drop, zIdx)./tbase;
+
+            % If the base is never exposed (tbase==0), fdry is 0 by
+            % definition.
+            fdry(tbase==0) = 0;
+
+        end
+
+        function wmin = WMIN(base, drop, zIdx)
+        % WMIN Minimum base film mass flow rate (eq. 27)
+        %   Base film mass flow rate at the end of the intermittent exposed
+        %   time (TBASE).
+            
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            per = base.inputSet.geometry.PERIM();
+            Wb = base.W(zIdx,:);
+            Ub = base.U(zIdx,:);
+            DeltaM=-base.MEVAP(zIdx) - base.ETA(zIdx).*drop.MDEP(zIdx);
+            Betab = base.BETA(zIdx);
+            wmin = Wb-per.*Ub.*DeltaM./Betab.*base.TBASE(zIdx);
+
+            % When Betab == 0, Wmin is Wb
+            wmin(Betab==0) = Wb(Betab==0);
+            
+            wmin = max(wmin, 0);
+        end
+
+        function thickmin = THICKMIN(base, drop, zIdx)
+        % THICKMIN Minimum base film thickness (eq. 28)
+        %   
+
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            rho_ls = base.fluid.RHOF;
+            Ub = base.U(zIdx,:);
+            per = base.inputSet.geometry.PERIM();
+                
+            thickmin = base.WMIN(drop, zIdx)./(rho_ls.*Ub.*per);
+        end
+
+
         
 
         function copyFlowProperties(srcObj, targetObj, opts)
