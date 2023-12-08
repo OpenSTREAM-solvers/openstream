@@ -314,6 +314,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(drp.W, 'Drop');
             plotters.plotz(flm.W, 'Film');
             plotters.plotz(flm.base.W, 'Base');
+            plotters.plotz(flm.base.WMIN(drp),'Base min');
             plotters.plotz(flm.wave.W,'Wave');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
@@ -324,7 +325,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 'xlabel', 'Axial position [m]', ...
                 'ylabel', 'Film mass flow rate [kg/s-m]');
             plotters.plotz(flm.WL, 'Film')
-            plotters.plotz(flm.base.WL, 'Base')
+            plotters.plotz(flm.base.WL, 'Base');
+            plotters.plotz(flm.base.WMINL(drp),'Base min');
             plotters.plotz(flm.wave.WL,'Wave')
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
@@ -380,6 +382,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.base.THICK, 'Base');
             plotters.plotz(flm.wave.THICK, 'Wave');
             plotters.plotz(flm.base.EQTHICK(), 'Base Eq');
+            plotters.plotz(flm.base.THICKMIN(drp), 'Base Min');
             plotters.plotz(flm.wave.AMP(), 'Wave Amp');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
@@ -404,6 +407,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.base.EPSILON(), 'Mass');
             plotters.plotz(flm.base.BETAP(), 'Heat flux');
             plotters.plotz(flm.base.ETA(), 'Deposition');
+            plotters.plotz(flm.base.FDRY(drp), 'Dry');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
             plotters.ylim([0 1]);

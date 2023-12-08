@@ -323,6 +323,13 @@ classdef Base < Solvers.AbstractFilm
             wmin = max(wmin, 0);
         end
 
+        function wminl = WMINL(base, drop, zIdx)
+        % WMINL Minimum base film mass flow rate per perimeter
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+            wminl = base.WMIN(drop, zIdx) ./ base.inputSet.geometry.PERIM();
+        end
+
         function thickmin = THICKMIN(base, drop, zIdx)
         % THICKMIN Minimum base film thickness (eq. 28)
         %   
