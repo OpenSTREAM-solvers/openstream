@@ -153,6 +153,28 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             Fwall  = -0.5.*absfilm.CW(zIdx).*absfilm.fluid.RHOF.*absfilm.U(zIdx,:).^2; % [N/m^2]
             
         end
+
+        function Uwall = UWALL(absfilm,zIdx)
+        %UWALL [m/s] Film wall velocity 
+        %
+            if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
+            
+            rho_ls = absfilm.fluid.RHOF;
+            Uwall  = (-absfilm.FWALL(zIdx)./rho_ls).^0.5;                    % [m/s] Wall friction velocity
+
+        end
+
+        function thick = YPLUS2THICK(absfilm, yplus, zIdx)
+        %YPLUS2THICK Calculate thickness from wall unit value
+        %
+            if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
+
+            rho_ls = absfilm.fluid.RHOF;                                    % Saturated liquid mass density
+            mu_ls = absfilm.fluid.MUF;                                      % Saturated liquid viscosity
+            nu_ls = mu_ls./rho_ls;                                          % Saturated liquid kinematic viscosity
+            thick = yplus./absfilm.UWALL(zIdx).*nu_ls;                      % [m] Converted thickness
+
+        end
         
         function Cv = CV(absfilm,zIdx)
         %CV Film/vapor interfacial friction factor

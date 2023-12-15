@@ -228,20 +228,30 @@ classdef Base < Solvers.AbstractFilm
         %EQTHICK Base equilibrium thickness
         %   
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
+
+            D_H = base.inputSet.geometry.HDIAM();
             
             switch base.inputSet.model.BASEEQTHICK
                 case 'DEFAULT'
                     coefs = [5.37E-5 -0.64 1.21];
+                    eqthick = ReMethod();
                 case 'MFVAL'
                     coefs = [1.8E-5 -0.5 1.5];
-                otherwise
+                    eqthick = ReMethod();
+                case 'COEFS'
                     coefs = base.inputSet.model.BASEEQTHICKCOEF;
+                    eqthick = ReMethod();
+                case 'YPLUS'
+                    yplus = 15;
+                    eqthick = base.YPLUS2THICK(yplus, zIdx);
             end
 
-            D_H = base.inputSet.geometry.HDIAM();
-            Re_v = base.film.mix.vapor.RE(zIdx);
-            Re_f = base.film.RE(zIdx);
-            eqthick = D_H .* coefs(1) .* (Re_v.^coefs(2)) .* (Re_f.^coefs(3));
+            function eqthick = ReMethod()
+                
+                Re_v = base.film.mix.vapor.RE(zIdx);
+                Re_f = base.film.RE(zIdx);
+                eqthick = D_H .* coefs(1) .* (Re_v.^coefs(2)) .* (Re_f.^coefs(3));
+            end
             
             % Limit eqthick to 1/2 of D_H, at most
             eqthick = min(eqthick, D_H/2);

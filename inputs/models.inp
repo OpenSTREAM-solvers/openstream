@@ -92,6 +92,7 @@ MOMENTBASE !                                                                > FU
 MOMENTWAVE !                                                                > FULL
 MOMENTDROP !                                                                > slip
 POSFILM !                                                                   > 1
+BASEEQTHICK !                                                               > YPLUS
 END
 
 ID         ! Model ID                                                       > BARCP

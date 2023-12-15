@@ -5,6 +5,8 @@ classdef BASEEQTHICK
     enumeration
         DEFAULT     % Default from Le Corre (2022)
         MFVAL       % MFVAL, in progress (20XX)
+        COEFS       % Manually specified coeffients
+        YPLUS
     end
 end
     
