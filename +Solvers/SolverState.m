@@ -6,6 +6,6 @@ classdef SolverState < uint16
         SOLVEDCONVERGED             (1)
         SOLVEDNOTCONVERGED          (2)
         INITIALSTEPCONVERGED        (3)
-        INITIALSTEPNOTCONVERGED     (3)
+        INITIALSTEPNOTCONVERGED     (4)
     end
 end

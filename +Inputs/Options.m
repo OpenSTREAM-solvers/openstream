@@ -26,9 +26,15 @@ classdef Options < Inputs.Input
         ERRORUD      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity error target in inner iterations [m/s]
         SSCONVWF     (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate steady-state convergence criterion [kg/s/m]
         SSCONVUF     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity steady-state convergence criterion [m/s]
+        SSCONVUD     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity steady-state convergence criterion [m/s]
         RELAXWF      (1,1) double  {mustBeInRange(RELAXWF,0,1)}            = 0.5                   % Relaxation factor for the film mass conservation equation
         RELAXUF      (1,1) double  {mustBeInRange(RELAXUF,0,1)}            = 0.2                   % Relaxation factor for the film momentum conservation equation
         RELAXUD      (1,1) double  {mustBeInRange(RELAXUD,0,1)}            = 0.2                   % Relaxation factor for the drop momentum conservation equation
+        RELAXWB      (1,1) double  {mustBeInRange(RELAXWB,0,1)}            = 0.5                   % Relaxation factor for the base mass conservation equation
+        RELAXUB      (1,1) double  {mustBeInRange(RELAXUB,0,1)}            = 0.2                   % Relaxation factor for the base momentum conservation equation
+        RELAXWW      (1,1) double  {mustBeInRange(RELAXWW,0,1)}            = 0.5                   % Relaxation factor for the wave mass conservation equation
+        RELAXUW      (1,1) double  {mustBeInRange(RELAXUW,0,1)}            = 0.2                   % Relaxation factor for the wave momentum conservation equation
+        RELAXFW      (1,1) double  {mustBeInRange(RELAXFW,0,1)}            = 0.5                   % Relaxation factor for the wave number conservation equation
     end
 
     methods

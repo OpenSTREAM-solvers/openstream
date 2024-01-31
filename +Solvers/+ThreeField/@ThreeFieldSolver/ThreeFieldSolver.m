@@ -2,7 +2,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
     %THREEFIELDSOLVER Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess=private)
+     properties (SetAccess=protected)
         
         NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
@@ -73,9 +73,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
             
             % Local parameters
-            mix   = tfSolver.mixSolver.mixture;                            % Mixture solution
-            model = tfSolver.inputSet.model;                               % Models
-            geom  = tfSolver.inputSet.geometry;                            % Geometry
+            mixArr = tfSolver.mixSolver.mixture;                            % Mixture solution
+            model  = tfSolver.inputSet.model;                               % Models
+            geom   = tfSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
             ITRFields = ["N","DWL","DU"];
@@ -84,94 +84,100 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             ITRd = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
 
             % Create film and drop arrays (by timestep)
-            flmArr = Film.empty(0,tfSolver.NTIME);
-            drpArr = Drop.empty(0,tfSolver.NTIME);
-            props = {'NZ','Z','NTIME','DT','TIME','TIDX'};                 % film and drop properties
+            flmArr(tfSolver.NTIME) = Film();
+            drpArr(tfSolver.NTIME) = Drop();
+            props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
             
             for tIdx = 1:tfSolver.NTIME
+
+                % Convenience variables (handles)
+                flm         = flmArr(tIdx);
+                drp         = drpArr(tIdx);
+                mix         = mixArr(tIdx);
+                fluid       = tfSolver.fluid(tIdx);
                 
-                % Inputset
-                drpArr(tIdx).inputSet = tfSolver.inputSet;
-                drpArr(tIdx).fluid    = tfSolver.fluid(tIdx);
-                
-                flmArr(tIdx).inputSet = tfSolver.inputSet;
-                flmArr(tIdx).fluid    = tfSolver.fluid(tIdx);
+                % Inputset, fluid                
+                flm.inputSet = tfSolver.inputSet;
+                flm.fluid    = fluid;
+                flm.mix      = mix;
                 
                 % Axial Steps
-                drpArr(tIdx).DZ = tfSolver.DZ;
+                drp.DZ = tfSolver.DZ;
                 
-                flmArr(tIdx).NZ = tfSolver.NZ;
-                flmArr(tIdx).DZ = tfSolver.DZ;
-                flmArr(tIdx).Z  = tfSolver.Z;
+                flm.NZ = tfSolver.NZ;
+                flm.DZ = tfSolver.DZ;
+                flm.Z  = tfSolver.Z;
                 
                 % Time step
-                flmArr(tIdx).NTIME = tfSolver.NTIME;
-                flmArr(tIdx).DT    = tfSolver.DT;
-                flmArr(tIdx).TIME  = tfSolver.TIME(tIdx);
-                flmArr(tIdx).TIDX  = tIdx;
+                flm.NTIME = tfSolver.NTIME;
+                flm.DT    = tfSolver.DT;
+                flm.TIME  = tfSolver.TIME(tIdx);
+                flm.TIDX  = tIdx;
                 
                 % Copy properties to drop
                 for p = props
-                    drpArr(tIdx).(p{:}) = flmArr(tIdx).(p{:});
+                    drp.(p{:}) = flm.(p{:});
                 end
                     
                 % Wall evaporation heat flux
-                HFLUX = mix(tIdx).HFLUX;                                   % [W/m^2] Wall heat flux
+                HFLUX = mix.HFLUX;                                   % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
                 
-                evapFn = double(mix(tIdx).XEQ > 0);                        % Saturated evaporation function
+                evapFn = double(mix.XEQ > 0);                        % Saturated evaporation function
                 Nbo = find(evapFn > 0,1);                                  % Boiling transition node
                 if Nbo >1
-                    evapFn(Nbo) = mix(tIdx).XEQ(Nbo)/diff(mix(tIdx).XEQ(Nbo-1:Nbo)); % Adjust evaporation function in transition node (part toward subcooled liquid, part toward evaporation)
+                    % Adjust evaporation function in transition node 
+                    % (part toward subcooled liquid, part toward evaporation)
+                    evapFn(Nbo) = mix.XEQ(Nbo)/diff(mix.XEQ(Nbo-1:Nbo)); 
                 end
                 
-                flmArr(tIdx).HFLUX = mix(tIdx).AFDISTR(evapFn.*avgHFLUX,HFLUX); % [W/m^2] Film evaporation heat flux
+                flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX); % [W/m^2] Film evaporation heat flux
                     
                 % Film evaporation (thermal equilibrium assumption)
-                flmArr(tIdx).MEVAP = -flmArr(tIdx).HFLUX./(tfSolver.fluid(tIdx).HG-tfSolver.fluid(tIdx).HF); % [kg/m^2/s] Evaporation mass flux
+                flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF); % [kg/m^2/s] Evaporation mass flux
                 
                 % Entrained ratio at onset of annular flow
                 switch model.OAFENTRAINED
                     case InputEnums.OAFENTRAINED.RATIO
                         e0 = model.OAFDROPRATIO;
                     case InputEnums.OAFENTRAINED.EQUILIBRIUM
-                        e0 = tfSolver.EQUIL(flmArr(tIdx),drpArr(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
+                        e0 = tfSolver.EQUIL(flm,drp,mix,mix.OAFIDX);
                 end
                 
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                drpArr(tIdx).W = repmat(e0.*mix(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
+                drpArr(tIdx).W = repmat(e0.*mixArr(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
                 
                 % Transient mass gradient in film field
                 %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
                 %flmArr(tIdx).W = flmArr(tIdx).W+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;  % [kg/s] Apply simple mass conservation
                 
                 % ... or transient mass gradient in drop field
-                drpArr(tIdx).W = drpArr(tIdx).W+mix(tIdx).W-mix(tIdx).W(mix(tIdx).OAFIDX);                                % 
-                flmArr(tIdx).W(1,1:geom.NWALL) = (mix(tIdx).liquid.W(1)-drpArr(tIdx).W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
-                flmArr(tIdx).W = flmArr(tIdx).W(1,:)+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;                 % [kg/s] Apply simple mass conservation
+                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);                                % 
+                flm.W(1,1:geom.NWALL) = (mix.liquid.W(1)-drp.W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
+                flm.W = flm.W(1,:)+cumsum(flm.MEVAP).*geom.PERIM.*tfSolver.DZ;                 % [kg/s] Apply simple mass conservation
                 
                 % Limit film flow rate minimum to 0
-                flmArr(tIdx).W = max(0,flmArr(tIdx).W);
-                drpArr(tIdx).W = mix(tIdx).liquid.W-sum(flmArr(tIdx).W,2); % [kg/s] Recalculate consistent drop flow rate
+                flm.W = max(0,flm.W);
+                drp.W = mix.liquid.W-sum(flm.W,2); % [kg/s] Recalculate consistent drop flow rate
                 
                 
                 % Initialize velocity [m/s]
-                %drpArr(tIdx).U = mix(tIdx).liquid.U;                       % [m/s] Drop velocity
-                drpArr(tIdx).U = drpArr(tIdx).USLIP(mix(tIdx));            % [m/s] Drop velocity
+                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
+                drp.U = drp.USLIP();                                        % [m/s] Drop velocity
                 
-                %flmArr(tIdx).U = repmat(mix(tIdx).liquid.U,1,geom.NWALL); % [m/s]
-                flmArr(tIdx).U = flmArr(tIdx).UALGEBR(mix(tIdx));          % [m/s] Film velocity
+                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
+                flm.U = flm.UALGEBR();                                      % [m/s] Film velocity
                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-                drpArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
-                flmArr(tIdx).H = repmat(tfSolver.fluid(tIdx).HF,tfSolver.NZ,1);
+                drp.H = repmat(fluid.HF,tfSolver.NZ,1);
+                flm.H = repmat(fluid.HF,tfSolver.NZ,1);
                 
                 % ITR
-                flmArr(tIdx).ITR = ITRf;
-                drpArr(tIdx).ITR = ITRd;
+                flm.ITR = ITRf;
+                drp.ITR = ITRd;
 
             end
 
@@ -198,10 +204,20 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             initTIDX = 1:length(tfSolver.filmInit);
 
             for i = 1:length(tfSolver.filmInit)
+
                 tfSolver.filmInit(i).TIME = initTIME(i);
                 tfSolver.filmInit(i).DT = initTIMEDT;
                 tfSolver.filmInit(i).NTIME = initNTIME;
                 tfSolver.filmInit(i).TIDX = initTIDX(i);
+
+                tfSolver.filmInit(i).mix       = copy(tfSolver.mixSolver.mixtureInit(end));
+                tfSolver.filmInit(i).mix.TIME  = initTIME(i);
+                tfSolver.filmInit(i).mix.DT    = initTIMEDT;
+                tfSolver.filmInit(i).mix.NTIME = initNTIME;
+                tfSolver.filmInit(i).mix.TIDX  = initTIDX(i);
+
+                tfSolver.dropInit(i).mix    = tfSolver.filmInit(i).mix;
+
                 tfSolver.dropInit(i).TIME = initTIME(i);
                 tfSolver.dropInit(i).DT = initTIMEDT;
                 tfSolver.dropInit(i).NTIME = initNTIME;
@@ -229,11 +245,11 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 elseif k == 2
                     Wd(k) = max(min(drp.W(zIdx).*(1-10*delta(k-1)),W),0);  % [kg/s] Next guess
                 else
-                    Wd(k) = interp1(delta,Wd,0,'spline','extrap');         % [kg/s] Next guess
+                    Wd(k) = interp1(delta,Wd,0,'linear','extrap');         % [kg/s] Next guess
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet ass flowrate
                 flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
-                delta(k) = drp.MDEP(mix,zIdx).*sum(perim)+sum(flm.MENT(mix,zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
+                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
                 err = abs(delta(k));
                 if err < 1E-4, break; end
             end
@@ -312,8 +328,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film mass exchanges')
-            plot(z,drp.MDEP(mix),'o-')
-            plot(z,flm.MENT(mix),'.-')
+            plot(z,drp.MDEP(),'o-')
+            plot(z,flm.MENT(),'.-')
             plot(z,flm.MEVAP,'+-')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
@@ -322,12 +338,12 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Film momentum exchanges')
-            plot(z,flm.FDEP(mix,drp),'o-')
-            plot(z,flm.FWALL(mix),'.-')
-            plot(z,flm.FVAPOR(mix),'.-')
-            plot(z,flm.FBUOY(mix),'.-')
-            plot(z,flm.FGRAV(mix),'.-')
-            plot(z,flm.FTOT(mix,drp),'k--')
+            plot(z,flm.FDEP(drp),'o-')
+            plot(z,flm.FWALL(),'.-')
+            plot(z,flm.FVAPOR(),'.-')
+            plot(z,flm.FBUOY(),'.-')
+            plot(z,flm.FGRAV(),'.-')
+            plot(z,flm.FTOT(drp),'k--')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Shear stress [N/m^2]')
@@ -335,11 +351,11 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Drop momentum exchanges')
-            plot(z,drp.FENT(mix,flm),'o-')
-            plot(z,drp.FDRAG(mix),'.-')
-            plot(z,drp.FBUOY(mix),'.-')
-            plot(z,drp.FGRAV(mix),'.-')
-            plot(z,drp.FTOT(mix,flm),'k--')
+            plot(z,drp.FENT(flm),'o-')
+            plot(z,drp.FDRAG(),'.-')
+            plot(z,drp.FBUOY(),'.-')
+            plot(z,drp.FGRAV(),'.-')
+            plot(z,drp.FTOT(flm),'k--')
             plot(repmat(mix.OAFZ,1,2),ylim,'r--','handleVisibility','off')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Force density [N/m^3]')
@@ -374,7 +390,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             % Cannot plot time series of one time step
             if isscalar(flm) || isscalar(opt.tIdx)
-                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+                tfSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
 %                 throw( ...
 %                     MException( ...
@@ -388,7 +404,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time series of mixture parameters at ' num2str(tfSolver.Z(zIdx(1))) ' [m]']);
             
             timeplot('W','Mass flowrates [kg/s]')
             timeplot('U','Velocity [m/s]')

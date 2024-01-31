@@ -5,6 +5,13 @@ PERIM     ! Perimeters [m]                 > 0.0314
 ANGLE     ! Angle [rad]                    > 0
 END
 
+ID        ! Channel ID                     > MFVAL_star
+LENGTH    ! Axial length (2.7+0.525)) [m]  > 3.225
+AREA      ! Coolant area [m^2]             > 2.5447e-04
+PERIM     ! Perimeters [m]                 > 0.96
+ANGLE     ! Angle [rad]                    > 0
+END
+
 ID        ! Channel ID                     > MFVAL
 LENGTH    ! Axial length (2.7+0.525)) [m]  > 3.225
 AREA      ! Coolant area [m^2]             > 4.3200e-04
@@ -13,8 +20,15 @@ ANGLE     ! Angle [rad]                    > 0
 END
 
 ID        ! Channel ID                     > BARC
-LENGTH    ! Axial length [m]               > 3.5
+LENGTH    ! Axial length [m]               > 5.5
 AREA      ! Coolant area [m^2]             > 6.0821e-05
 PERIM     ! Perimeters [m]                 > 0.0276
+ANGLE     ! Angle [rad]                    > 0
+END
+
+ID        ! Channel ID                     > HWATFILM
+LENGTH    ! Axial length [m]               > 3.65
+AREA      ! Coolant area [m^2]             > 1.5394e-04
+PERIM     ! Perimeters [m]                 > 0.0440
 ANGLE     ! Angle [rad]                    > 0
 END

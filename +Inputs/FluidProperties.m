@@ -11,7 +11,7 @@ classdef FluidProperties
         RHOF       (1,1) double  {mustBeNumeric}                           = 1                     % [kg/m^3] Saturated liquid mass density
         RHOG       (1,1) double  {mustBeNumeric}                           = 1                     % [kg/m^3] Saturated vapor mass density
         MUF        (1,1) double  {mustBeNumeric}                           = 1                     % [Pa.s] Saturated liquid viscosity
-        MUG        (1,1) double  {mustBeNumeric}                           = 1                     % [Pa.s] Saturated liquid viscosity
+        MUG        (1,1) double  {mustBeNumeric}                           = 1                     % [Pa.s] Saturated vapor viscosity
         HF         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated liquid enthalpy
         HG         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated vapor enthalpy
         HFG        (1,1) double  {mustBeNumeric}                           = 0                     % [J/kg] Latent heat of evaporation
