@@ -50,7 +50,9 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r ./requirements.txt
 
-      - run: make html
+      - name: Make html files
+        run: make html
+        working-directory: ./docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
