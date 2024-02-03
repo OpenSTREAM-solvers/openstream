@@ -3,6 +3,17 @@ name: Publish Sphinx docs to GitHub Pages
 on:
   push:
     branches: [docs]
+  workflow_dispatch:
+    inputs:
+        logLevel:
+          description: 'Log level'
+          required: true
+          default: 'warning'
+          type: choice
+          options:
+          - info
+          - warning
+          - debug
 
 jobs:
   deploy:
