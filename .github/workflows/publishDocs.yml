@@ -24,10 +24,6 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          sparse-checkout: |
-            .github
-            docs
 
       - name: Setup Python
         uses: actions/setup-python@v3
