@@ -33,7 +33,7 @@ jobs:
       - name: Upgrade pip
         run: |
           # install pip=>20.1 to use "pip cache dir"
-          python3 -m pip install --upgrade pip
+          pip install --upgrade pip
 
       - name: Get pip cache dir
         id: pip-cache
@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: python3 -m pip install -r ./requirements.txt
+        run: pip install -r ./docs/build/requirements.txt
 
       - run: make html
 
