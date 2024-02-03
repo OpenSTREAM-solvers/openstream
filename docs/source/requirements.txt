@@ -1,0 +1,18 @@
+# Sphinx
+sphinx
+
+# MATLAB Domain
+sphinxcontrib-matlabdomain
+
+# RTD theme
+sphinx_rtd_theme
+
+# Copy button in code blocks
+sphinx-copybutton
+
+# Bibtex manager
+sphinxcontrib-bibtex
+
+# Open external links in new tab
+sphinx-new-tab-link
+
