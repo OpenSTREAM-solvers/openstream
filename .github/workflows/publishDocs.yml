@@ -2,7 +2,8 @@ name: Publish Sphinx docs to GitHub Pages
 
 on:
   push:
-    branches: [docs]
+    branches: [main, docs]
+  pull_request:
   workflow_dispatch:
     inputs:
         logLevel:
@@ -33,7 +34,7 @@ jobs:
       - name: Upgrade pip
         run: |
           # install pip=>20.1 to use "pip cache dir"
-          python3 -m pip install --upgrade pip
+          pip install --upgrade pip
 
       - name: Get pip cache dir
         id: pip-cache
@@ -48,7 +49,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: python3 -m pip install -r ./requirements.txt
+        run: pip install -r ./docs/source/requirements.txt
 
       - name: Make html files
         run: make html
@@ -56,7 +57,7 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/docs'
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
