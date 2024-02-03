@@ -5,4 +5,5 @@ outputs/
 sandbox/
 !sandbox/*.md
 !sandbox/*_default.m
+docs/build/**
 
