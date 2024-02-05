@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Usage &mdash; TwoPhaseSolver  documentation</title>
+  <title>TwoPhaseSolver FAQ &mdash; TwoPhaseSolver  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -23,7 +23,9 @@
         <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Support" href="support.html" />
+    <link rel="prev" title="CoolPropWrapper" href="../ExternalPackages/CoolPropWrapper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,8 +49,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="runSampleScript.html">Run sample script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
@@ -62,11 +64,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">TwoPhaseSolver FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TwoPhaseSolver FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute to the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 </ul>
 
         </div>
@@ -83,9 +85,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Usage</li>
+      <li class="breadcrumb-item active">TwoPhaseSolver FAQ</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/Usage/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/Community/faq.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -93,28 +95,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gettingStarted.html#install-using-git-and-github">Install using Git and Github</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gettingStarted.html#next-steps">Next steps</a></li>
+  <section id="twophasesolver-faq">
+<h1>TwoPhaseSolver FAQ<a class="headerlink" href="#twophasesolver-faq" title="Link to this heading"></a></h1>
+<p>This documentation is made with <a class="reference external" href="https://www.sphinx-doc.org/" rel="noopener noreferrer" target="_blank">Sphinx</a> using the <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/" rel="noopener noreferrer" target="_blank">Read the Docs</a> theme.
+The goal of this section is to help you implement a workflow for contributing to this documentation.</p>
+<p>As to why this combination of schemes are used to create this documentation, here’s an excerpt from the Sphinx website:</p>
+<blockquote class="epigraph">
+<div><p>Sphinx makes it easy to create intelligent and beautiful documentation.</p>
+<p>Here are some of Sphinx’s major features:</p>
+<ul class="simple">
+<li><p>Output formats: HTML (including Windows HTML Help), LaTeX (for printable PDF versions), ePub, Texinfo, manual pages, plain text</p></li>
+<li><p>Extensive cross-references: semantic markup and automatic links for functions, classes, citations, glossary terms and similar pieces of information</p></li>
+<li><p>Hierarchical structure: easy definition of a document tree, with automatic links to siblings, parents and children</p></li>
+<li><p>Automatic indices: general index as well as a language-specific module indices</p></li>
+<li><p>Code handling: automatic highlighting using the Pygments highlighter</p></li>
+<li><p>Extensions: automatic testing of code snippets, inclusion of docstrings from Python modules (API docs) via built-in extensions, and much more functionality via third-party extensions.</p></li>
+<li><p>Themes: modify the look and feel of outputs via creating themes, and reuse many third-party themes.</p></li>
+<li><p>Contributed extensions: dozens of extensions contributed by users; most of them installable from PyPI.</p></li>
 </ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="runSampleScript.html">Run sample script</a></li>
-</ul>
-</div>
+<p>Sphinx uses the reStructuredText markup language by default, and can read MyST markdown via third-party extensions. Both of these are powerful and straightforward to use, and have functionality for complex documentation and publishing workflows. They both build upon Docutils to parse and write documents.</p>
+</div></blockquote>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../ExternalPackages/CoolPropWrapper.html" class="btn btn-neutral float-left" title="CoolPropWrapper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

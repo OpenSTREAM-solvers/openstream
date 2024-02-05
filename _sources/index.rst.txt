@@ -30,6 +30,17 @@
 
    /ExternalPackages/CoolPropWrapper
 
+.. toctree::
+   :maxdepth: 3
+   :glob:
+   :hidden:
+   :caption: Community
+
+   /Community/faq
+   /Community/support
+   /Community/contribute
+   /Community/authors
+
 .. include:: index_content.rst
 
 Indices and tables
