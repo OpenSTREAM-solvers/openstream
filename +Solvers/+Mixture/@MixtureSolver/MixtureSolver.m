@@ -375,6 +375,78 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
         end
+
+        function plotzt(mixSolver, zIdx, opt)
+        % 2d plot, position z on horizontal and time t on vertical axis
+            arguments
+                mixSolver
+                zIdx (:,1) double
+                opt.tIdx (:,1) double = -1
+                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opt.reverseTime (1,1) logical = false
+            end
+
+            
+            switch opt.solveMode
+                case 'TRANSIENT'
+                    mix = mixSolver.mixture;
+                case 'STEADY'
+                    mix = mixSolver.mixtureInit;
+            end
+
+            if isscalar(opt.tIdx) && (opt.tIdx < 0)
+                opt.tIdx = 1:length(mix);
+            end
+
+            % Cannot plot time series of one time step
+            if isscalar(mix) || isscalar(opt.tIdx)
+                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+                return
+            end
+
+            % Time vector
+            plotTimeVector = [mix(opt.tIdx).TIME];
+            if opt.reverseTime
+                plotTimeVector = plotTimeVector - plotTimeVector(end);
+            end            
+
+            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            
+            zt_plot('W','Mass flowrates [kg/s]')
+            zt_plot('P','Pressure [Pa]')
+            zt_plot('XEQ','Equilibrium quality [-]')
+            zt_plot('X','Steam mass quality [-]')
+            zt_plot('VF','Void fraction [-]')
+            zt_plot('U','Velocity [m/s]')
+
+            function zt_plot(param,ylabelText)
+
+                nexttile; hold all; grid on;
+                if ismethod(mix,param)
+                    paramData = arrayfun( ...
+                                    @(i) mix(i).(param), ...
+                                    1:length(plotTimeVector), ...
+                                    'UniformOutput', false);
+                    paramData = cell2mat(paramData);
+
+                else
+                    paramData = [mix.(param)];
+                end
+                
+                [t_mesh,z_mesh] = meshgrid(plotTimeVector,mixSolver.Z);
+
+                surf(z_mesh,t_mesh,paramData);
+                shading interp 
+                xlabel('Position z [m]') 
+                ylabel('Time t [s]') 
+                view(2);
+                cb = colorbar(); 
+                ylabel(cb,ylabelText,'FontSize',12,'Rotation',270)
+            
+            end
+
+        end
+
         
         function saveResults(mixSolver, opts)
         %SAVERESULTS
