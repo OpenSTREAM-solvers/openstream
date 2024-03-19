@@ -18,6 +18,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         mixture
         liquidInit
         vaporInit
+        fluidInit
         liquid
         vapor
 
@@ -86,8 +87,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             ITRv = twfSolver.CreateITR(twfSolver.NZ, ITRFields);
 
             % Create liquid and vapor arrays (by timestep)
-            liqArr(twfSolver.NTIME) = Liquid(mixArr);
-            vapArr(twfSolver.NTIME) = Vapor(mixArr);
+            liqArr(twfSolver.NTIME) = Liquid();
+            vapArr(twfSolver.NTIME) = Vapor();
             props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
             
             for tIdx = 1:twfSolver.NTIME
@@ -123,10 +124,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                vapArr(tIdx).W = mix(tIdx).W.*mix(tIdx).X; % [kg/s] % Set vapor mass flow to mixture model mass flow rate times quality
+                vap.W = mix.W.*mix.X; % [kg/s] % Set vapor mass flow to mixture model mass flow rate times quality
                 
                 % Transient mass gradient in film field
-                liqArr(tIdx).W = mix(tIdx).W.*(1-mix(tIdx).X); % [kg/s] % Set liquid mass flow to mixture model mass flow rate times quality
+                liq.W = mix.W.*(1-mix.X); % [kg/s] % Set liquid mass flow to mixture model mass flow rate times quality
                 
                 % ... or transient mass gradient in drop field
                 %vap.W = drp.W+mix.W-mix.W(mix.OAFIDX);                                % 

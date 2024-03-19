@@ -16,7 +16,7 @@ twfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 if twfSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
-    twfSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
+    twfSolver.log('\n\n--------------------------------------------- Two-fluid solver run initiated ---------------------------------------------\n')
 
     try
         % Solve init
@@ -35,7 +35,7 @@ else
         rethrow(ME)
     end
     
-    twfSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
+    twfSolver.log('\n--------------------------------------------- Two-fluid solver run completed ---------------------------------------------\n\n')
 end
 
 twfSolver.inputSet.session.log.closeLog();
@@ -163,7 +163,7 @@ function solver(solveINIT)
         end
         
         [maxN,maxzIdx] = max(liquid(tIdx).ITR.N);
-        maxDWL = max(mix(tIdx).ITR.DWL);
+        maxDWL = max(liquid(tIdx).ITR.DWL);
         %maxDP = max(mix(tIdx).ITR.DP);
         %maxDH = max(mix(tIdx).ITR.DH);
         
