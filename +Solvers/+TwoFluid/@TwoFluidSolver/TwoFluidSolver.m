@@ -1,5 +1,5 @@
 classdef TwoFluidSolver < Solvers.AbstractSolver
-    %MIXTURESOLVER Summary of this class goes here
+    %TWOFLUIDSOLVER Summary of this class goes here
     %   Detailed explanation goes here
     
      properties (SetAccess=protected)
@@ -16,6 +16,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         
         mixtureInit
         mixture
+        liquidInit
+        vaporInit
+        liquid
+        vapor
 
      end
 
@@ -32,7 +36,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
     methods
         function twfSolver = TwoFluidSolver(inputSet,mixSolver)
-            %MIXTURESOLVER Creates a Mixture solver
+            %TWOFLUIDSOLVER Creates a TwoFluid solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
@@ -60,7 +64,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         %
             
             import Inputs.*
-            import Solvers.TwoField.*
+            import Solvers.TwoFluid.*
             import Solvers.*
 
             % Copy relevant properties from mixSolver
@@ -69,35 +73,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 twfSolver.(p{:}) = twfSolver.mixSolver.(p{:});
             end
 
-            % Calculate time steps
-            %mixSolver.DT = mixSolver.inputSet.options.TSTEP;                            % [s] Time interval
-            %mixSolver.TIME = colon(mixSolver.inputSet.bc(1).TIME, ...
-            %                 mixSolver.DT, ...
-            %                 mixSolver.inputSet.bc(end).TIME);                    % [s] Computational time array
-            %mixSolver.NTIME = length(mixSolver.TIME);
-
-            % Calculate axial steps
-            %mixSolver.DZ = mixSolver.inputSet.geometry.LENGTH/mixSolver.inputSet.model.NNODES;    % [m] Uniform node length
-            %mixSolver.Z = (0:mixSolver.DZ:mixSolver.inputSet.geometry.LENGTH)';                   % [m] Node elevations
-            %mixSolver.NZ = length(mixSolver.Z);                                                   % Total number of axial nodes (add one for inlet conditions)
-            
-            % Interpolate BCs in time and space (z)
-            %mixSolver.interpBoundaryConditions();
-            
-            %
-            % Create mixture array (by timestep)
-
-            % Setup DP and ITR
-            % Grav:     [Pa] Gravitational pressure drop
-            % Wall:     [Pa] Wall friction pressure drop
-            % Acc_z:    [pa] Spatial acceleration pressure drop
-            % Acc_t:    [Pa] Temporal acceleration pressure drop
-            % K:        [Pa] Local pressure drop
-            % Tot:      [Pa] Total pressure drop
-            %DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];          % Fieldnames for DP struct
-            %DPCell = cell(numel(DPFields),1);                               % Cell structure to convert into struct
-            %DPCell(:) = {zeros(mixSolver.NZ,1)};                            % Initialize with zeros
-            %DP = cell2struct(DPCell, DPFields, 1);                          % Convert cell to struct with fieldnames
 
             % Local parameters
             mixArr = twfSolver.mixSolver.mixture;                            % Mixture solution
@@ -110,14 +85,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             ITRFields = ["N","DWV","DUV"];
             ITRv = twfSolver.CreateITR(twfSolver.NZ, ITRFields);
 
-            %%%%
-
-            % Create film and drop arrays (by timestep)
-            liqArr(twfSolver.NTIME) = Liquid();
-            vapArr(twfSolver.NTIME) = Vapour();
+            % Create liquid and vapor arrays (by timestep)
+            liqArr(twfSolver.NTIME) = Liquid(mixArr);
+            vapArr(twfSolver.NTIME) = Vapor(mixArr);
             props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
             
-            for tIdx = 1:tfSolver.NTIME
+            for tIdx = 1:twfSolver.NTIME
 
                 % Convenience variables (handles)
                 liq         = liqArr(tIdx);
@@ -131,8 +104,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 liq.mix      = mix;
                 
                 % Axial Steps
-                vap.DZ = tfSolver.DZ;
-                
+                vap.DZ = twfSolver.DZ;
                 liq.NZ = twfSolver.NZ;
                 liq.DZ = twfSolver.DZ;
                 liq.Z  = twfSolver.Z;
@@ -143,129 +115,51 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 liq.TIME  = twfSolver.TIME(tIdx);
                 liq.TIDX  = tIdx;
                 
-                % Copy properties to vapour
+                % Copy properties to vapor
                 for p = props
                     vap.(p{:}) = liq.(p{:});
                 end
-                    
-                % Wall evaporation heat flux
-                %HFLUX = mix.HFLUX;                                   % [W/m^2] Wall heat flux
-                %avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
-                %avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
-                
-                %evapFn = double(mix.XEQ > 0);                        % Saturated evaporation function
-                %Nbo = find(evapFn > 0,1);                                  % Boiling transition node
-                %if Nbo >1
-                    % Adjust evaporation function in transition node 
-                    % (part toward subcooled liquid, part toward evaporation)
-                %    evapFn(Nbo) = mix.XEQ(Nbo)/diff(mix.XEQ(Nbo-1:Nbo)); 
-                %end
-                
-                %flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX); % [W/m^2] Film evaporation heat flux
-                    
-                % Film evaporation (thermal equilibrium assumption)
-                %flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF); % [kg/m^2/s] Evaporation mass flux
-                
-                % Entrained ratio at onset of annular flow
-                %switch model.OAFENTRAINED
-                %    case InputEnums.OAFENTRAINED.RATIO
-                %        e0 = model.OAFDROPRATIO;
-                %    case InputEnums.OAFENTRAINED.EQUILIBRIUM
-                %        e0 = tfSolver.EQUIL(flm,drp,mix,mix.OAFIDX);
-                %end
                 
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                %drpArr(tIdx).W = repmat(e0.*mixArr(tIdx).OAFWL,tfSolver.NZ,1); % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
+                vapArr(tIdx).W = mix(tIdx).W.*mix(tIdx).X; % [kg/s] % Set vapor mass flow to mixture model mass flow rate times quality
                 
                 % Transient mass gradient in film field
-                %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
-                %flmArr(tIdx).W = flmArr(tIdx).W+cumsum(flmArr(tIdx).MEVAP).*geom.PERIM.*tfSolver.DZ;  % [kg/s] Apply simple mass conservation
+                liqArr(tIdx).W = mix(tIdx).W.*(1-mix(tIdx).X); % [kg/s] % Set liquid mass flow to mixture model mass flow rate times quality
                 
                 % ... or transient mass gradient in drop field
-                %drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);                                % 
-                %flm.W(1,1:geom.NWALL) = (mix.liquid.W(1)-drp.W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
-                %flm.W = flm.W(1,:)+cumsum(flm.MEVAP).*geom.PERIM.*tfSolver.DZ;                 % [kg/s] Apply simple mass conservation
+                %vap.W = drp.W+mix.W-mix.W(mix.OAFIDX);                                % 
+                %liq.W(1,1:geom.NWALL) = (mix.liquid.W(1)-drp.W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
                 
-                % Limit film flow rate minimum to 0
-                %flm.W = max(0,flm.W);
-                %drp.W = mix.liquid.W-sum(flm.W,2); % [kg/s] Recalculate consistent drop flow rate
-                
+                % Limit flow rate minimum to 0
+                liq.W = max(0,liq.W);
+                vap.W = max(0,vap.W);                
                 
                 % Initialize velocity [m/s]
-                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
-                %drp.U = drp.USLIP();                                        % [m/s] Drop velocity
-                
-                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
-                %flm.U = flm.UALGEBR();                                      % [m/s] Film velocity
+                vap.U = mix.vapor.U;                                      % [m/s] Drop velocity
+                liq.U = mix.liquid.U;                                         % [m/s] Drop velocity
+               
                                 
-                % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-                %drp.H = repmat(fluid.HF,tfSolver.NZ,1);
-                %flm.H = repmat(fluid.HF,tfSolver.NZ,1);
+                % Initialize enthalpy [J/kg]
+                vap.H = mix.vapor.H;
+                liq.H = mix.liquid.H;
                 
                 % ITR
                 liq.ITR = ITRl;
                 vap.ITR = ITRv;
 
-
-            % % Setup fluid property object
-            % mixSolver.fluid = FluidProperties( ...
-            %                         mixSolver.boundaryConditions.PRESSURE, ...
-            %                         mixSolver.inputSet.model);
-            % 
-            % mixArr = Mixture.empty(0,mixSolver.NTIME);
-            % for tIdx = 1:mixSolver.NTIME
-            % 
-            %     % Inputset
-            %     mixArr(tIdx).inputSet = mixSolver.inputSet;
-            %     mixArr(tIdx).fluid = mixSolver.fluid(tIdx);
-            % 
-            %     % Axial Steps
-            %     mixArr(tIdx).NZ = mixSolver.NZ;
-            %     mixArr(tIdx).DZ = mixSolver.DZ;
-            %     mixArr(tIdx).Z = mixSolver.Z;
-            % 
-            %     % Time step
-            %     mixArr(tIdx).NTIME = mixSolver.NTIME;
-            %     mixArr(tIdx).DT = mixSolver.DT;
-            %     mixArr(tIdx).TIME = mixSolver.TIME(tIdx);
-            %     mixArr(tIdx).TIDX = tIdx;
-            % 
-            %     % Wall heat flux
-            %     mixArr(tIdx).HFLUX = ...
-            %         reshape( ...
-            %             mixSolver.boundaryConditions.HFLUX(:,:,tIdx), ...
-            %             mixSolver.NZ,...
-            %             [] ...
-            %             );
-            % 
-            %     % Mass flow ratep [kg/s], pressure [Pa], enthalpy [J/kg]
-            %     mixArr(tIdx).W     = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
-            %     mixArr(tIdx).P     = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
-            %     mixArr(tIdx).H     = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
-            % 
-            %     % DP, ITR
-            %     mixArr(tIdx).DP = DP;
-            %     mixArr(tIdx).ITR = ITR;
-            % 
-            %     % Phases
-            %     mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
-            %     mixArr(tIdx).vapor = Vapor(mixArr(tIdx));
-                
-
             end
 
             % Store transient mixture array
-            %twfSolver.mixture = mixArr;
             twfSolver.liquid = liqArr;
-            twfSolver.vapour = vapArr;
+            twfSolver.vapor = vapArr;
 
 
             % Create steady state mixture array
             twfSolver.liquidInit = copy( ...
                 repmat(liqArr(1),1,twfSolver.inputSet.options.SSMAXITER));
-            twfSolver.vapourInit = copy( ...
+            twfSolver.vaporInit = copy( ...
                 repmat(vapArr(1),1,twfSolver.inputSet.options.SSMAXITER));
             twfSolver.fluidInit = FluidProperties( ...
                                     repmat( ...
@@ -274,7 +168,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                                         twfSolver.inputSet.options.SSMAXITER), ...
                                     twfSolver.inputSet.model);
 
-            % Update mixtureInit times and timesteps
+            % Update liquidInit and vaporInit times and timesteps
             initTIMEDT = twfSolver.inputSet.options.SSTSTEP;
             initNTIME = length(twfSolver.liquidInit);
             initTIME = 0:initTIMEDT:initTIMEDT*(initNTIME-1);
@@ -292,12 +186,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 twfSolver.liquidInit(i).mix.NTIME = initNTIME;
                 twfSolver.liquidInit(i).mix.TIDX  = initTIDX(i);
 
-                twfSolver.vapourInit(i).mix    = twfSolver.liquidInit(i).mix;
+                twfSolver.vaporInit(i).mix    = twfSolver.liquidInit(i).mix;
 
-                twfSolver.vapourInit(i).TIME = initTIME(i);
-                twfSolver.vapourInit(i).DT = initTIMEDT;
-                twfSolver.vapourInit(i).NTIME = initNTIME;
-                twfSolver.vapourInit(i).TIDX = initTIDX(i);
+                twfSolver.vaporInit(i).TIME = initTIME(i);
+                twfSolver.vaporInit(i).DT = initTIMEDT;
+                twfSolver.vaporInit(i).NTIME = initNTIME;
+                twfSolver.vaporInit(i).TIDX = initTIDX(i);
             end
 
             % set STATE to UNSOLVED
@@ -305,95 +199,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
         end
 
-        % function mixSolver = interpBoundaryConditions(mixSolver)
-        %     %INTERPBOUNDARYCONDITIONS Expand specified boundary conditions
-        %     %to every node and timestep defined by the model and geometry.
-        %     %   Detailed explanation goes here
-        % 
-        %     % Retrieve list of boundary condition properties
-        %     bcFields = mixSolver.inputSet.bc.listInputProperties();
-        % 
-        %     % Interpolate bc properties in time
-        %     params = checkParams({'TIME','PRESSURE','HIN','MFLOW','POWER'});
-        %     mixSolver.boundaryConditions = cell2struct( ...
-        %                                 arrayfun( ...
-        %                                     @(idx) mixSolver.timeInterpolate([mixSolver.inputSet.bc.(params(idx))]), ...
-        %                                     1:length(params), ...
-        %                                     'UniformOutput',false),...
-        %                                 params,...
-        %                                 2);
-        % 
-        %     % Interpolate wall power in space
-        %     WPOWERZ = arrayfun( ...
-        %                 @(bc)mixSolver.axialInterpolate( ...
-        %                                 cumsum(bc.WMESH), ...
-        %                                 bc.WPOWER ...
-        %                                 ), ...
-        %                 mixSolver.inputSet.bc, ...
-        %                 'UniformOutput',false ...
-        %                 );
-        %     % Combine WPOWERZ to NZ x NWALL x N_bc
-        %     WPOWERZ = reshape( ...
-        %                     cell2mat(WPOWERZ), ...
-        %                     mixSolver.NZ, ...
-        %                     mixSolver.inputSet.geometry.NWALL, ...
-        %                     []);
-        % 
-        %     % Interpolate wall power in time
-        %     WPOWERT = arrayfun( ...
-        %                 @(wallIdx) mixSolver.timeInterpolate( ...
-        %                             reshape(WPOWERZ(:,wallIdx,:), ...
-        %                                 mixSolver.NZ, ...
-        %                                 [] ...
-        %                            ).').', ...
-        %                            1:mixSolver.inputSet.geometry.NWALL, ...
-        %                            'UniformOutput',false);
-        %     % Reorganize WPOWERT to NZ x NWall x NTIME
-        %     WPOWERT = permute( ...
-        %                 reshape( ...
-        %                     cell2mat(WPOWERT), ...
-        %                     mixSolver.NZ, ...
-        %                     mixSolver.NTIME, ...
-        %                     [] ...
-        %                 ), [1 3 2]);
-        % 
-        %     mixSolver.boundaryConditions.WPOWER = WPOWERT;
-        % 
-        % 
-        %     % Calculate wall heat flux at each node in space & time
-        %     % NOTE: This is very convoluted
-        %     mixSolver.boundaryConditions.HFLUX = ...
-        %         mixSolver.boundaryConditions.WPOWER .* reshape(mixSolver.boundaryConditions.POWER,1,1,[]) ...
-        %         ./ sum(reshape( ...
-        %                 mixSolver.inputSet.geometry.PERIM .* mixSolver.DZ,1,mixSolver.inputSet.geometry.NWALL,1 ...
-        %                 ).* ...
-        %                mixSolver.boundaryConditions.WPOWER,[1,2] ...
-        %               );
-        % 
-        %     function validParams = checkParams(params)
-        %     %CHECKPARAMS Ensure interpolation parameters are valid
-        %     %parameters of the boundaryCondition mix.
-        % 
-        %         validParams = string().empty();
-        %         for idx = 1:length(params)
-        %             if find(bcFields==params(idx))
-        %                 validParams(end+1) = params(idx);
-        %             else
-        %                 throw( ...
-        %                     MException( ...
-        %                         'MixtureError:InvalidInterpolationParameter', ...
-        %                         'Parameter %s is not a valid boundary condition parameter', ...
-        %                         params{idx} ...
-        %                         ) ...
-        %                 );
-        %             end
-        %         end
-        % 
-        %     end
-        % 
-        % end
-
-% adjust plot functions
+        % adjust plot functions
 
         function plotz(mixSolver, tIdx, opt)
         %PLOTZ
@@ -630,31 +436,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
         end
 
-        function interpOut = timeInterpolate(mix, y)
-            if isscalar([mix.inputSet.bc.TIME])
-                interpOut = y;
-            else
-                interpOut = interp1([mix.inputSet.bc.TIME].', ...
-                                    y, ...
-                                    mix.TIME, ...
-                                    mix.inputSet.options.TIMEINTERP);
-            end
-        end
-
-        function interpOut = axialInterpolate(mix, x, y)
-        %AXIALINTERPOLATE
-        % Linear extrapolation is used for cases where interpolation returns NaN (for instance, point slightly outside allowed tolerance when 'next' interpolation methos is selected)
-            interpOut = interp1(x, ...
-                                y, ...
-                                mix.Z, ...
-                                mix.inputSet.options.AXIALINTERP, ...
-                                "extrap");
-            interpOut(isnan(interpOut)) = interp1(x, ...
-                                y, ...
-                                mix.Z(isnan(interpOut)), ...
-                                'linear', ...
-                                "extrap");               
-        end
     end
 end
 
