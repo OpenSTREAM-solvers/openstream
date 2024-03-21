@@ -2,7 +2,7 @@ classdef Mixture < Solvers.AbstractField
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=?Solvers.AbstractSolver)
+    properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
         % Solver properties
         NZ                                                                 = 0                    % [-] Number of axial steps
@@ -53,6 +53,8 @@ classdef Mixture < Solvers.AbstractField
                 mix.fluid  = fluid;
             end
 
+            % Overload copyable properties
+            mix.flowProperties = {'W','P','H','DP'};
         end
         
         function set.W(mix, val)
@@ -391,68 +393,6 @@ classdef Mixture < Solvers.AbstractField
             
             affnc = mix.AFFNC(zIdx);
             afDistr = (1-affnc).*param1 + affnc.*param2;
-        end
-        
-        function out = struct(obj)
-        %STRUCT Converter to struct
-        %
-            for i = length(obj):-1:1
-                out(i) = struct('TIME', obj(i).TIME, ...
-                                'W',   obj(i).W, ...
-                                'P',   obj(i).P, ...
-                                'H',   obj(i).H, ...
-                                'DP',  obj(i).DP, ...
-                                'ITR', obj(i).ITR);
-            end
-        end
-
-        function copyFlowProperties(srcObj, targetObj, opts)
-        %COPYFLOWPROPERTIES
-        %
-            arguments
-                srcObj
-                targetObj (1,:) Solvers.Mixture.Mixture
-                opts.all  (1,1) logical = false
-            end
-
-            for i = 1:length(targetObj)
-                
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'MixtureError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
-                
-                % Copy properties
-                propNames = {'W','P','H','DP'};
-                for j = 1:length(propNames)
-                    % Full copy
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                    % Partial copy to preserve inlet conditions
-                    else
-                        % Scalar structs are copied per field
-                        if isstruct(targetObj(1).(propNames{j})) && isscalar(targetObj(1).(propNames{j}))
-                            structFields = fieldnames(targetObj(1).(propNames{j}));
-                            for ii = 1:length(structFields)
-                                targetObj(1).(propNames{j}).(structFields{ii})(2:end) = ...
-                                    srcObj.(propNames{j}).(structFields{ii})(2:end);
-                            end
-                        % Non-scalar properties are copied as a vector
-                        else
-                            targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                        end
-                        
-                    end
-                end
-
-
-            end
-
         end
     
     end

@@ -2,7 +2,7 @@ classdef Base < Solvers.AbstractFilm
     %BASE Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess={?Solvers.AbstractFilm,?Solvers.AbstractSolver})
+     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
         % % Solver properties
         NZ                                                                 = 0                    % [-] Number of axial steps
