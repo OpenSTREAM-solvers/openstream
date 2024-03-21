@@ -46,6 +46,9 @@ classdef Liquid < Solvers.AbstractField
                 liquid.inputSet = inputSet;
                 liquid.fluid  = fluid;
             end
+
+            % Overload copyable properties
+            %liquid.flowProperties = {'W','U','H'};
         end
 
         function Mtot = MTOT(liquid,zIdx)
@@ -76,52 +79,6 @@ classdef Liquid < Solvers.AbstractField
         
         
         
-        
-        function out = struct(obj)
-        %STRUCT Converter to struct
-        %
-            for i = length(obj):-1:1
-                out(i) = struct('TIME', obj(i).TIME, ...
-                                'W',   obj(i).W, ...
-                                'U',   obj(i).U, ...
-                                'H',   obj(i).H, ...
-                                'ITR', obj(i).ITR);
-            end
-        end
-        
-        function copyFlowProperties(srcObj, targetObj, opts)
-        %COPYFLOWPROPERTIES
-        %
-            arguments
-                srcObj
-                targetObj (1,:) Solvers.TwoFluid.Liquid
-                opts.all  (1,1) logical = false
-            end
-
-            for i = 1:length(targetObj)
-                
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'LiquidError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
-                
-                % Copy properties
-                propNames = {'W','U','H'};
-                for j = 1:length(propNames)
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                    else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                    end
-                end
-            end
-        end
-
     end
 end
 
