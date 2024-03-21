@@ -14,8 +14,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         fluid       {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
         
-        mixtureInit
-        mixture
         liquidInit
         vaporInit
         fluidInit
@@ -74,11 +72,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 twfSolver.(p{:}) = twfSolver.mixSolver.(p{:});
             end
 
-
             % Local parameters
-            mixArr = twfSolver.mixSolver.mixture;                            % Mixture solution
-            %model  = twfSolver.inputSet.model;                               % Models
-            %geom   = twfSolver.inputSet.geometry;
+            mixArr = twfSolver.mixSolver.mixture;                           % Mixture solution
+            %model  = twfSolver.inputSet.model;                              % Models
+            %geom   = twfSolver.inputSet.geometry;                           % Geometry
 
             % Setup inner iteration value struct
             ITRFields = ["N","DWL","DUL"];
@@ -89,7 +86,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % Create liquid and vapor arrays (by timestep)
             liqArr(twfSolver.NTIME) = Liquid();
             vapArr(twfSolver.NTIME) = Vapor();
-            props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
+            props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};  % liquid and vapor properties
             
             for tIdx = 1:twfSolver.NTIME
 
@@ -106,6 +103,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 
                 % Axial Steps
                 vap.DZ = twfSolver.DZ;
+                
                 liq.NZ = twfSolver.NZ;
                 liq.DZ = twfSolver.DZ;
                 liq.Z  = twfSolver.Z;
@@ -121,30 +119,27 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     vap.(p{:}) = liq.(p{:});
                 end
                 
+                % Wall evaporation heat flux
+                liq.HFLUX = (mix.XEQ<=1).*mix.HFLUX;                       % [W/m^2] Wall heat flux to liquid phase
+                vap.HFLUX = (mix.XEQ>1).*mix.HFLUX;                        % [W/m^2] Wall heat flux to vapor phase
+                
+                % Liquid evaporation (thermal equilibrium assumption)
+                liq.MEVAP = -all([mix.XEQ>=0 mix.XEQ<=1],2).*liq.HFLUX./(fluid.HG-fluid.HF); % [kg/m^2/s] Wall evaporation mass flux
+                vap.MEVAP = -liq.MEVAP;
+                %vap.COND = 0.*vap.HFLUX;                                   % [kg/m^2/s] Interfacial condensation mass flux
+                
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
-                % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
-                % Note 2: other, maybe better, initialization states could be investigated
-                vap.W = mix.W.*mix.X; % [kg/s] % Set vapor mass flow to mixture model mass flow rate times quality
-                
-                % Transient mass gradient in film field
-                liq.W = mix.W.*(1-mix.X); % [kg/s] % Set liquid mass flow to mixture model mass flow rate times quality
-                
-                % ... or transient mass gradient in drop field
-                %vap.W = drp.W+mix.W-mix.W(mix.OAFIDX);                                % 
-                %liq.W(1,1:geom.NWALL) = (mix.liquid.W(1)-drp.W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
-                
-                % Limit flow rate minimum to 0
-                liq.W = max(0,liq.W);
-                vap.W = max(0,vap.W);                
+                % Note: only 1st time step is important since other time steps are initialized by the previous time step in the solver
+                liq.W = mix.W.*(1-mix.X);                                  % [kg/s] % Set liquid mass flow to mixture model mass flow rate times quality
+                vap.W = mix.W.*mix.X;                                      % [kg/s] % Set vapor mass flow to mixture model mass flow rate times quality
                 
                 % Initialize velocity [m/s]
-                vap.U = mix.vapor.U;                                      % [m/s] Drop velocity
-                liq.U = mix.liquid.U;                                         % [m/s] Drop velocity
+                liq.U = mix.liquid.U;                                      % [m/s] Liquid velocity
+                vap.U = mix.vapor.U;                                       % [m/s] Vapor velocity
                
-                                
                 % Initialize enthalpy [J/kg]
-                vap.H = mix.vapor.H;
-                liq.H = mix.liquid.H;
+                liq.H = min(mix.H,fluid.HF);
+                vap.H = max(mix.H,fluid.HG);
                 
                 % ITR
                 liq.ITR = ITRl;
@@ -154,15 +149,14 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             % Store transient mixture array
             twfSolver.liquid = liqArr;
-            twfSolver.vapor = vapArr;
-
+            twfSolver.vapor  = vapArr;
 
             % Create steady state mixture array
             twfSolver.liquidInit = copy( ...
                 repmat(liqArr(1),1,twfSolver.inputSet.options.SSMAXITER));
-            twfSolver.vaporInit = copy( ...
+            twfSolver.vaporInit  = copy( ...
                 repmat(vapArr(1),1,twfSolver.inputSet.options.SSMAXITER));
-            twfSolver.fluidInit = FluidProperties( ...
+            twfSolver.fluidInit  = FluidProperties( ...
                                     repmat( ...
                                         twfSolver.boundaryConditions.PRESSURE(1), ...
                                         1, ...
@@ -171,15 +165,15 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             % Update liquidInit and vaporInit times and timesteps
             initTIMEDT = twfSolver.inputSet.options.SSTSTEP;
-            initNTIME = length(twfSolver.liquidInit);
-            initTIME = 0:initTIMEDT:initTIMEDT*(initNTIME-1);
-            initTIDX = 1:length(twfSolver.liquidInit);
+            initNTIME  = length(twfSolver.liquidInit);
+            initTIME   = 0:initTIMEDT:initTIMEDT*(initNTIME-1);
+            initTIDX   = 1:length(twfSolver.liquidInit);
 
             for i = 1:length(twfSolver.liquidInit)
-                twfSolver.liquidInit(i).TIME = initTIME(i);
-                twfSolver.liquidInit(i).DT = initTIMEDT;
+                twfSolver.liquidInit(i).TIME  = initTIME(i);
+                twfSolver.liquidInit(i).DT    = initTIMEDT;
                 twfSolver.liquidInit(i).NTIME = initNTIME;
-                twfSolver.liquidInit(i).TIDX = initTIDX(i);
+                twfSolver.liquidInit(i).TIDX  = initTIDX(i);
 
                 twfSolver.liquidInit(i).mix       = copy(twfSolver.mixSolver.mixtureInit(end));
                 twfSolver.liquidInit(i).mix.TIME  = initTIME(i);
@@ -189,10 +183,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
                 twfSolver.vaporInit(i).mix    = twfSolver.liquidInit(i).mix;
 
-                twfSolver.vaporInit(i).TIME = initTIME(i);
-                twfSolver.vaporInit(i).DT = initTIMEDT;
-                twfSolver.vaporInit(i).NTIME = initNTIME;
-                twfSolver.vaporInit(i).TIDX = initTIDX(i);
+                twfSolver.vaporInit(i).TIME   = initTIME(i);
+                twfSolver.vaporInit(i).DT     = initTIMEDT;
+                twfSolver.vaporInit(i).NTIME  = initNTIME;
+                twfSolver.vaporInit(i).TIDX   = initTIDX(i);
             end
 
             % set STATE to UNSOLVED
@@ -202,70 +196,87 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
         % adjust plot functions
 
-        function plotz(mixSolver, tIdx, opt)
+        function plotz(twfSolver, tIdx, opt)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
             arguments
-                mixSolver
+                twfSolver
                 tIdx    (1,1) double
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
             end
             
             switch opt.solveMode
                 case 'TRANSIENT'
-                    mix = mixSolver.mixture(tIdx);
+                    liq = twfSolver.liquid(tIdx);
+                    vap = twfSolver.vapor(tIdx);
                 case 'STEADY'
-                    mix = mixSolver.mixtureInit(tIdx);
+                    liq = twfSolver.liquidInit(tIdx);
+                    vap = twfSolver.vaporInit(tIdx);
             end
             
-            figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME) ' [s]'])
-                
-            nexttile; hold all; grid on; title('Mass flow rates')
+            bc  = twfSolver.boundaryConditions;
+            mix = twfSolver.mixSolver.mixture(tIdx);
+            z   = twfSolver.Z;
+            figure('name',['Axial distributions of two-fluid parameters at ' num2str(mix.TIME) ' [s]'])
+            
+            nexttile; hold all; grid on; title('Wall heat flux')
+            plot(z,bc.HFLUX(:,:,tIdx),'s-')
+            plot(z,liq.HFLUX,'.--')
+            plot(z,vap.HFLUX,'.--')
+            xlabel('Axial position [m]'); xlim([0 z(end)]);
+            ylabel('Wall heat flux [W/m^2]')
+            legend({'Total','Liquid','Gas'},'location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Phase mass flow rates')
             plot(mix.Z,mix.W,'.-')  
-            plot(mix.liquid.Z,mix.liquid.W,'.-')
-            plot(mix.vapor.Z,mix.vapor.W,'.-')
+            plot(z,liq.W,'.-')
+            plot(z,vap.W,'.-')
             xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Mass flowrates [kg/s]')
-            legend({'Mixture','Liquid','Vapor'},'location','southEast')
+            ylabel('Phase mass flowrates [kg/s]')
+            legend({'Mixture','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Pressure drop')
-            plot(mix.Z,cumsum(mix.DP.Tot),'.-') 
-            plot(mix.Z,cumsum(mix.DP.Grav),'.-')
-            plot(mix.Z,cumsum(mix.DP.Wall),'.-')
-            plot(mix.Z,cumsum(mix.DP.Acc_z),'.-')
-            plot(mix.Z,cumsum(mix.DP.Acc_t),'.-')
-            plot(mix.Z,cumsum(mix.DP.K),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Pressure drop [Pa]')
-            legend({'Total','Gravitational','Wall','Acc z','Acc t','Local'},'location','northWest');
+            nexttile; hold all; grid on; title('Phase velocities')
+            plot(z,mix.U,'.-')
+            plot(z,liq.U,'.-')
+            plot(z,vap.U,'.-')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Phase velocity [m/s]')
+            legend({'Mixture','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Void fraction and quality')
-            plot(mix.Z,mix.XEQ(1:mix.NZ),'.-')  
-            plot(mix.Z,mix.X(1:mix.NZ),'.-')
-            plot(mix.Z,mix.VF(1:mix.NZ),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Quality / Void fraction [-]')
-            legend({'Equilibrium quality','Vapor mass quality','Void fraction'},'location','southEast')
+            nexttile; hold all; grid on; title('Phase enthalpies')
+            plot(z,mix.H,'.')
+            plot(z,liq.H,'.-')
+            plot(z,vap.H,'.-')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Phase enthalpies [J/kg]')
+            legend({'Mixture Liquid','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Field velocity')
-            plot(mix.Z,mix.U(1:mix.NZ),'.-')  
-            plot(mix.liquid.Z,mix.liquid.U(1:mix.NZ),'.-')
-            plot(mix.vapor.Z,mix.vapor.U(1:mix.NZ),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Velocities [m/s]')
-            legend({'Mixture','Liquid','Vapor'},'location','southEast')
+            nexttile; hold all; grid on; title('Liquid mass exchanges')
+            plot(z,liq.MEVAP,'.-')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Mass flux [kg/s/m^2]')
+            legend({'Wall evaporation'},'location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Vapor mass exchanges')
+            plot(z,vap.MEVAP,'.-')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Mass flux [kg/s/m^2]')
+            legend({'Wall evaporation'},'location','best')
             set(gca,'fontSize',14)
 
         end
     
-        function plott(mixSolver, zIdx, opt)
+        function plott(twfSolver, zIdx, opt)
             %PLOTT 
+            % TODO: Method to be checked
             % 
             arguments
-                mixSolver
+                twfSolver
                 zIdx (:,1) double
                 opt.tIdx (:,1) double = -1
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
@@ -274,53 +285,52 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             
             switch opt.solveMode
                 case 'TRANSIENT'
-                    mix = mixSolver.mixture;
+                    liq = twfSolver.liquid;
+                    vap = twfSolver.vapor;
                 case 'STEADY'
-                    mix = mixSolver.mixtureInit;
+                    liq = twfSolver.liquidInit;
+                    vap = twfSolver.vaporINit;
             end
 
             if isscalar(opt.tIdx) && (opt.tIdx < 0)
-                opt.tIdx = 1:length(mix);
+                opt.tIdx = 1:length(liq);
             end
 
             % Cannot plot time series of one time step
-            if isscalar(mix) || isscalar(opt.tIdx)
-                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+            if isscalar(liq) || isscalar(opt.tIdx)
+                twfSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
             end
 
             % Time vector
-            plotTimeVector = [mix(opt.tIdx).TIME];
+            plotTimeVector = [liq(opt.tIdx).TIME];
             if opt.reverseTime
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time series of two-fluid parameters at ' num2str(twfSolver.Z(zIdx(1))) ' [m]']);
             
             timeplot('W','Mass flowrates [kg/s]')
-            timeplot('P','Pressure [Pa]')
-            timeplot('XEQ','Equilibrium quality [-]')
-            timeplot('X','Steam mass quality [-]')
-            timeplot('VF','Void fraction [-]')
             timeplot('U','Velocity [m/s]')
-
+            timeplot('H','nthalpy [J/kg]')
+            
             function timeplot(param,ylabelText)
 
                 nexttile; hold all; grid on;
-                if ismethod(mix,param)
+                if ismethod(liq,param)
                     paramData = arrayfun( ...
-                                    @(i) mix(i).(param), ...
+                                    @(i) liq(i).(param), ...
                                     1:length(plotTimeVector), ...
                                     'UniformOutput', false);
                     paramData = cell2mat(paramData);
 
                 else
-                    paramData = [mix.(param)];
+                    paramData = [liq.(param)];
                 end
                 
                 plot(plotTimeVector, paramData(zIdx,opt.tIdx),'.-');
 
-                legendStr = num2str(mixSolver.Z(zIdx),'z=%0.4f m');
+                legendStr = num2str(twfSolver.Z(zIdx),'z=%0.4f m');
                 legend(legendStr,'Location','southeast');
                 
                 xlabel('Time [s]'); xlim(plotTimeVector([1 end]));
@@ -331,10 +341,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
         end
 
-        function plotzt(mixSolver, zIdx, opt)
-        % 2d plot, position z on horizontal and time t on vertical axis
+        function plotzt(twfSolver, zIdx, opt)
+        %PLOZT: 2d plot, position z on horizontal and time t on vertical axis
+        % TODO: Method to be checked
+        %
             arguments
-                mixSolver
+                twfSolver
                 zIdx (:,1) double
                 opt.tIdx (:,1) double = -1
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
@@ -344,28 +356,30 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             
             switch opt.solveMode
                 case 'TRANSIENT'
-                    mix = mixSolver.mixture;
+                    liq = twfSolver.liquid;
+                    vap = twfSolver.vapor;
                 case 'STEADY'
-                    mix = mixSolver.mixtureInit;
+                    liq = twfSolver.liquidInit;
+                    vap = twfSolver.vaporINit;
             end
 
             if isscalar(opt.tIdx) && (opt.tIdx < 0)
-                opt.tIdx = 1:length(mix);
+                opt.tIdx = 1:length(twf);
             end
 
             % Cannot plot time series of one time step
-            if isscalar(mix) || isscalar(opt.tIdx)
-                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
+            if isscalar(liq) || isscalar(opt.tIdx)
+                twfSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
             end
 
             % Time vector
-            plotTimeVector = [mix(opt.tIdx).TIME];
+            plotTimeVector = [liq(opt.tIdx).TIME];
             if opt.reverseTime
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time series of mixture parameters at ' num2str(twfSolver.Z(zIdx(1))) ' [m]']);
             
             zt_plot('W','Mass flowrates [kg/s]')
             zt_plot('P','Pressure [Pa]')
@@ -379,16 +393,16 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 nexttile; hold all; grid on;
                 if ismethod(mix,param)
                     paramData = arrayfun( ...
-                                    @(i) mix(i).(param), ...
+                                    @(i) liq(i).(param), ...
                                     1:length(plotTimeVector), ...
                                     'UniformOutput', false);
                     paramData = cell2mat(paramData);
 
                 else
-                    paramData = [mix.(param)];
+                    paramData = [liq.(param)];
                 end
                 
-                [t_mesh,z_mesh] = meshgrid(plotTimeVector,mixSolver.Z);
+                [t_mesh,z_mesh] = meshgrid(plotTimeVector,twfSolver.Z);
 
                 surf(z_mesh,t_mesh,paramData);
                 shading interp 
@@ -403,23 +417,25 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         end
 
         
-        function saveResults(mixSolver, opts)
+        function saveResults(twfSolver, opts)
         %SAVERESULTS
         %
         arguments
-            mixSolver
+            twfSolver
             opts.saveFormat {mustBeMember(opts.saveFormat,["MAT"])}   = "MAT"
         end
-            session = mixSolver.inputSet.session;
+            session = twfSolver.inputSet.session;
             switch opts.saveFormat
                 case "MAT"
                     results = struct( ...
-                                'Z', mixSolver.Z, ...
-                                'TIME', mixSolver.TIME, ...
+                                'Z', twfSolver.Z, ...
+                                'TIME', twfSolver.TIME, ...
                                 'sessionName', session.name, ...
-                                'boundaryConditions', mixSolver.boundaryConditions, ...
-                                'mixtureInit', struct(mixSolver.mixtureInit), ...
-                                'mixture', struct(mixSolver.mixture));
+                                'boundaryConditions', twfSolver.boundaryConditions, ...
+                                'liquidInit', struct(twfSolver.liquidInit), ...
+                                'vaporInit', struct(twfSolver.vaporInit), ...
+                                'liquid', struct(twfSolver.liquid), ...
+                                'vapor', struct(twfSolver.vapor));
 
                     if isfolder(session.directory)
                         save( ...

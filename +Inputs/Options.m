@@ -21,13 +21,20 @@ classdef Options < Inputs.Input
         RELAXPM      (1,1) double  {mustBeInRange(RELAXPM,0,1)}            = 1                     % Relaxation factor for the mixture momentum conservation equation
         RELAXHM      (1,1) double  {mustBeInRange(RELAXHM,0,1)}            = 1                     % Relaxation factor for the mixture energy conservation equation
         
+        RELAXWL      (1,1) double  {mustBeInRange(RELAXWL,0,1)}            = 1                     % Relaxation factor for the liquid mass conservation equation
+        RELAXWV      (1,1) double  {mustBeInRange(RELAXWV,0,1)}            = 1                     % Relaxation factor for the vapor mass conservation equation
+        RELAXUL      (1,1) double  {mustBeInRange(RELAXUL,0,1)}            = 1                     % Relaxation factor for the liquid momentum conservation equation
+        RELAXUV      (1,1) double  {mustBeInRange(RELAXUV,0,1)}            = 1                     % Relaxation factor for the vapor momentum conservation equation
+        RELAXHL      (1,1) double  {mustBeInRange(RELAXHL,0,1)}            = 1                     % Relaxation factor for the liquid mass conservation equation
+        RELAXHV      (1,1) double  {mustBeInRange(RELAXHV,0,1)}            = 1                     % Relaxation factor for the vapor energy conservation equation
+        
         ERRORWF      (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
         ERRORUF      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity error target in inner iterations [m/s]
         ERRORUD      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity error target in inner iterations [m/s]
         SSCONVWF     (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate steady-state convergence criterion [kg/s/m]
         SSCONVUF     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity steady-state convergence criterion [m/s]
         SSCONVUD     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity steady-state convergence criterion [m/s]
-        RELAXWF      (1,1) double  {mustBeInRange(RELAXWF,0,1)}            = 0.5                   % Relaxation factor for the film mass conservation equation
+        RELAXWF      (1,1) double  {mustBeInRange(RELAXWF,0,1)}            = 0.5                   % Relaxation factor for the film energy conservation equation
         RELAXUF      (1,1) double  {mustBeInRange(RELAXUF,0,1)}            = 0.2                   % Relaxation factor for the film momentum conservation equation
         RELAXUD      (1,1) double  {mustBeInRange(RELAXUD,0,1)}            = 0.2                   % Relaxation factor for the drop momentum conservation equation
         RELAXWB      (1,1) double  {mustBeInRange(RELAXWB,0,1)}            = 0.5                   % Relaxation factor for the base mass conservation equation

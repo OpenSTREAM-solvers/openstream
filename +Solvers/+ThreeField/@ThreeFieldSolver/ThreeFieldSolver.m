@@ -404,7 +404,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(tfSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time series of three-field parameters at ' num2str(tfSolver.Z(zIdx(1))) ' [m]']);
             
             timeplot('W','Mass flowrates [kg/s]')
             timeplot('U','Velocity [m/s]')
