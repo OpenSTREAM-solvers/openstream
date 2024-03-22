@@ -11,8 +11,6 @@ classdef Vapor < Solvers.AbstractField
         DT                                                                 = 0                    % [s] Time step size
         TIDX                                                               = 1                    % [-] Time step index
         Z                                                                  = 1.                   % [m] Elevation
-        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Vapor wall heat flux
-        MEVAP        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [kg/s/m^2] Wall evaporation mass flux    
         
         % Flow properties
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
@@ -47,26 +45,94 @@ classdef Vapor < Solvers.AbstractField
                 vapor.fluid  = fluid;
             end
         end
-
-        function Mtot = MTOT(vapor,zIdx)
-        %MTOT Total
-        %
+        
+        function x = X(vapor,zIdx)
+        %X Vapor mass fraction
+        
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             
-            %TODO: add interfacial mass terms later
-            geom = vapor.inputSet.geometry;
-            Mtot  = sum(geom.PERIM.*vapor.MEVAP(zIdx,:),2);
+            x = vapor.W(zIdx)./vapor.mix.W(zIdx);                          % [-]
         end
         
-        function Htot = HTOT(vapor,zIdx)
-        %HTOT Total
-        %
+        function t = T(vapor,zIdx)
+        %T Vapor temperature
+        
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             
-            %TODO: add interfacial mass terms later
-            %TODO: add non-equilibrium terms later
-            geom = vapor.inputSet.geometry;
-            Htot  = sum(geom.PERIM.*vapor.HFLUX(zIdx,:),2);
+            P  = vapor.fluid.PRESSURE;
+            
+            t = vapor.fluid.coolpropH.temperature('P',P,'H',vapor.H(zIdx)); % [K]
+        end
+        
+        function hflux = HFLUX(vapor,zIdx)
+        %HFLUX Wall heat flux to vapor phase
+        
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            
+            XEQ   = vapor.mix.XEQ;
+            HFLUX = vapor.mix.HFLUX;
+            
+            % Heat flux to liquid phase up to XEQ = 1
+            k = [1; diff(min(1,XEQ))./diff(XEQ)];                          % [-] Subcooled / saturation ratio
+            hflux = (1-k(zIdx)).*HFLUX(zIdx,:);                            % [W/m^2] 
+        end
+        
+        function Mwevap = MWEVAP(vapor,liquid,zIdx)
+        %MWEVAP Wall evaporation mass flux
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            Mwevap = -liquid.MWEVAP(zIdx);                                 % [kg/s/m^2]
+        end
+        
+        function Mwall = MWALL(vapor,liquid,zIdx)
+        %MWALL Wall evaporation mass transfer
+        %No condensation considered at the wall
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            PERIM = vapor.inputSet.geometry.PERIM;
+            
+            Mwall  = sum(PERIM.*vapor.MWEVAP(liquid,zIdx),2);               % [kg/s/m]
+        end
+
+        function Mtot = MTOT(vapor,liquid,zIdx)
+        %MTOT Total mass transfer
+        %TODO: add interfacial mass terms later
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            Mtot  = vapor.MWALL(liquid,zIdx);                              % [kg/s/m]
+        end
+        
+        
+        function Hwhf = HWHF(vapor,zIdx)
+        %HWALL wall energy transfer from wall heat flux
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            
+            PERIM = vapor.inputSet.geometry.PERIM;
+
+            Hwhf = sum(PERIM.*vapor.HFLUX(zIdx),2);                        % [W/m]
+        end
+        
+        function Hwall = HWALL(vapor,liquid,zIdx)
+        %HWALL wall energy transfer from mass transfer
+
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            HG = vapor.fluid.HG;
+
+            Hwall = vapor.MWALL(liquid,zIdx).*(HG-vapor.H(zIdx));          % [W/m]
+        end
+        
+        function Htot = HTOT(vapor,liquid,zIdx)
+        %HTOT Total energy transfer
+        %TODO: add interfacial mass terms later
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            Htot  = vapor.HWHF(zIdx) + vapor.HWALL(liquid,zIdx);           % [W/m]
         end
         
         
@@ -78,6 +144,7 @@ classdef Vapor < Solvers.AbstractField
         
         function out = struct(obj)
         %STRUCT Converter to struct
+        % TODO: Should it be in abstractField?
         %
             for i = length(obj):-1:1
                 out(i) = struct('TIME', obj(i).TIME, ...
@@ -90,6 +157,7 @@ classdef Vapor < Solvers.AbstractField
         
         function copyFlowProperties(srcObj, targetObj, opts)
         %COPYFLOWPROPERTIES
+        % TODO: Should it be in abstractField?
         %
             arguments
                 srcObj

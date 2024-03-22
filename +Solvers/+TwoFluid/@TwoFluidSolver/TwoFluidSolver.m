@@ -119,27 +119,18 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     vap.(p{:}) = liq.(p{:});
                 end
                 
-                % Wall evaporation heat flux
-                liq.HFLUX = (mix.XEQ<=1).*mix.HFLUX;                       % [W/m^2] Wall heat flux to liquid phase
-                vap.HFLUX = (mix.XEQ>1).*mix.HFLUX;                        % [W/m^2] Wall heat flux to vapor phase
-                
-                % Liquid evaporation (thermal equilibrium assumption)
-                liq.MEVAP = -all([mix.XEQ>=0 mix.XEQ<=1],2).*liq.HFLUX./(fluid.HG-fluid.HF); % [kg/m^2/s] Wall evaporation mass flux
-                vap.MEVAP = -liq.MEVAP;
-                %vap.COND = 0.*vap.HFLUX;                                   % [kg/m^2/s] Interfacial condensation mass flux
-                
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note: only 1st time step is important since other time steps are initialized by the previous time step in the solver
-                liq.W = mix.W.*(1-mix.X);                                  % [kg/s] % Set liquid mass flow to mixture model mass flow rate times quality
-                vap.W = mix.W.*mix.X;                                      % [kg/s] % Set vapor mass flow to mixture model mass flow rate times quality
+                liq.W = mix.liquid.W;                                      % [kg/s] Mixture model liquid mass flow rate
+                vap.W = mix.vapor.W;                                       % [kg/s] Mixture model vapor mass flow rate
                 
                 % Initialize velocity [m/s]
-                liq.U = mix.liquid.U;                                      % [m/s] Liquid velocity
-                vap.U = mix.vapor.U;                                       % [m/s] Vapor velocity
+                liq.U = mix.liquid.U;                                      % [m/s] Mixture model liquid velocity
+                vap.U = mix.vapor.U;                                       % [m/s] Mixture model vapor velocity
                
                 % Initialize enthalpy [J/kg]
-                liq.H = min(mix.H,fluid.HF);
-                vap.H = max(mix.H,fluid.HG);
+                liq.H = min(mix.H,fluid.HF);                               % [J/kg] Mixture model enthalpy, up to liquid saturation
+                vap.H = max(mix.H,fluid.HG);                               % [J/kg] Mixture model enthalpy, down to vapor saturation
                 
                 % ITR
                 liq.ITR = ITRl;
@@ -237,6 +228,15 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             legend({'Mixture','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
+            nexttile; hold all; grid on; title('Vapor mass quality')
+            plot(mix.Z,mix.XEQ,'.-')  
+            plot(z,mix.X,'.-')
+            plot(z,vap.X,'.-')
+            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
+            ylabel('Quality [-]')
+            legend({'Equilibrium','Mixture','Gas'},'location','best')
+            set(gca,'fontSize',14)
+            
             nexttile; hold all; grid on; title('Phase velocities')
             plot(z,mix.U,'.-')
             plot(z,liq.U,'.-')
@@ -247,7 +247,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Phase enthalpies')
-            plot(z,mix.H,'.')
+            plot(z,mix.H,'.-')
             plot(z,liq.H,'.-')
             plot(z,vap.H,'.-')
             xlabel('Axial position [m]'); xlim(z([1 end]));
@@ -255,18 +255,47 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             legend({'Mixture Liquid','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Liquid mass exchanges')
-            plot(z,liq.MEVAP,'.-')
+            nexttile; hold all; grid on; title('Phase temperatures')
+            plot(z,repmat(twfSolver.fluid.TSAT,length(z),1),'.-')
+            plot(z,liq.T-273.15,'.-')
+            plot(z,vap.T-273.15,'.-')
             xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Mass flux [kg/s/m^2]')
-            legend({'Wall evaporation'},'location','best')
+            ylabel('Phase temperatures [C]')
+            legend({'Saturation','Liquid','Gas'},'location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Liquid mass exchanges')
+            plot(z,liq.MWALL,'.-')
+            plot(z,liq.MTOT,'k--')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Mass exchange [kg/s/m]')
+            legend({'Wall evaporation','Total'},'location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Vapor mass exchanges')
-            plot(z,vap.MEVAP,'.-')
+            plot(z,vap.MWALL(liq),'.-')
+            plot(z,vap.MTOT(liq),'k--')
             xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Mass flux [kg/s/m^2]')
-            legend({'Wall evaporation'},'location','best')
+            ylabel('Mass exchange [kg/s/m]')
+            legend({'Wall evaporation','Total'},'location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Liquid energy exchanges')
+            plot(z,liq.HWHF,'.-')
+            plot(z,liq.HWALL,'.-')
+            plot(z,liq.HTOT,'k--')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Energy exchange [W/m]')
+            legend({'Wall heat flux','Wall mass exch','Total'},'location','best')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Vapor energy exchanges')
+            plot(z,vap.HWHF,'.-')
+            plot(z,vap.HWALL(liq),'.-')
+            plot(z,vap.HTOT(liq),'k--')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Energy Exchange [W/m]')
+            legend({'Wall heat flux','Wall mass exch','Total'},'location','best')
             set(gca,'fontSize',14)
 
         end
