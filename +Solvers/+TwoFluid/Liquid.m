@@ -75,8 +75,9 @@ classdef Liquid < Solvers.AbstractField
             XEQ   = liquid.mix.XEQ;
             HFLUX = liquid.mix.HFLUX;
             
-            % Heat flux to liquid phase up to XEQ = 1
-            k = [1; diff(min(1,XEQ))./diff(XEQ)];                          % [-] Subcooled / saturation ratio
+            % Heat flux to liquid phase up to XEQ = XCBT
+            XCBT = 0.8;                                                    % XCBT set to XEQ = 0.8 for now
+            k = [1; diff(min(XCBT,XEQ))./diff(XEQ)];                       % [-] Pre-CBT ratio
             hflux = k(zIdx).*HFLUX(zIdx,:);                                % [W/m^2] 
         end
         
@@ -89,12 +90,11 @@ classdef Liquid < Solvers.AbstractField
             HG  = liquid.fluid.HG;
             HF  = liquid.fluid.HF;
             
-            % Thermal equilibrium assumption
-            k = [0; diff(min(1,max(0,XEQ)))./diff(XEQ)];                   % [-] Saturation ratio
-            Mwevap = -k(zIdx).*liquid.HFLUX(zIdx)./(HG-HF);                % [kg/s/m^2]
-            
-            % Entire heat flux evaporates the liquid
-            %Mwevap = -liquid.HFLUX(zIdx)./(HG-HF);                         % [kg/s/m^2]
+            % Mass evaporation starts from XEQ = XOSV
+            XOSV = -0.1;                                                   % XOSV set to XEQ = -0.1 for now
+            k = [0; diff(max(XOSV,XEQ))./diff(XEQ)];                       % [-] Post-OSV ratio
+            %Mwevap = -k(zIdx).*liquid.HFLUX(zIdx)./(HG-HF);                % [kg/s/m^2] Heat flux is only used for evaporation (probably wrong)
+            Mwevap = -k(zIdx).*liquid.HFLUX(zIdx)./(HG-liquid.H(zIdx));    % [kg/s/m^2] Heat flux warms up liquid first (if subcooled) before evaporation
         end
         
         function Mwall = MWALL(liquid,zIdx)

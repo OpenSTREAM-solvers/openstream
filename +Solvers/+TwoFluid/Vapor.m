@@ -67,17 +67,14 @@ classdef Vapor < Solvers.AbstractField
             t = vapor.fluid.coolpropH.temperature('P',P,'H',vapor.H(zIdx)); % [K]
         end
         
-        function hflux = HFLUX(vapor,zIdx)
+        function hflux = HFLUX(vapor,liquid,zIdx)
         %HFLUX Wall heat flux to vapor phase
         
-            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
-            XEQ   = vapor.mix.XEQ;
             HFLUX = vapor.mix.HFLUX;
             
-            % Heat flux to liquid phase up to XEQ = 1
-            k = [1; diff(min(1,XEQ))./diff(XEQ)];                          % [-] Subcooled / saturation ratio
-            hflux = (1-k(zIdx)).*HFLUX(zIdx,:);                            % [W/m^2] 
+            hflux = HFLUX(zIdx,:)-liquid.HFLUX(zIdx);                      % [W/m^2] 
         end
         
         function Mwevap = MWEVAP(vapor,liquid,zIdx)
@@ -109,14 +106,14 @@ classdef Vapor < Solvers.AbstractField
         end
         
         
-        function Hwhf = HWHF(vapor,zIdx)
+        function Hwhf = HWHF(vapor,liquid,zIdx)
         %HWALL wall energy transfer from wall heat flux
 
-            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
             PERIM = vapor.inputSet.geometry.PERIM;
 
-            Hwhf = sum(PERIM.*vapor.HFLUX(zIdx),2);                        % [W/m]
+            Hwhf = sum(PERIM.*vapor.HFLUX(liquid,zIdx),2);                        % [W/m]
         end
         
         function Hwall = HWALL(vapor,liquid,zIdx)
@@ -135,7 +132,7 @@ classdef Vapor < Solvers.AbstractField
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
-            Htot  = vapor.HWHF(zIdx) + vapor.HWALL(liquid,zIdx);           % [W/m]
+            Htot  = vapor.HWHF(liquid,zIdx) + vapor.HWALL(liquid,zIdx);           % [W/m]
         end
         
     end

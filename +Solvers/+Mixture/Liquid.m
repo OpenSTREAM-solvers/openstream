@@ -57,10 +57,16 @@ classdef Liquid < Solvers.AbstractPhase
         end
 
         function u = U(liquid, zIdx)
-            %U Velocity [m/a]
+            %U Velocity [m/s]
             %   NOTE: need to be verified
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             u = liquid.MFLUX(zIdx) ./ liquid.VF(zIdx) ./ liquid.mix.fluid.RHOL(liquid.mix.H(zIdx));
+            
+            % set to the mixture velocity in the single-phase vapor region
+            singlePhaseIdx = isnan(u);
+            mixU = liquid.mix.U(zIdx);
+            u(singlePhaseIdx) = mixU(singlePhaseIdx);
+            
         end
 
         function h = H(liquid, zIdx)

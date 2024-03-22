@@ -124,14 +124,14 @@ function solver(solveINIT)
                 %HFLUX = mix(tIdx).HFLUX(zIdx,:);                                        % [W/m^2] Wall heat flux
                 
                 % Liquid mass conservation
-                Mtot = liquid(tIdx).MTOT(zIdx);                                              % [kg/s/m] Mass exchange terms with liquid
-                Wlnew = Uliter.*(Wlups+Wlold./Ulold.*DZ./DT+Mtot.*DZ)./(Uliter+DZ./DT);      % [kg/s] Update liquid mass flow rate
-                liquid(tIdx).W(zIdx,:) = (1-options.RELAXWL).*Wliter+options.RELAXWL.*Wlnew; % [kg/s] Apply relaxation
+                Mtot = liquid(tIdx).MTOT(zIdx);                                            % [kg/s/m] Mass exchange terms with liquid
+                Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);           % [kg/s] Update liquid mass flow rate
+                liquid(tIdx).W(zIdx,:) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
                 
                 % Vapor mass conservation
-                Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                                  % [kg/s/m] Mass exchange terms with vapor
-                Wvnew = Uviter.*(Wvups+Wvold./Uvold.*DZ./DT+Mtot.*DZ)./(Uviter+DZ./DT);      % [kg/s] Update vapor mass flow rate
-                vapor(tIdx).W(zIdx,:) = (1-options.RELAXWV).*Wviter+options.RELAXWV.*Wvnew;  % [kg/s] Apply relaxation
+                Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                                % [kg/s/m] Mass exchange terms with vapor
+                Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);           % [kg/s] Update vapor mass flow rate
+                vapor(tIdx).W(zIdx,:) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
 
                 % Momentum conservation
                 %%%% get pressure from mixture model
@@ -142,16 +142,16 @@ function solver(solveINIT)
                 % mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
                 
                 % Liquid energy conservation
-                Htot = liquid(tIdx).HTOT(zIdx);                                              % [W/m] Linear energy exchange terms with liquid
-                Htot = Htot./(Wliter/Uliter); Htot(Wliter == 0) = 0;                         % [W/kg] Avoid division by 0
-                Hlnew = (Hlups.*Uliter+Hlold.*DZ./DT+Htot.*DZ)./(Uliter+DZ./DT);             % [J/kg] Update liquid enthalpy
-                liquid(tIdx).H(zIdx,:) = (1-options.RELAXHL).*Hliter+options.RELAXHL.*Hlnew; % [J/kg] Apply relaxation
+                Htot = liquid(tIdx).HTOT(zIdx);                                            % [W/m] Linear energy exchange terms with liquid
+                Htot = Htot/(Wliter/Uliter); Htot(Wliter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
+                Hlnew = (Hlups*Uliter+Hlold*DZ/DT+Htot*DZ)/(Uliter+DZ/DT);                 % [J/kg] Update liquid enthalpy
+                liquid(tIdx).H(zIdx,:) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew; % [J/kg] Apply relaxation
                 
                 % Vapor energy conservation
-                Htot = vapor(tIdx).HTOT(liquid(tIdx),zIdx);                                  % [W/m] Linear energy exchange terms with vapor
-                Htot = Htot./(Wviter/Uviter); Htot(Wviter == 0) = 0;                         % [W/kg] Avoid division by 0
-                Hvnew = (Hvups.*Uviter+Hvold.*DZ./DT+Htot.*DZ)./(Uviter+DZ./DT);             % [J/kg] Update vapor enthalpy
-                vapor(tIdx).H(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;  % [J/kg] Apply relaxation
+                Htot = vapor(tIdx).HTOT(liquid(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with vapor
+                Htot = Htot/(Wviter/Uviter); Htot(Wviter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
+                Hvnew = (Hvups*Uviter+Hvold*DZ/DT+Htot*DZ)/(Uviter+DZ/DT);                 % [J/kg] Update vapor enthalpy
+                vapor(tIdx).H(zIdx,:) = (1-options.RELAXHV)*Hviter+options.RELAXHV*Hvnew;  % [J/kg] Apply relaxation
                 
                 
                 % Check convergence

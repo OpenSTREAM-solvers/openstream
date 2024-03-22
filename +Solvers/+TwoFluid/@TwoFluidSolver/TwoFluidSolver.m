@@ -78,9 +78,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %geom   = twfSolver.inputSet.geometry;                           % Geometry
 
             % Setup inner iteration value struct
-            ITRFields = ["N","DWL","DUL"];
+            ITRFields = ["N","DW","DU","DH"];
             ITRl = twfSolver.CreateITR(twfSolver.NZ, ITRFields);
-            ITRFields = ["N","DWV","DUV"];
+            ITRFields = ["N","DW","DU","DH"];
             ITRv = twfSolver.CreateITR(twfSolver.NZ, ITRFields);
 
             % Create liquid and vapor arrays (by timestep)
@@ -208,15 +208,27 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             bc  = twfSolver.boundaryConditions;
             mix = twfSolver.mixSolver.mixture(tIdx);
             z   = twfSolver.Z;
+            NWALL = twfSolver.inputSet.geometry.NWALL();
+            
             figure('name',['Axial distributions of two-fluid parameters at ' num2str(mix.TIME) ' [s]'])
             
             nexttile; hold all; grid on; title('Wall heat flux')
-            plot(z,bc.HFLUX(:,:,tIdx),'s-')
-            plot(z,liq.HFLUX,'.--')
-            plot(z,vap.HFLUX,'.--')
+            bcHFLUX = bc.HFLUX(:,:,tIdx);
+            liqHFLUX = liq.HFLUX;
+            vapHFLUX = vap.HFLUX(liq);
+            for i = 1:NWALL-1
+                plot(z,bcHFLUX(:,i),'s-','handleVisibility','off')
+                plot(z,liqHFLUX(:,i),'.-','handleVisibility','off')
+                plot(z,vapHFLUX(:,i),'.-','handleVisibility','off')
+                set(gca,'ColorOrderIndex',1)
+            end
+            i = NWALL;
+            plot(z,bcHFLUX(:,i),'s-','displayName','Boundary conditions')
+            plot(z,liqHFLUX(:,i),'.-','displayName','Liquid')
+            plot(z,vapHFLUX(:,i),'.-','displayName','Gas')
             xlabel('Axial position [m]'); xlim([0 z(end)]);
             ylabel('Wall heat flux [W/m^2]')
-            legend({'Total','Liquid','Gas'},'location','best')
+            legend('show','location','best')
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Phase mass flow rates')
@@ -256,7 +268,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Phase temperatures')
-            plot(z,repmat(twfSolver.fluid.TSAT,length(z),1),'.-')
+            plot(z,repmat(twfSolver.fluid.TSAT,length(z),1)-273.15,'.-')
             plot(z,liq.T-273.15,'.-')
             plot(z,vap.T-273.15,'.-')
             xlabel('Axial position [m]'); xlim(z([1 end]));
@@ -290,7 +302,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Vapor energy exchanges')
-            plot(z,vap.HWHF,'.-')
+            plot(z,vap.HWHF(liq),'.-')
             plot(z,vap.HWALL(liq),'.-')
             plot(z,vap.HTOT(liq),'k--')
             xlabel('Axial position [m]'); xlim(z([1 end]));
