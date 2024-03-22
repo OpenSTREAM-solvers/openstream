@@ -341,7 +341,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             
             timeplot('W','Mass flowrates [kg/s]')
             timeplot('U','Velocity [m/s]')
-            timeplot('H','nthalpy [J/kg]')
+            timeplot('H','Enthalpy [J/kg]')
             
             function timeplot(param,ylabelText)
 
@@ -371,9 +371,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         end
 
         function plotzt(twfSolver, zIdx, opt)
-        %PLOZT: 2d plot, position z on horizontal and time t on vertical axis
+        %PLOTZT: 2d plot, position z on horizontal and time t on vertical axis
         % TODO: Method to be checked
-        %
+        % Updated - To be extended later
             arguments
                 twfSolver
                 zIdx (:,1) double
@@ -393,7 +393,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             end
 
             if isscalar(opt.tIdx) && (opt.tIdx < 0)
-                opt.tIdx = 1:length(twf);
+                opt.tIdx = 1:length(liq);
             end
 
             % Cannot plot time series of one time step
@@ -408,19 +408,16 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(twfSolver.Z(zIdx(1))) ' [m]']);
+            figure('name',['Time and axial distribution of liquid parameters']);
             
-            zt_plot('W','Mass flowrates [kg/s]')
-            zt_plot('P','Pressure [Pa]')
-            zt_plot('XEQ','Equilibrium quality [-]')
-            zt_plot('X','Steam mass quality [-]')
-            zt_plot('VF','Void fraction [-]')
-            zt_plot('U','Velocity [m/s]')
+            zt_plot_liquid('W','Mass flowrates [kg/s]')
+            zt_plot_liquid('U','Velocity [m/s]')
+            zt_plot_liquid('H','Enthalpy [J/kg]')
 
-            function zt_plot(param,ylabelText)
+            function zt_plot_liquid(param,ylabelText)
 
                 nexttile; hold all; grid on;
-                if ismethod(mix,param)
+                if ismethod(liq,param)
                     paramData = arrayfun( ...
                                     @(i) liq(i).(param), ...
                                     1:length(plotTimeVector), ...
@@ -442,6 +439,39 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 ylabel(cb,ylabelText,'FontSize',12,'Rotation',270)
             
             end
+
+            figure('name',['Time and axial distribution of vapor parameters']);
+            
+            zt_plot_vapor('W','Mass flowrates [kg/s]')
+            zt_plot_vapor('U','Velocity [m/s]')
+            zt_plot_vapor('H','Enthalpy [J/kg]')
+            
+            function zt_plot_vapor(param,ylabelText)
+
+                nexttile; hold all; grid on;
+                if ismethod(vap,param)
+                    paramData = arrayfun( ...
+                                    @(i) vap(i).(param), ...
+                                    1:length(plotTimeVector), ...
+                                    'UniformOutput', false);
+                    paramData = cell2mat(paramData);
+
+                else
+                    paramData = [vap.(param)];
+                end
+                
+                [t_mesh,z_mesh] = meshgrid(plotTimeVector,twfSolver.Z);
+
+                surf(z_mesh,t_mesh,paramData);
+                shading interp 
+                xlabel('Position z [m]') 
+                ylabel('Time t [s]') 
+                view(2);
+                cb = colorbar(); 
+                ylabel(cb,ylabelText,'FontSize',12,'Rotation',270)
+            
+            end
+
 
         end
 
