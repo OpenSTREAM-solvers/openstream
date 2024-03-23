@@ -124,7 +124,7 @@ function solver(solveINIT)
                 %HFLUX = mix(tIdx).HFLUX(zIdx,:);                                        % [W/m^2] Wall heat flux
                 
                 % Liquid mass conservation
-                Mtot = liquid(tIdx).MTOT(zIdx);                                            % [kg/s/m] Mass exchange terms with liquid
+                Mtot = liquid(tIdx).MTOT(vapor(tIdx),zIdx);                                % [kg/s/m] Mass exchange terms with liquid
                 Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);           % [kg/s] Update liquid mass flow rate
                 liquid(tIdx).W(zIdx,:) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
                 
@@ -142,7 +142,7 @@ function solver(solveINIT)
                 % mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
                 
                 % Liquid energy conservation
-                Htot = liquid(tIdx).HTOT(zIdx);                                            % [W/m] Linear energy exchange terms with liquid
+                Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid
                 Htot = Htot/(Wliter/Uliter); Htot(Wliter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hlnew = (Hlups*Uliter+Hlold*DZ/DT+Htot*DZ)/(Uliter+DZ/DT);                 % [J/kg] Update liquid enthalpy
                 liquid(tIdx).H(zIdx,:) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew; % [J/kg] Apply relaxation
