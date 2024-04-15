@@ -24,4 +24,10 @@ SSCONVH     ! Enthalpy steady-state convergence criterion [J/kg]           > 1E-
 SSCONVWF    !                                                              > 1E-4
 RELAXWW     ! Wave relaxation                                              > 0.5
 RELAXWB     ! Base relaxation                                              > 0.5
+RELAXWL     ! Liquid mass flow rate relaxation                             > 1.0
+RELAXWV     ! Vapor mass flow rate relaxation                              > 1.0
+RELAXUL     ! Liquid velocity relaxation                                   > 0.5
+RELAXUV     ! Vapor velocity relaxation                                    > 0.5
+RELAXHL     ! Liquid enthalpy relaxation                                   > 1.0
+RELAXHV     ! Vapor enthalpy relaxation                                    > 1.0
 END

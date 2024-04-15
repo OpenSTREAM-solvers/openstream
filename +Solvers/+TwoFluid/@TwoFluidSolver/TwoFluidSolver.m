@@ -273,56 +273,111 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             legend({'Mixture Liquid','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Phase temperatures')
-            plot(z,repmat(twfSolver.fluid.TSAT,length(z),1)-273.15,'.-')
-            plot(z,liq.T-273.15,'.-')
-            plot(z,vap.T-273.15,'.-')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Phase temperatures [C]')
-            legend({'Saturation','Liquid','Gas'},'location','best')
-            set(gca,'fontSize',14)
+        %    nexttile; hold all; grid on; title('Phase temperatures')
+        %    plot(z,repmat(twfSolver.fluid.TSAT,length(z),1)-273.15,'.-')
+        %    plot(z,liq.T-273.15,'.-')
+        %    plot(z,vap.T-273.15,'.-')
+        %    xlabel('Axial position [m]'); xlim(z([1 end]));
+        %    ylabel('Phase temperatures [C]')
+        %    legend({'Saturation','Liquid','Gas'},'location','best')
+        %    set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Liquid mass exchanges')
-            plot(z,liq.MWALL,'.-','displayName','Wall evaporation')
-            plot(z,liq.MEVAP(vap),'.-','displayName','Interfacial evaporation')
-            plot(z,liq.MCOND(vap),'.-','displayName','Interfacial condensation')
-            plot(z,liq.MTOT(vap),'k--','displayName','Total')
+        %    nexttile; hold all; grid on; title('Liquid mass exchanges')
+        %    plot(z,liq.MWALL,'.-','displayName','Wall evaporation')
+        %    plot(z,liq.MEVAP(vap),'.-','displayName','Interfacial evaporation')
+        %    plot(z,liq.MCOND(vap),'.-','displayName','Interfacial condensation')
+        %    plot(z,liq.MTOT(vap),'k--','displayName','Total')
+        %    xlabel('Axial position [m]'); xlim(z([1 end]));
+        %    ylabel('Mass exchange [kg/s/m]')
+        %    legend('show','location','best')
+        %    set(gca,'fontSize',14)
+        %    
+        %    nexttile; hold all; grid on; title('Vapor mass exchanges')
+        %    plot(z,vap.MWALL(liq),'.-','displayName','Wall evaporation')
+        %    plot(z,vap.MEVAP(liq),'.-','displayName','Interfacial evaporation')
+        %    plot(z,vap.MCOND(liq),'.-','displayName','Interfacial condensation')
+        %    plot(z,vap.MTOT(liq),'k--','displayName','Total')
+        %    xlabel('Axial position [m]'); xlim(z([1 end]));
+        %    ylabel('Mass exchange [kg/s/m]')
+        %    legend('show','location','best')
+        %    set(gca,'fontSize',14)
+
+            nexttile; hold all; grid on; title('Mass exchanges')
+            plot(z,liq.MTOT(vap),'.-','displayName','Liquid total mass exchange')
+            plot(z,vap.MTOT(liq),'.-','displayName','Vapor total mass exchange')
+            plot(z,liq.MTOT(vap)+vap.MTOT(liq),'.-','displayName','Sum of mass exchange')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Mass exchange [kg/s/m]')
             legend('show','location','best')
             set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on; title('Vapor mass exchanges')
-            plot(z,vap.MWALL(liq),'.-','displayName','Wall evaporation')
-            plot(z,vap.MEVAP(liq),'.-','displayName','Interfacial evaporation')
-            plot(z,vap.MCOND(liq),'.-','displayName','Interfacial condensation')
-            plot(z,vap.MTOT(liq),'k--','displayName','Total')
+
+            nexttile; hold all; grid on; title('Energy exchanges')
+            plot(z,liq.HTOT(vap),'.-','displayName','Liquid total energy exchange')
+            plot(z,vap.HTOT(liq),'.-','displayName','Vapor total energy exchange')
+            plot(z,liq.HTOT(vap)+vap.HTOT(liq),'.-','displayName','Sum of energy exchange')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Energy exchange [W/s/m]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+
+            nexttile; hold all; grid on; title('Evaporation mass exchanges')
+            plot(z,liq.MEVAP(vap),'.-','displayName','Liquid total mass exchange')
+            plot(z,vap.MEVAP(liq),'.-','displayName','Vapor total mass exchange')
+            plot(z,liq.MEVAP(vap)+vap.MEVAP(liq),'.-','displayName','Sum of mass exchange')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Mass exchange [kg/s/m]')
             legend('show','location','best')
             set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on; title('Liquid energy exchanges')
-            plot(z,liq.HWHF,'.-','displayName','Wall heat flux')
-            plot(z,liq.HWALL,'.-','displayName','Wall mass exch')
-            %plot(z,liq.HEVAP(vap),'.-','displayName','Interfacial evaporation')
-            plot(z,liq.HCOND(vap),'.-','displayName','Interfacial condensation')
-            plot(z,liq.HTOT(vap),'k--','displayName','Total')
+
+            nexttile; hold all; grid on; title('Condensation mass exchanges')
+            plot(z,liq.MCOND(vap),'.-','displayName','Liquid total mass exchange')
+            plot(z,vap.MCOND(liq),'.-','displayName','Vapor total mass exchange')
+            plot(z,liq.MCOND(vap)+vap.MCOND(liq),'.-','displayName','Sum of mass exchange')
             xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Energy exchange [W/m]')
+            ylabel('Mass exchange [kg/s/m]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+
+
+            nexttile; hold all; grid on; title('Evaporation energy exchanges')
+            plot(z,liq.HEVAP(vap),'.-','displayName','Liquid total energy exchange')
+            plot(z,vap.HEVAP(liq),'.-','displayName','Vapor total energy exchange')
+            plot(z,liq.HEVAP(vap)+vap.HEVAP(liq),'.-','displayName','Sum of energy exchange')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Energy exchange [W/s/m]')
+            legend('show','location','best')
+            set(gca,'fontSize',14)
+
+            nexttile; hold all; grid on; title('Condensation energy exchanges')
+            plot(z,liq.HCOND(vap),'.-','displayName','Liquid total energy exchange')
+            plot(z,vap.HCOND(liq),'.-','displayName','Vapor total energy exchange')
+            plot(z,liq.HCOND(vap)+vap.HCOND(liq),'.-','displayName','Sum of energy exchange')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Energy exchange [W/s/m]')
             legend('show','location','best')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Vapor energy exchanges')
-            plot(z,vap.HWHF(liq),'.-','displayName','Wall heat flux')
-            plot(z,vap.HWALL(liq),'.-','displayName','Wall mass exch')
-            plot(z,vap.HEVAP(liq),'.-','displayName','Interfacial evaporation')
-            %plot(z,vap.HCOND(liq),'.-','displayName','Interfacial condensation')
-            plot(z,vap.HTOT(liq),'k--','displayName','Total')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Energy Exchange [W/m]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
+         %   nexttile; hold all; grid on; title('Liquid energy exchanges')
+         %   plot(z,liq.HWHF,'.-','displayName','Wall heat flux')
+         %   plot(z,liq.HWALL,'.-','displayName','Wall mass exch')
+         %   %plot(z,liq.HEVAP(vap),'.-','displayName','Interfacial evaporation')
+         %   plot(z,liq.HCOND(vap),'.-','displayName','Interfacial condensation')
+         %   plot(z,liq.HTOT(vap),'k--','displayName','Total')
+         %   xlabel('Axial position [m]'); xlim(z([1 end]));
+         %   ylabel('Energy exchange [W/m]')
+         %   legend('show','location','best')
+         %   set(gca,'fontSize',14)
+         %   
+         %   nexttile; hold all; grid on; title('Vapor energy exchanges')
+         %   plot(z,vap.HWHF(liq),'.-','displayName','Wall heat flux')
+         %   plot(z,vap.HWALL(liq),'.-','displayName','Wall mass exch')
+         %   plot(z,vap.HEVAP(liq),'.-','displayName','Interfacial evaporation')
+         %   %plot(z,vap.HCOND(liq),'.-','displayName','Interfacial condensation')
+         %   plot(z,vap.HTOT(liq),'k--','displayName','Total')
+         %   xlabel('Axial position [m]'); xlim(z([1 end]));
+         %   ylabel('Energy Exchange [W/m]')
+         %   legend('show','location','best')
+         %   set(gca,'fontSize',14)
 
         end
     

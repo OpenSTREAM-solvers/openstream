@@ -133,13 +133,17 @@ function solver(solveINIT)
                 Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);           % [kg/s] Update vapor mass flow rate
                 vapor(tIdx).W(zIdx,:) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
 
-                % Momentum conservation
-                %%%% get pressure from mixture model
-                %Ftot = liquid(tIdx).FTOT(zIdx);
-                
-                % DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                            % [Pa] Pressure drop components
-                % Pnew = mix(tIdx).P(zIdx-1) + DPparts.TOT;                           % [Pa] New pressure
-                % mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
+                % Liquid momentum conservation (uncomment to turn on)
+                Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                                % [N/m] 
+                Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
+                Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT);             % [m/s] Update liquid velocity
+                liquid(tIdx).U(zIdx,:) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew; % [m/s] Apply relaxation
+
+                % Vapor momentum conservation (uncomment to turn on)
+                Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                                % [N/m] 
+                Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
+                Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT);             % [m/s] Update vapor velocity
+                vapor(tIdx).U(zIdx,:) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;  % [m/s] Apply relaxation                
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid
@@ -157,10 +161,11 @@ function solver(solveINIT)
                 % Check convergence
                 dWl = abs((liquid(tIdx).W(zIdx)-Wliter));                  % [kg/s] Liquid mass flow rate error between inner iterations
                 dWv = abs((vapor(tIdx).W(zIdx)-Wviter));                   % [kg/s] Vapor mass flow rate error between inner iterations
-
+                dUl = abs((liquid(tIdx).U(zIdx)-Uliter));                  % [m/s]  Liquid velocity error between inner iterations
+                dUv = abs((vapor(tIdx).U(zIdx)-Uviter));                   % [m/s]  Vapor velocity error between inner iterations
                 dHl = abs((liquid(tIdx).H(zIdx)-Hliter));                  % [J/kg] Enthalpy error between inner iterations
                 dHv = abs((vapor(tIdx).H(zIdx)-Hviter));                   % [J/kg] Enthalpy error between inner iterations
-                if all([dWl < options.ERRORW, dWv < options.ERRORW, dHl < options.ERRORH, dHv < options.ERRORH])   
+                if all([dWl < options.ERRORW, dWv < options.ERRORW, dUl < options.ERRORU, dUv < options.ERRORU, dHl < options.ERRORH, dHv < options.ERRORH])   
                     break;
                     
                 elseif itr == options.MAXITER
@@ -174,11 +179,12 @@ function solver(solveINIT)
             % Iteration parameters
             liquid(tIdx).ITR.N(zIdx)  = itr;
             liquid(tIdx).ITR.DW(zIdx) = dWl;
-            %liquid(tIdx).ITR.DU(zIdx)  = dUl;
+            liquid(tIdx).ITR.DU(zIdx) = dUl;
             liquid(tIdx).ITR.DH(zIdx) = dHl;
-            vapor(tIdx).ITR.N(zIdx)  = itr;
-            vapor(tIdx).ITR.DW(zIdx) = dWv;
-            vapor(tIdx).ITR.DH(zIdx) = dHv;
+            vapor(tIdx).ITR.N(zIdx)   = itr;
+            vapor(tIdx).ITR.DW(zIdx)  = dWv;
+            vapor(tIdx).ITR.DU(zIdx)  = dUv;
+            vapor(tIdx).ITR.DH(zIdx)  = dHv;
 
             % Stop running if solver did not converge
             %if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
@@ -189,27 +195,29 @@ function solver(solveINIT)
         
         [maxN,maxzIdx] = max(liquid(tIdx).ITR.N);
         maxDWl = max(liquid(tIdx).ITR.DW);
-        %maxDUl = max(liquid(tIdx).ITR.DU);
+        maxDUl = max(liquid(tIdx).ITR.DU);
         maxDHl = max(liquid(tIdx).ITR.DH);
         maxDWv = max(vapor(tIdx).ITR.DW);
+        maxDUv = max(vapor(tIdx).ITR.DU);
         maxDHv = max(vapor(tIdx).ITR.DH);
-        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',maxN,maxzIdx,maxDWl,maxDWv,maxDHl,maxDHv)
+        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
         
         % Temporal deviations in W, U, and H
         timeDWl = max(abs(liquid(tIdx).W - liquid(tIdx-1).W));
-        %timeDUl = max(abs(liquid(tIdx).U - liquid(tIdx-1).U));
+        timeDUl = max(abs(liquid(tIdx).U - liquid(tIdx-1).U));
         timeDHl = max(abs(liquid(tIdx).H - liquid(tIdx-1).H));
         timeDWv = max(abs(vapor(tIdx).W - vapor(tIdx-1).W));
+        timeDUv = max(abs(vapor(tIdx).U - vapor(tIdx-1).U));
         timeDHv = max(abs(vapor(tIdx).H - vapor(tIdx-1).H));
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
-            if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
+            if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
                 
                 % Indicate init converged
                 twfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
                 
-                twfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDHl,timeDHv)
+                twfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
     
                 % Replace mixtureInit with subset up to this tIdx
                 twfSolver.liquidInit = twfSolver.liquidInit(1:tIdx);
@@ -225,7 +233,7 @@ function solver(solveINIT)
             elseif tIdx < length(liquid)-1
                 % unless non-convergence occurred
                 if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    twfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDHl,timeDHv) %,timeDUf,timeDUd , Uf = %.5f [m/s]), Ud = %.5f [m/s]
+                    twfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv) 
                     break;
                 end
 
