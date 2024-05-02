@@ -127,13 +127,30 @@ classdef Vapor < Solvers.AbstractField
             
             hflux = HFLUX(zIdx,:)-liquid.HFLUX(zIdx);                      % [W/m^2] 
         end
+
+        function inu = INU(vapor,zIdx)
+        %INU Interfacial Nusselt number
+        
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            
+            % Make it constant for now
+            inu = 2.*ones(size(zIdx));                                     % [-]
+            % Other models: Ranz-Marshall?
+        end
         
         function inthflux = INTHFLUX(vapor,liquid,zIdx)
         %INTHFLUX Interfacial heat flux to vapor phase
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
-            inthflux = -liquid.INTHFLUX(vapor,zIdx);                       % [W/m^2]
+            L    = vapor.L(liquid,zIdx);
+            INU  = vapor.INU(zIdx);
+            
+            KV = vapor.fluid.KV(vapor.H(zIdx));                            % Vapor conductivity (saturated to superheated) [W/m/K]
+            h = INU.*KV./L; h(L <= 1E-6) = 0;                              % heat transfer coefficient [W/m^2/K]
+
+            TSAT  = vapor.fluid.TSAT;                                      % Saturated fluid temperature
+            inthflux = h.*(TSAT-vapor.T(zIdx));                            % Interfacial heat flux to vapor phase [W/m^2]
         end
         
         
@@ -144,22 +161,14 @@ classdef Vapor < Solvers.AbstractField
             
             Mwevap = -liquid.MWEVAP(zIdx);                                 % [kg/s/m^2]
         end
-        
-        function Miexch = MIEXCH(vapor,liquid,zIdx)
-        %MWEVAP interfacial mass flux
-        
-            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
-            
-            Miexch = -liquid.MIEXCH(vapor,zIdx);                           % [W/m];
-        end
-        
+
         function Mwall = MWALL(vapor,liquid,zIdx)
         %MWALL Wall evaporation mass transfer
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
             Mwall  = -liquid.MWALL(zIdx);                                  % [kg/s/m]
-        end
+        end        
         
         function Mevap = MEVAP(vapor,liquid,zIdx)
         %MEVAP Interfacial evaporation mass transfer
@@ -176,15 +185,14 @@ classdef Vapor < Solvers.AbstractField
             
             Mcond = -liquid.MCOND(vapor,zIdx);                             % [kg/s/m]
         end
-        
 
         function Mtot = MTOT(vapor,liquid,zIdx)
         %MTOT Total mass transfer
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
-            Mtot  = vapor.MWALL(liquid,zIdx);                              % [kg/s/m]
-            %Mtot  = vapor.MWALL(liquid,zIdx) + vapor.MEVAP(liquid,zIdx) + vapor.MCOND(liquid,zIdx); % [kg/s/m]
+            %Mtot  = vapor.MWALL(liquid,zIdx);                              % [kg/s/m]
+            Mtot  = vapor.MWALL(liquid,zIdx) + vapor.MEVAP(liquid,zIdx) + vapor.MCOND(liquid,zIdx); % [kg/s/m]
         end
         
         
@@ -217,7 +225,7 @@ classdef Vapor < Solvers.AbstractField
             HG = vapor.fluid.HG;
 
             Hevap = vapor.MEVAP(liquid,zIdx).*(HG-vapor.H(zIdx));          % [W/s/m]
-            %Hevap = vapor.MEVAP(liquid,zIdx).*(liquid.H(zIdx)-vapor.H(zIdx));  % [W/s/m]
+            %Hevap = vapor.MEVAP(liquid,zIdx).*(vapor.H(zIdx)-vapor.H(zIdx));          % [W/s/m]
         end
         
         function Hcond = HCOND(vapor,liquid,zIdx)
@@ -227,16 +235,20 @@ classdef Vapor < Solvers.AbstractField
             
             HG = vapor.fluid.HG;
 
-            Hcond = vapor.MCOND(liquid,zIdx).*(HG-vapor.H(zIdx));          % [W/s/m]
+            %Hcond = vapor.MCOND(liquid,zIdx).*(HG-vapor.H(zIdx));          % [W/s/m]
+            Hcond = vapor.MCOND(liquid,zIdx).*(vapor.H(zIdx)-vapor.H(zIdx));          % [W/s/m]
         end
         
         function Htot = HTOT(vapor,liquid,zIdx)
         %HTOT Total energy transfer
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+
+            AREA = vapor.inputSet.geometry.AREA;
+            ihflux = AREA.*vapor.AI(liquid,zIdx).*vapor.INTHFLUX(liquid,zIdx);    % [W/m]
             
-            Htot  = vapor.HWHF(liquid,zIdx) + vapor.HWALL(liquid,zIdx);    % [W/m]
-            %Htot  = vapor.HWHF(liquid,zIdx) + vapor.HWALL(liquid,zIdx) + vapor.HEVAP(liquid,zIdx) + vapor.HCOND(liquid,zIdx); % [W/m]
+            %Htot  = vapor.HWHF(liquid,zIdx) + vapor.HWALL(liquid,zIdx);    % [W/m]
+            Htot  = vapor.HWHF(liquid,zIdx) + vapor.HWALL(liquid,zIdx) + vapor.HEVAP(liquid,zIdx) + vapor.HCOND(liquid,zIdx) ; % [W/m]+ ihflux
         end
         
         function Fgrav = FGRAV(vapor,liquid,zIdx)
@@ -253,20 +265,13 @@ classdef Vapor < Solvers.AbstractField
 
         function Fpres = FPRES(vapor,liquid,zIdx)
         %FPRES pressure gradient
-        %TODO fix indexing when calling function outside of solver with 
-        % zIdx = 1
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
             AREA = vapor.inputSet.geometry.AREA;                          % [m^2]    cross-section area
-            PRES = vapor.mix.P(zIdx);                                     % [Pa] mixture pressure
-            %DIFF = diff(PRES);                                            % [Pa] pressure differences
-            DIFF = PRES - vapor.mix.P(zIdx-1);                            % [Pa] pressure differences
-            %DIFF(length(zIdx))=DIFF(length(zIdx)-1);                      % add one more element of same value
-
-            DPDZ = DIFF/vapor.DZ;                                         % [Pa/m] pressure gradient
+            DPDZ = vapor.mix.DP.Tot(zIdx);                                % [Pa/m] pressure gradient
             
-            Fpres  = - AREA*vapor.VF(liquid,zIdx).*DPDZ;                         % [N/m]
+            Fpres  = AREA*vapor.VF(liquid,zIdx).*DPDZ;                         % [N/m]
         end
 
         function re = RE(vapor, zIdx)
@@ -317,8 +322,8 @@ classdef Vapor < Solvers.AbstractField
         % FMWALL momentum exchange through wall mass exchange  
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
-            Fmwall = -liquid.FMWALL(zIdx);            % [N/m]   (should be positive)
-
+            PERIM = liquid.inputSet.geometry.PERIM;                        % [m]      perimeter
+            Fmwall = -PERIM.*liquid.MWEVAP(zIdx).*(vapor.U(zIdx)-liquid.U(zIdx));  % [N/m]   (MWEVAP is negative)
         end
         
         function Ftot = FTOT(vapor,liquid,zIdx)
@@ -328,10 +333,10 @@ classdef Vapor < Solvers.AbstractField
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
             % turn on force terms
-            Ftot  = vapor.FPRES(liquid,zIdx) + vapor.FWSHEAR(liquid,zIdx)+vapor.FGRAV(liquid,zIdx) +vapor.FISHEAR(liquid,zIdx)+vapor.FMWALL(liquid,zIdx);% [N/m]
+            %Ftot  = vapor.FPRES(liquid,zIdx) + vapor.FWSHEAR(liquid,zIdx)+vapor.FGRAV(liquid,zIdx) +vapor.FISHEAR(liquid,zIdx) +vapor.FMWALL(liquid,zIdx);% [N/m] 
             
             % turn off force terms
-            %Ftot=zeros(size(zIdx));% [N/m]  
+            Ftot=zeros(size(zIdx));% [N/m]  
         end
 
     end

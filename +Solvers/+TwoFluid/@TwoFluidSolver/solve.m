@@ -134,16 +134,16 @@ function solver(solveINIT)
                 vapor(tIdx).W(zIdx,:) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
 
                 % Liquid momentum conservation (uncomment to turn on)
-                Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                                % [N/m] 
-                Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
-                Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT);             % [m/s] Update liquid velocity
-                liquid(tIdx).U(zIdx,:) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew; % [m/s] Apply relaxation
+                %Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                                % [N/m] 
+                %Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
+                %Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT);             % [m/s] Update liquid velocity
+                %liquid(tIdx).U(zIdx,:) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew; % [m/s] Apply relaxation
 
                 % Vapor momentum conservation (uncomment to turn on)
-                Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                                % [N/m] 
-                Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
-                Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT);             % [m/s] Update vapor velocity
-                vapor(tIdx).U(zIdx,:) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;  % [m/s] Apply relaxation                
+                %Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                                % [N/m] 
+                %Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
+                %Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT);             % [m/s] Update vapor velocity
+                %vapor(tIdx).U(zIdx,:) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;  % [m/s] Apply relaxation                
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid

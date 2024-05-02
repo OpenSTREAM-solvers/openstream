@@ -255,14 +255,14 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             ylabel('Volumetric interfacial area [m^-^1]')
             set(gca,'fontSize',14)
             
-            nexttile; hold all; grid on; title('Phase velocities')
-            plot(z,mix.U,'.-')
-            plot(z,liq.U,'.-')
-            plot(z,vap.U,'.-')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Phase velocity [m/s]')
-            legend({'Mixture','Liquid','Gas'},'location','best')
-            set(gca,'fontSize',14)
+         %   nexttile; hold all; grid on; title('Phase velocities')
+         %   plot(z,mix.U,'.-')
+         %   plot(z,liq.U,'.-')
+         %   plot(z,vap.U,'.-')
+         %   xlabel('Axial position [m]'); xlim(z([1 end]));
+         %   ylabel('Phase velocity [m/s]')
+         %   legend({'Mixture','Liquid','Gas'},'location','best')
+         %   set(gca,'fontSize',14)
             
             nexttile; hold all; grid on; title('Phase enthalpies')
             plot(z,mix.H,'.-')
@@ -270,17 +270,17 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             plot(z,vap.H,'.-')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Phase enthalpies [J/kg]')
-            legend({'Mixture Liquid','Liquid','Gas'},'location','best')
+            legend({'Mixture','Liquid','Gas'},'location','best')
             set(gca,'fontSize',14)
             
-        %    nexttile; hold all; grid on; title('Phase temperatures')
-        %    plot(z,repmat(twfSolver.fluid.TSAT,length(z),1)-273.15,'.-')
-        %    plot(z,liq.T-273.15,'.-')
-        %    plot(z,vap.T-273.15,'.-')
-        %    xlabel('Axial position [m]'); xlim(z([1 end]));
-        %    ylabel('Phase temperatures [C]')
-        %    legend({'Saturation','Liquid','Gas'},'location','best')
-        %    set(gca,'fontSize',14)
+            nexttile; hold all; grid on; title('Phase temperatures')
+            plot(z,repmat(twfSolver.fluid.TSAT,length(z),1)-273.15,'.-')
+            plot(z,liq.T-273.15,'.-')
+            plot(z,vap.T-273.15,'.-')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Phase temperatures [C]')
+            legend({'Saturation','Liquid','Gas'},'location','best')
+            set(gca,'fontSize',14)
             
         %    nexttile; hold all; grid on; title('Liquid mass exchanges')
         %    plot(z,liq.MWALL,'.-','displayName','Wall evaporation')
@@ -302,60 +302,92 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         %    legend('show','location','best')
         %    set(gca,'fontSize',14)
 
-            nexttile; hold all; grid on; title('Mass exchanges')
-            plot(z,liq.MTOT(vap),'.-','displayName','Liquid total mass exchange')
-            plot(z,vap.MTOT(liq),'.-','displayName','Vapor total mass exchange')
-            plot(z,liq.MTOT(vap)+vap.MTOT(liq),'.-','displayName','Sum of mass exchange')
+         %   nexttile; hold all; grid on; title('Mass exchanges')
+         %   plot(z,liq.MTOT(vap),'.-','displayName','Liquid total mass exchange')
+         %   plot(z,vap.MTOT(liq),'.-','displayName','Vapor total mass exchange')
+         %   plot(z,liq.MTOT(vap)+vap.MTOT(liq),'.-','displayName','Sum of mass exchange')
+         %   xlabel('Axial position [m]'); xlim(z([1 end]));
+         %   ylabel('Mass exchange [kg/s/m]')
+         %   legend('show','location','best')
+         %   set(gca,'fontSize',14)
+
+          %  nexttile; hold all; grid on; title('Energy exchanges')
+          %  plot(z,liq.HTOT(vap),'.-','displayName','Liquid total energy exchange')
+          %  plot(z,vap.HTOT(liq),'.-','displayName','Vapor total energy exchange')
+          %  plot(z,liq.HTOT(vap)+vap.HTOT(liq),'.-','displayName','Sum of energy exchange')
+          %  xlabel('Axial position [m]'); xlim(z([1 end]));
+          %  ylabel('Energy exchange [W/s/m]')
+          %  legend('show','location','best')
+          %  set(gca,'fontSize',14)
+
+           % nexttile; hold all; grid on; title('Evaporation mass exchanges')
+           % plot(z,liq.MEVAP(vap),'.-','displayName','Liquid total mass exchange')
+           % plot(z,vap.MEVAP(liq),'.-','displayName','Vapor total mass exchange')
+           % plot(z,liq.MEVAP(vap)+vap.MEVAP(liq),'.-','displayName','Sum of mass exchange')
+           % xlabel('Axial position [m]'); xlim(z([1 end]));
+           % ylabel('Mass exchange [kg/s/m]')
+           % legend('show','location','best')
+           % set(gca,'fontSize',14)
+%
+           % nexttile; hold all; grid on; title('Condensation mass exchanges')
+           % plot(z,liq.MCOND(vap),'.-','displayName','Liquid condensation mass exchange')
+           % plot(z,vap.MCOND(liq),'.-','displayName','Vapor condensation mass exchange')
+           % plot(z,liq.MCOND(vap)+vap.MCOND(liq),'.-','displayName','Sum of mass exchange')
+           % xlabel('Axial position [m]'); xlim(z([1 end]));
+           % ylabel('Mass exchange [kg/s/m]')
+           % legend('show','location','best')
+           % set(gca,'fontSize',14)
+%
+
+            nexttile; hold all; grid on; title('Wall boiling')
+            plot(z,liq.MWALL,'.-','displayName','Liquid')
+            plot(z,vap.MWALL(liq),'.-','displayName','Vapor')
+            plot(z,liq.MWALL + vap.MWALL(liq),'.-','displayName','Sum')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Mass exchange [kg/s/m]')
             legend('show','location','best')
             set(gca,'fontSize',14)
 
-            nexttile; hold all; grid on; title('Energy exchanges')
-            plot(z,liq.HTOT(vap),'.-','displayName','Liquid total energy exchange')
-            plot(z,vap.HTOT(liq),'.-','displayName','Vapor total energy exchange')
-            plot(z,liq.HTOT(vap)+vap.HTOT(liq),'.-','displayName','Sum of energy exchange')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Energy exchange [W/s/m]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
-
-            nexttile; hold all; grid on; title('Evaporation mass exchanges')
-            plot(z,liq.MEVAP(vap),'.-','displayName','Liquid total mass exchange')
-            plot(z,vap.MEVAP(liq),'.-','displayName','Vapor total mass exchange')
-            plot(z,liq.MEVAP(vap)+vap.MEVAP(liq),'.-','displayName','Sum of mass exchange')
+            nexttile; hold all; grid on; title('Evaporation')
+            plot(z,liq.MEVAP(vap),'.-','displayName','Liquid')
+            plot(z,vap.MEVAP(liq),'.-','displayName','Vapor')
+            plot(z,liq.MEVAP(vap) + vap.MEVAP(liq),'.-','displayName','Sum')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Mass exchange [kg/s/m]')
             legend('show','location','best')
             set(gca,'fontSize',14)
 
-            nexttile; hold all; grid on; title('Condensation mass exchanges')
-            plot(z,liq.MCOND(vap),'.-','displayName','Liquid total mass exchange')
-            plot(z,vap.MCOND(liq),'.-','displayName','Vapor total mass exchange')
-            plot(z,liq.MCOND(vap)+vap.MCOND(liq),'.-','displayName','Sum of mass exchange')
+            nexttile; hold all; grid on; title('Condensation')
+            plot(z,liq.MCOND(vap),'.-','displayName','Liquid')
+            plot(z,vap.MCOND(liq),'.-','displayName','Vapor')
+            plot(z,liq.MCOND(vap) + vap.MCOND(liq),'.-','displayName','Sum')
             xlabel('Axial position [m]'); xlim(z([1 end]));
             ylabel('Mass exchange [kg/s/m]')
             legend('show','location','best')
             set(gca,'fontSize',14)
 
+         %  HG = liq.fluid.HG;
+         %  HF = liq.fluid.HF;
+%
+         %  nexttile; hold all; grid on; title('Evaporation')
+         %  plot(z,liq.MEVAP(vap).*HF,'.-','displayName','Liquid')
+         %  plot(z,vap.MEVAP(liq).*HG,'.-','displayName','Vapor')
+         %  plot(z,liq.MEVAP(vap).*HF + vap.MEVAP(liq).*HG,'.-','displayName','Sum')
+         %  xlabel('Axial position [m]'); xlim(z([1 end]));
+         %  ylabel('Energy exchange [W/s/m]')
+         %  legend('show','location','best')
+         %  set(gca,'fontSize',14)
 
-            nexttile; hold all; grid on; title('Evaporation energy exchanges')
-            plot(z,liq.HEVAP(vap),'.-','displayName','Liquid total energy exchange')
-            plot(z,vap.HEVAP(liq),'.-','displayName','Vapor total energy exchange')
-            plot(z,liq.HEVAP(vap)+vap.HEVAP(liq),'.-','displayName','Sum of energy exchange')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Energy exchange [W/s/m]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
+            
 
-            nexttile; hold all; grid on; title('Condensation energy exchanges')
-            plot(z,liq.HCOND(vap),'.-','displayName','Liquid total energy exchange')
-            plot(z,vap.HCOND(liq),'.-','displayName','Vapor total energy exchange')
-            plot(z,liq.HCOND(vap)+vap.HCOND(liq),'.-','displayName','Sum of energy exchange')
-            xlabel('Axial position [m]'); xlim(z([1 end]));
-            ylabel('Energy exchange [W/s/m]')
-            legend('show','location','best')
-            set(gca,'fontSize',14)
+         %   nexttile; hold all; grid on; title('Condensation energy exchanges')
+         %   plot(z,liq.MCOND(vap).*HG,'.-','displayName','Liquid energy exchange')
+         %   plot(z,vap.MCOND(liq).*HG,'.-','displayName','Vapor energy exchange')
+         %   plot(z,liq.MCOND(vap).*HG + vap.MCOND(liq).*HG,'.-','displayName','Sum of energy exchange')
+         %   xlabel('Axial position [m]'); xlim(z([1 end]));
+         %   ylabel('Energy exchange [W/s/m]')
+         %   legend('show','location','best')
+         %   set(gca,'fontSize',14)
             
          %   nexttile; hold all; grid on; title('Liquid energy exchanges')
          %   plot(z,liq.HWHF,'.-','displayName','Wall heat flux')
