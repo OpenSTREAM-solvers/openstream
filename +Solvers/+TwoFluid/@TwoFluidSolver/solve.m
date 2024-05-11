@@ -124,38 +124,52 @@ function solver(solveINIT)
                 %HFLUX = mix(tIdx).HFLUX(zIdx,:);                                        % [W/m^2] Wall heat flux
                 
                 % Liquid mass conservation
-                Mtot = liquid(tIdx).MTOT(vapor(tIdx),zIdx);                                % [kg/s/m] Mass exchange terms with liquid
-                Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);           % [kg/s] Update liquid mass flow rate
-                liquid(tIdx).W(zIdx,:) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
+                Mtot = liquid(tIdx).MTOT(vapor(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with liquid
+                Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);         % [kg/s] Update liquid mass flow rate
+                liquid(tIdx).W(zIdx) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
                 
                 % Vapor mass conservation
-                Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                                % [kg/s/m] Mass exchange terms with vapor
-                Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);           % [kg/s] Update vapor mass flow rate
-                vapor(tIdx).W(zIdx,:) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
-
-                % Liquid momentum conservation (uncomment to turn on)
-                %Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                                % [N/m] 
-                %Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
-                %Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT);             % [m/s] Update liquid velocity
-                %liquid(tIdx).U(zIdx,:) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew; % [m/s] Apply relaxation
-
-                % Vapor momentum conservation (uncomment to turn on)
-                %Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                                % [N/m] 
-                %Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
-                %Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT);             % [m/s] Update vapor velocity
-                %vapor(tIdx).U(zIdx,:) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;  % [m/s] Apply relaxation                
+                Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with vapor
+                Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);         % [kg/s] Update vapor mass flow rate
+                vapor(tIdx).W(zIdx) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
+                
+                switch model.MOMENTLIQUID
+                    case InputEnums.MOMENTLIQUID.MIXTURE
+                    % Already initialized to mixture solution
+                        
+                    case InputEnums.MOMENTLIQUID.FULL
+                    % Full liquid momentum conservation
+                        
+                        Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                                % [N/m]
+                        Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
+                        Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT);             % [m/s] Update liquid velocity
+                        liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew;   % [m/s] Apply relaxation
+                end
+                
+                switch model.MOMENTGAS
+                    case InputEnums.MOMENTGAS.MIXTURE
+                    % Already initialized to mixture solution    
+                        
+                    case InputEnums.MOMENTGAS.FULL
+                    % Full gas momentum conservation
+                    
+                        Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                                % [N/m]
+                        Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
+                        Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT);             % [m/s] Update vapor velocity
+                        vapor(tIdx).U(zIdx) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;    % [m/s] Apply relaxation
+                end
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid
                 Htot = Htot/(Wliter/Uliter); Htot(Wliter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hlnew = (Hlups*Uliter+Hlold*DZ/DT+Htot*DZ)/(Uliter+DZ/DT);                 % [J/kg] Update liquid enthalpy
-                liquid(tIdx).H(zIdx,:) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew; % [J/kg] Apply relaxation
+                liquid(tIdx).H(zIdx) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew;   % [J/kg] Apply relaxation
                 
                 % Vapor energy conservation
                 Htot = vapor(tIdx).HTOT(liquid(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with vapor
                 Htot = Htot/(Wviter/Uviter); Htot(Wviter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hvnew = (Hvups*Uviter+Hvold*DZ/DT+Htot*DZ)/(Uviter+DZ/DT);                 % [J/kg] Update vapor enthalpy
-                vapor(tIdx).H(zIdx,:) = (1-options.RELAXHV)*Hviter+options.RELAXHV*Hvnew;  % [J/kg] Apply relaxation
+                vapor(tIdx).H(zIdx) = (1-options.RELAXHV)*Hviter+options.RELAXHV*Hvnew;    % [J/kg] Apply relaxation
                 
                 
                 % Check convergence
