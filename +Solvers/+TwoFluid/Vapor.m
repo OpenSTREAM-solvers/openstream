@@ -84,6 +84,34 @@ classdef Vapor < Solvers.AbstractField
             vf = 1 - liquid.VF(vapor,zIdx);                                % [-]
         end
         
+        function area = AREA(vapor,liquid,zIdx)
+        %AREA gas cross-section area
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            AREA = vapor.inputSet.geometry.AREA;                           % [m^2] Area
+            
+            area = vapor.VF(liquid,zIdx).*AREA;                            % [m^2]
+        end
+        
+        function rho = RHO2FLUID(vapor,liquid,zIdx)
+        %RHOMIX Two-phase density
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            rho = liquid.RHO2FLUID(vapor,zIdx);                            % [-]
+        end
+        
+        function u = USLIP(vapor,liquid,zIdx)
+        %VELOCITY Gas velocity based on input phase slip
+        
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            
+            S = vapor.inputSet.model.SLIP;
+            
+            u = liquid.USLIP(vapor,zIdx).*S;                               % [m/s]
+        end
+        
         function re = RE(vapor,zIdx)
         %RE Reynolds number [-]
         %

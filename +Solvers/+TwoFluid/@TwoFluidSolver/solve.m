@@ -133,31 +133,42 @@ function solver(solveINIT)
                 Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);         % [kg/s] Update vapor mass flow rate
                 vapor(tIdx).W(zIdx) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
                 
+                % Liquid momentum conservation
                 switch model.MOMENTLIQUID
                     case InputEnums.MOMENTLIQUID.MIXTURE
                     % Already initialized to mixture solution
-                        
+                        Ulnew = Uliter;
+                    
+                    case InputEnums.MOMENTLIQUID.SLIP
+                    % Phase slip model
+                        Ulnew = liquid(tIdx).USLIP(vapor(tIdx),zIdx);      % [m/s]
+                    
                     case InputEnums.MOMENTLIQUID.FULL
                     % Full liquid momentum conservation
                         
-                        Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                                % [N/m]
-                        Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
-                        Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT);             % [m/s] Update liquid velocity
-                        liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew;   % [m/s] Apply relaxation
+                        Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                    % [N/m]
+                        Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
+                        Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT); % [m/s] Update liquid velocity
                 end
+                liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew;   % [m/s] Apply relaxation
                 
+                % Vapor momentum conservation
                 switch model.MOMENTGAS
                     case InputEnums.MOMENTGAS.MIXTURE
-                    % Already initialized to mixture solution    
+                    % Already initialized to mixture solution   
+                        Uvnew = Uviter;
+                    case InputEnums.MOMENTGAS.SLIP
+                    % Phase slip model
+                        Uvnew = vapor(tIdx).USLIP(liquid(tIdx),zIdx);      % [m/s]
                         
                     case InputEnums.MOMENTGAS.FULL
                     % Full gas momentum conservation
                     
-                        Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                                % [N/m]
-                        Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;                     % [m/s^2] Avoid division by 0
-                        Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT);             % [m/s] Update vapor velocity
-                        vapor(tIdx).U(zIdx) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;    % [m/s] Apply relaxation
+                        Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                    % [N/m]
+                        Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
+                        Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT); % [m/s] Update vapor velocity
                 end
+                vapor(tIdx).U(zIdx) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;    % [m/s] Apply relaxation
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid

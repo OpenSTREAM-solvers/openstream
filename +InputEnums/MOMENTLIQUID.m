@@ -4,6 +4,7 @@ classdef MOMENTLIQUID
 %   the liquid class. 
     enumeration
         MIXTURE
+        SLIP
         FULL
     end
 end

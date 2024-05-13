@@ -19,8 +19,8 @@ classdef Model < Inputs.Input
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'         % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                     % Phase velocity ratio [-]
         
-        MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'MIXTURE'             % Liquid momentum conservation model [-]  
-        MOMENTGAS        (1,1) InputEnums.MOMENTGAS                        = 'MIXTURE'             % Gas momentum conservation model [-]        
+        MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'SLIP'                % Liquid momentum conservation model [-]  
+        MOMENTGAS        (1,1) InputEnums.MOMENTGAS                        = 'SLIP'                % Gas momentum conservation model [-]        
         INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'            % Interfacial length scale model model [-]
         INTLENGTHCST     (1,1) double                                      = 1E-3                  % Constant interfacial length scale [m]
         INTTRANSH        (1,1) InputEnums.INTTRANSH                        = 'BULK'                % Interfacial enthalpy transfer [-]

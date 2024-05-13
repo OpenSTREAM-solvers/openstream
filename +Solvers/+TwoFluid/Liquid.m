@@ -82,9 +82,48 @@ classdef Liquid < Solvers.AbstractField
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
             RHOL = liquid.fluid.RHOL(liquid.H(zIdx));                      % [kg/m^3]
-            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));                      % [kg/m^3]
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));                       % [kg/m^3]
             
             vf = 1 - max(0,vapor.W(zIdx)./(liquid.S(vapor,zIdx).*liquid.W(zIdx).*RHOV./RHOL+vapor.W(zIdx)));
+        end
+        
+        function area = AREA(liquid,vapor,zIdx)
+        %AREA liquid cross-section area
+        
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+            
+            AREA = liquid.inputSet.geometry.AREA;                          % [m^2] Area
+            
+            area = liquid.VF(vapor,zIdx).*AREA;                            % [m^2]
+        end
+        
+        function rho = RHO2FLUID(liquid,vapor,zIdx)
+        %RHOMIX Two-phase density
+        
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+            
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
+            VF   = 1-liquid.VF(vapor,zIdx);
+            
+            rho = (1-VF).*RHOL + VF.*RHOV;                                 % [-]
+        end
+        
+        function u = USLIP(liquid,vapor,zIdx)
+        %VELOCITY Liquid velocity based on input phase slip
+        
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+           
+            AREA = liquid.inputSet.geometry.AREA;                          % [m^2] Area
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
+            %VF   = 1-liquid.VF(vapor,zIdx);
+            S    = liquid.inputSet.model.SLIP;
+            VF   = max(0,vapor.W(zIdx)./(S.*liquid.W(zIdx).*RHOV./RHOL+vapor.W(zIdx))); % [-] Void fraction based on phase slip model
+            
+            %u = liquid.W(zIdx)./RHOL./liquid.AREA(vapor,zIdx);
+            u = liquid.W2FLUID(vapor,zIdx)./AREA./(RHOL.*(1-VF)+RHOV.*VF.*S); % [m/s] (Most robust option)
+            %u = liquid.W(zIdx)./RHOL./AREA./(1-VF);
         end
         
         function re = RE(liquid,zIdx)

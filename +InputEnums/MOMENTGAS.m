@@ -4,6 +4,7 @@ classdef MOMENTGAS
 %   the gas class. 
     enumeration
         MIXTURE
+        SLIP
         FULL
     end
 end
