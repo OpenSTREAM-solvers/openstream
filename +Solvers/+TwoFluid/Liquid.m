@@ -144,8 +144,54 @@ classdef Liquid < Solvers.AbstractField
             
             RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
             MUL  = liquid.fluid.MUL(liquid.H(zIdx));
+            %MU  = MUL./(liquid.VF(vapor,zIdx));               % mixture viscosity
+            %VR = liquid.VF(vapor,zIdx).*liquid.VR(vapor,zIdx);
+            VR = liquid.VR(vapor,zIdx);
             
-            rev = RHOL.*abs(vapor.U(zIdx)-liquid.U(zIdx)).*liquid.L(zIdx)./MUL; % [-]
+            rev = RHOL.*abs(VR).*liquid.L(zIdx)./MUL; % [-]
+        end
+
+        function rel = REL(liquid,vapor,zIdx)
+        %REL Dispersed liquid Reynolds number
+        
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+            
+            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));
+            MUV  = liquid.fluid.MUV(liquid.H(zIdx));  
+
+            VR = liquid.VR(vapor,zIdx);
+            
+            rel = RHOV.*abs(VR).*liquid.L(zIdx)./MUV; % [-]
+        end
+
+        function visc = VISCV(liquid,zIdx)
+        %VISC viscosity number dispersed gas
+        
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            
+            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
+            MUL  = liquid.fluid.MUL(liquid.H(zIdx));
+            SIGMA = liquid.fluid.SIGMA;  
+            G = liquid.inputSet.model.G;
+            Diff_RHO = abs(RHOL-RHOV);
+            
+            visc = MUL./sqrt(RHOL.*SIGMA.*sqrt(G.*SIGMA./(Diff_RHO))); % [-]
+        end
+
+        function visc = VISCL(liquid,zIdx)
+        %VISC viscosity number dispersed liquid
+        
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            
+            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
+            MUV  = liquid.fluid.MUV(liquid.H(zIdx));
+            SIGMA = liquid.fluid.SIGMA;  
+            G = liquid.inputSet.model.G;
+            Diff_RHO = abs(RHOL-RHOV);
+            
+            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(G.*SIGMA./(Diff_RHO))); % [-]
         end
         
          function t = T(liquid,zIdx)
@@ -160,7 +206,7 @@ classdef Liquid < Solvers.AbstractField
             %XTR_SCB Quality at onset of subcooled boiling transition 
             % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later
             
-            xtr_scb = -0.2;
+            xtr_scb = -0.1;%-0.2 
         end
         
         function xtr_scb = XTR_SAT(liquid)
@@ -180,14 +226,14 @@ classdef Liquid < Solvers.AbstractField
             %XTR_ANN Quality at onset of annular flow region 
             % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later (e.g. Wallis model)
             
-            xtr_ann = 0.3;
+            xtr_ann = 0.1;% set to a quality close to where liquid and vapor void fractions are equal, was previously se to 0.3;
         end
         
         function xtr_cbt = XTR_CBT(liquid)
             %XTR_CBT Quality at CBT 
             % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later
             
-            xtr_cbt = 0.7;
+            xtr_cbt = 0.88;%0.7
         end
         
         function flowregime = FLOWREGIME(liquid,zIdx)
@@ -195,17 +241,17 @@ classdef Liquid < Solvers.AbstractField
         % Note: Very slow! Calls to this method should be limited
             
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            
+
             XEQ = liquid.mix.XEQ(zIdx);                                    % [-]
             
-            id = zeros(liquid.NZ,1);                                       % Liquid (initilization)
+            id = zeros(liquid.NZ,1);                                       % Liquid (initialization)
             id(XEQ > liquid.XTR_SCB) = 1;                                  % bubbly_subcooled
             id(XEQ > liquid.XTR_SAT) = 2;                                  % bubbly_saturated
             id(XEQ > liquid.XTR_ITM) = 3;                                  % intermediate
             id(XEQ > liquid.XTR_ANN) = 4;                                  % annular
-            id(XEQ > liquid.XTR_CBT) = 5;                                  % dffb
-            
-            flowregime = categorical(id,[0 1 2 3 4 5],{'liquid','bubbly_subcooled','bubbly_saturated','intermediate','annular','dffb'});
+            id(XEQ > liquid.XTR_CBT) = 5;                                 
+
+            flowregime = categorical(id,[0 1 2 3 4 5],{'liquid','bubbly_subcooled','bubbly_saturated','intermediate','annular','dffb'});  
         end
         
         function l = L(liquid,zIdx)
@@ -221,6 +267,34 @@ classdef Liquid < Solvers.AbstractField
                     l = model.INTLENGTHCST.*ones(size(zIdx));              % [m]
             end
         end
+
+        function area = PAREA(liquid,zIdx)
+        %PAREA Projected area of typical particle (e.g. bubble or drop)
+        
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            
+            model = liquid.inputSet.model;
+            
+            switch model.INTLENGTH
+                case 'CONSTANT'
+                    l = model.INTLENGTHCST.*ones(size(zIdx));              % [m]
+                    area = pi*l.^2/4;                                      % [m^2]
+            end
+        end
+
+        function vol = PVOL(liquid,zIdx)
+        %PVOL Volume of typical particle (e.g. bubble or drop)
+        
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            
+            model = liquid.inputSet.model;
+            
+            switch model.INTLENGTH
+                case 'CONSTANT'
+                    l = model.INTLENGTHCST.*ones(size(zIdx));              % [m]
+                    vol = pi*l.^3/6;                                       % [m^3]
+            end
+        end
                 
         function ai = AI(liquid,vapor,zIdx)
         %AI Volumetric interfacial area
@@ -229,18 +303,24 @@ classdef Liquid < Solvers.AbstractField
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
             flowregime = liquid.FLOWREGIME(zIdx);
-            
-            % Dispersed gas
-            %Idv = ismember(flowregime,{'liquid','bubbly_subcooled','bubbly_saturated','intermediate'});
-            aiv = 6*vapor.VF(liquid,zIdx)./liquid.L(zIdx);                 % [m^-1] Dispersed gas
-            ai      = aiv;                                                 % [m^-1]
-            
-            %Dispersed liquid
-            Idl = ismember(flowregime,{'annular','dffb'});
-            ail = 6*liquid.VF(vapor,zIdx)./liquid.L(zIdx);                 % [m^-1] Dispersed liquid
-            ai(Idl) = ail(Idl);                                            % [m^-1]
-            
+            model = liquid.inputSet.model;
+
+            switch model.INTAREA
+                case 'DISPGAS2DISPLIQ'
+                    
+                    % Dispersed gas
+                    %Idv = ismember(flowregime,{'liquid','bubbly_subcooled','bubbly_saturated','intermediate'});
+                    aiv = 6*vapor.VF(liquid,zIdx)./liquid.L(zIdx);                 % [m^-1] Dispersed gas
+                    ai  = aiv;                                                     % [m^-1]
+                    
+                    %Dispersed liquid
+                    Idl = ismember(flowregime,{'annular','dffb'});
+                    ail = 6*liquid.VF(vapor,zIdx)./liquid.L(zIdx);                 % [m^-1] Dispersed liquid
+                    ai(Idl) = ail(Idl);                                            % [m^-1]
+                        
+            end
             ai = max(0,ai);                                                % [m^-1]
+
         end
         
         function k_LIQ = WALLQCOEF(liquid,zIdx)
@@ -257,7 +337,7 @@ classdef Liquid < Solvers.AbstractField
         
         function k_BOIL = WALLBOILCOEF(liquid,zIdx)
         %WALLBOILCOEF  Wall heat input to liquid boiling
-            %TODO: Decide on which options to select or create model options
+        %TODO: Decide on which options to select or create model options
             
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -266,20 +346,19 @@ classdef Liquid < Solvers.AbstractField
             % Liquid/boiling wall heat partitioning
             k_BOIL = [0; diff(max(liquid.XTR_SCB,XEQ))./diff(XEQ)];        % [-] Liquid below XTR_SCB, boiling above XTR_SCB
             x = linspace(liquid.XTR_SCB,liquid.XTR_SAT,10);                % [-]
-            %k_EVAP = max(min(interp1(x,linspace(0,1,10),XEQ,'linear','extrap'),k_EVAP),0);                                 % [-] Linear      interpolation between XTR_SCB and XTR_SCB
-            k_BOIL = max(min(interp1(x,linspace(0,1,10).^2,XEQ,'linear','extrap'),k_BOIL),0);                                % [-] Quadratic   interpolation between XTR_SCB and XTR_SCB
-            %k_EVAP = max(min(interp1(x,exp((liquid.XTR_SAT-x)./(liquid.XTR_SCB-1E-6-x)),XEQ,'linear','extrap'),k_EVAP),0); % [-] Exponential interpolation between XTR_SCB and XTR_SCB
-            k_BOIL = k_BOIL(zIdx);                                         % [-]
-        end
 
-        function wallf = WALLF(liquid,zIdx)
-        %WALLF Wetted area fraction
-        %TODO fill in reasonable correlation
+            model = liquid.inputSet.model;
             
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            switch model.BOILCOEF
+                case 'LINEAR'
+                    k_BOIL = max(min(interp1(x,linspace(0,1,10),XEQ,'linear','extrap'),k_BOIL),0);                                 % [-] Linear      interpolation between XTR_SCB and XTR_SCB
+                case 'QUADRATIC'
+                    k_BOIL = max(min(interp1(x,linspace(0,1,10).^2,XEQ,'linear','extrap'),k_BOIL),0);                                % [-] Quadratic   interpolation between XTR_SCB and XTR_SCB
+                case 'EXPONENTIAL'
+                    k_BOIL = max(min(interp1(x,exp((liquid.XTR_SAT-x)./(liquid.XTR_SCB-1E-6-x)),XEQ,'linear','extrap'),k_BOIL),0); % [-] Exponential interpolation between XTR_SCB and XTR_SCB
+            end
 
-            % Make it constant for now
-            wallf = ones(size(zIdx));
+            k_BOIL = k_BOIL(zIdx);                                         % [-]
         end
         
         function intnu = INTNUV(liquid,vapor,zIdx)
@@ -348,7 +427,8 @@ classdef Liquid < Solvers.AbstractField
             KV = vapor.fluid.KV(vapor.H(zIdx));                            % [W/m/K] Vapor conductivity  <- assume liquid phase is dispersed
             hl   = INTNUL.*KV./L; hl(L <= 1E-6) = 0;                       % [W/m^2/K] Interfacial heat transfer coefficient
             h(Idl) = hl(Idl);                                              % [W/m^2/K]
-            %h = max(0,h);                                                  % [W/m^2/K]
+            %h(liquid.VF(vapor,zIdx)<0.5) = hl(liquid.VF(vapor,zIdx)<0.5);                                              % [W/m^2/K]
+            h = max(0,h);                                                  % [W/m^2/K]
             
             TSAT  = liquid.fluid.TSAT;                                     % [K] Saturated fluid temperature
             inthflux_evap = h.*(vapor.T(zIdx)-TSAT);                       % [W/m^2] Evaporation heat flux
@@ -356,7 +436,7 @@ classdef Liquid < Solvers.AbstractField
         end
 
         function [Mcond, Mevap] = INTMFLOW(liquid,vapor,zIdx)
-        %INTMMFLOW condensation and evaporation mass flow
+        %INTMMFLOW interfacial condensation and evaporation mass flow
             
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
@@ -516,102 +596,221 @@ classdef Liquid < Solvers.AbstractField
             H2fluid = (liquid.W(zIdx).*liquid.H(zIdx)+vapor.W(zIdx).*vapor.H(zIdx))./liquid.W2FLUID(vapor,zIdx); % [J/kg]
         end
         
+        function vr = VR(liquid,vapor,zIdx)
+        %VR Local relative velocity
+        
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+            
+            switch liquid.inputSet.model.LOCRELVEL
+                case 'AREAMEAN'
+                    vr = vapor.U(zIdx) - liquid.U(zIdx);
+                case 'SCALED'
+                    mult = liquid.inputSet.model.RELVELCST.*ones(size(zIdx));
+                    vr = mult.*(vapor.U(zIdx) - liquid.U(zIdx));
+                case 'DRIFT'
+                    vr = vapor.VF(liquid,zIdx).*(vapor.U(zIdx) - liquid.U(zIdx));
+                    vrl = liquid.VF(vapor,zIdx).*(vapor.U(zIdx) - liquid.U(zIdx));
+                    vr(liquid.VF(vapor,zIdx)<0.5)=vrl(liquid.VF(vapor,zIdx)<0.5);
+                case 'FLOWREGIME'
+                    flowregime = liquid.FLOWREGIME(zIdx);
+                    % bubbly, slug, churn (assume also for dffb)
+                    RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
+                    RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
+                    C = 1.2 - 0.2.*sqrt(RHOV./RHOL);
+                    vr = (1-C.*(vapor.VF(liquid,zIdx)))./(liquid.VF(vapor,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
+        
+                    % annular (instead contribution from interfacial shear)
+                    Idann = ismember(flowregime,{'annular'});
+                    vr_ann = zeros(size(zIdx));
+                    vr(Idann) = vr_ann(Idann);
+        
+                    % dffb (dispersed liquid)
+                    Iddffb = ismember(flowregime,{'dffb'});
+                    vr_dffb = (1-C.*(liquid.VF(vapor,zIdx)))./(vapor.VF(liquid,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
+                    vr(Iddffb) = vr_dffb(Iddffb);
+            end   
+        end
 
-        function Fgrav = FGRAV(liquid,zIdx)
+        function Fgrav = FGRAV(liquid,vapor,zIdx)
         %FGRAV gravitational force
         
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
             model = liquid.inputSet.model;
             AREA = liquid.inputSet.geometry.AREA;                          % [m^2]    cross-section area
             RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
 
-            Fgrav = -model.G*cos(model.ANGLE*pi/180)*RHOL.*liquid.VF(zIdx).*AREA; % [N/m]
+            Fgrav = -model.G*cos(model.ANGLE*pi/180)*RHOL.*liquid.VF(vapor,zIdx).*AREA; % [N/m]
         end
 
-        function Fpres = FPRES(liquid,zIdx)
-        %FPRES pressure gradient
+        function Fbuoy = FBUOY(liquid,vapor,zIdx)
+        %FBUOY Liquid buoyancy
        
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
             AREA = liquid.inputSet.geometry.AREA;                          % [m^2]    cross-section area
-            DPDZ = liquid.mix.DP.Tot(zIdx);                                % [Pa/m] pressure gradient
+            DPDZ = liquid.mix.DP.Tot(zIdx)/liquid.DZ;                      % [Pa/m] pressure gradient
             
-            Fpres  = AREA*liquid.VF(zIdx).*DPDZ;                           % [N/m]
+            Fbuoy  = AREA*liquid.VF(vapor,zIdx).*DPDZ;                     % [N/m]
         end
 
- 
-
-
-        function Fric = FRIC(liquid,zIdx)
-        %FRIC Fanning friction factor
-        %TODO add more options, e.g. Haaland formula
-            
+        function fw = FW(liquid, zIdx)
+        %FW Liquid wall friction factor [-]
+        
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
-            % Blasius for now
-            Fric = 0.0791./liquid.RE(zIdx).^0.25;                          % [-] 
-            Fric(liquid.RE(zIdx) <= 1E-3) = 0;                             % [-] Avoid division by 0  
-            % Constant for now
-            %Fric = 0.005;
+            model = liquid.inputSet.model;
+            fw = (model.FRICTION(1).*liquid.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3));
         end
 
-
-        function Fwshear = FWSHEAR(liquid,zIdx)
-        %FWSHEAR wall shear force
-        %TODO find issue that stops convergence and remove division by 10
-        %in the last line
+        function tauwl = TAUWL(liquid,zIdx)
+        %TAUWL liquid-wall shear stress
         
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
 
-            PERIM = liquid.inputSet.geometry.PERIM;                        % [m]      perimeter
             RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
             
-            MULT  = 0.5*liquid.WALLF(zIdx).*liquid.FRIC(zIdx).*RHOL;
-            TAUW  = MULT.*liquid.U(zIdx).*liquid.U(zIdx);                  % [Pa]     wall shear stress
-
-            Fwshear  = -PERIM.*TAUW./100;                                  % [N/m]
+            MULT  = 0.5.*(liquid.FW(zIdx)./4.).*RHOL;
+            tauwl  = MULT.*liquid.U(zIdx).*abs(liquid.U(zIdx));             % [Pa]     wall shear stress
         end
 
-        function Fishear = FISHEAR(liquid,vapor,zIdx)
-        %FISHEAR interfacial shear force
-        %TODO replace multiplication factor MULT with proper correlation
+        function Fshear = FSHEAR(liquid,vapor,zIdx)
+        %FSHEAR wall and interfacial shear force
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
-            AREA = liquid.inputSet.geometry.AREA;                          % [m2]      area
-            PERIM = liquid.inputSet.geometry.PERIM;                        % [m]      perimeter
+            switch liquid.inputSet.model.INTAREA
+                case 'DISPGAS2DISPLIQ'
+                    flowregime = liquid.FLOWREGIME(zIdx);
+                    PERIM = liquid.inputSet.geometry.PERIM;                        % [m]  perimeter
+                    TAUWL  = liquid.TAUWL(zIdx);                                   % [Pa] liquid wall shear
+                    TAUWV  = vapor.TAUWV(zIdx);                                    % [Pa] vapor wall shear   
 
-            MULT = 1;
-            
-            TAUI  = MULT.*(vapor.U(zIdx)-liquid.U(zIdx)).*abs(vapor.U(zIdx)-liquid.U(zIdx));  % [Pa]     interfacial shear stress
+                    % Dispersed gas
+                    Fshear  = -liquid.VF(vapor,zIdx).*PERIM.*TAUWL;               % [N/m]
 
-            Fishear  = PERIM.*TAUI;                                % [N/m] AREA.*liquid.AI(zIdx)
+                    % Dispersed liquid
+                    Idl = ismember(flowregime,{'annular','dffb'});
+                    Fwshearl = -liquid.VF(vapor,zIdx).*PERIM.*TAUWV;               % [N/m]
+                    Fshear(Idl)=Fwshearl(Idl);
+            end
         end
 
-        function Fmwall = FMWALL(liquid,zIdx)
-        % FMWALL momentum exchange through wall mass exchange  
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+        function cd = CDG(liquid,vapor,zIdx)
+        %CD Drag coefficient for dispersed gas
+        % TODO: Distorted fluid particle correlation is more reasonable,
+        % but predicts too high drag forces, possibly due to the AREAMEAN
+        % assumption in the relative velocity calculation
 
-            %PERIM = liquid.inputSet.geometry.PERIM;                        % [m]      perimeter
-            %Fmwall = PERIM.*liquid.MWEVAP(zIdx).*(interface.U(zIdx)-liquid.U(zIdx));            % [N/m]   (MWEVAP is negative)
-            % assuming at velocity at liquid interphase is the same as in
-            % the bulk (full-slip), this terms becomes zero
-            Fmwall = zeros(size(zIdx));
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+
+            % Stokes
+            cd = 24./(liquid.REV(vapor,zIdx).^(1)); 
+            cd(liquid.REV(vapor,zIdx) <= 1E-3) = 0;                        % [-] Avoid division by 0 
+
+            % Viscous
+            %REV = liquid.REV(vapor,zIdx);
+            %cd = 24./(REV).*(1+0.1.*REV.^(0.75)); 
+            %cd(liquid.REV(vapor,zIdx) <= 1E-3) = 0;                        % [-] Avoid division by 0
+
+            % Distorted fluid particle (bubbly flow n=1)
+            %mult = sqrt(2)/3.*((1+17.67.*(liquid.VF(vapor,zIdx)).^(1.3))./(18.67.*(liquid.VF(vapor,zIdx)).^(1.5))).^2;
+            %mult = sqrt(2)/3.*(liquid.VF(vapor,zIdx)).^2;
+            %cd = liquid.VISCV(zIdx).*liquid.REV(vapor,zIdx).*mult;
+            %cd(liquid.VF(vapor,zIdx)<0.5)=0;
+            %cd = min(cd,0.45);
+
+            % Churn
+            %cd = 8/3.*(liquid.VF(vapor,zIdx)).^3;
+        end
+
+        function cd = CDL(liquid,vapor,zIdx)
+        %CD Drag coefficient for dispersed liquid
+
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+
+            %Stokes region
+            %cd = 24./(liquid.REL(vapor,zIdx).^(1)); 
+            %cd(liquid.REL(vapor,zIdx) <= 1E-3) = 0;                        % [-] Avoid division by 0
+
+            % Viscous
+            REL = liquid.REL(vapor,zIdx);
+            cd = 24./(REL).*(1+0.15.*REL.^(0.687)); 
+            cd(liquid.REL(vapor,zIdx) <= 1E-3) = 0;                        % [-] Avoid division by 0
+            cd(liquid.VF(vapor,zIdx)>0.5)=0;
+
+            % Distorted fluid particle (bubbly flow n=2.5)
+            %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
+            %mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
+            %cd = liquid.VISCL(zIdx).*liquid.REL(vapor,zIdx).*mult;
+            %cd(liquid.VF(vapor,zIdx)>0.5)=0;
+            %cd = min(cd,1);
+
+            % Churn
+            %cd = 8/3.*(1-liquid.VF(vapor,zIdx)).^3;
+        end
+
+        function Fdrag = FDRAG(liquid,vapor,zIdx)
+        % FDRAG liquid drag
+
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+
+            switch liquid.inputSet.model.INTAREA
+                case 'DISPGAS2DISPLIQ'
+                    flowregime = liquid.FLOWREGIME(zIdx);
+                    AREA = liquid.inputSet.geometry.AREA;                % [m2] area
+                    RHOV = liquid.fluid.RHOV(vapor.H(zIdx));             % [kg/m^3] vapor density
+                    RHOL = liquid.fluid.RHOL(liquid.H(zIdx));            % [kg/m^3] liquid density
+
+                    % Dispersed gas
+                    vr = liquid.VR(vapor,zIdx);
+                    mult = liquid.PAREA(zIdx)./liquid.PVOL(zIdx);        % [1/m]
+                    Fdrag = AREA.*0.5.*mult.*liquid.CDG(vapor,zIdx).*vapor.VF(liquid,zIdx).*RHOL.*vr.*abs(vr); % [N/m]          
+
+                    % Dispersed liquid
+                    Idl = ismember(flowregime,{'annular','dffb'});       % [1/m]
+                    Fdragl = AREA.*0.5.*mult.*liquid.CDL(vapor,zIdx).*liquid.VF(liquid,zIdx).*RHOV.*vr.*abs(vr); % [N/m] 
+                    Fdrag(Idl) = Fdragl(Idl);
+            end
+        end
+
+        function Fmass = FMASS(liquid,vapor,zIdx)
+        % FMASS momentum exchange through mass exchange  
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+
+            Fmass = liquid.MINTCOND(vapor,zIdx).*(vapor.U(zIdx)-liquid.U(zIdx)); % [N/m] 
 
         end
 
         function Ftot = FTOT(liquid,vapor,zIdx)
         %FTOT Total force 
-        %TODO Add interfacial mass exchange terms
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
-            
+
+            grav = liquid.FGRAV(vapor,zIdx);
+            buoy = liquid.FBUOY(vapor,zIdx);
+            int_drag = liquid.FDRAG(vapor,zIdx);
+            shear = liquid.FSHEAR(vapor,zIdx);
+            mass = liquid.FMASS(vapor,zIdx);
+
             % turn on force terms
-            %Ftot=liquid.FPRES(zIdx)+liquid.FGRAV(zIdx)  +liquid.FWSHEAR(zIdx) + liquid.FISHEAR(vapor,zIdx)  +liquid.FMWALL(zIdx);% [N/m] 
+            Ftot= grav + buoy + shear + int_drag + mass;%  % [N/m] 
 
             % turn off force terms
-            Ftot=zeros(size(zIdx));% [N/m]  
+            % Ftot=zeros(size(zIdx));% [N/m]  
+        end
+
+        function U2fluid = U2FLUID(liquid,vapor,zIdx)
+        %U2FLUID Total velocity
+        
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));             % [kg/m^3] vapor density
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));            % [kg/m^3] liquid density
+
+            U2fluid = (liquid.VF(vapor,zIdx).*RHOL.*liquid.U(zIdx) + vapor.VF(liquid,zIdx).*RHOV.*vapor.U(zIdx))./(liquid.VF(vapor,zIdx).*RHOL+ vapor.VF(liquid,zIdx).*RHOV);
+        
+            %U2fluid = (liquid.W(zIdx).*liquid.U(zIdx)+vapor.W(zIdx).*vapor.U(zIdx))./liquid.W2FLUID(vapor,zIdx); % [m/s]
         end
         
     end
