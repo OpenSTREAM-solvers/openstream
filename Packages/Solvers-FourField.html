@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreeField Solver &mdash; TwoPhaseSolver  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mixture Solver" href="Solvers-Mixture.html" />
+    <link rel="prev" title="Solvers" href="Solvers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TwoPhaseSolver
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InputEnums.html">InputEnums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Session.html">Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers.html">Solvers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">TwoPhaseSolver FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TwoPhaseSolver</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="Solvers.html">Solvers</a></li>
+      <li class="breadcrumb-item active">ThreeField Solver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Packages/Solvers-FourField.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Solvers.ThreeField">
+<span id="threefield-solver"></span><h1>ThreeField Solver<a class="headerlink" href="#module-Solvers.ThreeField" title="Link to this heading"></a></h1>
+<p><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">ThreeField</span> <span class="pre">Solver</span></code> is pretty cool.</p>
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.</span></span><span class="sig-name descname"><span class="pre">Film</span></span><a class="headerlink" href="#Solvers.ThreeField.Film" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p>
+<p>FILM Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NZ" title="Link to this definition"></a></dt>
+<dd><p>Solver properties</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NTIME" title="Link to this definition"></a></dt>
+<dd><p>[-] Number of time steps</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.TIME" title="Link to this definition"></a></dt>
+<dd><p>[s] Time series</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.DT" title="Link to this definition"></a></dt>
+<dd><p>[s] Time step size</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.TIDX">
+<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.TIDX" title="Link to this definition"></a></dt>
+<dd><p>[-] Time step index</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.Z" title="Link to this definition"></a></dt>
+<dd><p>[m] Elevation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>[W/m^2] Film heat flux</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.MEVAP">
+<span class="sig-name descname"><span class="pre">MEVAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.MEVAP" title="Link to this definition"></a></dt>
+<dd><p>[kg/s/m^2] Evaporation mass flux</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.W">
+<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.W" title="Link to this definition"></a></dt>
+<dd><p>Flow properties</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.U">
+<span class="sig-name descname"><span class="pre">U</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.U" title="Link to this definition"></a></dt>
+<dd><p>[m/s] Velocity</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.H">
+<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.H" title="Link to this definition"></a></dt>
+<dd><p>[J/kg] Enthalpy</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.ITR">
+<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.ThreeField.Film.ITR" title="Link to this definition"></a></dt>
+<dd><p>Iteration properties</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
+<p>DROP Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.Drop">
+<span class="sig-name descname"><span class="pre">Drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.Drop" title="Link to this definition"></a></dt>
+<dd><p>DROP Creates a <a class="reference internal" href="#Solvers.ThreeField.Drop.Drop" title="Solvers.ThreeField.Drop.Drop"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Drop()</span></code></a> ?solver? drop
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.NZ" title="Link to this definition"></a></dt>
+<dd><p>Solver properties</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.NTIME" title="Link to this definition"></a></dt>
+<dd><p>[-] Number of time steps</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.TIME" title="Link to this definition"></a></dt>
+<dd><p>[s] Time series</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.DT" title="Link to this definition"></a></dt>
+<dd><p>[s] Time step size</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.TIDX">
+<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.TIDX" title="Link to this definition"></a></dt>
+<dd><p>[-] Time step index</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.Z" title="Link to this definition"></a></dt>
+<dd><p>[m] Elevation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.W">
+<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.W" title="Link to this definition"></a></dt>
+<dd><p>Flow properties</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.U">
+<span class="sig-name descname"><span class="pre">U</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.U" title="Link to this definition"></a></dt>
+<dd><p>[m/s] Velocity</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.H">
+<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.H" title="Link to this definition"></a></dt>
+<dd><p>[J/kg] Enthalpy</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.ITR">
+<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.ThreeField.Drop.ITR" title="Link to this definition"></a></dt>
+<dd><p>Iteration properties</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.mix">
+<span class="sig-name descname"><span class="pre">mix</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.mix" title="Link to this definition"></a></dt>
+<dd><p>Mixture</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.CONC">
+<span class="sig-name descname"><span class="pre">CONC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.CONC" title="Link to this definition"></a></dt>
+<dd><p>Drop concentration</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.MDEP">
+<span class="sig-name descname"><span class="pre">MDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.MDEP" title="Link to this definition"></a></dt>
+<dd><p>Drop deposition mass flux</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.RE">
+<span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.RE" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.RE" title="Solvers.ThreeField.Drop.RE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">RE()</span></code></a> Reynolds number [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.DIAM">
+<span class="sig-name descname"><span class="pre">DIAM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.DIAM" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.DIAM" title="Solvers.ThreeField.Drop.DIAM"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DIAM()</span></code></a> drop diameter</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.AREA">
+<span class="sig-name descname"><span class="pre">AREA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.AREA" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.AREA" title="Solvers.ThreeField.Drop.AREA"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AREA()</span></code></a> drop interfacial area</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.VOLUME">
+<span class="sig-name descname"><span class="pre">VOLUME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.VOLUME" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.VOLUME" title="Solvers.ThreeField.Drop.VOLUME"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">VOLUME()</span></code></a> drop volume</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.DENSITY">
+<span class="sig-name descname"><span class="pre">DENSITY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.DENSITY" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.DENSITY" title="Solvers.ThreeField.Drop.DENSITY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DENSITY()</span></code></a> drop number density</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.AI">
+<span class="sig-name descname"><span class="pre">AI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.AI" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.AI" title="Solvers.ThreeField.Drop.AI"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AI()</span></code></a> drop volumetric interfacial area</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.DRAG">
+<span class="sig-name descname"><span class="pre">DRAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.DRAG" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.DRAG" title="Solvers.ThreeField.Drop.DRAG"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DRAG()</span></code></a> drop drag coefficient</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.FBUOY">
+<span class="sig-name descname"><span class="pre">FBUOY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.FBUOY" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.FBUOY" title="Solvers.ThreeField.Drop.FBUOY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FBUOY()</span></code></a> Drop buoyancy</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.FGRAV">
+<span class="sig-name descname"><span class="pre">FGRAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.FGRAV" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.FGRAV" title="Solvers.ThreeField.Drop.FGRAV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FGRAV()</span></code></a> Drop gravity</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.FDRAG">
+<span class="sig-name descname"><span class="pre">FDRAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.FDRAG" title="Link to this definition"></a></dt>
+<dd><p>FVAPOR drop vapor drag</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.FENT">
+<span class="sig-name descname"><span class="pre">FENT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">film</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.FENT" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.FENT" title="Solvers.ThreeField.Drop.FENT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FENT()</span></code></a> Film entrainment shear</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.FTOT">
+<span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">film</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.FTOT" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.FTOT" title="Solvers.ThreeField.Drop.FTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FTOT()</span></code></a> Total</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.USLIP">
+<span class="sig-name descname"><span class="pre">USLIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.USLIP" title="Link to this definition"></a></dt>
+<dd><p>Slip drop velocity model</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.UALGEBR">
+<span class="sig-name descname"><span class="pre">UALGEBR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">film</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.UALGEBR" title="Link to this definition"></a></dt>
+<dd><p>Algebraic drop velocity model (consistent with mixture model)</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.UEQUIL">
+<span class="sig-name descname"><span class="pre">UEQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">film</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.UEQUIL" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Solvers.ThreeField.Drop.UEQUIL" title="Solvers.ThreeField.Drop.UEQUIL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UEQUIL()</span></code></a> Drop velocity based on equilibrium model (Ftot = 0)</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.struct">
+<span class="sig-name descname"><span class="pre">struct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.struct" title="Link to this definition"></a></dt>
+<dd><p>STRUCT Converter to <a class="reference internal" href="#Solvers.ThreeField.Drop.struct" title="Solvers.ThreeField.Drop.struct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">struct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.copyFlowProperties">
+<span class="sig-name descname"><span class="pre">copyFlowProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">srcObj</span></em>, <em class="sig-param"><span class="pre">targetObj</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.copyFlowProperties" title="Link to this definition"></a></dt>
+<dd><p>COPYFLOWPROPERTIES</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Solvers.html" class="btn btn-neutral float-left" title="Solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Solvers-Mixture.html" class="btn btn-neutral float-right" title="Mixture Solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, The TwoPhaseSolver Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

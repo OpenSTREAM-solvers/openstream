@@ -114,16 +114,16 @@ Detailed explanation goes here</p>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Session.setupLog">
+<span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
+<dd><p>SETUPLOG Setup log</p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
 <span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
 <dd><p>MAKESESSIONDIRECTORY Make the session directory</p>
 <p>Check if session directory is legal and/or exists</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.setupLog">
-<span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
-<dd><p>SETUPLOG Setup log</p>
 </dd></dl>
 
 </dd>
@@ -155,15 +155,9 @@ Detailed explanation goes here</p>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.closeLog">
-<span class="sig-name descname"><span class="pre">closeLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.closeLog" title="Link to this definition"></a></dt>
-<dd><p>CLOSELOG Close log file reference</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
-<dd><p>DELETE Deconstructor of Log</p>
+<dt class="sig sig-object mat" id="Session.Log.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.log" title="Link to this definition"></a></dt>
+<dd><p>LOG Log events</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -179,15 +173,21 @@ Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.log" title="Link to this definition"></a></dt>
-<dd><p>LOG Log events</p>
+<dt class="sig sig-object mat" id="Session.Log.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
+<dd><p>DELETE Deconstructor of Log</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Log.openLog">
 <span class="sig-name descname"><span class="pre">openLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.openLog" title="Link to this definition"></a></dt>
 <dd><p>SETUPLOG Open/Setup the logging file</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Log.closeLog">
+<span class="sig-name descname"><span class="pre">closeLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.closeLog" title="Link to this definition"></a></dt>
+<dd><p>CLOSELOG Close log file reference</p>
 </dd></dl>
 
 </dd>
