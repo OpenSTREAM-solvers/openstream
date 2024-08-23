@@ -68,7 +68,7 @@ jobs:
           scheme: small
           run: |
             apk add make
-            ./docs
+            cd ./docs
             make latexpdf        
 
       - name: Copy pdf file
