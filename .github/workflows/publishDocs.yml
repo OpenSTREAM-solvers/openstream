@@ -56,9 +56,20 @@ jobs:
         run: make html
         working-directory: ./docs
 
+      - name: Make pdf file
+        id: makepdf
+        run: make latexpdf
+        working-directory: ./docs
+
+      - name: Copy pdf file
+        if: steps.makepdf.outcome == 'success'
+        run: mkdir -p ./docs/html/files && cp ./docs/build/latex/TwoPhaseSolver.pdf ./docs/build/html/files/TwoPhaseSolver.pdf
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
+
+
