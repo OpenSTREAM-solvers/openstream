@@ -60,16 +60,14 @@ jobs:
         id: makelatex
         run: make latex
         working-directory: ./docs
+
+      - name: Install TeXlive
+        run: sudo apt-get update && sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
       
       - name: Make pdf file
         id: makepdf
-        uses: xu-cheng/texlive-action@v2
-        with: 
-          scheme: small
-          run: |
-            apk add make
-            cd ./docs
-            make latexpdf        
+        run: make latexpdf
+        working-directory: ./docs
 
       - name: Copy pdf file
         if: steps.makepdf.outcome == 'success'
