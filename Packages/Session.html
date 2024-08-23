@@ -98,10 +98,37 @@
   <section id="session">
 <h1>Session<a class="headerlink" href="#session" title="Link to this heading"></a></h1>
 <dl class="mat class" id="module-Session">
-<dt class="sig sig-object mat" id="Session.LogMode">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">LogMode</span></span><a class="headerlink" href="#Session.LogMode" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
-<p>LOGMODE Enumeration class of possible log modes</p>
+<dt class="sig sig-object mat" id="Session.Session">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>SESSION Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Session.Session">
+<span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.Session" title="Link to this definition"></a></dt>
+<dd><p>SESSION Construct an instance of this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
+<span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
+<dd><p>MAKESESSIONDIRECTORY Make the session directory</p>
+<p>Check if session directory is legal and/or exists</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Session.setupLog">
+<span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
+<dd><p>SETUPLOG Setup log</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="mat class">
@@ -168,44 +195,17 @@ Detailed explanation goes here</p>
 </div>
 </dd></dl>
 
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Session.LogMode">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">LogMode</span></span><a class="headerlink" href="#Session.LogMode" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
+<p>LOGMODE Enumeration class of possible log modes</p>
+</dd></dl>
+
 <dl class="mat function">
 <dt class="sig sig-object mat" id="Session.isLegalPath">
 <span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
 <dd><p>ISLEGALPATH Determine if a path is legal in current OS</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Session.Session">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>SESSION Summary of this class goes here
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.Session">
-<span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.Session" title="Link to this definition"></a></dt>
-<dd><p>SESSION Construct an instance of this class
-Detailed explanation goes here</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
-<span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
-<dd><p>MAKESESSIONDIRECTORY Make the session directory</p>
-<p>Check if session directory is legal and/or exists</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.setupLog">
-<span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
-<dd><p>SETUPLOG Setup log</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
 </dd></dl>
 
 </section>

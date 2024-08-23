@@ -99,235 +99,277 @@
 <span id="inputs"></span><h1>Inputs<a class="headerlink" href="#module-Inputs" title="Link to this heading"></a></h1>
 <p><a class="reference internal" href="#module-Inputs" title="Inputs"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs</span></code></a> is pretty cool.</p>
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.InputSet">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet" title="Link to this definition"></a></dt>
-<dd><p>INPUTSET Creates set of input objects
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.InputSet.InputSet">
-<span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.InputSet" title="Link to this definition"></a></dt>
-<dd><p>INPUTSET Construct an instance of this class
-Detailed explanation goes here</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.Geometry">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Inputs.Model">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">modelID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Model" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
-<p>GEOMETRY Summary of this class goes here
+<p>MODEL Summary of this class goes here
 Detailed explanation goes here</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Geometry.Geometry">
-<span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.Geometry" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Inputs.Model.Model">
+<span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">modelID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Model.Model" title="Link to this definition"></a></dt>
 <dd><p>MODEL Construct an instance of this class
 Detailed explanation goes here</p>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Geometry.ANGLE">
-<span class="sig-name descname"><span class="pre">ANGLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.Geometry.ANGLE" title="Link to this definition"></a></dt>
-<dd><p>Angle [rad]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.ANGLE">
+<span class="sig-name descname"><span class="pre">ANGLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.Model.ANGLE" title="Link to this definition"></a></dt>
+<dd><p>Flow axis angle from vertical [deg]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Geometry.AREA">
-<span class="sig-name descname"><span class="pre">AREA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Geometry.AREA" title="Link to this definition"></a></dt>
-<dd><p>Coolant area [m^2]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.BASEEQTHICKCOEF">
+<span class="sig-name descname"><span class="pre">BASEEQTHICKCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[5.37E-5-0.641.21]</span></em><a class="headerlink" href="#Inputs.Model.BASEEQTHICKCOEF" title="Link to this definition"></a></dt>
+<dd><p>Base equilibrium thickness coefficient</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Geometry.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#Inputs.Geometry.ID" title="Link to this definition"></a></dt>
-<dd><p>Channel <a class="reference internal" href="#Inputs.Geometry.ID" title="Inputs.Geometry.ID"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ID</span></code></a></p>
+<dt class="sig sig-object mat" id="Inputs.Model.DEPOSITION">
+<span class="sig-name descname"><span class="pre">DEPOSITION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'GOVAN'</span></em><a class="headerlink" href="#Inputs.Model.DEPOSITION" title="Link to this definition"></a></dt>
+<dd><p>Drop deposition model [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Geometry.LENGTH">
-<span class="sig-name descname"><span class="pre">LENGTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Geometry.LENGTH" title="Link to this definition"></a></dt>
-<dd><p>Axial length [m]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.DROPDIAM">
+<span class="sig-name descname"><span class="pre">DROPDIAM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Model.DROPDIAM" title="Link to this definition"></a></dt>
+<dd><p>Drop diameter [mm]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Geometry.PERIM">
-<span class="sig-name descname"><span class="pre">PERIM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Geometry.PERIM" title="Link to this definition"></a></dt>
-<dd><p>Perimeters [m]</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Geometry.HDIAM">
-<span class="sig-name descname"><span class="pre">HDIAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.HDIAM" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.Geometry.HDIAM" title="Inputs.Geometry.HDIAM"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">HDIAM()</span></code></a> Hydraulic diameter</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Geometry.NWALL">
-<span class="sig-name descname"><span class="pre">NWALL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.NWALL" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.Geometry.NWALL" title="Inputs.Geometry.NWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">NWALL()</span></code></a> Number of walls</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
-<p>BOUNDARYCONDITIONS Summary of this class goes here
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.BoundaryConditions">
-<span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.BoundaryConditions" title="Link to this definition"></a></dt>
-<dd><p>BOUNDARYCONDITIONS Construct an instance of this class
-Detailed explanation goes here</p>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HIN">
-<span class="sig-name descname"><span class="pre">HIN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.HIN" title="Link to this definition"></a></dt>
-<dd><p>Inlet enthalpy [J/kg]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.DROPDRAG">
+<span class="sig-name descname"><span class="pre">DROPDRAG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'CONSTANT'</span></em><a class="headerlink" href="#Inputs.Model.DROPDRAG" title="Link to this definition"></a></dt>
+<dd><p>Drop drag model</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.MFLOW">
-<span class="sig-name descname"><span class="pre">MFLOW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.MFLOW" title="Link to this definition"></a></dt>
-<dd><p>Mass flow rate [kg/s]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.DROPDRAGCOEF">
+<span class="sig-name descname"><span class="pre">DROPDRAGCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.45</span></em><a class="headerlink" href="#Inputs.Model.DROPDRAGCOEF" title="Link to this definition"></a></dt>
+<dd><p>Drop drag coefficient</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.POWER">
-<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.POWER" title="Link to this definition"></a></dt>
-<dd><p>Total power [W]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.DROPSLIP">
+<span class="sig-name descname"><span class="pre">DROPSLIP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#Inputs.Model.DROPSLIP" title="Link to this definition"></a></dt>
+<dd><p>Drop velocity ratio [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.PRESSURE">
-<span class="sig-name descname"><span class="pre">PRESSURE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.PRESSURE" title="Link to this definition"></a></dt>
-<dd><p>System pressure [Pa]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.ENTRAINMENT">
+<span class="sig-name descname"><span class="pre">ENTRAINMENT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'GOVAN'</span></em><a class="headerlink" href="#Inputs.Model.ENTRAINMENT" title="Link to this definition"></a></dt>
+<dd><p>Film entrainment model [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Inputs.BoundaryConditions.TIME" title="Link to this definition"></a></dt>
-<dd><p>Time [s]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.EQSTROUHALCOEF">
+<span class="sig-name descname"><span class="pre">EQSTROUHALCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.1236E-40.5]</span></em><a class="headerlink" href="#Inputs.Model.EQSTROUHALCOEF" title="Link to this definition"></a></dt>
+<dd><p>Wave equilibrium Strouhal coefficients</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WMESH">
-<span class="sig-name descname"><span class="pre">WMESH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WMESH" title="Link to this definition"></a></dt>
-<dd><p>Relative power node size distribution [m]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.FLUID">
+<span class="sig-name descname"><span class="pre">FLUID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;WATER&quot;</span></em><a class="headerlink" href="#Inputs.Model.FLUID" title="Link to this definition"></a></dt>
+<dd><p>Fluid ID</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WPOWER">
-<span class="sig-name descname"><span class="pre">WPOWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WPOWER" title="Link to this definition"></a></dt>
-<dd><p>Relative power distribution(s) [-]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.FRICTION">
+<span class="sig-name descname"><span class="pre">FRICTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.2-0.20]</span></em><a class="headerlink" href="#Inputs.Model.FRICTION" title="Link to this definition"></a></dt>
+<dd><p>Wall friction coefficients</p>
 </dd></dl>
 
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DHIN">
-<span class="sig-name descname"><span class="pre">DHIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DHIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DHIN" title="Inputs.BoundaryConditions.DHIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DHIN()</span></code></a> [J/kg] Inlet subcooling enthalpy difference given fluidObj</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.G">
+<span class="sig-name descname"><span class="pre">G</span></span><em class="property"> <span class="pre">=</span> <span class="pre">9.81</span></em><a class="headerlink" href="#Inputs.Model.G" title="Link to this definition"></a></dt>
+<dd><p>[m/s^2] Gravitational acceleration</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DTIN">
-<span class="sig-name descname"><span class="pre">DTIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DTIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DTIN" title="Inputs.BoundaryConditions.DTIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DTIN()</span></code></a> [K] Inlet subcooling temperature difference given fluidObj</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#Inputs.Model.ID" title="Link to this definition"></a></dt>
+<dd><p>Model <a class="reference internal" href="#Inputs.Model.ID" title="Inputs.Model.ID"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ID</span></code></a></p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HF">
-<span class="sig-name descname"><span class="pre">HF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HF" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.HF" title="Inputs.BoundaryConditions.HF"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">HF()</span></code></a> [J/kg] Liquid saturation given fluidObj</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.KLOC">
+<span class="sig-name descname"><span class="pre">KLOC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOC" title="Link to this definition"></a></dt>
+<dd><p>Elevation of local perturbations [m]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HG">
-<span class="sig-name descname"><span class="pre">HG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HG" title="Link to this definition"></a></dt>
-<dd><p>HF [J/kg] Vapor saturation given fluidObj</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.KLOSS">
+<span class="sig-name descname"><span class="pre">KLOSS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOSS" title="Link to this definition"></a></dt>
+<dd><p>corresponding pressure loss coefficients [-]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIN">
-<span class="sig-name descname"><span class="pre">TIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TIN" title="Inputs.BoundaryConditions.TIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TIN()</span></code></a> [K] Inlet temperature</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.MOMENTBASE">
+<span class="sig-name descname"><span class="pre">MOMENTBASE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'ALGEBRAIC'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTBASE" title="Link to this definition"></a></dt>
+<dd><p>Base Film momentum conservation model [-]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TSAT">
-<span class="sig-name descname"><span class="pre">TSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TSAT" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TSAT" title="Inputs.BoundaryConditions.TSAT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TSAT()</span></code></a> [K] Saturation temperature given fluidObj</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.MOMENTDROP">
+<span class="sig-name descname"><span class="pre">MOMENTDROP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SLIP'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTDROP" title="Link to this definition"></a></dt>
+<dd><p>Drop momentum conservation model [-]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.XIN">
-<span class="sig-name descname"><span class="pre">XIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.XIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.XIN" title="Inputs.BoundaryConditions.XIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">XIN()</span></code></a> [-] Inlet equilibrium quality</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.MOMENTFILM">
+<span class="sig-name descname"><span class="pre">MOMENTFILM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'ALGEBRAIC'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTFILM" title="Link to this definition"></a></dt>
+<dd><p>Film momentum conservation model [-]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.plot" title="Link to this definition"></a></dt>
-<dd><p>PLOT Plot boundary conditions
-usage: bc.plot(fluidObj)</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.MOMENTWAVE">
+<span class="sig-name descname"><span class="pre">MOMENTWAVE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'FULL'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTWAVE" title="Link to this definition"></a></dt>
+<dd><p>Film momentum conservation model [-]</p>
 </dd></dl>
 
-</dd>
-</dl>
-</div>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.NNODES">
+<span class="sig-name descname"><span class="pre">NNODES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.Model.NNODES" title="Link to this definition"></a></dt>
+<dd><p>Number of axial nodes</p>
 </dd></dl>
 
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.Input">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">dynamicprops</span></code></p>
-<p>INPUT Su
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.Input">
-<span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.Input" title="Link to this definition"></a></dt>
-<dd><p>INPUT Parse inputFile to construct this class
-Detailed explanation goes here</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.OAF">
+<span class="sig-name descname"><span class="pre">OAF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'WALLIS'</span></em><a class="headerlink" href="#Inputs.Model.OAF" title="Link to this definition"></a></dt>
+<dd><p>Onset of annular flow model [-]</p>
 </dd></dl>
 
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat staticmethod">
-<dt class="sig sig-object mat" id="Inputs.Input.convert2JSON">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">convert2JSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.convert2JSON" title="Link to this definition"></a></dt>
-<dd><p>Read inputFilePath</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.OAFBASERATIO">
+<span class="sig-name descname"><span class="pre">OAFBASERATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Model.OAFBASERATIO" title="Link to this definition"></a></dt>
+<dd><p>Base/Film mass ratio at onset of annular flow [-]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.listInputProperties">
-<span class="sig-name descname"><span class="pre">listInputProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.listInputProperties" title="Link to this definition"></a></dt>
-<dd><p>LISTINPUTPROPERTIES
-List of protected obj property names</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.OAFDROPRATIO">
+<span class="sig-name descname"><span class="pre">OAFDROPRATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.7</span></em><a class="headerlink" href="#Inputs.Model.OAFDROPRATIO" title="Link to this definition"></a></dt>
+<dd><p>Drop/Liquid mass ratio at onset of annular flow [-]</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.validateInputEntry">
-<span class="sig-name descname"><span class="pre">validateInputEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">objPropname</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.validateInputEntry" title="Link to this definition"></a></dt>
-<dd><p>VALIDATEINPUTENTRY
-Description</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.OAFENTRAINED">
+<span class="sig-name descname"><span class="pre">OAFENTRAINED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RATIO'</span></em><a class="headerlink" href="#Inputs.Model.OAFENTRAINED" title="Link to this definition"></a></dt>
+<dd><p>Entrained model at onset of annular flow [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.OAFFILMSPLIT">
+<span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RATIO'</span></em><a class="headerlink" href="#Inputs.Model.OAFFILMSPLIT" title="Link to this definition"></a></dt>
+<dd><p>Film mass flow rate at onset of annular flow [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.OAFTRANSITION">
+<span class="sig-name descname"><span class="pre">OAFTRANSITION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.100.0]</span></em><a class="headerlink" href="#Inputs.Model.OAFTRANSITION" title="Link to this definition"></a></dt>
+<dd><p>Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.POSFILM">
+<span class="sig-name descname"><span class="pre">POSFILM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Inputs.Model.POSFILM" title="Link to this definition"></a></dt>
+<dd><p>Keep positive film flowrate/thickness</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.PROPERTIES">
+<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SATURATED'</span></em><a class="headerlink" href="#Inputs.Model.PROPERTIES" title="Link to this definition"></a></dt>
+<dd><p>Fluid property assumptions</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RELAXTB">
+<span class="sig-name descname"><span class="pre">RELAXTB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Model.RELAXTB" title="Link to this definition"></a></dt>
+<dd><p>Base film relaxation time</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RELAXTW">
+<span class="sig-name descname"><span class="pre">RELAXTW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Model.RELAXTW" title="Link to this definition"></a></dt>
+<dd><p>Wave relaxation time</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.SCBOIL">
+<span class="sig-name descname"><span class="pre">SCBOIL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'NONE'</span></em><a class="headerlink" href="#Inputs.Model.SCBOIL" title="Link to this definition"></a></dt>
+<dd><p>Subcooled boiling mode</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.SHAPEFACTORCOEF">
+<span class="sig-name descname"><span class="pre">SHAPEFACTORCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.325E52]</span></em><a class="headerlink" href="#Inputs.Model.SHAPEFACTORCOEF" title="Link to this definition"></a></dt>
+<dd><p>Wave shape factor coefficients</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.SLIP">
+<span class="sig-name descname"><span class="pre">SLIP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Model.SLIP" title="Link to this definition"></a></dt>
+<dd><p>Phase velocity ratio [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.THINFILMFRIC">
+<span class="sig-name descname"><span class="pre">THINFILMFRIC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'TURBULENT'</span></em><a class="headerlink" href="#Inputs.Model.THINFILMFRIC" title="Link to this definition"></a></dt>
+<dd><p>Thin film wall friction model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.THINFILMTHICK">
+<span class="sig-name descname"><span class="pre">THINFILMTHICK</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Model.THINFILMTHICK" title="Link to this definition"></a></dt>
+<dd><p>Thin film thickness [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.TPFM">
+<span class="sig-name descname"><span class="pre">TPFM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPFM" title="Link to this definition"></a></dt>
+<dd><p>Two-phase friction multiplier [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.TPKM">
+<span class="sig-name descname"><span class="pre">TPKM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPKM" title="Link to this definition"></a></dt>
+<dd><p>Two-phase local loss multiplier [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.VAPORFRIC">
+<span class="sig-name descname"><span class="pre">VAPORFRIC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'WALLIS'</span></em><a class="headerlink" href="#Inputs.Model.VAPORFRIC" title="Link to this definition"></a></dt>
+<dd><p>Vapor friction model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.VAPORFRICCST">
+<span class="sig-name descname"><span class="pre">VAPORFRICCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.005</span></em><a class="headerlink" href="#Inputs.Model.VAPORFRICCST" title="Link to this definition"></a></dt>
+<dd><p>Vapor friction constant [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.VOID">
+<span class="sig-name descname"><span class="pre">VOID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.VOID" title="Link to this definition"></a></dt>
+<dd><p>Void fraction model</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.WAVEDRAGCOEF">
+<span class="sig-name descname"><span class="pre">WAVEDRAGCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.021.350E50.437]</span></em><a class="headerlink" href="#Inputs.Model.WAVEDRAGCOEF" title="Link to this definition"></a></dt>
+<dd><p>Wave drag coefficient</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.WAVEFREQUENCY">
+<span class="sig-name descname"><span class="pre">WAVEFREQUENCY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RELAXATION'</span></em><a class="headerlink" href="#Inputs.Model.WAVEFREQUENCY" title="Link to this definition"></a></dt>
+<dd><p>Wave number conservation model</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.WAVEMIXCOEF">
+<span class="sig-name descname"><span class="pre">WAVEMIXCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#Inputs.Model.WAVEMIXCOEF" title="Link to this definition"></a></dt>
+<dd><p>Wave mixing coefficient</p>
 </dd></dl>
 
 </dd>
@@ -672,277 +714,235 @@ Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.Model">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">modelID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Model" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Inputs.Geometry">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
-<p>MODEL Summary of this class goes here
+<p>GEOMETRY Summary of this class goes here
 Detailed explanation goes here</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Model.Model">
-<span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">modelID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Model.Model" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Inputs.Geometry.Geometry">
+<span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.Geometry" title="Link to this definition"></a></dt>
 <dd><p>MODEL Construct an instance of this class
 Detailed explanation goes here</p>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.ANGLE">
-<span class="sig-name descname"><span class="pre">ANGLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.Model.ANGLE" title="Link to this definition"></a></dt>
-<dd><p>Flow axis angle from vertical [deg]</p>
+<dt class="sig sig-object mat" id="Inputs.Geometry.ANGLE">
+<span class="sig-name descname"><span class="pre">ANGLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.Geometry.ANGLE" title="Link to this definition"></a></dt>
+<dd><p>Angle [rad]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.BASEEQTHICKCOEF">
-<span class="sig-name descname"><span class="pre">BASEEQTHICKCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[5.37E-5-0.641.21]</span></em><a class="headerlink" href="#Inputs.Model.BASEEQTHICKCOEF" title="Link to this definition"></a></dt>
-<dd><p>Base equilibrium thickness coefficient</p>
+<dt class="sig sig-object mat" id="Inputs.Geometry.AREA">
+<span class="sig-name descname"><span class="pre">AREA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Geometry.AREA" title="Link to this definition"></a></dt>
+<dd><p>Coolant area [m^2]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.DEPOSITION">
-<span class="sig-name descname"><span class="pre">DEPOSITION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'GOVAN'</span></em><a class="headerlink" href="#Inputs.Model.DEPOSITION" title="Link to this definition"></a></dt>
-<dd><p>Drop deposition model [-]</p>
+<dt class="sig sig-object mat" id="Inputs.Geometry.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#Inputs.Geometry.ID" title="Link to this definition"></a></dt>
+<dd><p>Channel <a class="reference internal" href="#Inputs.Geometry.ID" title="Inputs.Geometry.ID"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ID</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.DROPDIAM">
-<span class="sig-name descname"><span class="pre">DROPDIAM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Model.DROPDIAM" title="Link to this definition"></a></dt>
-<dd><p>Drop diameter [mm]</p>
+<dt class="sig sig-object mat" id="Inputs.Geometry.LENGTH">
+<span class="sig-name descname"><span class="pre">LENGTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Geometry.LENGTH" title="Link to this definition"></a></dt>
+<dd><p>Axial length [m]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.DROPDRAG">
-<span class="sig-name descname"><span class="pre">DROPDRAG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'CONSTANT'</span></em><a class="headerlink" href="#Inputs.Model.DROPDRAG" title="Link to this definition"></a></dt>
-<dd><p>Drop drag model</p>
+<dt class="sig sig-object mat" id="Inputs.Geometry.PERIM">
+<span class="sig-name descname"><span class="pre">PERIM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Geometry.PERIM" title="Link to this definition"></a></dt>
+<dd><p>Perimeters [m]</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Geometry.HDIAM">
+<span class="sig-name descname"><span class="pre">HDIAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.HDIAM" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.Geometry.HDIAM" title="Inputs.Geometry.HDIAM"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">HDIAM()</span></code></a> Hydraulic diameter</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Geometry.NWALL">
+<span class="sig-name descname"><span class="pre">NWALL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.NWALL" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.Geometry.NWALL" title="Inputs.Geometry.NWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">NWALL()</span></code></a> Number of walls</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.InputSet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet" title="Link to this definition"></a></dt>
+<dd><p>INPUTSET Creates set of input objects
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.InputSet.InputSet">
+<span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.InputSet" title="Link to this definition"></a></dt>
+<dd><p>INPUTSET Construct an instance of this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.Input">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">dynamicprops</span></code></p>
+<p>INPUT Su
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.Input">
+<span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.Input" title="Link to this definition"></a></dt>
+<dd><p>INPUT Parse inputFile to construct this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="Inputs.Input.convert2JSON">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">convert2JSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.convert2JSON" title="Link to this definition"></a></dt>
+<dd><p>Read inputFilePath</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.listInputProperties">
+<span class="sig-name descname"><span class="pre">listInputProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.listInputProperties" title="Link to this definition"></a></dt>
+<dd><p>LISTINPUTPROPERTIES
+List of protected obj property names</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.validateInputEntry">
+<span class="sig-name descname"><span class="pre">validateInputEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">objPropname</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.validateInputEntry" title="Link to this definition"></a></dt>
+<dd><p>VALIDATEINPUTENTRY
+Description</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
+<p>BOUNDARYCONDITIONS Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.BoundaryConditions">
+<span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.BoundaryConditions" title="Link to this definition"></a></dt>
+<dd><p>BOUNDARYCONDITIONS Construct an instance of this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HIN">
+<span class="sig-name descname"><span class="pre">HIN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.HIN" title="Link to this definition"></a></dt>
+<dd><p>Inlet enthalpy [J/kg]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.DROPDRAGCOEF">
-<span class="sig-name descname"><span class="pre">DROPDRAGCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.45</span></em><a class="headerlink" href="#Inputs.Model.DROPDRAGCOEF" title="Link to this definition"></a></dt>
-<dd><p>Drop drag coefficient</p>
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.MFLOW">
+<span class="sig-name descname"><span class="pre">MFLOW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.MFLOW" title="Link to this definition"></a></dt>
+<dd><p>Mass flow rate [kg/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.DROPSLIP">
-<span class="sig-name descname"><span class="pre">DROPSLIP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#Inputs.Model.DROPSLIP" title="Link to this definition"></a></dt>
-<dd><p>Drop velocity ratio [-]</p>
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.POWER">
+<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.POWER" title="Link to this definition"></a></dt>
+<dd><p>Total power [W]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.ENTRAINMENT">
-<span class="sig-name descname"><span class="pre">ENTRAINMENT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'GOVAN'</span></em><a class="headerlink" href="#Inputs.Model.ENTRAINMENT" title="Link to this definition"></a></dt>
-<dd><p>Film entrainment model [-]</p>
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.PRESSURE">
+<span class="sig-name descname"><span class="pre">PRESSURE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.PRESSURE" title="Link to this definition"></a></dt>
+<dd><p>System pressure [Pa]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.EQSTROUHALCOEF">
-<span class="sig-name descname"><span class="pre">EQSTROUHALCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.1236E-40.5]</span></em><a class="headerlink" href="#Inputs.Model.EQSTROUHALCOEF" title="Link to this definition"></a></dt>
-<dd><p>Wave equilibrium Strouhal coefficients</p>
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Inputs.BoundaryConditions.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.FLUID">
-<span class="sig-name descname"><span class="pre">FLUID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;WATER&quot;</span></em><a class="headerlink" href="#Inputs.Model.FLUID" title="Link to this definition"></a></dt>
-<dd><p>Fluid ID</p>
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WMESH">
+<span class="sig-name descname"><span class="pre">WMESH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WMESH" title="Link to this definition"></a></dt>
+<dd><p>Relative power node size distribution [m]</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.FRICTION">
-<span class="sig-name descname"><span class="pre">FRICTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.2-0.20]</span></em><a class="headerlink" href="#Inputs.Model.FRICTION" title="Link to this definition"></a></dt>
-<dd><p>Wall friction coefficients</p>
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WPOWER">
+<span class="sig-name descname"><span class="pre">WPOWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WPOWER" title="Link to this definition"></a></dt>
+<dd><p>Relative power distribution(s) [-]</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.G">
-<span class="sig-name descname"><span class="pre">G</span></span><em class="property"> <span class="pre">=</span> <span class="pre">9.81</span></em><a class="headerlink" href="#Inputs.Model.G" title="Link to this definition"></a></dt>
-<dd><p>[m/s^2] Gravitational acceleration</p>
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DHIN">
+<span class="sig-name descname"><span class="pre">DHIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DHIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DHIN" title="Inputs.BoundaryConditions.DHIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DHIN()</span></code></a> [J/kg] Inlet subcooling enthalpy difference given fluidObj</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#Inputs.Model.ID" title="Link to this definition"></a></dt>
-<dd><p>Model <a class="reference internal" href="#Inputs.Model.ID" title="Inputs.Model.ID"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ID</span></code></a></p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DTIN">
+<span class="sig-name descname"><span class="pre">DTIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DTIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DTIN" title="Inputs.BoundaryConditions.DTIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DTIN()</span></code></a> [K] Inlet subcooling temperature difference given fluidObj</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.KLOC">
-<span class="sig-name descname"><span class="pre">KLOC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOC" title="Link to this definition"></a></dt>
-<dd><p>Elevation of local perturbations [m]</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HF">
+<span class="sig-name descname"><span class="pre">HF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HF" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.HF" title="Inputs.BoundaryConditions.HF"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">HF()</span></code></a> [J/kg] Liquid saturation given fluidObj</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.KLOSS">
-<span class="sig-name descname"><span class="pre">KLOSS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOSS" title="Link to this definition"></a></dt>
-<dd><p>corresponding pressure loss coefficients [-]</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HG">
+<span class="sig-name descname"><span class="pre">HG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HG" title="Link to this definition"></a></dt>
+<dd><p>HF [J/kg] Vapor saturation given fluidObj</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.MOMENTBASE">
-<span class="sig-name descname"><span class="pre">MOMENTBASE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'ALGEBRAIC'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTBASE" title="Link to this definition"></a></dt>
-<dd><p>Base Film momentum conservation model [-]</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIN">
+<span class="sig-name descname"><span class="pre">TIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TIN" title="Inputs.BoundaryConditions.TIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TIN()</span></code></a> [K] Inlet temperature</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.MOMENTDROP">
-<span class="sig-name descname"><span class="pre">MOMENTDROP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SLIP'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTDROP" title="Link to this definition"></a></dt>
-<dd><p>Drop momentum conservation model [-]</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TSAT">
+<span class="sig-name descname"><span class="pre">TSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TSAT" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TSAT" title="Inputs.BoundaryConditions.TSAT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TSAT()</span></code></a> [K] Saturation temperature given fluidObj</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.MOMENTFILM">
-<span class="sig-name descname"><span class="pre">MOMENTFILM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'ALGEBRAIC'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTFILM" title="Link to this definition"></a></dt>
-<dd><p>Film momentum conservation model [-]</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.XIN">
+<span class="sig-name descname"><span class="pre">XIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.XIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.XIN" title="Inputs.BoundaryConditions.XIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">XIN()</span></code></a> [-] Inlet equilibrium quality</p>
 </dd></dl>
 
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.MOMENTWAVE">
-<span class="sig-name descname"><span class="pre">MOMENTWAVE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'FULL'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTWAVE" title="Link to this definition"></a></dt>
-<dd><p>Film momentum conservation model [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.NNODES">
-<span class="sig-name descname"><span class="pre">NNODES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.Model.NNODES" title="Link to this definition"></a></dt>
-<dd><p>Number of axial nodes</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.OAF">
-<span class="sig-name descname"><span class="pre">OAF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'WALLIS'</span></em><a class="headerlink" href="#Inputs.Model.OAF" title="Link to this definition"></a></dt>
-<dd><p>Onset of annular flow model [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.OAFBASERATIO">
-<span class="sig-name descname"><span class="pre">OAFBASERATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Model.OAFBASERATIO" title="Link to this definition"></a></dt>
-<dd><p>Base/Film mass ratio at onset of annular flow [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.OAFDROPRATIO">
-<span class="sig-name descname"><span class="pre">OAFDROPRATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.7</span></em><a class="headerlink" href="#Inputs.Model.OAFDROPRATIO" title="Link to this definition"></a></dt>
-<dd><p>Drop/Liquid mass ratio at onset of annular flow [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.OAFENTRAINED">
-<span class="sig-name descname"><span class="pre">OAFENTRAINED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RATIO'</span></em><a class="headerlink" href="#Inputs.Model.OAFENTRAINED" title="Link to this definition"></a></dt>
-<dd><p>Entrained model at onset of annular flow [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.OAFFILMSPLIT">
-<span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RATIO'</span></em><a class="headerlink" href="#Inputs.Model.OAFFILMSPLIT" title="Link to this definition"></a></dt>
-<dd><p>Film mass flow rate at onset of annular flow [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.OAFTRANSITION">
-<span class="sig-name descname"><span class="pre">OAFTRANSITION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.100.0]</span></em><a class="headerlink" href="#Inputs.Model.OAFTRANSITION" title="Link to this definition"></a></dt>
-<dd><p>Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.POSFILM">
-<span class="sig-name descname"><span class="pre">POSFILM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Inputs.Model.POSFILM" title="Link to this definition"></a></dt>
-<dd><p>Keep positive film flowrate/thickness</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.PROPERTIES">
-<span class="sig-name descname"><span class="pre">PROPERTIES</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SATURATED'</span></em><a class="headerlink" href="#Inputs.Model.PROPERTIES" title="Link to this definition"></a></dt>
-<dd><p>Fluid property assumptions</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.RELAXTB">
-<span class="sig-name descname"><span class="pre">RELAXTB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Model.RELAXTB" title="Link to this definition"></a></dt>
-<dd><p>Base film relaxation time</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.RELAXTW">
-<span class="sig-name descname"><span class="pre">RELAXTW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Model.RELAXTW" title="Link to this definition"></a></dt>
-<dd><p>Wave relaxation time</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.SCBOIL">
-<span class="sig-name descname"><span class="pre">SCBOIL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'NONE'</span></em><a class="headerlink" href="#Inputs.Model.SCBOIL" title="Link to this definition"></a></dt>
-<dd><p>Subcooled boiling mode</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.SHAPEFACTORCOEF">
-<span class="sig-name descname"><span class="pre">SHAPEFACTORCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.325E52]</span></em><a class="headerlink" href="#Inputs.Model.SHAPEFACTORCOEF" title="Link to this definition"></a></dt>
-<dd><p>Wave shape factor coefficients</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.SLIP">
-<span class="sig-name descname"><span class="pre">SLIP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Model.SLIP" title="Link to this definition"></a></dt>
-<dd><p>Phase velocity ratio [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.THINFILMFRIC">
-<span class="sig-name descname"><span class="pre">THINFILMFRIC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'TURBULENT'</span></em><a class="headerlink" href="#Inputs.Model.THINFILMFRIC" title="Link to this definition"></a></dt>
-<dd><p>Thin film wall friction model [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.THINFILMTHICK">
-<span class="sig-name descname"><span class="pre">THINFILMTHICK</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Model.THINFILMTHICK" title="Link to this definition"></a></dt>
-<dd><p>Thin film thickness [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.TPFM">
-<span class="sig-name descname"><span class="pre">TPFM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPFM" title="Link to this definition"></a></dt>
-<dd><p>Two-phase friction multiplier [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.TPKM">
-<span class="sig-name descname"><span class="pre">TPKM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPKM" title="Link to this definition"></a></dt>
-<dd><p>Two-phase local loss multiplier [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.VAPORFRIC">
-<span class="sig-name descname"><span class="pre">VAPORFRIC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'WALLIS'</span></em><a class="headerlink" href="#Inputs.Model.VAPORFRIC" title="Link to this definition"></a></dt>
-<dd><p>Vapor friction model [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.VAPORFRICCST">
-<span class="sig-name descname"><span class="pre">VAPORFRICCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.005</span></em><a class="headerlink" href="#Inputs.Model.VAPORFRICCST" title="Link to this definition"></a></dt>
-<dd><p>Vapor friction constant [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.VOID">
-<span class="sig-name descname"><span class="pre">VOID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.VOID" title="Link to this definition"></a></dt>
-<dd><p>Void fraction model</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.WAVEDRAGCOEF">
-<span class="sig-name descname"><span class="pre">WAVEDRAGCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.021.350E50.437]</span></em><a class="headerlink" href="#Inputs.Model.WAVEDRAGCOEF" title="Link to this definition"></a></dt>
-<dd><p>Wave drag coefficient</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.WAVEFREQUENCY">
-<span class="sig-name descname"><span class="pre">WAVEFREQUENCY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RELAXATION'</span></em><a class="headerlink" href="#Inputs.Model.WAVEFREQUENCY" title="Link to this definition"></a></dt>
-<dd><p>Wave number conservation model</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.WAVEMIXCOEF">
-<span class="sig-name descname"><span class="pre">WAVEMIXCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#Inputs.Model.WAVEMIXCOEF" title="Link to this definition"></a></dt>
-<dd><p>Wave mixing coefficient</p>
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.plot" title="Link to this definition"></a></dt>
+<dd><p>PLOT Plot boundary conditions
+usage: bc.plot(fluidObj)</p>
 </dd></dl>
 
 </dd>
