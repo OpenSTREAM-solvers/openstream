@@ -63,11 +63,13 @@ jobs:
       
       - name: Make pdf file
         id: makepdf
-        uses: yegor256/latexmk-action@0.8.0
+        uses: xu-cheng/texlive-action@v2
         with: 
-          path: './docs'
-          cmd: 'make latexpdf'        
-        
+          scheme: small
+          run: |
+            apk add make
+            ./docs
+            make latexpdf        
 
       - name: Copy pdf file
         if: steps.makepdf.outcome == 'success'
