@@ -1,5 +1,6 @@
 classdef (Abstract) AbstractField < matlab.mixin.Copyable
     %ABSTRACTFIELD Summary of this class goes here
+    %
     %   Detailed explanation goes here
     
     properties (Abstract=true, SetAccess=?Solvers.AbstractSolver)

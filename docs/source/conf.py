@@ -35,7 +35,10 @@ matlab_auto_link = 'all'
 matlab_show_property_default_value = True
 matlab_class_signature = True
 autoclass_content = 'class'
-autodoc_member_order = 'alphabetical'
+autodoc_member_order = 'bysource'
+autodoc_default_options = {
+	'member-order': 'bysource'
+}
 toc_object_entries = True
 toc_object_entries_show_parents = 'all'
 
