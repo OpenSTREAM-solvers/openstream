@@ -1,7 +1,7 @@
 Solvers
 =======
 
-:mod:`Inputs` is pretty cool.
+:mod:`Solvers` is pretty cool.
 
 .. automodule:: Solvers
    :show-inheritance:
