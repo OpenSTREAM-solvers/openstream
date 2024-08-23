@@ -62,7 +62,7 @@ jobs:
         working-directory: ./docs
 
       - name: Install TeXlive
-        run: sudo apt-get update && sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
+        run: sudo apt-get update && sudo apt-get install texlive latexmk 
       
       - name: Make pdf file
         id: makepdf
