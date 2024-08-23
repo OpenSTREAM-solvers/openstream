@@ -127,9 +127,10 @@
 
 <span class="c">% Axial and temporal plots</span>
 <span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">                                     </span><span class="c">% Axial plot at 1st time step</span>
-<span class="c">%mixSolver.plotz(mixSolver.NTIME);                      % Axial plot at final time step</span>
-<span class="c">%mixSolver.plott(mixSolver.NZ)                          % Temporal plot at last spatial node</span>
-<span class="c">%mixSolver.plott(mixSolver.NZ,&#39;solveMode&#39;,&#39;STEADY&#39;)     % Temporal plot at last spatial node of steady state solution</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NTIME</span><span class="p">);</span><span class="w">                      </span><span class="c">% Axial plot at final time step</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NZ</span><span class="p">)</span><span class="w">                          </span><span class="c">% Temporal plot at last spatial node</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NZ</span><span class="p">,</span><span class="s">&#39;solveMode&#39;</span><span class="p">,</span><span class="s">&#39;STEADY&#39;</span><span class="p">)</span><span class="w">     </span><span class="c">% Temporal plot at last spatial node of steady state solution</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotzt</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NZ</span><span class="p">,</span><span class="s">&quot;solveMode&quot;</span><span class="p">,</span><span class="s">&quot;TRANSIENT&quot;</span><span class="p">);</span><span class="w"> </span><span class="c">% Spatial-temporal map of transient solution at channel exit</span>
 
 <span class="c">% Save results</span>
 <span class="n">mixSolver</span><span class="p">.</span><span class="n">saveResults</span><span class="p">(</span><span class="n">saveFormat</span><span class="p">=</span><span class="s">&quot;MAT&quot;</span><span class="p">);</span>
