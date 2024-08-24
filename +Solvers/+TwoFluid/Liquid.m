@@ -195,7 +195,7 @@ classdef Liquid < Solvers.AbstractField
         end
         
          function t = T(liquid,zIdx)
-        %T Liquid temperature
+            %T Liquid temperature
         
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -244,14 +244,34 @@ classdef Liquid < Solvers.AbstractField
 
             XEQ = liquid.mix.XEQ(zIdx);                                    % [-]
             
-            id = zeros(liquid.NZ,1);                                       % Liquid (initialization)
-            id(XEQ > liquid.XTR_SCB) = 1;                                  % bubbly_subcooled
-            id(XEQ > liquid.XTR_SAT) = 2;                                  % bubbly_saturated
-            id(XEQ > liquid.XTR_ITM) = 3;                                  % intermediate
-            id(XEQ > liquid.XTR_ANN) = 4;                                  % annular
-            id(XEQ > liquid.XTR_CBT) = 5;                                 
+            import Solvers.TwoFluid.REGIMES;
 
-            flowregime = categorical(id,[0 1 2 3 4 5],{'liquid','bubbly_subcooled','bubbly_saturated','intermediate','annular','dffb'});  
+            id = zeros(liquid.NZ,1);                       % Liquid (initialization)
+            id(XEQ > liquid.XTR_SCB) = 1;           % bubbly_subcooled
+            id(XEQ > liquid.XTR_SAT) = 2;           % bubbly_saturated
+            id(XEQ > liquid.XTR_ITM) = 3;               % intermediate
+            id(XEQ > liquid.XTR_ANN) = 4;                    % annular
+            id(XEQ > liquid.XTR_CBT) = 5; 
+            
+            flowregime = REGIMES(id);
+
+            % id = repmat(REGIMES.LIQUID,liquid.NZ,1);                       % Liquid (initialization)
+            % id(XEQ > liquid.XTR_SCB) = REGIMES.BUBBLY_SUBCOOLED;           % bubbly_subcooled
+            % id(XEQ > liquid.XTR_SAT) = REGIMES.BUBBLY_SATURATED;           % bubbly_saturated
+            % id(XEQ > liquid.XTR_ITM) = REGIMES.INTERMEDIATE;               % intermediate
+            % id(XEQ > liquid.XTR_ANN) = REGIMES.ANNULAR;                    % annular
+            % id(XEQ > liquid.XTR_CBT) = REGIMES.DFFB; 
+            % 
+            % flowregime = id;
+
+            % id = zeros(liquid.NZ,1);                                       % Liquid (initialization)
+            % id(XEQ > liquid.XTR_SCB) = 1;                                  % bubbly_subcooled
+            % id(XEQ > liquid.XTR_SAT) = 2;                                  % bubbly_saturated
+            % id(XEQ > liquid.XTR_ITM) = 3;                                  % intermediate
+            % id(XEQ > liquid.XTR_ANN) = 4;                                  % annular
+            % id(XEQ > liquid.XTR_CBT) = 5;                                 
+            % 
+            % flowregime = categorical(id,[0 1 2 3 4 5],{'liquid','bubbly_subcooled','bubbly_saturated','intermediate','annular','dffb'});  
         end
         
         function l = L(liquid,zIdx)
@@ -301,6 +321,8 @@ classdef Liquid < Solvers.AbstractField
         % TODO: Simplistic model for now, more realistic models to be implemented later, including a transport equation (i.e., AI will become a primary parameter since resolved by the solver)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+
+            import Solvers.TwoFluid.REGIMES
             
             flowregime = liquid.FLOWREGIME(zIdx);
             model = liquid.inputSet.model;
@@ -314,7 +336,8 @@ classdef Liquid < Solvers.AbstractField
                     ai  = aiv;                                                     % [m^-1]
                     
                     %Dispersed liquid
-                    Idl = ismember(flowregime,{'annular','dffb'});
+                    %Idl = ismember(flowregime,{'annular','dffb'});
+                    Idl = ismember(flowregime,[REGIMES.ANNULAR,REGIMES.DFFB]);
                     ail = 6*liquid.VF(vapor,zIdx)./liquid.L(zIdx);                 % [m^-1] Dispersed liquid
                     ai(Idl) = ail(Idl);                                            % [m^-1]
                         
@@ -411,6 +434,8 @@ classdef Liquid < Solvers.AbstractField
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
+            import Solvers.TwoFluid.REGIMES
+
             flowregime  = liquid.FLOWREGIME(zIdx);
             L   = liquid.L(zIdx);                                          % [m] Interfacial length scale
 
@@ -422,7 +447,7 @@ classdef Liquid < Solvers.AbstractField
             h = hv;                                                        % [W/m^2/K]
             
             % Dispersed liquid
-            Idl = ismember(flowregime,{'annular','dffb'});
+            Idl = ismember(flowregime,[REGIMES.ANNULAR,REGIMES.DFFB]);
             INTNUL = vapor.INTNUL(liquid,zIdx);                            % [-] Interfacial Nusselt number
             KV = vapor.fluid.KV(vapor.H(zIdx));                            % [W/m/K] Vapor conductivity  <- assume liquid phase is dispersed
             hl   = INTNUL.*KV./L; hl(L <= 1E-6) = 0;                       % [W/m^2/K] Interfacial heat transfer coefficient
@@ -600,7 +625,8 @@ classdef Liquid < Solvers.AbstractField
         %VR Local relative velocity
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
-            
+            import Solvers.TwoFluid.REGIMES
+
             switch liquid.inputSet.model.LOCRELVEL
                 case 'AREAMEAN'
                     vr = vapor.U(zIdx) - liquid.U(zIdx);
@@ -620,12 +646,12 @@ classdef Liquid < Solvers.AbstractField
                     vr = (1-C.*(vapor.VF(liquid,zIdx)))./(liquid.VF(vapor,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
         
                     % annular (instead contribution from interfacial shear)
-                    Idann = ismember(flowregime,{'annular'});
+                    Idann = ismember(flowregime,[REGIMES.ANNULAR]);
                     vr_ann = zeros(size(zIdx));
                     vr(Idann) = vr_ann(Idann);
         
                     % dffb (dispersed liquid)
-                    Iddffb = ismember(flowregime,{'dffb'});
+                    Iddffb = ismember(flowregime,[REGIMES.DFFB]);
                     vr_dffb = (1-C.*(liquid.VF(vapor,zIdx)))./(vapor.VF(liquid,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
                     vr(Iddffb) = vr_dffb(Iddffb);
             end   
@@ -678,6 +704,7 @@ classdef Liquid < Solvers.AbstractField
         %FSHEAR wall and interfacial shear force
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+            import Solvers.TwoFluid.REGIMES
 
             switch liquid.inputSet.model.INTAREA
                 case 'DISPGAS2DISPLIQ'
@@ -690,7 +717,7 @@ classdef Liquid < Solvers.AbstractField
                     Fshear  = -liquid.VF(vapor,zIdx).*PERIM.*TAUWL;               % [N/m]
 
                     % Dispersed liquid
-                    Idl = ismember(flowregime,{'annular','dffb'});
+                    Idl = ismember(flowregime,[REGIMES.ANNULAR, REGIMES.DFFB]);
                     Fwshearl = -liquid.VF(vapor,zIdx).*PERIM.*TAUWV;               % [N/m]
                     Fshear(Idl)=Fwshearl(Idl);
             end
@@ -754,6 +781,7 @@ classdef Liquid < Solvers.AbstractField
         % FDRAG liquid drag
 
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
+            import Solvers.TwoFluid.REGIMES
 
             switch liquid.inputSet.model.INTAREA
                 case 'DISPGAS2DISPLIQ'
@@ -768,7 +796,7 @@ classdef Liquid < Solvers.AbstractField
                     Fdrag = AREA.*0.5.*mult.*liquid.CDG(vapor,zIdx).*vapor.VF(liquid,zIdx).*RHOL.*vr.*abs(vr); % [N/m]          
 
                     % Dispersed liquid
-                    Idl = ismember(flowregime,{'annular','dffb'});       % [1/m]
+                    Idl = ismember(flowregime,[REGIMES.ANNULAR, REGIMES.DFFB]);       % [1/m]
                     Fdragl = AREA.*0.5.*mult.*liquid.CDL(vapor,zIdx).*liquid.VF(liquid,zIdx).*RHOV.*vr.*abs(vr); % [N/m] 
                     Fdrag(Idl) = Fdragl(Idl);
             end
