@@ -34,9 +34,10 @@ At this point, you are ready to run the sample script. You will see some of the 
 
 	% Axial and temporal plots
 	mixSolver.plotz(1);                                     % Axial plot at 1st time step
-	%mixSolver.plotz(mixSolver.NTIME);                      % Axial plot at final time step
-	%mixSolver.plott(mixSolver.NZ)                          % Temporal plot at last spatial node
-	%mixSolver.plott(mixSolver.NZ,'solveMode','STEADY')     % Temporal plot at last spatial node of steady state solution
+	mixSolver.plotz(mixSolver.NTIME);                      % Axial plot at final time step
+	mixSolver.plott(mixSolver.NZ)                          % Temporal plot at last spatial node
+	mixSolver.plott(mixSolver.NZ,'solveMode','STEADY')     % Temporal plot at last spatial node of steady state solution
+	mixSolver.plotzt(mixSolver.NZ,"solveMode","TRANSIENT"); % Spatial-temporal map of transient solution at channel exit
 	
 	% Save results
 	mixSolver.saveResults(saveFormat="MAT");

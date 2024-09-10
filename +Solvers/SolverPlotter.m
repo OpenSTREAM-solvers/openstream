@@ -167,6 +167,11 @@ classdef SolverPlotter < handle
             end
         end
 
+        function fh = gcf(plotters)
+
+            fh = plotters.fh;
+        end
+
         function out = ylim(plotters, newLim)
 
             % Loop through plotters
@@ -211,7 +216,7 @@ classdef SolverPlotter < handle
                 case {'MIX', 'MIXTURE'}
                     plotStyle = {colors(7), '-', 's'};
                 case {'MIXLIQ', 'MIXTURELIQUID', 'LIQUID'}
-                    plotStyle = {colors(7), '-', 'o'};
+                    plotStyle = {colors(2), '-', 'o'};
                 case {'VAP', 'VAPOR'}
                     plotStyle = {colors(1), '-', '.' };
                     
@@ -246,12 +251,17 @@ classdef SolverPlotter < handle
                 case {'DROP+FILM', 'FILM+DROP'}
                     plotStyle = {'red', '--', '+'};
 
-                case {'EQ', 'EQUILIBRIUM'}
+                case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
                     plotStyle = {colors(5), '-', 'o'};
                 case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'OAF'}
                     plotStyle = {'red', '--', '.'};
+
+                case {'EQQUAL', 'EQUILIBRIUMQUAL', 'EQUILQ'}
+                    plotStyle = {colors(5), '-', 'o'};
+                case {'VF','VOIDFRACTION'}
+                    plotStyle = {colors(6), '-', '.'};
                 
                 case {'DEPOSITION'}
                     plotStyle = {colors(1), '-', '.'};
@@ -267,10 +277,15 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(5), '-', '.'};
                 case {'BUOYANCY'}
                     plotStyle = {colors(6), '-', '.'};
-                case {'GRAVITY'}
+                case {'GRAVITY', 'GRAVITATIONAL', 'GRAV'}
                     plotStyle = {colors(7), '-', '.'};
                 case {'INTERFACIAL'}
                     plotStyle = {colors(1), '-', 'O'};
+
+                case {'Z'}
+                    plotStyle = {colors(2), '-', '.'};
+                case {'TIME', 'T'}
+                    plotStyle = {colors(3), '-', '+'};
 
                 otherwise
                     plotStyle = {'black', '--', '.'};

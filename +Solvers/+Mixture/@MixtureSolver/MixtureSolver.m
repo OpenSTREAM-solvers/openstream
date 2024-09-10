@@ -247,7 +247,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         end
 
-        function plotz(mixSolver, tIdx, opt)
+        function plotter = plotz(mixSolver, tIdx, opt)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
             arguments
@@ -262,51 +262,79 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 case 'STEADY'
                     mix = mixSolver.mixtureInit(tIdx);
             end
+
+            bc  = mixSolver.boundaryConditions;
+            z   = mixSolver.Z;
+            oafZ = repmat(mix.OAFZ,1,2);
+
+            NWALL = mixSolver.inputSet.geometry.NWALL();
+
+            plotter = Solvers.SolverPlotter( ...
+                                sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mix.TIME, opt.solveMode), ...
+                                1:NWALL);
+            plotter.setZs(z);
             
-            figure('name',['Axial distributions of mixture parameters at ' num2str(mix.TIME) ' [s]'])
-                
-            nexttile; hold all; grid on; title('Mass flow rates')
-            plot(mix.Z,mix.W,'.-')  
-            plot(mix.liquid.Z,mix.liquid.W,'.-')
-            plot(mix.vapor.Z,mix.vapor.W,'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Mass flowrates [kg/s]')
-            legend({'Mixture','Liquid','Vapor'},'location','southEast')
-            set(gca,'fontSize',14)
+            % Wall heat flux
+            plotter.newTile( ...
+                "tileTitle", 'Wall heat flux', ...
+                'xlabel', 'Axial position [m]', ...
+                'ylabel', 'Wall heat flux [W/m^2]');
+            plotter.plotz(bc.HFLUX(:,:,tIdx), 'BC', 'DisplayName', 'Boundary Condition');
+            plotter.plotz(mix.HFLUX, 'MIX', 'DisplayName', 'Mixture');
+            plotter.legend("show", 'Location', 'best');
+            plotter.plotOAF(oafZ);
+
+            % Mass flow rates
+            plotter.newTile( ...
+                "tileTitle", "Mass flow rate", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Mass flowrates [kg/s]");
             
-            nexttile; hold all; grid on; title('Pressure drop')
-            plot(mix.Z,cumsum(mix.DP.Tot),'.-') 
-            plot(mix.Z,cumsum(mix.DP.Grav),'.-')
-            plot(mix.Z,cumsum(mix.DP.Wall),'.-')
-            plot(mix.Z,cumsum(mix.DP.Acc_z),'.-')
-            plot(mix.Z,cumsum(mix.DP.Acc_t),'.-')
-            plot(mix.Z,cumsum(mix.DP.K),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Pressure drop [Pa]')
-            legend({'Total','Gravitational','Wall','Acc z','Acc t','Local'},'location','northWest');
-            set(gca,'fontSize',14)
+            plotter.plotz(mix.W,"Mixture","DisplayName","Mixture");
+            plotter.plotz(mix.liquid.W,"Liquid","DisplayName","Liquid");
+            plotter.plotz(mix.vapor.W,"Vapor","DisplayName","Vapor");
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+
+            % Pressure drop
+             plotter.newTile( ...
+                "tileTitle", "Pressure drop", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Pressure drop [Pa]");
+            plotter.plotz(cumsum(mix.DP.Tot),'Total') 
+            plotter.plotz(cumsum(mix.DP.Grav),'Gravitational')
+            plotter.plotz(cumsum(mix.DP.Wall),'Wall')
+            plotter.plotz(cumsum(mix.DP.Acc_z),'Z','DisplayName','Acc Z')
+            plotter.plotz(cumsum(mix.DP.Acc_t),'T','DisplayName','Acc t')
+            plotter.plotz(cumsum(mix.DP.K),'Local')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
             
-            nexttile; hold all; grid on; title('Void fraction and quality')
-            plot(mix.Z,mix.XEQ(1:mix.NZ),'.-')  
-            plot(mix.Z,mix.X(1:mix.NZ),'.-')
-            plot(mix.Z,mix.VF(1:mix.NZ),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Quality / Void fraction [-]')
-            legend({'Equilibrium quality','Vapor mass quality','Void fraction'},'location','southEast')
-            set(gca,'fontSize',14)
-            
-            nexttile; hold all; grid on; title('Field velocity')
-            plot(mix.Z,mix.U(1:mix.NZ),'.-')  
-            plot(mix.liquid.Z,mix.liquid.U(1:mix.NZ),'.-')
-            plot(mix.vapor.Z,mix.vapor.U(1:mix.NZ),'.-')
-            xlabel('Axial position [m]'); xlim(mix.Z([1 end]));
-            ylabel('Velocities [m/s]')
-            legend({'Mixture','Liquid','Vapor'},'location','southEast')
-            set(gca,'fontSize',14)
+            % Void fraction and quality
+            plotter.newTile( ...
+                "tileTitle", "Void fraction and quality", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(mix.XEQ(1:mix.NZ),'EQUIL','DisplayName','Equilibrium quality')  
+            plotter.plotz(mix.X(1:mix.NZ),'VAPOR','DisplayName','Vapor mass quality')
+            plotter.plotz(mix.VF(1:mix.NZ),'VF','DisplayName','Void faction')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+
+            % Field velocity
+            plotter.newTile( ...
+                "tileTitle", "Field velocity", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Velocity [m/s]");
+            plotter.plotz(mix.U(1:mix.NZ),'Mixture')  
+            plotter.plotz(mix.liquid.U(1:mix.NZ),'Liquid')
+            plotter.plotz(mix.vapor.U(1:mix.NZ),'Vapor')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
 
         end
     
-        function plott(mixSolver, zIdx, opt)
+        function fh = plott(mixSolver, zIdx, opt)
             %PLOTT 
             % 
             arguments
@@ -340,8 +368,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            fh = figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
             
+            timeplot('HFLUX','Heat flux [W/m^2]')
             timeplot('W','Mass flowrates [kg/s]')
             timeplot('P','Pressure [Pa]')
             timeplot('XEQ','Equilibrium quality [-]')
@@ -376,7 +405,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         end
 
-        function plotzt(mixSolver, zIdx, opt)
+        function fh = plotzt(mixSolver, zIdx, opt)
         % 2d plot, position z on horizontal and time t on vertical axis
             arguments
                 mixSolver
@@ -410,8 +439,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotTimeVector = plotTimeVector - plotTimeVector(end);
             end            
 
-            figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            fh = figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
             
+            zt_plot('HFLUX','Heat flux [W/m^2]')
             zt_plot('W','Mass flowrates [kg/s]')
             zt_plot('P','Pressure [Pa]')
             zt_plot('XEQ','Equilibrium quality [-]')
@@ -446,7 +476,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
         end
-
         
         function saveResults(mixSolver, opts)
         %SAVERESULTS

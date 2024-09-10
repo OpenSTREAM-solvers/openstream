@@ -1,5 +1,6 @@
 classdef (Abstract) AbstractFilm < Solvers.AbstractField
     %ABSTRACTFILM Summary of this class goes here
+    %
     %   Detailed explanation goes here
 
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
@@ -15,6 +16,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         
         function absfilm = AbstractFilm(inputSet, fluid)
             %ABSFILM Creates an abstract film, absfilm
+            %
             %   Detailed explanation goes here
 
             if nargin > 0
@@ -30,6 +32,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         function wl = WL(absfilm,zIdx)
         %WL Film mass flow rate per unit perimeter
         %    
+        %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             perim  = absfilm.inputSet.geometry.PERIM;
@@ -39,7 +42,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         
         function thick = THICK(absfilm,zIdx)
         %THICK Film thickness
-        %    
+        %
+        %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             rhof  = absfilm.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
@@ -49,6 +53,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
         function re = RE(absfilm,zIdx)
         %RE Film Reynolds number [-]
+        %
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             

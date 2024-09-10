@@ -7,3 +7,5 @@ sandbox/
 !sandbox/*_default.m
 docs/build/**
 
+**/.DS_Store
+

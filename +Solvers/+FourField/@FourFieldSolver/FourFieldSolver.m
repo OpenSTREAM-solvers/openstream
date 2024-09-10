@@ -386,7 +386,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.wave.AMP(), 'Wave Amp');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);
-            plotters.ylim([0 1E-3]);
+            %plotters.ylim([0 1E-3]);
 
             % Wave axial lengths
             plotters.newTile( ...

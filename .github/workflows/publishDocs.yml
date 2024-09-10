@@ -4,6 +4,7 @@ on:
   push:
     branches: [main, docs]
   pull_request:
+    branches: [main, docs]
   workflow_dispatch:
     inputs:
         logLevel:
@@ -55,9 +56,29 @@ jobs:
         run: make html
         working-directory: ./docs
 
+      - name: Make latex file
+        id: makelatex
+        run: make latex
+        working-directory: ./docs
+
+      - name: Install TeXlive
+        run: sudo apt-get update && sudo apt-get install texlive latexmk texlive-publishers texlive-science  cm-super
+      
+      - name: Make pdf file
+        id: makepdf
+        run: make latexpdf
+        working-directory: ./docs
+
+      - name: Copy pdf file
+        if: steps.makepdf.outcome == 'success'
+        run: mkdir -p ./build/html/files && cp ./build/latex/TwoPhaseSolver.pdf ./build/html/files/TwoPhaseSolver.pdf
+        working-directory: ./docs
+        
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/build/html
+
+
