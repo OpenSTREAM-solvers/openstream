@@ -56,6 +56,8 @@ classdef Model < Inputs.Input
         MOMENTWAVE      (1,1) InputEnums.MOMENTWAVE                        = 'FULL'                % Film momentum conservation model [-]  
         WAVEMIXCOEF     (:,1) double  {mustBeNonnegative}                  = 0.0                   % Wave mixing coefficient
         
+        % Obstruction Solver Only
+        OBSWSPLITRATIO  (2,1) double {mustBeNonnegative}                   = [0.90 0.10]           % Split ratio of mass downstream of obstruction (2nd term is the wake region) [kg/s]
     end
 
     properties (Constant)
@@ -124,6 +126,18 @@ classdef Model < Inputs.Input
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
             
+        end
+
+        function obj = setProperty(obj, propName, value)
+            %SETPROPERTY A setter for protected properties
+            %
+            % Limited to access protected properties
+
+            % TODO: Check if propName is a protected property
+
+            % Change property value
+            obj.(propName) = value;
+
         end
         
 
