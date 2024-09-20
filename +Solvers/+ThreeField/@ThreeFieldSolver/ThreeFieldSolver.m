@@ -34,12 +34,13 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
     end
 
     methods
-        function tfSolver = ThreeFieldSolver(inputSet,mixSolver)
+        function tfSolver = ThreeFieldSolver(inputSet,mixSolver, opts)
             %THREEFIELDSOLVER Creates a ThreeField solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
+                opts.initSolver logical = true
             end
 
             % Call abstract class constructor
@@ -49,12 +50,14 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             tfSolver.mixSolver = mixSolver;
 
             % Attempt to solve mixSolver if it is unsolved
-            if tfSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
+            if tfSolver.mixSolver.STATE ~= Solvers.SolverState.SOLVEDCONVERGED && tfSolver.mixSolver.STATE ~= Solvers.SolverState.SOLVEDNOTCONVERGED
                 tfSolver.mixSolver.solve();
             end
             
-            % Initialize solver parameters
-            tfSolver.initializeSolver();
+            if opts.initSolver
+                % Initialize solver parameters
+                tfSolver.initializeSolver();
+            end
 
         end
         

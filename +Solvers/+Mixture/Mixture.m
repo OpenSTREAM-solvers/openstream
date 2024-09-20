@@ -412,41 +412,86 @@ classdef Mixture < Solvers.AbstractField
             arguments
                 srcObj
                 targetObj (1,:) Solvers.Mixture.Mixture
-                opts.all  (1,1) logical = false
+                opts.copyMode  (1,1) string {mustBeMember(opts.copyMode,{'full','first','rest','continue'})} = "full"
             end
 
             for i = 1:length(targetObj)
                 
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'MixtureError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
+                
                 
                 % Copy properties
                 propNames = {'W','P','H','DP'};
                 for j = 1:length(propNames)
                     % Full copy
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                    if opts.copyMode == "full"
+
+                        % Make sure obj meshes match
+                        if srcObj(1).Z ~= targetObj(1).Z
+                            throw( ...
+                                MException( ...
+                                    'MixtureError:copyFlowPropertiesError', ...
+                                    'Source and target objects have mismatched spatial meshes' ...
+                                    ) ...
+                                );
+                        end
+
+                        targetObj(i).(propNames{j}) = srcObj(i).(propNames{j});
+
                     % Partial copy to preserve inlet conditions
-                    else
+                    elseif opts.copyMode == "rest"
+                        
+                        % Make sure obj meshes match
+                        if srcObj(1).Z ~= targetObj(1).Z
+                            throw( ...
+                                MException( ...
+                                    'MixtureError:copyFlowPropertiesError', ...
+                                    'Source and target objects have mismatched spatial meshes' ...
+                                    ) ...
+                                );
+                        end
+
                         % Scalar structs are copied per field
-                        if isstruct(targetObj(1).(propNames{j})) && isscalar(targetObj(1).(propNames{j}))
-                            structFields = fieldnames(targetObj(1).(propNames{j}));
+                        if isstruct(targetObj(i).(propNames{j})) && isscalar(targetObj(i).(propNames{j}))
+                            structFields = fieldnames(targetObj(i).(propNames{j}));
                             for ii = 1:length(structFields)
-                                targetObj(1).(propNames{j}).(structFields{ii})(2:end) = ...
-                                    srcObj.(propNames{j}).(structFields{ii})(2:end);
+                                targetObj(i).(propNames{j}).(structFields{ii})(2:end) = ...
+                                    srcObj(i).(propNames{j}).(structFields{ii})(2:end);
                             end
                         % Non-scalar properties are copied as a vector
                         else
-                            targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                            targetObj(i).(propNames{j})(2:end) = srcObj(i).(propNames{j})(2:end);
                         end
-                        
+
+                    % Partial copy of only first element in space
+                    elseif opts.copyMode == "first"
+                        % Scalar structs are copied per field
+                        if isstruct(targetObj(i).(propNames{j})) && isscalar(targetObj(i).(propNames{j}))
+                            structFields = fieldnames(targetObj(i).(propNames{j}));
+                            for ii = 1:length(structFields)
+                                targetObj(i).(propNames{j}).(structFields{ii})(1) = ...
+                                    srcObj(i).(propNames{j}).(structFields{ii})(1);
+                            end
+                        % Non-scalar properties are copied as a vector
+                        else
+                            targetObj(i).(propNames{j})(1) = srcObj(i).(propNames{j})(1);
+                        end
+                    
+                    % Partial copy of only last element in space in src to
+                    % first element in space in target
+                    elseif opts.copyMode == "continue"
+
+                        % Scalar structs are copied per field
+                        if isstruct(targetObj(i).(propNames{j})) && isscalar(targetObj(i).(propNames{j}))
+                            structFields = fieldnames(targetObj(i).(propNames{j}));
+                            for ii = 1:length(structFields)
+                                targetObj(i).(propNames{j}).(structFields{ii})(1) = ...
+                                    srcObj(i).(propNames{j}).(structFields{ii})(end);
+                            end
+                        % Non-scalar properties are copied as a vector
+                        else
+                            targetObj(i).(propNames{j})(1) = srcObj(i).(propNames{j})(end);
+                        end
+                       
                     end
                 end
 

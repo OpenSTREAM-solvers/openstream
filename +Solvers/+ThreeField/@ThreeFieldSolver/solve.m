@@ -96,10 +96,10 @@ function solver(solveINIT)
             
             Wfold = film(tIdx-1).W(zIdx,:);                                % [kg/s] Film mass flow rate at previosu time step
             Ufold = film(tIdx-1).U(zIdx,:);                                % [m/s] Film velocity at previous time step
-            Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at previosu time step
-            Ufups = film(tIdx).U(zIdx-1,:);                                % [m/s] Film velocity at previous time step
+            Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at current time step, at upstream node
+            Ufups = film(tIdx).U(zIdx-1,:);                                % [m/s] Film velocity at current time step, at upstream node
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
-            Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous time step
+            Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at current time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
