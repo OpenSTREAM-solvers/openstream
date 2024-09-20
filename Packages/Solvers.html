@@ -259,14 +259,6 @@
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.AbstractPhase">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractPhase</span></span><a class="headerlink" href="#Solvers.AbstractPhase" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>ABSTRACTPHASE Summary of this class goes here
-Detailed explanation goes here</p>
-</dd></dl>
-
-<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.AbstractField">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractField</span></span><a class="headerlink" href="#Solvers.AbstractField" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">matlab.mixin.Copyable</span></code></p>
@@ -335,42 +327,11 @@ memoize a function handle view of the method</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Solvers.AbstractPhase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractPhase</span></span><a class="headerlink" href="#Solvers.AbstractPhase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>ABSTRACTSOLVER Summary of this class goes here
+<p>ABSTRACTPHASE Summary of this class goes here
 Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.AbstractSolver">
-<span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.AbstractSolver" title="Link to this definition"></a></dt>
-<dd><p>ABSTRACTSOLVER Constructor</p>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.STATE">
-<span class="sig-name descname"><span class="pre">STATE</span></span><a class="headerlink" href="#Solvers.AbstractSolver.STATE" title="Link to this definition"></a></dt>
-<dd><p>Solver state defined by SolverState enum</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">solver</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.log" title="Link to this definition"></a></dt>
-<dd><p>LOG Log events</p>
-</dd></dl>
-
-<dl class="mat staticmethod">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.CreateITR">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">CreateITR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">NZ</span></em>, <em class="sig-param"><span class="pre">ITRFields</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.CreateITR" title="Link to this definition"></a></dt>
-<dd><p>Create inner iteration value struct</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
 </dd></dl>
 
 <dl class="mat class">
@@ -461,6 +422,45 @@ Detailed explanation goes here</p>
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverState</span></span><a class="headerlink" href="#Solvers.SolverState" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
 <p>SOLVERSTATE Enumeration class of possible solver states</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.AbstractSolver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>ABSTRACTSOLVER Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractSolver.AbstractSolver">
+<span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.AbstractSolver" title="Link to this definition"></a></dt>
+<dd><p>ABSTRACTSOLVER Constructor</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractSolver.STATE">
+<span class="sig-name descname"><span class="pre">STATE</span></span><a class="headerlink" href="#Solvers.AbstractSolver.STATE" title="Link to this definition"></a></dt>
+<dd><p>Solver state defined by SolverState enum</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractSolver.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">solver</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.log" title="Link to this definition"></a></dt>
+<dd><p>LOG Log events</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="Solvers.AbstractSolver.CreateITR">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">CreateITR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">NZ</span></em>, <em class="sig-param"><span class="pre">ITRFields</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.CreateITR" title="Link to this definition"></a></dt>
+<dd><p>Create inner iteration value struct</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 </section>
