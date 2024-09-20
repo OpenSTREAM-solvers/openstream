@@ -1,0 +1,7 @@
+ID        ! Obstruction ID                 > ROD
+WALL      ! Wall index                     > 1
+RLOCATION ! Relative location on wall      > [0.5 0.5]
+SHAPE     ! Base shape                     > CIRCLE
+DIAMETER  ! Shape diameter [m]             > 1E-3
+END
+
