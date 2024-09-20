@@ -5,7 +5,7 @@ classdef Geometry < Inputs.Input
     properties (SetAccess=protected)
         
         ID         (1,1) string  {mustBeTextScalar}                                                % Channel ID
-        LENGTH     (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Axial length [m]
+        LENGTH     (1,1) double  {mustBeNonnegative,mustBeNonempty}           = 1                     % Axial length [m]
         AREA       (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Coolant area [m^2] 
         PERIM      (1,:) double  {mustBePositive,mustBeNonempty}           = 1                     % Perimeters [m]
         ANGLE      (1,1) double  {mustBeNumeric}                           = 0                     % Angle [rad] 
@@ -98,6 +98,17 @@ classdef Geometry < Inputs.Input
             
         end
         
+        function obj = setProperty(obj, propName, value)
+            %SETPROPERTY A setter for protected properties
+            %
+            % Limited to access protected properties
+
+            % TODO: Check if propName is a protected property
+
+            % Change property value
+            obj.(propName) = value;
+
+        end
 
     end
     

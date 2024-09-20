@@ -33,6 +33,11 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
             % Call superclass constructor to parse file
             obj = obj@Inputs.Input(filePath);
 
+            % Return if empty inputs
+            if nargin == 0
+                return;
+            end
+
             % Save geometryObj
             obj.geometryObj = geometryObjInput;
 
@@ -218,6 +223,18 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 ylabel(label)
                 set(gca,'fontSize',14)
             end
+
+        end
+
+        function obj = setProperty(obj, propName, value)
+            %SETPROPERTY A setter for protected properties
+            %
+            % Limited to access protected properties
+
+            % TODO: Check if propName is a protected property
+
+            % Change property value
+            obj.(propName) = value;
 
         end
 

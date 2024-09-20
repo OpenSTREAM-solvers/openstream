@@ -1,4 +1,4 @@
-classdef (HandleCompatible) Input < dynamicprops
+classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
     %INPUT Su
     %   Detailed explanation goes here
 
@@ -14,6 +14,11 @@ classdef (HandleCompatible) Input < dynamicprops
                 inputFilePath {mustBeText}                                  = ""
                 key {mustBeText}                                            = ""
                 val {mustBeA(val,["string","char","double"])}               = ""
+            end
+
+            % Return if no inputs
+            if nargin == 0
+                return
             end
             
             % Return if empty inputFilePath
@@ -147,6 +152,19 @@ classdef (HandleCompatible) Input < dynamicprops
             end
 
         end
+
+        function obj = setProperty(obj, propName, value)
+            %SETPROPERTY A setter for protected properties
+            %
+            % Limited to access protected properties
+
+            % TODO: Check if propName is a protected property
+
+            % Change property value
+            obj.(propName) = value;
+
+        end
+
 
     end
     
