@@ -13,7 +13,7 @@ mixSolver.inputSet.session.log.diaryOn();
 % Open log in presistent mode
 mixSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
-if mixSolver.STATE ~= SolverState.UNSOLVED
+if mixSolver.STATE ~= SolverState.INITIALIZED
     error('This solver needs to be reinitialized before solving.');
 else
     mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
@@ -196,6 +196,10 @@ function solver(solveINIT)
     
     % End timer
     mixSolver.log('Elapsed time: %0.2f sec\n', toc(startTime))
+
+    % Set state to solved
+    %   TODO: convergence test?
+    mixSolver.STATE = "SOLVEDCONVERGED";
 end
 
 end
