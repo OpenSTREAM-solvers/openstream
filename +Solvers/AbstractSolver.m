@@ -25,9 +25,10 @@ classdef (Abstract) AbstractSolver < handle
         function solver = AbstractSolver(inputSet)
         %ABSTRACTSOLVER Constructor
         %
-            
-            % Store inputSet as object property
-            solver.inputSet = inputSet;
+            if nargin > 0
+                % Store inputSet as object property
+                solver.inputSet = inputSet;
+            end
 
         end
         
