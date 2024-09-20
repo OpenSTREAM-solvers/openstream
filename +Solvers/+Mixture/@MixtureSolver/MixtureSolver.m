@@ -30,18 +30,21 @@ classdef MixtureSolver < Solvers.AbstractSolver
     end
 
     methods
-        function mixSolver = MixtureSolver(inputSet)
+        function mixSolver = MixtureSolver(inputSet, opts)
             %MIXTURESOLVER Creates a Mixture solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
+                opts.initSolver logical =true
             end
 
             % Call abstract class constructor
             mixSolver = mixSolver@Solvers.AbstractSolver(inputSet);
             
-            % Initialize solver parameters
-            mixSolver.initializeSolver();
+            if opts.initSolver
+                % Initialize solver parameters
+                mixSolver.initializeSolver();
+            end
 
         end
         
@@ -154,8 +157,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixSolver.mixtureInit(i).TIDX = initTIDX(i);
             end
 
-            % set STATE to UNSOLVED
-            mixSolver.STATE = SolverState.UNSOLVED;
+            % set STATE to INITIALIZED
+            mixSolver.STATE = SolverState.INITIALIZED;
 
         end
 
@@ -245,6 +248,29 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             end
 
+        end
+
+        function clearInit(mixSolver)
+        %CLEARINIT Clearer for mixtureInit
+        %
+        %   NOTE: this is not necessarily the best way to implement this.
+        %   See obstruction solver for details
+
+            mixSolver.mixtureInit = [];
+            mixSolver.STATE = Solvers.SolverState.UNSOLVED;
+        end
+
+        function setInit(mixSolver, mixtureInit)
+        %SETINIT Setter for mixtureInit
+        %
+        %   NOTE: this is not necessarily the best way to implement this.
+        %   See obstruction solver for details
+        arguments
+            mixSolver
+            mixtureInit Solvers.Mixture.Mixture
+        end
+
+            mixSolver.mixtureInit = mixtureInit;
         end
 
         function plotter = plotz(mixSolver, tIdx, opt)
