@@ -6,8 +6,8 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'TwoPhaseSolver'
-author = 'The TwoPhaseSolver Team'
+project = 'OpenSTREAM'
+author = 'The OpenSTREAM Team'
 copyright = f'2024, {author}'
 
 # -- General configuration ---------------------------------------------------
