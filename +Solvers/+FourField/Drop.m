@@ -2,7 +2,7 @@ classdef Drop < Solvers.ThreeField.Drop
     %DROP Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess=?Solvers.AbstractSolver)
+     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
         % % Solver properties
         % NZ                                                                 = 0                    % [-] Number of axial steps

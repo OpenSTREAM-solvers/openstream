@@ -84,7 +84,7 @@ function solver(solveINIT)
         tfSolver.log('Time %5.2f [s]',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
-        RHOF = fluid(tIdx).RHOF;                                  % [kg/m^3] Satrurated liquid density
+        RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
 
         % Update three-field property guesses from previous time step
         film(tIdx-1).copyFlowProperties(film(tIdx));
@@ -224,7 +224,7 @@ function solver(solveINIT)
         
         if solveINIT
             % Finish steady state solver when SS convergence criterions are met
-            if all([timeDWL < options.SSCONVWF ,timeDUf < options.SSCONVUF, timeDUd < options.SSCONVUD] )
+            if all([timeDWL < options.SSCONVWF, timeDUf < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;

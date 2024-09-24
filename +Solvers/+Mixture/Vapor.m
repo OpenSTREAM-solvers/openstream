@@ -57,7 +57,7 @@ classdef Vapor < Solvers.AbstractPhase
         end
 
         function u = U(vapor, zIdx)
-            %U Velocity [m/a]
+            %U Velocity [m/s]
             %   NOTE: need to be verified
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.mix.H(zIdx));
