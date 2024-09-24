@@ -91,7 +91,7 @@ Python executable. The following instructions are from the
 
 4. Specify Python installation location in MATLAB:
 
-   -  Run ``pyenv('pathtopython')``, where ``pathtopython`` is the path
+   -  Run ``pyenv('Version', pathtopython')``, where ``pathtopython`` is the path
       to where Python is installed. Here are some typical locations
       depending on your OS:
 
