@@ -241,18 +241,6 @@
 <dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UEQUIL" title="Solvers.AbstractFilm.UEQUIL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UEQUIL()</span></code></a> Film velocity based on complete equilibrium model (Ftot = 0)</p>
 </dd></dl>
 
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractFilm.struct">
-<span class="sig-name descname"><span class="pre">struct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.struct" title="Link to this definition"></a></dt>
-<dd><p>STRUCT Converter to <a class="reference internal" href="#Solvers.AbstractFilm.struct" title="Solvers.AbstractFilm.struct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">struct()</span></code></a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractFilm.copyFlowProperties">
-<span class="sig-name descname"><span class="pre">copyFlowProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">srcObj</span></em>, <em class="sig-param"><span class="pre">targetObj</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.copyFlowProperties" title="Link to this definition"></a></dt>
-<dd><p>COPYFLOWPROPERTIES</p>
-</dd></dl>
-
 </dd>
 </dl>
 </div>
@@ -308,6 +296,12 @@
 <dd><p>Iteration properties</p>
 </dd></dl>
 
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.flowProperties">
+<span class="sig-name descname"><span class="pre">flowProperties</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'W','U','H'}</span></em><a class="headerlink" href="#Solvers.AbstractField.flowProperties" title="Link to this definition"></a></dt>
+<dd><p>Flow properties used for copying</p>
+</dd></dl>
+
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.memoizeFunction">
@@ -319,6 +313,18 @@ functions</p>
 </div></blockquote>
 <p>For the first call with a particular method, create and
 memoize a function handle view of the method</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.struct">
+<span class="sig-name descname"><span class="pre">struct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.struct" title="Link to this definition"></a></dt>
+<dd><p>STRUCT Converter to <a class="reference internal" href="#Solvers.AbstractField.struct" title="Solvers.AbstractField.struct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">struct()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.copyFlowProperties">
+<span class="sig-name descname"><span class="pre">copyFlowProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">srcObj</span></em>, <em class="sig-param"><span class="pre">targetObj</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.copyFlowProperties" title="Link to this definition"></a></dt>
+<dd><p>COPYFLOWPROPERTIES</p>
 </dd></dl>
 
 </dd>

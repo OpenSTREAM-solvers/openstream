@@ -271,14 +271,20 @@ Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORU">
+<span class="sig-name descname"><span class="pre">ERRORU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.ERRORU" title="Link to this definition"></a></dt>
+<dd><p>Velocity error target in inner iterations [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Options.ERRORP">
-<span class="sig-name descname"><span class="pre">ERRORP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORP" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ERRORP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.ERRORP" title="Link to this definition"></a></dt>
 <dd><p>Pressure error target in inner ierations [Pa]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Options.ERRORH">
-<span class="sig-name descname"><span class="pre">ERRORH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORH" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ERRORH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.ERRORH" title="Link to this definition"></a></dt>
 <dd><p>Enthalpy error target in inner ierations [J/kg]</p>
 </dd></dl>
 
@@ -290,7 +296,7 @@ Detailed explanation goes here</p>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Options.SSMAXITER">
-<span class="sig-name descname"><span class="pre">SSMAXITER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#Inputs.Options.SSMAXITER" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SSMAXITER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">20</span></em><a class="headerlink" href="#Inputs.Options.SSMAXITER" title="Link to this definition"></a></dt>
 <dd><p>Max number of steady-state iterations</p>
 </dd></dl>
 
@@ -301,14 +307,20 @@ Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVU">
+<span class="sig-name descname"><span class="pre">SSCONVU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.SSCONVU" title="Link to this definition"></a></dt>
+<dd><p>Velocity steady-state convergence criterion [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Options.SSCONVP">
-<span class="sig-name descname"><span class="pre">SSCONVP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.SSCONVP" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SSCONVP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.SSCONVP" title="Link to this definition"></a></dt>
 <dd><p>Pressure steady-state convergence criterion [Pa]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Options.SSCONVH">
-<span class="sig-name descname"><span class="pre">SSCONVH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.SSCONVH" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SSCONVH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.SSCONVH" title="Link to this definition"></a></dt>
 <dd><p>Enthalpy steady-state convergence criterion [J/kg]</p>
 </dd></dl>
 
@@ -340,6 +352,42 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Inputs.Options.RELAXHM">
 <span class="sig-name descname"><span class="pre">RELAXHM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHM" title="Link to this definition"></a></dt>
 <dd><p>Relaxation factor for the mixture energy conservation equation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWL">
+<span class="sig-name descname"><span class="pre">RELAXWL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXWL" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the liquid mass conservation equation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWV">
+<span class="sig-name descname"><span class="pre">RELAXWV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXWV" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the vapor mass conservation equation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUL">
+<span class="sig-name descname"><span class="pre">RELAXUL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXUL" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the liquid momentum conservation equation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUV">
+<span class="sig-name descname"><span class="pre">RELAXUV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXUV" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the vapor momentum conservation equation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXHL">
+<span class="sig-name descname"><span class="pre">RELAXHL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHL" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the liquid mass conservation equation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXHV">
+<span class="sig-name descname"><span class="pre">RELAXHV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHV" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the vapor energy conservation equation</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -381,7 +429,7 @@ Detailed explanation goes here</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Options.RELAXWF">
 <span class="sig-name descname"><span class="pre">RELAXWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWF" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the film mass conservation equation</p>
+<dd><p>Relaxation factor for the film energy conservation equation</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -523,6 +571,102 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Inputs.Model.SLIP">
 <span class="sig-name descname"><span class="pre">SLIP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Model.SLIP" title="Link to this definition"></a></dt>
 <dd><p>Phase velocity ratio [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.MOMENTLIQUID">
+<span class="sig-name descname"><span class="pre">MOMENTLIQUID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SLIP'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTLIQUID" title="Link to this definition"></a></dt>
+<dd><p>Liquid momentum conservation model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.MOMENTGAS">
+<span class="sig-name descname"><span class="pre">MOMENTGAS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SLIP'</span></em><a class="headerlink" href="#Inputs.Model.MOMENTGAS" title="Link to this definition"></a></dt>
+<dd><p>Gas momentum conservation model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.BOILCOEF">
+<span class="sig-name descname"><span class="pre">BOILCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'QUADRATIC'</span></em><a class="headerlink" href="#Inputs.Model.BOILCOEF" title="Link to this definition"></a></dt>
+<dd><p>Subcooled boiling interpolation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTLENGTH">
+<span class="sig-name descname"><span class="pre">INTLENGTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'CONSTANT'</span></em><a class="headerlink" href="#Inputs.Model.INTLENGTH" title="Link to this definition"></a></dt>
+<dd><p>Interfacial length scale model model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTAREA">
+<span class="sig-name descname"><span class="pre">INTAREA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'DISPGAS2DISPLIQ'</span></em><a class="headerlink" href="#Inputs.Model.INTAREA" title="Link to this definition"></a></dt>
+<dd><p>Interfacial area model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTLENGTHCST">
+<span class="sig-name descname"><span class="pre">INTLENGTHCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2E-3</span></em><a class="headerlink" href="#Inputs.Model.INTLENGTHCST" title="Link to this definition"></a></dt>
+<dd><p>Constant interfacial length scale [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTTRANSH">
+<span class="sig-name descname"><span class="pre">INTTRANSH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'BULK'</span></em><a class="headerlink" href="#Inputs.Model.INTTRANSH" title="Link to this definition"></a></dt>
+<dd><p>Interfacial enthalpy transfer [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTNU">
+<span class="sig-name descname"><span class="pre">INTNU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'CONSTANT'</span></em><a class="headerlink" href="#Inputs.Model.INTNU" title="Link to this definition"></a></dt>
+<dd><p>Interfacial heat transfer model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTNUVCST">
+<span class="sig-name descname"><span class="pre">INTNUVCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2.0</span></em><a class="headerlink" href="#Inputs.Model.INTNUVCST" title="Link to this definition"></a></dt>
+<dd><p>Dispersed gas constant interfacial Nusselt number [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.INTNULCST">
+<span class="sig-name descname"><span class="pre">INTNULCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2.0</span></em><a class="headerlink" href="#Inputs.Model.INTNULCST" title="Link to this definition"></a></dt>
+<dd><p>Dispersed liquid constant interfacial Nusselt number [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RANZMARSHALLVCST">
+<span class="sig-name descname"><span class="pre">RANZMARSHALLVCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[20.61/21/3]</span></em><a class="headerlink" href="#Inputs.Model.RANZMARSHALLVCST" title="Link to this definition"></a></dt>
+<dd><p>Dispersed gas Ranz-Marshall coefficients [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RANZMARSHALLLCST">
+<span class="sig-name descname"><span class="pre">RANZMARSHALLLCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[20.61/21/3]</span></em><a class="headerlink" href="#Inputs.Model.RANZMARSHALLLCST" title="Link to this definition"></a></dt>
+<dd><p>Dispersed liquid Ranz-Marshall coefficients [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.LOCRELVEL">
+<span class="sig-name descname"><span class="pre">LOCRELVEL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'SCALED'</span></em><a class="headerlink" href="#Inputs.Model.LOCRELVEL" title="Link to this definition"></a></dt>
+<dd><p>Local relative velocity model [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RELVELCST">
+<span class="sig-name descname"><span class="pre">RELVELCST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Model.RELVELCST" title="Link to this definition"></a></dt>
+<dd><p>Multiplication factor to determine the localrelative velocity [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RELAXTCOND">
+<span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Model.RELAXTCOND" title="Link to this definition"></a></dt>
+<dd><p>Condensation relaxation time [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.RELAXTEVAP">
+<span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Model.RELAXTEVAP" title="Link to this definition"></a></dt>
+<dd><p>Evaporation relaxation time [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -902,6 +1046,30 @@ Detailed explanation goes here</p>
 <dd><p>[N/m] Surface tension</p>
 </dd></dl>
 
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.KF">
+<span class="sig-name descname"><span class="pre">KF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.FluidProperties.KF" title="Link to this definition"></a></dt>
+<dd><p>[W/m/K] Saturated liquid conductivity</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.KG">
+<span class="sig-name descname"><span class="pre">KG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.FluidProperties.KG" title="Link to this definition"></a></dt>
+<dd><p>[W/m/K] Saturated vapor conductivity</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.PRANDTLF">
+<span class="sig-name descname"><span class="pre">PRANDTLF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.FluidProperties.PRANDTLF" title="Link to this definition"></a></dt>
+<dd><p>[-] Saturated liquid Prandtl number</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.PRANDTLG">
+<span class="sig-name descname"><span class="pre">PRANDTLG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.FluidProperties.PRANDTLG" title="Link to this definition"></a></dt>
+<dd><p>[-] Saturated vapor Prandtl number</p>
+</dd></dl>
+
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.T">
@@ -937,6 +1105,30 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.MUV">
 <span class="sig-name descname"><span class="pre">MUV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.MUV" title="Link to this definition"></a></dt>
 <dd><p><a class="reference internal" href="#Inputs.FluidProperties.MUV" title="Inputs.FluidProperties.MUV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MUV()</span></code></a> Vapor dynamic viscosity [Pa-s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.KL">
+<span class="sig-name descname"><span class="pre">KL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.KL" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.FluidProperties.KL" title="Inputs.FluidProperties.KL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">KL()</span></code></a> Liquid conductivity (subcooled to saturated) [W/m/K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.KV">
+<span class="sig-name descname"><span class="pre">KV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.KV" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.FluidProperties.KV" title="Inputs.FluidProperties.KV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">KV()</span></code></a> Vapor conductivity (saturated to superheated) [W/m/K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.PRANDTLL">
+<span class="sig-name descname"><span class="pre">PRANDTLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.PRANDTLL" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.FluidProperties.PRANDTLL" title="Inputs.FluidProperties.PRANDTLL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">PRANDTLL()</span></code></a> Liquid Prandtl number (subcooled to saturated) [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.FluidProperties.PRANDTLV">
+<span class="sig-name descname"><span class="pre">PRANDTLV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.PRANDTLV" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.FluidProperties.PRANDTLV" title="Inputs.FluidProperties.PRANDTLV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">PRANDTLV()</span></code></a> Vapor Prandtl number (saturated to superheated) [-]</p>
 </dd></dl>
 
 <dl class="mat method">
