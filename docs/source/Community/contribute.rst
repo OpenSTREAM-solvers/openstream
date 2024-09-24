@@ -58,7 +58,7 @@ See `Sphinx Overview <http://www.sphinx-doc.org/en/stable/>`_ for background rea
    
    `cd` to the `docs` folder::
 
-   $ cd C:\Path\to\TwoPhaseSolver\docs
+   $ cd C:\Path\to\openstream\docs
 
    Use the `virtualenv` command to create a virtual environment directory called `venv`::
 
@@ -102,6 +102,6 @@ For a quick preview of the document you are currently working on, use `ctrl+alt+
 
 Full build
 **********
-For a full build of the project, `Sphinx` needs to be used. 
+For a full build of the project, `Sphinx` needs to be called. More specifically, `sphinx-build` is the program that is run. 
 
 

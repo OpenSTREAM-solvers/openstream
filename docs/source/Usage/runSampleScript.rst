@@ -1,7 +1,7 @@
 Run sample script
 =================
 
-At this point, you are ready to run the sample script. You will see some of the basic usages of the TwoPhaseSolver. 
+At this point, you are ready to run the sample script. You will see some of the basic usages of  OpenSTREAM. 
 
 .. code-block:: matlab
 
