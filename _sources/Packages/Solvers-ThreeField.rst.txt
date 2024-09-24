@@ -1,9 +1,9 @@
-FourField Solver
-================
+ThreeField Solver
+=================
 
-:mod:`FourField Solver` is cooler.
+:mod:`ThreeField Solver` is pretty cool.
    
-.. automodule:: Solvers.FourField
+.. automodule:: Solvers.ThreeField
    :show-inheritance:
    :members:
 .. :exclude-members: 
