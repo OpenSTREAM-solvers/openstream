@@ -3,7 +3,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
     %
     %   Detailed explanation goes here
     
-    properties (Abstract=true, SetAccess=?Solvers.AbstractSolver)
+    properties (Abstract=true, SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         NZ           (1,1) double  {mustBeNumeric}                          % [-] Number of axial steps
         NTIME        (1,1) double  {mustBeNumeric}                          % [-] Number of time steps
         TIME         (1,1) double  {mustBeNumeric}                          % [s] Time series
@@ -24,6 +24,10 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         %memoizedFunctions = dictionary();
         % Currently using containers.Map() for MATLAB version
         memoizedFunctions = containers.Map();
+    end
+
+    properties (SetAccess = protected)
+        flowProperties (:,:) cell = {'W','U','H'}            % Flow properties used for copying
     end
 
     methods
@@ -51,6 +55,84 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             fn = obj.memoizedFunctions(methodStr);
             out = fn(varargin{:});
             
+        end
+
+        function out = struct(obj)
+        %STRUCT Converter to struct
+        %
+            flowProps = obj.flowProperties;
+            for i = length(obj):-1:1
+                
+                % Add `TIME` and `ITR` by default
+                outElement = struct('TIME', obj(i).TIME, ...
+                                'ITR', obj(i).ITR);
+
+                % Add flow properties as specified
+                for flowPropIdx = 1:length(flowProps)
+                    
+                    % Name of flow property
+                    flowProp = flowProps{flowPropIdx};
+                    
+                    % Set flowProp as new field
+                    outElement.(flowProp) = obj(i).(flowProp);
+
+                end
+
+                % add outElement to out
+                out(i) = outElement;
+            end
+        end
+
+        function copyFlowProperties(srcObj, targetObj, opts)
+        %COPYFLOWPROPERTIES
+        %
+            arguments
+                srcObj
+                targetObj (1,:) Solvers.AbstractField
+                opts.all  (1,1) logical = false
+            end
+
+            % TODO: add type check for srcObj and targetObj
+
+            for i = 1:length(targetObj)
+                
+                % Make sure obj meshes match
+                if srcObj.Z ~= targetObj(1).Z
+                    classType = class(srcObj);
+                    throw( ...
+                        MException( ...
+                            'AbstractFieldError:copyFlowPropertiesError', ...
+                            sprintf('Source and target objects (%s) have mismatched spatial meshes', classType) ...
+                            ) ...
+                        );
+                end
+                
+                % Copy properties
+                propNames = srcObj.flowProperties;
+                for j = 1:length(propNames)
+                    % Full copy
+                    if opts.all
+                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                    % Partial copy to preserve inlet conditions
+                    else
+                        % Scalar structs are copied per field
+                        if isstruct(targetObj(1).(propNames{j})) && isscalar(targetObj(1).(propNames{j}))
+                            structFields = fieldnames(targetObj(1).(propNames{j}));
+                            for ii = 1:length(structFields)
+                                targetObj(1).(propNames{j}).(structFields{ii})(2:end) = ...
+                                    srcObj.(propNames{j}).(structFields{ii})(2:end);
+                            end
+                        % Non-scalar properties are copied as a vector
+                        else
+                            targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                        end
+                        
+                    end
+                end
+
+
+            end
+
         end
 
     end

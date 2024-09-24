@@ -6,15 +6,6 @@ import Solvers.*
 import Solvers.Mixture.*
 
 %Inputs
-inputSet = InputSet( ...
-            modelFilePath         = './inputs/models.inp',  modelID    = 'MFVALS', ...
-            optionsFilePath       = './inputs/options.inp', optionsID  = 'STEADY', ...
-            geometryFilePath      = './inputs/geom.inp',    geometryID = 'MFVAL', ...
-            bcFilePath            = './inputs/bc_mfval_steady.inp', ...
-            sessionParentDir      = fullfile(pwd,'outputs'), ...
-            overwriteSessionFiles = true, ...
-            LOGMODE               = 'BOTH');
-
 % inputSet = InputSet( ...
 %             modelFilePath         = './inputs/models.inp',  modelID    = 'MFVALS', ...
 %             optionsFilePath       = './inputs/options.inp', optionsID  = 'STEADY', ...
@@ -31,25 +22,48 @@ inputSet = InputSet( ...
             bcFilePath            = './inputs/bc_barc.inp', ...
             sessionParentDir      = fullfile(pwd,'outputs'), ...
             overwriteSessionFiles = true, ...
-            LOGMODE               = 'BOTH');    
+            LOGMODE               = 'BOTH');        
+%         
+% Create the mixture solver
+mixSolver = MixtureSolver(inputSet);
 
-%% Four-field
-
-import Solvers.FourField.*
-
-% Create the three-field solver
-ffSolver = FourFieldSolver(inputSet);
-ffSolver.plotz(1);                                                         % Plot initialization state (dep and ent set to 0 but calculated value is plotted instead)
-
-% tfSolver is initialized at construction. Here, it is explicitly initialized for clarity.
-ffSolver.initializeSolver(); 
+% mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.
+mixSolver.initializeSolver(); 
 
 % Solve (does not accept any argument)
-ffSolver.solve();
+mixSolver.solve();
 
 % Axial and temporal plots
-ffSolver.plotz(1);
-ffSolver.plotz(ffSolver.NTIME);
+mixSolver.plotz(1);
+mixSolver.plotz(mixSolver.NTIME);
+%mixSolver.plott(mixSolver.NZ,'solveMode','STEADY')
+%mixSolver.plott(mixSolver.NZ)
+%mixSolver.plott([1 floor(mixSolver.NZ./8.*(2:8))])
 
 % Save results
-ffSolver.saveResults(saveFormat="MAT");
+mixSolver.saveResults(saveFormat="MAT");
+
+%return
+
+%% Two-fluid
+
+import Solvers.TwoFluid.*
+
+% Create the two-fluid solver
+twfSolver = TwoFluidSolver(inputSet, mixSolver);
+twfSolver.plotz(1);                                                         % Plot initialization state (dep and ent set to 0 but calculated value is plotted instead)
+
+% tfSolver is initialized at construction. Here, it is explicitly initialized for clarity.
+twfSolver.initializeSolver(); 
+
+% Solve (does not accept any argument)
+twfSolver.solve();
+
+% Axial and temporal plots
+twfSolver.plotz(1);
+twfSolver.plotz(twfSolver.NTIME);
+%twfSolver.plott(twfSolver.NZ)
+%twfSolver.plotzt(twfSolver.NZ, 'solveMode', 'TRANSIENT')
+
+% Save results
+twfSolver.saveResults(saveFormat="MAT");

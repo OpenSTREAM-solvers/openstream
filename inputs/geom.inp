@@ -32,3 +32,10 @@ AREA      ! Coolant area [m^2]             > 1.5394e-04
 PERIM     ! Perimeters [m]                 > 0.0440
 ANGLE     ! Angle [rad]                    > 0
 END
+
+ID        ! Channel ID                     > TESTING
+LENGTH    ! Axial length [m]               > 4
+AREA      ! Coolant area [m^2]             > 8.0000e-05
+PERIM     ! Perimeters [m]                 > 0.02
+ANGLE     ! Angle [rad]                    > 0
+END
