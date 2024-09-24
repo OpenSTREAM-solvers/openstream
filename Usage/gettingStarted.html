@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting started &mdash; TwoPhaseSolver  documentation</title>
+  <title>Getting started &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Run sample script" href="runSampleScript.html" />
-    <link rel="prev" title="TwoPhaseSolver" href="../index.html" /> 
+    <link rel="prev" title="OpenSTREAM" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            TwoPhaseSolver
+            OpenSTREAM
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -73,7 +73,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">TwoPhaseSolver FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
@@ -85,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">TwoPhaseSolver</a>
+          <a href="../index.html">OpenSTREAM</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -107,19 +107,19 @@
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
 <section id="prerequisites-and-installation">
 <h2>Prerequisites and installation<a class="headerlink" href="#prerequisites-and-installation" title="Link to this heading"></a></h2>
-<p>TwoPhaseSolver is a MATLAB program for simulating two-phase flow
+<p>OpenSTREAM is a MATLAB program for simulating two-phase flow
 behaviors. The Python version of
 <a class="reference external" href="http://www.coolprop.org/index.html#what-is-coolprop" rel="noopener noreferrer" target="_blank">CoolProp</a> is
 used for calculating the fluid properties.
 <a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noopener noreferrer" target="_blank">CoolPropWrapper</a> is a
 MATLAB interface that interacts with CoolProp through Python. Both
-TwoPhaseSolver and CoolProp are hosted here on GitHub. Making a copy
+OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
 (cloning) of these programs will be our first step.</p>
 <section id="install-using-git-and-github">
 <h3>Install using Git and Github<a class="headerlink" href="#install-using-git-and-github" title="Link to this heading"></a></h3>
 <ul>
 <li><p>There are two main ways of interacting with GitHub to use and
-contribute to the TwoPhaseSolver project: <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/set-up-git" rel="noopener noreferrer" target="_blank">Git Command Line Interface
+contribute to the OpenSTREAM project: <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/set-up-git" rel="noopener noreferrer" target="_blank">Git Command Line Interface
 (CLI)</a>,
 and the <a class="reference external" href="https://desktop.github.com/" rel="noopener noreferrer" target="_blank">GitHub Desktop</a> program. Use
 the links to set up one of the methods.</p></li>
@@ -129,11 +129,11 @@ chose to use the:</p>
 <li><p><strong>Command line interface</strong></p>
 <ul>
 <li><p>Clone (make a copy of) the <strong>repo</strong>sitory using:
-<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">git&#64;github.com:mfval/TwoPhaseSolver.git</span></code>
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">git&#64;github.com:OpenSTREAM-solvers/openstream.git</span></code>
 (<a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" rel="noopener noreferrer" target="_blank">SSH
 authentication</a>)</p>
 <p>or</p>
-<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">https://github.com/mfval/TwoPhaseSolver.git</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">https://github.com/OpenSTREAM-solvers/openstream.git</span></code>
 (<a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git" rel="noopener noreferrer" target="_blank">HTTPS
 authentication</a>).</p>
 <p>(The <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> flag is needed to clone
@@ -142,7 +142,7 @@ such as the
 <a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noopener noreferrer" target="_blank">mfval/CoolPropWrapper</a>,
 in one command.)</p>
 </li>
-<li><p>Then, use <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">TwoPhaseSolver</span></code> to enter the newly created
+<li><p>Then, use <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">openstream</span></code> to enter the newly created
 folder. You should see the newly downloaded files for the
 project.</p></li>
 </ul>
@@ -160,7 +160,7 @@ linked above.</p></li>
 </section>
 <section id="matlab-python-compatibility">
 <h3>MATLAB-Python compatibility<a class="headerlink" href="#matlab-python-compatibility" title="Link to this heading"></a></h3>
-<p>Before using the TwoPhaseSolver, we need to make sure Python with the
+<p>Before using the OpenSTREAM, we need to make sure Python with the
 appropriate version is installed, and MATLAB knows the location of the
 Python executable. The following instructions are from the
 <a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noopener noreferrer" target="_blank">CoolPropWrapper</a> repo.</p>
@@ -217,7 +217,7 @@ for version 3.10.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">cp=CoolPropWrapper()</span></code>.</p>
 <ul>
 <li><p>If you are using the CoolPropWrapper as MATLAB Package in
-TwoPhaseSolver, use <code class="docutils literal notranslate"><span class="pre">cp=CoolPropWrapper.CoolPropWrapper()</span></code>.</p></li>
+OpenSTREAM, use <code class="docutils literal notranslate"><span class="pre">cp=CoolPropWrapper.CoolPropWrapper()</span></code>.</p></li>
 </ul>
 </li>
 <li><p>If the CoolProp module is not installed, you will be prompted to
@@ -241,14 +241,14 @@ Tutorial script to make sure everything is working properly.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="TwoPhaseSolver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="OpenSTREAM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="runSampleScript.html" class="btn btn-neutral float-right" title="Run sample script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, The TwoPhaseSolver Team.</p>
+    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
