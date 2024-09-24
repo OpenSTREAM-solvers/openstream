@@ -1,7 +1,7 @@
 FourField Solver
 ================
 
-:mod:`FourField Solver` is pretty cool.
+:mod:`FourField Solver` is cooler.
    
 .. automodule:: Solvers.FourField
    :show-inheritance:
