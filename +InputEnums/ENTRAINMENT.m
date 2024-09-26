@@ -7,7 +7,6 @@ classdef ENTRAINMENT
         GOVAN       %Hewitt and Govan (1990)
         OKAWA2003   %Okawa et al. (2003)
         OKAWA2004   % Okawa et al. (2004)
-        USERDEF     % Following the model of Okawa et al. (2004), allows user defined thresholds and coefficients
     end
 end
     
