@@ -92,12 +92,16 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                     ment = -absfilm.mix.AFDISTR(0,ment,zIdx);                              % [kg/m^2/s] Entrainment mass flux, in annular flow region only
                 case InputEnums.ENTRAINMENT.OKAWA2003
                     % Okawa et al. 2003 film entrainment model
-                    params = [4.79e-4 0.111];
-                    ment = absfilm.OKAWAMENT(zIdx, params);
+                    coefs = [4.79e-4 1 0.111];
+                    ment = absfilm.OKAWAMENT(zIdx, coefs);
                 case InputEnums.ENTRAINMENT.OKAWA2004
                     % Okawa et al. 2004 film entrainment model
-                    params = [3.1e-2 2.3 0.0675 1.6e-3 1.2 0.295 6.8e-4 0.5];
-                    ment = absfilm.OKAWAMENT(zIdx, params);
+                    coefs = [3.1e-2 2.3 0 0.0675 1.6e-3 1.2 0 0.295 6.8e-4 0.5 0];
+                    ment = absfilm.OKAWAMENT(zIdx, coefs);
+                case InputEnums.ENTRAINMENT.OKAWAGEN
+                    % Generic model following OKAWA 2003/2004 framework with user defined coefficients
+                    coefs = model.OKAWACOEFS;
+                    ment = absfilm.OKAWAMENT(zIdx, coefs);
             end
             
         end
@@ -407,7 +411,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
         end
         
-        function ment = OKAWAMENT(film, zIdx, params)
+        function ment = OKAWAMENT(film, zIdx, coefs)
             %OKAWAMENT Private method to calculate the entrainment mass
             %flux using an Okawa model
             model = film.inputSet.model;
@@ -447,14 +451,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             end
             
             entnum = Cv.*rhog.*film.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
-            switch model.ENTRAINMENT
-                case InputEnums.ENTRAINMENT.OKAWA2003
-                    [a, c] = film.OKAWACOEFS(entnum, params);
-                    b = 1;
-                case InputEnums.ENTRAINMENT.OKAWA2004
-                    [a, b] = film.OKAWACOEFS(entnum, params);
-                    c = 0;
-            end
+            [a, b, c] = film.OKAWACOEFS(entnum, coefs);
             
             ment = (a*rhof).*entnum.^b.*(rhof/rhog).^c;               % [kg/m^2/s] Entrainment mass flux
             ment(film.RE(zIdx)<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
@@ -465,14 +462,15 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
         end
         
-        function [k, n] = OKAWACOEFS(film, entnum, params)
+        function [a, b, c] = OKAWACOEFS(film, entnum, coefs)
             %OKAWAMENT Private method to determine the coefficients used in
             %OKAWA entrainment model based on the calculated entrainment
             %number
             
-            t = [-1e-5 params(3:3:end) 1e5];
-            k = zeros(size(entnum));
-            n = zeros(size(entnum));
+            t = [-1e-5 coefs(4:4:end) 1e5];
+            a = zeros(size(entnum));
+            b = zeros(size(entnum));
+            c = zeros(size(entnum));
             
             %Binary search to find the index of thresholds where
             %thresholds[index - 1] < entnum < thresholds[index]
@@ -483,8 +481,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 while (low <= high)
                     mid = ceil((low + high)/2);
                     if (t(mid - 1) < entnum(i) && t(mid) >= entnum(i))
-                        k(i) = params(3 * mid - 5);
-                        n(i) = params(3 * mid - 4);
+                        a(i) = coefs(4 * mid - 7);
+                        b(i) = coefs(4 * mid - 6);
+                        c(i) = coefs(4 * mid - 5);
                         break
                     elseif (t(mid) < entnum(i))
                         low = mid + 1;

@@ -7,6 +7,7 @@ classdef ENTRAINMENT
         GOVAN       %Hewitt and Govan (1990)
         OKAWA2003   %Okawa et al. (2003)
         OKAWA2004   % Okawa et al. (2004)
+        OKAWAGEN    % User defined coefficients for Okawa et al. (2003, 2004) framework
     end
 end
     

@@ -30,6 +30,7 @@ classdef Model < Inputs.Input
         OAFTRANSITION (1,2) double  {mustBeNumeric}                        = [0.10 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION    (1,1) InputEnums.DEPOSITION                          = 'GOVAN'               % Drop deposition model [-]
         ENTRAINMENT   (1,1) InputEnums.ENTRAINMENT                         = 'GOVAN'               % Film entrainment model [-]
+        OKAWACOEFS    (:,1) double  {mustBeNumeric}                        = [4.79e-4 1 0.111]     % Coefficients for OKAWA entrainment model, default to 2003
         MOMENTFILM    (1,1) InputEnums.MOMENTFILM                          = 'ALGEBRAIC'           % Film momentum conservation model [-]  
         MOMENTDROP    (1,1) InputEnums.MOMENTDROP                          = 'SLIP'                % Drop momentum conservation model [-]                                                                 
         DROPSLIP      (1,1) double  {mustBePositive}                       = 1.0                   % Drop velocity ratio [-]       
@@ -118,6 +119,14 @@ classdef Model < Inputs.Input
                     upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
                     );
                 obj.extra = obj.inputStruct;
+            end
+
+            % Check if OKAWACOEFS array is properly sized, throw error if incorrectly sized
+            if mod(length(obj.OKAWACOEFS) + 1, 4) ~= 0
+                throw( ...
+                    MException('InputError:ModelInconsistency', ...
+                               'Incorrect OKAWACOEFS array size.') ...
+                     );
             end
 
             % Remove dynamic property inputStruct
