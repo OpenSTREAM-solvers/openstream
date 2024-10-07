@@ -14,6 +14,8 @@ classdef Model < Inputs.Input
         TPFM        (1,1) InputEnums.TPFM                                  = 'HOMOGENEOUS'         % Two-phase friction multiplier [-]
         KLOC        (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % Elevation of local perturbations [m] 
         KLOSS       (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % corresponding pressure loss coefficients [-]
+        BLOCKRATIO  (1,:) double  {mustBeNumeric,mustBeNonempty}           = [0 0]                 % blockage ratio for each local perturbation [-]
+        BLOCKTUNING (1,:) double  {mustBeNumeric,mustBeNonempty}           = [1 1]                 % tuning factor for each local perturbation [-]
         TPKM        (1,1) InputEnums.TPKM                                  = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
         SCBOIL      (1,1) InputEnums.SCBOIL                                = 'NONE'                % Subcooled boiling mode
         VOID        (1,1) InputEnums.VOID                                  = 'HOMOGENEOUS'         % Void fraction model 
