@@ -19,14 +19,30 @@ classdef SolverPlotter < handle
         fh          (1,1) matlab.ui.Figure       
         th          (1,1) matlab.graphics.layout.TiledChartLayout
         ahs               matlab.graphics.axis.Axes
+        isReused    (1,1) logical                                   = false
     end
     
     methods
-        function plotters = SolverPlotter(Titles, WallIdxs)
+        function plotters = SolverPlotter(Titles, WallIdxs, opts)
             %SOLVERPLOTTER Construct an instance of this class
             %   Detailed explanation goes here
+            arguments
+                Titles           = ""
+                WallIdxs         = 1
+                opts.fhs         = [];
+            end
 
+            % Return if no inputs
             if nargin == 0, return; end
+
+            % Check opts.fhs
+            % TODO: implement reusing figure handles
+            if ~isempty(opts.fhs)
+                if length(opts.fhs) ~= length(WallIdxs)
+                    error('SOLVERPLOTTERERROR:InconsistentArguments', 'Number of figure handles must match wall indices');
+                end
+            end
+            
             if ischar(Titles)
                 Titles = string(Titles);
             end
@@ -56,26 +72,47 @@ classdef SolverPlotter < handle
             for idx = 1:length(plotters)
 
                 plotter = plotters(idx);
-                new_ah(idx) = nexttile(plotters(idx).th);
-                plotter.ahs(end+1) = new_ah(idx);
-                plotter.currentAhIdx = length(plotter.ahs);
 
-                % Set tile title
-                title(new_ah(idx), opts.tileTitle);
+                % Try finding axes with tileTitle
+                [old_ah old_ah_idx] = plotter.findTileByTitle(opts.tileTitle);
+                if ~isempty(old_ah)
 
-                % Set x-y label
-                xlabel(new_ah(idx), opts.xlabel);
-                if iscell(opts.ylabel) && length(opts.ylabel) == 2
-                    yyaxis(new_ah(idx), 'left');
-                    ylabel(new_ah(idx), opts.ylabel{1});
-                    yyaxis(new_ah(idx), 'right');
-                    ylabel(new_ah(idx), opts.ylabel{2});
+                    % Set 'new' handle
+                    new_ah(idx) = old_ah;
+
+                    % Set currentAhIdx
+                    plotter.currentAhIdx = old_ah_idx;
+
+                    % Set currentAh legend fixed status
+                    old_ah.Legend.UserData.fixed = true;
+
+                    % Set currentAh legend fixed legend String
+                    old_ah.Legend.UserData.fixedString = old_ah.Legend.String;
+
                 else
-                    ylabel(new_ah(idx), opts.ylabel);
-                end
+                    % Create next tile
+                    new_ah(idx) = nexttile(plotters(idx).th);
+                    plotter.ahs(end+1) = new_ah(idx);
+                    plotter.currentAhIdx = length(plotter.ahs);
 
-                % Set font size
-                new_ah(idx).FontSize = plotter.FontSize;
+                    % Set tile title
+                    title(new_ah(idx), opts.tileTitle);
+    
+                    % Set x-y label
+                    xlabel(new_ah(idx), opts.xlabel);
+                    if iscell(opts.ylabel) && length(opts.ylabel) == 2
+                        yyaxis(new_ah(idx), 'left');
+                        ylabel(new_ah(idx), opts.ylabel{1});
+                        yyaxis(new_ah(idx), 'right');
+                        ylabel(new_ah(idx), opts.ylabel{2});
+                    else
+                        ylabel(new_ah(idx), opts.ylabel);
+                    end
+    
+                    % Set font size
+                    new_ah(idx).FontSize = plotter.FontSize;
+
+                end
 
                 % Turn hold on for axes
                 hold(new_ah(idx), "on");
@@ -199,8 +236,34 @@ classdef SolverPlotter < handle
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
-                legend(plotter.gca, varargin{:});
+                ah = plotter.gca();
+                if isa(ah.Legend, 'matlab.graphics.illustration.Legend') && ...
+                        isstruct(ah.Legend.UserData) && ...
+                        isfield(ah.Legend.UserData, 'fixed') && ...
+                        ah.Legend.UserData.fixed
+                    ah.Legend.String = ah.Legend.UserData.fixedString;
+                    %TODO: throw warning
+                else
+                    legend(plotter.gca, varargin{:});
+                end
             end
+        end
+
+        function [old_ah, old_ah_idx] = findTileByTitle(plotter, tileTitle)
+        % FINDTILEBYTITLE Utility function to help find exisiting axes
+        % handles
+        %
+        %
+            
+            tileTitles = arrayfun(@(txtH) string(txtH.String), [plotter.ahs.Title]);
+            if ~isempty(tileTitles)
+                old_ah = plotter.ahs(contains(tileTitles,tileTitle));
+                old_ah_idx = find(contains(tileTitles,tileTitle));
+            else
+                old_ah = [];
+                old_ah_idx = [];
+            end
+            
         end
 
     end
