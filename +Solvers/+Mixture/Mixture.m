@@ -27,11 +27,13 @@ classdef Mixture < Solvers.AbstractField
         vapor
     end
 
-    properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
+    properties (SetAccess=?Solvers.AbstractSolver, GetAccess={?Solvers.AbstractPhase,?Solvers.AbstractSolver})
         
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
+        solver
+        mixFull
     end
 
     properties (Access=private)
@@ -299,7 +301,7 @@ classdef Mixture < Solvers.AbstractField
         %DPTOT Total pressure loss [Pa]
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
+
             dptot = mix.DPGRAV(zIdx) + mix.DPWALL(zIdx) + mix.DPACCZ(zIdx) + mix.DPACCT(Uold, zIdx) + mix.DPK(zIdx);
         end
 
@@ -328,47 +330,72 @@ classdef Mixture < Solvers.AbstractField
         function oafIdx = OAFIDX(mix)
             %OAFIDX Onset of annular flow node
             %
+            
+            % See if a full mixture is provided
+            if ~isempty(mix.mixFull)
+                % Use the mixFull version
+                oafIdx = mix.mixFull.OAFIDX();
 
-            % Use saved value if it has been calculated already
-            if ~isempty(mix.oafidx_const)
-                oafIdx = mix.oafidx_const;
-                return
+            % Otherwise, calculate it for this mixture
+            else
+                % Use saved value if it has been calculated already
+                if ~isempty(mix.oafidx_const)
+                    oafIdx = mix.oafidx_const;
+                    return
+                end
+                
+                model = mix.inputSet.model;
+                HDIAM  = mix.inputSet.geometry.HDIAM;
+                MFLUX  = mix.MFLUX;
+                
+                % Densities
+                RHOF = mix.fluid.RHOF;
+                RHOG = mix.fluid.RHOG;
+                DELTARHO = RHOF-RHOG;
+                
+                switch model.OAF
+                    case InputEnums.OAF.WALLIS
+                        % Wallis model
+                        xoaf = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
+                    case InputEnums.OAF.WALLIS_SIMP
+                        % Simplified Wallis model
+                        xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
+                end
+                oafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
+                if isempty(oafIdx), oafIdx = mix.NZ; end                       % Most donstream node (NZ) when annular flow region is not found
+    
+                % Save value
+                mix.oafidx_const = oafIdx;
             end
-            
-            model = mix.inputSet.model;
-            HDIAM  = mix.inputSet.geometry.HDIAM;
-            MFLUX  = mix.MFLUX;
-            
-            % Densities
-            RHOF = mix.fluid.RHOF;
-            RHOG = mix.fluid.RHOG;
-            DELTARHO = RHOF-RHOG;
-            
-            switch model.OAF
-                case InputEnums.OAF.WALLIS
-                    % Wallis model
-                    xoaf = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
-                case InputEnums.OAF.WALLIS_SIMP
-                    % Simplified Wallis model
-                    xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
-            end
-            oafIdx = find(mix.X>=xoaf, 1, 'first');                        % Find node corresponding to the onset of annular flow
-            if isempty(oafIdx), oafIdx = mix.NZ; end                       % Most donstream node (NZ) when annular flow region is not found
-
-            % Save value
-            mix.oafidx_const = oafIdx;
         end
         
         function oafz = OAFZ(mix)
         %OAFZ Onset of annular flow elevation
         %
-            oafz = mix.Z(mix.OAFIDX);                                      % [m] Elevation at onset of annular flow
+            % See if a full mixture is provided
+            if ~isempty(mix.mixFull)
+                % Use the mixFull version
+                oafz = mix.mixFull.OAFZ();
+
+            % Otherwise, calculate it for this mixture
+            else
+                oafz = mix.Z(mix.OAFIDX);                                   % [m] Elevation at onset of annular flow
+            end
+
         end
         
         function oafwl = OAFWL(mix)
         %OAFWL Liquid mass flow rate at onset of annular flow
         %
-            oafwl = mix.liquid.W(mix.OAFIDX);                    % [kg/s] Mixture liquid mass flow rate
+            % See if a full mixture is provided
+            if ~isempty(mix.mixFull)
+                % Use the mixFull version
+                oafwl = mix.mixFull.OAFWL();
+
+            % Otherwise, calculate it for this mixture
+            else
+                oafwl = mix.liquid.W(mix.OAFIDX);                           % [kg/s] Mixture liquid mass flow rate
+            end
         end
         
         function afFnc = AFFNC(mix, zIdx)
@@ -376,21 +403,46 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            model = mix.inputSet.model;
-            geom  = mix.inputSet.geometry;
+            % See if a full mixture is provided
+            if ~isempty(mix.mixFull)
+                
+                % offset zIdx
+                zIdx = zIdx + mix.solver.zIdx_offset;
 
-            p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
-            p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
-            afFnc = mix.sigm(zIdx,[p(1), mix.OAFIDX()+p(2)]);
+                % Use the mixFull version
+                afFnc = mix.mixFull.AFFNC(zIdx);
+
+            % Otherwise, calculate it for this mixture
+            else
+
+                model = mix.inputSet.model;
+                geom  = mix.inputSet.geometry;
+    
+                p = model.OAFTRANSITION;                                       % Sigmoid function parameters 
+                p = p.*(model.NNODES/geom.LENGTH);                             % ... in node length
+                afFnc = mix.sigm(zIdx,[p(1), mix.OAFIDX()+p(2)]);
+            end
         end
         
         function afDistr = AFDISTR(mix,param1,param2,zIdx)
         %AFDISTR Annular flow distribution function
         %
             if nargin < 4, zIdx = (1:mix(1).NZ).'; end
-            
-            affnc = mix.AFFNC(zIdx);
-            afDistr = (1-affnc).*param1 + affnc.*param2;
+
+            % See if a full mixture is provided
+            if ~isempty(mix.mixFull)
+                
+                % offset zIdx
+                zIdx = zIdx + mix.solver.zIdx_offset -1;
+
+                % Use the mixFull version
+                afDistr = mix.mixFull.AFDISTR(param1,param2,zIdx);
+
+            % Otherwise, calculate it for this mixture
+            else
+                affnc = mix.AFFNC(zIdx);
+                afDistr = (1-affnc).*param1 + affnc.*param2;
+            end
         end
         
         function out = struct(obj)
@@ -484,12 +536,40 @@ classdef Mixture < Solvers.AbstractField
                         if isstruct(targetObj(i).(propNames{j})) && isscalar(targetObj(i).(propNames{j}))
                             structFields = fieldnames(targetObj(i).(propNames{j}));
                             for ii = 1:length(structFields)
-                                targetObj(i).(propNames{j}).(structFields{ii})(1) = ...
-                                    srcObj(i).(propNames{j}).(structFields{ii})(end);
+                                if propNames{j} == "DP"
+                                    srcVal = sum(srcObj(i).(propNames{j}).(structFields{ii}));
+                                else
+                                    srcVal = srcObj(i).(propNames{j}).(structFields{ii})(end);
+                                end
+                                targetObj(i).(propNames{j}).(structFields{ii})(1) = srcVal;
                             end
                         % Non-scalar properties are copied as a vector
                         else
-                            targetObj(i).(propNames{j})(1) = srcObj(i).(propNames{j})(end);
+                            % If property size shows different num. of walls, 
+                            % look at inputset.obs for hints, FOR NOW
+                            % TODO: if there are more than 1 obstruction,
+                            %       major changes will be needed.
+                            if size(targetObj(i).(propNames{j}), 2) ~= size(srcObj(i).(propNames{j}), 2)
+                                
+                                % Determine obstruction wall id
+                                wallID = srcObj.inputSet.obs(1).WALL;
+
+                                % source value
+                                srcVal = srcObj(i).(propNames{j})(end,:);
+
+                                % Split srcVal at wallID to 2
+                                % ex. if wallID ==1 , targetVal(:,[1,2])
+                                % will correspond to srcVal(:,1)
+                                targetVal = [srcVal(:,1:wallID), repmat(srcVal(:,wallID),1,2), srcVal(:,wallID+1:end)];
+
+                                % Assign targetVal
+                                targetObj(i).(propNames{j})(1,:) = targetVal;                                
+
+                                
+                            else
+                                % simply copy if same size
+                                targetObj(i).(propNames{j})(1,:) = srcObj(i).(propNames{j})(end,:);
+                            end
                         end
                        
                     end

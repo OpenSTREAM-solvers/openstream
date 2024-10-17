@@ -13,30 +13,76 @@ mixSolver.inputSet.session.log.diaryOn();
 % Open log in presistent mode
 mixSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
-if mixSolver.STATE ~= SolverState.INITIALIZED
-    error('This solver needs to be reinitialized before solving.');
-else
-    mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
+try 
+    while true
     
-        % Continue solving if init converged
-        if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            mixSolver.log('\t\tSkipping transient solver ...\n');
+        switch mixSolver.STATE
+    
+            case SolverState.UNINITIALIZED
+                error('This solver needs to be reinitialized before solving.');
+    
+            case SolverState.INITIALIZED
+                mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
+                % Solve init
+                solver(true);
+    
+            case SolverState.INITIALSTEPCONVERGED
+                mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
+                % Solve transient
+                solver(false);
+    
+            case SolverState.INITIALSTEPNOTCONVERGED
+                mixSolver.log('\t\tSkipping transient solver ...\n');
+                break;
+    
+            case SolverState.SOLVEDCONVERGED
+                break;
+
+            otherwise
+                break;
+    
         end
-
-    catch ME
-        mixSolver.inputSet.session.log.closeLog();
-        mixSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
     
+    end
+
     mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
+    
+catch ME
+    mixSolver.inputSet.session.log.closeLog();
+    mixSolver.inputSet.session.log.diaryOff();
+    rethrow(ME)
 end
+
+% mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
+% 
+% if mixSolver.STATE == SolverState.UNINITIALIZED
+%     error('This solver needs to be reinitialized before solving.');
+% else
+%     mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
+% 
+%     try
+% 
+%         % Check if INITIAL STEP CONVERGED
+%         if mixSolver.STATE ~= SolverState.INITIALSTEPCONVERGED
+%             % Solve init
+%             solver(true);
+%         end
+% 
+%         % Continue solving if init converged
+%         if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
+%             solver(false);
+%         else
+%             mixSolver.log('\t\tSkipping transient solver ...\n');
+%         end
+% 
+%     catch ME
+%         mixSolver.inputSet.session.log.closeLog();
+%         mixSolver.inputSet.session.log.diaryOff();
+%         rethrow(ME)
+%     end
+% 
+%     mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
+% end
 
 mixSolver.inputSet.session.log.closeLog();
 mixSolver.inputSet.session.log.diaryOff();
@@ -53,6 +99,8 @@ function solver(solveINIT)
         mixSolver.log('\nRun transient ...\n');
         mix = mixSolver.mixture;
         solveMODE = 'SPECIFIED';
+        % set SOLVED flag to SOLVECONVERGED
+        mixSolver.STATE = SolverState.SOLVEDCONVERGED;
     end
     
     % Shortcut to inputSet objects
@@ -185,7 +233,13 @@ function solver(solveINIT)
                 mixSolver.STATE = "INITIALSTEPNOTCONVERGED";
                 mixSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
             end
+        else
+            % Set state to solved
+            %   TODO: convergence test?
+            %mixSolver.STATE = "SOLVEDCONVERGED";
+            %mixSolver.log('\n\t\tTRANSIENT CONVERGED            max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
         end
+        
     
         
     
@@ -197,9 +251,7 @@ function solver(solveINIT)
     % End timer
     mixSolver.log('Elapsed time: %0.2f sec\n', toc(startTime))
 
-    % Set state to solved
-    %   TODO: convergence test?
-    mixSolver.STATE = "SOLVEDCONVERGED";
+    
 end
 
 end

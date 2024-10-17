@@ -22,6 +22,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
      properties (SetAccess = protected)
         inputSet
         STATE                                                               = Solvers.SolverState.UNSOLVED
+        SOLVERMODE                                                          = Solvers.SolverMode.NEW
+        previousSolution
+        fullSolution
+        zIdx_offset
      end
 
 
@@ -34,12 +38,36 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %MIXTURESOLVER Creates a Mixture solver
             %   Detailed explanation goes here
             arguments
-                inputSet            {isa(inputSet,'Inputs.InputSet')}
-                opts.initSolver logical =true
+                inputSet                    Inputs.InputSet
+                opts.solverMode     (1,1)   Solvers.SolverMode              = Solvers.SolverMode.NEW
+                opts.initSolver     (1,1)   logical                         = true
+                opts.prevSolution   {mustBeScalarOrEmpty}                   = []
             end
 
             % Call abstract class constructor
             mixSolver = mixSolver@Solvers.AbstractSolver(inputSet);
+
+            % State -> CREATED
+            mixSolver.STATE = Solvers.SolverState.CREATED;
+
+            % Check and store solver mode
+            if opts.solverMode == Solvers.SolverMode.CONTINUE
+                % opts.prevSolution is needed to continue
+                if ~isempty(opts.prevSolution)
+                    
+                    % Store previous solution
+                    mixSolver.previousSolution = opts.prevSolution;
+
+                else
+                    % TODO: reorganize errors
+                    error("MIXTURESOLER:InputArgumentsError", "The previous solution was not provided");
+                end
+            elseif opts.solverMode == Solvers.SolverMode.NEW
+                % TODO: Do something here?
+            end
+
+            % Store solver mode
+            mixSolver.SOLVERMODE = opts.solverMode;
             
             if opts.initSolver
                 % Initialize solver parameters
@@ -64,8 +92,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mixSolver.NTIME = length(mixSolver.TIME);
 
             % Calculate axial steps
-            mixSolver.DZ = mixSolver.inputSet.geometry.LENGTH/mixSolver.inputSet.model.NNODES;    % [m] Uniform node length
-            mixSolver.Z = (0:mixSolver.DZ:mixSolver.inputSet.geometry.LENGTH)';                   % [m] Node elevations
+            mixSolver.DZ = mixSolver.inputSet.geometry.LENGTH/(mixSolver.inputSet.model.NNODES-1);    % [m] Uniform node length
+            if mixSolver.SOLVERMODE == SolverMode.NEW
+                mixSolver.Z = (0:mixSolver.DZ:mixSolver.inputSet.geometry.LENGTH)';                   % [m] Node elevations
+            elseif mixSolver.SOLVERMODE == SolverMode.CONTINUE
+                prevLastZ = mixSolver.previousSolution.Z(end);
+                mixSolver.Z = (prevLastZ:mixSolver.DZ:prevLastZ+mixSolver.inputSet.geometry.LENGTH)';
+                mixSolver.Z = mixSolver.Z(1:end);
+            end
             mixSolver.NZ = length(mixSolver.Z);                                                   % Total number of axial nodes (add one for inlet conditions)
             
             % Interpolate BCs in time and space (z)
@@ -101,6 +135,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 % Inputset
                 mixArr(tIdx).inputSet = mixSolver.inputSet;
                 mixArr(tIdx).fluid = mixSolver.fluid(tIdx);
+
+                 % Link to solver
+                mixArr(tIdx).solver = mixSolver;
                 
                 % Axial Steps
                 mixArr(tIdx).NZ = mixSolver.NZ;
@@ -134,11 +171,33 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
                 mixArr(tIdx).vapor = Vapor(mixArr(tIdx));
                 
+                
 
             end
 
             % Store transient mixture array
             mixSolver.mixture = mixArr;
+
+            if mixSolver.SOLVERMODE == SolverMode.NEW
+                % NOTE: Nothing to do?
+            elseif mixSolver.SOLVERMODE == SolverMode.CONTINUE
+
+                % TODO: Check prevSolution has same timestep as current
+                
+                % Copy mixture properties from last node in prevSolution
+                % for each time step to first node in this solution
+                for tIdx = 1:length(mixSolver.previousSolution.TIME)
+
+                    % Copy properties
+                    mixSolver.previousSolution.mixture(tIdx).copyFlowProperties(mixSolver.mixture(tIdx),"copyMode","continue");
+                    
+                    % TODO: copy these properties to all spatial nodes for
+                    % faster convergence?
+
+                end
+            end
+
+           
 
             % Create steady state mixture array
             mixSolver.mixtureInit = copy( ...
@@ -159,6 +218,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             % set STATE to INITIALIZED
             mixSolver.STATE = SolverState.INITIALIZED;
+
 
         end
 
@@ -183,7 +243,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Interpolate wall power in space
             WPOWERZ = arrayfun( ...
                         @(bc)mixSolver.axialInterpolate( ...
-                                        cumsum(bc.WMESH), ...
+                                        cumsum(bc.WMESH)+mixSolver.Z(1), ...
                                         bc.WPOWER ...
                                         ), ...
                         mixSolver.inputSet.bc, ...
@@ -273,16 +333,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             mixSolver.mixtureInit = mixtureInit;
         end
 
-        function plotter = plotz(mixSolver, tIdx, opt)
+        function plotter = plotz(mixSolver, tIdx, opts)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
             arguments
                 mixSolver
                 tIdx    (1,1) double
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opts.plotter = []
             end
             
-            switch opt.solveMode
+            switch opts.solveMode
                 case 'TRANSIENT'
                     mix = mixSolver.mixture(tIdx);
                 case 'STEADY'
@@ -295,9 +356,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             NWALL = mixSolver.inputSet.geometry.NWALL();
 
-            plotter = Solvers.SolverPlotter( ...
-                                sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mix.TIME, opt.solveMode), ...
-                                1:NWALL);
+            % Reuse plotter if provided
+            if length(opts.plotter) == NWALL
+                plotter = opts.plotter;
+            else
+                plotter = Solvers.SolverPlotter( ...
+                                    sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mix.TIME, opts.solveMode), ...
+                                    1:NWALL);
+            end
             plotter.setZs(z);
             
             % Wall heat flux
@@ -561,6 +627,134 @@ classdef MixtureSolver < Solvers.AbstractSolver
                                 mix.Z(isnan(interpOut)), ...
                                 'linear', ...
                                 "extrap");               
+        end
+
+        function solverSubset = subset(mixSolver, start_zIdx, subsetSize, opts)
+            %SOLVERSUBSET
+            %
+            %   start_zIdx: zIdx of first axial node, inclusive
+            %   subsetSize: size of subset
+            arguments
+                mixSolver
+                start_zIdx
+                subsetSize
+                opts.inputSet (1,1) Inputs.InputSet
+            end
+
+            % Create copy of solver
+            solverSubset = mixSolver.copy();
+
+            % SolverMode is SUBSET
+            solverSubset.SOLVERMODE = Solvers.SolverMode.SUBSET;
+
+            % Save full solver
+            solverSubset.fullSolution = mixSolver;
+
+            % Set Z, NZ, and zIdx_offset
+            % TODO: Add check out out of bounds
+            subset_zIdx = start_zIdx:start_zIdx+subsetSize-1;
+            solverSubset.Z = solverSubset.Z(subset_zIdx);
+            solverSubset.NZ = subsetSize;
+            solverSubset.zIdx_offset = start_zIdx;
+
+            % update boundary condition
+            solverSubset.boundaryConditions.WPOWER = solverSubset.boundaryConditions.WPOWER(subset_zIdx,:,:);
+            solverSubset.boundaryConditions.HFLUX = solverSubset.boundaryConditions.HFLUX(subset_zIdx,:,:);
+
+            % Make copy of mixtureInit at each timestep
+            for tIdx = 1:length(solverSubset.mixtureInit)
+                
+                % Make copy
+                mixCopy = copy(solverSubset.mixtureInit(tIdx));
+
+                % Link to full mix
+                mixCopy.mixFull = solverSubset.mixtureInit(tIdx);
+
+                % Set Z, NZ
+                mixCopy.Z = solverSubset.Z;
+                mixCopy.NZ = solverSubset.NZ;
+
+                % Set solver
+                mixCopy.solver = solverSubset;
+                
+                % Take subset of each vector prop
+                % NOTE: this should be part of mixture?
+                propNames = {'HFLUX', 'W', 'P', 'H', 'DP', 'ITR'};
+                for propIdx = 1:length(propNames)
+                    if isstruct(mixCopy.(propNames{propIdx}))
+                        fNames = fieldnames(mixCopy.(propNames{propIdx}));
+                        for fIdx = 1:length(fNames)
+                            mixCopy.(propNames{propIdx}).(fNames{fIdx}) = ...
+                                mixCopy.(propNames{propIdx}).(fNames{fIdx})(subset_zIdx,:);
+                            if propNames{propIdx} == "DP" && start_zIdx ~= 1
+                                %mixCopy.(propNames{propIdx}).(fNames{fIdx})(1) = sum(mixSolver.mixtureInit(tIdx).(propNames{propIdx}).(fNames{fIdx})(1:start_zIdx,:));
+                                %mixCopy.(propNames{propIdx}).(fNames{fIdx})(2:end) = mixSolver.mixtureInit(tIdx).(propNames{propIdx}).(fNames{fIdx})(subset_zIdx(2:end),:);
+                                mixCopy.(propNames{propIdx}).(fNames{fIdx})(1:end) = mixSolver.mixtureInit(tIdx).(propNames{propIdx}).(fNames{fIdx})(subset_zIdx(1:end),:);
+                            end
+                        end
+                    elseif ismatrix(mixCopy.(propNames{propIdx}))
+                        mixCopy.(propNames{propIdx}) = mixCopy.(propNames{propIdx})(subset_zIdx,:);
+                    end
+                end
+
+                % Set liquid and vapor reference
+                mixCopy.liquid = Solvers.Mixture.Liquid(mixCopy);
+                mixCopy.vapor = Solvers.Mixture.Vapor(mixCopy);
+
+                % save
+                solverSubset.mixtureInit(tIdx) = mixCopy;
+
+            end
+
+            % Make copy of mixture at each timestep
+            % TODO: combine with above for loop
+            for tIdx = 1:length(solverSubset.mixture)
+                
+                % Make copy
+                mixCopy = copy(solverSubset.mixture(tIdx));
+
+                % Link to full mix
+                mixCopy.mixFull = solverSubset.mixture(tIdx);
+
+                % Set Z, NZ
+                mixCopy.Z = solverSubset.Z;
+                mixCopy.NZ = solverSubset.NZ;
+
+                % Set solver
+                mixCopy.solver = solverSubset;
+                
+                % Take subset of each vector prop
+                % NOTE: this should be part of mixture?
+                propNames = {'HFLUX', 'W', 'P', 'H', 'DP', 'ITR'};
+                for propIdx = 1:length(propNames)
+                    if isstruct(mixCopy.(propNames{propIdx}))
+                        fNames = fieldnames(mixCopy.(propNames{propIdx}));
+                        for fIdx = 1:length(fNames)
+                            mixCopy.(propNames{propIdx}).(fNames{fIdx}) = ...
+                                mixCopy.(propNames{propIdx}).(fNames{fIdx})(subset_zIdx,:);
+                            if propNames{propIdx} == "DP" && start_zIdx ~= 1
+                                %mixCopy.(propNames{propIdx}).(fNames{fIdx})(1) = sum(mixSolver.mixture(tIdx).(propNames{propIdx}).(fNames{fIdx})(1:start_zIdx,:));
+                                %mixCopy.(propNames{propIdx}).(fNames{fIdx})(2:end) = mixSolver.mixture(tIdx).(propNames{propIdx}).(fNames{fIdx})(subset_zIdx(2:end),:);
+                                mixCopy.(propNames{propIdx}).(fNames{fIdx})(1:end) = mixSolver.mixture(tIdx).(propNames{propIdx}).(fNames{fIdx})(subset_zIdx(1:end),:);
+                            end
+                        end
+                    elseif ismatrix(mixCopy.(propNames{propIdx}))
+                        mixCopy.(propNames{propIdx}) = mixCopy.(propNames{propIdx})(subset_zIdx,:);
+                    end
+                end
+
+                % Set liquid and vapor reference
+                mixCopy.liquid = Solvers.Mixture.Liquid(mixCopy);
+                mixCopy.vapor = Solvers.Mixture.Vapor(mixCopy);
+
+                % save
+                solverSubset.mixture(tIdx) = mixCopy;
+
+            end
+
+            
+
+
         end
     end
 end
