@@ -1,4 +1,4 @@
-classdef (Abstract) AbstractSolver < handle
+classdef (Abstract) AbstractSolver < matlab.mixin.Copyable & handle
     %ABSTRACTSOLVER Summary of this class goes here
     %   Detailed explanation goes here
 
@@ -8,8 +8,8 @@ classdef (Abstract) AbstractSolver < handle
 
     properties (SetAccess=protected, Abstract)
 
-        STATE (1,1) Solvers.SolverState                                     % Solver state defined by SolverState enum
-
+        STATE           (1,1) Solvers.SolverState                           % Solver state defined by SolverState enum
+        SOLVERMODE      (1,1) Solvers.SolverMode                            % Solver solution mode: NEW, CONTINUE, or SUBSET
     end
 
     methods (Abstract)
@@ -28,6 +28,8 @@ classdef (Abstract) AbstractSolver < handle
             if nargin > 0
                 % Store inputSet as object property
                 solver.inputSet = inputSet;
+            else
+                solver.STATE = Solvers.SolverState.EMPTY;
             end
 
         end
