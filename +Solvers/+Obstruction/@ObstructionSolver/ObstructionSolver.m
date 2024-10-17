@@ -17,14 +17,17 @@ classdef ObstructionSolver < Solvers.AbstractSolver
         
         solutionSets (:,1) Solvers.Obstruction.SolutionSet
         axialBounds
+        axialBoundIndices
         spanBounds
 
      end
 
      properties (SetAccess = protected)
+        originalInputset
         inputSet
         STATE                                                               = Solvers.SolverState.UNSOLVED
         solverType
+        SOLVERMODE
      end
 
     methods
@@ -45,6 +48,9 @@ classdef ObstructionSolver < Solvers.AbstractSolver
                 error("MIXTURESOLVER:NoObstructionError", "No obstructions are in the inputSet");
             end
 
+            % Save original inputSet
+            obsSolver.originalInputset = inputSet;
+
             % For now, assume only one obstruction is given
             obs = inputSet.obs(1);
 
@@ -60,7 +66,7 @@ classdef ObstructionSolver < Solvers.AbstractSolver
             obsSolver.spanBounds = [0 spanBounds wallPerim];
 
             % Split inputSet into axial segments
-            obsSolver.inputSet = inputSet.SplitByAxialPosition(obsSolver.axialBounds);
+            [obsSolver.inputSet, obsSolver.axialBoundIndices] = inputSet.SplitByAxialPosition(obsSolver.axialBounds);
 
             % Split last/3rd inputSet by tracks
             obsSolver.inputSet(end).SplitBySpanPosition(obs.WALL, obsSolver.spanBounds);
@@ -95,63 +101,115 @@ classdef ObstructionSolver < Solvers.AbstractSolver
             import Solvers.Obstruction.SolutionSet
             import Solvers.SolverState
 
+            % Solve un-obstructed mixture solver
+            mixSolver_unObs = Solvers.Mixture.MixtureSolver(obsSolver.originalInputset);
+            mixSolver_unObs.solve();
+
             % Split the solution into three parts: 
+            
+            %%
             % 1. Before the obstruction
             obsSolver.solutionSets(1) = SolutionSet( ...
                                             "NONOBS", ...
                                             obsSolver.inputSet(1), ...
                                             obsSolver.axialBounds(1:2));
-            obsSolver.solutionSets(1).setSolver( ...
-                Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(1)));
+            % Subset of mixSolver
+            subset_StartIdx = obsSolver.axialBoundIndices(1,1);
+            subset_length = diff(obsSolver.axialBoundIndices(:,1))+1;
+            mixSolver(1) = mixSolver_unObs.subset(subset_StartIdx, subset_length, "inputSet", obsSolver.inputSet(1));
+            
+            % Solver for the current step
+            stepSolver(1) = Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(1), mixSolver);
+            
             % Solve
-            obsSolver.solutionSets(1).solver.solve();
+            stepSolver(1).solve();
 
 
+            % Store stepSolver to solutionset
+            obsSolver.solutionSets(1).setSolver(stepSolver(1));
+            
+
+            %%
             % 2. Along the obstruction
+            
+            % Update inputSet P
+            for tIdx = 1:length(obsSolver.inputSet(2).bc)
+                obsSolver.inputSet(2).bc(tIdx).setProperty("PRESSURE", stepSolver(1).mixSolver.mixture(1).P(end));
+                obsSolver.inputSet(2).bc(tIdx).setProperty("HIN", stepSolver(1).mixSolver.mixture(1).H(end));
+            end
             obsSolver.solutionSets(2) = SolutionSet( ...
                                             "OBS", ...
                                             obsSolver.inputSet(2), ...
-                                            obsSolver.axialBounds(2:3));
+                                          obsSolver.axialBounds(2:3));
+            
+            % Subset of mixSolver
+            subset_StartIdx = obsSolver.axialBoundIndices(1,2);
+            subset_length = diff(obsSolver.axialBoundIndices(:,2))+1;
+            mixSolver(2) = mixSolver_unObs.subset(subset_StartIdx, subset_length, "inputSet", obsSolver.inputSet(2));
+
+            % % Set initSolver to true
+            % mixSolver(2) = Solvers.Mixture.MixtureSolver(obsSolver.inputSet(2), "solverMode","CONTINUE", "prevSolution", stepSolver(1).mixSolver);
+            % 
+            % % Solve mixSolver
+            % mixSolver(2).solve();
+            
             % Create mixture solver if another solver is used
-            if obsSolver.solverType ~= InputEnums.SOLVER.MIXTURE
-                
-                % Set initSolver to true
-                mixSolver = Solvers.Mixture.MixtureSolver(obsSolver.inputSet(2), "initSolver", true);
-                
-                % Replace mixtureInit with []
-                % NOTE: maybe the last time step in previous segment is
-                % better than empty array?
-                mixSolver.clearInit();
+            if obsSolver.solverType ~= InputEnums.SOLVER.MIXTURE                
 
-                % copy flow properties in continue mode
-                obsSolver.solutionSets(1).solver.mixSolver.mixture(:).copyFlowProperties(mixSolver.mixture(:), "copyMode", "continue");
-                
-                % Set solver state to INITIALSTEPCONVERGED
-                
+                % Create solver with previous solution
+                stepSolver(2) = Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(2), mixSolver(2),  "solverMode","CONTINUE",  "prevSolution", stepSolver(1));
 
-                % Create solver without init
-                subSolver = Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(2), mixSolver, 'initSolver', false);
-                subSolver
+                % Solve
+                stepSolver(2).solve();
+                
             else
                 % Solve
-                subSolver = Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(2));
+                %stepSolver(2) = mixSolver(2);
             end
-                
 
+            % Store stepSolver to solutionset
+            obsSolver.solutionSets(2).setSolver(stepSolver(2));
+            %return
 
-            
-            % Replace inits with last steps from previous solver
-            
-            obsSolver.solutionSets(2).setSolver( ...
-                Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(2)));
-
+            %%
             %   3. After the obstruction
+            % Update inputSet P
+            for tIdx = 1:length(obsSolver.inputSet(3).bc)
+                obsSolver.inputSet(3).bc(tIdx).setProperty("PRESSURE", stepSolver(2).mixSolver.mixture(1).P(end));
+                obsSolver.inputSet(3).bc(tIdx).setProperty("HIN", stepSolver(2).mixSolver.mixture(1).H(end));
+            end
             obsSolver.solutionSets(3) = SolutionSet( ...
                                             "NONOBS", ...
                                             obsSolver.inputSet(3), ...
                                             obsSolver.axialBounds(3:4));
-            obsSolver.solutionSets(3).setSolver( ...
-                Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(3)));
+
+            % Subset of mixSolver
+            subset_StartIdx = obsSolver.axialBoundIndices(1,3);
+            subset_length = diff(obsSolver.axialBoundIndices(:,3))+1;
+            mixSolver(3) = mixSolver_unObs.subset(subset_StartIdx, subset_length, "inputSet", obsSolver.inputSet(3));
+
+            % % Set initSolver to true
+            % mixSolver(3) = Solvers.Mixture.MixtureSolver(obsSolver.inputSet(3), "solverMode","CONTINUE", "prevSolution", stepSolver(2).mixSolver);
+            % 
+            % % Solve mixSolver
+            % mixSolver(3).solve();
+            
+            % Create mixture solver if another solver is used
+            if obsSolver.solverType ~= InputEnums.SOLVER.MIXTURE                
+
+                % Create solver without init
+                stepSolver(3) = Solvers.(obsSolver.solverType.solverPath())(obsSolver.inputSet(3), mixSolver(3),  "solverMode","CONTINUE",  "prevSolution", stepSolver(2));
+
+                % Solve
+                stepSolver(3).solve();
+                
+            else
+                % Solve
+                stepSolver(3) = mixSolver(3);
+            end
+
+            % Store stepSolver to solutionset
+            obsSolver.solutionSets(3).setSolver(stepSolver(3));
 
 
         end
