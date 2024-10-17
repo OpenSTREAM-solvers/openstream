@@ -13,29 +13,69 @@ tfSolver.inputSet.session.log.diaryOn();
 % Open log in presistent mode
 tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
-if tfSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
-else
-    tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-        
-        % Continue solving if init converged
-        if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            tfSolver.log('\t\tSkipping transient solver ...\n');
-        end
-    catch ME
-        tfSolver.inputSet.session.log.closeLog();
-        tfSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
+try 
+    while true
     
-    tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
+        switch tfSolver.STATE
+    
+            case SolverState.UNINITIALIZED
+                error('This solver needs to be reinitialized before solving.');
+    
+            case SolverState.INITIALIZED
+                tfSolver.log('\n\n--------------------------------------------- Three-field solver run initiated ---------------------------------------------\n')
+                % Solve init
+                solver(true);
+    
+            case SolverState.INITIALSTEPCONVERGED
+                tfSolver.log('\n\n--------------------------------------------- Three-field solver run initiated ---------------------------------------------\n')
+                % Solve transient
+                solver(false);
+    
+            case SolverState.INITIALSTEPNOTCONVERGED
+                tfSolver.log('\t\tSkipping transient solver ...\n');
+                break;
+    
+            case SolverState.SOLVEDCONVERGED
+                break;
+
+            otherwise
+                break;
+    
+        end
+    
+    end
+
+    tfSolver.log('\n--------------------------------------------- Three-field solver run completed ---------------------------------------------\n\n')
+   
+catch ME
+    tfSolver.inputSet.session.log.closeLog();
+    tfSolver.inputSet.session.log.diaryOff();
+    rethrow(ME)
 end
+
+% if tfSolver.STATE ~= SolverState.UNSOLVED
+%     error('This solver needs to be reinitialized before solving.');
+% else
+%     tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
+% 
+%     try
+%         % Solve init
+%         solver(true);
+% 
+%         % Continue solving if init converged
+%         if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
+%             solver(false);
+%         else
+%             tfSolver.log('\t\tSkipping transient solver ...\n');
+%         end
+%     catch ME
+%         tfSolver.inputSet.session.log.closeLog();
+%         tfSolver.inputSet.session.log.diaryOff();
+%         rethrow(ME)
+%     end
+% 
+%     tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
+% end
 
 tfSolver.inputSet.session.log.closeLog();
 tfSolver.inputSet.session.log.diaryOff();
