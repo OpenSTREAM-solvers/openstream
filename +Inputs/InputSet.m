@@ -101,7 +101,7 @@ classdef InputSet
 
         end
 
-        function inputSets = SplitByAxialPosition(obj, axialPositions)
+        function [inputSets, segmentBoundIndicies] = SplitByAxialPosition(obj, axialPositions)
             % SPLITBYAXIALPOSITION Splits an inputSet by axialPositions
             %
             %   This function allows a simulation to be split up into
@@ -137,7 +137,7 @@ classdef InputSet
 
             % Determine node indicies that correspond to axialPositions
             % Remember, 1-based indexing
-            axialNodeIndicies = round(totalNumNodes/totalLength.*axialPositions)+1;
+            axialNodeIndicies = round((totalNumNodes-1)/totalLength.*axialPositions)+1;
 
             % If two consecutive indicies are the same, increment the
             % latter one
@@ -182,26 +182,35 @@ classdef InputSet
                 % Make direct copy
                 segmentBC = mixBC;
 
-                % Split WPOWER and HFLUX by node id
-                fns = {'WPOWER', 'HFLUX'};
-                for j=1:numel(fns)
-                    
-                    % fieldname
-                    fn = fns{j};
+                % Retrieve the HFLUX at each node
+                %
+                % HFLUX matrix form mixBC
+                mixBC_HFLUX = mixBC.HFLUX;
                 
-                    % Retrieve field value
-                    mixBCFieldValue = mixBC.(fn);
-                    % Subset of field value
-                    mixBCFieldValue = mixBCFieldValue( ...
+                % store node HFLUX to segmentBC
+                segmentBC.HFLUX = mixBC_HFLUX( ...
                                         linspace(segmentBoundIndicies(1,i),segmentBoundIndicies(2,i),segmentNumNodes(i)),:,:);
-                    % Store subset
-                    segmentBC.(fn) = mixBCFieldValue;
-                    
-                end
+
+            
 
                 % Field POWER should be updated to reflect total 
                 % power in segment. 
-                segmentBC.POWER = segmentBC.POWER.*0+sum(segmentBC.HFLUX(:,:,10).*nodeLength.*mix.inputSet.geometry.PERIM, 'all');
+                % TODO: HFLUX indexing needs to be checked
+                % TODO: 1% POWER discrepency before vs after segmentation
+                segmentBC.POWER = reshape(sum(segmentBC.HFLUX(:,:,:).*nodeLength.*mix.inputSet.geometry.PERIM, [1,2]),size(segmentBC.POWER));
+
+                % Build the corresponding WPOWER (relative power
+                % distribution) at each time step
+                % Set WPOWER to same size as HFLUX
+                segmentBC.WPOWER = segmentBC.HFLUX.*0;
+                for tIdx = 1:length(segmentBC.TIME)
+                    if segmentBC.POWER(tIdx) == 0
+                        segmentBC.WPOWER(:,:,tIdx) = segmentBC.HFLUX(:,:,tIdx).*nodeLength.*mix.inputSet.geometry.PERIM.*0;
+                    else
+                        segmentBC.WPOWER(:,:,tIdx) = segmentBC.HFLUX(:,:,tIdx).*nodeLength.*mix.inputSet.geometry.PERIM./segmentBC.POWER(tIdx);
+                    end
+                end
+                
 
                 % Convert boundary conditions to Inputs.BoundaryConditions
                 % format
@@ -213,6 +222,7 @@ classdef InputSet
                     bcStep(tIdx).setProperty("MFLOW", segmentBC.MFLOW(tIdx,1));
                     bcStep(tIdx).setProperty("POWER", segmentBC.POWER(tIdx,1));
                     bcStep(tIdx).setProperty("WMESH",  nodeLength.*ones(1,segmentNumNodes(i)));
+                    
                     % if all elements of WPOWER is 0, set to 1.
                     if all(segmentBC.WPOWER(:,:,tIdx) == 0, 'all')
                         segmentBC.WPOWER(:,:,tIdx) = 1;
@@ -292,6 +302,7 @@ classdef InputSet
             % Update geom perims
             trackPerims = [nonWakeTrackPerim, wakeTrackPerim];
             originalPerims = obj.geometry.PERIM;
+            originalNodeAreas = obj.geometry.PERIM .* obj.geometry.LENGTH ./ (obj.model.NNODES-1);
             obj.geometry.setProperty("PERIM", [originalPerims(1:wallIdx-1) trackPerims originalPerims(wallIdx+1:end)]);
     
             % Update boundary conditions (WPOWER)
@@ -299,27 +310,30 @@ classdef InputSet
             
             % All BC time steps
             BCs = obj.bc;
+
+            % New node areas
+            nodeAreas = obj.geometry.PERIM .* obj.geometry.LENGTH ./ (obj.model.NNODES-1);
     
             % For each BC step in time
             for tIdx = 1:length(BCs)
                 
                 % Retreive WPOWER, and make into NWMESHxNWALL
                 currWPOWERs = reshape(BCs(tIdx).WPOWER, length(BCs(tIdx).WPOWER), []);
-    
-                % Copy of wall to be modified
-                targetWallWPOWER = currWPOWERs(:,wallIdx);
-    
-                % duplicate targetWallWPOWER
-                targetWallWPOWERs = repmat(targetWallWPOWER,1,2);
-    
-                % Apply perim ratio
-                targetWallWPOWERs = targetWallWPOWERs.*[perimRatio 1-perimRatio];
-    
+
+                % Heat flux at walls
+                currHFLUXs = BCs(tIdx).POWER .* currWPOWERs ./ sum(currWPOWERs) ./ originalNodeAreas;
+
+                % Create WPOWER for the two walls
+                targetWallWPOWERs = currHFLUXs .* nodeAreas;
+                newHFLUXs = targetWallWPOWERs./nodeAreas;
+                %targetWallWPOWERs = targetWallWPOWERs ./ sum(targetWallWPOWERs,'all');
+                targetWallWPOWERs = newHFLUXs ./ sum(newHFLUXs,'all');
+
                 % Insert new WPOWERs
-                newWPOWERs = [currWPOWERs(:,1:wallIdx-1) targetWallWPOWERs currWPOWERs(:,wallIdx+1:end)];
+                %newWPOWERs = [currWPOWERs(:,1:wallIdx-1) targetWallWPOWERs currWPOWERs(:,wallIdx+1:end)];
                 
                 % setWPOWER in BC
-                obj.bc(tIdx).setProperty('WPOWER', newWPOWERs);
+                obj.bc(tIdx).setProperty('WPOWER', targetWallWPOWERs);
     
             end
 
