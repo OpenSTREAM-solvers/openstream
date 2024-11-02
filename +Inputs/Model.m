@@ -57,7 +57,7 @@ classdef Model < Inputs.Input
         WAVEMIXCOEF     (:,1) double  {mustBeNonnegative}                  = 0.0                   % Wave mixing coefficient
         
         % Obstruction Solver Only
-        OBSWSPLITRATIO  (2,1) double {mustBeNonnegative}                   = [0.0275 0.001]        % Split ratio of mass downstream of obstruction (2nd term is the wake region) [kg/s]
+        OBSWSPLITRATIO  (2,1) double {mustBeNonnegative}                   = [0.0266 0.001] .* [0.5 0.5]        % Split ratio of mass downstream of obstruction (2nd term is the wake region) [kg/s]
     end
 
     properties (Constant)
