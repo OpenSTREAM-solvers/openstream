@@ -79,7 +79,7 @@ function solver(solveINIT)
         mix(tIdx-1).copyFlowProperties(mix(tIdx))
 
         % Axial sweep
-        for zIdx = 2:mixSolver.NZ                                                        % Loop over axial nodes
+        for zIdx = 2:mixSolver.NZ                                                       % Loop over axial nodes
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -93,8 +93,7 @@ function solver(solveINIT)
                 VEL   = mix(tIdx).U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array for speed
                 U     = VEL(2); Uups = VEL(1);                                          % [m/s] Mixture velocities at node k and k-1
                 Uold  = mix(tIdx-1).U(zIdx);                                            % [m/s] Mixture velocity at previous time step
-                RHO   = mix(tIdx).RHO(zIdx);                                            % [kg/m^3] Mixture density
-                TAUW  = mix(tIdx).TAUW(zIdx);                                           % [Pa] Wall shear stress
+                Hold  = mix(tIdx-1).H(zIdx);                                            % [J/kg] Mixture enthalpy at previous time step
                 HFLUX = mix(tIdx).HFLUX(zIdx,:);                                        % [W/m^2] Wall heat flux
                 
                 % Mass conservation
@@ -103,19 +102,19 @@ function solver(solveINIT)
                 mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew;     % [kg/s] Apply relaxation
                 
                 % Momentum conservation
-                DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                            % [Pa] Pressure drop components
-                Pnew = mix(tIdx).P(zIdx-1) + DPparts.TOT;                           % [Pa] New pressure
-                mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
+                DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                                % [Pa] Pressure drop components
+                Pnew = mix(tIdx).P(zIdx-1) + DPparts.TOT;                               % [Pa] New pressure
+                mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew;     % [Pa] Apply relaxation
     
                 % Energy conservation
                 Hnew = (mix(tIdx).H(zIdx-1)+DZ./mix(tIdx).W(zIdx).*sum(geom.PERIM.'.*reshape(HFLUX,length(zIdx),[]).',1)+ ...
-                       mix(tIdx-1).H(zIdx)./U.*DZ./DT)/(1+DZ./U./DT);               % [J/kg] Update mixture enthalpy
-                mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew; % [J/kg] Apply relaxation
+                       Hold./U.*DZ./DT)/(1+DZ./U./DT);                                  % [J/kg] Update mixture enthalpy
+                mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew;     % [J/kg] Apply relaxation
                 
                 % Check convergence
-                dW = abs((mix(tIdx).W(zIdx)-Witer));                             % [kg/s] Mass flow rate error between inner iterations
-                dP = abs((mix(tIdx).P(zIdx)-Piter));                             % [Pa]   Pressure error between inner iterations
-                dH = abs((mix(tIdx).H(zIdx)-Hiter));                             % [J/kg] Enthalpy error between inner iterations
+                dW = abs((mix(tIdx).W(zIdx)-Witer));                                    % [kg/s] Mass flow rate error between inner iterations
+                dP = abs((mix(tIdx).P(zIdx)-Piter));                                    % [Pa]   Pressure error between inner iterations
+                dH = abs((mix(tIdx).H(zIdx)-Hiter));                                    % [J/kg] Enthalpy error between inner iterations
                 if all([dW < options.ERRORW, dP < options.ERRORP, dH < options.ERRORH])   
                     break;
                 elseif itr == options.MAXITER
@@ -134,6 +133,14 @@ function solver(solveINIT)
             mix(tIdx).DP.K(zIdx)     = -DPparts.K;                                     % [Pa] Local pressure drop
             mix(tIdx).DP.Tot(zIdx)   = -DPparts.TOT;                                   % [Pa] Total pressure drop
             
+            % Save acceleration terms
+            mix(tIdx).ACC.U_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).U(zIdx)-mix(tIdx).U(zIdx-1))./DZ; % [m/s^2]  Spatial  hydrodynamic acceleration
+            mix(tIdx).ACC.U_t(zIdx) = (mix(tIdx).U(zIdx)-Uold)./DT;                                   % [m/s^2]  Temporal hydrodynamic acceleration
+            mix(tIdx).ACC.U(zIdx)   = mix(tIdx).ACC.U_z(zIdx)+mix(tIdx).ACC.U_t(zIdx);                % [m/s^2]  Total    hydrodynamic acceleration
+            mix(tIdx).ACC.H_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).H(zIdx)-mix(tIdx).H(zIdx-1))./DZ; % [J/kg/s] Spatial  thermal acceleration
+            mix(tIdx).ACC.H_t(zIdx) = (mix(tIdx).H(zIdx)-Hold)./DT;                                   % [J/kg/s] Temporal thermal acceleration
+            mix(tIdx).ACC.H(zIdx)   = mix(tIdx).ACC.H_z(zIdx)+mix(tIdx).ACC.H_t(zIdx);                % [J/kg/s] Total    thermal acceleration
+            
             % Iteration parameters
             mix(tIdx).ITR.N(zIdx)  = itr;
             mix(tIdx).ITR.DW(zIdx) = dW;
@@ -144,7 +151,6 @@ function solver(solveINIT)
             if mixSolver.STATE == SolverState.SOLVEDNOTCONVERGED
                 break;
             end
-    
     
         end
         
@@ -186,8 +192,6 @@ function solver(solveINIT)
                 mixSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
             end
         end
-    
-        
     
     end
     

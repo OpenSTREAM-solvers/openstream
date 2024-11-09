@@ -66,7 +66,6 @@ classdef Liquid < Solvers.AbstractPhase
             singlePhaseIdx = isnan(u);
             mixU = liquid.mix.U(zIdx);
             u(singlePhaseIdx) = mixU(singlePhaseIdx);
-            
         end
 
         function h = H(liquid, zIdx)

@@ -18,6 +18,7 @@ classdef Mixture < Solvers.AbstractField
         P            (:,1) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
         DP           (1,1) struct                                                                 % [-] Detailed pressure drops
+        ACC          (1,1) struct                                                                 % [-] Detailed acceleration terms
 
         % Iteration properties
         ITR
@@ -54,7 +55,7 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Overload copyable properties
-            mix.flowProperties = {'W','P','H','DP'};
+            mix.flowProperties = {'W','P','H','DP','ACC'};
 
         end
         

@@ -71,18 +71,30 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Create mixture array (by timestep)
 
-            % Setup DP and ITR
+            % Setup DP structure
             % Grav:     [Pa] Gravitational pressure drop
             % Wall:     [Pa] Wall friction pressure drop
             % Acc_z:    [pa] Spatial acceleration pressure drop
             % Acc_t:    [Pa] Temporal acceleration pressure drop
             % K:        [Pa] Local pressure drop
             % Tot:      [Pa] Total pressure drop
-            DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];          % Fieldnames for DP struct
-            DPCell = cell(numel(DPFields),1);                               % Cell structure to convert into struct
-            DPCell(:) = {zeros(mixSolver.NZ,1)};                            % Initialize with zeros
-            DP = cell2struct(DPCell, DPFields, 1);                          % Convert cell to struct with fieldnames
+            DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];         % Fieldnames for DP struct
+            DPCell = cell(numel(DPFields),1);                              % Cell structure to convert into struct
+            DPCell(:) = {zeros(mixSolver.NZ,1)};                           % Initialize with zeros
+            DP = cell2struct(DPCell, DPFields, 1);                         % Convert cell to struct with fieldnames
 
+            % Setup ACC structure
+            % U_z:    [m/s^2] Spatial  hydrodynamic acceleration
+            % U_t:    [m/s^2] Temporal hydrodynamic acceleration
+            % U  :    [m/s^2] Total    hydrodynamic acceleration
+            % H_z:    [m/s^2] Spatial  thermal acceleration
+            % H_t:    [m/s^2] Temporal thermal acceleration
+            % H  :    [m/s^2] Total    thermal acceleration
+            ACCFields =  ["U_z","U_t","U","H_z","H_t","H"];                % Fieldnames for A struct
+            ACCCell = cell(numel(ACCFields),1);                            % Cell structure to convert into struct
+            ACCCell(:) = {zeros(mixSolver.NZ,1)};                          % Initialize with zeros
+            ACC = cell2struct(ACCCell, ACCFields, 1);                      % Convert cell to struct with fieldnames
+            
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DH"];
             ITR = mixSolver.CreateITR(mixSolver.NZ, ITRFields);
@@ -123,8 +135,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixArr(tIdx).P     = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
                 mixArr(tIdx).H     = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
                 
-                % DP, ITR
-                mixArr(tIdx).DP = DP;
+                % DP, A, ITR
+                mixArr(tIdx).DP  = DP;
+                mixArr(tIdx).ACC = ACC;
                 mixArr(tIdx).ITR = ITR;
 
                 % Phases
