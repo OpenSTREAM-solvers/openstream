@@ -3,6 +3,7 @@ classdef SCBOIL
 %   Detailed explanation goes here
     enumeration
         NONE
+        SAHAZUBER
     end
 end
     

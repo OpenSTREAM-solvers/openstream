@@ -63,6 +63,7 @@ classdef Mixture < Solvers.AbstractField
         %SET.W Setter for W, mass flow rate [kg/s]
         %  mix.mflux is calculated upon setting mix.W
 
+        
             % Set mix.W value
             mix.W = val;
 
@@ -86,19 +87,26 @@ classdef Mixture < Solvers.AbstractField
         function mflux = MFLUX(mix, zIdx)
         %MFLUX Mass flux [kg/m^2-s]
         %
-            if nargin < 2, mflux = mix.mflux; 
-            else, mflux = mix.mflux(zIdx); end
+            if nargin < 2
+                mflux = mix.mflux; 
+            else
+                mflux = mix.mflux(zIdx);
+            end
+            
         end
 
         function xeq = XEQ(mix, zIdx)
         %XEQ Equilibrium quality [-]
         %   This function only retrieves the mix.xeq values pre-calculated
         %   when mix.H is set. This is to eliminate the redundant
-        %   calculation as a result of requent function calls. The values
+        %   calculation as a result of frequent function calls. The values
         %   are calculated via mix.XEQ_CALC()
         %
-            if nargin < 2, xeq = mix.xeq; 
-            else, xeq = mix.xeq(zIdx); end
+            if nargin < 2
+                xeq = mix.xeq; 
+            else
+                xeq = mix.xeq(zIdx);
+            end
 
         end
 
@@ -106,7 +114,7 @@ classdef Mixture < Solvers.AbstractField
         %X Vapor quality [-]
         %   This function only retrieves the mix.x values pre-calculated
         %   when mix.H is set. This is to eliminate the redundant
-        %   calculation as a result of requent function calls. The values
+        %   calculation as a result of frequent function calls. The values
         %   are calculated via mix.X_CALC()
         %
             if nargin < 2
@@ -114,6 +122,7 @@ classdef Mixture < Solvers.AbstractField
             else
                 x = mix.x(zIdx); 
             end
+            
         end
 
         function vf =VF(mix, zIdx)
@@ -444,7 +453,7 @@ classdef Mixture < Solvers.AbstractField
         function XEQ_CALC(mix)
         %XEQ_CALC Helper function to calculate Equilibrium quality [-]
         %  
-            mix.xeq =(mix.H-mix.fluid.HF) ./ mix.fluid.HFG;
+            mix.xeq = (mix.H-mix.fluid.HF) ./ mix.fluid.HFG;
         end
 
         function X_CALC(mix)
@@ -455,9 +464,33 @@ classdef Mixture < Solvers.AbstractField
             mix.XEQ_CALC();
             
             % Use mix.xeq to calculate x
+            geom = mix.inputSet.geometry;
+            
             switch mix.inputSet.model.SCBOIL
                 case 'NONE'
-                    mix.x=min(max(mix.xeq,0),1);
+                    mix.x = min(max(mix.xeq,0),1);
+                case 'SAHAZUBER'
+                    % Saha-Zuber model
+                    % Saha P. and Zuber N. "Point of net vapor generation and vapor void fraction in subcooled boiling", Heat transfer, 4, 1974
+                    % Saturated properties, averaged heat flux and hydraulic diameter are used
+                    % Point of net vapor generation is bounded by [xin 0]
+                    % TODO: Validate and potentially modify model for applications to channels with walls of different heat fluxes (e.g. unheated wall)
+                    mix.x = min(max(mix.xeq,0),1);
+                    
+                    HDIAM = mix.inputSet.geometry.HDIAM;                   % [m] Diameter
+                    HFG = mix.fluid.HFG;                                   % [J/kg] 
+                    KF = mix.fluid.KF;                                     % [W/m/K] Saturated liquid thermal conductivity
+                    CPF = mix.fluid.CPF;                                   % [J/kg/K] Saturated liquid constant pressure specific heat
+                    HEATFLUX = sum(geom.PERIM.*mix.HFLUX,2)./sum(geom.PERIM,2); % [W/m^2] Averaged wall heat flux
+                    
+                    Pe = mix.MFLUX.*(HDIAM*CPF/KF);                        % [-] Peclet number
+                    Bo = HEATFLUX./mix.MFLUX./HFG;                         % [-] Boiling number
+                    xb = -0.0022.*min(7E4,Pe).*Bo;                         % [-] Thermodynamic quality at point B
+                    xb = max(xb,min(mix.X(1),-1E-6));                      % [-] Bound by inlet quality (up to 0)
+                    
+                    idx = mix.xeq > xb;
+                    mix.x(idx) = mix.xeq(idx)-xb(idx).*exp(mix.xeq(idx)./xb(idx)-1);
+                    mix.x(idx) = mix.x(idx)./(1-xb(idx).*exp(mix.xeq(idx)./xb(idx)-1));
             end
         end
 

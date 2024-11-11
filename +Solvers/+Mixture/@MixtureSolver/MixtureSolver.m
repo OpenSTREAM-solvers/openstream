@@ -325,17 +325,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
             
-            % Void fraction and quality
-            plotter.newTile( ...
-                "tileTitle", "Void fraction and quality", ...
-                "xlabel","Axial position [m]", ...
-                "ylabel","Quality / Void fraction [-]");
-            plotter.plotz(mix.XEQ(1:mix.NZ),'EQUIL','DisplayName','Equilibrium quality')  
-            plotter.plotz(mix.X(1:mix.NZ),'VAPOR','DisplayName','Vapor mass quality')
-            plotter.plotz(mix.VF(1:mix.NZ),'VF','DisplayName','Void faction')
-            plotter.legend("show", "Location", 'best');
-            plotter.plotOAF(oafZ);
-
             % Field velocity
             plotter.newTile( ...
                 "tileTitle", "Field velocity", ...
@@ -344,6 +333,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(mix.U(1:mix.NZ),'Mixture')  
             plotter.plotz(mix.liquid.U(1:mix.NZ),'Liquid')
             plotter.plotz(mix.vapor.U(1:mix.NZ),'Vapor')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Void fraction and quality
+            plotter.newTile( ...
+                "tileTitle", "Void fraction and quality", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(mix.XEQ(1:mix.NZ),'EQUIL','DisplayName','Equilibrium quality')  
+            plotter.plotz(mix.X(1:mix.NZ),'VAPOR','DisplayName','Vapor mass quality')
+            plotter.plotz(mix.VF(1:mix.NZ),'VF','DisplayName','Void faction')
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
 
@@ -410,16 +410,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(arrayfun(@(x) sum(x.DP.K(1:zIdx)),mix),'Local')
             plotter.legend("show", "Location", 'best');
             
-            % Void fraction and quality
-            plotter.newTile( ...
-                "tileTitle", "Void fraction and quality", ...
-                "xlabel","Time [s]", ...
-                "ylabel","Quality / Void fraction [-]");
-            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'EQUIL','DisplayName','Equilibrium quality')  
-            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'VAPOR','DisplayName','Vapor mass quality')
-            plotter.plotz(arrayfun(@(x) x.VF(zIdx),mix),'VF','DisplayName','Void faction')
-            plotter.legend("show", "Location", 'best');
-
             % Field velocity
             plotter.newTile( ...
                 "tileTitle", "Field velocity", ...
@@ -429,7 +419,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(arrayfun(@(x) x.liquid.U(zIdx),mix),'Liquid')
             plotter.plotz(arrayfun(@(x) x.vapor.U(zIdx),mix),'Vapor')
             plotter.legend("show", "Location", 'best');
-
+            
+            % Void fraction and quality
+            plotter.newTile( ...
+                "tileTitle", "Void fraction and quality", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'EQUIL','DisplayName','Equilibrium quality')  
+            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'VAPOR','DisplayName','Vapor mass quality')
+            plotter.plotz(arrayfun(@(x) x.VF(zIdx),mix),'VF','DisplayName','Void faction')
+            plotter.legend("show", "Location", 'best');
+            
         end
 
         function fh = plotzt(mixSolver, opt)
