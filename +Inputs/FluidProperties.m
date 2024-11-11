@@ -16,8 +16,10 @@ classdef FluidProperties
         HG         (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg] Saturated vapor enthalpy
         HFG        (1,1) double  {mustBeNumeric}                           = 0                     % [J/kg] Latent heat of evaporation
         SIGMA      (1,1) double  {mustBeNumeric}                           = 1                     % [N/m] Surface tension
-        KF         (1,1) double  {mustBeNumeric}                           = 1                     % [W/m/K] Saturated liquid conductivity
-        KG         (1,1) double  {mustBeNumeric}                           = 1                     % [W/m/K] Saturated vapor conductivity
+        KF         (1,1) double  {mustBeNumeric}                           = 1                     % [W/m/K] Saturated liquid thermal conductivity
+        KG         (1,1) double  {mustBeNumeric}                           = 1                     % [W/m/K] Saturated vapor thermal conductivity
+        CPF        (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg/K] Saturated liquid constant pressure specific heat
+        CPG        (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg/K] Saturated vapor constant pressure specific heat
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % [-] Saturated liquid Prandtl number
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % [-] Saturated vapor Prandtl number
         
@@ -63,8 +65,10 @@ classdef FluidProperties
             HF       = coolpropH.enthalpy('P',P,'Q',0);                    % [J/kg] Saturated liquid enthalpy
             HG       = coolpropH.enthalpy('P',P,'Q',1);                    % [J/kg] Saturated vapor enthalpy
             SIGMA    = coolpropH.surfaceTension('P',P,'Q',1);              % [N/m] Surface tension
-            KF       = coolpropH.conductivity('P',P,'Q',0);                % [W/m/K] Saturated liquid conductivity
-            KG       = coolpropH.conductivity('P',P,'Q',1);                % [W/m/K] Saturated vapor conductivity
+            KF       = coolpropH.conductivity('P',P,'Q',0);                % [W/m/K] Saturated liquid thermal conductivity
+            KG       = coolpropH.conductivity('P',P,'Q',1);                % [W/m/K] Saturated vapor thermal conductivity
+            CPF      = coolpropH.cp('P',P,'Q',0);                          % [J/kg/K] Saturated liquid constant pressure specific heat
+            CPG      = coolpropH.cp('P',P,'Q',1);                          % [J/kg/K] Saturated vapor constant pressure specific heat
             PRANDTLF = coolpropH.prandtl('P',P,'Q',0);                     % [-] Saturated liquid Prandtl number
             PRANDTLG = coolpropH.prandtl('P',P,'Q',1);                     % [-] Saturated vapor Prandtl number
             coolpropH.setSpecifyPhase('');
@@ -90,8 +94,10 @@ classdef FluidProperties
                 obj(i).HG       = HG(i);                                   % [J/kg] Saturated vapor enthalpy
                 obj(i).HFG      = HG(i) - HF(i);                           % [J/kg] Latent heat of evaporation
                 obj(i).SIGMA    = SIGMA(i);                                % [N/m] Surface tension
-                obj(i).KF       = KF(i);                                   % [W/m/K] Saturated liquid conductivity
-                obj(i).KG       = KG(i);                                   % [W/m/K] Saturated vapor conductivity
+                obj(i).KF       = KF(i);                                   % [W/m/K] Saturated liquid thermal conductivity
+                obj(i).KG       = KG(i);                                   % [W/m/K] Saturated vapor thermal conductivity
+                obj(i).CPF      = CPF(i);                                  % [J/kg/K] Saturated liquid constant pressure specific heat
+                obj(i).CPG      = CPG(i);                                  % [J/kg/K] Saturated vapor constant pressure specific heat
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
                 
@@ -175,7 +181,7 @@ classdef FluidProperties
         end
         
         function kl = KL(obj,H)
-            %KL Liquid conductivity (subcooled to saturated) [W/m/K]
+            %KL Liquid thermal conductivity (subcooled to saturated) [W/m/K]
             arguments
                 obj
                 H
@@ -191,7 +197,7 @@ classdef FluidProperties
         end
         
         function kv = KV(obj,H)
-            %KV Vapor conductivity (saturated to superheated) [W/m/K]
+            %KV Vapor thermal conductivity (saturated to superheated) [W/m/K]
             arguments
                 obj
                 H
@@ -202,6 +208,38 @@ classdef FluidProperties
                     kv = repmat(obj.KG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     kv = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',max(H,obj.HG));
+            end
+            
+        end
+        
+        function cpl = CPL(obj,H)
+            %CPL Liquid constant pressure specific heat (subcooled to saturated) [J/kg/K]
+            arguments
+                obj
+                H
+            end
+            
+            switch obj.PROPERTIES
+                case InputEnums.FLUIDPROPERTIES.SATURATED
+                    cpl = repmat(obj.CPF,numel(H),1);
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
+                    cpl = obj.coolpropH.cp('P',obj.PRESSURE,'H',min(H,obj.HF));
+            end
+            
+        end
+        
+        function cpv = CPV(obj,H)
+            %CPV Vapor constant pressure specific heat (subcooled to saturated) [J/kg/K]
+            arguments
+                obj
+                H
+            end
+            
+            switch obj.PROPERTIES
+                case InputEnums.FLUIDPROPERTIES.SATURATED
+                    cpv = repmat(obj.CPG,numel(H),1);
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
+                    cpv = obj.coolpropH.cp('P',obj.PRESSURE,'H',max(H,obj.HG));
             end
             
         end
