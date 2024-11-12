@@ -468,6 +468,7 @@ classdef Mixture < Solvers.AbstractField
             
             switch mix.inputSet.model.SCBOIL
                 case 'NONE'
+                    % Thermal equilibrium model
                     mix.x = min(max(mix.xeq,0),1);
                 case 'SAHAZUBER'
                     % Saha-Zuber model
@@ -486,7 +487,7 @@ classdef Mixture < Solvers.AbstractField
                     Pe = mix.MFLUX.*(HDIAM*CPF/KF);                        % [-] Peclet number
                     Bo = HEATFLUX./mix.MFLUX./HFG;                         % [-] Boiling number
                     xb = -0.0022.*min(7E4,Pe).*Bo;                         % [-] Thermodynamic quality at point B
-                    xb = max(xb,min(mix.X(1),-1E-6));                      % [-] Bound by inlet quality (up to 0)
+                    xb = max(xb,min(mix.XEQ(1),-1E-6));                    % [-] Bound by inlet quality (up to 0)
                     
                     idx = mix.xeq > xb;
                     mix.x(idx) = mix.xeq(idx)-xb(idx).*exp(mix.xeq(idx)./xb(idx)-1);
