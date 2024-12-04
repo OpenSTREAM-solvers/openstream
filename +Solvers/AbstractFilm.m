@@ -10,6 +10,10 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
         mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN
     end
+
+    properties (Access=private)
+        okawa_coefs (:,1) double  {mustBeNumeric}                         = []                   % OKAWA entrainment model coefficients and thresholds
+    end
     
     
     methods
@@ -92,16 +96,21 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                     ment = -absfilm.mix.AFDISTR(0,ment,zIdx);                              % [kg/m^2/s] Entrainment mass flux, in annular flow region only
                 case InputEnums.ENTRAINMENT.OKAWA2003
                     % Okawa et al. 2003 film entrainment model
-                    coefs = [4.79e-4 1 0.111];
+                    coefs = [320 0.111 4.79e-4 1];
                     ment = absfilm.OKAWAMENT(zIdx, coefs);
                 case InputEnums.ENTRAINMENT.OKAWA2004
                     % Okawa et al. 2004 film entrainment model
-                    coefs = [3.1e-2 2.3 0 0.0675 1.6e-3 1.2 0 0.295 6.8e-4 0.5 0];
+                    coefs = [320 0 3.1e-2 2.3 0.0675 1.6e-3 0.295 6.8e-4];
+                    ment = absfilm.OKAWAMENT(zIdx, coefs);
+                case InputEnums.ENTRAINMENT.OKAWA2004B
+                    % Okawa et al. 2004 film entrainment model w/o last branch for rod bundle geometry
+                    coefs = [320 0 3.1e-2 2.3 0.0675 1.6e-3];
                     ment = absfilm.OKAWAMENT(zIdx, coefs);
                 case InputEnums.ENTRAINMENT.OKAWAGEN
                     % Generic model following OKAWA 2003/2004 framework with user defined coefficients
-                    coefs = model.OKAWACOEFS;
+                    coefs = model.OKAWACOEFS.';
                     ment = absfilm.OKAWAMENT(zIdx, coefs);
+                
             end
             
         end
@@ -429,7 +438,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             negfilm = find(Wf<0);
             Wf = abs(Wf);
             
-            Refc = 320;
+            Refc = coefs(1);
             slip = ones(size(Wf)); err=1;                          % [-, -] Set initial guess and error for delta search
             
             % Wall friction factor (model consistent with entrainment correlation derivation)
@@ -451,7 +460,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             end
             
             entnum = Cv.*rhog.*film.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
-            [a, b, c] = film.OKAWACOEFS(entnum, coefs);
+            c = coefs(2);
+            [a, b] = film.OKAWACOEFS(entnum, coefs);
             
             ment = (a*rhof).*entnum.^b.*(rhof/rhog).^c;               % [kg/m^2/s] Entrainment mass flux
             ment(film.RE(zIdx)<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
@@ -462,15 +472,14 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
         end
         
-        function [a, b, c] = OKAWACOEFS(film, entnum, coefs)
+        function [a, b] = OKAWACOEFS(film, entnum, coefs)
             %OKAWAMENT Private method to determine the coefficients used in
             %OKAWA entrainment model based on the calculated entrainment
             %number
             
-            t = [-1e-5 coefs(4:4:end) 1e5];
+            t = [-1e-5 coefs(5:2:end) 1e5];
             a = zeros(size(entnum));
             b = zeros(size(entnum));
-            c = zeros(size(entnum));
             
             %Binary search to find the index of thresholds where
             %thresholds[index - 1] < entnum < thresholds[index]
@@ -481,9 +490,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 while (low <= high)
                     mid = ceil((low + high)/2);
                     if (t(mid - 1) < entnum(i) && t(mid) >= entnum(i))
-                        a(i) = coefs(4 * mid - 7);
-                        b(i) = coefs(4 * mid - 6);
-                        c(i) = coefs(4 * mid - 5);
                         break
                     elseif (t(mid) < entnum(i))
                         low = mid + 1;
@@ -491,6 +497,24 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                         high = mid - 1;
                     end
                 end
+
+                % If the okawa coefficients array is empty, populate it using the private method SETOKAWACOEFS
+                if isempty(film.okawa_coefs)
+                    film.SETOKAWACOEFS(coefs);
+                end
+
+                a(i) = film.okawa_coefs(2 * mid - 3);
+                b(i) = film.okawa_coefs(2 * mid - 2);
+            end
+        end
+
+        function SETOKAWACOEFS(film, coefs)
+            film.okawa_coefs = zeros(length(coefs) - 2, 1);
+            film.okawa_coefs(1) = coefs(3);
+            film.okawa_coefs(2) = coefs(4);
+            for i = 1:(length(coefs) - 4) / 2
+                film.okawa_coefs(2 * i + 1) = coefs(2 * i + 4);
+                film.okawa_coefs(2 * i + 2) = (log(film.okawa_coefs(2 * i - 1)) + film.okawa_coefs(2 * i) * log(coefs(2 * i + 3)) - log(film.okawa_coefs(2 * i + 1))) / log(coefs(2 * i + 3));
             end
         end
     end
