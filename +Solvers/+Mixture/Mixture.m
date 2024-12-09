@@ -17,9 +17,10 @@ classdef Mixture < Solvers.AbstractField
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         P            (:,1) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
-        DP           (1,1) struct                                                                 % [-] Detailed pressure drops
-        ACC          (1,1) struct                                                                 % [-] Detailed acceleration terms
-
+        DP           (1,1) struct                                                                 % Detailed pressure drops
+        ACC          (1,1) struct                                                                 % Detailed acceleration terms
+        TRELAX       (1,1) struct                                                                 % Time relaxation terms
+        
         % Iteration properties
         ITR
 
@@ -54,8 +55,8 @@ classdef Mixture < Solvers.AbstractField
                 mix.fluid  = fluid;
             end
 
-            % Overload copyable properties
-            mix.flowProperties = {'W','P','H','DP','ACC'};
+            % Overload copyable properties (order is important due to the setter functions)
+            mix.flowProperties = {'TRELAX','W','P','H','DP','ACC'};
 
         end
         
@@ -85,7 +86,11 @@ classdef Mixture < Solvers.AbstractField
         end
         
         function mflux = MFLUX(mix, zIdx)
-        %MFLUX Mass flux [kg/m^2-s]
+        %MFLUX Mass flux [kg/m^2/s]
+        %   This function only retrieves the mix.mflux values pre-calculated
+        %   when mix.W is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.MFLUX_CALC()
         %
             if nargin < 2
                 mflux = mix.mflux; 
@@ -124,49 +129,47 @@ classdef Mixture < Solvers.AbstractField
             end
             
         end
-
+        
         function vf =VF(mix, zIdx)
         %VF Void fraction [-]
-        %   
+        %TODO: Can take time to compute, would benefit from pre-calculation such as for XEQ and X
+        %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             geom = mix.inputSet.geometry;
-            fluidProp = mix.fluid;
 
             switch model.VOID
                 case InputEnums.VOID.HOMOGENEOUS
                     % [-] Homogeneous void model
-                    if nargin < 2, vf = vfslip(mix.X(),1); 
-                    else,          vf = vfslip(mix.X(zIdx),1); 
-                    end
+                    vf = vfslip(mix.X(zIdx),1); 
                     
                 case InputEnums.VOID.SLIP
                     % [-] Slip void model
-                    if nargin < 2, vf = vfslip(mix.X(),model.SLIP); 
-                    else,          vf = vfslip(mix.X(zIdx),model.SLIP); 
-                    end
-
+                    vf = vfslip(mix.X(zIdx),model.SLIP); 
+                    
                 case InputEnums.VOID.BESTION
                     % [-] Bestion drift flux model
                     C0 = 1.;                                               % [-] Distribution parameter
-                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(fluidProp.RHOF-fluidProp.RHOG)./fluidProp.RHOG); % [m/s] Drift velocity
+                    RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
+                    RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
+                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(RHOL-RHOV)./RHOV); % [m/s] Drift velocity
                     vf = vfdrift(C0,ugj);            
             end
             
             
             function vf = vfslip(x,S)
             %VFSLIP Void fraction based on slip model
-                vf = x.*fluidProp.RHOF./(x.*fluidProp.RHOF+S.*(1-x).*fluidProp.RHOG);
+                RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
+                RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
+                vf = x.*RHOL./(x.*RHOL+S.*(1-x).*RHOV);
             end
             
             function vf = vfdrift(C0,ugj)
             %VFDRIFT Void fraction based on drift flux model
             % C0    [-]     Distribution parameter
             % ugj   [m/s]   Drift velocity
-                if nargin < 2, vf  = mix.JG./(C0.*(mix.JG+mix.JL)+ugj);
-                else,          vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
-                end
+                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
             end
             
         end
@@ -177,8 +180,8 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             vf = mix.VF(zIdx);
-            rho = vf.*mix.fluid.RHOV(mix.H(zIdx))+ ...
-                    (1-vf).*mix.fluid.RHOL(mix.H(zIdx));
+            rho = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx))+ ...
+                    (1-vf).*mix.fluid.RHOL(mix.liquid.H(zIdx));    
         end
 
         function mu = MU(mix, zIdx)
@@ -186,8 +189,8 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            mu = mix.X(zIdx).*mix.fluid.MUV(mix.H(zIdx)) + ...
-                    (1-mix.X(zIdx)).*mix.fluid.MUL(mix.H(zIdx));
+            mu = mix.X(zIdx).*mix.fluid.MUV(mix.vapor.H(zIdx)) + ...
+                    (1-mix.X(zIdx)).*mix.fluid.MUL(mix.liquid.H(zIdx));
         end
 
         function u = U(mix, zIdx)
@@ -203,7 +206,7 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            jl = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOL(mix.H(zIdx));
+            jl = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOL(mix.liquid.H(zIdx));
         end
 
         function jg = JG(mix, zIdx)
@@ -211,7 +214,7 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            jg = mix.X(zIdx).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.H(zIdx));
+            jg = mix.X(zIdx).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.vapor.H(zIdx));
         end
 
         function re = RE(mix, zIdx)
@@ -282,7 +285,7 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            VEL   = mix.U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array
+            VEL   = mix.U([zIdx-1 zIdx]);                                  % [m/s] Calculate velocity array
             U     = VEL(2); 
             Uups  = VEL(1);
 
@@ -294,8 +297,7 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
             
-            VEL   = mix.U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array
-            U     = VEL(2);
+            U     = mix.U(zIdx);                                           % [m/s] Calculate velocity 
 
             dpAcc_t = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(1-Uold/U).*mix.DZ./mix.DT;
         end
@@ -446,27 +448,27 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function MFLUX_CALC(mix)
-        %MFLUX_CALC Helper function to calculate Mass flux [kg/m^2-s]
+        %MFLUX_CALC Helper function to calculate mass flux [kg/m^2-s]
             mix.mflux = mix.W./mix.inputSet.geometry.AREA;
         end
 
         function XEQ_CALC(mix)
-        %XEQ_CALC Helper function to calculate Equilibrium quality [-]
+        %XEQ_CALC Helper function to calculate equilibrium quality [-]
         %  
             mix.xeq = (mix.H-mix.fluid.HF) ./ mix.fluid.HFG;
         end
 
         function X_CALC(mix)
-        %X_CALC Helper function to calculate Equilibrium quality [-]
+        %X_CALC Helper function to calculate vapor quality [-]
         %  
             
             % Call XEQ first
-            mix.XEQ_CALC();
+            mix.XEQ_CALC();                                                % Use mix.xeq to calculate x
             
-            % Use mix.xeq to calculate x
-            geom = mix.inputSet.geometry;
+            model = mix.inputSet.model;
+            geom  = mix.inputSet.geometry;
             
-            switch mix.inputSet.model.SCBOIL
+            switch model.SCBOIL
                 case 'NONE'
                     % Thermal equilibrium model
                     mix.x = min(max(mix.xeq,0),1);
@@ -478,7 +480,7 @@ classdef Mixture < Solvers.AbstractField
                     % TODO: Validate and potentially modify model for applications to channels with walls of different heat fluxes (e.g. unheated wall)
                     mix.x = min(max(mix.xeq,0),1);
                     
-                    HDIAM = mix.inputSet.geometry.HDIAM;                   % [m] Diameter
+                    HDIAM = geom.HDIAM;                                    % [m] Diameter
                     HFG = mix.fluid.HFG;                                   % [J/kg] 
                     KF = mix.fluid.KF;                                     % [W/m/K] Saturated liquid thermal conductivity
                     CPF = mix.fluid.CPF;                                   % [J/kg/K] Saturated liquid constant pressure specific heat
@@ -492,6 +494,12 @@ classdef Mixture < Solvers.AbstractField
                     idx = mix.xeq > xb;
                     mix.x(idx) = mix.xeq(idx)-xb(idx).*exp(mix.xeq(idx)./xb(idx)-1);
                     mix.x(idx) = mix.x(idx)./(1-xb(idx).*exp(mix.xeq(idx)./xb(idx)-1));
+                case 'TRELAX'
+                    % Time relaxation model
+                    % New proposed model based on interfacial phase change time relaxation approach (main calculations in solve.m)
+                    % Physical approach to geometrical and thermal inhomogeneities
+                    % TODO: Document and validate model
+                    mix.x = sum(geom.PERIM.*mix.TRELAX.X,2)./sum(geom.PERIM,2); % [-] Averaged based on wall contributions
             end
         end
 

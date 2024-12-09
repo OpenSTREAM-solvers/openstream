@@ -116,6 +116,13 @@ classdef Geometry < Inputs.Input
             
         end
         
+        function R = RWALL(obj)
+            % RWALL Wall perimeter ratio
+            
+            R = obj.PERIM./sum(obj.PERIM); 
+            
+        end
+        
 
     end
     

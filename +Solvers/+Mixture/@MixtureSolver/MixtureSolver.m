@@ -90,10 +90,20 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % H_z:    [m/s^2] Spatial  thermal acceleration
             % H_t:    [m/s^2] Temporal thermal acceleration
             % H  :    [m/s^2] Total    thermal acceleration
-            ACCFields =  ["U_z","U_t","U","H_z","H_t","H"];                % Fieldnames for A struct
+            ACCFields =  ["U_z","U_t","U","H_z","H_t","H"];                % Fieldnames for ACC struct
             ACCCell = cell(numel(ACCFields),1);                            % Cell structure to convert into struct
             ACCCell(:) = {zeros(mixSolver.NZ,1)};                          % Initialize with zeros
             ACC = cell2struct(ACCCell, ACCFields, 1);                      % Convert cell to struct with fieldnames
+            
+            % Setup TRELAX structure
+            % WV  :  [kg/s] Vapor mass flow rate
+            % WVTH:  [J/kg] Thermodynamic vapor mass flow rate
+            % X   :  [-] Vapor mass quality
+            % XTH :  [-] Thermodynamic mass quality
+            TRELAXFields =  ["WV","WVTH","X","XTH"];                       % Fieldnames for TRELAX struct
+            TRELAXCell = cell(numel(TRELAXFields),1);                      % Cell structure to convert into struct
+            TRELAXCell(:) = {zeros(mixSolver.NZ,1)};                       % Initialize with zeros
+            TRELAX = cell2struct(TRELAXCell, TRELAXFields, 1);             % Convert cell to struct with fieldnames
             
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DH"];
@@ -130,20 +140,28 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         [] ...
                         );
                 
-                % Mass flow ratep [kg/s], pressure [Pa], enthalpy [J/kg]
+                % DP, ACC, TRELAX, ITR
+                mixArr(tIdx).DP  = DP;
+                mixArr(tIdx).ACC = ACC;
+                mixArr(tIdx).TRELAX  = TRELAX;
+                mixArr(tIdx).ITR = ITR;
+                
+                % Mass flow rate [kg/s], pressure [Pa], enthalpy [J/kg]
                 mixArr(tIdx).W     = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
                 mixArr(tIdx).P     = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
                 mixArr(tIdx).H     = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
                 
-                % DP, A, ITR
-                mixArr(tIdx).DP  = DP;
-                mixArr(tIdx).ACC = ACC;
-                mixArr(tIdx).ITR = ITR;
-
+                % Initialize TRELAX after H to get correct XEQ
+                NWALL = mixSolver.inputSet.geometry.NWALL;
+                RWALL = mixSolver.inputSet.geometry.RWALL;
+                mixArr(tIdx).TRELAX.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).W.*RWALL;
+                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).W.*RWALL./2;
+                mixArr(tIdx).TRELAX.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
+                mixArr(tIdx).TRELAX.XTH  = repmat(mixArr(tIdx).XEQ,1,NWALL);
+                
                 % Phases
                 mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
                 mixArr(tIdx).vapor = Vapor(mixArr(tIdx));
-                
 
             end
 
@@ -301,9 +319,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             % Mass flow rates
             plotter.newTile( ...
-                "tileTitle", "Mass flow rate", ...
+                "tileTitle", "Mass flow rates", ...
                 "xlabel","Axial position [m]", ...
-                "ylabel","Mass flowrates [kg/s]");
+                "ylabel","Mass flow rate [kg/s]");
             
             plotter.plotz(mix.W,"Mixture","DisplayName","Mixture");
             plotter.plotz(mix.liquid.W,"Liquid","DisplayName","Liquid");
@@ -311,9 +329,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
 
-            % Pressure drop
+            % Pressure drops
              plotter.newTile( ...
-                "tileTitle", "Pressure drop", ...
+                "tileTitle", "Pressure drops", ...
                 "xlabel","Axial position [m]", ...
                 "ylabel","Pressure drop [Pa]");
             plotter.plotz(cumsum(mix.DP.Tot),'Total') 
@@ -325,25 +343,61 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
             
-            % Field velocity
+            % Enthalpies
             plotter.newTile( ...
-                "tileTitle", "Field velocity", ...
+                "tileTitle", "Enthalpies", ...
                 "xlabel","Axial position [m]", ...
-                "ylabel","Velocity [m/s]");
-            plotter.plotz(mix.U(1:mix.NZ),'Mixture')  
-            plotter.plotz(mix.liquid.U(1:mix.NZ),'Liquid')
-            plotter.plotz(mix.vapor.U(1:mix.NZ),'Vapor')
+                "ylabel","Enthalpy [J/kg]");
+            
+            plotter.plotz(mix.H,"Mixture","DisplayName","Mixture");
+            plotter.plotz(mix.liquid.H,"Liquid","DisplayName","Liquid");
+            plotter.plotz(mix.vapor.H,"Vapor","DisplayName","Vapor");
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
             
-            % Void fraction and quality
+            % Velocities
             plotter.newTile( ...
-                "tileTitle", "Void fraction and quality", ...
+                "tileTitle", "Field velocities", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Velocity [m/s]");
+            plotter.plotz(mix.U,'Mixture')  
+            plotter.plotz(mix.liquid.U,'Liquid')
+            plotter.plotz(mix.vapor.U,'Vapor')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Void fraction and qualities
+            plotter.newTile( ...
+                "tileTitle", "Void fractions and qualities", ...
                 "xlabel","Axial position [m]", ...
                 "ylabel","Quality / Void fraction [-]");
-            plotter.plotz(mix.XEQ(1:mix.NZ),'EQUIL','DisplayName','Equilibrium quality')  
-            plotter.plotz(mix.X(1:mix.NZ),'VAPOR','DisplayName','Vapor mass quality')
-            plotter.plotz(mix.VF(1:mix.NZ),'VF','DisplayName','Void faction')
+            plotter.plotz(mix.XEQ,'Equil','DisplayName','Equilibrium quality')  
+            plotter.plotz(mix.X,'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(mix.VF,'VF','DisplayName','Void faction')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Temperatures
+            plotter.newTile( ...
+                "tileTitle", "Temperature", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Temperature [K]");
+            
+            plotter.plotz(mix.T,"Mixture","DisplayName","Mixture");
+            plotter.plotz(mix.liquid.T,"Liquid","DisplayName","Liquid");
+            plotter.plotz(mix.vapor.T,"Vapor","DisplayName","Vapor");
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Qualities and relaxed qualities
+            plotter.newTile( ...
+                "tileTitle", "Qualities and relaxed qualities", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Quality [-]");
+            plotter.plotz(mix.XEQ,'Equil','DisplayName','Equilibrium thermo. quality')  
+            plotter.plotz(mix.X,'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(mix.TRELAX.XTH,'RelaxEquil','DisplayName','Relaxed thermo. X')
+            plotter.plotz(mix.TRELAX.X,'RelaxVapor','DisplayName','Relaxed vapor X')
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
 
@@ -389,17 +443,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             % Mass flow rates
             plotter.newTile( ...
-                "tileTitle", "Mass flow rate", ...
+                "tileTitle", "Mass flow rates", ...
                 "xlabel","Time [s]", ...
-                "ylabel","Mass flowrates [kg/s]");
+                "ylabel","Mass flow rate [kg/s]");
             plotter.plotz(arrayfun(@(x) x.W(zIdx),mix),"Mixture","DisplayName","Mixture");
             plotter.plotz(arrayfun(@(x) x.liquid.W(zIdx),mix),"Liquid","DisplayName","Liquid");
             plotter.plotz(arrayfun(@(x) x.vapor.W(zIdx),mix),"Vapor","DisplayName","Vapor");
             plotter.legend("show", "Location", 'best');
 
-            % Pressure drop
+            % Pressure drops
              plotter.newTile( ...
-                "tileTitle", "Pressure drop", ...
+                "tileTitle", "Pressure drops", ...
                 "xlabel","Time [s]", ...
                 "ylabel","Pressure drop [Pa]");
             plotter.plotz(arrayfun(@(x) sum(x.DP.Tot(1:zIdx)),mix),'Total') 
@@ -410,9 +464,19 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(arrayfun(@(x) sum(x.DP.K(1:zIdx)),mix),'Local')
             plotter.legend("show", "Location", 'best');
             
-            % Field velocity
+            % Enthalpies
             plotter.newTile( ...
-                "tileTitle", "Field velocity", ...
+                "tileTitle", "Enthalpies", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Enthalpy [J/kg]");
+            plotter.plotz(arrayfun(@(x) x.H(zIdx),mix),'Mixture')  
+            plotter.plotz(arrayfun(@(x) x.liquid.H(zIdx),mix),'Liquid')
+            plotter.plotz(arrayfun(@(x) x.vapor.H(zIdx),mix),'Vapor')
+            plotter.legend("show", "Location", 'best');
+            
+            % Velocities
+            plotter.newTile( ...
+                "tileTitle", "Field velocities", ...
                 "xlabel","Time [s]", ...
                 "ylabel","Velocity [m/s]");
             plotter.plotz(arrayfun(@(x) x.U(zIdx),mix),'Mixture')  
@@ -420,14 +484,35 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(arrayfun(@(x) x.vapor.U(zIdx),mix),'Vapor')
             plotter.legend("show", "Location", 'best');
             
-            % Void fraction and quality
+            % Void fraction and qualities
             plotter.newTile( ...
-                "tileTitle", "Void fraction and quality", ...
+                "tileTitle", "Void fraction and qualities", ...
                 "xlabel","Time [s]", ...
                 "ylabel","Quality / Void fraction [-]");
-            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'EQUIL','DisplayName','Equilibrium quality')  
-            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'VAPOR','DisplayName','Vapor mass quality')
+            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'Equil','DisplayName','Equilibrium quality')  
+            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'Vapor','DisplayName','Vapor mass quality')
             plotter.plotz(arrayfun(@(x) x.VF(zIdx),mix),'VF','DisplayName','Void faction')
+            plotter.legend("show", "Location", 'best');
+            
+            % Temperatures
+            plotter.newTile( ...
+                "tileTitle", "Temperatures", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Temperature [K]");
+            plotter.plotz(arrayfun(@(x) x.T(zIdx),mix),'Mixture')  
+            plotter.plotz(arrayfun(@(x) x.liquid.T(zIdx),mix),'Liquid')
+            plotter.plotz(arrayfun(@(x) x.vapor.T(zIdx),mix),'Vapor')
+            plotter.legend("show", "Location", 'best');
+            
+            % Qualities and relaxed qualities
+            plotter.newTile( ...
+                "tileTitle", "Qualities and relaxed qualities", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'Equil','DisplayName','Equilibrium quality')  
+            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(arrayfun(@(x) x.TRELAX.XEQ(zIdx),mix),'RelaxEquil','DisplayName','Equilibrium quality')  
+            plotter.plotz(arrayfun(@(x) x.TRELAX.X(zIdx),mix),'RelaxVapor','DisplayName','Vapor mass quality')
             plotter.legend("show", "Location", 'best');
             
         end

@@ -4,6 +4,7 @@ classdef SCBOIL
     enumeration
         NONE
         SAHAZUBER
+        TRELAX
     end
 end
     
