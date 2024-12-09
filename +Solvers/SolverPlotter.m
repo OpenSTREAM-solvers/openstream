@@ -217,6 +217,8 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(2), '-', 'o'};
                 case {'VAP', 'VAPOR'}
                     plotStyle = {colors(1), '-', '.' };
+                 case {'RELAXVAPOR'}
+                    plotStyle = {colors(1), '--', '+' };   
                     
                 case {'FILM'}
                     plotStyle = {colors(2), '--', '.'};
@@ -251,6 +253,8 @@ classdef SolverPlotter < handle
 
                 case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
                     plotStyle = {colors(5), '-', 'o'};
+                case {'RELAXEQUIL'}
+                    plotStyle = {colors(5), '--', '+'};    
                 case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'OAF'}

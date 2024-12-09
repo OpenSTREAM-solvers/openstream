@@ -60,7 +60,7 @@ classdef Vapor < Solvers.AbstractPhase
             %U Velocity [m/s]
             %   NOTE: need to be verified
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.mix.H(zIdx));
+            u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.H(zIdx));
             
             % set to the mixture velocity in the single-phase liquid region
             %singlePhaseIdx = 1:(vapor.mix.OAFIDX-1);
@@ -72,9 +72,15 @@ classdef Vapor < Solvers.AbstractPhase
 
         function h = H(vapor, zIdx)
             %H Enthalpy [J/kg]
+            %   Calculated based on mixture enthapy and vapor quality
+            %   TODO: Find a better way to prevent division by small X and large h
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            h = min(vapor.mix.H(zIdx), vapor.mix.fluid.HG.');
+            
+            X = min(vapor.mix.X(zIdx),vapor.mix.XEQ(zIdx));                % Account for potential superheated vapor
+            h = (vapor.mix.H(zIdx)-(1-X).*vapor.mix.fluid.HF)./X;
+            %h = max(h,vapor.mix.fluid.HG);                                 % No subcooled vapor
+            h = min(h,5E6);
         end
 
         function mflux = MFLUX(vapor, zIdx)
@@ -88,9 +94,17 @@ classdef Vapor < Solvers.AbstractPhase
             %RE Reynolds number [-]
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.mix.H(zIdx))...
+            re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.H(zIdx))...
                     ./sum(vapor.mix.inputSet.geometry.PERIM);
         end
+        
+        function t = T(vapor, zIdx)
+            %T Temperature [K]
+            %
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            
+            t = vapor.mix.fluid.T(vapor.H(zIdx));
+        end   
 
     end
 end
