@@ -100,7 +100,7 @@ Python executable. The following instructions are from the
          for version 3.10.
       -  **Linux**: ``/usr/bin/python3.10``, for version 3.10. Use
          ``whereis python3`` to find possible locations.
-      -  **MacOS**: Someone with a Mac, please write how you do this…
+      -  **MacOS**: ``/usr/local/bin/python3.10``, for version 3.10.
 
 5. Try creating an instance of CoolPropWrapper() in MATLAB:
 
