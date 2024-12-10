@@ -323,11 +323,17 @@ classdef InputSet
                 % Heat flux at walls
                 currHFLUXs = BCs(tIdx).POWER .* currWPOWERs ./ sum(currWPOWERs) ./ originalNodeAreas;
 
+                % Replace NaNs with 0s
+                currHFLUXs = fillmissing(currHFLUXs, "constant", 0);
+
+                % Add wall to newHFLUX
+                newHFLUXs = [currHFLUXs(:,1:wallIdx), currHFLUXs(:,wallIdx), currHFLUXs(:,wallIdx+1:end)];
+                
                 % Create WPOWER for the two walls
-                targetWallWPOWERs = currHFLUXs .* nodeAreas;
-                newHFLUXs = targetWallWPOWERs./nodeAreas;
+                targetWallWPOWERs = newHFLUXs .* nodeAreas;
+                %newHFLUXs = targetWallWPOWERs./nodeAreas;
                 %targetWallWPOWERs = targetWallWPOWERs ./ sum(targetWallWPOWERs,'all');
-                targetWallWPOWERs = newHFLUXs ./ sum(newHFLUXs,'all');
+                %targetWallWPOWERs = newHFLUXs ./ sum(newHFLUXs,'all');
 
                 % Insert new WPOWERs
                 %newWPOWERs = [currWPOWERs(:,1:wallIdx-1) targetWallWPOWERs currWPOWERs(:,wallIdx+1:end)];
