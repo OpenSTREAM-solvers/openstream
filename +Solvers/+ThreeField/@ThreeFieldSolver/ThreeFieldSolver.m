@@ -35,7 +35,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         solve(tfSolver)
     end
 
-    methods
+    methods 
         function tfSolver = ThreeFieldSolver(inputSet,mixSolver, opts)
             %THREEFIELDSOLVER Creates a ThreeField solver
             %   Detailed explanation goes here
@@ -66,7 +66,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
                 else
                     % TODO: reorganize errors
-                    error("THREEFIELDSOLER:InputArgumentsError", "The previous solution was not provided");
+                    error("THREEFIELDSOLVER:InputArgumentsError", "The previous solution was not provided");
                 end
             elseif opts.solverMode == Solvers.SolverMode.NEW
                 % TODO: Do something here?
@@ -131,7 +131,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 flm.mix      = mix;
                 
                 % Axial Steps
-                drp.DZ = tfSolver.DZ;
+                drp.DZ = tfSolver.DZ;   % TODO: this might not be necessary
                 
                 flm.NZ = tfSolver.NZ;
                 flm.DZ = tfSolver.DZ;
@@ -149,7 +149,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 end
                     
                 % Wall evaporation heat flux
-                HFLUX = mix.HFLUX;                                      % [W/m^2] Wall heat flux
+                
+                % check if size(mix.HFLUX,2) == size(geom.PERIM,2)
+                if size(mix.HFLUX, 2) == size(geom.PERIM,2)
+                    % Use mix.HFLUX
+                    HFLUX = mix.HFLUX;                                      % [W/m^2] Wall heat flux
+                else
+                    % recalculate HFLUX
+                    mix_temp = Solvers.Mixture.MixtureSolver(tfSolver.inputSet);
+                    HFLUX = mix_temp.mixture(tIdx).HFLUX;
+                end
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);   % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);               % [W/m^2] ... distributed to all walls
                 
@@ -341,7 +350,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             NWALL = tfSolver.inputSet.geometry.NWALL;
 
-             % Reuse plotter if provided
+            % Reuse plotter if provided
             if length(opts.plotter) == NWALL
                 plotters = opts.plotter;
             else

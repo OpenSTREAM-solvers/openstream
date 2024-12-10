@@ -191,7 +191,7 @@ classdef Wave < Solvers.AbstractFilm
             if nargin <3, zIdx = (1:wave(1).NZ).'; end
             
             %TODO:
-            deltaU = wave.film.base.U(zIdx) - wave.U(zIdx);
+            deltaU = wave.film.base.U(zIdx,:) - wave.U(zIdx,:);
             Fbasemass = wave.MBASE(drop,zIdx).*deltaU; % [N/m^2]
             
         end
@@ -214,7 +214,7 @@ classdef Wave < Solvers.AbstractFilm
             rho_vs = wave.fluid.RHOG;
             
             % Difference in wave and vapor velocities
-            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx,:);
 
             % Eq. 45
             Fdrag = 0.5 .* wave.SHAPEFACTOR(zIdx) .* wave.DRAGCOEF(zIdx) .* rho_vs .* dU.^2;
@@ -235,7 +235,7 @@ classdef Wave < Solvers.AbstractFilm
             rho_vs = wave.fluid.RHOG;
             
             % Difference in wave and vapor velocities
-            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx,:);
 
             % Eq. 46
             Fshear = 0.5 .* f_v_w .* rho_vs .* dU.^2;
@@ -416,33 +416,39 @@ classdef Wave < Solvers.AbstractFilm
             arguments
                 srcObj
                 targetObj (1,:) Solvers.FourField.Wave
-                opts.all  (1,1) logical = false
+                opts.copyMode  (1,1) string {mustBeMember(opts.copyMode,{'full','first','rest','continue'})} = "full"
             end
 
-            for i = 1:length(targetObj)
-                
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'FilmError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
-                
-                % Copy properties
-                propNames = {'W','U','H','FREQUENCY'};
-                for j = 1:length(propNames)
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                    else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                    end
-                end
+            opts.propNames = {'W','U','H','FREQUENCY'};
 
+            % Call superclass method
+            nameValuePairs = namedargs2cell(opts);
+            copyFlowProperties@Solvers.AbstractFilm(srcObj, targetObj, nameValuePairs{:});
 
-            end
+            % for i = 1:length(targetObj)
+            % 
+            %     % Make sure obj meshes match
+            %     if srcObj.Z ~= targetObj(1).Z
+            %         throw( ...
+            %             MException( ...
+            %                 'FilmError:copyFlowPropertiesError', ...
+            %                 'Source and target objects have mismatched spatial meshes' ...
+            %                 ) ...
+            %             );
+            %     end
+            % 
+            %     % Copy properties
+            %     propNames = {'W','U','H','FREQUENCY'};
+            %     for j = 1:length(propNames)
+            %         if opts.all
+            %             targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+            %         else
+            %             targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+            %         end
+            %     end
+            % 
+            % 
+            % end
 
         end
     

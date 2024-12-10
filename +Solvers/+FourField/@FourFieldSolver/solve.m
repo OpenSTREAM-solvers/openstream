@@ -13,28 +13,44 @@ ffSolver.inputSet.session.log.diaryOn();
 % Open log in presistent mode
 ffSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
-if ffSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
-else
-    ffSolver.log('\n\n------------------------------------------- Four-field solver run initiated -------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-        
-        % Continue solving if init converged
-        if ffSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            ffSolver.log('\t\tSkipping transient solver ...\n');
-        end
-    catch ME
-        ffSolver.inputSet.session.log.closeLog();
-        ffSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
+try 
+    while true
     
-    ffSolver.log('\n------------------------------------------- Four-field solver run completed -------------------------------------------\n\n')
+        switch ffSolver.STATE
+    
+            case SolverState.UNINITIALIZED
+                error('This solver needs to be reinitialized before solving.');
+    
+            case SolverState.INITIALIZED
+                ffSolver.log('\n\n--------------------------------------------- Four-field solver run initiated ---------------------------------------------\n')
+                % Solve init
+                solver(true);
+    
+            case SolverState.INITIALSTEPCONVERGED
+                ffSolver.log('\n\n--------------------------------------------- Four-field solver run initiated ---------------------------------------------\n')
+                % Solve transient
+                solver(false);
+    
+            case SolverState.INITIALSTEPNOTCONVERGED
+                ffSolver.log('\t\tSkipping transient solver ...\n');
+                break;
+    
+            case SolverState.SOLVEDCONVERGED
+                break;
+
+            otherwise
+                break;
+    
+        end
+    
+    end
+
+    ffSolver.log('\n--------------------------------------------- Four-field solver run completed ---------------------------------------------\n\n')
+   
+catch ME
+    ffSolver.inputSet.session.log.closeLog();
+    ffSolver.inputSet.session.log.diaryOff();
+    rethrow(ME)
 end
 
 ffSolver.inputSet.session.log.closeLog();

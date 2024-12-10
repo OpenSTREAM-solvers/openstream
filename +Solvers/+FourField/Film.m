@@ -18,7 +18,7 @@ classdef Film < Solvers.AbstractFilm
         ITR
      end
 
-     properties (SetAccess=?Solvers.AbstractSolver)
+     properties (SetAccess={?Solvers.AbstractSolver,?Solvers.AbstractFilm})
         wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN
         base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN
      end
@@ -132,12 +132,29 @@ classdef Film < Solvers.AbstractFilm
 
             model = film.inputSet.model;
             geom = film.inputSet.geometry;
+            
+            % If WIN is a scalar, distribute evenly.
+            if ~isnan(WIN)
+                % [kg/s] Distribute film at inlet uniformly on all walls
+                film.base.W(1,1:geom.NWALL) = WIN.*geom.PERIM./sum(geom.PERIM);
+                
+                % [kg/s] Apply simple mass conservation
+                film.base.W = film.base.W(1,:)+cumsum(film.base.MEVAP).*geom.PERIM.*film.DZ;
+            else
+                % [kg/s] Apply film as specified
+                % This allocates all film mass to the base as starting pt.
+                film.base.W(1,1:geom.NWALL) = film.W(1,1:geom.NWALL);
+                
+                % MEVAP mass conservation is assumed to be accounted for
+                % given the specified film mass flow rate at inlet
 
-            % [kg/s] Distribute film at inlet uniformly on all walls
-            film.base.W(1,1:geom.NWALL) = WIN.*geom.PERIM./sum(geom.PERIM);
+                % [kg/s] Apply simple mass conservation
+                film.base.W(2:end,:) = film.base.W(1,:)+cumsum(film.base.MEVAP(2:film.NZ)).*geom.PERIM.*film.DZ;
 
-            % [kg/s] Apply simple mass conservation
-            film.base.W = film.base.W(1,:)+cumsum(film.base.MEVAP).*geom.PERIM.*film.DZ;
+            end
+
+
+            
             
             % Limit film mass flux minimum to 0 [kg/s]
             film.base.W = max(0, film.base.W);
@@ -175,31 +192,37 @@ classdef Film < Solvers.AbstractFilm
         %
             arguments
                 srcObj
-                targetObj (1,:) Solvers.FourField.Film
-                opts.all  (1,1) logical = false
+                targetObj (1,:) Solvers.FourField.Film                
+                opts.copyMode  (1,1) string {mustBeMember(opts.copyMode,{'full','first','rest','continue'})} = "full"
             end
 
-            for i = 1:length(targetObj)
-                
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'FilmError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
-                
-                % Copy base and wave
-                propNames = {'base', 'wave'};
-                for j = 1:length(propNames)
-                    % Copy base and wave flow properties
-                    srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}));
-                end
+            opts.propNames = {'base', 'wave'};
 
+            % Call superclass method
+            nameValuePairs = namedargs2cell(opts);
+            copyFlowProperties@Solvers.AbstractFilm(srcObj, targetObj, nameValuePairs{:});
 
-            end
+            % for i = 1:length(targetObj)
+            % 
+            %     % Make sure obj meshes match
+            %     if srcObj.Z ~= targetObj(1).Z
+            %         throw( ...
+            %             MException( ...
+            %                 'FilmError:copyFlowPropertiesError', ...
+            %                 'Source and target objects have mismatched spatial meshes' ...
+            %                 ) ...
+            %             );
+            %     end
+            % 
+            %     % Copy base and wave
+            %     propNames = {'base', 'wave'};
+            %     for j = 1:length(propNames)
+            %         % Copy base and wave flow properties
+            %         srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}));
+            %     end
+            % 
+            % 
+            % end
 
         end
     

@@ -34,27 +34,21 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
     end
 
     methods
-        function ffSolver = FourFieldSolver(inputSet,mixSolver)
+        function ffSolver = FourFieldSolver(inputSet,mixSolver, opts)
             %FOURFIELDSOLVER Creates a FourField solver
             %   Detailed explanation goes here
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
+                
+                opts.solverMode     (1,1)   Solvers.SolverMode              = Solvers.SolverMode.NEW
+                opts.initSolver     (1,1)   logical                         = true
+                opts.prevSolution   {mustBeScalarOrEmpty}                   = []
             end
 
             % Call abstract class constructor
-            ffSolver = ffSolver@Solvers.ThreeField.ThreeFieldSolver(inputSet,mixSolver);
-            
-            % % Store mixSolver handle
-            % ffSolver.mixSolver = mixSolver;
-            % 
-            % % Attempt to solve mixSolver if it is unsolved
-            % if ffSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
-            %     ffSolver.mixSolver.solve();
-            % end
-            % 
-            % % Initialize solver parameters
-            % ffSolver.initializeSolver();
+            nameValuePairs = namedargs2cell(opts);
+            ffSolver = ffSolver@Solvers.ThreeField.ThreeFieldSolver(inputSet, mixSolver,nameValuePairs{:});
 
         end
         
@@ -64,7 +58,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
             import Inputs.*
             import Solvers.FourField.*
-            import Solvers.SolverState
+            import Solvers.*
             
             % Copy relevant properties from mixSolver
             props = {'NZ','NTIME','TIME','DT','Z','DZ','fluid','boundaryConditions'}; % mixSolver properties
@@ -121,7 +115,15 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 drp.ITR = ITRd;
                    
                 % Wall evaporation heat flux
-                HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
+                % check if size(mix.HFLUX,2) == size(geom.PERIM,2)
+                if size(mix.HFLUX, 2) == geom.NWALL
+                    % Use mix.HFLUX
+                    HFLUX = mix.HFLUX;                                      % [W/m^2] Wall heat flux
+                else
+                    % recalculate HFLUX
+                    mix_temp = Solvers.Mixture.MixtureSolver(ffSolver.inputSet);
+                    HFLUX = mix_temp.mixture(tIdx).HFLUX;
+                end
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
                 
@@ -154,17 +156,36 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 % Note 2: other, maybe better, initialization states could be investigated
                 drp.W = repmat(e0.*mix.OAFWL,ffSolver.NZ,1);               % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
 
-                % Transient mass gradient in drop field
-                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);
+                % For new solutions
+                if ffSolver.SOLVERMODE == SolverMode.NEW
+                    % Transient mass gradient in drop field
+                    drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);
+
+                    % Transient mass gradient in film.base and film.wave
+                    % and recalculate drop mass flow rate
+                    %   TODO: Does this need to be done for continued solutions?
+                    flm.initializeBaseAndWave( ...
+                                    mix.liquid.W(1)-drp.W(1), ...              % Inlet flow rate (all walls)
+                                    ITRf ...                                   % Iteration struct
+                                 );
+                    
+                    drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
                 
-                % Transient mass gradient in film.base and film.wave
-                % and recalculate drop mass flow rate
-                flm.initializeBaseAndWave( ...
-                                mix.liquid.W(1)-drp.W(1), ...              % Inlet flow rate (all walls)
-                                ITRf ...                                   % Iteration struct
-                             );
-                drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
-                
+                else
+                    % Copy properties from previous solution
+                    ffSolver.previousSolution.drop(tIdx).copyFlowProperties(drp,"copyMode","continue");
+                    ffSolver.previousSolution.film(tIdx).copyFlowProperties(flm,"copyMode","continue");
+
+                    % Transient mass gradient in film.base and film.wave
+                    % and recalculate drop mass flow rate
+                    %   TODO: Does this need to be done for continued solutions?
+                    flm.initializeBaseAndWave( ...
+                                    NaN, ...                                   % Inlet flow rate (all walls)
+                                    ITRf ...                                   % Iteration struct
+                                 );
+
+                end
+
                 % Initialize velocity [m/s]
                 %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
                 drp.U = drp.USLIP();                                        % [m/s] Drop velocity
@@ -172,13 +193,33 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
                                                 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-                drp.H = repmat(fluid.HF,ffSolver.NZ,1);                
+                drp.H = repmat(fluid.HF,ffSolver.NZ,1);
+                
 
             end
 
             % Store transient mixture array
             ffSolver.film = flmArr;
             ffSolver.drop = drpArr;
+
+            if ffSolver.SOLVERMODE == SolverMode.CONTINUE
+
+                % TODO: Check prevSolution has same timestep as current
+                
+                % Copy fourfield properties from last node in prevSolution
+                % for each time step to first node in this solution
+                for tIdx = 1:length(ffSolver.previousSolution.TIME)
+
+                    % Copy properties
+                    ffSolver.previousSolution.drop(tIdx).copyFlowProperties(ffSolver.drop(tIdx),"copyMode","continue");
+                    ffSolver.previousSolution.film(tIdx).copyFlowProperties(ffSolver.film(tIdx),"copyMode","continue");
+                    
+                    % TODO: copy these properties to all spatial nodes for
+                    % faster convergence?
+                    %ffSolver.drop(tIdx).copyFlowProperties()
+
+                end
+            end
 
             % Create steady state arrays
             ffSolver.filmInit = copy( ...
@@ -225,8 +266,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 
             end
 
-            % set STATE to UNSOLVED
-            ffSolver.STATE = SolverState.UNSOLVED;
+            % set STATE to INITIALIZED
+            ffSolver.STATE = SolverState.INITIALIZED;
             
         end
         
@@ -263,16 +304,17 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
         end
 
-        function plotz(ffSolver, tIdx, opt)
+        function plotters = plotz(ffSolver, tIdx, opts)
         %PLOTZ
         %   NOTE: currently supports only single timeSteps
             arguments
                 ffSolver
                 tIdx    (1,1) double
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opts.plotter = []
             end
         
-            switch opt.solveMode
+            switch opts.solveMode
                 case 'TRANSIENT'
                     flm = ffSolver.film(tIdx);
                     drp = ffSolver.drop(tIdx);
@@ -289,9 +331,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             NWALL = ffSolver.inputSet.geometry.NWALL();
 
-            plotters = Solvers.SolverPlotter( ...
-                                sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
-                                1:NWALL);
+            % Reuse plotter if provided
+            if length(opts.plotter) == NWALL
+                plotters = opts.plotter;
+            else
+                plotters = Solvers.SolverPlotter( ...
+                                    sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opts.solveMode), ...
+                                    1:NWALL);
+            end
             plotters.setZs(z);
 
             % Wall heat flux

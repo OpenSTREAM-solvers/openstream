@@ -187,7 +187,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             %TODO:
-            deltaU = base.film.wave.U(zIdx) - base.U(zIdx);
+            deltaU = base.film.wave.U(zIdx) - base.U(zIdx,:);
             Fwavemass = base.MWAVE(drop,zIdx).*deltaU; % [N/m^2]
 
             Fwavemass = base.mix.AFDISTR(0,Fwavemass,zIdx);
@@ -356,42 +356,42 @@ classdef Base < Solvers.AbstractFilm
 
         
 
-        function copyFlowProperties(srcObj, targetObj, opts)
-        %COPYFLOWPROPERTIES
-        %
-            arguments
-                srcObj
-                targetObj (1,:) Solvers.FourField.Base
-                opts.all  (1,1) logical = false
-            end
-
-            for i = 1:length(targetObj)
-                
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'FilmError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
-                
-                % TODO: copy film?
-                % Copy properties
-                propNames = {'W','U','H'};
-                for j = 1:length(propNames)
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                    else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                    end
-                end
-
-
-            end
-
-        end
+        % function copyFlowProperties(srcObj, targetObj, opts)
+        % %COPYFLOWPROPERTIES
+        % %
+        %     arguments
+        %         srcObj
+        %         targetObj (1,:) Solvers.FourField.Base
+        %         opts.all  (1,1) logical = false
+        %     end
+        % 
+        %     for i = 1:length(targetObj)
+        % 
+        %         % Make sure obj meshes match
+        %         if srcObj.Z ~= targetObj(1).Z
+        %             throw( ...
+        %                 MException( ...
+        %                     'FilmError:copyFlowPropertiesError', ...
+        %                     'Source and target objects have mismatched spatial meshes' ...
+        %                     ) ...
+        %                 );
+        %         end
+        % 
+        %         % TODO: copy film?
+        %         % Copy properties
+        %         propNames = {'W','U','H'};
+        %         for j = 1:length(propNames)
+        %             if opts.all
+        %                 targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+        %             else
+        %                 targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+        %             end
+        %         end
+        % 
+        % 
+        %     end
+        % 
+        % end
     
     end
 

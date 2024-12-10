@@ -335,6 +335,13 @@ classdef Mixture < Solvers.AbstractField
             if ~isempty(mix.mixFull)
                 % Use the mixFull version
                 oafIdx = mix.mixFull.OAFIDX();
+            
+                % If oafIdx > mix.NZ
+                %   return NZ
+                % TODO: this needs to be verfied to work well in obs.
+                if oafIdx > mix.NZ
+                    oafIdx = mix.NZ;
+                end
 
             % Otherwise, calculate it for this mixture
             else

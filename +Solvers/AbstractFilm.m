@@ -362,14 +362,16 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         %
             arguments
                 srcObj
-                targetObj (1,:) Solvers.ThreeField.Film
+                targetObj (1,:) Solvers.AbstractFilm
                 opts.copyMode  (1,1) string {mustBeMember(opts.copyMode,{'full','first','rest','continue'})} = "full"
+                opts.propNames = {'W','U','H'}
             end
+
+            propNames = opts.propNames;
 
             for i = 1:length(targetObj)
                 
                % Copy properties
-                propNames = {'W','U','H'};
                  for j = 1:length(propNames)
                     % Full copy
                     if opts.copyMode == "full"
@@ -474,8 +476,13 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
                                 
                             else
-                                % simply copy if same size
-                                targetObj(i).(propNames{j})(1,:) = srcObj(i).(propNames{j})(end,:);
+                                if isobject(srcObj(i).(propNames{j}))
+                                    % copy flow properties
+                                    srcObj(i).(propNames{j})(end).copyFlowProperties(targetObj(i).(propNames{j})(1),"copyMode","continue");
+                                else
+                                    % simply copy if same size
+                                    targetObj(i).(propNames{j})(1,:) = srcObj(i).(propNames{j})(end,:);
+                                end
                             end
                         end
                        
