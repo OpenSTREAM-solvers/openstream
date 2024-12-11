@@ -18,6 +18,9 @@ classdef Model < Inputs.Input
         SCBOIL           (1,1) InputEnums.SCBOIL                           = 'NONE'                % Subcooled boiling mode
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'         % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                     % Phase velocity ratio [-]
+        CBT              (1,1) InputEnums.CBT                              = 'NONE'                % Critical Boiling Transition model 
+        RELAXX           (1,:) double                                      = [-0.5 0.0]            % Relaxation time eq quality [s]
+        RELAXT           (1,:) double                                      = [0.15 0.10 0.10 0.01] % Relaxation time array [s]
         
         MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'SLIP'                % Liquid momentum conservation model [-]  
         MOMENTGAS        (1,1) InputEnums.MOMENTGAS                        = 'SLIP'                % Gas momentum conservation model [-]        
