@@ -52,6 +52,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             import Inputs.*
             import Solvers.Mixture.*
             import Solvers.*
+            
+            NWALL = mixSolver.inputSet.geometry.NWALL;
 
             % Calculate time steps
             mixSolver.DT = mixSolver.inputSet.options.TSTEP;                            % [s] Time interval
@@ -100,9 +102,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % WVTH:  [J/kg] Thermodynamic vapor mass flow rate
             % X   :  [-] Vapor mass quality
             % XTH :  [-] Thermodynamic mass quality
-            TRELAXFields =  ["WV","WVTH","X","XTH"];                       % Fieldnames for TRELAX struct
+            TRELAXFields =  ["TIME","WV","WVTH","X","XTH"];                % Fieldnames for TRELAX struct
             TRELAXCell = cell(numel(TRELAXFields),1);                      % Cell structure to convert into struct
-            TRELAXCell(:) = {zeros(mixSolver.NZ,1)};                       % Initialize with zeros
+            TRELAXCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
             TRELAX = cell2struct(TRELAXCell, TRELAXFields, 1);             % Convert cell to struct with fieldnames
             
             % Setup inner iteration value struct
@@ -146,22 +148,20 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixArr(tIdx).TRELAX  = TRELAX;
                 mixArr(tIdx).ITR = ITR;
                 
-                % Mass flow rate [kg/s], pressure [Pa], enthalpy [J/kg]
-                mixArr(tIdx).W     = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
-                mixArr(tIdx).P     = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
-                mixArr(tIdx).H     = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
-                
-                % Initialize TRELAX after H to get correct XEQ
-                NWALL = mixSolver.inputSet.geometry.NWALL;
-                RWALL = mixSolver.inputSet.geometry.RWALL;
-                mixArr(tIdx).TRELAX.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).W.*RWALL;
-                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).W.*RWALL./2;
-                mixArr(tIdx).TRELAX.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
-                mixArr(tIdx).TRELAX.XTH  = repmat(mixArr(tIdx).XEQ,1,NWALL);
-                
                 % Phases
                 mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
-                mixArr(tIdx).vapor = Vapor(mixArr(tIdx));
+                mixArr(tIdx).vapor  = Vapor(mixArr(tIdx));
+                
+                % Mass flow rate [kg/s], pressure [Pa], enthalpy [J/kg]
+                mixArr(tIdx).W = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
+                mixArr(tIdx).P = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
+                mixArr(tIdx).H = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
+                
+                % Initialize TRELAX after H to get correct XEQ
+                mixArr(tIdx).TRELAX.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).WWALL;
+                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).WNEARWALL;
+                mixArr(tIdx).TRELAX.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
+                mixArr(tIdx).TRELAX.XTH  = repmat(mixArr(tIdx).XEQ,1,NWALL);
 
             end
 
@@ -314,6 +314,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 'ylabel', 'Wall heat flux [W/m^2]');
             plotter.plotz(bcHFLUX, 'BC', 'DisplayName', 'Boundary Condition');
             plotter.plotz(mix.HFLUX, 'MIX', 'DisplayName', 'Mixture');
+            plotter.plotz(mix.CHF, 'Liquid', 'DisplayName', 'CHF');
             plotter.legend("show", 'Location', 'best');
             plotter.plotOAF(oafZ);
 
@@ -509,10 +510,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 "tileTitle", "Qualities and relaxed qualities", ...
                 "xlabel","Time [s]", ...
                 "ylabel","Quality / Void fraction [-]");
-            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'Equil','DisplayName','Equilibrium quality')  
+            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'Equil','DisplayName','Equilibrium thermo. quality')  
             plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'Vapor','DisplayName','Vapor mass quality')
-            plotter.plotz(arrayfun(@(x) x.TRELAX.XEQ(zIdx),mix),'RelaxEquil','DisplayName','Equilibrium quality')  
-            plotter.plotz(arrayfun(@(x) x.TRELAX.X(zIdx),mix),'RelaxVapor','DisplayName','Vapor mass quality')
+            plotter.plotz(arrayfun(@(x) x.TRELAX.XTH(zIdx),mix),'RelaxEquil','DisplayName','Relaxed thermo. X')  
+            plotter.plotz(arrayfun(@(x) x.TRELAX.X(zIdx),mix),'RelaxVapor','DisplayName','Relaxed vapor X')
             plotter.legend("show", "Location", 'best');
             
         end
@@ -551,6 +552,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 zt_plot('X','Steam mass quality','-',1)
                 zt_plot('VF','Void fraction','-',1)
                 zt_plot('U','Velocity','m/s',1)
+                zt_plot('vapor.T','Vapor temperature','K',1)
                 
             end
 

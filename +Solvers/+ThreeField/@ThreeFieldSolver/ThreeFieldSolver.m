@@ -469,7 +469,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     end
             end
 
-
         end
 
     end

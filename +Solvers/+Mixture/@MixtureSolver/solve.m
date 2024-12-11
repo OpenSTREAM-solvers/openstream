@@ -89,7 +89,7 @@ function solver(solveINIT)
             Uold    = mix(tIdx-1).U(zIdx);                                              % [m/s] Mixture velocity at previous time step
             Hold    = mix(tIdx-1).H(zIdx);                                              % [J/kg] Mixture enthalpy at previous time step
             WVold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                                    % [m/s] Relaxed vapor mass flow rate at previous time step
-            WVTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                                  % [m/s] Relaxed vapor mass flow rate at previous time step
+            WVTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                                  % [m/s] Relaxed thermodynamic vapor mass flow rate at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -116,29 +116,15 @@ function solver(solveINIT)
                        Hold/U*DZ/DT)/(1+DZ/U/DT);                                       % [J/kg] Update mixture enthalpy
                 mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew;     % [J/kg] Apply relaxation
                 
+                % Critical Boiling Transition
+                [~,cbt] = mix(tIdx).CHF(zIdx);                                          % [-] Critical Boiling Transition array
+                
                 % Time relaxation terms (that needs to be updated in point iterations)
-                
-                % TODO: - Add CHF method with several options, should be wall dependant
-                %       - Define regions for relaxation time, model (e.g., cst) can be attributed to each region
-                %            REGIME from two-fluid model could be used
-                %       - Time relaxation arrays to be set from input, may be different between WV and WVTH
-                %       - Accelerate execution by storing density, if possible
-                %
-                
-                TRELAXL = mix(tIdx).AFDISTR(0.10,0.05,zIdx);                            % Flow regime dependant time relaxation (near wall liquid source)
-                WNW = geom.RWALL.*mix(tIdx).W(zIdx);                                    % [kg/s] Mass flow distribution per wall
-                HFG = mix(tIdx).vapor.H(zIdx)-mix(tIdx).liquid.H(zIdx);                 % [J/kg] Assume that all heat goes toward phase change (even when subcooled)
-                
-                XCHF = 0.60;
-                WLER = LHGR;                                                            % [W/m] Wall linear evaparation
-                if mix(tIdx).XEQ(zIdx) > XCHF, WLER = WLER.*0; end                      % ... set to 0 downstream CHF 
-                
-                % Umixture is used instead of Uvapor to make it independant from void fraction model
-                Wnew = (mix(tIdx).TRELAX.WV(zIdx-1,:) + DZ.*(WVold./Uold./DT ...
-                    + WLER./HFG + mix(tIdx).XEQ(zIdx).*WNW./U./TRELAXL)) ...
-                    ./(1 + DZ/U*(1/DT + 1/TRELAXL));
-                mix(tIdx).TRELAX.WV(zIdx,:) = max(0,Wnew);                              % [-] Relaxed vapor mass flow
-                mix(tIdx).TRELAX.X(zIdx,:) = mix(tIdx).TRELAX.WV(zIdx,:)./WNW;          % [-] Relaxed vapor quality
+                switch model.SCBOIL
+                    case 'TRELAX'
+                        mix(tIdx).TRELAX.WV(zIdx,:) = mix(tIdx).WV(zIdx,U,WVold,Uold,DT,DZ,LHGR,cbt);     % [kg/s] Relaxed vapor mass flow
+                        mix(tIdx).TRELAX.X(zIdx,:)  = mix(tIdx).TRELAX.WV(zIdx,:)./mix(tIdx).WWALL(zIdx); % [-] Relaxed vapor quality
+                end
                 
                 % Check convergence
                 dW = abs((mix(tIdx).W(zIdx)-Witer));                                    % [kg/s] Mass flow rate error between inner iterations
@@ -154,18 +140,12 @@ function solver(solveINIT)
     
             end
             
-            % Set time relaxation terms
-
-            % TODO: Here WNV should represent a near wall region (otherwise TRELAX.XEQ and XEQ would be equal for azymuthal equal heat flux)
-            %       Arbitrary division by 2 for now (should be consistent with mix.TRELAX.WVTH initilization in MixtureSolver.m)
-            
-            TRELAXLTH = TRELAXL;
-            WNW = WNW./2;
-            
-            mix(tIdx).TRELAX.WVTH(zIdx,:) = (mix(tIdx).TRELAX.WVTH(zIdx-1,:) + DZ.*(WVTHold./Uold./DT ...
-                    + LHGR./HFG + mix(tIdx).XEQ(zIdx).*WNW./U./TRELAXLTH)) ...
-                    ./(1 + DZ/U*(1/DT + 1/TRELAXLTH));                                 % [-] Relaxed thermodynamic vapor mass flow
-            mix(tIdx).TRELAX.XTH(zIdx,:) = mix(tIdx).TRELAX.WVTH(zIdx,:)./WNW;         % [-] Relaxed thermodynamic vapor quality
+            % Save time relaxation terms
+            mix(tIdx).TRELAX.TIME(zIdx,:) = mix(tIdx).RELAXTIME(zIdx,cbt);                            % [s] Time relaxation
+            mix(tIdx).TRELAX.WV(zIdx,:)   = mix(tIdx).WV(zIdx,U,WVold,Uold,DT,DZ,LHGR,cbt);           % [kg/s] Relaxed vapor mass flow
+            mix(tIdx).TRELAX.X(zIdx,:)    = mix(tIdx).TRELAX.WV(zIdx,:)./mix(tIdx).WWALL(zIdx);       % [-] Relaxed vapor quality
+            mix(tIdx).TRELAX.WVTH(zIdx,:) = mix(tIdx).WVTH(zIdx,U,WVTHold,Uold,DT,DZ,LHGR,cbt);       % [kg/s] Relaxed thermodynamic vapor mass flow
+            mix(tIdx).TRELAX.XTH(zIdx,:)  = mix(tIdx).TRELAX.WVTH(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Relaxed thermodynamic vapor quality
             
             % Save pressure drop components
             mix(tIdx).DP.Grav(zIdx)  = -DPparts.GRAV;                                  % [Pa] Gravitational pressure drop
