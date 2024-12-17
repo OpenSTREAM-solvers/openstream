@@ -58,7 +58,7 @@ classdef Vapor < Solvers.AbstractPhase
 
         function u = U(vapor, zIdx)
             %U Velocity [m/s]
-            %   NOTE: need to be verified
+            %NOTE: need to be verified
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.H(zIdx));
             
@@ -67,20 +67,30 @@ classdef Vapor < Solvers.AbstractPhase
             singlePhaseIdx = isnan(u);
             mixU = vapor.mix.U(zIdx);
             u(singlePhaseIdx) = mixU(singlePhaseIdx);
-            
         end
 
         function h = H(vapor, zIdx)
             %H Enthalpy [J/kg]
-            %   Calculated based on mixture enthapy and vapor quality
-            %   TODO: Find a better way to prevent division by small X and large h
+            %Calculation dpends on non equilibrium model
+            %TODO: Check and clean up
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            model = vapor.mix.inputSet.model;
             
-            X = min(vapor.mix.X(zIdx),vapor.mix.XEQ(zIdx));                % Account for potential superheated vapor
-            h = (vapor.mix.H(zIdx)-(1-X).*vapor.mix.fluid.HF)./X;
-            %h = max(h,vapor.mix.fluid.HG);                                 % No subcooled vapor
-            h = min(h,5E6);
+            switch model.SCBOIL
+                
+                case 'TRELAX'
+                    WV = vapor.mix.TRELAX.WV(zIdx,:);
+                    h = sum(vapor.mix.TRELAX.HV(zIdx,:).*WV,2)./sum(WV,2);
+                    h(isnan(h)) = vapor.mix.fluid.HG;
+                    % sum(WV,2) is the same as vapor.W
+                    
+                otherwise
+                    X = min(vapor.mix.X(zIdx),vapor.mix.XEQ(zIdx));        % Account for potential superheated vapor
+                    h = (vapor.mix.H(zIdx)-(1-X).*vapor.mix.fluid.HF)./X;  % Division by 0?
+                    %h = max(h,vapor.mix.fluid.HG);                         % No subcooled vapor
+                    %h = min(h,5E6);
+            end
         end
 
         function mflux = MFLUX(vapor, zIdx)
@@ -102,7 +112,6 @@ classdef Vapor < Solvers.AbstractPhase
             %T Temperature [K]
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            
             t = vapor.mix.fluid.T(vapor.H(zIdx));
         end   
 

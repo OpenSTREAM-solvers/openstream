@@ -102,7 +102,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % WVTH:  [J/kg] Thermodynamic vapor mass flow rate
             % X   :  [-] Vapor mass quality
             % XTH :  [-] Thermodynamic mass quality
-            TRELAXFields =  ["TIME","WV","WVTH","X","XTH"];                % Fieldnames for TRELAX struct
+            TRELAXFields =  ["TIME","WV","X","HV","TV","WVTH","XTH"];      % Fieldnames for TRELAX struct
             TRELAXCell = cell(numel(TRELAXFields),1);                      % Cell structure to convert into struct
             TRELAXCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
             TRELAX = cell2struct(TRELAXCell, TRELAXFields, 1);             % Convert cell to struct with fieldnames
@@ -126,13 +126,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 % Axial Steps
                 mixArr(tIdx).NZ = mixSolver.NZ;
                 mixArr(tIdx).DZ = mixSolver.DZ;
-                mixArr(tIdx).Z = mixSolver.Z;
+                mixArr(tIdx).Z  = mixSolver.Z;
                 
                 % Time step
                 mixArr(tIdx).NTIME = mixSolver.NTIME;
-                mixArr(tIdx).DT = mixSolver.DT;
-                mixArr(tIdx).TIME = mixSolver.TIME(tIdx);
-                mixArr(tIdx).TIDX = tIdx;
+                mixArr(tIdx).DT    = mixSolver.DT;
+                mixArr(tIdx).TIME  = mixSolver.TIME(tIdx);
+                mixArr(tIdx).TIDX  = tIdx;
 
                 % Wall heat flux
                 mixArr(tIdx).HFLUX = ...
@@ -143,10 +143,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         );
                 
                 % DP, ACC, TRELAX, ITR
-                mixArr(tIdx).DP  = DP;
-                mixArr(tIdx).ACC = ACC;
-                mixArr(tIdx).TRELAX  = TRELAX;
-                mixArr(tIdx).ITR = ITR;
+                mixArr(tIdx).DP     = DP;
+                mixArr(tIdx).ACC    = ACC;
+                mixArr(tIdx).TRELAX = TRELAX;
+                mixArr(tIdx).ITR    = ITR;
                 
                 % Phases
                 mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
@@ -159,8 +159,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 
                 % Initialize TRELAX after H to get correct XEQ
                 mixArr(tIdx).TRELAX.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).WWALL;
-                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).WNEARWALL;
                 mixArr(tIdx).TRELAX.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
+                mixArr(tIdx).TRELAX.HV   = repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,NWALL);
+                mixArr(tIdx).TRELAX.TV   = reshape(mixSolver.fluid(tIdx).T(mixArr(tIdx).TRELAX.HV),[],NWALL);
+                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).WNEARWALL;
                 mixArr(tIdx).TRELAX.XTH  = repmat(mixArr(tIdx).XEQ,1,NWALL);
 
             end
@@ -355,6 +357,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(mix.vapor.H,"Vapor","DisplayName","Vapor");
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
+            plot(xlim,mixSolver.fluid(tIdx).HF.*[1 1],'k--','handleVisibility','off')
+            plot(xlim,mixSolver.fluid(tIdx).HG.*[1 1],'k--','handleVisibility','off')
             
             % Velocities
             plotter.newTile( ...
