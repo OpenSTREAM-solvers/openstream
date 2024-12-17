@@ -37,10 +37,13 @@ classdef Mixture < Solvers.AbstractField
     end
 
     properties (Access=private)
-        mflux        (:,1) double  {mustBeNumeric}                         = 1                  % [kg/m^2-s] Mass flux
-        xeq          (:,1) double  {mustBeNumeric}                         = 1                  % [-] Equilibrium quality
-        x            (:,1) double  {mustBeNumeric}                         = 1                  % [-] Vapor quality
-        rho          (:,1) double  {mustBeNumeric}                         = 1                  % [kg/m^3] Mixture density
+        mflux        (:,1) double  {mustBeNumeric}                         = 1.                 % [kg/m^2-s] Mass flux
+        xeq          (:,1) double  {mustBeNumeric}                         = 1.                 % [-] Equilibrium quality
+        x            (:,1) double  {mustBeNumeric}                         = 1.                 % [-] Vapor quality
+        vf           (:,1) double  {mustBeNumeric}                         = 1.                 % [-] Void fraction
+        chf          (:,:) double  {mustBeNumeric}                                              % [-] Critical Heat Flux
+        cbt          (:,:) logical                                                              % [-] Critical Boiling Transition flag
+        rho          (:,1) double  {mustBeNumeric}                         = 1.                 % [kg/m^3] Mixture density
         oafidx_const       double  {mustBeNumeric}                         = []                 % [-] Solved index for onset of annular flow
         sigm_const   (:,1) double  {mustBeNumeric}                         = []                 % [-] Solved sigmoid fnc value
     end       
@@ -88,7 +91,7 @@ classdef Mixture < Solvers.AbstractField
             % Set mix.H value
             mix.H = val;
 
-            % Calculate mix.rho (mix.rho calls mix.x, which call mix.xeq)
+            % Calculate mix.rho (mix.rho calls mix.vf, which calls mix.x, which calls mix.xeq)
             mix.RHO_CALC(zIdx);
     
         end
@@ -140,92 +143,46 @@ classdef Mixture < Solvers.AbstractField
         
         function vf =VF(mix, zIdx)
         %VF Void fraction [-]
-        %TODO: Can take time to compute, would benefit from pre-calculation such as for XEQ and X
+        %   This function only retrieves the mix.vf values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.VF_CALC()
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            geom = mix.inputSet.geometry;
-
-            switch model.VOID
-                case InputEnums.VOID.HOMOGENEOUS
-                    % [-] Homogeneous void model
-                    vf = vfslip(mix.X(zIdx),1); 
-                    
-                case InputEnums.VOID.SLIP
-                    % [-] Slip void model
-                    vf = vfslip(mix.X(zIdx),model.SLIP); 
-                    
-                case InputEnums.VOID.BESTION
-                    % [-] Bestion drift flux model
-                    C0 = 1.;                                               % [-] Distribution parameter
-                    RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
-                    RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
-                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(RHOL-RHOV)./RHOV); % [m/s] Drift velocity
-                    vf = vfdrift(C0,ugj);            
-            end
-            
-            
-            function vf = vfslip(x,S)
-            %VFSLIP Void fraction based on slip model
-                RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
-                RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
-                vf = x.*RHOL./(x.*RHOL+S.*(1-x).*RHOV);
-            end
-            
-            function vf = vfdrift(C0,ugj)
-            %VFDRIFT Void fraction based on drift flux model
-            % C0    [-]     Distribution parameter
-            % ugj   [m/s]   Drift velocity
-                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+            if nargin < 2
+                vf = mix.vf; 
+            else
+                vf = mix.vf(zIdx); 
             end
             
         end
         
-        function [chf,cbt] =CHF(mix, zIdx)
+        function chf =CHF(mix, zIdx)
         %CHF Critical Heat Flux [W/m^2], wall dependant
-        %TODO: Implement additional CHF correlations
-        %      Investigate potential rewetting downstream CHF
-            
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            geom = mix.inputSet.geometry;
-            
-            Pr  = mix.P(end);                                              % [Pa] System pressure
-            G   = mix.MFLUX(1:mix(1).NZ);                                  % [kg/m^2/s] Mass flux
-            XEQ = mix.XEQ(1:mix(1).NZ);                                    % [-] Equilibrium quality
-            D   = geom.HDIAM;                                              % [m] Diameter
-            
-            switch model.CBT
-                case InputEnums.CBT.NONE
-                    chf = nan(mix(1).NZ,geom.NWALL);
-                    
-                case InputEnums.CBT.BIASI
-                    % Biasi correlation
-                    % BIAS!, L . et al.: A new correlation for round ducts and uniform
-                    % heating and its comparison with world data, EURAEC report 1874, 1967.
-                    
-                    Pr = Pr/1.01235E5;                                     % [ata] System pressure    
-                    G  = G./10;                                            % [g/cm^2/s] Mass flux
-                    D  = D*1E2;                                            % [cm] Diameter
-
-                    n = 0.6 - 0.2*double(D>=1);
-                    
-                    HP = -1.159+0.149*Pr*exp(-0.019*Pr)+8.99*Pr/(10+Pr^2);
-                    YP = 0.7249+0.099*Pr*exp(-0.032*Pr);
-                    
-                    q1 = (3.780E3/D^n)./G.^0.6.*HP.*(1-XEQ);               % [W/cm^2] High quality
-                    q2 = (1.883E3/D^n)./G.^(1/6).*(YP./G.^(1/6)-XEQ);      % [W/cm^2] Low quality
-                    
-                    chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
+        %   This function only retrieves the mix.chf values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.CHF_CALC()
+        %    
+            if nargin < 2
+                chf = mix.chf; 
+            else
+                chf = mix.chf(zIdx,:); 
             end
             
-            cbt = mix.HFLUX(1:mix(1).NZ,:) > chf;                          % CBT indicator
-            %cbt = cumsum(cbt) > 1;                                         % No rewetting downstream CBT
-            
-            chf = chf(zIdx,:);
-            cbt = cbt(zIdx,:);
+        end
+        
+        function cbt =CBT(mix, zIdx)
+        %CHF Critical Heat Flux [W/m^2], wall dependant
+        %   This function only retrieves the mix.chf values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.CHF_CALC()
+        %    
+            if nargin < 2
+                cbt = mix.cbt; 
+            else
+                cbt = mix.cbt(zIdx,:); 
+            end
             
         end
         
@@ -242,6 +199,15 @@ classdef Mixture < Solvers.AbstractField
                 rho = mix.rho(zIdx); 
             end
             
+        end
+        
+        function lhgr = LHGR(mix, zIdx)
+        %LHGR Linear heat generation rate
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            geom = mix.inputSet.geometry;
+            lhgr = geom.PERIM.*mix.HFLUX(zIdx,:);                          % [W/m] Linear heat generation rate
         end
 
         function mu = MU(mix, zIdx)
@@ -443,7 +409,7 @@ classdef Mixture < Solvers.AbstractField
         function oafwl = OAFWL(mix)
         %OAFWL Liquid mass flow rate at onset of annular flow
         %
-            oafwl = mix.liquid.W(mix.OAFIDX);                    % [kg/s] Mixture liquid mass flow rate
+            oafwl = mix.liquid.W(mix.OAFIDX);                              % [kg/s] Mixture liquid mass flow rate
         end
         
         function afFnc = AFFNC(mix, zIdx)
@@ -518,7 +484,7 @@ classdef Mixture < Solvers.AbstractField
         %XEQ_CALC Helper function to calculate equilibrium quality [-]
         %  
         
-            mix.xeq(zIdx) = (mix.H(zIdx)-mix.fluid.HF) ./ mix.fluid.HFG;
+            mix.xeq(zIdx) = (mix.H(zIdx)-mix.fluid.HF)./ mix.fluid.HFG;
         end
 
         function X_CALC(mix, zIdx)
@@ -526,7 +492,7 @@ classdef Mixture < Solvers.AbstractField
         %  
             
             % Call XEQ first
-            mix.XEQ_CALC(zIdx);                                                % Use mix.xeq to calculate x
+            mix.XEQ_CALC(zIdx);                                            % Use mix.xeq to calculate x
             
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
@@ -560,22 +526,118 @@ classdef Mixture < Solvers.AbstractField
                     zIdx = zIdx(idx);
                     mix.x(zIdx) = mix.xeq(zIdx)-xb(idx).*exp(mix.xeq(zIdx)./xb(idx)-1);
                     mix.x(zIdx) = mix.x(zIdx)./(1-xb(idx).*exp(mix.xeq(zIdx)./xb(idx)-1));
+                    mix.x(zIdx) = min(mix.x(zIdx),1);
                     
                 case 'TRELAX'
                     % Time relaxation model
                     % New proposed model based on interfacial phase change time relaxation approach (main calculations in solve.m)
                     % Physical approach to geometrical and thermal inhomogeneities
                     % TODO: Document and validate model
-                    mix.x(zIdx) = sum(geom.PERIM.*mix.TRELAX.X(zIdx,:),2)./sum(geom.PERIM,2); % [-] Averaged based on wall contributions
+                    
+                    mix.x(zIdx) = sum(mix.TRELAX.WV(zIdx,:),2)./mix.W(zIdx);
             end
         end
         
-        function RHO_CALC(mix, zIdx)
-        %RHO_CALC Helper function to calcuate density [kg/m^3]
+        function VF_CALC(mix, zIdx)
+        %VF_CALC Helper function to calculate void fraction [-]
         %
-        
+            
             % Call X first
             mix.X_CALC(zIdx);
+            
+            model = mix.inputSet.model;
+            geom = mix.inputSet.geometry;
+
+            switch model.VOID
+                case InputEnums.VOID.HOMOGENEOUS
+                    % [-] Homogeneous void model
+                    mix.vf(zIdx) = vfslip(mix.X(zIdx),1); 
+                    
+                case InputEnums.VOID.SLIP
+                    % [-] Slip void model
+                    mix.vf(zIdx) = vfslip(mix.X(zIdx),model.SLIP); 
+                    
+                case InputEnums.VOID.BESTION
+                    % [-] Bestion drift flux model
+                    C0 = 1.;                                               % [-] Distribution parameter
+                    RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
+                    RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
+                    ugj = 0.188.*sqrt(model.G.*geom.HDIAM.*(RHOL-RHOV)./RHOV); % [m/s] Drift velocity
+                    mix.vf(zIdx) = vfdrift(C0,ugj);            
+            end
+            
+            
+            function vf = vfslip(x,S)
+            %VFSLIP Void fraction based on slip model
+                RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
+                RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
+                vf = x.*RHOL./(x.*RHOL+S.*(1-x).*RHOV);
+            end
+            
+            function vf = vfdrift(C0,ugj)
+            %VFDRIFT Void fraction based on drift flux model
+            % C0    [-]     Distribution parameter
+            % ugj   [m/s]   Drift velocity
+                vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
+            end
+            
+        end
+        
+        function CHF_CALC(mix, zIdx)
+        %CHF_CALC Helper function to calculate Critical Heat Flux [W/m^2]    
+        %TODO: Implement additional CHF correlations
+        %      Investigate potential rewetting downstream CHF
+            
+            model = mix.inputSet.model;
+            geom = mix.inputSet.geometry;
+            
+            Pr  = mix.P(end);                                              % [Pa] System pressure
+            G   = mix.MFLUX(1:mix(1).NZ);                                  % [kg/m^2/s] Mass flux
+            XEQ = mix.XEQ(1:mix(1).NZ);                                    % [-] Equilibrium quality
+            D   = geom.HDIAM;                                              % [m] Diameter
+            
+            switch model.CBT
+                case InputEnums.CBT.NONE
+                    chf = nan(mix(1).NZ,geom.NWALL);
+                    
+                case InputEnums.CBT.BIASI
+                    % Biasi correlation
+                    % BIAS!, L . et al.: A new correlation for round ducts and uniform
+                    % heating and its comparison with world data, EURAEC report 1874, 1967.
+                    
+                    Pr = Pr/1.01235E5;                                     % [ata] System pressure    
+                    G  = G./10;                                            % [g/cm^2/s] Mass flux
+                    D  = D*1E2;                                            % [cm] Diameter
+
+                    n = 0.6 - 0.2*double(D>=1);
+                    
+                    HP = -1.159+0.149*Pr*exp(-0.019*Pr)+8.99*Pr/(10+Pr^2);
+                    YP = 0.7249+0.099*Pr*exp(-0.032*Pr);
+                    
+                    q1 = (3.780E3/D^n)./G.^0.6.*HP.*(1-XEQ);               % [W/cm^2] High quality
+                    q2 = (1.883E3/D^n)./G.^(1/6).*(YP./G.^(1/6)-XEQ);      % [W/cm^2] Low quality
+                    
+                    chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
+            end
+            
+            %chf = 0.6.*chf;
+            %chf = linspace(1.35,0.25,mix(1).NZ)'.*chf;
+            cbt = mix.HFLUX(1:mix(1).NZ,:) > chf;                          % CBT indicator
+            %cbt = cumsum(cbt) > 1;                                         % No rewetting downstream CBT
+            %Set cbt to 1 for Xeq >= 1?
+            
+            mix.chf(zIdx,:) = chf(zIdx,:);
+            mix.cbt(zIdx,:) = cbt(zIdx,:);
+            
+        end
+        
+        function RHO_CALC(mix, zIdx)
+        %RHO_CALC Helper function to calculate density [kg/m^3]
+        %
+        
+            % Call VF and CHF first
+            mix.VF_CALC(zIdx);
+            mix.CHF_CALC(zIdx);
             
             vf = mix.VF(zIdx);
             mix.rho(zIdx) = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx)) + ...
@@ -586,65 +648,177 @@ classdef Mixture < Solvers.AbstractField
     
     methods (Hidden=true)    
         
-        
         function w = WWALL(mix, zIdx)
-            % Mass flow distribution per wall
-            
+        %WWALL Mass flow distribution per wall
+        %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             geom  = mix.inputSet.geometry;
-            
             w = geom.RWALL.*mix.W(zIdx);                                   % [kg/s]
         end
         
         function w = WNEARWALL(mix, zIdx)
-            % Near-wall mass flow distribution per wall
-            % TODO: WNEARWALL should correspond to a near wall region (otherwise TRELAX.XEQ and XEQ would be equal for azymuthal equal heat flux)
-            %       Arbitrary division by 2 for now
-            
+        %WNEARWALL Near-wall mass flow distribution per wall
+        %TODO: WNEARWALL should correspond to a near wall region (otherwise TRELAX.XEQ and XEQ would be equal for azymuthal equal heat flux)
+        %       Arbitrary division by 2 for now
+        %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             w = mix.WWALL(zIdx)./2;                                        % [kg/s]
         end
         
-        function t = RELAXTIME(mix, zIdx, cbt)
-            % Relaxation time model for near-wall liquid source
+        function t = RELAXTIME(mix, zIdx)
+        %RELAXTIME Relaxation time model for wall dependant interfacial transfer
+        %TODO: Investigate of this parameter should be walld dependant or not
+        %    
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             model = mix.inputSet.model;
             geom  = mix.inputSet.geometry;
             N = length(model.RELAXX);
-            
+            cbt = mix.CBT(zIdx);
+
             t = interp1(model.RELAXX,model.RELAXT(1:N),mix.XEQ(zIdx),'linear','extrap'); % Pre-CBT time relaxation model
-            t = repmat(t,1,geom.NWALL);                                    % Expand to all wall
-            t(cbt)                 = model.RELAXT(N+1);                    % Post-CBT time relaxation model (wall dependant)
+            %t = repmat(t,1,geom.NWALL);                                    % Expand to all wall
+            %t(cbt)                 = model.RELAXT(N+1);                    % Post-CBT time relaxation model (wall dependant)
+            t(any(cbt,2))          = model.RELAXT(N+1);                    % !!!Wall lumped approach
             t(mix.KLOSS(zIdx)>0,:) = model.RELAXT(N+2);                    % Grid time relaxation
         end
         
-        function wv = WV(mix, zIdx, U, WVold, Uold, DT, DZ, LHGR, cbt)
-            %WV Time relaxed vapor mass flow rate
+        function mint = MINT(mix, UV, zIdx)
+        %MINT Linear interfacial mass transfer rate
+        %Drives the system towards thermal equalibirum
+        %
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            
+            WW = mix.WWALL(zIdx);                                          % [kg/s] Mass flow distribution per wall
+            TRELAXL = mix.RELAXTIME(zIdx);                                 % [s] Time relaxation model
+            wint = mix.XEQ(zIdx).*WW-mix.TRELAX.WV(zIdx,:);                % [kg/s]
+            mint = wint./UV./TRELAXL;                                      % [kg/s/m]
+        end
+        
+        function mwbr = MWBR(mix, zIdx)
+        %LMER Linear mass wall boiling rate
+        %Liquid assumed to fully boil regardless of subcooling
+        %Set to 0 beyond CBT
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            cbt = mix.CBT(zIdx);                                           % CBT flag
+            LHGR = mix.LHGR(zIdx);                                         % [W/m] Linear heat generation rate
+            HFG  = mix.fluid.HG-mix.liquid.H(zIdx);                        % [J/kg] Vapor is generated at saturation
+            mwbr = double(~cbt).*LHGR./HFG;                                % [kg/s/m] 
+        end
+        
+        function mvtot = MVTOT(mix, UV, zIdx)
+        %MVTOT Total linear vapor mass transfer rate
+        %    
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            
+            mvtot = mix.MINT(UV,zIdx) + mix.MWBR(zIdx);                    % [kg/s/m]
+        end
+        
+        function lher = LHER(mix, UV, zIdx)
+        %LHBR Linear interfacial heat evaporation rate
+        %    
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            
+            ME = max(0,mix.MINT(UV,zIdx));                                 % [kg/s] Interfacial evaporation mass flow driver
+            HV = mix.TRELAX.HV(zIdx,:);                                    % [J/kg] Vapor enthalpy
+            %HV = (mix.TRELAX.HV(zIdx-1,:)+HV)./2;  % This can help by taking the average of HV over zIdx-1 to zIdx
+            lher = ME.*(mix.liquid.H(zIdx)-HV);                            % [W/m]
+        end
+        
+        function lhbr = LHBR(mix, zIdx)
+        %LHBR Linear boiling heat rate
+            
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            MWBR = mix.MWBR(zIdx);                                         % [kg/s] Linear mass wall boiling rate 
+            HV = mix.TRELAX.HV(zIdx,:);                                    % [J/kg] Vapor enthalpy
+            %HV = (mix.TRELAX.HV(zIdx-1,:)+HV)./2;
+            lhbr = MWBR.*(mix.fluid.HG-HV);                                % [W/m]
+        end
+        
+        function lhvr = LHVR(mix, zIdx)
+        %LHVR Linear heat to vapor rate
+        %Set to LHGR beyond CBT
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            cbt = mix.CBT(zIdx);                                           % CBT flag
+            LHGR = mix.LHGR(zIdx);                                         % [W/m] Linear heat generation rate
+            lhvr = double(cbt).*LHGR;                                      % [W/m]
+        end
+        
+        function lhtot = LHTOT(mix, UV, zIdx)
+        %LHTOT Total linear vapor heat rate
+        %    
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            
+            lhtot = mix.LHER(UV,zIdx) + mix.LHBR(zIdx) + mix.LHVR(zIdx);   % [W/m]
+        end
+        
+        function hvtot = HVTOT(mix, UV, zIdx)
+        %HVTOT Total linear vapor energy transfer rate
+        %    
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            
+            WV = mix.TRELAX.WV(zIdx,:);                                    % [kg/s] Vapor mass flow rate
+            lhtot = mix.LHTOT(UV,zIdx);                                    % [W/m] Total linear vapor heat rate
+            
+            WV = sum(WV,2);lhtot = sum(lhtot,2);                           % [J/kg/s] !!! Wall lump approach
+            
+            hvtot = lhtot./WV;                                             % [J/kg/s]
+            hvtot(WV <= 1E-8) = 0;
+        end
+        
+        function wv = WV(mix, zIdx, UV, WVold, Uold)
+        %WV Time relaxed vapor mass flow rate
+        %Used for alternative direct substitution scheme in solver
             
             WW      = mix.WWALL(zIdx);                                     % [kg/s] Mass flow distribution per wall
-            HFG     = mix.vapor.H(zIdx)-mix.liquid.H(zIdx);                % [J/kg] Assume that all heat goes toward phase change (even when subcooled)
-            WLER    = double(~cbt).*LHGR;                                  % [W/m] Wall linear evaparation (set to 0 downstream CBT, i.e. heat flux to vapor)
-            TRELAXL = mix.RELAXTIME(zIdx,cbt);                             % [s] Time relaxation model
+            MWBR    = mix.MWBR(zIdx);                                      % [kg/s/m] Linear mass wall boiling rate
+            TRELAXL = mix.RELAXTIME(zIdx);                                 % [s] Time relaxation model
             
-            Wnew = (mix.TRELAX.WV(zIdx-1,:) + DZ.*(WVold./Uold./DT ...
-                + WLER./HFG + mix.XEQ(zIdx).*WW./U./TRELAXL)) ...          % Umixture is used instead of Uvapor to make it independant from void fraction model
-                ./(1 + DZ./U.*(1/DT + 1./TRELAXL));                        % [kg/s] Update relaxec vapor mass flow
+            Wnew = (mix.TRELAX.WV(zIdx-1,:) + (WVold./Uold./mix.DT ...
+                + mix.XEQ(zIdx).*WW./UV./TRELAXL + MWBR).*mix.DZ) ...     
+                ./(1 + mix.DZ./UV.*(1/mix.DT + 1./TRELAXL));               % [kg/s] Update relaxed vapor mass flow
             wv = max(0,Wnew);                                              % [kg/s] Relaxed vapor mass flow
         end
         
-        function wvth = WVTH(mix, zIdx, U, WVTHold, Uold, DT, DZ, LHGR, cbt)
-            %WV Time relaxed thermodynamic vapor mass flow rate
-            %TODO: Time relaxation same as for vapor mass flow rate for now, could be different
-            
+        function wvth = WVTH(mix, zIdx, UV, WVTHold, Uold)
+        %WVTH Time relaxed modified (thermodynamic) vapor mass flow rate
+        %Alternative direct substitution scheme in solver
+        %TODO: Time relaxation same as for vapor mass flow rate for now, could be different
+        %    
             WNW     = mix.WNEARWALL(zIdx);                                 % [kg/s] Mass flow distribution per wall
-            HFG     = mix.vapor.H(zIdx)-mix.liquid.H(zIdx);                % [J/kg] Assume that all heat goes toward phase change (even when subcooled)
-            TRELAXL = mix.RELAXTIME(zIdx,cbt);                             % [s] Time relaxation model
+            MWBR    = mix.MWBR(zIdx);                                      % [kg/s/m] Linear mass wall boiling rate
+            TRELAXL = mix.RELAXTIME(zIdx);                                 % [s] Time relaxation model
             
-            wvth = (mix.TRELAX.WVTH(zIdx-1,:) + DZ.*(WVTHold./Uold./DT ...
-                + LHGR./HFG + mix.XEQ(zIdx).*WNW./U./TRELAXL)) ...
-                ./(1 + DZ./U.*(1/DT + 1./TRELAXL));                        % [kg/s] Relaxed thermodynamic vapor mass flow
+            wvth = (mix.TRELAX.WVTH(zIdx-1,:) + (WVTHold./Uold./mix.DT ...
+                 + mix.XEQ(zIdx).*WNW./UV./TRELAXL + MWBR).*mix.DZ) ...
+                ./(1 + mix.DZ./UV.*(1/mix.DT + 1./TRELAXL));               % [kg/s] Update relaxed modified vapor mass flow
+        end
+        
+        function hv = HV(mix, zIdx, UV, HVold)
+        %HV Time relaxed vapor enthalpy
+        %Alternative direct substitution scheme in solver
+        %t
+            
+            WV   = mix.TRELAX.WV(zIdx,:);                                  % [kg/s] Relaxed vapor mass flow rate
+            MWBR = mix.MWBR(zIdx);                                         % [kg/s/m] Linear mass wall boiling rate
+            LHVR = mix.LHVR(zIdx);                                         % [W/m] Linear heat to vapor rate
+            ME   = max(0,mix.MINT(UV,zIdx));                               % [kg/s] Interfacial evaporation mass flow driver
+            
+            WV = sum(WV,2); MWBR = sum(MWBR,2); LHVR = sum(LHVR,2); ME = sum(ME,2); % !!! Wall lump approach
+            
+            G = (ME.*mix.liquid.H(zIdx) + LHVR + MWBR.*mix.fluid.HG)./WV;
+            J = (ME + MWBR)./WV;
+            G(WV <= 1E-8) = 0; J(WV <= 1E-8) = 0;
+            hnew = (mix.TRELAX.HV(zIdx-1,:) + (HVold./UV./mix.DT + G).*mix.DZ) ...
+                ./(1 + mix.DZ./UV.*(1/mix.DT) + J.*mix.DZ);                % [kg/s] Update relaxed vapor enthalpy   
+            hv = max(mix.fluid.HG,hnew);                                   % No subcooled vapor
         end
         
     end

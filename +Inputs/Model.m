@@ -19,7 +19,7 @@ classdef Model < Inputs.Input
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'         % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                     % Phase velocity ratio [-]
         CBT              (1,1) InputEnums.CBT                              = 'NONE'                % Critical Boiling Transition model 
-        RELAXX           (1,:) double                                      = [-0.5 0.0]            % Relaxation time eq quality [s]
+        RELAXX           (1,:) double                                      = [-0.5 0.0]            % Relaxation time eq quality [-]
         RELAXT           (1,:) double                                      = [0.15 0.10 0.10 0.01] % Relaxation time array [s]
         
         MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'SLIP'                % Liquid momentum conservation model [-]  
