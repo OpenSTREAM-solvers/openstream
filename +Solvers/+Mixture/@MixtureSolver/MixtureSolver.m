@@ -623,7 +623,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             "-mat" ...
                         );
                     else
-                        error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()');
+                        error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
                     end
             end
 
