@@ -52,7 +52,7 @@ classdef (HandleCompatible) Input < dynamicprops
             end
         end
 
-        function [isSpecifiedEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
+        function [isSpecifiedEntry, defaultUsed, defaultValue] = validateInputEntry(obj, objPropname, opts)
             % VALIDATEINPUTENTRY 
             %   Description
             arguments
@@ -69,6 +69,7 @@ classdef (HandleCompatible) Input < dynamicprops
             % Default false isValidEntry and defaultUsed
             isSpecifiedEntry = false;
             defaultUsed = false;
+            defaultValue = [];
 
             % List of properties set in inputStruct 
             inputStructFieldnames = fieldnames(obj.inputStruct);
@@ -81,6 +82,9 @@ classdef (HandleCompatible) Input < dynamicprops
             % Find propname in inputStructFieldnames
             if find(strcmp(inputStructFieldnames, objPropname))
                 
+                % Variable is specified
+                isSpecifiedEntry = true;
+
                 % assign field entry as inputField
                 inputField = obj.inputStruct.(objPropname);
 
@@ -99,13 +103,13 @@ classdef (HandleCompatible) Input < dynamicprops
                 elseif ~propIsRequired && inputFieldIsEmpty
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
-                    warning('%s: Value for entry %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
+                    % warning('%s: Value for entry %s was not set. Default value used: %s', ...
+                    %     objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
+                    defaultValue = propProps.DefaultValue;
                 else
                     % Assign specified non-empty value to property
                     % Let MATLAB throw errors from parameter validation
-                    isSpecifiedEntry = true;
                 end
             else
                 if propIsRequired
@@ -118,9 +122,10 @@ classdef (HandleCompatible) Input < dynamicprops
                 else
                 % An optional property was not specified
                     
-                    warning('%s: Value for optional property %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
+                    % warning('%s: Value for optional property %s was not set. Default value used: %s', ...
+                    %     objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
+                    defaultValue = propProps.DefaultValue;
                 end
             end
 
@@ -144,6 +149,73 @@ classdef (HandleCompatible) Input < dynamicprops
             for idx = 1:length(opts.exclude)
                 objPropnames = objPropnames( ...
                     ~strcmpi(objPropnames,opts.exclude{idx}));
+            end
+
+        end
+
+        function [varargout] = defaultValueUsedReport(obj, propNames, propValues)
+        %DEFAULTVALUEUSEDREPORT Report of properties in which the default
+        %values were used.
+        %
+        %
+        arguments
+            obj
+            propNames   string
+            propValues  cell
+        end
+
+            % TODO: Check propNames and propValues size matches
+    
+            % Init. string array
+            rep = "";
+    
+            % Title line
+            rep(end+1) = sprintf("Default values were used for the following variables in %s:", upper(class(obj)));
+
+            % Max propname length
+            propName_max = max(arrayfun(@(n) strlength(n),propNames));
+    
+            % For each propName, add entry to rep
+            for i = 1:length(propNames)
+                
+                % Get propname, propvalue
+                propName = propNames(i);
+                propValue = propValues{i};
+    
+                % Identify propValue type format
+                if isstring(propValue) || ischar(propValue)
+                    %propValue = propValue;
+                elseif isnumeric(propValue)
+                    % Check if is scalar
+                    if isscalar(propValue)
+                        addBrackets = false;
+                    else
+                        addBrackets = true;
+                    end
+                    % Convert to string and add brackets
+                    % NOTE: 2D+ arrays will be reshaped...
+                    propValue = sprintf('%f ', propValue);
+                    if addBrackets
+                        propValue = sprintf('[%s]', propValue);
+                    end
+                else
+                    % TODO: Throw error or handle it somehow
+                end
+    
+                % Create string
+                rep(end+1) = sprintf(sprintf('%%-%ds: %%s ',propName_max+2), propName, propValue);
+    
+            end
+    
+            
+            if nargout == 1
+                % return if nargout == 1
+                varargout(1) = {rep};
+            elseif nargout == 0
+                % print if no outputs requested
+                fprintf('%s\n', rep)
+            else
+                % TODO: Throw error for requesting too many outputs
             end
 
         end

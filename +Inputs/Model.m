@@ -100,6 +100,7 @@ classdef Model < Inputs.Input
             
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();
+            defaultValues = {};
 
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -109,19 +110,26 @@ classdef Model < Inputs.Input
                 
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
-                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
+                [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname,id=modelID);
                 if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                    defaultValues{end+1} = defaultValue;
                 end
-                
-                if isSpecified
+
+                if isSpecified 
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
                 end
             end
+
+            % Create warning
+            %   TODO: check log mode? combine warnings?
+            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+            warning('Model:defaultValueUsedWarning', ...
+                sprintf('%s\n',defaultValueWarningString));
 
             % If extra fields in obj.inputStruct remain, warn user
             remainingInputStructFields = fieldnames(obj.inputStruct);
