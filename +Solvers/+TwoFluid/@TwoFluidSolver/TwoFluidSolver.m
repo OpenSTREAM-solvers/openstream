@@ -208,7 +208,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             bc  = twfSolver.boundaryConditions;
             mix = twfSolver.mixSolver.mixture(tIdx);
             z   = twfSolver.Z;
-            NWALL = twfSolver.inputSet.geometry.NWALL();
+            NWALL = twfSolver.inputSet.geometry.NWALL;
             
             figure('name',['Axial distributions of two-fluid parameters at ' num2str(mix.TIME) ' [s]'])
             
