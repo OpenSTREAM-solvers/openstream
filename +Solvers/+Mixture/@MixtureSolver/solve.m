@@ -26,7 +26,9 @@ else
         if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
             solver(false);
         else
-            mixSolver.log('\t\tSkipping transient solver ...\n');
+            if length(mixSolver.mixture) > 1
+                mixSolver.log('\t\tSkipping transient solver ...\n');
+            end
         end
 
     catch ME
@@ -46,12 +48,15 @@ function solver(solveINIT)
 
     % Check if solving mixtureInit
     if solveINIT
-        mixSolver.log('\nRun steady-state ...\n');
+        mixSolver.log('\nSolve steady-state ...\n');
         mix = mixSolver.mixtureInit;
         solveMODE = 'INITIAL';
         fluid   = repmat(mixSolver.fluid(1),1,length(mix));
     else
-        mixSolver.log('\nRun transient ...\n');
+        if length(mixSolver.mixture) < 2
+            return
+        end
+        mixSolver.log('\nSolve transient ...\n');
         mix = mixSolver.mixture;
         solveMODE = 'SPECIFIED';
         fluid   = mixSolver.fluid;
@@ -120,14 +125,14 @@ function solver(solveINIT)
                 mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew;     % [J/kg] Apply relaxation
                 
                 % Time relaxation terms (that needs to be updated in point iterations)
-                switch model.SCBOIL
+                switch model.THERMALNONEQ
                     case 'TRELAX'
                         
                         WViter = mix(tIdx).TRELAX.WV(zIdx,:);                           % [J/kg] Vapor mass flow rate
                         HViter = mix(tIdx).TRELAX.HV(zIdx,:);                           % [J/kg] Vapor enthalpy
                         
-                        %UV      = mix(tIdx).vapor.U(zIdx);                              % [m/s] Vapor velocity
-                        UV      = U;
+                        UV      = mix(tIdx).vapor.U(zIdx);                              % [m/s] Vapor velocity
+                        %UV      = U;
                         
                         % Vapor mass conservation
 %                         mix(tIdx).TRELAX.WV(zIdx,:) = mix(tIdx).WV(zIdx,UV,WVold,UVold);                   % [kg/s] Relaxed vapor mass flow (direct substitution)
@@ -192,11 +197,6 @@ function solver(solveINIT)
             mix(tIdx).ITR.DP(zIdx) = dP;
             mix(tIdx).ITR.DH(zIdx) = dH;
 
-            % Stop running if solver did not converge
-            if mixSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                break;
-            end
-    
         end
         
         [maxN,maxzIdx] = max(mix(tIdx).ITR.N);
@@ -223,20 +223,21 @@ function solver(solveINIT)
                 % Replace mixtureInit with subset up to this tIdx
                 mixSolver.mixtureInit = mixSolver.mixtureInit(1:tIdx);
     
-                % Replace first transient time step flow data with this tIdx
+                % Replace first transient time step flow data with steady-state solver solution
                 mixSolver.mixtureInit(end).copyFlowProperties(mixSolver.mixture(1));
         
                 break;
             
             % otherwise, update next timestep with current flow properties
-            elseif tIdx < length(mix)-1
+            elseif tIdx < length(mix)
                 mixSolver.mixtureInit(tIdx).copyFlowProperties(mixSolver.mixtureInit(tIdx+1));
+            
             % otherwise, not converged
             else
                 mixSolver.STATE = "INITIALSTEPNOTCONVERGED";
-                mixSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
+                mixSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
                 
-                % Replace first transient time step flow data with this tIdx
+                % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
                 mixSolver.mixtureInit(end).copyFlowProperties(mixSolver.mixture(1));
             end
         end
