@@ -244,8 +244,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             [] ...
                         ), [1 3 2]);
             
-            mixSolver.boundaryConditions.WPOWER = WPOWERT;
-            
+            mixSolver.boundaryConditions.WPOWER = WPOWERT;            
             
             % Calculate wall heat flux at each node in space & time
             % NOTE: This is very convoluted
@@ -254,7 +253,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ./ sum(reshape( ...
                         mixSolver.inputSet.geometry.PERIM .* mixSolver.DZ,1,mixSolver.inputSet.geometry.NWALL,1 ...
                         ).* ...
-                       mixSolver.boundaryConditions.WPOWER,[1,2] ...
+                       mixSolver.boundaryConditions.WPOWER(2:end,:,:),[1,2] ...
                       );
 
             function validParams = checkParams(params)
@@ -287,7 +286,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixSolver
                 tIdx     (1,1) double
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
-                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL()
+                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL
             end
             
             bc  = mixSolver.boundaryConditions;
@@ -391,6 +390,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(mix.T,"Mixture","DisplayName","Mixture");
             plotter.plotz(mix.liquid.T,"Liquid","DisplayName","Liquid");
             plotter.plotz(mix.vapor.T,"Vapor","DisplayName","Vapor");
+            plotter.plotz(mix.TWALL,"Wall","DisplayName","Wall");
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
             
@@ -415,13 +415,12 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixSolver
                 zIdx     (1,1) double
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
-                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL()
+                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL
             end
             
             bc    = mixSolver.boundaryConditions;
             z     = mixSolver.Z;
-            time  = mixSolver.TIME;
-            NWALL = mixSolver.inputSet.geometry.NWALL();
+            NWALL = mixSolver.inputSet.geometry.NWALL;
             
             switch opt.solveMode
                 case 'TRANSIENT'
@@ -431,7 +430,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     mix = mixSolver.mixtureInit();
                     bcHFLUX = repmat(bc.HFLUX(zIdx,:,1),mixSolver.NTIME,1);
             end
-
+            time  = [mix.TIME];
+            
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of mixture parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
                                 opt.wall);
@@ -442,8 +442,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 "tileTitle", 'Wall heat flux', ...
                 'xlabel', 'Time [s]', ...
                 'ylabel', 'Wall heat flux [W/m^2]');
-            plotter.plotz(bcHFLUX, 'BC', 'DisplayName', 'Boundary Condition');
+            %plotter.plotz(bcHFLUX, 'BC', 'DisplayName', 'Boundary Condition');
             plotter.plotz(cell2mat(arrayfun(@(x) x.HFLUX(zIdx,:)',mix,'uni',0))', 'MIX', 'DisplayName', 'Mixture');
+            plotter.plotz(cell2mat(arrayfun(@(x) x.CHF(zIdx)',mix,'uni',0))', 'Liquid', 'DisplayName', 'CHF');
             plotter.legend("show", 'Location', 'best');
 
             % Mass flow rates
@@ -507,6 +508,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.plotz(arrayfun(@(x) x.T(zIdx),mix),'Mixture')  
             plotter.plotz(arrayfun(@(x) x.liquid.T(zIdx),mix),'Liquid')
             plotter.plotz(arrayfun(@(x) x.vapor.T(zIdx),mix),'Vapor')
+            plotter.plotz(cell2mat(arrayfun(@(x) x.TWALL(zIdx)',mix,'uni',0))', 'Wall', 'DisplayName', 'Wall');
+            
             plotter.legend("show", "Location", 'best');
             
             % Qualities and relaxed qualities
@@ -529,7 +532,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixSolver
                 opt.tIdx (:,1) double = 1:mixSolver.NTIME
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
-                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL()
+                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL
             end
             
             switch opt.solveMode
@@ -557,12 +560,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 zt_plot('VF','Void fraction','-',1)
                 zt_plot('U','Velocity','m/s',1)
                 zt_plot('vapor.T','Vapor temperature','K',1)
+                zt_plot('TWALL','Wall temperature','K',1)
                 
             end
 
             function zt_plot(param,ylabelText,ylabelUnit,k)
                 
-                NWALL = mixSolver.inputSet.geometry.NWALL();
+                NWALL = mixSolver.inputSet.geometry.NWALL;
                 plotTimeVector = [mix(opt.tIdx).TIME];
                 
                 nexttile; hold all; grid on; title(ylabelText)

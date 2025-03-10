@@ -3,6 +3,8 @@ classdef TPKM
 %   Detailed explanation goes here
     enumeration
         HOMOGENEOUS
+        SLIP
+        ROMIE
     end
 end
     

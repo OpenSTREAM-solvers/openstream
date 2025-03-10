@@ -77,7 +77,7 @@ classdef Vapor < Solvers.AbstractPhase
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             model = vapor.mix.inputSet.model;
             
-            switch model.SCBOIL
+            switch model.THERMALNONEQ
                 
                 case 'TRELAX'
                     WV = vapor.mix.TRELAX.WV(zIdx,:);
@@ -104,8 +104,12 @@ classdef Vapor < Solvers.AbstractPhase
             %RE Reynolds number [-]
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.H(zIdx))...
-                    ./sum(vapor.mix.inputSet.geometry.PERIM);
+            %re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.H(zIdx))...
+            %        ./sum(vapor.mix.inputSet.geometry.PERIM);
+            
+            geom  = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+            re = fluid.RHOV(vapor.H(zIdx)).*vapor.U(zIdx).*geom.HDIAM./fluid.MUV(vapor.H(zIdx));
         end
         
         function t = T(vapor, zIdx)
