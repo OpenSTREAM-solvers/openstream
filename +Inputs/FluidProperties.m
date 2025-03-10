@@ -22,7 +22,7 @@ classdef FluidProperties
         CPG        (1,1) double  {mustBeNumeric}                           = 1                     % [J/kg/K] Saturated vapor constant pressure specific heat
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % [-] Saturated liquid Prandtl number
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % [-] Saturated vapor Prandtl number
-        
+        PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % [-] Critical pressure
     end
 
     properties (SetAccess=private)
@@ -73,6 +73,9 @@ classdef FluidProperties
             PRANDTLG = coolpropH.prandtl('P',P,'Q',1);                     % [-] Saturated vapor Prandtl number
             coolpropH.setSpecifyPhase('');
 
+            % Critical properties
+            PCRIT    = coolpropH.CoolProp.p_critical;                      % [Pa] Critical pressure
+            
             % Assign properties to each object
             for i = 1:length(obj)
 
@@ -84,7 +87,7 @@ classdef FluidProperties
                 obj(i).coolpropH = coolpropH;
 
                 % Distribute properties
-                obj(i).PRESSURE = P(i);                                    % [Pa] Saturated fluid pressure
+                obj(i).PRESSURE = P(i);                                    % [Pa] System pressure
                 obj(i).TSAT     = TSAT(i);                                 % [K] Saturated fluid temperature
                 obj(i).RHOF     = RHOF(i);                                 % [kg/m^3] Saturated liquid mass density
                 obj(i).RHOG     = RHOG(i);                                 % [kg/m^3] Saturated vapor mass density
@@ -100,6 +103,7 @@ classdef FluidProperties
                 obj(i).CPG      = CPG(i);                                  % [J/kg/K] Saturated vapor constant pressure specific heat
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
+                obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
                 
             end
             

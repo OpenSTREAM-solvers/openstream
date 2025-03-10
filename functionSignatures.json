@@ -13,7 +13,7 @@
             {"name":"KLOC"          , "kind":"namevalue", "type":[["string","scalar"],["char"],["numeric","positive","size=1,:"]],"purpose":"Elevation of local perturbations [m] "},
             {"name":"KLOSS"         , "kind":"namevalue", "type":[["string","scalar"],["char"],["numeric","positive","size=1,:"]],"purpose":"corresponding pressure loss coefficients [-]"},
             {"name":"TPKM"          , "kind":"namevalue", "type":[["string","scalar"],["char"],["choices=string(enumeration('InputEnums.TPKM'))"]],"purpose":"Two-phase local loss multiplier [-] "},
-            {"name":"SCBOIL"        , "kind":"namevalue", "type":[["string","scalar"],["char"],["choices=string(enumeration('InputEnums.SCBOIL'))"]],"purpose":"Subcooled boiling mode"},
+            {"name":"THERMALNONEQ"  , "kind":"namevalue", "type":[["string","scalar"],["char"],["choices=string(enumeration('InputEnums.THERMALNONEQ'))"]],"purpose":"Thermal non-equilibrium model"},
             {"name":"VOID"          , "kind":"namevalue", "type":[["string","scalar"],["char"],["choices=string(enumeration('InputEnums.VOID'))"]],"purpose":"Void fraction model "},
             {"name":"SLIP"          , "kind":"namevalue", "type":[["string","scalar"],["char"],["numeric","positive","scalar"]],"purpose":"Phase velocity ratio [-]"},
             {"name":"OAF"           , "kind":"namevalue", "type":[["string","scalar"],["char"],["choices=string(enumeration('InputEnums.OAF'))"]],"purpose":"Onset of annular flow model [-]"},
