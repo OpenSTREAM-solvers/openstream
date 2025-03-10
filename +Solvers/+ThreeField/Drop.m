@@ -77,13 +77,17 @@ classdef Drop < Solvers.AbstractField
             sig   = drop.fluid.SIGMA;                                      % [N/m] Surface tension
             hdiam = drop.inputSet.geometry.HDIAM;                          % [m] Hydraulic diameter
             
-            conc = abs(drop.CONC(zIdx));                               % [kg/m^3] Drop concentration
+            conc = abs(drop.CONC(zIdx));                                   % [kg/m^3] Drop concentration
+            conc = conc + 1E-6;                                            % Avoid division by 0 in mded correlations
             
             Wd = drop.W(zIdx);
             negdrop = find(Wd<0);
             %Wd = abs(Wd);
             
             switch model.DEPOSITION
+                case InputEnums.DEPOSITION.NONE
+                    % Supress drop deposition
+                    mdep = zeros(length(zIdx),1);
                 case InputEnums.DEPOSITION.GOVAN
                     % Govan & Hewitt drop deposition model
                     if conc/rhog < 0.3
@@ -98,7 +102,7 @@ classdef Drop < Solvers.AbstractField
             end
             
             mdep(negdrop)=-mdep(negdrop);
-            mdep = drop.mix.AFDISTR(0,mdep,zIdx);                               % [kg/m^2/s] Deposition mass flux, in annular flow region only
+            mdep = drop.mix.AFDISTR(0,mdep,zIdx);                          % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
         function re = RE(drop, zIdx)
