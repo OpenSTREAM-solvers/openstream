@@ -26,8 +26,11 @@ else
         if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
             solver(false);
         else
-            tfSolver.log('\t\tSkipping transient solver ...\n');
+            if length(tfSolver.film) > 1
+                tfSolver.log('\t\tSkipping transient solver ...\n');
+            end
         end
+        
     catch ME
         tfSolver.inputSet.session.log.closeLog();
         tfSolver.inputSet.session.log.diaryOff();
@@ -56,6 +59,9 @@ function solver(solveINIT)
         mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
         solveMODE = 'INITIAL';
     else
+        if length(tfSolver.film) < 2
+            return
+        end
         tfSolver.log('\nSolve transient ...\n');
         film = tfSolver.film;
         drop = tfSolver.drop;
@@ -90,6 +96,7 @@ function solver(solveINIT)
         film(tIdx-1).copyFlowProperties(film(tIdx));
         drop(tIdx-1).copyFlowProperties(drop(tIdx));
         
+        %e0 = tfSolver.EQUIL(film(tIdx),drop(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
         
         % Axial sweep
         for zIdx = 2:tfSolver.NZ
@@ -114,11 +121,6 @@ function solver(solveINIT)
                 Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
                 Wfnew = Ufiter.*(Wfups+Wfold./Ufold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT); % [kg/s] Update film mass flow rate
                 film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;    % [kg/s] Apply relaxation
-                
-                % DEBUG
-                % fprintf('t:%d, z:%d, itr:%03d-> mtot:%0.8u, wbase:%0.8u, wdrop:%0.8u, ment: %0.8u\n', ...
-                %     tIdx, zIdx, itr, ...
-                %     Mtot, mean(film(tIdx).W(zIdx,:)), drop(tIdx).W(zIdx,:), film(tIdx).MENT(zIdx));
 
                 if model.POSFILM
                     film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);                       % [kg/s] 
@@ -219,7 +221,7 @@ function solver(solveINIT)
         
         % Temporal deviations in W and U
         timeDWL = max(abs((film(tIdx).WL - film(tIdx-1).WL)),[],'all');
-        timeDUf  = max(abs((film(tIdx).U - film(tIdx-1).U)),[],'all');
+        timeDUf = max(abs((film(tIdx).U - film(tIdx-1).U)),[],'all');
         timeDUd = max(abs((drop(tIdx).U - drop(tIdx-1).U)),[],'all');
         
         if solveINIT
@@ -235,27 +237,25 @@ function solver(solveINIT)
                 tfSolver.filmInit = tfSolver.filmInit(1:tIdx);
                 tfSolver.dropInit = tfSolver.dropInit(1:tIdx);
                 
-                % Replace first transient time step flow data with this tIdx
+                % Replace first transient time step flow data with steady-state solver solution
                 tfSolver.filmInit(end).copyFlowProperties(tfSolver.film(1));
                 tfSolver.dropInit(end).copyFlowProperties(tfSolver.drop(1));
                 
                 break;
             
             % otherwise, update next timestep with current flow properties
-            elseif tIdx < length(film)-1
-                % unless non-convergence occurred
-                if tfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    tfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
-                    break;
-                end
-
+            elseif tIdx < length(film)
                 tfSolver.filmInit(tIdx).copyFlowProperties(tfSolver.filmInit(tIdx+1));
                 tfSolver.dropInit(tIdx).copyFlowProperties(tfSolver.dropInit(tIdx+1));
+            
             % otherwise, not converged
             else
                 tfSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                tfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s]), Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
-                break;
+                tfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                
+                % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
+                tfSolver.filmInit(end).copyFlowProperties(tfSolver.film(1));
+                tfSolver.dropInit(end).copyFlowProperties(tfSolver.drop(1));
             end
         end
     

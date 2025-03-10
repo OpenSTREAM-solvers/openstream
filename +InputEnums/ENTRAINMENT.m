@@ -4,6 +4,7 @@ classdef ENTRAINMENT
 %   NOTE: the entrainment and deposition correlations are coupled, i.e. the
 %   same model should be used for both entrainment and deposotion mass flux
     enumeration
+        NONE
         GOVAN       %Hewitt and Govan (1990)
         OKAWA2003   %Okawa et al. (2003)
     end
