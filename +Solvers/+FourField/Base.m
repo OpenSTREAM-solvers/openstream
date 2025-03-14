@@ -172,14 +172,17 @@ classdef Base < Solvers.AbstractFilm
 
         end
         
-        function Fwave = FWAVE(base,zIdx)
+        function Fwave = FWAVE(base,drop,zIdx)
         %FWAVE Wave interfacial force
         %
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
-            %TODO: add model option
-            Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx); % [N/m^2]
-            
+            switch base.inputSet.model.WAVEBASEINT
+                case 'VAPORSHEAR'
+                    Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx);  % [N/m^2]
+                case 'VAPORSHEARDROPMASS'
+                    Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx) + base.film.wave.FDEP(drop,zIdx); % [N/m^2]
+            end
         end
 
         function Fwavemass = FWAVEMASS(base,drop,zIdx)
@@ -223,9 +226,9 @@ classdef Base < Solvers.AbstractFilm
             
             switch base.inputSet.model.MOMENTBASE
                 case 'FULLNOP'
-                    Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FDEP(drop,zIdx);
+                    Ftot  = base.FWALL(zIdx)+base.FWAVE(drop,zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FDEP(drop,zIdx);
                 otherwise
-                    Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);
+                    Ftot  = base.FWALL(zIdx)+base.FWAVE(drop,zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);
             end
         end
 
@@ -237,7 +240,7 @@ classdef Base < Solvers.AbstractFilm
             D_H = base.inputSet.geometry.HDIAM;
             
             switch base.inputSet.model.BASEEQTHICK
-                case 'DEFAULT'
+                case 'RISO'
                     coefs = [5.37E-5 -0.64 1.21];
                     eqthick = ReMethod();
                 case 'MFVAL'

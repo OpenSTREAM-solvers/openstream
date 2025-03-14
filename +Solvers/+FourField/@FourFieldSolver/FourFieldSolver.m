@@ -457,7 +457,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.base.FDEP(drp), 'Drop deposition');
             plotters.plotz(flm.base.FWALL(),  'Wall');
             plotters.plotz(flm.base.FBASEVAPOR(),  'Vapor');
-            plotters.plotz(flm.base.FWAVE(),  'Wave');
+            plotters.plotz(flm.base.FWAVE(drp),  'Wave');
             plotters.plotz(flm.base.FWAVEMASS(drp),  'WaveMass');
             plotters.plotz(flm.base.FBUOY(),   'Buoyancy');
             plotters.plotz(flm.base.FGRAV(),   'Gravity');

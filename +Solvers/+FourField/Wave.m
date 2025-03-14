@@ -180,12 +180,12 @@ classdef Wave < Solvers.AbstractFilm
             
         end
 
-        function Fbase = FBASE(wave,zIdx)
+        function Fbase = FBASE(wave,drop,zIdx)
         %FBASE Base interfacial force
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
-            Fbase = -wave.film.base.FWAVE(zIdx); % [N/m^2]
+            Fbase = -wave.film.base.FWAVE(drop,zIdx); % [N/m^2]
             
         end
 
@@ -264,7 +264,7 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
-            Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(zIdx)+wave.FBASEMASS(drop,zIdx);
+            Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(drop,zIdx)+wave.FBASEMASS(drop,zIdx);
             
         end
 
