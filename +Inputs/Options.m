@@ -12,7 +12,7 @@ classdef Options < Inputs.Input
         ERRORP       (1,1) double  {mustBeNumeric}                         = 1E+0                  % Pressure error target in inner ierations [Pa]
         ERRORH       (1,1) double  {mustBeNumeric}                         = 1E+0                  % Enthalpy error target in inner ierations [J/kg]
         SSTSTEP      (1,1) double  {mustBeNumeric,mustBePositive}          = 1.0                   % Time step for steady-state iterations [s]
-        SSMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}          = 40                    % Max number of steady-state iterations
+        SSMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}          = 50                    % Max number of steady-state iterations
         SSCONVW      (1,1) double  {mustBeNumeric}                         = 1E-3                  % Mass flow rate steady-state convergence criterion [kg/s]
         SSCONVU      (1,1) double  {mustBeNumeric}                         = 1E-3                  % Velocity steady-state convergence criterion [m/s]
         SSCONVP      (1,1) double  {mustBeNumeric}                         = 1E+0                  % Pressure steady-state convergence criterion [Pa]

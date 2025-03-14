@@ -231,7 +231,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
         %
             
-            errMax = 1E-4;                                                 % [kg/s/m] Convergence criterion
+            errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
             nwall = ffSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = ffSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
             W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
@@ -244,11 +244,19 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 elseif k == 3
                     Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
                 else
-                    try
-                        Wd(k) = max(min(interp1(delta(~isnan(delta)),Wd(~isnan(delta)),0,'linear','extrap'),W),0); % [kg/s] Next guess
-                    catch
-                        Wd(k-1) = nan; delta(k-1) = nan;                   % Remove previous iteration
-                        Wd(k) = mean(Wd(k-3:k-2));                         % se mean from previous iterations
+                    if all(diff(delta)./diff(Wd) > 0)
+                        % Expected behavior
+                        try
+                            Wd(k) = max(min(interp1(delta(~isnan(delta)),Wd(~isnan(delta)),0,'linear','extrap'),W),0); % [kg/s] Next guess
+                        catch
+                            Wd(k) = max(min(Wd(k-1)*(1-20*delta(k-1)),W),0); % [kg/s] Next guess (in case interpolation fails)
+                            Wd(k-1) = nan; delta(k-1) = nan;               % Remove previous iteration (avoid interpolation failure at next iteration)
+                            errMax = errMax0*10;                           % Relax convergence criterion when interpolation fails
+                        end
+                    else
+                        % Nonsensical behavior
+                        Wd(k) = max(min(Wd(k-1)*(1-20*delta(k-1)),W),0);   % [kg/s] Next guess (ad-hoc sensitivity factor)
+                        errMax = errMax0*10;                               % Relax convergence criterion for nonsensical behavior
                     end
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
