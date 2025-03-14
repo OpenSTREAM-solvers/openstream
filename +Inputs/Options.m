@@ -4,46 +4,53 @@ classdef Options < Inputs.Input
     
     properties (SetAccess=protected)
         
-        ID           (1,1) string  {mustBeTextScalar}                                              % Option ID 
-        TSTEP        (1,1) double  {mustBeNumeric,mustBePositive}          = 0.1                   % Time step [s]
-        MAXITER      (1,1) uint8   {mustBeInteger,mustBePositive}          = 100                   % Max number of inner (point) iterations
-        ERRORW       (1,1) double  {mustBeNumeric}                         = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
-        ERRORU       (1,1) double  {mustBeNumeric}                         = 1E-4                  % Velocity error target in inner iterations [m/s]
-        ERRORP       (1,1) double  {mustBeNumeric}                         = 1E+0                  % Pressure error target in inner ierations [Pa]
-        ERRORH       (1,1) double  {mustBeNumeric}                         = 1E+0                  % Enthalpy error target in inner ierations [J/kg]
-        SSTSTEP      (1,1) double  {mustBeNumeric,mustBePositive}          = 1.0                   % Time step for steady-state iterations [s]
-        SSMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}          = 50                    % Max number of steady-state iterations
-        SSCONVW      (1,1) double  {mustBeNumeric}                         = 1E-3                  % Mass flow rate steady-state convergence criterion [kg/s]
-        SSCONVU      (1,1) double  {mustBeNumeric}                         = 1E-3                  % Velocity steady-state convergence criterion [m/s]
-        SSCONVP      (1,1) double  {mustBeNumeric}                         = 1E+0                  % Pressure steady-state convergence criterion [Pa]
-        SSCONVH      (1,1) double  {mustBeNumeric}                         = 1E+0                  % Enthalpy steady-state convergence criterion [J/kg]
-        AXIALINTERP  (1,1) string  {mustBeTextScalar}                      = 'next'                % Axial power interpolation method
-        TIMEINTERP   (1,1) string  {mustBeTextScalar}                      = 'linear'              % Time-dependant boundary conditions interpolation method
-        RELAXWM      (1,1) double  {mustBeInRange(RELAXWM,0,1)}            = 1                     % Relaxation factor for the mixture mass conservation equation
-        RELAXPM      (1,1) double  {mustBeInRange(RELAXPM,0,1)}            = 1                     % Relaxation factor for the mixture momentum conservation equation
-        RELAXHM      (1,1) double  {mustBeInRange(RELAXHM,0,1)}            = 1                     % Relaxation factor for the mixture energy conservation equation
+        ID               (1,1) string  {mustBeTextScalar}                                          % Option ID
+        AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Axial power interpolation method
+        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Time-dependant boundary conditions interpolation method
+        TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step [s]
+        MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Max number of inner (point) iterations
+        SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step for steady-state iterations [s]
+        SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 50                    % Max number of steady-state iterations
         
-        RELAXWL      (1,1) double  {mustBeInRange(RELAXWL,0,1)}            = 1                     % Relaxation factor for the liquid mass conservation equation
-        RELAXWV      (1,1) double  {mustBeInRange(RELAXWV,0,1)}            = 1                     % Relaxation factor for the vapor mass conservation equation
-        RELAXUL      (1,1) double  {mustBeInRange(RELAXUL,0,1)}            = 1                     % Relaxation factor for the liquid momentum conservation equation
-        RELAXUV      (1,1) double  {mustBeInRange(RELAXUV,0,1)}            = 1                     % Relaxation factor for the vapor momentum conservation equation
-        RELAXHL      (1,1) double  {mustBeInRange(RELAXHL,0,1)}            = 1                     % Relaxation factor for the liquid mass conservation equation
-        RELAXHV      (1,1) double  {mustBeInRange(RELAXHV,0,1)}            = 1                     % Relaxation factor for the vapor energy conservation equation
+        % Mixture solver options
+        ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
+        ERRORP           (1,1) double  {mustBeNumeric}                     = 1E+0                  % Pressure error target in inner ierations [Pa]
+        ERRORH           (1,1) double  {mustBeNumeric}                     = 1E+0                  % Enthalpy error target in inner ierations [J/kg]
+        SSCONVW          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate steady-state convergence criterion [kg/s]
+        SSCONVP          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Pressure steady-state convergence criterion [Pa]
+        SSCONVH          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Enthalpy steady-state convergence criterion [J/kg]
+        RELAXWM          (1,1) double  {mustBeInRange(RELAXWM,0,1)}        = 1                     % Relaxation factor for the mixture mass conservation equation [-]
+        RELAXPM          (1,1) double  {mustBeInRange(RELAXPM,0,1)}        = 1                     % Relaxation factor for the mixture momentum conservation equation [-]
+        RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1                     % Relaxation factor for the mixture energy conservation equation [-]
         
-        ERRORWF      (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
-        ERRORUF      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity error target in inner iterations [m/s]
-        ERRORUD      (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity error target in inner iterations [m/s]
-        SSCONVWF     (1,1) double  {mustBeNumeric}                         = 1E-4                  % Film mass flow rate steady-state convergence criterion [kg/s/m]
-        SSCONVUF     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Film velocity steady-state convergence criterion [m/s]
-        SSCONVUD     (1,1) double  {mustBeNumeric}                         = 1E-2                  % Drop velocity steady-state convergence criterion [m/s]
-        RELAXWF      (1,1) double  {mustBeInRange(RELAXWF,0,1)}            = 0.5                   % Relaxation factor for the film mass conservation equation
-        RELAXUF      (1,1) double  {mustBeInRange(RELAXUF,0,1)}            = 0.2                   % Relaxation factor for the film momentum conservation equation
-        RELAXUD      (1,1) double  {mustBeInRange(RELAXUD,0,1)}            = 0.2                   % Relaxation factor for the drop momentum conservation equation
-        RELAXWB      (1,1) double  {mustBeInRange(RELAXWB,0,1)}            = 0.5                   % Relaxation factor for the base mass conservation equation
-        RELAXUB      (1,1) double  {mustBeInRange(RELAXUB,0,1)}            = 0.2                   % Relaxation factor for the base momentum conservation equation
-        RELAXWW      (1,1) double  {mustBeInRange(RELAXWW,0,1)}            = 0.5                   % Relaxation factor for the wave mass conservation equation
-        RELAXUW      (1,1) double  {mustBeInRange(RELAXUW,0,1)}            = 0.2                   % Relaxation factor for the wave momentum conservation equation
-        RELAXFW      (1,1) double  {mustBeInRange(RELAXFW,0,1)}            = 0.5                   % Relaxation factor for the wave number conservation equation
+        % Two-fluid solver options
+        ERRORU           (1,1) double  {mustBeNumeric}                     = 1E-4                  % Velocity error target in inner iterations [m/s]
+        SSCONVU          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Velocity steady-state convergence criterion [m/s]
+        RELAXWL          (1,1) double  {mustBeInRange(RELAXWL,0,1)}        = 1                     % Relaxation factor for the liquid mass conservation equation [-]
+        RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 1                     % Relaxation factor for the vapor mass conservation equation [-]
+        RELAXUL          (1,1) double  {mustBeInRange(RELAXUL,0,1)}        = 1                     % Relaxation factor for the liquid momentum conservation equation [-]
+        RELAXUV          (1,1) double  {mustBeInRange(RELAXUV,0,1)}        = 1                     % Relaxation factor for the vapor momentum conservation equation [-]
+        RELAXHL          (1,1) double  {mustBeInRange(RELAXHL,0,1)}        = 1                     % Relaxation factor for the liquid mass conservation equation [-]
+        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 1                     % Relaxation factor for the vapor energy conservation equation [-]
+        
+        % Three-field solver options
+        ERRORWF          (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
+        ERRORUF          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Film velocity error target in inner iterations [m/s]
+        ERRORUD          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Drop velocity error target in inner iterations [m/s]
+        SSCONVWF         (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate steady-state convergence criterion [kg/s/m]
+        SSCONVUF         (1,1) double  {mustBeNumeric}                     = 1E-2                  % Film velocity steady-state convergence criterion [m/s]
+        SSCONVUD         (1,1) double  {mustBeNumeric}                     = 1E-2                  % Drop velocity steady-state convergence criterion [m/s]
+        RELAXWF          (1,1) double  {mustBeInRange(RELAXWF,0,1)}        = 0.5                   % Relaxation factor for the film mass conservation equation [-]
+        RELAXUF          (1,1) double  {mustBeInRange(RELAXUF,0,1)}        = 0.2                   % Relaxation factor for the film momentum conservation equation [-]
+        RELAXUD          (1,1) double  {mustBeInRange(RELAXUD,0,1)}        = 0.2                   % Relaxation factor for the drop momentum conservation equation [-]
+        
+        % Four-field solver options
+        RELAXWB          (1,1) double  {mustBeInRange(RELAXWB,0,1)}        = 0.5                   % Relaxation factor for the base mass conservation equation [-]
+        RELAXUB          (1,1) double  {mustBeInRange(RELAXUB,0,1)}        = 0.2                   % Relaxation factor for the base momentum conservation equation [-]
+        RELAXWW          (1,1) double  {mustBeInRange(RELAXWW,0,1)}        = 0.5                   % Relaxation factor for the wave mass conservation equation [-]
+        RELAXUW          (1,1) double  {mustBeInRange(RELAXUW,0,1)}        = 0.2                   % Relaxation factor for the wave momentum conservation equation [-]
+        RELAXFW          (1,1) double  {mustBeInRange(RELAXFW,0,1)}        = 0.5                   % Relaxation factor for the wave number conservation equation [-]
+        
     end
 
     methods
