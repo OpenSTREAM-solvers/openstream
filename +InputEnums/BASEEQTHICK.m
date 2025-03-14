@@ -3,7 +3,7 @@ classdef BASEEQTHICK
 %   Defines which base film equilibrium model to use
 %
     enumeration
-        DEFAULT     % Default from Le Corre (2022)
+        RISO        % RISO dataset from Le Corre (2022)
         MFVAL       % MFVAL, in progress (20XX)
         COEFS       % Manually specified coeffients
         YPLUS
