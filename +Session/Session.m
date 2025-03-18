@@ -10,6 +10,9 @@ classdef Session < handle
                     (1,1) logical       = false
 
         log         (1,1) Session.Log
+        
+        % Warnings
+        showWarnings          (1,1) logical = true
     end
 
     properties (Dependent)
@@ -42,15 +45,23 @@ classdef Session < handle
         %SETUPLOG Setup log
         %
             arguments
-                session
+                session                 Session.Session
                 LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
                                                                             % LogMode
                 opts.LOGFID    (1,1)    int32            = -1
             end
             
+            switch LOGMODE
+                case {Session.LogMode.NONE, Session.LogMode.LOGTOFILEONLY}
+                    session.showWarnings = false;
+                otherwise
+                    session.showWarnings = true;
+            end
+
             session.log = Session.Log(LOGMODE, ...
                                       "session",session, ...
-                                      "LOGFID",opts.LOGFID);
+                                      "LOGFID",opts.LOGFID,...
+                                      "showWarnings", session.showWarnings);
         end
 
         function makeSessionDirectory(obj)

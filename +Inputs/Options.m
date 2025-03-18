@@ -101,20 +101,27 @@ classdef Options < Inputs.Input
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
                 warning( ...
-                    'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
+                    'Options: These inputs were not used: %s ', ...
                     remainingInputStructFields{:} ...
                     );
                 obj.extra = obj.inputStruct;
             end
 
-            % If default values were used, warn user
-            if ~isempty(defaultValueFieldNames)
-                % Create warning
-                %   TODO: check log mode? combine warnings?
-                defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
-                warning('Geometry:defaultValueUsedWarning', ...
+            % Default value used warning
+            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+            if nargout == 0
+                warning('Options:defaultValueUsedWarning', ...
                     sprintf('%s\n',defaultValueWarningString));
+            else
+                w = struct('warnID', 'Options:defaultValueUsedWarning', ...
+                           'msg', defaultValueWarningString);
+                if isempty(obj.warnings)
+                    obj.warnings = w;
+                else
+                    obj.warnings(end+1) = w;
+                end
             end
+            
 
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');

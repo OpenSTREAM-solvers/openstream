@@ -125,11 +125,20 @@ classdef Model < Inputs.Input
                 end
             end
 
-            % Create warning
-            %   TODO: check log mode? combine warnings?
+            % Default value used warning
             defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
-            warning('Model:defaultValueUsedWarning', ...
-                sprintf('%s\n',defaultValueWarningString));
+            if nargout == 0
+                warning('Model:defaultValueUsedWarning', ...
+                    sprintf('%s\n',defaultValueWarningString));
+            else
+                w = struct('warnID', 'Model:defaultValueUsedWarning', ...
+                           'msg', defaultValueWarningString);
+                if isempty(obj.warnings)
+                    obj.warnings = w;
+                else
+                    obj.warnings(end+1) = w;
+                end
+            end
 
             % If extra fields in obj.inputStruct remain, warn user
             remainingInputStructFields = fieldnames(obj.inputStruct);

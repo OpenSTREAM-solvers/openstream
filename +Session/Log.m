@@ -119,11 +119,11 @@ classdef Log < handle
 
         else
             % If LOGTOFILEONLY, open and write to log
-            if obj.LOGMODE == LogMode.LOGTOFILEONLY ...
-                    && obj.LOGFID >= 0
+            if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+               obj.LOGMODE == LogMode.BOTH 
                 obj.openLog();
                     builtin('fprintf',obj.LOGFID, 'Warning:\n');
-                    builtin('fprintf',obj.LOGFID, varargin{:});
+                    builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
                     if ~obj.keepLogOpen
                         obj.closeLog();
                     end

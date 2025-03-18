@@ -3,7 +3,8 @@ classdef (HandleCompatible) Input < dynamicprops
     %   Detailed explanation goes here
 
     properties (SetAccess=protected)
-        extra   = struct.empty()
+        extra       = struct.empty()
+        warnings    = struct.empty()
     end
     
     methods
@@ -143,7 +144,8 @@ classdef (HandleCompatible) Input < dynamicprops
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
                 strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected')...
-                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra'));
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra')...
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'warnings'));
 
             % Exclude properties specified in opts.exclude
             for idx = 1:length(opts.exclude)

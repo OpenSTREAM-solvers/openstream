@@ -90,14 +90,19 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 end
             end
 
-            % If default values were used, warn user
-            if ~isempty(defaultValueFieldNames)
-                % Create warning
-                %   TODO: check log mode? combine warnings?
-                defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+            % Default value used warning
+            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+            if nargout == 0
                 warning('BoundaryConditions:defaultValueUsedWarning', ...
-                        sprintf('%s\n',defaultValueWarningString));
-
+                    sprintf('%s\n',defaultValueWarningString));
+            else
+                w = struct('warnID', 'BoundaryConditions:defaultValueUsedWarning', ...
+                           'msg', defaultValueWarningString);
+                if isempty(obj.warnings)
+                    obj.warnings = w;
+                else
+                    obj.warnings(end+1) = w;
+                end
             end
             
             % Transpose WMESH
