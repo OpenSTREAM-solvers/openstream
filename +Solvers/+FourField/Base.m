@@ -175,7 +175,7 @@ classdef Base < Solvers.AbstractFilm
         function Fwave = FWAVE(base,drop,zIdx)
         %FWAVE Wave interfacial force
         %
-            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             switch base.inputSet.model.WAVEBASEINT
                 case 'VAPORSHEAR'

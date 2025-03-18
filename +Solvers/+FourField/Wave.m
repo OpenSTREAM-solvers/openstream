@@ -183,7 +183,7 @@ classdef Wave < Solvers.AbstractFilm
         function Fbase = FBASE(wave,drop,zIdx)
         %FBASE Base interfacial force
         %
-            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
             Fbase = -wave.film.base.FWAVE(drop,zIdx); % [N/m^2]
             
