@@ -249,9 +249,9 @@ classdef Liquid < Solvers.AbstractField
             id = zeros(liquid.NZ,1);                       % Liquid (initialization)
             id(XEQ > liquid.XTR_SCB) = 1;           % bubbly_subcooled
             id(XEQ > liquid.XTR_SAT) = 2;           % bubbly_saturated
-            id(XEQ > liquid.XTR_ITM) = 3;               % intermediate
-            id(XEQ > liquid.XTR_ANN) = 4;                    % annular
-            id(XEQ > liquid.XTR_CBT) = 5; 
+            %id(XEQ > liquid.XTR_ITM) = 3;               % intermediate
+            %id(XEQ > liquid.XTR_ANN) = 4;                    % annular
+            %id(XEQ > liquid.XTR_CBT) = 5; 
             
             flowregime = REGIMES(id);
 
