@@ -76,12 +76,22 @@ classdef Session < handle
                     %TODO: add warning about deletion
                     [status, msg, msgID] = rmdir(obj.directory,'s');
                     if status ~= 1
-                        throw( ...
-                            MException(msgID,msg) ...
-                        );
-                    else
-                        warning('%s was removed.', obj.directory);
+                        % Sometimes, setting diary off fixes this
+                        diary off;
+                        [status, msg, msgID] = rmdir(obj.directory,'s');
+                        if status ~= 1
+                            msg = sprintf("%s\n%s", msg, ...
+                                    "Try deleting existing instances of the solver.\n" + ...
+                                    "This error is likely caused by abandoned fopen files " + ...
+                                    "that were not properly closed. Try running `fopen('all')` " + ...
+                                    "to list all open fids.");
+                            throw( ...
+                                MException(msgID,msg) ...
+                            );
+                        end
                     end
+                        warning('%s was removed.', obj.directory);
+                    
                 end
             end
 
