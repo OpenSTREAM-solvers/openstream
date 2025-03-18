@@ -167,7 +167,7 @@ classdef Film < Solvers.AbstractFilm
             %TODO: consi
             film.wave.FREQUENCY(1:film.NZ,1:geom.NWALL) = film.wave.EQFREQUENCY();
             oafIdx = film.mix.OAFIDX;
-            film.wave.FREQUENCY(1:oafIdx,1:geom.NWALL) = film.wave.EQFREQUENCY(oafIdx);
+            film.wave.FREQUENCY(1:oafIdx,1:geom.NWALL) = repmat(film.wave.EQFREQUENCY(oafIdx),oafIdx,1);
 
             % Setup iteration struct
             film.base.ITR = ITR;

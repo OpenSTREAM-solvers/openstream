@@ -156,8 +156,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                                 mix.liquid.W(1)-drp.W(1), ...              % Inlet flow rate (all walls)
                                 ITRf ...                                   % Iteration struct
                              );
-                flmW = flm.W(1:mix.OAFIDX,:);                                        % [kg/s] Save total film flow rate
-                flm.base.W(1:mix.OAFIDX,:) = flm.base.W(mix.OAFIDX,:);               % [kg/s] Set constant base film flow rate 
+                flmW = flm.W(1:mix.OAFIDX,:);                              % [kg/s] Save total film flow rate
+                flm.base.W(1:mix.OAFIDX,:) = repmat(flm.base.W(mix.OAFIDX,:),mix.OAFIDX,1); % [kg/s] Set constant base film flow rate 
                 flm.wave.W(1:mix.OAFIDX,:) = max(0,flmW-flm.base.W(1:mix.OAFIDX,:)); % [kg/s] Adjust wave flow rate   
                 
                 drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
@@ -333,7 +333,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.newTile( ...
                 "tileTitle", 'Film mass flow rate per unit perimeter', ...
                 'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Film mass flow rate [kg/s-m]');
+                'ylabel', 'Film mass flow rate [kg/s/m]');
             plotters.plotz(flm.WL, 'Film')
             plotters.plotz(flm.base.WL, 'Base');
             plotters.plotz(flm.base.WMINL(drp),'Base min');
@@ -473,7 +473,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotters.plotz(flm.wave.FDEP(drp), 'Drop deposition');
             plotters.plotz(flm.wave.FDRAG(),  'Vapor drag');
             plotters.plotz(flm.wave.FSHEAR(),  'Vapor shear');
-            plotters.plotz(flm.wave.FBASE(),  'Base');
+            plotters.plotz(flm.wave.FBASE(drp),  'Base');
             plotters.plotz(flm.wave.FBASEMASS(drp),  'BaseMass');
             plotters.plotz(flm.wave.FBUOY(),   'Buoyancy');
             plotters.plotz(flm.wave.FGRAV(),   'Gravity');
