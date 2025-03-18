@@ -26,34 +26,39 @@ else
         if twfSolver.STATE == SolverState.INITIALSTEPCONVERGED
             solver(false);
         else
-            twfSolver.log('\t\tSkipping transient solver ...\n');
+            if length(twfSolver.liquid) > 1
+                twfSolver.log('\t\tSkipping transient solver ...\n');
+            end
         end
+        
     catch ME
         twfSolver.inputSet.session.log.closeLog();
         twfSolver.inputSet.session.log.diaryOff();
         rethrow(ME)
     end
     
-    twfSolver.log('\n---------------------------------------------- Two-fluid solver run completed ----------------------------------------------\n\n')
+    twfSolver.log('\n-------------------------------------------- Two-fluid solver run completed --------------------------------------------\n\n')
 end
 
 twfSolver.inputSet.session.log.closeLog();
 twfSolver.inputSet.session.log.diaryOff();
 twfSolver.log('Output directory: %s\n',twfSolver.inputSet.session.directory);
 
-
 function solver(solveINIT)
 
     % check if solving liquidInit and vaporInit
     if solveINIT
-        twfSolver.log('\nRun steady-state ...\n');
+        twfSolver.log('\nSolve steady-state ...\n');
         liquid = twfSolver.liquidInit;
         vapor = twfSolver.vaporInit;
         fluid = twfSolver.fluidInit;
         mix = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
         solveMODE = 'INITIAL';
     else
-        twfSolver.log('\nRun transient ...\n');
+        if length(twfSolver.liquid) < 2
+            return
+        end
+        twfSolver.log('\nSolve transient ...\n');
         liquid = twfSolver.liquid;
         vapor = twfSolver.vapor;
         fluid = twfSolver.fluid;
@@ -65,9 +70,9 @@ function solver(solveINIT)
     twfSolver.STATE = SolverState.SOLVEDCONVERGED;
     
     % Shortcut to inputSet objects
-    model = twfSolver.inputSet.model;
+    model   = twfSolver.inputSet.model;
     options = twfSolver.inputSet.options;
-    geom = twfSolver.inputSet.geometry;
+    geom    = twfSolver.inputSet.geometry;
     
     % Uniform mesh size
     DZ = twfSolver.DZ;    
@@ -80,8 +85,8 @@ function solver(solveINIT)
         
         twfSolver.log('Time %5.2f [s]',liquid(tIdx).TIME)
 
-        DT = liquid(tIdx).DT;                                              % Current time step size
-        RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
+        DT = liquid(tIdx).DT;                                              % [s] Current time step size
+        %RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
         
         % Update two-field property guesses from previous time step
         liquid(tIdx-1).copyFlowProperties(liquid(tIdx));
@@ -210,11 +215,6 @@ function solver(solveINIT)
             vapor(tIdx).ITR.DW(zIdx)  = dWv;
             vapor(tIdx).ITR.DU(zIdx)  = dUv;
             vapor(tIdx).ITR.DH(zIdx)  = dHv;
-
-            % Stop running if solver did not converge
-            %if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-            %    break;
-            %end
     
         end
         
@@ -255,26 +255,23 @@ function solver(solveINIT)
                 break;
             
             % otherwise, update next timestep with current flow properties
-            elseif tIdx < length(liquid)-1
-                % unless non-convergence occurred
-                if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    twfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv) 
-                    break;
-                end
-
+            elseif tIdx < length(liquid)
                 twfSolver.liquidInit(tIdx).copyFlowProperties(twfSolver.liquidInit(tIdx+1));
                 twfSolver.vaporInit(tIdx).copyFlowProperties(twfSolver.vaporInit(tIdx+1));
+                
             % otherwise, not converged
             else
                 twfSolver.STATE = "INITIALSTEPNOTCONVERGED";
-                twfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDHl,timeDHv) % ,timeDP,timeDH , P = %.5f [Pa], H = %.5f [J/kg]
-                break;
+                twfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDHl,timeDHv) % ,timeDP,timeDH , P = %.5f [Pa], H = %.5f [J/kg]
+                
+                % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
+                twfSolver.liquidInit(end).copyFlowProperties(twfSolver.liquid(1));
+                twfSolver.vaporInit(end).copyFlowProperties(twfSolver.vapor(1));
             end
         end
     
     end
     
-    %twfSolver.log('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
     twfSolver.log('\n')
     
     % End timer
