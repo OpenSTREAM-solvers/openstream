@@ -52,6 +52,7 @@ classdef Model < Inputs.Input
         OAFTRANSITION    (1,2) double  {mustBeNumeric}                     = [0.10 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION       (1,1) InputEnums.DEPOSITION                       = 'OKAWA'               % Drop deposition model
         ENTRAINMENT      (1,1) InputEnums.ENTRAINMENT                      = 'OKAWA2003'           % Film entrainment model
+        OKAWACOEFS       (1,:) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1] % Coefficients of Okawa entrainment model [-]
         MOMENTFILM       (1,1) InputEnums.MOMENTFILM                       = 'ALGEBRAIC'           % Film momentum conservation model
         VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'              % Vapor friction model
         VAPORFRICCST     (1,1) double  {mustBePositive}                    = 0.005                 % Vapor friction constant [-]

@@ -68,16 +68,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             model = absfilm.inputSet.model;
-            vapor = absfilm.mix.vapor;
-            rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
-            rhog  = absfilm.fluid.RHOG;                                    % [kg/m^3] Saturated vapor density
-            muf   = absfilm.fluid.MUF;                                     % [kg/m^3] Saturated liquid viscosity
-            mug   = absfilm.fluid.MUG;                                     % [kg/m^3] Saturated vapor viscosity
-            sig   = absfilm.fluid.SIGMA;                                   % [N/m] Surface tension
-            hdiam = absfilm.inputSet.geometry.HDIAM;                       % [m] Hydraulic diameter
-            area  = absfilm.inputSet.geometry.AREA;                        % [m^2] Coolant area
-            perim = absfilm.inputSet.geometry.PERIM;                       % [m^2] Coolant area
-            
+           
             Wf = absfilm.W(zIdx,:);
             negfilm = find(Wf<0);
             Wf = abs(Wf);
@@ -86,44 +77,43 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 case InputEnums.ENTRAINMENT.NONE
                     % Suppress film entrainment
                     ment = zeros(length(zIdx),1);
+                    
                 case InputEnums.ENTRAINMENT.GOVAN
                     % Govan & Hewitt film entrainment model
+                    vapor = absfilm.mix.vapor;
+                    rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
+                    rhog  = absfilm.fluid.RHOG;                                    % [kg/m^3] Saturated vapor density
+                    muf   = absfilm.fluid.MUF;                                     % [kg/m^3] Saturated liquid viscosity
+                    mug   = absfilm.fluid.MUG;                                     % [kg/m^3] Saturated vapor viscosity
+                    sig   = absfilm.fluid.SIGMA;                                   % [N/m] Surface tension
+                    hdiam = absfilm.inputSet.geometry.HDIAM;                       % [m] Hydraulic diameter
+                    area  = absfilm.inputSet.geometry.AREA;                        % [m^2] Coolant area
+                    perim = absfilm.inputSet.geometry.PERIM;                       % [m^2] Coolant area
+                    
                     k = 5.75e-5; n1 = 0.316; n2 = 0.632;                   % Model constants
                     Wfc = muf.*exp(5.8504+0.4249*mug/muf*sqrt(rhof/rhog)).*perim./4; % [kg/s] Critical film flow rate
                     ment = k*((Wf./perim-Wfc./perim).^2*16/(rhof*sig*hdiam)).^n1.*(rhof/rhog)^n2.*vapor.W(zIdx)./area; % [kg/m^2/s] Entrainment mass flux
                     ment(Wf<=Wfc) = 0;                                     % Set to 0 below critical film flowrate
+                    
                 case InputEnums.ENTRAINMENT.OKAWA2003
                     % Okawa et al. 2003 film entrainment model
-                    ke = 4.79E-4; n  = 0.111; Refc = 320;                  % Model constants
-                    %ke = 3.50E-4;   % RISO TS20
-                    %ke = 15E-4;     % RISO TS17/26L
-                    slip = ones(size(Wf)); err=1;                          % [-, -] Set initial guess and error for delta search
-
-                    % Wall friction factor (model consistent with entrainment correlation derivation)
-                    Cw = absfilm.CW_LAM_CALC(zIdx, 0.005);                 % [-] Wall friction factor, C=0.005
+                    coefs = [320 0.111 4.79E-4 1];
+                    ment  = absfilm.OKAWAMENT(zIdx, coefs);
                     
-                    % Film thickness (model consistent with entrainment correlation derivation)
-                    %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;      % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
-                    for it = 1:100
-                        delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim;  % [m] Film thicknesse(s)
-                        Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);    % [-] Interfacial friction factor, thick=delta, C=0.005
-                        newslip = sqrt(Cw./Cv.*(rhof/rhog));               % [-] Slip formulation
-                        err = max(abs((newslip)./(slip)-1));               % [-] Error
-                        slip = newslip;                                    % [-] Update slip
-                        if err < 0.01; break
-                        end
-                    end
-                    if err > 0.01
-                        disp('Okawa correlation : not converged')
-                    end
+                case InputEnums.ENTRAINMENT.OKAWA2004
+                    % Okawa et al. 2004 film entrainment model
+                    coefs = [320 0 0.0310 2.3 0.0675 1.2 0.2950 0.5];
+                    ment  = absfilm.OKAWAMENT(zIdx, coefs);
                     
-                    entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig; % [-] Entrainment number
-                    ment = (ke*rhof).*entnum.*(rhof/rhog)^n;               % [kg/m^2/s] Entrainment mass flux
+                case InputEnums.ENTRAINMENT.OKAWA2004MOD
+                    % Modified Okawa et al. (2004) from Adamsson and Le Corre (2011)
+                    coefs = [320 0 0.0310 2.3 0.0675 1.2];
+                    ment  = absfilm.OKAWAMENT(zIdx, coefs);
                     
-                    %ment(absfilm.RE(zIdx)<=Refc) = 0;                      % Set to 0 below critical film Reynolds
-                    deltaRe = 100;                                         % [-] Set a Re window size across critical film Reynolds
-                    mult = min(1,max(0,(absfilm.RE(zIdx)-(Refc-deltaRe/2))./deltaRe)); % Set to 0 (linearly across Re window to avoid potential non-convergence)
-                    ment = mult.*ment;
+                case InputEnums.ENTRAINMENT.OKAWAGEN
+                    % Generic Okawa model
+                    coefs = model.OKAWACOEFS;
+                    ment  = absfilm.OKAWAMENT(zIdx, coefs);
             end
             
             ment(negfilm)=-ment(negfilm);
@@ -361,32 +351,108 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
     methods(Access = private)
         
-        function Cw = CW_TURB_CALC(film,zIdx,C)
+        function Cw = CW_TURB_CALC(absfilm,zIdx,C)
         %CW_TURB_CALC Private method to calculate the turbulent wall
         %friction factor
 
-            nwall = film.inputSet.geometry.NWALL;                  % Number of walls
+            nwall = absfilm.inputSet.geometry.NWALL;                  % Number of walls
             Cw = repmat(C,length(zIdx),nwall);                     % [-]
 
         end
 
-        function Cw = CW_LAM_CALC(film,zIdx,C)
-        %CW_LAM_CALC Private method to calculate the laminar wall%friction
-        %factor
+        function Cw = CW_LAM_CALC(absfilm,zIdx,C)
+        %CW_LAM_CALC Private method to calculate the laminar wall
+        %friction factor
 
-            RE = max(film.RE(zIdx),1E-6);
+            RE = max(absfilm.RE(zIdx),1E-6);
             Cw = max(16./RE,C);                                    % [-]
         end
 
-        function Cv = CV_WALLISTHICK_CALC(film, thick, C)
+        function Cv = CV_WALLISTHICK_CALC(absfilm, thick, C)
         %CV_WALLISTHICK_CALC Private method to calculate the interfacial
         %shear using the WALLISTHICK model
 
-            area = film.inputSet.geometry.AREA;                    % [m^2] Cross-section area
-            perim = film.inputSet.geometry.PERIM;                  % [m]   Perimeter(s)
+            area = absfilm.inputSet.geometry.AREA;                    % [m^2] Cross-section area
+            perim = absfilm.inputSet.geometry.PERIM;                  % [m]   Perimeter(s)
             Cv = C.*(1+(75/area).*sum(perim.*thick,2));            % [-]
 
         end
+        
+        function entnum = ENTNUM(absfilm, zIdx)
+        %ENTNUM Private method to calculate the entrainment number
+        %based on Okawa model assumptions
+        
+            vapor = absfilm.mix.vapor;
+            rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
+            rhog  = absfilm.fluid.RHOG;                                    % [kg/m^3] Saturated vapor density
+            sig   = absfilm.fluid.SIGMA;                                   % [N/m] Surface tension
+            area  = absfilm.inputSet.geometry.AREA;                        % [m^2] Coolant area
+            perim = absfilm.inputSet.geometry.PERIM;                       % [m^2] Coolant area
+            
+            Wf = abs(absfilm.W(zIdx,:));
+            
+            % Wall friction factor (model consistent with entrainment correlation derivation)
+            Cw = absfilm.CW_LAM_CALC(zIdx, 0.005);                         % [-] Wall friction factor, C=0.005
+            
+            % Film thickness (model consistent with entrainment correlation derivation)
+            %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;              % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
+            slip = ones(size(Wf)); err=1;                                  % [-, -] Set initial guess and error for delta search
+            for it = 1:100
+                delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim;  % [m] Film thicknesse(s)
+                Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);            % [-] Interfacial friction factor, thick=delta, C=0.005
+                newslip = sqrt(Cw./Cv.*(rhof/rhog));                       % [-] Slip formulation
+                err = max(abs((newslip)./(slip)-1));                       % [-] Error
+                slip = newslip;                                            % [-] Update slip
+                if err < 0.01; break
+                end
+            end
+            if err > 0.01
+                disp('Okawa correlation : not converged')
+            end
+            
+            entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
+            
+        end
+        
+        function ment = OKAWAMENT(absfilm, zIdx, coefs)
+        %OKAWAMENT Private method to calculate the entrainment mass flux
+        %based on Okawa models
+            
+            rhof   = absfilm.fluid.RHOF;                                   % [kg/m^3] Saturated liquid density
+            rhog   = absfilm.fluid.RHOG;                                   % [kg/m^3] Saturated vapor density
+            entnum = absfilm.ENTNUM(zIdx);                                 % [-] Entrainment number
+        
+            Refc = coefs(1); n = coefs(2);
+            [ke, n2] = absfilm.OKAWACOEFS(entnum, coefs);
+            
+            ment = ke.*rhof.*entnum.^n2.*(rhof/rhog).^n;                   % [kg/m^2/s] Entrainment mass flux
+            
+            %ment(film.RE(zIdx)<=Refc) = 0;                                 % Set to 0 below critical film Reynolds
+            deltaRe = 100;                                                 % [-] Set a Re window size across critical film Reynolds
+            mult = min(1,max(0,(absfilm.RE(zIdx)-(Refc-deltaRe/2))./deltaRe)); % Set to 0 (linearly across Re window to avoid potential non-convergence)
+            ment = mult.*ment;
+            
+        end
+        
+        function [ke, n2] = OKAWACOEFS(absfilm, entnum, coefs)
+        %OKAWACOEFS Private method to determine the coefficients used in
+        %OKAWA entrainment models based on the calculated entrainment number
+        
+            n2array = coefs(4:2:end);
+            entbp = coefs(5:2:end);
+            
+            for k = 1:numel(entnum)
+                kearray = coefs(3);
+                for i = find(entbp-entnum(k)<=0)
+                    kearray(i+1) = kearray(i)*entbp(i)^n2array(i)/entbp(i)^n2array(i+1);
+                end
+                ke(k) = kearray(end);
+                n2(k) = n2array(length(kearray));
+            end
+            ke = reshape(ke,size(entnum)); n2 = reshape(n2,size(entnum)); 
+            
+        end
+        
     end
 
     methods(Access = protected)
