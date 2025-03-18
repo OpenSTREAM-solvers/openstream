@@ -78,7 +78,7 @@ classdef Geometry < Inputs.Input
                 %   TODO: check log mode? combine warnings?
                 defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
                 warning('Geometry:defaultValueUsedWarning', ...
-                    sprintf('%s\n',defaultValueWarningString));
+                        sprintf('%s\n',defaultValueWarningString));
             end
 
             % Remove dynamic property inputStruct

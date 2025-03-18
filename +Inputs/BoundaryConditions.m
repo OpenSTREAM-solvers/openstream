@@ -96,7 +96,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 %   TODO: check log mode? combine warnings?
                 defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
                 warning('BoundaryConditions:defaultValueUsedWarning', ...
-                    sprintf('%s\n',defaultValueWarningString));
+                        sprintf('%s\n',defaultValueWarningString));
 
             end
             
