@@ -44,7 +44,6 @@ tfSolver.inputSet.session.log.closeLog();
 tfSolver.inputSet.session.log.diaryOff();
 tfSolver.log('Output directory: %s\n',tfSolver.inputSet.session.directory);
 
-
 function solver(solveINIT)
     
     
@@ -205,11 +204,11 @@ function solver(solveINIT)
             end
             
             % Iteration parameters
-            film(tIdx).ITR.N(zIdx)  = itr;
+            film(tIdx).ITR.N(zIdx)           = itr;
             film(tIdx).ITR.DWL(zIdx,1:nwall) = dWL;
             film(tIdx).ITR.DU(zIdx,1:nwall)  = dUf;
-            drop(tIdx).ITR.N(zIdx)  = itr;
-            drop(tIdx).ITR.DU(zIdx) = dUd;
+            drop(tIdx).ITR.N(zIdx)           = itr;
+            drop(tIdx).ITR.DU(zIdx)          = dUd;
             
         end
         
@@ -261,7 +260,6 @@ function solver(solveINIT)
     
     end
     
-    %tfSolver.log('\n------------------------------ %9s Three-field solver run completed ------------------------------\n\n', solveMODE)
     tfSolver.log('\n')
     
     % End timer
