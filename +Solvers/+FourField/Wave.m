@@ -69,7 +69,7 @@ classdef Wave < Solvers.AbstractFilm
             
             perim  = wave.inputSet.geometry.PERIM;
             
-            wl = wave.W(zIdx,:)./perim;                                    % [kg/s/m] Film mass flow rate per unit perimeter
+            wl = wave.W(zIdx,:)./perim;                                    % [kg/s/m] Wave mass flow rate per unit perimeter
         end
         
         function thick = THICK(wave, zIdx)
@@ -77,7 +77,7 @@ classdef Wave < Solvers.AbstractFilm
         %    
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
         
-            thick = wave.AMP(zIdx) .* wave.BETA(zIdx);                     % [m] Film thickness
+            thick = wave.AMP(zIdx) .* wave.BETA(zIdx);                     % [m] Wave thickness
         end
 
         function beta = BETA(wave, zIdx)
@@ -144,18 +144,21 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             mturb = wave.film.base.MTURB(zIdx);
-
         end
         
-        function [Mbase, Mturb] = MBASE(wave,drop,zIdx)
+        function Mbase = MBASE(wave,drop,zIdx)
         %MWAVE Mass flux interaction with base
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
-            [Mwave, Mturb_base] = wave.film.base.MWAVE(drop,zIdx);
+            % Net exchange term (eq. 32)
+            [~, Mnet] = wave.film.base.MWAVE(drop,zIdx);
+            
+            % Base exchange + turbulent mixing term (eq.8)
             Mturb = wave.MTURB(zIdx);
-            Mbase = max(0, -(Mwave-Mturb_base)) + Mturb;
-
+            Mbase = max(-Mnet, 0) + Mturb;
+            
+            Mbase = wave.mix.AFDISTR(0,Mbase,zIdx);
         end
         
         function Mtot = MTOT(wave,drop,zIdx)
@@ -163,16 +166,13 @@ classdef Wave < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
-            % Net mass exchange
+            % TODO: Create the MDEP method
             Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx)-wave.film.base.MWAVE(drop,zIdx);
-
-            % Add turbulent exchange term (eq.8)
-            Mtot = Mtot + wave.MTURB(zIdx);
             
         end
 
         function Fwall = FWALL(wave,zIdx)
-        %FWALL Film wall shear stress
+        %FWALL Wave wall shear stress
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
@@ -198,10 +198,11 @@ classdef Wave < Solvers.AbstractFilm
             deltaU = wave.film.base.U(zIdx) - wave.U(zIdx);
             Fbasemass = wave.MBASE(drop,zIdx).*deltaU; % [N/m^2]
             
+            Fbasemass = wave.mix.AFDISTR(0,Fbasemass,zIdx);
         end
 
         function Fvapor = FVAPOR(wave,zIdx)
-        %FVAPOR Film vapor shear stress
+        %FVAPOR Wave vapor shear stress
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
@@ -222,9 +223,9 @@ classdef Wave < Solvers.AbstractFilm
 
             % Eq. 45
             Fdrag = 0.5 .* wave.SHAPEFACTOR(zIdx) .* wave.DRAGCOEF(zIdx) .* rho_vs .* dU.^2;
+            Fdrag = wave.BETA(zIdx).*Fdrag;
 
             Fdrag = wave.mix.AFDISTR(0,Fdrag,zIdx);
-            
         end
 
         function Fshear = FSHEAR(wave,zIdx)
@@ -243,9 +244,20 @@ classdef Wave < Solvers.AbstractFilm
 
             % Eq. 46
             Fshear = 0.5 .* f_v_w .* rho_vs .* dU.^2;
+            Fshear = wave.BETA(zIdx).*Fshear;
             
         end
         
+        function Fdep = FDEP(wave,drop,zIdx)
+        %FDEP Droplet
+        %
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+            
+            deltaU = drop.U(zIdx) - wave.U(zIdx,:);
+            Fdep = wave.ETA(zIdx).*drop.MDEP(zIdx) .* deltaU;   % [N/m^2]
+            
+            Fdep = wave.mix.AFDISTR(0,Fdep,zIdx);
+        end
 
         function Ftot = FTOT(wave,drop,zIdx)
         %FTOT Total
@@ -253,7 +265,6 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
             Ftot = wave.FVAPOR(zIdx)+wave.FBUOY(zIdx)+wave.FGRAV(zIdx)+wave.FDEP(drop,zIdx)+wave.FBASE(zIdx)+wave.FBASEMASS(drop,zIdx);
-            %Ftot = wave.FVAPOR(zIdx)+wave.FBASE(zIdx);
             
         end
 
@@ -284,8 +295,8 @@ classdef Wave < Solvers.AbstractFilm
             end
 
             re_v = wave.film.mix.vapor.RE(zIdx);
-            re_l = wave.film.mix.liquid.RE(zIdx);
-            eqst = coefs(1) .* re_v.^coefs(2) .* re_l.^coefs(3);
+            re_f = wave.film.RE(zIdx);
+            eqst = coefs(1) .* re_v.^coefs(2) .* re_f.^coefs(3);
 
         end
 
@@ -295,12 +306,11 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             % Hydraulic diameter
-            d_h = wave.inputSet.geometry.HDIAM();
-            nwall = wave.inputSet.geometry.NWALL();
+            d_h = wave.inputSet.geometry.HDIAM;
+            nwall = wave.inputSet.geometry.NWALL;
 
             % Solve eqfreq using definition of St
             eqfreq = wave.EQSTROUHAL(zIdx).*wave.film.mix.vapor.U(zIdx)./d_h;
-            eqfreq = repmat(eqfreq,1,nwall);
 
         end
 
@@ -367,7 +377,7 @@ classdef Wave < Solvers.AbstractFilm
             amp = sqrt(abs(amp));
             
             % Limit amp+base.thick to 1/2 of D_H, at most
-            D_H = wave.inputSet.geometry.HDIAM();
+            D_H = wave.inputSet.geometry.HDIAM;
             amp = min(amp, D_H/2-wave.film.base.THICK(zIdx));
 
         end
@@ -379,11 +389,12 @@ classdef Wave < Solvers.AbstractFilm
             
             relaxTW = wave.inputSet.model.RELAXTW;
             deltafreq = (wave.EQFREQUENCY(zIdx)-wave.FREQUENCY(zIdx,:))./wave.U(zIdx,:)./relaxTW;  % [Hz/m] Wave frequency exchange terms
-
+            
+            deltafreq = wave.mix.AFDISTR(0,deltafreq,zIdx);
         end
-
-        function dragcoef = DRAGCOEF(wave, zIdx)
-        %DRAGCOEF Wave drag coefficient
+        
+        function rev = REV(wave, zIdx)
+        %REF Vapor Reynolds number (with respect to waves)
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -394,10 +405,21 @@ classdef Wave < Solvers.AbstractFilm
             rho_vs = wave.fluid.RHOG;
             du = wave.film.mix.vapor.U(zIdx) - wave.U(zIdx,:);
             mu_vs = wave.fluid.MUG;
-            Re_vw = rho_vs .* du .* coefs(1) ./mu_vs;
+            rev = rho_vs .* du .* coefs(1) ./mu_vs;
+        end
+
+        function dragcoef = DRAGCOEF(wave, zIdx)
+        %DRAGCOEF Wave drag coefficient
+        %
+            if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            % Coefficients
+            coefs = wave.inputSet.model.WAVEDRAGCOEF;
+            
+            % Vapor Reynolds number (Eq. 64)
+            Re_vw = wave.REV(zIdx);
 
             % Draf Coef (Eq. 63)
-            coefs = wave.inputSet.model.WAVEDRAGCOEF;
             dragcoef = (coefs(2)./Re_vw).^2 + coefs(3);
         end
     

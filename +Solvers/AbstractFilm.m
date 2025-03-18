@@ -5,10 +5,10 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
         
-        DZ           (1,1) double  {mustBeNumeric}                          =0                   % [m] Axial step size
+        DZ           (1,1) double  {mustBeNumeric}                         =0      % [m] Axial step size
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
-        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN
+        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}    = NaN
     end
    
 
@@ -37,7 +37,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
             perim  = absfilm.inputSet.geometry.PERIM;
             
-            wl = absfilm.W(zIdx,:)./perim;                                    % [kg/s/m] Film mass flow rate per unit perimeter
+            wl = absfilm.W(zIdx,:)./perim;                                 % [kg/s/m] Film mass flow rate per unit perimeter
         end
         
         function thick = THICK(absfilm,zIdx)
@@ -46,9 +46,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
-            rhof  = absfilm.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
+            rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
             
-            thick = absfilm.WL(zIdx)./absfilm.U(zIdx,:)./rhof;                   % [m] Film thickness
+            thick = absfilm.WL(zIdx)./absfilm.U(zIdx,:)./rhof;             % [m] Film thickness
         end
 
         function re = RE(absfilm,zIdx)
@@ -57,9 +57,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
-            muf   = absfilm.fluid.MUF;                                        % [kg/m^3] Saturated liquid viscosity
+            muf   = absfilm.fluid.MUF;                                     % [kg/m^3] Saturated liquid viscosity
             
-            re = abs(4.*absfilm.WL(zIdx)./muf);                               % [-] Film Reynolds number
+            re = abs(4.*absfilm.WL(zIdx)./muf);                            % [-] Film Reynolds number
         end
         
         function ment = MENT(absfilm,zIdx)
@@ -69,20 +69,23 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
             model = absfilm.inputSet.model;
             vapor = absfilm.mix.vapor;
-            rhof  = absfilm.fluid.RHOF;                                       % [kg/m^3] Saturated liquid density
-            rhog  = absfilm.fluid.RHOG;                                       % [kg/m^3] Saturated vapor density
-            muf   = absfilm.fluid.MUF;                                        % [kg/m^3] Saturated liquid viscosity
-            mug   = absfilm.fluid.MUG;                                        % [kg/m^3] Saturated vapor viscosity
-            sig   = absfilm.fluid.SIGMA;                                      % [N/m] Surface tension
-            hdiam = absfilm.inputSet.geometry.HDIAM;                          % [m] Hydraulic diameter
-            area  = absfilm.inputSet.geometry.AREA;                           % [m^2] Coolant area
-            perim = absfilm.inputSet.geometry.PERIM;                          % [m^2] Coolant area
+            rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
+            rhog  = absfilm.fluid.RHOG;                                    % [kg/m^3] Saturated vapor density
+            muf   = absfilm.fluid.MUF;                                     % [kg/m^3] Saturated liquid viscosity
+            mug   = absfilm.fluid.MUG;                                     % [kg/m^3] Saturated vapor viscosity
+            sig   = absfilm.fluid.SIGMA;                                   % [N/m] Surface tension
+            hdiam = absfilm.inputSet.geometry.HDIAM;                       % [m] Hydraulic diameter
+            area  = absfilm.inputSet.geometry.AREA;                        % [m^2] Coolant area
+            perim = absfilm.inputSet.geometry.PERIM;                       % [m^2] Coolant area
             
             Wf = absfilm.W(zIdx,:);
             negfilm = find(Wf<0);
             Wf = abs(Wf);
             
             switch model.ENTRAINMENT
+                case InputEnums.ENTRAINMENT.NONE
+                    % Suppress film entrainment
+                    ment = zeros(length(zIdx),1);
                 case InputEnums.ENTRAINMENT.GOVAN
                     % Govan & Hewitt film entrainment model
                     k = 5.75e-5; n1 = 0.316; n2 = 0.632;                   % Model constants
@@ -92,16 +95,18 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 case InputEnums.ENTRAINMENT.OKAWA2003
                     % Okawa et al. 2003 film entrainment model
                     ke = 4.79E-4; n  = 0.111; Refc = 320;                  % Model constants
+                    %ke = 3.50E-4;   % RISO TS20
+                    %ke = 15E-4;     % RISO TS17/26L
                     slip = ones(size(Wf)); err=1;                          % [-, -] Set initial guess and error for delta search
 
                     % Wall friction factor (model consistent with entrainment correlation derivation)
-                    Cw = absfilm.CW_LAM_CALC(zIdx, 0.005);                    % [-] Wall friction factor, C=0.005
+                    Cw = absfilm.CW_LAM_CALC(zIdx, 0.005);                 % [-] Wall friction factor, C=0.005
                     
                     % Film thickness (model consistent with entrainment correlation derivation)
                     %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;      % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
                     for it = 1:100
                         delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim;  % [m] Film thicknesse(s)
-                        Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);       % [-] Interfacial friction factor, thick=delta, C=0.005
+                        Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);    % [-] Interfacial friction factor, thick=delta, C=0.005
                         newslip = sqrt(Cw./Cv.*(rhof/rhog));               % [-] Slip formulation
                         err = max(abs((newslip)./(slip)-1));               % [-] Error
                         slip = newslip;                                    % [-] Update slip
@@ -112,13 +117,17 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                         disp('Okawa correlation : not converged')
                     end
                     
-                    entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
+                    entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig; % [-] Entrainment number
                     ment = (ke*rhof).*entnum.*(rhof/rhog)^n;               % [kg/m^2/s] Entrainment mass flux
-                    ment(absfilm.RE(zIdx)<=Refc) = 0;                                   % Set to 0 below critical film Reynolds
+                    
+                    %ment(absfilm.RE(zIdx)<=Refc) = 0;                      % Set to 0 below critical film Reynolds
+                    deltaRe = 100;                                         % [-] Set a Re window size across critical film Reynolds
+                    mult = min(1,max(0,(absfilm.RE(zIdx)-(Refc-deltaRe/2))./deltaRe)); % Set to 0 (linearly across Re window to avoid potential non-convergence)
+                    ment = mult.*ment;
             end
             
             ment(negfilm)=-ment(negfilm);
-            ment = -absfilm.mix.AFDISTR(0,ment,zIdx);                              % [kg/m^2/s] Entrainment mass flux, in annular flow region only
+            ment = -absfilm.mix.AFDISTR(0,ment,zIdx);                      % [kg/m^2/s] Entrainment mass flux, in annular flow region only
 
         end
         
@@ -142,14 +151,14 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             switch model.THINFILMFRIC
                 case InputEnums.THINFILMFRIC.TURBULENT
                     %
-                    Cw = absfilm.CW_TURB_CALC(zIdx, C);                        % Call private method
+                    Cw = absfilm.CW_TURB_CALC(zIdx, C);                    % Call private method
 
                 case InputEnums.THINFILMFRIC.LAMINAR
                     %
-                    Cw = absfilm.CW_LAM_CALC(zIdx, C);                         % Call private method
+                    Cw = absfilm.CW_LAM_CALC(zIdx, C);                     % Call private method
             end
             
-            Cw  = absfilm.mix.AFDISTR(0,Cw,zIdx);
+            Cw  = absfilm.mix.AFDISTR(C,Cw,zIdx);
             
         end
         
@@ -287,7 +296,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             Ualgebr = sqrt((2*TAUW/absfilm.fluid.RHOF)./Cw);                  % [m/s] 
             
             Ualgebr  = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),Ualgebr,zIdx);  
-            
+
         end
         
         function Uequil = UEQUILS(absfilm,zIdx)

@@ -3,7 +3,7 @@ classdef SolverPlotter < handle
     %   Detailed explanation goes here
     
     properties
-        FontSize            {mustBePositive, isnumeric}             = 10            % Font size of text in plots
+        FontSize            {mustBePositive, isnumeric}             = 14            % Font size of text in plots
         Title               {isstring}                              = ""            % Figure title
         WallIdx             {mustBePositive, mustBeInteger}         = 1             % Wall index
         Zs          (:,1)   {isnumeric}                             = []
@@ -142,9 +142,7 @@ classdef SolverPlotter < handle
                 lh.LineStyle = plotStyles.LineStyle;
                 lh.Marker = plotStyles.Marker;
 
-
             end
-
             
         end
 
@@ -219,6 +217,8 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(2), '-', 'o'};
                 case {'VAP', 'VAPOR'}
                     plotStyle = {colors(1), '-', '.' };
+                 case {'RELAXVAPOR'}
+                    plotStyle = {colors(1), '--', '+' };   
                     
                 case {'FILM'}
                     plotStyle = {colors(2), '--', '.'};
@@ -253,6 +253,8 @@ classdef SolverPlotter < handle
 
                 case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
                     plotStyle = {colors(5), '-', 'o'};
+                case {'RELAXEQUIL'}
+                    plotStyle = {colors(5), '--', '+'};    
                 case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'OAF'}

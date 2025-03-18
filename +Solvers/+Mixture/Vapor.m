@@ -58,23 +58,39 @@ classdef Vapor < Solvers.AbstractPhase
 
         function u = U(vapor, zIdx)
             %U Velocity [m/s]
-            %   NOTE: need to be verified
+            %NOTE: need to be verified
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.mix.H(zIdx));
+            u = vapor.MFLUX(zIdx) ./ vapor.VF(zIdx) ./ vapor.mix.fluid.RHOV(vapor.H(zIdx));
             
             % set to the mixture velocity in the single-phase liquid region
             %singlePhaseIdx = 1:(vapor.mix.OAFIDX-1);
             singlePhaseIdx = isnan(u);
             mixU = vapor.mix.U(zIdx);
             u(singlePhaseIdx) = mixU(singlePhaseIdx);
-            
         end
 
         function h = H(vapor, zIdx)
             %H Enthalpy [J/kg]
+            %Calculation dpends on non equilibrium model
+            %TODO: Check and clean up
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            h = min(vapor.mix.H(zIdx), vapor.mix.fluid.HG.');
+            model = vapor.mix.inputSet.model;
+            
+            switch model.THERMALNONEQ
+                
+                case 'TRELAX'
+                    WV = vapor.mix.TRELAX.WV(zIdx,:);
+                    h = sum(vapor.mix.TRELAX.HV(zIdx,:).*WV,2)./sum(WV,2);
+                    h(isnan(h)) = vapor.mix.fluid.HG;
+                    % sum(WV,2) is the same as vapor.W
+                    
+                otherwise
+                    X = min(vapor.mix.X(zIdx),vapor.mix.XEQ(zIdx));        % Account for potential superheated vapor
+                    h = (vapor.mix.H(zIdx)-(1-X).*vapor.mix.fluid.HF)./X;  % Division by 0?
+                    %h = max(h,vapor.mix.fluid.HG);                         % No subcooled vapor
+                    %h = min(h,5E6);
+            end
         end
 
         function mflux = MFLUX(vapor, zIdx)
@@ -88,9 +104,20 @@ classdef Vapor < Solvers.AbstractPhase
             %RE Reynolds number [-]
             %
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.mix.H(zIdx))...
-                    ./sum(vapor.mix.inputSet.geometry.PERIM);
+            %re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.H(zIdx))...
+            %        ./sum(vapor.mix.inputSet.geometry.PERIM);
+            
+            geom  = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+            re = fluid.RHOV(vapor.H(zIdx)).*vapor.U(zIdx).*geom.HDIAM./fluid.MUV(vapor.H(zIdx));
         end
+        
+        function t = T(vapor, zIdx)
+            %T Temperature [K]
+            %
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            t = vapor.mix.fluid.T(vapor.H(zIdx));
+        end   
 
     end
 end

@@ -35,7 +35,7 @@ classdef InputSet
                                         {islogical}         = false     % Flag to overwrite existing session files
             end
 
-            % Import pacakges
+            % Import packages
             import Inputs.*
             
             %

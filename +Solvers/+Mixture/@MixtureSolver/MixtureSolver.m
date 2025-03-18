@@ -52,6 +52,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             import Inputs.*
             import Solvers.Mixture.*
             import Solvers.*
+            
+            NWALL = mixSolver.inputSet.geometry.NWALL;
 
             % Calculate time steps
             mixSolver.DT = mixSolver.inputSet.options.TSTEP;                            % [s] Time interval
@@ -71,18 +73,40 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Create mixture array (by timestep)
 
-            % Setup DP and ITR
+            % Setup DP structure
             % Grav:     [Pa] Gravitational pressure drop
             % Wall:     [Pa] Wall friction pressure drop
             % Acc_z:    [pa] Spatial acceleration pressure drop
             % Acc_t:    [Pa] Temporal acceleration pressure drop
             % K:        [Pa] Local pressure drop
             % Tot:      [Pa] Total pressure drop
-            DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];          % Fieldnames for DP struct
-            DPCell = cell(numel(DPFields),1);                               % Cell structure to convert into struct
-            DPCell(:) = {zeros(mixSolver.NZ,1)};                            % Initialize with zeros
-            DP = cell2struct(DPCell, DPFields, 1);                          % Convert cell to struct with fieldnames
+            DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];         % Fieldnames for DP struct
+            DPCell = cell(numel(DPFields),1);                              % Cell structure to convert into struct
+            DPCell(:) = {zeros(mixSolver.NZ,1)};                           % Initialize with zeros
+            DP = cell2struct(DPCell, DPFields, 1);                         % Convert cell to struct with fieldnames
 
+            % Setup ACC structure
+            % U_z:    [m/s^2] Spatial  hydrodynamic acceleration
+            % U_t:    [m/s^2] Temporal hydrodynamic acceleration
+            % U  :    [m/s^2] Total    hydrodynamic acceleration
+            % H_z:    [m/s^2] Spatial  thermal acceleration
+            % H_t:    [m/s^2] Temporal thermal acceleration
+            % H  :    [m/s^2] Total    thermal acceleration
+            ACCFields =  ["U_z","U_t","U","H_z","H_t","H"];                % Fieldnames for ACC struct
+            ACCCell = cell(numel(ACCFields),1);                            % Cell structure to convert into struct
+            ACCCell(:) = {zeros(mixSolver.NZ,1)};                          % Initialize with zeros
+            ACC = cell2struct(ACCCell, ACCFields, 1);                      % Convert cell to struct with fieldnames
+            
+            % Setup TRELAX structure
+            % WV  :  [kg/s] Vapor mass flow rate
+            % WVTH:  [J/kg] Thermodynamic vapor mass flow rate
+            % X   :  [-] Vapor mass quality
+            % XTH :  [-] Thermodynamic mass quality
+            TRELAXFields =  ["TIME","WV","X","HV","TV","WVTH","XTH"];      % Fieldnames for TRELAX struct
+            TRELAXCell = cell(numel(TRELAXFields),1);                      % Cell structure to convert into struct
+            TRELAXCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
+            TRELAX = cell2struct(TRELAXCell, TRELAXFields, 1);             % Convert cell to struct with fieldnames
+            
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DH"];
             ITR = mixSolver.CreateITR(mixSolver.NZ, ITRFields);
@@ -102,13 +126,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 % Axial Steps
                 mixArr(tIdx).NZ = mixSolver.NZ;
                 mixArr(tIdx).DZ = mixSolver.DZ;
-                mixArr(tIdx).Z = mixSolver.Z;
+                mixArr(tIdx).Z  = mixSolver.Z;
                 
                 % Time step
                 mixArr(tIdx).NTIME = mixSolver.NTIME;
-                mixArr(tIdx).DT = mixSolver.DT;
-                mixArr(tIdx).TIME = mixSolver.TIME(tIdx);
-                mixArr(tIdx).TIDX = tIdx;
+                mixArr(tIdx).DT    = mixSolver.DT;
+                mixArr(tIdx).TIME  = mixSolver.TIME(tIdx);
+                mixArr(tIdx).TIDX  = tIdx;
 
                 % Wall heat flux
                 mixArr(tIdx).HFLUX = ...
@@ -118,19 +142,28 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         [] ...
                         );
                 
-                % Mass flow ratep [kg/s], pressure [Pa], enthalpy [J/kg]
-                mixArr(tIdx).W     = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
-                mixArr(tIdx).P     = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
-                mixArr(tIdx).H     = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
+                % DP, ACC, TRELAX, ITR
+                mixArr(tIdx).DP     = DP;
+                mixArr(tIdx).ACC    = ACC;
+                mixArr(tIdx).TRELAX = TRELAX;
+                mixArr(tIdx).ITR    = ITR;
                 
-                % DP, ITR
-                mixArr(tIdx).DP = DP;
-                mixArr(tIdx).ITR = ITR;
-
                 % Phases
                 mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
-                mixArr(tIdx).vapor = Vapor(mixArr(tIdx));
+                mixArr(tIdx).vapor  = Vapor(mixArr(tIdx));
                 
+                % Mass flow rate [kg/s], pressure [Pa], enthalpy [J/kg]
+                mixArr(tIdx).W = repmat(mixSolver.boundaryConditions.MFLOW(tIdx),mixSolver.NZ,1);
+                mixArr(tIdx).P = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
+                mixArr(tIdx).H = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
+                
+                % Initialize TRELAX after H to get correct XEQ
+                mixArr(tIdx).TRELAX.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).WWALL;
+                mixArr(tIdx).TRELAX.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
+                mixArr(tIdx).TRELAX.HV   = repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,NWALL);
+                mixArr(tIdx).TRELAX.TV   = reshape(mixSolver.fluid(tIdx).T(mixArr(tIdx).TRELAX.HV),[],NWALL);
+                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).WNEARWALL;
+                mixArr(tIdx).TRELAX.XTH  = repmat(mixArr(tIdx).XEQ,1,NWALL);
 
             end
 
@@ -211,8 +244,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             [] ...
                         ), [1 3 2]);
             
-            mixSolver.boundaryConditions.WPOWER = WPOWERT;
-            
+            mixSolver.boundaryConditions.WPOWER = WPOWERT;            
             
             % Calculate wall heat flux at each node in space & time
             % NOTE: This is very convoluted
@@ -221,7 +253,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ./ sum(reshape( ...
                         mixSolver.inputSet.geometry.PERIM .* mixSolver.DZ,1,mixSolver.inputSet.geometry.NWALL,1 ...
                         ).* ...
-                       mixSolver.boundaryConditions.WPOWER,[1,2] ...
+                       mixSolver.boundaryConditions.WPOWER(2:end,:,:),[1,2] ...
                       );
 
             function validParams = checkParams(params)
@@ -249,29 +281,31 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         function plotter = plotz(mixSolver, tIdx, opt)
         %PLOTZ
-        %   NOTE: currently supports only single timeSteps
+        %   NOTE: currently supports only single timeStep
             arguments
                 mixSolver
-                tIdx    (1,1) double
+                tIdx     (1,1) double
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL
             end
+            
+            bc  = mixSolver.boundaryConditions;
+            z   = mixSolver.Z;
             
             switch opt.solveMode
                 case 'TRANSIENT'
                     mix = mixSolver.mixture(tIdx);
+                    bcHFLUX = bc.HFLUX(:,:,tIdx);
                 case 'STEADY'
                     mix = mixSolver.mixtureInit(tIdx);
+                    bcHFLUX = bc.HFLUX(:,:,1);
             end
 
-            bc  = mixSolver.boundaryConditions;
-            z   = mixSolver.Z;
             oafZ = repmat(mix.OAFZ,1,2);
-
-            NWALL = mixSolver.inputSet.geometry.NWALL();
 
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mix.TIME, opt.solveMode), ...
-                                1:NWALL);
+                                opt.wall);
             plotter.setZs(z);
             
             % Wall heat flux
@@ -279,16 +313,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 "tileTitle", 'Wall heat flux', ...
                 'xlabel', 'Axial position [m]', ...
                 'ylabel', 'Wall heat flux [W/m^2]');
-            plotter.plotz(bc.HFLUX(:,:,tIdx), 'BC', 'DisplayName', 'Boundary Condition');
+            plotter.plotz(bcHFLUX, 'BC', 'DisplayName', 'Boundary Condition');
             plotter.plotz(mix.HFLUX, 'MIX', 'DisplayName', 'Mixture');
+            plotter.plotz(mix.CHF, 'Liquid', 'DisplayName', 'CHF');
             plotter.legend("show", 'Location', 'best');
             plotter.plotOAF(oafZ);
 
             % Mass flow rates
             plotter.newTile( ...
-                "tileTitle", "Mass flow rate", ...
+                "tileTitle", "Mass flow rates", ...
                 "xlabel","Axial position [m]", ...
-                "ylabel","Mass flowrates [kg/s]");
+                "ylabel","Mass flow rate [kg/s]");
             
             plotter.plotz(mix.W,"Mixture","DisplayName","Mixture");
             plotter.plotz(mix.liquid.W,"Liquid","DisplayName","Liquid");
@@ -296,9 +331,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
 
-            % Pressure drop
+            % Pressure drops
              plotter.newTile( ...
-                "tileTitle", "Pressure drop", ...
+                "tileTitle", "Pressure drops", ...
                 "xlabel","Axial position [m]", ...
                 "ylabel","Pressure drop [Pa]");
             plotter.plotz(cumsum(mix.DP.Tot),'Total') 
@@ -310,111 +345,195 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
             
-            % Void fraction and quality
+            % Enthalpies
             plotter.newTile( ...
-                "tileTitle", "Void fraction and quality", ...
+                "tileTitle", "Enthalpies", ...
                 "xlabel","Axial position [m]", ...
-                "ylabel","Quality / Void fraction [-]");
-            plotter.plotz(mix.XEQ(1:mix.NZ),'EQUIL','DisplayName','Equilibrium quality')  
-            plotter.plotz(mix.X(1:mix.NZ),'VAPOR','DisplayName','Vapor mass quality')
-            plotter.plotz(mix.VF(1:mix.NZ),'VF','DisplayName','Void faction')
+                "ylabel","Enthalpy [J/kg]");
+            
+            plotter.plotz(mix.H,"Mixture","DisplayName","Mixture");
+            plotter.plotz(mix.liquid.H,"Liquid","DisplayName","Liquid");
+            plotter.plotz(mix.vapor.H,"Vapor","DisplayName","Vapor");
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
-
-            % Field velocity
+            plot(xlim,mixSolver.fluid(tIdx).HF.*[1 1],'k--','handleVisibility','off')
+            plot(xlim,mixSolver.fluid(tIdx).HG.*[1 1],'k--','handleVisibility','off')
+            
+            % Velocities
             plotter.newTile( ...
-                "tileTitle", "Field velocity", ...
+                "tileTitle", "Field velocities", ...
                 "xlabel","Axial position [m]", ...
                 "ylabel","Velocity [m/s]");
-            plotter.plotz(mix.U(1:mix.NZ),'Mixture')  
-            plotter.plotz(mix.liquid.U(1:mix.NZ),'Liquid')
-            plotter.plotz(mix.vapor.U(1:mix.NZ),'Vapor')
+            plotter.plotz(mix.U,'Mixture')  
+            plotter.plotz(mix.liquid.U,'Liquid')
+            plotter.plotz(mix.vapor.U,'Vapor')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Void fraction and qualities
+            plotter.newTile( ...
+                "tileTitle", "Void fractions and qualities", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(mix.XEQ,'Equil','DisplayName','Equilibrium quality')  
+            plotter.plotz(mix.X,'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(mix.VF,'VF','DisplayName','Void faction')
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Temperatures
+            plotter.newTile( ...
+                "tileTitle", "Temperature", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Temperature [K]");
+            
+            plotter.plotz(mix.T,"Mixture","DisplayName","Mixture");
+            plotter.plotz(mix.liquid.T,"Liquid","DisplayName","Liquid");
+            plotter.plotz(mix.vapor.T,"Vapor","DisplayName","Vapor");
+            plotter.plotz(mix.TWALL,"Wall","DisplayName","Wall");
+            plotter.legend("show", "Location", 'best');
+            plotter.plotOAF(oafZ);
+            
+            % Qualities and relaxed qualities
+            plotter.newTile( ...
+                "tileTitle", "Qualities and relaxed qualities", ...
+                "xlabel","Axial position [m]", ...
+                "ylabel","Quality [-]");
+            plotter.plotz(mix.XEQ,'Equil','DisplayName','Equilibrium thermo. quality')  
+            plotter.plotz(mix.X,'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(mix.TRELAX.XTH,'RelaxEquil','DisplayName','Relaxed thermo. X')
+            plotter.plotz(mix.TRELAX.X,'RelaxVapor','DisplayName','Relaxed vapor X')
             plotter.legend("show", "Location", 'best');
             plotter.plotOAF(oafZ);
 
         end
-    
-        function fh = plott(mixSolver, zIdx, opt)
-            %PLOTT 
-            % 
+        
+        function plotter = plott(mixSolver, zIdx, opt)
+        %PLOTT
+        %   NOTE: currently supports only single elevation
             arguments
                 mixSolver
-                zIdx (:,1) double
-                opt.tIdx (:,1) double = -1
+                zIdx     (1,1) double
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
-                opt.reverseTime (1,1) logical = false
+                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL
             end
+            
+            bc    = mixSolver.boundaryConditions;
+            z     = mixSolver.Z;
+            NWALL = mixSolver.inputSet.geometry.NWALL;
             
             switch opt.solveMode
                 case 'TRANSIENT'
-                    mix = mixSolver.mixture;
+                    mix = mixSolver.mixture();
+                    bcHFLUX = reshape(bc.HFLUX(zIdx,:,:),NWALL,[])';
                 case 'STEADY'
-                    mix = mixSolver.mixtureInit;
+                    mix = mixSolver.mixtureInit();
+                    bcHFLUX = repmat(bc.HFLUX(zIdx,:,1),mixSolver.NTIME,1);
             end
-
-            if isscalar(opt.tIdx) && (opt.tIdx < 0)
-                opt.tIdx = 1:length(mix);
-            end
-
-            % Cannot plot time series of one time step
-            if isscalar(mix) || isscalar(opt.tIdx)
-                mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
-                return
-            end
-
-            % Time vector
-            plotTimeVector = [mix(opt.tIdx).TIME];
-            if opt.reverseTime
-                plotTimeVector = plotTimeVector - plotTimeVector(end);
-            end            
-
-            fh = figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
+            time  = [mix.TIME];
             
-            timeplot('HFLUX','Heat flux [W/m^2]')
-            timeplot('W','Mass flowrates [kg/s]')
-            timeplot('P','Pressure [Pa]')
-            timeplot('XEQ','Equilibrium quality [-]')
-            timeplot('X','Steam mass quality [-]')
-            timeplot('VF','Void fraction [-]')
-            timeplot('U','Velocity [m/s]')
-
-            function timeplot(param,ylabelText)
-
-                nexttile; hold all; grid on;
-                if ismethod(mix,param)
-                    paramData = arrayfun( ...
-                                    @(i) mix(i).(param), ...
-                                    1:length(plotTimeVector), ...
-                                    'UniformOutput', false);
-                    paramData = cell2mat(paramData);
-
-                else
-                    paramData = [mix.(param)];
-                end
-                
-                plot(plotTimeVector, paramData(zIdx,opt.tIdx),'.-');
-
-                legendStr = num2str(mixSolver.Z(zIdx),'z=%0.4f m');
-                legend(legendStr,'Location','southeast');
-                
-                xlabel('Time [s]'); xlim(plotTimeVector([1 end]));
-                ylabel(ylabelText)
-                set(gca,'fontSize',14)
+            plotter = Solvers.SolverPlotter( ...
+                                sprintf('Time distributions of mixture parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
+                                opt.wall);
+            plotter.setZs(time);
             
-            end
+            % Wall heat flux
+            plotter.newTile( ...
+                "tileTitle", 'Wall heat flux', ...
+                'xlabel', 'Time [s]', ...
+                'ylabel', 'Wall heat flux [W/m^2]');
+            %plotter.plotz(bcHFLUX, 'BC', 'DisplayName', 'Boundary Condition');
+            plotter.plotz(cell2mat(arrayfun(@(x) x.HFLUX(zIdx,:)',mix,'uni',0))', 'MIX', 'DisplayName', 'Mixture');
+            plotter.plotz(cell2mat(arrayfun(@(x) x.CHF(zIdx)',mix,'uni',0))', 'Liquid', 'DisplayName', 'CHF');
+            plotter.legend("show", 'Location', 'best');
 
+            % Mass flow rates
+            plotter.newTile( ...
+                "tileTitle", "Mass flow rates", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Mass flow rate [kg/s]");
+            plotter.plotz(arrayfun(@(x) x.W(zIdx),mix),"Mixture","DisplayName","Mixture");
+            plotter.plotz(arrayfun(@(x) x.liquid.W(zIdx),mix),"Liquid","DisplayName","Liquid");
+            plotter.plotz(arrayfun(@(x) x.vapor.W(zIdx),mix),"Vapor","DisplayName","Vapor");
+            plotter.legend("show", "Location", 'best');
+
+            % Pressure drops
+             plotter.newTile( ...
+                "tileTitle", "Pressure drops", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Pressure drop [Pa]");
+            plotter.plotz(arrayfun(@(x) sum(x.DP.Tot(1:zIdx)),mix),'Total') 
+            plotter.plotz(arrayfun(@(x) sum(x.DP.Grav(1:zIdx)),mix),'Gravitational')
+            plotter.plotz(arrayfun(@(x) sum(x.DP.Wall(1:zIdx)),mix),'Wall')
+            plotter.plotz(arrayfun(@(x) sum(x.DP.Acc_z(1:zIdx)),mix),'Z','DisplayName','Acc Z')
+            plotter.plotz(arrayfun(@(x) sum(x.DP.Acc_t(1:zIdx)),mix),'T','DisplayName','Acc t')
+            plotter.plotz(arrayfun(@(x) sum(x.DP.K(1:zIdx)),mix),'Local')
+            plotter.legend("show", "Location", 'best');
+            
+            % Enthalpies
+            plotter.newTile( ...
+                "tileTitle", "Enthalpies", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Enthalpy [J/kg]");
+            plotter.plotz(arrayfun(@(x) x.H(zIdx),mix),'Mixture')  
+            plotter.plotz(arrayfun(@(x) x.liquid.H(zIdx),mix),'Liquid')
+            plotter.plotz(arrayfun(@(x) x.vapor.H(zIdx),mix),'Vapor')
+            plotter.legend("show", "Location", 'best');
+            
+            % Velocities
+            plotter.newTile( ...
+                "tileTitle", "Field velocities", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Velocity [m/s]");
+            plotter.plotz(arrayfun(@(x) x.U(zIdx),mix),'Mixture')  
+            plotter.plotz(arrayfun(@(x) x.liquid.U(zIdx),mix),'Liquid')
+            plotter.plotz(arrayfun(@(x) x.vapor.U(zIdx),mix),'Vapor')
+            plotter.legend("show", "Location", 'best');
+            
+            % Void fraction and qualities
+            plotter.newTile( ...
+                "tileTitle", "Void fraction and qualities", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'Equil','DisplayName','Equilibrium quality')  
+            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(arrayfun(@(x) x.VF(zIdx),mix),'VF','DisplayName','Void faction')
+            plotter.legend("show", "Location", 'best');
+            
+            % Temperatures
+            plotter.newTile( ...
+                "tileTitle", "Temperatures", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Temperature [K]");
+            plotter.plotz(arrayfun(@(x) x.T(zIdx),mix),'Mixture')  
+            plotter.plotz(arrayfun(@(x) x.liquid.T(zIdx),mix),'Liquid')
+            plotter.plotz(arrayfun(@(x) x.vapor.T(zIdx),mix),'Vapor')
+            plotter.plotz(cell2mat(arrayfun(@(x) x.TWALL(zIdx)',mix,'uni',0))', 'Wall', 'DisplayName', 'Wall');
+            
+            plotter.legend("show", "Location", 'best');
+            
+            % Qualities and relaxed qualities
+            plotter.newTile( ...
+                "tileTitle", "Qualities and relaxed qualities", ...
+                "xlabel","Time [s]", ...
+                "ylabel","Quality / Void fraction [-]");
+            plotter.plotz(arrayfun(@(x) x.XEQ(zIdx),mix),'Equil','DisplayName','Equilibrium thermo. quality')  
+            plotter.plotz(arrayfun(@(x) x.X(zIdx),mix),'Vapor','DisplayName','Vapor mass quality')
+            plotter.plotz(arrayfun(@(x) x.TRELAX.XTH(zIdx),mix),'RelaxEquil','DisplayName','Relaxed thermo. X')  
+            plotter.plotz(arrayfun(@(x) x.TRELAX.X(zIdx),mix),'RelaxVapor','DisplayName','Relaxed vapor X')
+            plotter.legend("show", "Location", 'best');
+            
         end
 
-        function fh = plotzt(mixSolver, zIdx, opt)
-        % 2d plot, position z on horizontal and time t on vertical axis
+        function fh = plotzt(mixSolver, opt)
+            %PLOTZT
+            % 2d plot, position z on horizontal and time t on vertical axis
             arguments
                 mixSolver
-                zIdx (:,1) double
-                opt.tIdx (:,1) double = -1
+                opt.tIdx (:,1) double = 1:mixSolver.NTIME
                 opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
-                opt.reverseTime (1,1) logical = false
+                opt.wall (1,:) double = 1:mixSolver.inputSet.geometry.NWALL
             end
-
             
             switch opt.solveMode
                 case 'TRANSIENT'
@@ -423,56 +542,60 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     mix = mixSolver.mixtureInit;
             end
 
-            if isscalar(opt.tIdx) && (opt.tIdx < 0)
-                opt.tIdx = 1:length(mix);
-            end
-
             % Cannot plot time series of one time step
             if isscalar(mix) || isscalar(opt.tIdx)
                 mixSolver.log('Error: Non-scalar time index required to plot time series.\n');
                 return
             end
-
-            % Time vector
-            plotTimeVector = [mix(opt.tIdx).TIME];
-            if opt.reverseTime
-                plotTimeVector = plotTimeVector - plotTimeVector(end);
-            end            
-
-            fh = figure('name',['Time series of mixture parameters at ' num2str(mixSolver.Z(zIdx(1))) ' [m]']);
             
-            zt_plot('HFLUX','Heat flux [W/m^2]')
-            zt_plot('W','Mass flowrates [kg/s]')
-            zt_plot('P','Pressure [Pa]')
-            zt_plot('XEQ','Equilibrium quality [-]')
-            zt_plot('X','Steam mass quality [-]')
-            zt_plot('VF','Void fraction [-]')
-            zt_plot('U','Velocity [m/s]')
+            for k = opt.wall
+                
+                fh = figure('name',['Time/axial distributions of mixture parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                
+                zt_plot('HFLUX','Wall heat flux','W/m^2',k)
+                zt_plot('W','Mass flow rate','kg/s',1)
+                zt_plot('DP.Tot','Pressure drop','Pa',1)
+                zt_plot('XEQ','Equilibrium quality','-',1)
+                zt_plot('X','Steam mass quality','-',1)
+                zt_plot('VF','Void fraction','-',1)
+                zt_plot('U','Velocity','m/s',1)
+                zt_plot('vapor.T','Vapor temperature','K',1)
+                zt_plot('TWALL','Wall temperature','K',1)
+                
+            end
 
-            function zt_plot(param,ylabelText)
-
-                nexttile; hold all; grid on;
-                if ismethod(mix,param)
-                    paramData = arrayfun( ...
-                                    @(i) mix(i).(param), ...
-                                    1:length(plotTimeVector), ...
-                                    'UniformOutput', false);
-                    paramData = cell2mat(paramData);
-
+            function zt_plot(param,ylabelText,ylabelUnit,k)
+                
+                NWALL = mixSolver.inputSet.geometry.NWALL;
+                plotTimeVector = [mix(opt.tIdx).TIME];
+                
+                nexttile; hold all; grid on; title(ylabelText)
+                
+                s = split(param,'.');
+                if length(s) < 2
+                    mixfield = mix;
                 else
-                    paramData = [mix.(param)];
+                    mixfield = [mix.(s{1})];
+                    param = s{2};
                 end
                 
+                if ismember(s{1},'DP')
+                    paramData = cell2mat(arrayfun(@(x) cumsum(x.(param)),mixfield(opt.tIdx),'uni',0));
+                else
+                    paramData = cell2mat(arrayfun(@(x) x.(param),mixfield(opt.tIdx),'uni',0));
+                end
+                if size(mixfield(1).(param),2) > 1
+                    paramData = paramData(:,k:NWALL:end);
+                end
                 [t_mesh,z_mesh] = meshgrid(plotTimeVector,mixSolver.Z);
-
-                surf(z_mesh,t_mesh,paramData);
+                surf(z_mesh,t_mesh,paramData,'edgeColor','none');
                 shading interp 
-                xlabel('Position z [m]') 
-                ylabel('Time t [s]') 
+                xlabel('Axial position [m]') 
+                ylabel('Time [s]') 
+                cb = colorbar(); cb.Label.String = [ylabelText ' [' ylabelUnit ']']; cb.Label.FontSize = 14;
+                set(gca,'fontSize',14)
                 view(2);
-                cb = colorbar(); 
-                ylabel(cb,ylabelText,'FontSize',12,'Rotation',270)
-            
+                
             end
 
         end
@@ -504,7 +627,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             "-mat" ...
                         );
                     else
-                        error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()');
+                        error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
                     end
             end
 

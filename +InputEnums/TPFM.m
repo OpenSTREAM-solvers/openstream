@@ -4,6 +4,7 @@ classdef TPFM
     enumeration
         HOMOGENEOUS
         SLIP
+        EPRI
     end
 end
     

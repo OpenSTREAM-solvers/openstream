@@ -15,9 +15,14 @@ classdef Model < Inputs.Input
         KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                 % Elevation of local perturbations [m] 
         KLOSS            (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                 % corresponding pressure loss coefficients [-]
         TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'         % Two-phase local loss multiplier [-] 
-        SCBOIL           (1,1) InputEnums.SCBOIL                           = 'NONE'                % Subcooled boiling mode
+        THERMALNONEQ     (1,1) InputEnums.THERMALNONEQ                     = 'EQUILIBRIUM'         % Thermal non-equilibrum model [-]
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'         % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                     % Phase velocity ratio [-]
+        CBT              (1,1) InputEnums.CBT                              = 'NONE'                % Critical Boiling Transition model 
+        RELAXX           (1,:) double                                      = [-0.5 0.0]            % Relaxation time eq quality [-]
+        RELAXT           (1,:) double                                      = [0.15 0.10 0.10 0.01] % Relaxation time array [s]
+        WBOILINGX0       (1,1) double  {mustBeNegative}                    = -1                    % Quality at onset of wall boiling evaporation [-]
+        WBOILINGN        (1,1) double  {mustBePositive}                    = 1                     % Exponent of wall boiling function [-]
         
         MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'SLIP'                % Liquid momentum conservation model [-]  
         MOMENTGAS        (1,1) InputEnums.MOMENTGAS                        = 'SLIP'                % Gas momentum conservation model [-]        
@@ -37,7 +42,7 @@ classdef Model < Inputs.Input
         RELAXTEVAP       (1,1) double                                      = 0.2                   % Evaporation relaxation time [s]
         
         OAF              (1,1) InputEnums.OAF                              = 'WALLIS'              % Onset of annular flow model [-]
-        OAFFILMSPLIT     (1,1) InputEnums.OAFFILMSPLIT                     = 'RATIO'               % Film mass flow rate at onset of annular flow [-]
+        OAFFILMSPLIT     (1,1) InputEnums.OAFFILMSPLIT                     = 'RATIO'               % Film mass flow split model at onset of annular flow [-]
         OAFBASERATIO     (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}   = 0.5                   % Base/Film mass ratio at onset of annular flow [-]
         OAFENTRAINED     (1,1) InputEnums.OAFENTRAINED                     = 'RATIO'               % Entrained model at onset of annular flow [-]
         OAFDROPRATIO     (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}   = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
@@ -48,7 +53,8 @@ classdef Model < Inputs.Input
         MOMENTDROP       (1,1) InputEnums.MOMENTDROP                       = 'SLIP'                % Drop momentum conservation model [-]                                                                 
         DROPSLIP         (1,1) double  {mustBePositive}                    = 1.0                   % Drop velocity ratio [-]       
         THINFILMFRIC     (1,1) InputEnums.THINFILMFRIC                     = 'TURBULENT'           % Thin film wall friction model [-]  
-        THINFILMTHICK    (1,1) double  {mustBePositive}                    = 1E-4                  % Thin film thickness [m]        
+        THINFILMTHICK    (1,1) double  {mustBePositive}                    = 1E-4                  % Minimum thin film thickness [m]        
+        THINWAVETHICK    (1,1) double  {mustBePositive}                    = 1E-5                  % Minimum thin wave thickness [m]     
         VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'              % Vapor friction model [-]  
         VAPORFRICCST     (1,1) double  {mustBePositive}                    = 0.005                 % Vapor friction constant [-]
         POSFILM          (1,1) logical                                     = true                  % Keep positive film flowrate/thickness
@@ -59,15 +65,15 @@ classdef Model < Inputs.Input
         BASEEQTHICK      (1,1) InputEnums.BASEEQTHICK                      = 'DEFAULT'
         BASEEQTHICKCOEF  (:,1) double  {mustBeNumeric}                     = [5.37E-5 -0.64 1.21]  % Base equilibrium thickness coefficient
         RELAXTB          (:,1) double  {mustBeNonnegative}                 = 0.2                   % Base film relaxation time
-        MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'ALGEBRAIC'           % Base Film momentum conservation model [-]  
+        MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'FULLNOP'             % Base film momentum conservation model [-]  
         SHAPEFACTORCOEF  (:,1) double {mustBeNumeric}                      = [1.325E5 2]           % Wave shape factor coefficients
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'
-        EQSTROUHALCOEF   (:,1) double {mustBeNumeric}                      = [1.1236E-4 0.5]       % Wave equilibrium Strouhal coefficients
+        EQSTROUHALCOEF   (:,1) double {mustBeNumeric}                      = [1.1236E-4 0.5 0.0]   % Wave equilibrium Strouhal coefficients
         WAVEDRAGCOEF     (:,1) double  {mustBeNumeric}                     = [0.02 1.350E5 0.437]  % Wave drag coefficient
         WAVEFREQUENCY    (1,1) InputEnums.WAVEFREQUENCY                    = 'RELAXATION'          % Wave number conservation model   
         RELAXTW          (:,1) double  {mustBeNonnegative}                 = 0.2                   % Wave relaxation time
         MOMENTWAVE       (1,1) InputEnums.MOMENTWAVE                       = 'FULL'                % Film momentum conservation model [-]  
-        WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 0.0                   % Wave mixing coefficient
+        WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 2                     % Wave turbulent mixing coefficient
         
     end
 

@@ -91,10 +91,24 @@ classdef Geometry < Inputs.Input
             
         end
         
+        function da = ADIAM(obj)
+            % ADIAM Diameter based on coolant cross-section area
+            
+            da = 2*sqrt(obj.AREA/pi);
+            
+        end
+        
         function N = NWALL(obj)
             % NWALL Number of walls
             
             N = length(obj.PERIM);
+            
+        end
+        
+        function R = RWALL(obj)
+            % RWALL Wall perimeter ratio
+            
+            R = obj.PERIM./sum(obj.PERIM); 
             
         end
         

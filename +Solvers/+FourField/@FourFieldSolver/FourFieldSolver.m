@@ -120,19 +120,12 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 % ITR
                 drp.ITR = ITRd;
                    
-                % Wall evaporation heat flux
+                % Wall/film evaporation heat flux
                 HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
-                
-                evapFn = double(mix.XEQ > 0);                              % Saturated evaporation function
-                Nbo = find(evapFn > 0,1);                                  % Boiling transition node
-                if Nbo >1
-                    % Adjust evaporation function in transition node 
-                    % (part toward subcooled liquid, part toward evaporation)
-                    evapFn(Nbo) = mix.XEQ(Nbo)/diff(mix.XEQ(Nbo-1:Nbo)); 
-                end
-                
+                evapFn = [0;diff(mix.X)./diff(mix.XEQ)];                   % [-] Evaporation function
+                evapFn(~isfinite(evapFn)) = 1;                             % [-] Fix potential division by 0
                 flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX);           % [W/m^2] Film evaporation heat flux
                     
                 % Film evaporation (thermal equilibrium assumption)
@@ -152,17 +145,21 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                drp.W = repmat(e0.*mix.OAFWL,ffSolver.NZ,1);               % [kg/s] % Set drop mass flow to onset of annular flow conditions everywhere
+                drp.W = repmat(e0.*mix.OAFWL,ffSolver.NZ,1);               % [kg/s] Set drop mass flow to onset of annular flow conditions everywhere
 
                 % Transient mass gradient in drop field
-                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);
+                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);                     % [kg/s] 
                 
-                % Transient mass gradient in film.base and film.wave
-                % and recalculate drop mass flow rate
+                % Transient mass gradient in film.base and film.wave,
+                % set constant base mass flow in pre-annular flow region and recalculate drop mass flow rate
                 flm.initializeBaseAndWave( ...
                                 mix.liquid.W(1)-drp.W(1), ...              % Inlet flow rate (all walls)
                                 ITRf ...                                   % Iteration struct
                              );
+                flmW = flm.W(1:mix.OAFIDX,:);                                        % [kg/s] Save total film flow rate
+                flm.base.W(1:mix.OAFIDX,:) = flm.base.W(mix.OAFIDX,:);               % [kg/s] Set constant base film flow rate 
+                flm.wave.W(1:mix.OAFIDX,:) = max(0,flmW-flm.base.W(1:mix.OAFIDX,:)); % [kg/s] Adjust wave flow rate   
+                
                 drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
                 
                 % Initialize velocity [m/s]
@@ -233,30 +230,35 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         function e0 = EQUIL(ffSolver,flm,drp,mix,zIdx)
         %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
         %
-            if nargin < 5, zIdx = (1:ffSolver.NZ); end
-            zIdx = zIdx(:);
             
+            errMax = 1E-4;                                                 % [kg/s/m] Convergence criterion
             nwall = ffSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = ffSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
             W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
             
             for k = 1:100
                 if k == 1
-                    Wd(1) = 0.5.*W;                                        % [kg/s] 50% of liquid mass in droplet field
+                    Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
-                    Wd(k) = max(min(drp.W(zIdx).*(1-10*delta(k-1)),W),0);  % [kg/s] Next guess
+                    Wd(k) = (0.7-double(delta(k-1)>0)*0.4).*W;             % [kg/s] Next guess: 30% or 70% of liquid mass in droplet field (depending on sign of delta)
+                elseif k == 3
+                    Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
                 else
-                    Wd(k) = interp1(delta,Wd,0,'linear','extrap');         % [kg/s] Next guess
+                    try
+                        Wd(k) = max(min(interp1(delta(~isnan(delta)),Wd(~isnan(delta)),0,'linear','extrap'),W),0); % [kg/s] Next guess
+                    catch
+                        Wd(k-1) = nan; delta(k-1) = nan;                   % Remove previous iteration
+                        Wd(k) = mean(Wd(k-3:k-2));                         % se mean from previous iterations
+                    end
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
-                flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx);
-                %flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
+                flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx); % [kg/s] Corresponding film flow distribution (considered uniform)
                 delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
                 err = abs(delta(k));
-                if err < 1E-4, break; end
+                if err < errMax, break; end
             end
-            if err > 1E-4
-                disp('Film equilibrium state : not converged')
+            if err > errMax
+                disp('Equilibrium entrainment ratio at onset of annular flow: not converged')
             end
             
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
@@ -287,7 +289,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             z   = ffSolver.Z;
             oafZ = repmat(mix.OAFZ,1,2);
 
-            NWALL = ffSolver.inputSet.geometry.NWALL();
+            NWALL = ffSolver.inputSet.geometry.NWALL;
 
             plotters = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
@@ -368,7 +370,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 "tileTitle", 'Wave frequency', ...
                 'xlabel', 'Axial position [m]', ...
                 'ylabel', 'Frequency [Hz]');
-            plotters.plotz(flm.wave.FREQUENCY(), 'Non-Equilibrium');
+            plotters.plotz(flm.wave.FREQUENCY, 'Non-Equilibrium');
             plotters.plotz(flm.wave.EQFREQUENCY(), 'Equilibrium');
             plotters.legend("show", 'Location', 'best');
             plotters.plotOAF(oafZ);

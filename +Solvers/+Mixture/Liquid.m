@@ -58,22 +58,34 @@ classdef Liquid < Solvers.AbstractPhase
 
         function u = U(liquid, zIdx)
             %U Velocity [m/s]
-            %   NOTE: need to be verified
+            %NOTE: need to be verified
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            u = liquid.MFLUX(zIdx) ./ liquid.VF(zIdx) ./ liquid.mix.fluid.RHOL(liquid.mix.H(zIdx));
+            u = liquid.MFLUX(zIdx) ./ liquid.VF(zIdx) ./ liquid.mix.fluid.RHOL(liquid.H(zIdx));
             
             % set to the mixture velocity in the single-phase vapor region
             singlePhaseIdx = isnan(u);
             mixU = liquid.mix.U(zIdx);
             u(singlePhaseIdx) = mixU(singlePhaseIdx);
-            
         end
 
         function h = H(liquid, zIdx)
             %H Enthalpy [J/kg]
+            %Calculated based on mixture & vapor enthalpies and vapor quality
+            %TODO: Find a better way to prevent division by small 1-X and negative h
             %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            h = max(liquid.mix.H(zIdx), liquid.mix.fluid.HF.');
+            
+%              X = max(liquid.mix.X(zIdx),liquid.mix.XEQ(zIdx));              % Account for potential subcooled liquid
+%             h = (liquid.mix.H(zIdx)-X.*liquid.mix.fluid.HG)./(1-X);
+%             %h = min(h,liquid.mix.fluid.HF);                                % No superheated liquid
+%             %h = max(h,liquid.mix.H(1));
+            
+            X = liquid.mix.X(zIdx);  
+            h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
+            h(isnan(h)) = liquid.mix.fluid.HF;
+            h(isinf(h)) = liquid.mix.fluid.HF;
+            %h = max(h,liquid.mix.H(1));
+            h = max(h,1E5);
         end
 
         function mflux = MFLUX(liquid, zIdx)
@@ -87,9 +99,16 @@ classdef Liquid < Solvers.AbstractPhase
             %RE Reynolds number [-]
             %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            re = 4.*liquid.W(zIdx)./liquid.mix.fluid.MUL(liquid.mix.H(zIdx))...
+            re = 4.*liquid.W(zIdx)./liquid.mix.fluid.MUL(liquid.H(zIdx))...
                     ./sum(liquid.mix.inputSet.geometry.PERIM);
         end
+        
+        function t = T(liquid, zIdx)
+            %T Temperature [K]
+            %
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            t = liquid.mix.fluid.T(liquid.H(zIdx));
+        end   
 
     end
 end

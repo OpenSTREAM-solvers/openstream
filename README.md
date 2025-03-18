@@ -1,5 +1,7 @@
 # OpenSTREAM
 
-The OpenSTREAM computational environment provides several open-source, one-dimensional, multi-field, two-phase flow simulation frameworks designed to facilitate efficient and collaborative model development and validation. These frameworks include a homogeneous equilibrium model, a two-fluid model, a three-field model, and an advanced four-field model of annular two-phase flow. The implemented models support single-component, incompressible, steady-state and transient boiling two-phase flows in single straight channels developed under reasonable simplifying assumptions. Basic closure models have been implemented, subject to future improvements.
+OpenSTREAM (Open Solvers for Two-phase flow Research, Engineering Analysis and Modeling) is a computational environment that provides several open-source, one-dimensional, multi-field, two-phase flow simulation frameworks designed to facilitate efficient and collaborative model development and validation.
 
-OpenSTREAM is aimed at facilitating access to such two-phase flow simulation frameworks to support collaborative model development, performance evaluation, and validation across research institutions.
+These frameworks include a homogeneous equilibrium model, a two-fluid model, a three-field model, and an advanced four-field model of annular two-phase flow. The implemented models support single-component, incompressible, steady-state and transient boiling two-phase flows in single straight channels developed under reasonable simplifying assumptions. Basic closure models have been implemented, subject to future improvements.
+
+OpenSTREAM is aimed at facilitating access to a two-phase flow simulation frameworks to support collaborative model development, performance evaluation, and validation across research institutions.
