@@ -16,7 +16,7 @@ ffSolver.inputSet.session.log.openLog('keepLogOpen', true);
 if ffSolver.STATE ~= SolverState.UNSOLVED
     error('This solver needs to be reinitialized before solving.');
 else
-    ffSolver.log('\n\n------------------------------------------- Four-field solver run initiated -------------------------------------------\n')
+    ffSolver.log('\n\n------------------------------------------- Four-field solver run initiated --------------------------------------------\n')
 
     try
         % Solve init
@@ -37,7 +37,7 @@ else
         rethrow(ME)
     end
     
-    ffSolver.log('\n------------------------------------------- Four-field solver run completed -------------------------------------------\n\n')
+    ffSolver.log('\n------------------------------------------- Four-field solver run completed --------------------------------------------\n\n')
 end
 
 ffSolver.inputSet.session.log.closeLog();
@@ -103,8 +103,8 @@ function solver(solveINIT)
         
         % Redistribute wave and base mass flow in pre-annular flow region based on updated field parameters
         eb = film(tIdx).distributeOAFW(film(tIdx).W(mix(tIdx).OAFIDX,:),mix(tIdx).OAFIDX);
-        filmW = film(tIdx).W(1:mix(tIdx).OAFIDX,:);                                            % [kg/s] Save total film flow rate
-        base(tIdx).W(1:mix(tIdx).OAFIDX,:) = eb.*film(tIdx).W(mix(tIdx).OAFIDX,:);             % [kg/s] Set constant base film flow rate                         
+        filmW = film(tIdx).W(1:mix(tIdx).OAFIDX,:);                        % [kg/s] Save total film flow rate
+        base(tIdx).W(1:mix(tIdx).OAFIDX,:) = repmat(eb.*film(tIdx).W(mix(tIdx).OAFIDX,:),mix(tIdx).OAFIDX,1); % [kg/s] Set constant base film flow rate                         
         wave(tIdx).W(1:mix(tIdx).OAFIDX,:) = max(0,filmW-base(tIdx).W(1:mix(tIdx).OAFIDX,:));  % [kg/s] Adjust wave flow rate   
         
         % Axial sweep
@@ -359,7 +359,6 @@ function solver(solveINIT)
     
     end
     
-    %tfSolver.log('\n------------------------------ %9s Four-field solver run completed ------------------------------\n\n', solveMODE)
     ffSolver.log('\n')
     
     % End timer
