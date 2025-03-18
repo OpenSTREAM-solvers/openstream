@@ -306,6 +306,30 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             legend('show','location','best')
             set(gca,'fontSize',14)
             
+            nexttile; hold all; grid on; title('Liquid momentum exchanges')
+            plot(z,liq.FSHEAR(vap),'.-')
+            plot(z,liq.FDRAG(vap),'.-')
+            plot(z,liq.FBUOY(vap),'.-')
+            plot(z,liq.FGRAV(vap),'.-')
+            plot(z,liq.FMASS(vap),'.-')
+            plot(z,liq.FTOT(vap),'k--')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Shear stress [N/m]')
+            legend({'Wall','Vapor','Buoyancy','Gravity','Mass','Total'},'location','northEast')
+            set(gca,'fontSize',14)
+            
+            nexttile; hold all; grid on; title('Vapor momentum exchanges')
+            plot(z,vap.FSHEAR(liq),'.-')
+            plot(z,vap.FDRAG(liq),'.-')
+            plot(z,vap.FBUOY(liq),'.-')
+            plot(z,vap.FGRAV(liq),'.-')
+            plot(z,vap.FMASS(liq),'.-')
+            plot(z,vap.FTOT(liq),'k--')
+            xlabel('Axial position [m]'); xlim(z([1 end]));
+            ylabel('Force density [N/m^3]')
+            legend({'Wall','Liquid','Buoyancy','Gravity','Mass','Total'},'location','northEast')
+            set(gca,'fontSize',14)
+            
             nexttile; hold all; grid on; title('Liquid energy exchanges')
             plot(z,liq.HWALLHFLOW,'.-','displayName','Wall heat flux')
             plot(z,liq.HWALL(vap),'.-','displayName','Wall mass exch')
