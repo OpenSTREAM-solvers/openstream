@@ -74,30 +74,30 @@ function solver(solveINIT)
     startTime = tic();
     
     % Time loop
-    for tIdx = 2:length(mix)                                                            % Loop over time steps
+    for tIdx = 2:length(mix)                                               % Loop over time steps
         
         mixSolver.log('Time %5.2f [s]',mix(tIdx).TIME)
 
         % Current time step size
-        DT = mix(tIdx).DT;
+        DT = mix(tIdx).DT;                                                 % [s] Current time step size
         
         % Update flow property guesses from previous time step
         mix(tIdx-1).copyFlowProperties(mix(tIdx))
 
         % Axial sweep
-        for zIdx = 2:mixSolver.NZ                                                       % Loop over axial nodes
+        for zIdx = 2:mixSolver.NZ                                          % Loop over axial nodes
             
-            LHGR   = mix(tIdx).LHGR(zIdx);                                              % [W/m] Linear heat generation rate
+            LHGR   = mix(tIdx).LHGR(zIdx);                                 % [W/m] Linear heat generation rate
             
             % Parameters from previous time step
-            Wold    = mix(tIdx-1).W(zIdx);                                              % [kg/s] Mixture mass flow rate at previous time step
-            Uold    = mix(tIdx-1).U(zIdx);                                              % [m/s] Mixture velocity at previous time step
-            Hold    = mix(tIdx-1).H(zIdx);                                              % [J/kg] Mixture enthalpy at previous time step
-            %UVold   = mix(tIdx-1).vapor.U(zIdx);                                        % [m/s] Vapor velocity at previous time step
+            Wold    = mix(tIdx-1).W(zIdx);                                 % [kg/s] Mixture mass flow rate at previous time step
+            Uold    = mix(tIdx-1).U(zIdx);                                 % [m/s] Mixture velocity at previous time step
+            Hold    = mix(tIdx-1).H(zIdx);                                 % [J/kg] Mixture enthalpy at previous time step
+            %UVold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
             UVold   = mix(tIdx-1).U(zIdx);
-            WVold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                                    % [m/s] Relaxed vapor mass flow rate at previous time step
-            WVTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                                  % [m/s] Relaxed thermodynamic vapor mass flow rate at previous time step
-            HVold   = mix(tIdx-1).TRELAX.HV(zIdx,:);                                    % [J/kg] Relaxed vapor enthalpy at previous time step
+            WVold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                       % [m/s] Relaxed vapor mass flow rate at previous time step
+            WVTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                     % [m/s] Relaxed thermodynamic vapor mass flow rate at previous time step
+            HVold   = mix(tIdx-1).TRELAX.HV(zIdx,:);                       % [J/kg] Relaxed vapor enthalpy at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -244,7 +244,6 @@ function solver(solveINIT)
     
     end
     
-    %mixSolver.log('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
     mixSolver.log('\n')
     
     % End timer
