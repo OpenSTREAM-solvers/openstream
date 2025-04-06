@@ -590,6 +590,17 @@ classdef Mixture < Solvers.AbstractField
             affnc = mix.AFFNC(zIdx);
             afDistr = (1-affnc).*param1 + affnc.*param2;
         end
+        
+        function kdist = KDIST(mix,zIdx)
+        %KDIST Distance from upstream spacer
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            model = mix.inputSet.model;
+            
+            dz = arrayfun(@(k) mix.Z(k)-[0 model.KLOC],zIdx,'uni',0);
+            kdist = cellfun(@(dz) min(dz(dz>=0)),dz);
+        end
     
     end
 

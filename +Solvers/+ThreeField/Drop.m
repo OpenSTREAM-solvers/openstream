@@ -67,6 +67,44 @@ classdef Drop < Solvers.AbstractField
             conc(negdrop) = -conc(negdrop);
         end
         
+        function kenh = KENH(drop,zIdx)
+        % Drop deposition enhancement factor
+        % Model documented in Le Corre, 2024.
+            
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            model = drop.inputSet.model;
+            kdist = drop.mix.KDIST(zIdx);
+            
+            switch model.DEPENHANCEMENT
+                case InputEnums.DEPENHANCEMENT.NONE
+                    % No drop deposition enhancement
+                    kenh = ones(length(zIdx),1);
+                case InputEnums.DEPENHANCEMENT.WINDECKER
+                    % Windecker drop depositon endhancement model
+                    B = 7.898; D = 4.791;                                  % [-] Model coefficients
+                    zRef = [0.05 0.15 0.45];                               % [m] Reference locations from upstream spacer
+                    
+                    % Blockage ratio effect
+                    BR = [0 model.KBLOCKRATIO];                            % [-] Blockage ratios of local obstructions (including at inlet)
+                    BR = BR(discretize(drop.Z(zIdx),[0 model.KLOC drop.Z(end)])); % [-] Corresponding axial distribution of blockage ratios
+                    kenhmax = 0.95.*(D.*BR(:)+1).*(B.*BR(:)+1);            % [-] Corresponding axial distribution of max drop deposition enhancement factor
+                    
+                    kfunc = @(z,kenhmax) ((kenhmax-1).*z/zRef(1)+1).*(z<=zRef(1)) + ...
+                        kenhmax.*(z>zRef(1) & z<=zRef(2)) + ...
+                        1./((1-1./kenhmax).*(z-zRef(2))./(zRef(3)-zRef(2))+1./kenhmax).*(z>zRef(2) & z<=zRef(3)) + ...
+                        1.*(z>zRef(3));                                    % [-] Piece-wise axial enhancement function
+                    
+                    kenh = kfunc(kdist,kenhmax);                           % [-] Axial distribution of drop deposition enhancement factor
+                    
+                    % Empirical multiplier
+                    KG = [0 model.KTUNING];                                % [-] Tuning coefficients of drop deposition enhancement (including at inlet)
+                    KG = KG(discretize(drop.Z(zIdx),[0 model.KLOC drop.Z(end)])); % [-] Corresponding axial distribution of tuning coefficients
+                    
+                    kenh = KG(:).*(kenh-1)+1;                              % [-] Final axial distribution of drop deposition enhancement factor
+            end
+        end
+        
         function mdep = MDEP(drop,zIdx)
         % Drop deposition mass flux
     
@@ -102,6 +140,7 @@ classdef Drop < Solvers.AbstractField
             end
             
             mdep(negdrop)=-mdep(negdrop);
+            mdep = drop.KENH(zIdx).*mdep;                                  % [kg/m^2/s] Enhanced drop deposition
             mdep = drop.mix.AFDISTR(0,mdep,zIdx);                          % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
