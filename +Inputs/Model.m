@@ -16,6 +16,7 @@ classdef Model < Inputs.Input
         TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'         % Two-phase friction multiplier
         KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                 % Elevation of local perturbations [m] 
         KLOSS            (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                 % corresponding pressure loss coefficients [-]
+        KBLOCKRATIO      (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                 % corresponding blockage ratios [-]
         TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'         % Two-phase local loss multiplier
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'         % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                     % Phase velocity ratio [-]
@@ -51,6 +52,8 @@ classdef Model < Inputs.Input
         OAFDROPRATIO     (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}   = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
         OAFTRANSITION    (1,2) double  {mustBeNumeric}                     = [0.10 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION       (1,1) InputEnums.DEPOSITION                       = 'OKAWA'               % Drop deposition model
+        DEPENHANCEMENT   (1,1) InputEnums.DEPENHANCEMENT                   = 'NONE'                % Drop deposition enhancement model due to local perturbations
+        KTUNING          (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                 % Drop deposition enhancement tuning coefficients [-]
         ENTRAINMENT      (1,1) InputEnums.ENTRAINMENT                      = 'OKAWA2003'           % Film entrainment model
         OKAWACOEFS       (1,:) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1] % Coefficients of Okawa entrainment model [-]
         MOMENTFILM       (1,1) InputEnums.MOMENTFILM                       = 'ALGEBRAIC'           % Film momentum conservation model

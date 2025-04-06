@@ -10,7 +10,7 @@ classdef Options < Inputs.Input
         TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step [s]
         MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Max number of inner (point) iterations
         SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step for steady-state iterations [s]
-        SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 50                    % Max number of steady-state iterations
+        SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 20                    % Max number of steady-state iterations
         
         % Mixture solver options
         ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
