@@ -120,6 +120,14 @@ classdef Base < Solvers.AbstractFilm
 
             mevap = base.BETAP(zIdx) .* base.film.MEVAP(zIdx,:);
         end
+        
+        function mdep = MDEP(base,drop,zIdx)
+        %MDEP Base deposition mass flux
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            mdep = base.ETA(zIdx).*drop.MDEP(zIdx);
+        end
 
         function Mturb = MTURB(base, zIdx)
         %MTURB Turbulent mass exchange
@@ -146,7 +154,7 @@ classdef Base < Solvers.AbstractFilm
             relaxTB = base.inputSet.model.RELAXTB;
 
             % Net exchange term (eq. 32)
-            Mnet = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.ETA(zIdx).*drop.MDEP(zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+            Mnet = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.MDEP(drop,zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
 
             % Wave exchange + turbulent mixing term (eq.7)
             Mturb = base.MTURB(zIdx);
@@ -168,7 +176,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             % TODO: Create the MDEP method
-            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.ETA(zIdx).*drop.MDEP(zIdx)+base.MWAVE(drop,zIdx)-base.film.wave.MBASE(drop,zIdx);
+            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.MDEP(drop,zIdx)+base.MWAVE(drop,zIdx)-base.film.wave.MBASE(drop,zIdx);
 
         end
         
@@ -204,7 +212,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: debug syntax
-            Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx); % [N/m^2]
+            Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx);              % [N/m^2]
             
         end
 
@@ -214,7 +222,7 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             deltaU = drop.U(zIdx) - base.U(zIdx,:);
-            Fdep = base.ETA(zIdx).*drop.MDEP(zIdx) .* deltaU;   % [N/m^2]
+            Fdep = base.MDEP(drop,zIdx) .* deltaU;                         % [N/m^2]
             
             Fdep = base.mix.AFDISTR(0,Fdep,zIdx);
         end
@@ -297,7 +305,7 @@ classdef Base < Solvers.AbstractFilm
             per = base.inputSet.geometry.PERIM;
             Wb = base.W(zIdx,:);
             Ub = base.U(zIdx,:);
-            DeltaM=-base.MEVAP(zIdx) - base.ETA(zIdx).*drop.MDEP(zIdx);
+            DeltaM=-base.MEVAP(zIdx) - base.MDEP(drop,zIdx);
             betaB = base.BETA(zIdx);
             
             tdry = base.TBASE(zIdx) - Wb.*betaB./per./Ub./DeltaM;
@@ -331,7 +339,7 @@ classdef Base < Solvers.AbstractFilm
             per = base.inputSet.geometry.PERIM;
             Wb = base.W(zIdx,:);
             Ub = base.U(zIdx,:);
-            DeltaM=-base.MEVAP(zIdx) - base.ETA(zIdx).*drop.MDEP(zIdx);
+            DeltaM=-base.MEVAP(zIdx) - base.MDEP(drop,zIdx);
             Betab = base.BETA(zIdx);
             wmin = Wb-per.*Ub.*DeltaM./Betab.*base.TBASE(zIdx);
 

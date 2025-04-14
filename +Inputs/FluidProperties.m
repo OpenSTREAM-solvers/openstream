@@ -280,6 +280,20 @@ classdef FluidProperties
             
         end
         
+        function paramData = transient(obj, param, opt)
+            %TRANSIENT Generate transient distribution array for parameter param
+            %
+            
+            arguments
+                obj
+                param         (1,1) string {mustBeTextScalar}
+                opt.tIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:length(obj)
+            end
+            
+            paramData = [obj(opt.tIdx).(param)];
+            
+        end
+        
         function plot(obj, H)
             %PLOT Plot properties for given enthalpy vector
             arguments

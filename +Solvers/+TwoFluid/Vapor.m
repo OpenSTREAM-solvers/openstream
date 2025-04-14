@@ -432,10 +432,10 @@ classdef Vapor < Solvers.AbstractField
         
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
             
-            AREA = vapor.inputSet.geometry.AREA;                          % [m^2]    cross-section area
-            DPDZ = vapor.mix.DP.Tot(zIdx)/vapor.DZ;                                % [Pa/m] pressure gradient
+            AREA = vapor.inputSet.geometry.AREA;                           % [m^2]    cross-section area
+            DPDZ = vapor.mix.DP.Tot(zIdx)/vapor.DZ;                        % [Pa/m] pressure gradient
             
-            Fbuoy  = AREA*vapor.VF(liquid,zIdx).*DPDZ;                    % [N/m]
+            Fbuoy = AREA*vapor.VF(liquid,zIdx).*DPDZ;                      % [N/m]
         end
 
         function fw = FW(vapor, zIdx)

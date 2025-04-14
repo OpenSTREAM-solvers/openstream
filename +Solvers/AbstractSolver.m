@@ -17,6 +17,7 @@ classdef (Abstract) AbstractSolver < handle
         solve
         plotz
         plott
+        plotzt
         saveResults
     end
 
@@ -40,6 +41,7 @@ classdef (Abstract) AbstractSolver < handle
     end
 
     methods (Static)
+        
         function ITR = CreateITR(NZ, ITRFields)
             % Create inner iteration value struct
             arguments
@@ -51,6 +53,7 @@ classdef (Abstract) AbstractSolver < handle
             ITRCell(:) = {zeros(NZ,1)};                                     % Initialize with zeros
             ITR = cell2struct(ITRCell, ITRFields, 1);                       % Convert cell to struct with fieldnames
         end
+        
     end
 end
 

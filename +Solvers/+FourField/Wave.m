@@ -77,7 +77,7 @@ classdef Wave < Solvers.AbstractFilm
         %    
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
         
-            thick = wave.AMP(zIdx) .* wave.BETA(zIdx);                     % [m] Wave thickness
+            thick = wave.AMPLITUDE(zIdx) .* wave.BETA(zIdx);               % [m] Wave thickness
         end
 
         function beta = BETA(wave, zIdx)
@@ -138,6 +138,14 @@ classdef Wave < Solvers.AbstractFilm
             mevap = wave.BETAP(zIdx) .* wave.film.MEVAP(zIdx,:);            
         end
         
+        function mdep = MDEP(wave,drop,zIdx)
+        %MDEP Wave deposition mass flux
+        %            
+            if nargin < 3, zIdx = (1:wave(1).NZ).'; end
+
+            mdep = wave.ETA(zIdx).*drop.MDEP(zIdx);
+        end
+        
         function mturb = MTURB(wave, zIdx)
         %MTURB Turbulent mass exchange
         %
@@ -167,7 +175,7 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
             % TODO: Create the MDEP method
-            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.ETA(zIdx).*drop.MDEP(zIdx)+wave.MBASE(drop,zIdx)-wave.film.base.MWAVE(drop,zIdx);
+            Mtot = wave.MEVAP(zIdx)+wave.MENT(zIdx)+wave.MDEP(drop,zIdx)+wave.MBASE(drop,zIdx)-wave.film.base.MWAVE(drop,zIdx);
             
         end
 
@@ -254,7 +262,7 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
             
             deltaU = drop.U(zIdx) - wave.U(zIdx,:);
-            Fdep = wave.ETA(zIdx).*drop.MDEP(zIdx) .* deltaU;   % [N/m^2]
+            Fdep = wave.MDEP(drop,zIdx) .* deltaU;                         % [N/m^2]
             
             Fdep = wave.mix.AFDISTR(0,Fdep,zIdx);
         end
@@ -356,7 +364,7 @@ classdef Wave < Solvers.AbstractFilm
         %   Function of amplitude, Shape factor
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
             
-            wwidth = wave.AMP(zIdx)./wave.SHAPEFACTOR(zIdx);
+            wwidth = wave.AMPLITUDE(zIdx)./wave.SHAPEFACTOR(zIdx);
 
             % if wwidth isnan, set to wave spacing
             spacing = wave.SPACING(zIdx);
@@ -367,8 +375,8 @@ classdef Wave < Solvers.AbstractFilm
 
         end
 
-        function amp = AMP(wave, zIdx)
-        %AMP Wave amplitude
+        function amp = AMPLITUDE(wave, zIdx)
+        %AMPLITUDE Wave amplitude
         %   Function of WL, rho, Shape factor, frequency
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 

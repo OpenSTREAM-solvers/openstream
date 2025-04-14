@@ -677,7 +677,7 @@ classdef Liquid < Solvers.AbstractField
             AREA = liquid.inputSet.geometry.AREA;                          % [m^2]    cross-section area
             DPDZ = liquid.mix.DP.Tot(zIdx)/liquid.DZ;                      % [Pa/m] pressure gradient
             
-            Fbuoy  = AREA*liquid.VF(vapor,zIdx).*DPDZ;                     % [N/m]
+            Fbuoy = AREA*liquid.VF(vapor,zIdx).*DPDZ;                      % [N/m]
         end
 
         function fw = FW(liquid, zIdx)

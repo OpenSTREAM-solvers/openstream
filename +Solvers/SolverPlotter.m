@@ -211,27 +211,89 @@ classdef SolverPlotter < handle
             colors = ["#0072BD","#D95319","#EDB120","#7E2F8E","#77AC30","#4DBEEE","#A2142F"];
             
             switch upper(fieldName)
+                
+                case {'Z'}
+                    plotStyle = {colors(2), '-', '.'};
+                case {'TIME', 'T'}
+                    plotStyle = {colors(3), '-', '+'};
+                case {'SATURATION'}
+                    plotStyle = {colors(1), '--', 'none'};    
+                case {'SATLIQ'}
+                    plotStyle = {colors(2), '--', 'none'};    
+                case {'SATVAP'}
+                    plotStyle = {colors(1), '--', 'none' };    
+                    
+                % Mixture solver
                 case {'MIX', 'MIXTURE'}
                     plotStyle = {colors(7), '-', 's'};
+                 case {'LIQUID+VAPOR', 'VAPOR+LIQUID'}
+                    plotStyle = {colors(7), '--', '+'};   
                 case {'MIXLIQ', 'MIXTURELIQUID', 'LIQUID'}
                     plotStyle = {colors(2), '-', 'o'};
                 case {'VAP', 'VAPOR'}
                     plotStyle = {colors(1), '-', '.' };
-                 case {'RELAXVAPOR'}
-                    plotStyle = {colors(1), '--', '+' };   
+                case {'RELAXVAPOR','VAPORDRAG'}
+                    plotStyle = {colors(1), '--', '+' };
+                case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
+                    plotStyle = {colors(5), '-', 'o'};
+                case {'RELAXEQUIL'}
+                    plotStyle = {colors(5), '--', '+'};
+                case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
+                    plotStyle = {colors(6), '-', '.'};
+                case {'EQQUAL', 'EQUILIBRIUMQUAL', 'EQUILQ'}
+                    plotStyle = {colors(5), '-', 'o'};
+                case {'VF','VOIDFRACTION'}
+                    plotStyle = {colors(6), '-', '.'};
+                case {'EVAPORATION'}
+                    plotStyle = {colors(2), '--', '.'};
+                case {'EXCHANGE'}
+                    plotStyle = {colors(4), '-', '.'};
+                case {'TOTAL'}
+                    plotStyle = {'black', '-', '+'};
+                case {'WALL'}
+                    plotStyle = {colors(5), '-', '.'};
+                case {'BUOYANCY'}
+                    plotStyle = {colors(6), '-', '.'};
+                case {'GRAVITY', 'GRAVITATIONAL', 'GRAV'}
+                    plotStyle = {colors(7), '-', '.'};
+                case {'LOCAL'}
+                    plotStyle = {'black', '--', '.'};
                     
+                % Two-fluid solver
+                case {'INTERFACIAL'}
+                    plotStyle = {colors(1), '-', 'O'};
+                case {'INTERFACIALEVAP'}
+                    plotStyle = {colors(1), '-', '+'};
+                case {'INTERFACIALCOND'}
+                    plotStyle = {colors(1), '-', '.'};  
+                
+                % Three-field solver
+                case {'OAF'}
+                    plotStyle = {'red', '--', '.'};
                 case {'FILM'}
                     plotStyle = {colors(2), '--', '.'};
+                case {'DROP'}
+                    plotStyle = {colors(5), '--', 'o'};
+                case {'DROP+FILM', 'FILM+DROP'}
+                    plotStyle = {colors(2), '--', '+'};
+                case {'DEPOSITION'}
+                    plotStyle = {colors(5), '--', 'o'};
+                case {'ENTRAINMENT'}
+                    plotStyle = {colors(2), '--', 'o'};
+                    
+                % Four-field solver
                 case {'EQFILM'}
                     plotStyle = {colors(2), '--', '^'};
-
                 case {'BASE'}
                     plotStyle = {colors(3), '--', '.'};
+                case {'BASE MIN','BASEMIN','BASEMASS'}
+                    plotStyle = {colors(3), '--', 'none'};    
                 case {'EQBASE', 'BASEEQ', 'BASE EQ'}
                     plotStyle = {colors(3), '--', '^'};
-
                 case {'WAVE'}
-                    plotStyle = {colors(4), '--', 's'};
+                    plotStyle = {colors(4), '--', '.'};
+                case {'WAVEMASS'}
+                    plotStyle = {colors(4), '--', 'none'};    
                 case {'EQWAVE', 'WAVEEQ', 'WAVE EQ'}
                     plotStyle = {colors(4), '--', '^'};
                 case {'WAVEAMP', 'WAVE AMP'}
@@ -244,51 +306,7 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(4), '--', '.'};
                 case {'WAVESPACING', 'WAVE SPACING', 'SPACING'}
                     plotStyle = {colors(4), '--', 'o'};
-
-                case {'DROP'}
-                    plotStyle = {colors(5), '--', 'o'};
-                
-                case {'DROP+FILM', 'FILM+DROP'}
-                    plotStyle = {'red', '--', '+'};
-
-                case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
-                    plotStyle = {colors(5), '-', 'o'};
-                case {'RELAXEQUIL'}
-                    plotStyle = {colors(5), '--', '+'};    
-                case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
-                    plotStyle = {colors(6), '-', '.'};
-                case {'OAF'}
-                    plotStyle = {'red', '--', '.'};
-
-                case {'EQQUAL', 'EQUILIBRIUMQUAL', 'EQUILQ'}
-                    plotStyle = {colors(5), '-', 'o'};
-                case {'VF','VOIDFRACTION'}
-                    plotStyle = {colors(6), '-', '.'};
-                
-                case {'DEPOSITION'}
-                    plotStyle = {colors(1), '-', '.'};
-                case {'ENTRAINMENT'}
-                    plotStyle = {colors(2), '-', '.'};
-                case {'EVAPORATION'}
-                    plotStyle = {colors(3), '-', '.'};
-                case {'EXCHANGE'}
-                    plotStyle = {colors(4), '-', '.'};
-                case {'TOTAL'}
-                    plotStyle = {'black', '-', '+'};
-                case {'WALL'}
-                    plotStyle = {colors(5), '-', '.'};
-                case {'BUOYANCY'}
-                    plotStyle = {colors(6), '-', '.'};
-                case {'GRAVITY', 'GRAVITATIONAL', 'GRAV'}
-                    plotStyle = {colors(7), '-', '.'};
-                case {'INTERFACIAL'}
-                    plotStyle = {colors(1), '-', 'O'};
-
-                case {'Z'}
-                    plotStyle = {colors(2), '-', '.'};
-                case {'TIME', 'T'}
-                    plotStyle = {colors(3), '-', '+'};
-
+                    
                 otherwise
                     plotStyle = {'black', '--', '.'};
             end

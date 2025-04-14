@@ -35,6 +35,99 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         function absField = AbstractField()
             
         end
+        
+        function paramData = transient(obj, param, subobj, opt)
+            %TRANSIENT Generate transient distribution array for parameter param
+            %
+            
+            arguments
+                obj
+                param         (1,1) string {mustBeTextScalar}
+                subobj                                                                 = []
+                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = []
+                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:obj(1).NZ
+                opt.tIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:length(obj)
+            end
+            
+            % Read parameter
+            p = split(param,'.');
+            if length(p) == 1
+                if isempty(subobj)
+                    paramData = cell2mat(arrayfun(@(x) x.(param),obj(opt.tIdx),'uni',0));
+                else
+                    paramData = cell2mat(arrayfun(@(x,y) x.(param)(y),obj(opt.tIdx),subobj(opt.tIdx),'uni',0));
+                end
+            else
+                if isempty(subobj)
+                    paramData = cell2mat(arrayfun(@(x) x.(p{1}).(p{2}),obj(opt.tIdx),'uni',0));
+                else
+                    paramData = cell2mat(arrayfun(@(x,y) x.(p{1}).(p{2})(y),obj(opt.tIdx),subobj(opt.tIdx),'uni',0));
+                end
+            end
+            
+            % Size parameter based on options
+            NWALL = size(paramData,2)/length(opt.tIdx);
+            if isempty(opt.wall), opt.wall = 1:NWALL; end
+            if NWALL > 1
+                idx = cell2mat(arrayfun(@(n) [n:NWALL:size(paramData,2)],opt.wall,'uni',0));
+                paramData = paramData(:,idx);                              % Wall discretization
+            end
+            paramData = paramData(opt.zIdx,:);                             % Keep relevant axial length
+            paramData = reshape(paramData,length(opt.zIdx),length(opt.tIdx),length(opt.wall));
+            
+            % Special case for single elevation
+            if length(opt.zIdx) == 1
+                paramData = permute(paramData,[3 2 1]);
+            end
+            
+        end
+        
+        function ax = plotzt(obj, param ,ylabelText ,ylabelUnit ,k ,opt, subobj, annular)
+            %PLOTZT 2D space/time distribution plot
+            
+            if nargin < 8, annular = false; end
+            
+            z     = obj(1).Z(opt.zIdx);                                    % [m]
+            time = [obj(opt.tIdx).TIME];                                   % [s]
+            if opt.reverseTime
+                time = time -time(end);
+            end
+            
+            % Load data
+            try
+                paramData = obj.transient(param,       'wall',k,'zIdx',opt.zIdx,'tIdx',opt.tIdx);
+            catch
+                paramData = obj.transient(param,subobj,'wall',k,'zIdx',opt.zIdx,'tIdx',opt.tIdx);
+            end
+            
+            % Adjust for temperature unit
+            if strcmp(ylabelUnit,'C')
+                paramData = paramData-273.15;
+            end
+            
+            % Remove pre-annular flow region
+            if annular
+                try
+                    OAFIDX = arrayfun(@(x) x.OAFIDX,obj);
+                catch
+                    OAFIDX = arrayfun(@(x) x.mix.OAFIDX,obj);
+                end
+                OAFIDX = OAFIDX - opt.zIdx(1) + 1;
+                for k = 1:length(OAFIDX)
+                    paramData(1:OAFIDX(k),k) = nan;
+                end
+            end
+            
+            ax = nexttile; hold all; grid on; title(ylabelText)
+            [t_mesh,z_mesh] = meshgrid(time,z);
+            surf(z_mesh,t_mesh,paramData,'edgeColor','none');
+            xlabel('Axial position [m]'); xlim([min(z)       max(z)]);
+            ylabel('Time [s]')          ; ylim([min(time) max(time)]);
+            cb = colorbar(); cb.Label.String = [ylabelText ' [' ylabelUnit ']']; cb.Label.FontSize = 14;
+            set(gca,'fontSize',14)
+            shading(opt.shading)
+            view(opt.view);
+        end
 
         function out = memoizeFunction(obj, methodStr, methodHandle, varargin)
         %MEMOIZEDMETHOD Implement a mechanism for registering memoizeable

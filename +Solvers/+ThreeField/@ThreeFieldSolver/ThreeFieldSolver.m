@@ -268,14 +268,28 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
  
         end
 
-        function plotz(tfSolver, tIdx, opt)
+        function plotter = plotz(tfSolver, tIdx, opt)
         %PLOTZ
-        %   NOTE: currently supports only single timeSteps
+        %   NOTE: currently supports only single timeStep
             arguments
                 tfSolver
-                tIdx    (1,1) double
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
+                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = 1
+                opt.display   {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
+                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
+                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NZ
+                opt.annular   (1,1) logical                                                                      = true
+                opt.unitTemp  {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
             end
+            
+            if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
+            if length(opt.zIdx) < 2
+                tfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                return
+            end
+            
+            z   = tfSolver.Z(opt.zIdx);
+            bc  = tfSolver.boundaryConditions;
         
             switch opt.solveMode
                 case 'TRANSIENT'
@@ -287,179 +301,360 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     tIdx = 1;
             end
             
-            bc  = tfSolver.boundaryConditions;
+            if opt.annular
+                zaf    = z(z >= flm.mix.OAFZ);
+                zafIdx = opt.zIdx(opt.zIdx >= flm.mix.OAFIDX) - opt.zIdx(1) + 1;
+            else
+                zaf    = z;
+                zafIdx = opt.zIdx;
+            end
+            
+            dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
+            
             mix = tfSolver.mixSolver.mixture(tIdx);
-            z   = tfSolver.Z;
+            bcHFLUX = bc.HFLUX(opt.zIdx,:,tIdx);
             oafZ = repmat(mix.OAFZ,1,2);
-            
-            NWALL = tfSolver.inputSet.geometry.NWALL;
 
-            plotters = Solvers.SolverPlotter( ...
+            plotter = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of three-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
-                                1:NWALL);
-            plotters.setZs(z);
+                                opt.wall);
+            plotter.setZs(z);
             
-             % Wall heat flux
-            plotters.newTile( ...
-                "tileTitle", 'Wall heat flux', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Wall heat flux [W/m^2]');
-            plotters.plotz(bc.HFLUX(:,:,tIdx), 'BC', 'DisplayName', 'Boundary Condition');
-            plotters.plotz(flm.HFLUX, 'FILM', 'DisplayName', 'Film');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
+            % Wall heat flux
+            if any(ismember({'HFLUX','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',         'Wall heat flux', ...
+                    'xlabel'   ,     'Axial position [m]', ...
+                    'ylabel'   , 'Wall heat flux [W/m^2]');
+                plotter.plotz(  bcHFLUX            ,'bc','DisplayName','Boundary Condition');
+                plotter.plotz(flm.HFLUX(opt.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Mass flow rates
-            plotters.newTile( ...
-                "tileTitle", 'Mass flow rate', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Field mass flow rate [kg/s]');
-            plotters.plotz(mix.liquid.W, 'MIXLIQ', 'DisplayName', 'Mixture Liquid');
-            plotters.plotz(sum([drp.W flm.W],2), 'DROP+FILM', 'DisplayName', 'Drop + Film');
-            plotters.plotz(drp.W, 'Drop');
-            plotters.plotz(flm.W, 'Film');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
+            if any(ismember({'W','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',      'Liquid mass flow rates', ...
+                    'xlabel',             'Axial position [m]', ...
+                    'ylabel',    'Field mass flow rate [kg/s]');
+                plotter.plotz(mix.liquid.W(opt.zIdx)                    ,'MixLiq'   ,'DisplayName','Mixture Liquid');
+                plotter.plotz(sum([drp.W(opt.zIdx) flm.W(opt.zIdx,:)],2),'Drop+Film','DisplayName','Drop + Film'   ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(drp.W(opt.zIdx)                           ,'Drop'                                    ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.W(opt.zIdx,:)                         ,'Film'                                    ,'XData',zaf,'subset',zafIdx);
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Film WL
-            plotters.newTile( ...
-                "tileTitle", 'Film mass flow rate per unit perimeter', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Film mass flow rate [kg/s/m]');
-            plotters.plotz(flm.WL, 'Film')
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
+            if any(ismember({'WL','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Film mass flow rate per unit perimeter', ...
+                    'xlabel'   ,                     'Axial position [m]', ...
+                    'ylabel'   ,           'Film mass flow rate [kg/s/m]');
+                plotter.plotz(flm.WL(opt.zIdx),'Film','XData',zaf,'subset',zafIdx)
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Field velocities
-            plotters.newTile( ...
-                "tileTitle", 'Field velocities', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Field velocities [m/s]');
-            plotters.plotz(mix.liquid.U, 'Mixture');
-            plotters.plotz(drp.U, 'Drop');
-            plotters.plotz(flm.U, 'Film');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
+            if any(ismember({'U','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',     'Field velocities', ...
+                    'xlabel'   ,   'Axial position [m]', ...
+                    'ylabel'   , 'Field velocity [m/s]');
+                plotter.plotz(mix.liquid.U(opt.zIdx),'MixLiq','DisplayName','Mixture Liquid');
+                plotter.plotz(drp.U(opt.zIdx)       ,'Drop'                                 ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.U(opt.zIdx,:)     ,'Film'                                 ,'XData',zaf,'subset',zafIdx);
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Film thickness
-            plotters.newTile( ...
-                "tileTitle", 'Film thickness', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Film thickness [m]');
-            plotters.plotz(flm.THICK, 'Film');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
-            %plotters.ylim([0 1E-3]);
+            if any(ismember({'THICK','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',    'Film thickness', ...
+                    'xlabel',   'Axial position [m]', ...
+                    'ylabel',   'Film thickness [m]');
+                plotter.plotz(flm.THICK(opt.zIdx),'Film','XData',zaf,'subset',zafIdx);
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Film mass Exchange
-            ah_base = plotters.newTile( ...
-                        "tileTitle", 'Film mass exchanges', ...
-                        'xlabel', 'Axial position [m]', ...
-                        'ylabel', 'Mass flux [kg/s/m^2]');
-            plotters.plotz(drp.MDEP(), 'DEPOSITION', 'DisplayName', 'Drop deposition');
-            plotters.plotz(flm.MENT(), 'Film entrainment');
-            plotters.plotz(flm.MEVAP, 'Evaporation');
-            plotters.plotz(flm.MTOT(drp), 'Total');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
+            if any(ismember({'FWE','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',  'Film mass exchanges', ...
+                    'xlabel',      'Axial position [m]', ...
+                    'ylabel',    'Mass flux [kg/s/m^2]');
+                plotter.plotz(drp.MDEP(opt.zIdx)    , 'Deposition','DisplayName','Drop deposition' ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.MENT(opt.zIdx)    ,'Entrainment','DisplayName','Film entrainment','XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.MEVAP(opt.zIdx)   ,'Evaporation','DisplayName','Film evaporation','XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.MTOT(drp,opt.zIdx),      'Total');
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Film momentum exchanges
-            plotters.newTile( ...
-                "tileTitle", 'Film momentum exchanges', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Shear stress [N/m^2]');
-            plotters.plotz(flm.FDEP(drp), 'Drop deposition');
-            plotters.plotz(flm.FWALL(),  'Wall');
-            plotters.plotz(flm.FVAPOR(),  'Vapor');
-            plotters.plotz(flm.FBUOY(),   'Buoyancy');
-            plotters.plotz(flm.FGRAV(),   'Gravity');
-            plotters.plotz(flm.FTOT(drp), 'Total');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
+            if any(ismember({'FME','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Film momentum exchanges', ...
+                    'xlabel',         'Axial position [m]', ...
+                    'ylabel',       'Shear stress [N/m^2]');
+                plotter.plotz(flm.FDEP(drp,opt.zIdx),'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.FWALL(opt.zIdx)   ,'Wall'                                      ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.FVAPOR(opt.zIdx)  ,'Vapor'                                     ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.FBUOY(opt.zIdx)   ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.FGRAV(opt.zIdx)   ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(flm.FTOT(drp,opt.zIdx),'Total'                                     ,'XData',zaf,'subset',zafIdx);
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
             
             % Drop momentum exchanges
-            plotters.newTile( ...
-                "tileTitle", 'Drop momentum exchanges', ...
-                'xlabel', 'Axial position [m]', ...
-                'ylabel', 'Shear stress [N/m^2]');
-            plotters.plotz(drp.FENT(flm),  'Film entrainment');
-            plotters.plotz(drp.FDRAG(),    'Drag');
-            plotters.plotz(drp.FBUOY(),   'Buoyancy');
-            plotters.plotz(drp.FGRAV(),   'Gravity');
-            plotters.plotz(drp.FTOT(flm), 'Total');
-            plotters.legend("show", 'Location', 'best');
-            plotters.plotOAF(oafZ);
-            
+            if any(ismember({'DME','ALL'},opt.display))
+                plotter.newTile( ...
+                    "tileTitle", 'Drop momentum exchanges', ...
+                    'xlabel',         'Axial position [m]', ...
+                    'ylabel',       'Shear stress [N/m^3]');
+                plotter.plotz(drp.FENT(flm,opt.zIdx),'Entrainment','DisplayName','Film entrainment','XData',zaf,'subset',zafIdx);
+                plotter.plotz(drp.FDRAG(opt.zIdx)   ,'Vapor'                                       ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(drp.FBUOY(opt.zIdx)   ,'Buoyancy'                                    ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(drp.FGRAV(opt.zIdx)   ,'Gravity'                                     ,'XData',zaf,'subset',zafIdx);
+                plotter.plotz(drp.FTOT(flm,opt.zIdx),'Total'                                       ,'XData',zaf,'subset',zafIdx);
+                plotter.legend('show', 'Location', 'best');
+                plotter.plotOAF(oafZ);
+            end
         end
-    
-        function plott(tfSolver, zIdx, opt)
-            %PLOTT 
-            % 
+        
+        function plotter = plott(tfSolver, zIdx, opt)
+        %PLOTT 
+        %   NOTE: currently supports only single elevation
             arguments
                 tfSolver
-                zIdx (:,1) double
-                opt.tIdx (:,1) double = -1
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})} = 'TRANSIENT'
-                opt.reverseTime (1,1) logical = false
+                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = tfSolver.NZ
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NTIME
+                opt.reverseTime (1,1) logical                                                                      = false
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
+            end
+            
+            if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
+            if length(opt.tIdx) < 2
+                tfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                return
             end
             
             switch opt.solveMode
                 case 'TRANSIENT'
-                    flm = tfSolver.film;
-                    drp = tfSolver.drop;
+                    mix = tfSolver.mixSolver.mixture(opt.tIdx);
+                    %fld = tfSolver.mixSolver.fluid(opt.tIdx);
+                    flm = tfSolver.film(opt.tIdx);
+                    drp = tfSolver.drop(opt.tIdx);
+                    bcHFLUX = permute(tfSolver.boundaryConditions.HFLUX(zIdx,:,:),[3 2 1]);
                 case 'STEADY'
-                    flm = tfSolver.filmInit;
-                    drp = tfSolver.dropInit;
+                    if isequal(opt.tIdx,[1:tfSolver.NTIME]')
+                        opt.tIdx = 1:length(tfSolver.filmInit);
+                    end
+                    mix = tfSolver.mixSolver.mixtureInit(opt.tIdx);
+                    %fld = repmat(tfSolver.mixSolver.fluid(1),1,length(opt.tIdx));
+                    flm = tfSolver.filmInit(opt.tIdx);
+                    drp = tfSolver.dropInit(opt.tIdx);
+                    bcHFLUX = repmat(tfSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
             end
-
-            if isscalar(opt.tIdx) && (opt.tIdx < 0)
-                opt.tIdx = 1:length(flm);
-            end
-
-            % Cannot plot time series of one time step
-            if isscalar(flm) || isscalar(opt.tIdx)
-                tfSolver.log('Error: Non-scalar time index required to plot time series.\n');
-                return
-%                 throw( ...
-%                     MException( ...
-%                         'MixtureSolverPlottError:ScalarTimestepError', ...
-%                         'Non-scalar time index required to plot time series'))
-            end
-
-            % Time vector
-            plotTimeVector = [flm(opt.tIdx).TIME];
+            
+            time = [flm.TIME];
             if opt.reverseTime
-                plotTimeVector = plotTimeVector - plotTimeVector(end);
-            end            
-
-            figure('name',['Time series of three-field parameters at ' num2str(tfSolver.Z(zIdx(1))) ' [m]']);
+                time = time -time(end);
+            end
             
-            timeplot('W','Mass flowrates [kg/s]')
-            timeplot('U','Velocity [m/s]')
+            dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
 
-            function timeplot(param,ylabelText)
-
-                nexttile; hold all; grid on;
-                if ismethod(flm,param)
-                    paramData = arrayfun( ...
-                                    @(i) flm(i).(param), ...
-                                    1:length(plotTimeVector), ...
-                                    'UniformOutput', false);
-                    paramData = cell2mat(paramData);
-
-                else
-                    paramData = [flm.(param)];
+            z = tfSolver.Z;
+            plotter = Solvers.SolverPlotter( ...
+                                sprintf('Time distributions of three-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
+                                opt.wall);
+            plotter.setZs(time);
+            
+            % Wall heat flux
+            if any(ismember({'HFLUX','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',         'Wall heat flux', ...
+                    'xlabel'   ,               'Time [s]', ...
+                    'ylabel'   , 'Wall heat flux [W/m^2]');
+                plotter.plotz(             bcHFLUX               ,'bc'  ,'DisplayName','Boundary Condition');
+                plotter.plotz(flm.transient('HFLUX','zIdx',zIdx)','Film'                                   );
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Mass flow rates
+            if any(ismember({'W','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',       'Mass flow rates', ...
+                    'xlabel'   ,              'Time [s]', ...
+                    'ylabel'   , 'Mass flow rate [kg/s]');
+                dropfilm = sum([drp.transient('W','zIdx',zIdx)' flm.transient('W','zIdx',zIdx)'],2);
+                plotter.plotz(mix.transient('liquid.W','zIdx',zIdx)','MixLiq'   ,'DisplayName','Mixture Liquid');
+                plotter.plotz(               dropfilm               ,'Drop+Film','DisplayName','Drop + Film'   );
+                plotter.plotz(drp.transient(       'W','zIdx',zIdx)','Drop'                                    );
+                plotter.plotz(flm.transient(       'W','zIdx',zIdx)','Film'                                    );
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Film WL
+            if any(ismember({'WL','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Film mass flow rate per unit perimeter', ...
+                    'xlabel'   ,                               'Time [s]', ...
+                    'ylabel'   ,           'Film mass flow rate [kg/s/m]');
+                plotter.plotz(flm.transient('WL','zIdx',zIdx)','Film');
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Field velocities
+            if any(ismember({'U','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',     'Field velocities', ...
+                    'xlabel'   ,             'Time [s]', ...
+                    'ylabel'   , 'Field velocity [m/s]');
+                plotter.plotz(mix.transient('U','zIdx',zIdx)','MixLiq','DisplayName','Mixture Liquid');
+                plotter.plotz(drp.transient('U','zIdx',zIdx)','Drop'                                 );
+                plotter.plotz(flm.transient('U','zIdx',zIdx)','Film'                                 );
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Film thickness
+            if any(ismember({'THICK','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle',  'Film thickness', ...
+                    'xlabel',           'Time [s]', ...
+                    'ylabel', 'Film thickness [m]');
+                plotter.plotz(flm.transient('THICK','zIdx',zIdx)','Film');
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Film mass Exchange
+            if any(ismember({'FWE','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Film mass exchanges', ...
+                    'xlabel',               'Time [s]', ...
+                    'ylabel',   'Mass flux [kg/s/m^2]');
+                plotter.plotz(drp.transient('MDEP' ,    'zIdx',zIdx)','Deposition' ,'DisplayName','Drop deposition' );
+                plotter.plotz(flm.transient('MENT' ,    'zIdx',zIdx)','Entrainment','DisplayName','Film entrainment');
+                plotter.plotz(flm.transient('MEVAP',    'zIdx',zIdx)','Evaporation','DisplayName','Film evaporation');
+                plotter.plotz(flm.transient('MTOT' ,drp,'zIdx',zIdx)','Total'                                       );
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Film momentum exchanges
+            if any(ismember({'FME','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Film momentum exchanges', ...
+                    'xlabel',                   'Time [s]', ...
+                    'ylabel',       'Shear stress [N/m^2]');
+                plotter.plotz(flm.transient('FDEP'  ,drp,'zIdx',zIdx)','Deposition','DisplayName','Drop deposition');
+                plotter.plotz(flm.transient('FWALL' ,    'zIdx',zIdx)','Wall'                                      );
+                plotter.plotz(flm.transient('FVAPOR',    'zIdx',zIdx)','Vapor'                                     );
+                plotter.plotz(flm.transient('FBUOY' ,    'zIdx',zIdx)','Buoyancy'                                  );
+                plotter.plotz(flm.transient('FGRAV' ,    'zIdx',zIdx)','Gravity'                                   );
+                plotter.plotz(flm.transient('FTOT'  ,drp,'zIdx',zIdx)','Total'                                     );
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+            % Drop momentum exchanges
+            if any(ismember({'DME','ALL'},opt.display))
+                plotter.newTile( ...
+                    "tileTitle", 'Drop momentum exchanges', ...
+                    'xlabel',                   'Time [s]', ...
+                    'ylabel',       'Shear stress [N/m^3]');
+                plotter.plotz(drp.transient('FENT' ,flm,'zIdx',zIdx)','Entrainment','DisplayName','Film entrainment');
+                plotter.plotz(drp.transient('FDRAG',    'zIdx',zIdx)','Vapor'                                       );
+                plotter.plotz(drp.transient('FBUOY',    'zIdx',zIdx)','Buoyancy'                                    );
+                plotter.plotz(drp.transient('FGRAV',    'zIdx',zIdx)','Gravity'                                     );
+                plotter.plotz(drp.transient('FTOT' ,flm,'zIdx',zIdx)','Total'                                       );
+                plotter.legend('show', 'Location', 'best');
+            end
+            
+        end
+        
+        function plotzt(tfSolver, opt)
+        %PLOTZT: 2d plot, position z on horizontal and time t on vertical axis
+        %
+            
+            arguments
+                tfSolver
+                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','velocity'}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',     'm/s'}
+                opt.field        {mustBeMember(opt.field,{'drop','film'})}                = {'drop','film'}
+                opt.solveMode    {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}     = 'TRANSIENT'
+                opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.inputSet.geometry.NWALL
+                opt.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.NZ
+                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.NTIME
+                opt.annular      (1,1) logical                                            = true
+                opt.reverseTime  (1,1) logical                                            = false
+                opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
+                opt.view         (1,2) double                                             = [0 90]
+            end
+            
+            if ~iscell(opt.display), opt.display = {opt.display}; end
+            if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
+            if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
+            if strcmp('ALL',opt.display)
+                    opt.display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK'};
+                    opt.label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness'};
+                    opt.unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm'};
+            end
+            switch opt.solveMode
+                case 'TRANSIENT'
+                    mix = tfSolver.mixSolver.mixture(opt.tIdx);
+                    drp = tfSolver.drop(opt.tIdx);
+                    flm = tfSolver.film(opt.tIdx);
+                case 'STEADY'
+                    if isequal(opt.tIdx,[1:tfSolver.NTIME]')
+                        opt.tIdx = 1:length(tfSolver.filmInit);
+                    end
+                    mix = tfSolver.mixSolver.mixtureInit(opt.tIdx);
+                    drp = tfSolver.dropInit(opt.tIdx);
+                    flm = tfSolver.filmInit(opt.tIdx);
+            end
+            if isempty(opt.wall)
+                opt.wall = 1:tfSolver.inputSet.geometry.NWALL;
+            end
+            if length(opt.zIdx) < 2
+                tfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                return
+            end
+            if length(opt.tIdx) < 2
+                tfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                return
+            end
+            
+            for k = opt.wall
+                if ismember('drop',opt.field)
+                    fh_drp = figure('name',['Time/axial distributions of three-field (drop) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    for i = 1:length(opt.display)
+                        if contains(opt.display{i},{'HFLUX','DP'})
+                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                        elseif contains(opt.display{i},{'WL','THICK'})
+                            continue
+                        else
+                            ax_drp(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
+                        end
+                    end
                 end
-                
-                plot(plotTimeVector, paramData(zIdx,opt.tIdx),'.-');
-
-                legendStr = num2str(tfSolver.Z(zIdx),'z=%0.4f m');
-                legend(legendStr,'Location','southeast');
-                
-                xlabel('Time [s]'); xlim(plotTimeVector([1 end]));
-                ylabel(ylabelText)
-                set(gca,'fontSize',14)
-            
+                if ismember('film',opt.field)
+                    fh_flm = figure('name',['Time/axial distributions of three-field (film) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    for i = 1:length(opt.display)
+                        if contains(opt.display{i},{'HFLUX','DP'})
+                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                        else
+                            ax_flm(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
+                        end
+                    end
+                end
             end
 
         end

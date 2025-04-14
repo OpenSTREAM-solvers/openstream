@@ -229,10 +229,10 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
-            thick = abs(absfilm.THICK(zIdx));                                 % [m] Film thickness
-            DPDZ = -absfilm.mix.DP.Tot(zIdx)/absfilm.DZ;                              % [Pa/m] Pressure gradient
+            thick = abs(absfilm.THICK(zIdx));                              % [m] Film thickness
+            DPDZ = absfilm.mix.DP.Tot(zIdx)/absfilm.DZ;                    % [Pa/m] Pressure gradient
             
-            Fbuoy = -thick.*(DPDZ);                                        % [N/m^2]
+            Fbuoy = thick.*(DPDZ);                                         % [N/m^2]
             
             Fbuoy = absfilm.mix.AFDISTR(0,Fbuoy,zIdx);   
             

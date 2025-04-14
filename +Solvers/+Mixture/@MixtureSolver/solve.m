@@ -115,8 +115,7 @@ function solver(solveINIT)
                 mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew;     % [kg/s] Apply relaxation
                 
                 % Mixture momentum conservation
-                DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                                % [Pa] Pressure drop components
-                Pnew = mix(tIdx).P(zIdx-1) + DPparts.TOT;                               % [Pa] New pressure
+                Pnew = mix(tIdx).P(zIdx-1) + mix(tIdx).DPTOT(Uold, zIdx);               % [Pa] New pressure
                 mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew;     % [Pa] Apply relaxation
     
                 % Mixture energy conservation
@@ -176,12 +175,13 @@ function solver(solveINIT)
             mix(tIdx).TRELAX.XTH(zIdx,:)  = mix(tIdx).TRELAX.WVTH(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Relaxed thermodynamic vapor quality
             
             % Save pressure drop components
-            mix(tIdx).DP.Grav(zIdx)  = -DPparts.GRAV;                                  % [Pa] Gravitational pressure drop
-            mix(tIdx).DP.Wall(zIdx)  = -DPparts.WALL;                                  % [Pa] Wall friction pressure drop
-            mix(tIdx).DP.Acc_z(zIdx) = -DPparts.ACCZ;                                  % [pa] Spatial acceleration pressure drop
-            mix(tIdx).DP.Acc_t(zIdx) = -DPparts.ACCT;                                  % [Pa] Temporal acceleration pressure drop
-            mix(tIdx).DP.K(zIdx)     = -DPparts.K;                                     % [Pa] Local pressure drop
-            mix(tIdx).DP.Tot(zIdx)   = -DPparts.TOT;                                   % [Pa] Total pressure drop
+            DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                       % [Pa] Pressure drop components
+            mix(tIdx).DP.Grav(zIdx)  = -DPparts.GRAV;                      % [Pa] Gravitational pressure drop
+            mix(tIdx).DP.Wall(zIdx)  = -DPparts.WALL;                      % [Pa] Wall friction pressure drop
+            mix(tIdx).DP.Acc_z(zIdx) = -DPparts.ACCZ;                      % [pa] Spatial acceleration pressure drop
+            mix(tIdx).DP.Acc_t(zIdx) = -DPparts.ACCT;                      % [Pa] Temporal acceleration pressure drop
+            mix(tIdx).DP.K(zIdx)     = -DPparts.K;                         % [Pa] Local pressure drop
+            mix(tIdx).DP.Tot(zIdx)   = -DPparts.TOT;                       % [Pa] Total pressure drop
             
             % Save acceleration terms
             mix(tIdx).ACC.U_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).U(zIdx)-mix(tIdx).U(zIdx-1))./DZ; % [m/s^2]  Spatial  hydrodynamic acceleration
@@ -198,6 +198,14 @@ function solver(solveINIT)
             mix(tIdx).ITR.DH(zIdx) = dH;
 
         end
+        
+        % Save cumulative pressure drop components
+        mix(tIdx).DPSUM.Grav  = cumsum(mix(tIdx).DP.Grav);                 % [Pa] Gravitational pressure drop
+        mix(tIdx).DPSUM.Wall  = cumsum(mix(tIdx).DP.Wall);                 % [Pa] Wall friction pressure drop
+        mix(tIdx).DPSUM.Acc_z = cumsum(mix(tIdx).DP.Acc_z);                % [pa] Spatial acceleration pressure drop
+        mix(tIdx).DPSUM.Acc_t = cumsum(mix(tIdx).DP.Acc_t);                % [Pa] Temporal acceleration pressure drop
+        mix(tIdx).DPSUM.K     = cumsum(mix(tIdx).DP.K);                    % [Pa] Local pressure drop
+        mix(tIdx).DPSUM.Tot   = cumsum(mix(tIdx).DP.Tot);                  % [Pa] Total pressure drop
         
         [maxN,maxzIdx] = max(mix(tIdx).ITR.N);
         maxDW = max(mix(tIdx).ITR.DW);

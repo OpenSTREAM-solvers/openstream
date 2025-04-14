@@ -200,31 +200,68 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
 %             [varargout{1:nargout}] = size(obj.TIME,varargin{:});
 %         end
 
-        function plot(obj,fluidObj)
+        function plot(obj,fluidObj,opt)
             %PLOT Plot boundary conditions
             % usage: bc.plot(fluidObj)
 
-            figure('name','Boundary conditions plots')
-            bcplot('PRESSURE','System pressure [Pa]',{},0)
-            bcplot('HIN','Inlet enthalpy [J/kg]',{'HF','HG'},0)
-            bcplot('MFLOW','Mass flow rate [kg/s]',{},0)
-            bcplot('POWER','Power [W]',{},0)
-            bcplot('TIN','Inlet temperature [K]',{'TSAT'},1)
-            bcplot('XIN','Inlet quality [-]',{},1)
-            bcplot('DTIN','Inlet subcooling [K]',{},1)
-            bcplot('DHIN','Inlet subcooling [J/kg]',{},1)
+            arguments
+                obj
+                fluidObj
+                opt.display     {mustBeMember(opt.display,{'PRESSURE','HIN','MFLOW','POWER','TIN','XIN','DTIN','DHIN'})} = {'PRESSURE','HIN','MFLOW','POWER','TIN','XIN','DTIN','DHIN'}
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                 = 1:length(obj)
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                   = 'K'
+            end
             
-            function bcplot(param,label,sat,flag)
+            if length(opt.tIdx) < 2
+                disp('Error: At least 2 time indexes required to plot time series.');
+                return
+            end
+            obj = obj(opt.tIdx);
+            
+            figure('name','Boundary conditions plots')
+            if ismember('PRESSURE',opt.display )
+                bcplot('PRESSURE','System pressure [Pa]'   ,{}         ,0)
+            end
+            if ismember('HIN',opt.display )
+                bcplot('HIN'     ,'Inlet enthalpy [J/kg]'  ,{'HF','HG'},0)
+            end
+            if ismember('MFLOW',opt.display )
+                bcplot('MFLOW'   ,'Mass flow rate [kg/s]'  ,{}         ,0)
+            end
+            if ismember('POWER',opt.display )
+                bcplot('POWER'   ,'Power [W]'              ,{}         ,0)
+            end
+            if ismember('TIN',opt.display )
+                bcplot('TIN'     ,'Inlet temperature [K]'  ,{'TSAT'}   ,1,opt.unitTemp)
+            end
+            if ismember('XIN',opt.display )
+                bcplot('XIN'     ,'Inlet quality [-]'      ,{}         ,1)
+            end
+            if ismember('DTIN',opt.display )
+                bcplot('DTIN'    ,'Inlet subcooling [K]'   ,{}         ,1)
+            end
+            if ismember('DHIN',opt.display )
+                bcplot('DHIN'    ,'Inlet subcooling [J/kg]',{}         ,1)
+            end
+            
+            function bcplot(param,label,sat,flag,unitTemp)
+                
+                if nargin<5, unitTemp = 'K'; end
+                delta = 0;
+                if strcmp('C',unitTemp)
+                    delta = -273.15;
+                    label = strrep(label,'K','C');
+                end
 
                 nexttile; hold all; grid on;
-                t = obj.TIME;
+                t = [obj.TIME];
                 switch flag
                     case 0
-                        plot(t,[obj.(param)],'.-')
+                        plot(t,[obj.(param)]+delta,'.-')
                     case 1
-                        plot(t,[obj.(param)(fluidObj)],'.-')
+                        plot(t,arrayfun(@(x,y) x.(param)(y),obj,fluidObj)+delta,'.-')
                 end
-                cellfun(@(x) plot(t,obj.(x)(fluidObj),'k--'),sat);
+                cellfun(@(param) plot(t,arrayfun(@(x,y) x.(param)(y),obj,fluidObj)+delta,'k--'),sat);
                 xlabel('Time [s]'); xlim([min(t)-.01 max(t)+.01])
                 ylabel(label)
                 set(gca,'fontSize',14)
