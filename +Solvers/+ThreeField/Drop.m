@@ -218,9 +218,9 @@ classdef Drop < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            DPDZ = -drop.mix.DP.Tot(zIdx)/drop.DZ;                              % [Pa/m] Pressure gradient
+            DPDZ = drop.mix.DP.Tot(zIdx)/drop.DZ;                          % [Pa/m] Pressure gradient
             
-            Fbuoy = -DPDZ;                                                 % [N/m^3]
+            Fbuoy = DPDZ;                                                  % [N/m^3]
             
             Fbuoy = drop.mix.AFDISTR(0,Fbuoy,zIdx);   
         end

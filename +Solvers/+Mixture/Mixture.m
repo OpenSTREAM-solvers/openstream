@@ -17,8 +17,9 @@ classdef Mixture < Solvers.AbstractField
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
         P            (:,1) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
-        DP           (1,1) struct                                                                 % Detailed pressure drops
-        ACC          (1,1) struct                                                                 % Detailed acceleration terms
+        DP           (1,1) struct                                                                 % Saved detailed pressure drops
+        DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
+        ACC          (1,1) struct                                                                 % Saved detailed acceleration terms
         TRELAX       (1,1) struct                                                                 % Time relaxation terms
         
         % Iteration properties
@@ -60,7 +61,7 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Overload copyable properties (order is important due to the setter functions)
-            mix.flowProperties = {'TRELAX','W','P','H','DP','ACC'};
+            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','ACC'};
 
         end
         
@@ -327,7 +328,7 @@ classdef Mixture < Solvers.AbstractField
             kloss = zeros(length(mix.Z),1);                                % [-] Initialize local loss coefficient array to 0
             [~,ind]=min(abs(mix.Z-model.KLOC));                            % Find local loss elevation indexes (closest node)
             kloss(ind)=model.KLOSS;                                        % [-] Apply loss
-            kloss = kloss(zIdx).';                                         % [-] Restrict to selected nodes
+            kloss = kloss(zIdx);                                           % [-] Restrict to selected nodes
             
         end
         
@@ -374,11 +375,8 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            VEL   = mix.U([zIdx-1 zIdx]);                                  % [m/s] Calculate velocity array
-            U     = VEL(2); 
-            Uups  = VEL(1);
-
-            dpAcc_z = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(U-Uups);
+            deltaU = diff([[mix.U(1);mix.U(1:end-1)] mix.U],[],2);         % [m/s] Calculate velocity difference
+            dpAcc_z = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*deltaU(zIdx);
         end
 
         function dpAcc_t = DPACCT(mix, Uold, zIdx)
@@ -387,8 +385,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
             
             U     = mix.U(zIdx);                                           % [m/s] Calculate velocity 
-
-            dpAcc_t = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(1-Uold/U).*mix.DZ./mix.DT;
+            dpAcc_t = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(1-Uold./U).*mix.DZ./mix.DT;
         end
 
         function dpk = DPK(mix, zIdx)
@@ -405,7 +402,7 @@ classdef Mixture < Solvers.AbstractField
         function dptot = DPTOT(mix, Uold, zIdx)
         %DPTOT Total pressure loss [Pa]
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
             
             dptot = mix.DPGRAV(zIdx) + mix.DPWALL(zIdx) + mix.DPACCZ(zIdx) + mix.DPACCT(Uold, zIdx) + mix.DPK(zIdx);
         end
@@ -413,14 +410,14 @@ classdef Mixture < Solvers.AbstractField
         function dpparts = DPPARTS(mix, Uold, zIdx)
         %DPPARTS Pressure loss components[Pa]
         %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
             
             dpparts.GRAV = mix.DPGRAV(zIdx);
             dpparts.WALL = mix.DPWALL(zIdx);
             dpparts.ACCZ = mix.DPACCZ(zIdx);
             dpparts.ACCT = mix.DPACCT(Uold, zIdx);
             dpparts.K    = mix.DPK(zIdx);
-            dpparts.TOT  = dpparts.GRAV + dpparts.WALL + dpparts.ACCZ + dpparts.ACCT + dpparts.K;
+            dpparts.TOT  = mix.DPTOT(Uold, zIdx);
         end
 
         function t = T(mix, zIdx)
@@ -881,8 +878,8 @@ classdef Mixture < Solvers.AbstractField
                     chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
             end
             
-            chf = 0.6.*chf;                                                % Correction for Bennett post-do cases
-            %chf = linspace(1.35,0.25,mix(1).NZ)'.*chf;                     % Correction for HPCHF case
+            %chf = 0.6.*chf;                                                % Correction for Bennett post-do cases
+            chf = linspace(1.35,0.25,mix(1).NZ)'.*chf;                     % Correction for HPCHF case
             %chf = linspace(1.36,0.25,mix(1).NZ)'.*chf; 
             
             cbt = mix.HFLUX(1:mix(1).NZ,:) > chf;                          % CBT indicator

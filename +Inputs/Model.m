@@ -76,12 +76,12 @@ classdef Model < Inputs.Input
         WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 2                     % Base film / wave turbulent mixing coefficient
         WAVEFREQUENCY    (1,1) InputEnums.WAVEFREQUENCY                    = 'RELAXATION'          % Wave number density model   
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'                % Equilibrium wave Strouhal number model
-        EQSTROUHALCOEF   (:,1) double {mustBeNumeric}                      = [1.1236E-4 0.5 0.0]   % Equilibrium wave Strouhal number coefficients [-]
+        EQSTROUHALCOEF   (:,1) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]   % Equilibrium wave Strouhal number coefficients [-]
         RELAXTW          (:,1) double  {mustBeNonnegative}                 = 0.2                   % Wave number density relaxation time [s]
         MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'FULLNOP'             % Base film momentum conservation model
         MOMENTWAVE       (1,1) InputEnums.MOMENTWAVE                       = 'FULL'                % Wave momentum conservation model
         WAVEBASEINT      (1,1) InputEnums.WAVEBASEINT                      = 'VAPORSHEAR'          % Wave / base film interfacial momentum transfer model
-        SHAPEFACTORCOEF  (:,1) double {mustBeNumeric}                      = [1.325E5 2]           % Wave shape factor coefficients [-]
+        SHAPEFACTORCOEF  (:,1) double  {mustBeNumeric}                     = [1.325E5 2]           % Wave shape factor coefficients [-]
         WAVEDRAGCOEF     (:,1) double  {mustBeNumeric}                     = [0.02 1.350E5 0.437]  % Wave drag coefficient [-]
         THINWAVETHICK    (1,1) double  {mustBePositive}                    = 1E-5                  % Minimum thin wave thickness [m]   
 
