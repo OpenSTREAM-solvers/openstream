@@ -2,7 +2,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
     %BOUNDARYCONDITIONS Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         TIME             double  {mustBeNumeric, mustBeScalarOrEmpty}                              % Time [s]
         PRESSURE         double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % System pressure [Pa]

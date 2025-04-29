@@ -2,9 +2,9 @@ classdef Model < Inputs.Input
     %MODEL Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
-        ID               (1,1) string  {mustBeTextScalar}                                               % Model ID 
+        ID               (1,1) string  {mustBeTextScalar}                                          % Model ID 
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
                                                                            = []                    % Number of axial nodes 
         FLUID            (1,1) string  {mustBeTextScalar}                  = "WATER"               % Fluid ID
@@ -49,7 +49,8 @@ classdef Model < Inputs.Input
         DROPSLIP         (1,1) double  {mustBePositive}                    = 1.0                   % Drop velocity ratio [-]       
         THINFILMFRIC     (1,1) InputEnums.THINFILMFRIC                     = 'TURBULENT'           % Thin film wall friction model [-]  
         THINFILMTHICK    (1,1) double  {mustBePositive}                    = 1E-4                  % Thin film thickness [m]        
-        VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'              % Vapor friction model [-]  
+        %VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'              % Vapor friction model [-]  
+        VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'SOLVER_DEPENDENT'    % Vapor friction model [-]  
         VAPORFRICCST     (1,1) double  {mustBePositive}                    = 0.005                 % Vapor friction constant [-]
         POSFILM          (1,1) logical                                     = true                  % Keep positive film flowrate/thickness
         DROPDIAM         (1,1) double  {mustBePositive}                    = 1E-3                  % Drop diameter [mm]
@@ -73,6 +74,12 @@ classdef Model < Inputs.Input
 
     properties (Constant)
         G             (1,1) double  {mustBeNumeric}                        = 9.81                  % [m/s^2] Gravitational acceleration
+        SOLVERDEPENDENTPROPS                                               = struct("VAPORFRIC", ...
+                                                                                    struct('THREEFIELD', InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'FOURFIELD', InputEnums.VAPORFRIC.CONSTANT, ...
+                                                                                            'DEFAULT', InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'DEP_FLAG', InputEnums.VAPORFRIC.SOLVER_DEPENDENT) ...
+                                                                                    );
     end
 
     methods

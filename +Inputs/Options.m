@@ -2,7 +2,7 @@ classdef Options < Inputs.Input
     %OPTIONS Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         ID           (1,1) string  {mustBeTextScalar}                                              % Option ID 
         TSTEP        (1,1) double  {mustBeNumeric,mustBePositive}          = 0.1                   % Time step [s]
