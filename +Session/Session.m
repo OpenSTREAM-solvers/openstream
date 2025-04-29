@@ -84,7 +84,36 @@ classdef Session < handle
                         ) ...
                     );
                 else
-                    %TODO: add warning about deletion
+                    % Check if there are any open files through fopen
+                    if isMATLABReleaseOlderThan("R2024a")
+                        openFileIDs = fopen('all');
+                    else
+                        openFileIDs = openedFiles();
+                    end
+                    for fid = openFileIDs
+                        % Retrieve file directory
+                        floc = fopen(fid);
+                        fdir = fileparts(floc);
+                        % See if file is in obj.directory
+                        if fdir == obj.directory
+                            % Close the file
+                            fclose(fid);
+                            warning('File closed: %s', floc);
+                        end
+                    end
+
+                    % Check if diary file is open
+                    if get(0,'Diary') == "on"
+                        diaryLoc = get(0,'DiaryFile');
+                        diaryDir = fileparts(diaryLoc);
+                        % See if file is in obj.directory
+                        if diaryDir == obj.directory
+                            % Close diary
+                            set(0, 'Diary', 'off');
+                            warning('Opened diary closed: %s', diaryLoc);
+                        end
+                    end
+                    
                     [status, msg, msgID] = rmdir(obj.directory,'s');
                     if status ~= 1
                         % Sometimes, setting diary off fixes this
