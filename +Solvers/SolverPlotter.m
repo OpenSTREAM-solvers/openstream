@@ -226,14 +226,14 @@ classdef SolverPlotter < handle
                 % Mixture solver
                 case {'MIX', 'MIXTURE'}
                     plotStyle = {colors(7), '-', 's'};
-                 case {'LIQUID+VAPOR', 'VAPOR+LIQUID'}
+                case {'LIQUID+VAPOR', 'VAPOR+LIQUID'}
                     plotStyle = {colors(7), '--', '+'};   
                 case {'MIXLIQ', 'MIXTURELIQUID', 'LIQUID'}
-                    plotStyle = {colors(2), '-', 'o'};
+                    plotStyle = {colors(2), '-', '.'};
                 case {'VAP', 'VAPOR'}
                     plotStyle = {colors(1), '-', '.' };
-                case {'RELAXVAPOR','VAPORDRAG'}
-                    plotStyle = {colors(1), '--', '+' };
+                case {'RELAXVAPOR','WALLVAPOR','VAPORDRAG'}
+                    plotStyle = {colors(1), '--', 'o' };
                 case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
                     plotStyle = {colors(5), '-', 'o'};
                 case {'RELAXEQUIL'}
@@ -245,11 +245,11 @@ classdef SolverPlotter < handle
                 case {'VF','VOIDFRACTION'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'EVAPORATION'}
-                    plotStyle = {colors(2), '--', '.'};
+                    plotStyle = {colors(3), '--', '.'};
                 case {'EXCHANGE'}
                     plotStyle = {colors(4), '-', '.'};
                 case {'TOTAL'}
-                    plotStyle = {'black', '-', '+'};
+                    plotStyle = {'black', '-', 'x'};
                 case {'WALL'}
                     plotStyle = {colors(5), '-', '.'};
                 case {'BUOYANCY'}
@@ -258,6 +258,8 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(7), '-', '.'};
                 case {'LOCAL'}
                     plotStyle = {'black', '--', '.'};
+                case {'CHF', 'CBT'}
+                    plotStyle = {colors(7), '--', '+'};       
                     
                 % Two-fluid solver
                 case {'INTERFACIAL'}

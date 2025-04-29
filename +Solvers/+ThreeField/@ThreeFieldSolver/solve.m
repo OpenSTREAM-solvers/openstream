@@ -56,7 +56,7 @@ function solver(solveINIT)
         drop = tfSolver.dropInit;
         fluid = tfSolver.fluidInit;
         mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
-        solveMODE = 'INITIAL';
+        %solveMODE = 'INITIAL';
     else
         if length(tfSolver.film) < 2
             return
@@ -66,7 +66,7 @@ function solver(solveINIT)
         drop = tfSolver.drop;
         fluid = tfSolver.fluid;
         mix = tfSolver.mixSolver.mixture;
-        solveMODE = 'SPECIFIED';
+        %solveMODE = 'SPECIFIED';
     end
     
     % set SOLVED flag to SOLVECONVERGED
@@ -216,7 +216,7 @@ function solver(solveINIT)
         maxDWL = max(film(tIdx).ITR.DWL,[],'all');
         maxDUf = max(film(tIdx).ITR.DU,[],'all');
         maxDUd = max(drop(tIdx).ITR.DU,[],'all');
-        tfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',maxN,maxzIdx,maxDWL,maxDUf,maxDUd)
+        tfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]                    \r',maxN,maxzIdx,maxDWL,maxDUf,maxDUd)
         
         % Temporal deviations in W and U
         timeDWL = max(abs((film(tIdx).WL - film(tIdx-1).WL)),[],'all');

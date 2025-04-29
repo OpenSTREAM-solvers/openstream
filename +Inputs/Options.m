@@ -27,11 +27,11 @@ classdef Options < Inputs.Input
         ERRORU           (1,1) double  {mustBeNumeric}                     = 1E-4                  % Velocity error target in inner iterations [m/s]
         SSCONVU          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Velocity steady-state convergence criterion [m/s]
         RELAXWL          (1,1) double  {mustBeInRange(RELAXWL,0,1)}        = 1                     % Relaxation factor for the liquid mass conservation equation [-]
-        RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 1                     % Relaxation factor for the vapor mass conservation equation [-]
+        RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 1                     % Relaxation factor for the vapor  mass conservation equation [-]
         RELAXUL          (1,1) double  {mustBeInRange(RELAXUL,0,1)}        = 1                     % Relaxation factor for the liquid momentum conservation equation [-]
-        RELAXUV          (1,1) double  {mustBeInRange(RELAXUV,0,1)}        = 1                     % Relaxation factor for the vapor momentum conservation equation [-]
-        RELAXHL          (1,1) double  {mustBeInRange(RELAXHL,0,1)}        = 1                     % Relaxation factor for the liquid mass conservation equation [-]
-        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 1                     % Relaxation factor for the vapor energy conservation equation [-]
+        RELAXUV          (1,1) double  {mustBeInRange(RELAXUV,0,1)}        = 1                     % Relaxation factor for the vapor  momentum conservation equation [-]
+        RELAXHL          (1,1) double  {mustBeInRange(RELAXHL,0,1)}        = 1                     % Relaxation factor for the liquid energy conservation equation [-]
+        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 1                     % Relaxation factor for the vapor  energy conservation equation [-]
         
         % Three-field solver options
         ERRORWF          (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]

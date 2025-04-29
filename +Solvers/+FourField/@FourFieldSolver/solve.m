@@ -59,7 +59,7 @@ function solver(solveINIT)
         drop = ffSolver.dropInit;
         fluid = ffSolver.fluidInit;
         mix = copy(repmat(ffSolver.mixSolver.mixture(1),1,ffSolver.inputSet.options.SSMAXITER));
-        solveMODE = 'INITIAL';
+        %solveMODE = 'INITIAL';
     else
         if length(ffSolver.film) < 2
             return
@@ -71,7 +71,7 @@ function solver(solveINIT)
         drop = ffSolver.drop;
         fluid = ffSolver.fluid;
         mix = ffSolver.mixSolver.mixture;
-        solveMODE = 'SPECIFIED';
+        %solveMODE = 'SPECIFIED';
     end
     
     % set SOLVED flag to SOLVECONVERGED
@@ -309,7 +309,7 @@ function solver(solveINIT)
         maxzIdxs = [maxzIdxb, maxzIdxw];
         [maxN, maxzIdx] = max([maxNb, maxNw]);
         maxzIdx = maxzIdxs(maxzIdx);
-        ffSolver.log('\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]\r',maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDUd)
+        ffSolver.log('\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]                    \r',maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDUd)
         
         % Temporal deviations in W and U
         timeDWLb = max(abs((base(tIdx).WL - base(tIdx-1).WL)),[],'all');
