@@ -108,17 +108,19 @@ classdef Options < Inputs.Input
             end
 
             % Default value used warning
-            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
-            if nargout == 0
-                warning('Options:defaultValueUsedWarning', ...
-                    sprintf('%s\n',defaultValueWarningString));
-            else
-                w = struct('warnID', 'Options:defaultValueUsedWarning', ...
-                           'msg', defaultValueWarningString);
-                if isempty(obj.warnings)
-                    obj.warnings = w;
+            if ~isempty(defaultValueFieldNames)
+                defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+                if nargout == 0
+                    warning('Options:defaultValueUsedWarning', ...
+                        sprintf('%s\n',defaultValueWarningString));
                 else
-                    obj.warnings(end+1) = w;
+                    w = struct('warnID', 'Options:defaultValueUsedWarning', ...
+                               'msg', defaultValueWarningString);
+                    if isempty(obj.warnings)
+                        obj.warnings = w;
+                    else
+                        obj.warnings(end+1) = w;
+                    end
                 end
             end
             
