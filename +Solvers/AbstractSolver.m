@@ -26,9 +26,12 @@ classdef (Abstract) AbstractSolver < handle
         function solver = AbstractSolver(inputSet)
         %ABSTRACTSOLVER Constructor
         %
-            
+
+            % Extract Solver name
+            solverName = regexpi(metaclass(solver).Name, '(?<=\.)[^.]+(?=\.)', 'match','once');
+            % Apply solver dependent inputset values
             % Store inputSet as object property
-            solver.inputSet = inputSet;
+            solver.inputSet = inputSet.applySolverDependentProps(solverName);
 
         end
         

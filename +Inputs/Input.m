@@ -1,4 +1,4 @@
-classdef (HandleCompatible) Input < dynamicprops
+classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
     %INPUT Su
     %   Detailed explanation goes here
 
@@ -143,7 +143,8 @@ classdef (HandleCompatible) Input < dynamicprops
             end
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected')...
+                cellfun(@(setaccess) isa(setaccess, 'meta.class'), [metaclass(obj).PropertyList.SetAccess]) ...
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'SOLVERDEPENDENTPROPS')...
                 & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra')...
                 & ~strcmp(string({metaclass(obj).PropertyList.Name}),'warnings'));
 
@@ -220,6 +221,59 @@ classdef (HandleCompatible) Input < dynamicprops
                 % TODO: Throw error for requesting too many outputs
             end
 
+        end
+
+        function out = applySolverDependentProperties(obj, solverName)
+            
+            % Make copy of obj to avoid overwriting the dependency
+            % specification
+            out = copy(obj);
+
+            % Convert solvername to upper
+            solverName = upper(solverName);
+
+            % Check if SOLVERDEPENDENTPROPS is a property
+            %   simply exit if not
+            if ~isprop(out, 'SOLVERDEPENDENTPROPS')
+                return;
+            end
+
+            % Iterate through each field in SOLVERDEPENDENTPROPS
+            depPropNames = fields(out.SOLVERDEPENDENTPROPS);
+            for i = length(depPropNames)
+                % Name of property
+                depPropName = depPropNames{i};
+                
+                % Details of the solver dependency
+                depProp = out.SOLVERDEPENDENTPROPS.(depPropName);
+                
+                % Retrieve flag that shows property is solver dependent
+                dep_flag = depProp.DEP_FLAG;
+                
+                % See if property is set to be dependent
+                if out.(depPropName) == dep_flag
+                    
+                    % Find solver in depProp details
+                    if isfield(depProp, solverName)
+                        % Identify detail type
+                        if isenum(depProp.(solverName)) || out.(depPropName)
+                            % Simply replace an enum or numeric value
+                            out.(depPropName) = depProp.(solverName);
+                        elseif isstruct(depProp.(solverName))
+                            % Expect a field called value
+                             out.(depPropName) = depProp.(solverName).value;
+                             % TODO: Handle further instructions. For
+                             % example, models that require different
+                             % coefficients can be specified and applied
+                             % here. This case is not tested.
+                        end
+                    % Apply default if
+                    elseif isfield(depProp, 'DEFAULT')
+                        out.(depPropName) = depProp.DEFAULT;
+                    end
+                end
+            end
+    
         end
 
     end

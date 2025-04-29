@@ -91,6 +91,20 @@ classdef InputSet
             obj.session.log.diaryOff();
 
         end
+        
+        function inputSet = applySolverDependentProps(inputSet, solverName)
+            arguments
+                inputSet        Inputs.InputSet
+                solverName      {mustBeTextScalar}
+            end
+            
+            inputSet.model = inputSet.model.applySolverDependentProperties(solverName);
+            inputSet.options = inputSet.options.applySolverDependentProperties(solverName);
+            inputSet.geometry = inputSet.geometry.applySolverDependentProperties(solverName);
+            inputSet.bc = inputSet.bc.applySolverDependentProperties(solverName);
+
+        end
+    
     end
 
     

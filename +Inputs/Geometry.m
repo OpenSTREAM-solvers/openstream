@@ -2,7 +2,7 @@ classdef Geometry < Inputs.Input
     %GEOMETRY Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         ID         (1,1) string  {mustBeTextScalar}                                                % Channel ID
         LENGTH     (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Axial length [m]

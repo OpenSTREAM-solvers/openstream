@@ -2,7 +2,7 @@ classdef Model < Inputs.Input
     %MODEL Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         ID               (1,1) string  {mustBeTextScalar}                                                    % Model ID 
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
@@ -70,7 +70,7 @@ classdef Model < Inputs.Input
         OKAWACOEFS       (1,:) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1]           % Coefficients of Okawa entrainment model [-]
         
         MOMENTFILM       (1,1) InputEnums.MOMENTFILM                       = 'ALGEBRAIC'                     % Film momentum conservation model
-        VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'                        % Vapor friction model
+        VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'SOLVER_DEPENDENT'              % Vapor friction model [-]  
         VAPORFRICCST     (1,1) double  {mustBePositive}                    = 0.005                           % Vapor friction constant [-]
         THINFILMFRIC     (1,1) InputEnums.THINFILMFRIC                     = 'TURBULENT'                     % Thin film wall friction model
         THINFILMTHICK    (1,1) double  {mustBePositive}                    = 1E-4                            % Minimum thin film thickness [m]        
@@ -103,7 +103,13 @@ classdef Model < Inputs.Input
     end
 
     properties (Constant)
-        G                (1,1) double  {mustBeNumeric}                     = 9.81                            % [m/s^2] Gravitational acceleration
+        G             (1,1) double  {mustBeNumeric}                        = 9.81                  % [m/s^2] Gravitational acceleration
+        SOLVERDEPENDENTPROPS                                               = struct("VAPORFRIC", ...
+                                                                                    struct('THREEFIELD', InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'FOURFIELD', InputEnums.VAPORFRIC.CONSTANT, ...
+                                                                                            'DEFAULT', InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'DEP_FLAG', InputEnums.VAPORFRIC.SOLVER_DEPENDENT) ...
+                                                                                    );
     end
 
     methods

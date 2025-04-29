@@ -2,7 +2,7 @@ classdef Options < Inputs.Input
     %OPTIONS Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         ID               (1,1) string  {mustBeTextScalar}                                          % Option ID
         AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Axial power interpolation method
