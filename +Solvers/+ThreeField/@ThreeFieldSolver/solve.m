@@ -89,7 +89,11 @@ function solver(solveINIT)
         tfSolver.log('Time %5.2f [s]',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
-        RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
+        if solveINIT
+            RHOF = fluid.RHOF;                                              % [kg/m^3] Saturated liquid density
+        else
+            RHOF = fluid(tIdx).RHOF;                                        % [kg/m^3] Saturated liquid density
+        end
 
         % Update three-field property guesses from previous time step
         film(tIdx-1).copyFlowProperties(film(tIdx));
