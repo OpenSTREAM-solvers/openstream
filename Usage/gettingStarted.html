@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -5,24 +7,18 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Getting started &mdash; OpenSTREAM  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=5ebca485" />
 
   
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -40,7 +36,6 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
-              <img src="../_static/OpenSTREAM-logo-icon-narrow-transparentBackground.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -112,9 +107,9 @@
 <h2>Prerequisites and installation<a class="headerlink" href="#prerequisites-and-installation" title="Link to this heading"></a></h2>
 <p>OpenSTREAM is a MATLAB program for simulating two-phase flow
 behaviors. The Python version of
-<a class="reference external" href="http://www.coolprop.org/index.html#what-is-coolprop" rel="noopener noreferrer" target="_blank">CoolProp</a> is
+<a class="reference external" href="http://www.coolprop.org/index.html#what-is-coolprop" rel="noreferrer" target="_blank">CoolProp</a> is
 used for calculating the fluid properties.
-<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noopener noreferrer" target="_blank">CoolPropWrapper</a> is a
+<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a> is a
 MATLAB interface that interacts with CoolProp through Python. Both
 OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
 (cloning) of these programs will be our first step.</p>
@@ -122,9 +117,9 @@ OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
 <h3>Install using Git and Github<a class="headerlink" href="#install-using-git-and-github" title="Link to this heading"></a></h3>
 <ul>
 <li><p>There are two main ways of interacting with GitHub to use and
-contribute to the OpenSTREAM project: <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/set-up-git" rel="noopener noreferrer" target="_blank">Git Command Line Interface
+contribute to the OpenSTREAM project: <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/set-up-git" rel="noreferrer" target="_blank">Git Command Line Interface
 (CLI)</a>,
-and the <a class="reference external" href="https://desktop.github.com/" rel="noopener noreferrer" target="_blank">GitHub Desktop</a> program. Use
+and the <a class="reference external" href="https://desktop.github.com/" rel="noreferrer" target="_blank">GitHub Desktop</a> program. Use
 the links to set up one of the methods.</p></li>
 <li><p>After installing and setting up your Git mechanism of choice, if you
 chose to use the:</p>
@@ -133,16 +128,16 @@ chose to use the:</p>
 <ul>
 <li><p>Clone (make a copy of) the <strong>repo</strong>sitory using:
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">git&#64;github.com:OpenSTREAM-solvers/openstream.git</span></code>
-(<a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" rel="noopener noreferrer" target="_blank">SSH
+(<a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" rel="noreferrer" target="_blank">SSH
 authentication</a>)</p>
 <p>or</p>
 <p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">https://github.com/OpenSTREAM-solvers/openstream.git</span></code>
-(<a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git" rel="noopener noreferrer" target="_blank">HTTPS
+(<a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git" rel="noreferrer" target="_blank">HTTPS
 authentication</a>).</p>
 <p>(The <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> flag is needed to clone
-<a class="reference external" href="https://git-scm.com/book/en/v2/Git-Tools-Submodules" rel="noopener noreferrer" target="_blank">submodules</a>,
+<a class="reference external" href="https://git-scm.com/book/en/v2/Git-Tools-Submodules" rel="noreferrer" target="_blank">submodules</a>,
 such as the
-<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noopener noreferrer" target="_blank">mfval/CoolPropWrapper</a>,
+<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">mfval/CoolPropWrapper</a>,
 in one command.)</p>
 </li>
 <li><p>Then, use <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">openstream</span></code> to enter the newly created
@@ -166,10 +161,10 @@ linked above.</p></li>
 <p>Before using the OpenSTREAM, we need to make sure Python with the
 appropriate version is installed, and MATLAB knows the location of the
 Python executable. The following instructions are from the
-<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noopener noreferrer" target="_blank">CoolPropWrapper</a> repo.</p>
+<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a> repo.</p>
 <ol class="arabic simple">
 <li><p>Determine which versions of Python are compatible with your version
-of MATLAB: <a class="reference external" href="https://www.mathworks.com/support/requirements/python-compatibility.html" rel="noopener noreferrer" target="_blank">compatibility
+of MATLAB: <a class="reference external" href="https://www.mathworks.com/support/requirements/python-compatibility.html" rel="noreferrer" target="_blank">compatibility
 list</a>.
 The second column, <em>MATLAB Interface MATLAB Engine</em>, shows the
 compatible Python versions.</p></li>
@@ -187,7 +182,7 @@ shown, go to step 3.</p></li>
 <li><p>Install compatible Python3</p>
 <ul class="simple">
 <li><p><strong>Windows</strong>: Go to
-<a class="reference external" href="https://www.python.org/downloads/" rel="noopener noreferrer" target="_blank">python.org</a> to download the
+<a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">python.org</a> to download the
 specific version of Python you need. Follow the setup procedure.</p></li>
 <li><p><strong>Linux</strong>: Chances are, you already have a version of Python
 installed. Verify the version using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If

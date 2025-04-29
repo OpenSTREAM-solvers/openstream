@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -5,24 +7,18 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contribute to the documentation &mdash; OpenSTREAM  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=5ebca485" />
 
   
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -40,7 +36,6 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
-              <img src="../_static/OpenSTREAM-logo-icon-narrow-transparentBackground.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -118,12 +113,12 @@
 <li><p>Setup Sublime Text as text editor</p></li>
 <li><p>Configure Python to compile the documentation</p></li>
 </ul>
-<p>The contents of this guide is partially taken from <a class="reference external" href="https://sublime-and-sphinx-guide.readthedocs.io/en/latest/create_project.html" rel="noopener noreferrer" target="_blank">here</a>.</p>
+<p>The contents of this guide is partially taken from <a class="reference external" href="https://sublime-and-sphinx-guide.readthedocs.io/en/latest/create_project.html" rel="noreferrer" target="_blank">here</a>.</p>
 <section id="setup-sublime-text-as-text-editor">
 <h2>Setup Sublime Text as text editor<a class="headerlink" href="#setup-sublime-text-as-text-editor" title="Link to this heading"></a></h2>
 <p>Any text editor, such as Vi, Nano, Sublime Text, and Visual Studio Code, or integrated development environment(IDE) software, such as Visual Studio, can be used to write and manage the files needed to create this documentation. For convenience, Sublime Text will be used for this guide.</p>
 <ol class="arabic simple">
-<li><p>Download and install <a class="reference external" href="https://www.sublimetext.com/download" rel="noopener noreferrer" target="_blank">Sublime Text</a>.</p></li>
+<li><p>Download and install <a class="reference external" href="https://www.sublimetext.com/download" rel="noreferrer" target="_blank">Sublime Text</a>.</p></li>
 <li><p>Open Sublime Text.</p></li>
 <li><p>Install <cite>Package Control</cite>. On the top menu bar, select <cite>Tools &gt; Command Palette</cite>, or press <cite>Ctrl+shift+p</cite> (Win, Linux), <cite>cmd+shift+p</cite> (Mac). In the search bar that pops up, type <cite>Install Package Control</cite>. Select the matching item that is listed, or press <cite>Enter</cite>. The installation progress will be shown on the bottom left corner of the window.</p></li>
 <li><p>Package Control is driven by the Command Palette. To open the palette, press <cite>ctrl+shift+p</cite> (Win, Linux) or <cite>cmd+shift+p</cite> (Mac). All Package Control commands begin with Package Control:, so start by typing <cite>Package</cite>. Select <cite>Install Package</cite>, and install the following packages:</p>
@@ -142,13 +137,13 @@
 <h3>Setup Python<a class="headerlink" href="#setup-python" title="Link to this heading"></a></h3>
 <p>To build your document in HTML (or other formats) on your computer, you must
 install Sphinx.</p>
-<p>See <a class="reference external" href="http://www.sphinx-doc.org/en/stable/" rel="noopener noreferrer" target="_blank">Sphinx Overview</a> for background reading. Then follow the steps below.</p>
+<p>See <a class="reference external" href="http://www.sphinx-doc.org/en/stable/" rel="noreferrer" target="_blank">Sphinx Overview</a> for background reading. Then follow the steps below.</p>
 <ol class="arabic">
-<li><p>If you are using Windows, you might need to <a class="reference external" href="https://www.python.org/downloads/" rel="noopener noreferrer" target="_blank">Install Python</a>.</p>
-<p>Depending on your Windows setup, after installation you might need to manually add the Python directory to your path. Try the <a class="reference external" href="https://www.youtube.com/watch?v=L5t5U0XnSew" rel="noopener noreferrer" target="_blank">Python Windows Install</a> for help.</p>
+<li><p>If you are using Windows, you might need to <a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">Install Python</a>.</p>
+<p>Depending on your Windows setup, after installation you might need to manually add the Python directory to your path. Try the <a class="reference external" href="https://www.youtube.com/watch?v=L5t5U0XnSew" rel="noreferrer" target="_blank">Python Windows Install</a> for help.</p>
 <p>If you are using a Mac, it’s probably installed.</p>
 </li>
-<li><p><a class="reference external" href="https://pip.pypa.io/en/stable/installation/" rel="noopener noreferrer" target="_blank">Install PIP</a>.</p>
+<li><p><a class="reference external" href="https://pip.pypa.io/en/stable/installation/" rel="noreferrer" target="_blank">Install PIP</a>.</p>
 <p>Depending on your Windows setup, after installation you might need to manually add the PIP directory to your path.</p>
 </li>
 <li><p>Install <cite>virtualenv</cite></p>
@@ -198,7 +193,7 @@ install Sphinx.</p>
 </section>
 <section id="start-writing">
 <h2>Start writing<a class="headerlink" href="#start-writing" title="Link to this heading"></a></h2>
-<p>This documentation is written in reStructuredText and compiled using Sphinx, both of which offers extensive options and customizabilities that can be difficult to master quickly. reStructuredText is similar to Markdown, which is the format used for GitHub <cite>README.md</cite> files. It is recommended that you go through <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/step-1/" rel="noopener noreferrer" target="_blank">this quick tutorial</a> to familiarize yourself with the syntax. Sphinx-doc also offers a <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer" rel="noopener noreferrer" target="_blank">great tutorial</a>. Some useful cheatsheets can be found <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/cheatsheet/" rel="noopener noreferrer" target="_blank">here</a>.</p>
+<p>This documentation is written in reStructuredText and compiled using Sphinx, both of which offers extensive options and customizabilities that can be difficult to master quickly. reStructuredText is similar to Markdown, which is the format used for GitHub <cite>README.md</cite> files. It is recommended that you go through <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/step-1/" rel="noreferrer" target="_blank">this quick tutorial</a> to familiarize yourself with the syntax. Sphinx-doc also offers a <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-primer" rel="noreferrer" target="_blank">great tutorial</a>. Some useful cheatsheets can be found <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/cheatsheet/" rel="noreferrer" target="_blank">here</a>.</p>
 </section>
 <section id="build-the-documentation">
 <h2>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Link to this heading"></a></h2>
