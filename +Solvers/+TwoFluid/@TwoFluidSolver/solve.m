@@ -51,9 +51,8 @@ function solver(solveINIT)
         twfSolver.log('\nSolve steady-state ...\n');
         liquid = twfSolver.liquidInit;
         vapor = twfSolver.vaporInit;
-        fluid = twfSolver.fluidInit;
-        mix = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
-        solveMODE = 'INITIAL';
+        %fluid = twfSolver.fluidInit;
+        %solveMODE = 'INITIAL';
     else
         if length(twfSolver.liquid) < 2
             return
@@ -61,9 +60,8 @@ function solver(solveINIT)
         twfSolver.log('\nSolve transient ...\n');
         liquid = twfSolver.liquid;
         vapor = twfSolver.vapor;
-        fluid = twfSolver.fluid;
-        mix = twfSolver.mixSolver.mixture;
-        solveMODE = 'SPECIFIED';
+        %fluid = twfSolver.fluid;
+        %solveMODE = 'SPECIFIED';
     end
 
     % set SOLVED flag to SOLVECONVERGED
@@ -120,21 +118,15 @@ function solver(solveINIT)
                 Uviter = vapor(tIdx).U(zIdx);                              % [m/s] Vapor velocity
                 Hviter = vapor(tIdx).H(zIdx);                              % [J/kg] Vapor enthalpy
                 
-                % Update secondary parameters
-                %VEL   = mix(tIdx).U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array for speed
-                %U     = VEL(2); Uups = VEL(1);                                          % [m/s] Mixture velocities at node k and k-1
-                %Uold  = mix(tIdx-1).U(zIdx);                                            % [m/s] Mixture velocity at previous time step
-                %RHO   = mix(tIdx).RHO(zIdx);                                            % [kg/m^3] Mixture density
-                %TAUW  = mix(tIdx).TAUW(zIdx);                                           % [Pa] Wall shear stress
-                %HFLUX = mix(tIdx).HFLUX(zIdx,:);                                        % [W/m^2] Wall heat flux
-                
                 % Liquid mass conservation
                 Mtot = liquid(tIdx).MTOT(vapor(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with liquid
+                Mtot = sum(Mtot,2);                                                      % [kg/s/m] Lumped approach
                 Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);         % [kg/s] Update liquid mass flow rate
                 liquid(tIdx).W(zIdx) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
                 
                 % Vapor mass conservation
                 Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with vapor
+                Mtot = sum(Mtot,2);
                 Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);         % [kg/s] Update vapor mass flow rate
                 vapor(tIdx).W(zIdx) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
                 
@@ -177,12 +169,14 @@ function solver(solveINIT)
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid
+                Htot = sum(Htot,2);
                 Htot = Htot/(Wliter/Uliter); Htot(Wliter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hlnew = (Hlups*Uliter+Hlold*DZ/DT+Htot*DZ)/(Uliter+DZ/DT);                 % [J/kg] Update liquid enthalpy
                 liquid(tIdx).H(zIdx) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew;   % [J/kg] Apply relaxation
                 
                 % Vapor energy conservation
                 Htot = vapor(tIdx).HTOT(liquid(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with vapor
+                Htot = sum(Htot,2);
                 Htot = Htot/(Wviter/Uviter); Htot(Wviter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hvnew = (Hvups*Uviter+Hvold*DZ/DT+Htot*DZ)/(Uviter+DZ/DT);                 % [J/kg] Update vapor enthalpy
                 vapor(tIdx).H(zIdx) = (1-options.RELAXHV)*Hviter+options.RELAXHV*Hvnew;    % [J/kg] Apply relaxation
@@ -225,7 +219,7 @@ function solver(solveINIT)
         maxDWv = max(vapor(tIdx).ITR.DW);
         maxDUv = max(vapor(tIdx).ITR.DU);
         maxDHv = max(vapor(tIdx).ITR.DH);
-        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
+        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]                    \r',maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
         
         % Temporal deviations in W, U, and H
         timeDWl = max(abs(liquid(tIdx).W - liquid(tIdx-1).W));
@@ -262,7 +256,7 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 twfSolver.STATE = "INITIALSTEPNOTCONVERGED";
-                twfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDHl,timeDHv) % ,timeDP,timeDH , P = %.5f [Pa], H = %.5f [J/kg]
+                twfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
                 twfSolver.liquidInit(end).copyFlowProperties(twfSolver.liquid(1));

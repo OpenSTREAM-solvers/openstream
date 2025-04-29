@@ -7,7 +7,7 @@ classdef Model < Inputs.Input
         ID               (1,1) string  {mustBeTextScalar}                                          % Model ID 
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
                                                                            = []                    % Number of axial nodes 
-        FLUID            (1,1) string  {mustBeTextScalar}                  = "WATER"               % Fluid ID
+        FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'               % Fluid ID
         PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'           % Fluid property assumptions
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                     % Flow axis angle from vertical [deg]
         
@@ -20,17 +20,21 @@ classdef Model < Inputs.Input
         TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'         % Two-phase local loss multiplier
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'         % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                     % Phase velocity ratio [-]
+        
+        WBOILINGXSUB     (1,1) double  {mustBeNonpositive}                 = -1                    % Equilibrium thermodynamic quality at onset of subcooled wall boiling [-]
+        WBOILINGXSAT     (1,1) double  {mustBeNumeric}                     =  0                    % Equilibrium thermodynamic quality at onset of saturated wall boiling [-]
+        WBOILINGN        (1,1) double  {mustBePositive}                    = 1                     % Wall boiling function exponent [-]
         CBT              (1,1) InputEnums.CBT                              = 'NONE'                % Critical Boiling Transition model 
+        CBTMULT          (1,1) string  {mustBeTextScalar}                  = '1'                   % Critical boiling Heat flux multiplier 
+
         THERMALNONEQ     (1,1) InputEnums.THERMALNONEQ                     = 'EQUILIBRIUM'         % Thermal non-equilibrum model
-        RELAXX           (1,:) double                                      = [-0.5 0.0]            % Thermal non-equilibrium interfacial phase change relaxation time thermodynamic quality [-]
-        RELAXT           (1,:) double                                      = [0.15 0.10 0.10 0.01] % Thermal non-equilibrium interfacial phase change relaxation time array, at post-CBT and at local perturbations [s]
-        WBOILINGX0       (1,1) double  {mustBeNegative}                    = -1                    % Thermal non-equilibrium thermodynamic quality at onset of wall boiling evaporation [-]
-        WBOILINGN        (1,1) double  {mustBePositive}                    = 1                     % Thermal non-equilibrium exponent of wall boiling function [-]
+        RELAXX           (1,:) double                                      = [-0.5  0.0 ]          % Interfacial phase change relaxation time thermodynamic quality [-]
+        RELAXTCOND       (1,:) double                                      = [ 0.15 0.10 0.01]     % Interfacial condensation relaxation time array and at local perturbations [s]
+        RELAXTEVAP       (1,:) double                                      = [ 0.15 0.10 0.01]     % Interfacial evaporation  relaxation time array and at local perturbations [s]
         
         % Two-fluid solver models
-        MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'SLIP'                % Liquid momentum conservation model
-        MOMENTGAS        (1,1) InputEnums.MOMENTGAS                        = 'SLIP'                % Gas momentum conservation model  
-        BOILCOEF         (1,1) InputEnums.BOILCOEF                         = 'QUADRATIC'           % Subcooled boiling interpolation
+        MOMENTLIQUID     (1,1) InputEnums.MOMENTLIQUID                     = 'MIXTURE'             % Liquid momentum conservation model
+        MOMENTGAS        (1,1) InputEnums.MOMENTGAS                        = 'MIXTURE'             % Gas momentum conservation model  
         INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'            % Interfacial length scale model model
         INTAREA          (1,1) InputEnums.INTAREA                          = 'DISPGAS2DISPLIQ'     % Interfacial area model
         INTLENGTHCST     (1,1) double                                      = 2E-3                  % Constant interfacial length scale [m]
@@ -42,13 +46,11 @@ classdef Model < Inputs.Input
         RANZMARSHALLLCST (1,4) double                                      = [2 0.6 1/2 1/3]       % Dispersed liquid Ranz-Marshall coefficients [-]
         LOCRELVEL        (1,1) InputEnums.LOCRELVEL                        = 'SCALED'              % Local relative velocity model
         RELVELCST        (1,1) double                                      = 1E-1                  % Multiplication factor to determine the local relative velocity [-]
-        RELAXTCOND       (1,1) double                                      = 0.2                   % Condensation relaxation time [s]
-        RELAXTEVAP       (1,1) double                                      = 0.2                   % Evaporation relaxation time [s]
         
         % Three-field solver models
         POSFILM          (1,1) logical                                     = true                  % Keep positive film flowrate/thickness
         OAF              (1,1) InputEnums.OAF                              = 'WALLIS'              % Onset of annular flow model
-        OAFENTRAINED     (1,1) InputEnums.OAFENTRAINED                     = 'EQUILIBRIUM'         % Entrained model at onset of annular flow
+        OAFENTRAINED     (1,1) InputEnums.OAFENTRAINED                     = 'EQUILIBRIUM'         % Entrained drop model at onset of annular flow
         OAFDROPRATIO     (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}   = 0.7                   % Drop/Liquid mass ratio at onset of annular flow [-]
         OAFTRANSITION    (1,2) double  {mustBeNumeric}                     = [0.10 0.0]            % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         DEPOSITION       (1,1) InputEnums.DEPOSITION                       = 'OKAWA'               % Drop deposition model

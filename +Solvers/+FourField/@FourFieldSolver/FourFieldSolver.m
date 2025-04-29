@@ -79,6 +79,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
             % Setup inner iteration value struct
             ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU"]);
+            ITRf.DWL = repmat(ITRf.DWL,1,geom.NWALL);
+            ITRf.DU  = repmat(ITRf.DU,1,geom.NWALL);
             ITRd = ffSolver.CreateITR(ffSolver.NZ, ["N","DU"]);
 
             % Create film and drop arrays (by timestep)
@@ -571,10 +573,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             end
             
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
-            if length(opt.tIdx) < 2
-                ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
-                return
-            end
             
             switch opt.solveMode
                 case 'TRANSIENT'
@@ -595,6 +593,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             end
             
             time = [flm.TIME];
+            if length(time) < 2
+                ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                return
+            end
             if opt.reverseTime
                 time = time -time(end);
             end

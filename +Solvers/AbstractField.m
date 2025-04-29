@@ -27,7 +27,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
     end
 
     properties (SetAccess = protected)
-        flowProperties (:,:) cell = {'W','U','H'}            % Flow properties used for copying
+        flowProperties (:,:) cell = {'W','U','H','ITR'}                    % Flow properties used for copying
     end
 
     methods

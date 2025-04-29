@@ -5,7 +5,7 @@ classdef THERMALNONEQ
         EQUILIBRIUM % Equilibrium model
         SAHAZUBER   % Saha-Zuber subcooled boiling
         EPRI        % EPRI subcooled boiling
-        TRELAX      % Time relaxation subcooled boiling & post-CHF model
+        RELAXATION  % Time relaxation subcooled boiling & post-CHF model
     end
 end
     

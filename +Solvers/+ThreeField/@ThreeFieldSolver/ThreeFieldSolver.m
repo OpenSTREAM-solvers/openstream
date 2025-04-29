@@ -80,6 +80,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Setup inner iteration value struct
             ITRFields = ["N","DWL","DU"];
             ITRf = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
+            ITRf.DWL = repmat(ITRf.DWL,1,geom.NWALL);
+            ITRf.DU  = repmat(ITRf.DU,1,geom.NWALL);
             ITRFields = ["N","DU"];
             ITRd = tfSolver.CreateITR(tfSolver.NZ, ITRFields);
 
@@ -442,10 +444,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
             
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
-            if length(opt.tIdx) < 2
-                tfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
-                return
-            end
             
             switch opt.solveMode
                 case 'TRANSIENT'
@@ -466,6 +464,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
             
             time = [flm.TIME];
+            if length(time) < 2
+                tfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                return
+            end
             if opt.reverseTime
                 time = time -time(end);
             end
