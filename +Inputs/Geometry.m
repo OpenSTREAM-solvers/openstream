@@ -72,18 +72,20 @@ classdef Geometry < Inputs.Input
                 obj.extra = obj.inputStruct;
             end
 
-           % Default value used warning
-            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
-            if nargout == 0
-                warning('Geometry:defaultValueUsedWarning', ...
-                    sprintf('%s\n',defaultValueWarningString));
-            else
-                w = struct('warnID', 'Geometry:defaultValueUsedWarning', ...
-                           'msg', defaultValueWarningString);
-                if isempty(obj.warnings)
-                    obj.warnings = w;
+            % Default value used warning
+            if ~isempty(defaultValueFieldNames)
+                defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+                if nargout == 0
+                    warning('Geometry:defaultValueUsedWarning', ...
+                        sprintf('%s\n',defaultValueWarningString));
                 else
-                    obj.warnings(end+1) = w;
+                    w = struct('warnID', 'Geometry:defaultValueUsedWarning', ...
+                               'msg', defaultValueWarningString);
+                    if isempty(obj.warnings)
+                        obj.warnings = w;
+                    else
+                        obj.warnings(end+1) = w;
+                    end
                 end
             end
 
