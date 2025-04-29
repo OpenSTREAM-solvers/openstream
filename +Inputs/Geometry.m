@@ -37,6 +37,7 @@ classdef Geometry < Inputs.Input
             
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();
+            defaultValues = {};
 
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -52,6 +53,7 @@ classdef Geometry < Inputs.Input
                                     upper(obj.inputStruct.(objPropname));
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                    defaultValues{end+1} = defaultValue;
                 end
                 
                 if isSpecified
@@ -70,12 +72,19 @@ classdef Geometry < Inputs.Input
                 obj.extra = obj.inputStruct;
             end
 
-            % If default values were used, warn user
-            if ~isempty(defaultValueFieldNames)
-                warning( ...
-                    '%s: Default values were used for these entries: \n\t %s ', ...
-                    upper(class(obj)), sprintf('%s ',defaultValueFieldNames{:}) ...
-                    );
+           % Default value used warning
+            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+            if nargout == 0
+                warning('Geometry:defaultValueUsedWarning', ...
+                    sprintf('%s\n',defaultValueWarningString));
+            else
+                w = struct('warnID', 'Geometry:defaultValueUsedWarning', ...
+                           'msg', defaultValueWarningString);
+                if isempty(obj.warnings)
+                    obj.warnings = w;
+                else
+                    obj.warnings(end+1) = w;
+                end
             end
 
             % Remove dynamic property inputStruct

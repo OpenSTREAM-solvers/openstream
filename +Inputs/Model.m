@@ -100,6 +100,7 @@ classdef Model < Inputs.Input
             
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();
+            defaultValues = {};
 
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -109,17 +110,33 @@ classdef Model < Inputs.Input
                 
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
-                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
+                [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname,id=modelID);
                 if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                    defaultValues{end+1} = defaultValue;
                 end
-                
-                if isSpecified
+
+                if isSpecified 
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
+                end
+            end
+
+            % Default value used warning
+            defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+            if nargout == 0
+                warning('Model:defaultValueUsedWarning', ...
+                    sprintf('%s\n',defaultValueWarningString));
+            else
+                w = struct('warnID', 'Model:defaultValueUsedWarning', ...
+                           'msg', defaultValueWarningString);
+                if isempty(obj.warnings)
+                    obj.warnings = w;
+                else
+                    obj.warnings(end+1) = w;
                 end
             end
 
