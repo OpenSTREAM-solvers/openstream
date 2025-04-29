@@ -47,7 +47,7 @@ MOMENTFILM !                                                                > FU
 MOMENTDROP !                                                                > slip
 DROPSLIP !                                                                  > 1.0
 DEPOSITION !                                                                > OKAWA
-ENTRAINMENT !                                                               > OKAWA
+ENTRAINMENT !                                                               > OKAWA2003
 %THINFILMFRIC ! % Thin film thickness [m]                                    > LAMINAR
 POSFILM !                                                                   > 1
 END
