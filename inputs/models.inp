@@ -1,127 +1,130 @@
-ID         ! Model ID                                                       > WATERS
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > water
-PROPERTIES ! Fluid property assumptions                                     > saturated
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           > 1   2   3   4
-KLOSS      ! corresponding pressure loss coefficients [-]                   > 0.5 0.5 0.5 0.5
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > slip
-SLIP       ! Phase velocity ratio [-]                                       > 1
+ID            ! Model ID                                                   > WATERS
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > water
+PROPERTIES    ! Fluid property assumptions                                 > saturated
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > homogeneous
+KLOC          ! Elevation of local perturbations [m]                       > 1   2   3   4
+KLOSS         ! corresponding pressure loss coefficients [-]               > 0.5 0.5 0.5 0.5
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > slip
+SLIP          ! Phase velocity ratio [-]                                   > 1
 END
 
-ID         ! Model ID                                                       > WATERP
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > water
-PROPERTIES ! Fluid property assumptions                                     > psystem
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           > 1   2   3
-KLOSS      ! corresponding pressure loss coefficients [-]                   > 0.5 0.5 0.5
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > homogeneous
-SLIP       ! Phase velocity ratio [-]                                       > 1
+ID            ! Model ID                                                   > WATERP
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > water
+PROPERTIES    ! Fluid property assumptions                                 > psystem
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > homogeneous
+KLOC          ! Elevation of local perturbations [m]                       > 1   2   3
+KLOSS         ! corresponding pressure loss coefficients [-]               > 0.5 0.5 0.5
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > homogeneous
+SLIP          ! Phase velocity ratio [-]                                   > 1
 END
 
-ID         ! Model ID                                                       > MFVALS
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > r245fa
-PROPERTIES ! Fluid property assumptions                                     > saturated
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           >
-KLOSS      ! corresponding pressure loss coefficients [-]                   >
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > homogeneous
-SLIP       ! Phase velocity ratio [-]                                       > 1
-OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
-OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
-OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > RATIO
-OAFTRANSITION !  % Annular flow transition function parameters  [m]         > [0.04 0.0]
-OAFBASERATIO !                                                              > 0.5
-MOMENTFILM !                                                                > FULL
-MOMENTDROP !                                                                > slip
-DROPSLIP !                                                                  > 1.0
-DEPOSITION !                                                                > OKAWA
-ENTRAINMENT !                                                               > OKAWA
-%THINFILMFRIC ! % Thin film thickness [m]                                    > LAMINAR
-POSFILM !                                                                   > 1
+ID            ! Model ID                                                   > MFVALS
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > r245fa
+PROPERTIES    ! Fluid property assumptions                                 > saturated
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > homogeneous
+KLOC          ! Elevation of local perturbations [m]                       >
+KLOSS         ! corresponding pressure loss coefficients [-]               >
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > homogeneous
+SLIP          ! Phase velocity ratio [-]                                   > 1
+OAF           ! Onset of annular flow model                                > WALLIS_SIMP
+OAFDROPRATIO  ! Drop/Liquid mass flow ratio at onset of annular flow       > 0.5
+OAFENTRAINED  ! Drop/Liquid mass flow ratio at onset of annular flow       > RATIO
+OAFTRANSITION !  % Annular flow transition function parameters  [m]        > [0.04 0.0]
+OAFBASERATIO  !                                                            > 0.5
+MOMENTFILM    !                                                            > FULL
+MOMENTDROP    !                                                            > slip
+DROPSLIP      !                                                            > 1.0
+DEPOSITION    !                                                            > OKAWA
+ENTRAINMENT   !                                                            > OKAWA
+%THINFILMFRIC ! % Thin film thickness [m]                                  > LAMINAR
+POSFILM !                                                                  > 1
 END
 
-ID         ! Model ID                                                       > MFVALP
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > r245fa
-PROPERTIES ! Fluid property assumptions                                     > psystem
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           >
-KLOSS      ! corresponding pressure loss coefficients [-]                   >
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > homogeneous
-SLIP       ! Phase velocity ratio [-]                                       > 1
-MOMENTFILM !                                                                > FULL
+ID            ! Model ID                                                   > MFVALP
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > r245fa
+PROPERTIES    ! Fluid property assumptions                                 > psystem
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > homogeneous
+KLOC          ! Elevation of local perturbations [m]                       >
+KLOSS         ! corresponding pressure loss coefficients [-]               >
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > homogeneous
+SLIP          ! Phase velocity ratio [-]                                   > 1
+MOMENTFILM    !                                                            > FULL
 END
 
 
-ID         ! Model ID                                                       > BARCS
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > water
-PROPERTIES ! Fluid property assumptions                                     > saturated
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > slip
-KLOC       ! Elevation of local perturbations [m]                           > 
-KLOSS      ! corresponding pressure loss coefficients [-]                   > 
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > slip
-SLIP       ! Phase velocity ratio [-]                                       > 1.15
-OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
-OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
-%OAFENTRAINED !                                                              > EQUILIBRIUM
-OAFENTRAINED !                                                              > RATIO
-OAFBASERATIO !                                                              > 0.2
-OAFFILMSPLIT !                                                              > RATIO
-THINFILMFRIC !                                                              > TURBULENT
-MOMENTFILM !                                                                > ALGEBRAIC
-MOMENTBASE !                                                                > FULL
-MOMENTWAVE !                                                                > FULL
-MOMENTDROP !                                                                > slip
-POSFILM !                                                                   > 1
-BASEEQTHICK !                                                               > YPLUS
+ID            ! Model ID                                                   > BARCS
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > water
+PROPERTIES    ! Fluid property assumptions                                 > saturated
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > slip
+KLOC          ! Elevation of local perturbations [m]                       > 1   2   3   4   5
+KLOSS         ! corresponding pressure loss coefficients [-]               > 0.5 0.5 0.5 0.5 0.5
+KBLOCKRATIO   ! corresponding blockage ratios [-]                          > 0.2 0.2 0.2 0.2 0.1
+KTUNING       ! corresponding drop deposition enhancement coefficients     > 0.5 0.5 0.5 0.3 0.5
+DEPENHANCEMENT !                                                           > WINDECKER
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > slip
+SLIP          ! Phase velocity ratio [-]                                   > 1.15
+OAFDROPRATIO  ! Drop/Liquid mass flow ratio at onset of annular flow       > 0.5
+OAF           ! Onset of annular flow model                                > WALLIS_SIMP
+%OAFENTRAINED !                                                            > EQUILIBRIUM
+OAFENTRAINED  !                                                            > RATIO
+OAFBASERATIO  !                                                            > 0.2
+OAFFILMSPLIT  !                                                            > RATIO
+THINFILMFRIC  !                                                            > TURBULENT
+MOMENTFILM    !                                                            > ALGEBRAIC
+MOMENTBASE    !                                                            > FULL
+MOMENTWAVE    !                                                            > FULL
+MOMENTDROP    !                                                            > slip
+POSFILM       !                                                            > 1
+BASEEQTHICK   !                                                            > YPLUS
 END
 
-ID         ! Model ID                                                       > BARCP
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > water
-PROPERTIES ! Fluid property assumptions                                     > psystem
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > slip
-KLOC       ! Elevation of local perturbations [m]                           > 
-KLOSS      ! corresponding pressure loss coefficients [-]                   > 
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > slip
-SLIP       ! Phase velocity ratio [-]                                       > 1.5
-OAFDROPRATIO ! Drop/Liquid mass flow ratio at onset of annular flow         > 0.5
-OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
-OAFENTRAINED ! Drop/Liquid mass flow ratio at onset of annular flow         > EQUILIBRIUM
+ID            ! Model ID                                                   > BARCP
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > water
+PROPERTIES    ! Fluid property assumptions                                 > psystem
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > slip
+KLOC          ! Elevation of local perturbations [m]                       > 
+KLOSS         ! corresponding pressure loss coefficients [-]               > 
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > slip
+SLIP          ! Phase velocity ratio [-]                                   > 1.5
+OAFDROPRATIO  ! Drop/Liquid mass flow ratio at onset of annular flow       > 0.5
+OAF           ! Onset of annular flow model                                > WALLIS_SIMP
+OAFENTRAINED  ! Drop/Liquid mass flow ratio at onset of annular flow       > EQUILIBRIUM
 END
 
-ID         ! Model ID                                                       > TEST
-NNODES     ! Number of axial nodes                                          > 100
-FLUID      ! Fluid ID                                                       > water
-PROPERTIES ! Fluid property assumptions                                     > psystem
-FRICTION   ! Wall friction coefficients                                     > 0.2 -0.2 0.0
-TPFM       ! Two-phase friction multiplier [-]                              > homogeneous
-KLOC       ! Elevation of local perturbations [m]                           > 
-KLOSS      ! corresponding pressure loss coefficients [-]                   > 
-TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
-VOID       ! Void fraction model                                            > slip
-SLIP       ! Phase velocity ratio [-]                                       > 1
+ID            ! Model ID                                                   > TEST
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > water
+PROPERTIES    ! Fluid property assumptions                                 > psystem
+FRICTION      ! Wall friction coefficients                                 > 0.2 -0.2 0.0
+TPFM          ! Two-phase friction multiplier [-]                          > homogeneous
+KLOC          ! Elevation of local perturbations [m]                       > 
+KLOSS         ! corresponding pressure loss coefficients [-]               > 
+TPKM          ! Two-phase local loss multiplier [-]                        > homogeneous
+THERMALNONEQ  ! Thermal non-equilibrium model                              > equilibrium
+VOID          ! Void fraction model                                        > slip
+SLIP          ! Phase velocity ratio [-]                                   > 1
 END
