@@ -120,7 +120,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 
                 % Initialize mixture
                 liq.mix = Mixture(mix,liq,vap);
-                vap.mix = Mixture(mix,liq,vap);
+                vap.mix = liq.mix;
                 
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note: only 1st time step is important since other time steps are initialized by the previous time step in the solver
@@ -394,7 +394,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Vapor energy exchanges', ...
                     'xlabel',        'Axial position [m]', ...
                     'ylabel',     'Energy transfer [W/m]');
-                plotter.plotz(vap.HWALHEAT(liq,opt.zIdx),'Wall');
+                plotter.plotz(vap.HWALHEAT(opt.zIdx)    ,'Wall'                                                    );
                 plotter.plotz(vap.HWALEVAP(liq,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
                 plotter.plotz(vap.HINTEVAP(liq,opt.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
                 plotter.plotz(vap.HINTCOND(liq,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
@@ -407,7 +407,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Liquid energy exchanges', ...
                     'xlabel',         'Axial position [m]', ...
                     'ylabel',      'Energy transfer [W/m]');
-                plotter.plotz(liq.HWALHEAT(opt.zIdx)    ,'Wall');
+                plotter.plotz(liq.HWALHEAT(opt.zIdx)    ,'Wall'                                                    );
                 plotter.plotz(liq.HWALEVAP(vap,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
                 plotter.plotz(liq.HINTEVAP(vap,opt.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
                 plotter.plotz(liq.HINTCOND(vap,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
@@ -501,10 +501,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Phase mass flow rates', ...
                     'xlabel',                 'Time [s]', ...
                     'ylabel',    'Mass flow rate [kg/s]');
-                %plotter.plotz(mix.transient('W'     ,'zIdx',zIdx)','Mixture'                                    );
-                plotter.plotz(liq.transient('mix.W','zIdx',zIdx)','Liquid+Vapor','DisplayName','Liquid + Vapor');
-                plotter.plotz(liq.transient('W'     ,'zIdx',zIdx)','Liquid'                                     );
-                plotter.plotz(vap.transient('W'     ,'zIdx',zIdx)','Vapor'                                      );
+                %plotter.plotz(mix.transient('W'    ,'zIdx',zIdx)','Mixture');
+                plotter.plotz(liq.transient('mix.W','zIdx',zIdx)','Mixture');
+                plotter.plotz(liq.transient('W'    ,'zIdx',zIdx)','Liquid' );
+                plotter.plotz(vap.transient('W'    ,'zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
             
@@ -514,10 +514,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle',   'Phase velocities', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,     'Velocity [m/s]');
-                %plotter.plotz(mix.transient('U','zIdx',zIdx)','Mixture');
-                plotter.plotz(liq.transient('mix.U','zIdx',zIdx)','Liquid+Vapor','DisplayName','Liquid + Vapor');
-                plotter.plotz(liq.transient('U','zIdx',zIdx)','Liquid' );
-                plotter.plotz(vap.transient('U','zIdx',zIdx)','Vapor'  );
+                %plotter.plotz(mix.transient('U'    ,'zIdx',zIdx)','Mixture');
+                plotter.plotz(liq.transient('mix.U','zIdx',zIdx)','Mixture');
+                plotter.plotz(liq.transient('U'    ,'zIdx',zIdx)','Liquid' );
+                plotter.plotz(vap.transient('U'    ,'zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
             
@@ -528,12 +528,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,    'Enthalpy [J/kg]');
                 
-                %plotter.plotz(mix.transient('H'     ,'zIdx',zIdx)','Mixture'                                    );
-                plotter.plotz(liq.transient('mix.H','zIdx',zIdx)','Liquid+Vapor','DisplayName','Liquid + Vapor');
-                plotter.plotz(liq.transient('H'     ,'zIdx',zIdx)','Liquid'                                     );
-                plotter.plotz(vap.transient('H'     ,'zIdx',zIdx)','Vapor'                                      );
-                plotter.plotz(fld.transient('HF')'                ,'SatLiq'      ,'DisplayName','Sat liquid'    );
-                plotter.plotz(fld.transient('HG')'                ,'SatVap'      ,'DisplayName','Sat vapor'     );
+                %plotter.plotz(mix.transient('H'    ,'zIdx',zIdx)','Mixture'                           );
+                plotter.plotz(liq.transient('mix.H','zIdx',zIdx)','Mixture'                           );
+                plotter.plotz(liq.transient('H'    ,'zIdx',zIdx)','Liquid'                            );
+                plotter.plotz(vap.transient('H'    ,'zIdx',zIdx)','Vapor'                             );
+                plotter.plotz(fld.transient('HF')'               ,'SatLiq' ,'DisplayName','Sat liquid');
+                plotter.plotz(fld.transient('HG')'               ,'SatVap' ,'DisplayName','Sat vapor' );
                 plotter.legend('show', 'Location', 'best');
             end
             
@@ -543,10 +543,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Void fractions and qualities', ...
                     'xlabel'   ,                     'Time [s]', ...
                     'ylabel'   ,  'Quality / Void fraction [-]');
-                %plotter.plotz(mix.transient('XEQ',    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
-                plotter.plotz(liq.transient('mix.XEQ','zIdx',zIdx)','Liquid+Vapor','DisplayName','Liquid + Vapor');
-                plotter.plotz(vap.transient('X'  ,    'zIdx',zIdx)','Vapor'       ,'DisplayName','Vapor mass quality' );
-                plotter.plotz(vap.transient('VF' ,liq,'zIdx',zIdx)','VoidFraction','DisplayName','Void fraction'      );
+                %plotter.plotz(mix.transient('XEQ'    ,    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
+                plotter.plotz(liq.transient('mix.XEQ',    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
+                plotter.plotz(vap.transient('X'      ,    'zIdx',zIdx)','Vapor'       ,'DisplayName','Vapor mass quality' );
+                plotter.plotz(vap.transient('VF'     ,liq,'zIdx',zIdx)','VoidFraction','DisplayName','Void fraction'      );
                 plotter.legend('show', 'Location', 'best');
             end
             
@@ -647,7 +647,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Vapor energy exchanges', ...
                     'xlabel',                  'Time [s]', ...
                     'ylabel',     'Energy transfer [W/m]');
-                plotter.plotz(vap.transient('HWALHEAT',liq,'zIdx',zIdx)','Wall'                                                    );
+                plotter.plotz(vap.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
                 plotter.plotz(vap.transient('HWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
                 plotter.plotz(vap.transient('HINTEVAP',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
                 plotter.plotz(vap.transient('HINTCOND',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
