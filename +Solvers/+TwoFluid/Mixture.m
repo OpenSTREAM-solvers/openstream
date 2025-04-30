@@ -128,6 +128,7 @@ classdef Mixture < Solvers.AbstractPhase
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
         
             h = (mix.liquid.W(zIdx).*mix.liquid.H(zIdx)+mix.vapor.W(zIdx).*mix.vapor.H(zIdx))./mix.W(zIdx); % [J/kg]
+            %[mix.liquid.W(zIdx) mix.vapor.W(zIdx) mix.W(zIdx)]
         end
         
         function xeq = XEQ(mix,zIdx)

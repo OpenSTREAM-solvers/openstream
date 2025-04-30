@@ -711,10 +711,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle', 'Qualities and relaxed qualities', ...
                     'xlabel'   ,                        'Time [s]', ...
                     'ylabel'   ,                     'Quality [-]');
-                plotter.plotz(mix.transient(       'XEQ','zIdx',zIdx)','Equil'     ,'DisplayName','Equilibrium thermo. quality');
-                plotter.plotz(mix.transient(       'X'  ,'zIdx',zIdx)','Vapor'     ,'DisplayName','Vapor mass quality'         );
-                plotter.plotz(mix.transient('TRELAX.XTH','zIdx',zIdx)','RelaxEquil','DisplayName','Relaxed thermo. X'          );
-                plotter.plotz(mix.transient('TRELAX.X'  ,'zIdx',zIdx)','RelaxVapor','DisplayName','Relaxed vapor X'            );
+                plotter.plotz(mix.transient(       'XEQ','zIdx',zIdx)','Equil'     ,'DisplayName','Equilibrium quality' );
+                plotter.plotz(mix.transient(       'X'  ,'zIdx',zIdx)','Vapor'     ,'DisplayName','Vapor mass quality'  );
+                plotter.plotz(mix.transient('TRELAX.XTH','zIdx',zIdx)','RelaxEquil','DisplayName','Wall thermo. quality');
+                plotter.plotz(mix.transient('TRELAX.X'  ,'zIdx',zIdx)','RelaxVapor','DisplayName','Wall vapor quality'  );
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;

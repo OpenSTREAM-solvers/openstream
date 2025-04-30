@@ -419,14 +419,16 @@ classdef Liquid < Solvers.AbstractField
                 case {'CONSTANT','RANZMARSHALL'}
                     
                     [inthflux_evap, inthflux_cond] = liquid.INTHFLUX(vapor,zIdx);  % [W/m^2] Interfacial heat flux
+                    HL = liquid.H(zIdx);
+                    HV = vapor.H(zIdx);
                     
                     switch liquid.inputSet.model.INTTRANSH
                         case 'BULK'
-                            Mcond_flux = inthflux_cond./(vapor.H(zIdx)-liquid.H(zIdx));   % [kg/s/m^2] Condensation mass flux
-                            Mevap_flux = inthflux_evap./(vapor.H(zIdx)-liquid.H(zIdx));   % [kg/s/m^2] Evaporation mass flux
+                            Mcond_flux = inthflux_cond./(HV-HL);           % [kg/s/m^2] Condensation mass flux
+                            Mevap_flux = inthflux_evap./(HV-HL);           % [kg/s/m^2] Evaporation mass flux
                         case 'SATURATED'
-                            Mcond_flux = inthflux_cond./(liquid.fluid.HG-liquid.H(zIdx)); % [kg/s/m^2] Condensation mass flux
-                            Mevap_flux = inthflux_evap./(vapor.H(zIdx)-liquid.fluid.HF);  % [kg/s/m^2] Evaporation mass flux
+                            Mcond_flux = inthflux_cond./(liquid.fluid.HG-HL);  % [kg/s/m^2] Condensation mass flux
+                            Mevap_flux = inthflux_evap./(HV-liquid.fluid.HF);  % [kg/s/m^2] Evaporation mass flux
                     end
                     
                     AREA = liquid.inputSet.geometry.AREA;                  % [m^2] Cross-section area
@@ -436,7 +438,7 @@ classdef Liquid < Solvers.AbstractField
                 case 'RELAXATION'
                     
                     mix = liquid.mix;
-                    
+  
                     UVeq = vapor.U(zIdx);                                  % [m/s] Approximated equilibrium vapor velocity
                     %WVeq = mix.W(zIdx).*max(0,mix.XEQ(zIdx));              % [kg/s] Equilibrium vapor mass flow rate
                     WVeq = mix.W(zIdx).*mix.XEQ(zIdx);                     % [kg/s] Equilibrium vapor mass flow rate
