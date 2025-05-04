@@ -50,8 +50,9 @@ function solver(solveINIT)
     if solveINIT
         twfSolver.log('\nSolve steady-state ...\n');
         liquid = twfSolver.liquidInit;
-        vapor = twfSolver.vaporInit;
-        %fluid = twfSolver.fluidInit;
+        vapor  = twfSolver.vaporInit;
+        fluid  = twfSolver.fluidInit;
+        mix    = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
         %solveMODE = 'INITIAL';
     else
         if length(twfSolver.liquid) < 2
@@ -59,8 +60,9 @@ function solver(solveINIT)
         end
         twfSolver.log('\nSolve transient ...\n');
         liquid = twfSolver.liquid;
-        vapor = twfSolver.vapor;
-        %fluid = twfSolver.fluid;
+        vapor  = twfSolver.vapor;
+        fluid  = twfSolver.fluid;
+        mix    = tfSolver.mixSolver.mixture;
         %solveMODE = 'SPECIFIED';
     end
 
@@ -70,7 +72,7 @@ function solver(solveINIT)
     % Shortcut to inputSet objects
     model   = twfSolver.inputSet.model;
     options = twfSolver.inputSet.options;
-    geom    = twfSolver.inputSet.geometry;
+    %geom    = twfSolver.inputSet.geometry;
     
     % Uniform mesh size
     DZ = twfSolver.DZ;    
@@ -131,6 +133,7 @@ function solver(solveINIT)
                 vapor(tIdx).W(zIdx) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
                 
                 % Liquid momentum conservation
+                %TODO: Add equilibrium and simplified equilibrium options
                 switch model.MOMENTLIQUID
                     case InputEnums.MOMENTLIQUID.MIXTURE
                     % Already initialized to mixture solution
@@ -146,10 +149,14 @@ function solver(solveINIT)
                         Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                    % [N/m]
                         Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
                         Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT); % [m/s] Update liquid velocity
+                        Ulnew = min(max(Ulnew,0),1.5*mix(tIdx).liquid.U(zIdx));          % [m/s] Keep within realistic bounds to help convergence
+                        %Ulnew(Wliter <= 1E-3) = liquid(tIdx).USLIP(vapor(tIdx),zIdx);
+                        Ulnew(Wliter <= 1E-3) = Uliter;
                 end
                 liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew;   % [m/s] Apply relaxation
                 
                 % Vapor momentum conservation
+                %TODO: Add equilibrium and simplified equilibrium options
                 switch model.MOMENTGAS
                     case InputEnums.MOMENTGAS.MIXTURE
                     % Already initialized to mixture solution   
@@ -164,6 +171,9 @@ function solver(solveINIT)
                         Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                    % [N/m]
                         Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
                         Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT); % [m/s] Update vapor velocity
+                        Uvnew = min(max(Uvnew,0),1.5*mix(tIdx).vapor.U(zIdx));           % [m/s] Keep within realistic bounds to help convergence
+                        %Uvnew(Wviter <= 1E-3) = vapor(tIdx).USLIP(liquid(tIdx),zIdx);
+                        Uvnew(Wviter <= 1E-3) = Uviter;
                 end
                 vapor(tIdx).U(zIdx) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;    % [m/s] Apply relaxation
                 

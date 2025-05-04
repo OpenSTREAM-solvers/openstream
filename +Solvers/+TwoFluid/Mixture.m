@@ -114,6 +114,15 @@ classdef Mixture < Solvers.AbstractPhase
             %u = (mix.liquid.W(zIdx).*mix.liquid.U(zIdx)+mix.vapor.W(zIdx).*mix.vapor.U(zIdx))./mix.W(zIdx); % [m/s]
         end
         
+        function tauw = TAUW(mix, zIdx)
+        %TAUW wall shear stress [N/m^2]
+        %TODO: Results should be updated based on mixture inputs from two-fluid simulation
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            tauw = mix.mixture.TAUW(zIdx);                                 % [Pa/m]
+        end
+        
         function dpdz = DPDZ(mix, zIdx)
         %DPDZ Pressure gradient [Pa/m]
         %
@@ -141,6 +150,32 @@ classdef Mixture < Solvers.AbstractPhase
             
             %h = mix.H(zIdx);
             %xeq = (h-mix.fluid.HF)./(mix.fluid.HG-mix.fluid.HF); % [-]
+        end
+        
+        function vf = VF(mix,zIdx)
+        %VF Void fraction [-]
+        
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            vf = mix.vapor.VF(mix.liquid,zIdx);                            % [-]
+        end
+        
+        function oafx = OAFX(mix, zIdx)
+        %OAFX Onset of annular flow equilibrium quality [-]
+        %TODO: Results should be updated based on mixture inputs from two-fluid simulation
+        
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            oafx = mix.mixture.OAFX(zIdx);                                 % [-]
+        end
+        
+        function afDistr = AFDISTR(mix, param1, param2, zIdx)
+        %AFDISTR Annular flow distribution function
+        %TODO: Results should be updated based on mixture inputs from two-fluid simulation
+        
+            if nargin < 4, zIdx = (1:mix(1).NZ).'; end
+            
+            afDistr = mix.mixture.AFDISTR(param1,param2,zIdx);             % [-]
         end
         
         function chf = CHF(mix, zIdx)

@@ -98,10 +98,10 @@ function solver(solveINIT)
             Wold    = mix(tIdx-1).W(zIdx);                                 % [kg/s] Mixture mass flow rate at previous time step
             Uold    = mix(tIdx-1).U(zIdx);                                 % [m/s] Mixture velocity at previous time step
             Hold    = mix(tIdx-1).H(zIdx);                                 % [J/kg] Mixture enthalpy at previous time step
-            UVold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
-            WVold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                       % [m/s] Relaxed vapor mass flow rate at previous time step
-            WVTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                     % [m/s] Relaxed thermodynamic vapor mass flow rate at previous time step
-            HVold   = mix(tIdx-1).TRELAX.HV(zIdx,:);                       % [J/kg] Relaxed vapor enthalpy at previous time step
+            Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
+            Wvold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                       % [m/s] Relaxed vapor mass flow rate at previous time step
+            WvTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                     % [m/s] Relaxed thermodynamic vapor mass flow rate at previous time step
+            Hvold   = mix(tIdx-1).TRELAX.HV(zIdx,:);                       % [J/kg] Relaxed vapor enthalpy at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -132,30 +132,30 @@ function solver(solveINIT)
                         % Five-equation thermal non-equilibrium model based on time-relaxed vapor mass and energy conservations
                         
                         % Save parameters from previous point iteration
-                        WViter = mix(tIdx).TRELAX.WV(zIdx,:);                           % [J/kg] Vapor mass flow rate
-                        HViter = mix(tIdx).TRELAX.HV(zIdx,:);                           % [J/kg] Vapor enthalpy
+                        Wviter = mix(tIdx).TRELAX.WV(zIdx,:);                           % [J/kg] Vapor mass flow rate
+                        Hviter = mix(tIdx).TRELAX.HV(zIdx,:);                           % [J/kg] Vapor enthalpy
                         
                         % Update secondary parameters
-                        UV      = mix(tIdx).vapor.U(zIdx);                              % [m/s] Vapor velocity
+                        Uv     = mix(tIdx).vapor.U(zIdx);                               % [m/s] Vapor velocity
                         
                         % Vapor mass conservation
-                        MVtot = mix(tIdx).MTOT(zIdx);                                                      % [kg/s/m] Linear vapor mass transfer rate
-                        WVnew = UV.*(mix(tIdx).TRELAX.WV(zIdx-1,:)+(WVold./UVold./DT+MVtot).*DZ)./(UV+DZ/DT);
-                        WVnew = max(0,WVnew);
-                        mix(tIdx).TRELAX.WV(zIdx,:) = (1-options.RELAXWV).*WViter+options.RELAXWV.*WVnew;  % [kg/s] Apply relaxation
+                        Mvtot = mix(tIdx).MTOT(zIdx);                                                      % [kg/s/m] Linear vapor mass transfer rate
+                        Wvnew = Uv.*(mix(tIdx).TRELAX.WV(zIdx-1,:)+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
+                        Wvnew = max(0,Wvnew);
+                        mix(tIdx).TRELAX.WV(zIdx,:) = (1-options.RELAXWV).*Wviter+options.RELAXWV.*Wvnew;  % [kg/s] Apply relaxation
 
                         mix(tIdx).TRELAX.X(zIdx,:)  = mix(tIdx).TRELAX.WV(zIdx,:)./mix(tIdx).WWALL(zIdx);  % [-] Relaxed vapor quality
                         
                         % Vapor energy conservation
-                        HVtot = mix(tIdx).HVTOT(zIdx);                                                   % [J/kg/m] Linear vapor enthalpy transfer
-                        Htot  = HVtot.*UV;                                                               % [W/kg]
-                        HVnew = (UV.*mix(tIdx).TRELAX.HV(zIdx-1,:)+(HVold./DT+Htot).*DZ)./(UV+DZ/DT);    % [J/kg] Update vapor enthalpy
-                        HVnew = max(fluid(tIdx).HG,HVnew);
-                        mix(tIdx).TRELAX.HV(zIdx,:) = (1-options.RELAXHV).*HViter+options.RELAXHV.*HVnew;  % [J/kg] Apply relaxation
+                        Hvtot = mix(tIdx).HVTOT(zIdx);                                                   % [J/kg/m] Linear vapor enthalpy transfer
+                        Htot  = Hvtot.*Uv;                                                               % [W/kg]
+                        Hvnew = (Uv.*mix(tIdx).TRELAX.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);    % [J/kg] Update vapor enthalpy
+                        Hvnew = max(fluid(tIdx).HG,Hvnew);
+                        mix(tIdx).TRELAX.HV(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;  % [J/kg] Apply relaxation
                         
                         % Check convergence
-                        dWv = abs((mix(tIdx).TRELAX.WV(zIdx,:)-WViter));                                   % [kg/s] Vapor mass flow rate error between inner iterations
-                        dHv = abs((mix(tIdx).TRELAX.HV(zIdx,:)-HViter));                                   % [J/kg] Vapor enthalpy error between inner iterations
+                        dWv = abs((mix(tIdx).TRELAX.WV(zIdx,:)-Wviter));                                   % [kg/s] Vapor mass flow rate error between inner iterations
+                        dHv = abs((mix(tIdx).TRELAX.HV(zIdx,:)-Hviter));                                   % [J/kg] Vapor enthalpy error between inner iterations
                 end
                 
                 % Check convergence
@@ -175,7 +175,7 @@ function solver(solveINIT)
             % Save time relaxation terms (including near-wall terms)
             mix(tIdx).TRELAX.TIME(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);                               % [s] Time relaxation
             mix(tIdx).TRELAX.TV(zIdx,:)   = fluid(tIdx).T(mix(tIdx).TRELAX.HV(zIdx,:))';              % [J/kg] Relaxed vapor temperature
-            mix(tIdx).TRELAX.WVTH(zIdx,:) = mix(tIdx).WVTH(zIdx,WVTHold,Uold);                        % [kg/s] Relaxed thermodynamic vapor mass flow
+            mix(tIdx).TRELAX.WVTH(zIdx,:) = mix(tIdx).WVTH(zIdx,WvTHold,Uold);                        % [kg/s] Relaxed thermodynamic vapor mass flow
             mix(tIdx).TRELAX.XTH(zIdx,:)  = mix(tIdx).TRELAX.WVTH(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Relaxed thermodynamic vapor quality
             
             % Save pressure drop components

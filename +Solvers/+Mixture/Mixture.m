@@ -246,7 +246,7 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function mu = MU(mix, zIdx)
-        %MU Dynamic viscosity [Pa-s]
+        %MU Dynamic viscosity [Pa.s]
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
@@ -293,6 +293,30 @@ classdef Mixture < Solvers.AbstractField
             
             rel = 4.*mix.W(zIdx)./mix.fluid.MUL(mix.liquid.H(zIdx))./sum(mix.inputSet.geometry.PERIM);
         end
+        
+        function t = T(mix, zIdx)
+        %T Temperature [K]
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            t = mix.fluid.T(mix.H(zIdx));
+        end
+        
+        function kdist = KDIST(mix,zIdx)
+        %KDIST Distance from upstream spacer (or from inlet)
+        %
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            model = mix.inputSet.model;
+            
+            dz = arrayfun(@(k) mix.Z(k)-[0 model.KLOC],zIdx,'uni',0);
+            kdist = cellfun(@(dz) min(dz(dz>=0)),dz);                      % [m]
+        end
+        
+    end
+    
+    %% Momentum transfer methods
+    methods
         
         function fw = FW(mix, zIdx)
         %FW Fanning wall friction factor [-]
@@ -341,12 +365,12 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function tauw = TAUW(mix, zIdx)
-        %TAUW wall shear stress [Pa]
+        %TAUW wall shear stress [N/m^2]
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
-            tauw = 0.5.*(mix.FWL(zIdx)./4)./RHOL.*mix.MFLUX(zIdx).^2.*mix.PHI2F(zIdx);
+            tauw = 0.5.*(mix.FWL(zIdx)./4)./RHOL.*mix.MFLUX(zIdx).^2.*mix.PHI2F(zIdx); % [N/m^2]
         end
 
         function kloss = KLOSS(mix, zIdx)
@@ -447,26 +471,7 @@ classdef Mixture < Solvers.AbstractField
             dpparts.K    = mix.DPK(zIdx);
             dpparts.TOT  = mix.DPTOT(Uold, zIdx);
         end
-
-        function t = T(mix, zIdx)
-        %T Temperature [K]
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            t = mix.fluid.T(mix.H(zIdx));
-        end
-        
-        function kdist = KDIST(mix,zIdx)
-        %KDIST Distance from upstream spacer (or from inlet)
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            
-            dz = arrayfun(@(k) mix.Z(k)-[0 model.KLOC],zIdx,'uni',0);
-            kdist = cellfun(@(dz) min(dz(dz>=0)),dz);                      % [m]
-        end
-        
+      
     end
     
     %% Wall heat transfer methods
@@ -595,12 +600,12 @@ classdef Mixture < Solvers.AbstractField
             Mevap = max(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));               % [kg/s/m] Evaporation  (>0)
             
             % Restrict to reasonable bounds
+            %TODO: Find a more physical bound
             Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./mix.DZ);            % [kg/s/m] Condensation (<0)
             Mevap =  min( Mevap,mix.liquid.W(zIdx)./mix.DZ);               % [kg/s/m] Evaporation  (>0)
             
             %Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./UVeq./0.03);        % [kg/s/m] Condensation (<0)
             %Mevap =  min( Mevap,mix.liquid.W(zIdx)./UVeq./0.03);           % [kg/s/m] Evaporation  (>0)
-            
         end
         
         function Mintevap = MINTEVAP(mix, zIdx)
@@ -815,6 +820,31 @@ classdef Mixture < Solvers.AbstractField
     %% Onset of annular flow methods
     methods
         
+        function oafx = OAFX(mix, zIdx)
+            %OAFX Onset of annular flow equilibrium quality
+            %
+            
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            model = mix.inputSet.model;
+            HDIAM = mix.inputSet.geometry.HDIAM;
+            MFLUX = mix.MFLUX(zIdx);
+            
+            % Densities
+            RHOF = mix.fluid.RHOF;
+            RHOG = mix.fluid.RHOG;
+            DELTARHO = RHOF-RHOG;
+            
+            switch model.OAF
+                case InputEnums.OAF.WALLIS
+                    % Wallis model
+                    oafx = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
+                case InputEnums.OAF.WALLIS_SIMP
+                    % Simplified Wallis model
+                    oafx = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
+            end
+        end
+        
         function oafIdx = OAFIDX(mix)
             %OAFIDX Onset of annular flow node
             %
@@ -825,24 +855,7 @@ classdef Mixture < Solvers.AbstractField
                 return
             end
             
-            model = mix.inputSet.model;
-            HDIAM = mix.inputSet.geometry.HDIAM;
-            MFLUX = mix.MFLUX;
-            
-            % Densities
-            RHOF = mix.fluid.RHOF;
-            RHOG = mix.fluid.RHOG;
-            DELTARHO = RHOF-RHOG;
-            
-            switch model.OAF
-                case InputEnums.OAF.WALLIS
-                    % Wallis model
-                    xoaf = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
-                case InputEnums.OAF.WALLIS_SIMP
-                    % Simplified Wallis model
-                    xoaf = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
-            end
-            oafIdx = find(mix.XEQ <= xoaf, 1, 'last');                     % Find node corresponding to the onset of annular flow
+            oafIdx = find(mix.XEQ <= mix.OAFX, 1, 'last');                 % Find node corresponding to the onset of annular flow
             if isempty(oafIdx), oafIdx = 1; end                            % Most upstream node (1) when pre-annular flow region is not found
 
             % Save value
@@ -1139,16 +1152,17 @@ classdef Mixture < Solvers.AbstractField
                     chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
             end
             
-            %chf = 0.6.*chf;                                                % Correction for Bennett post-do cases
-            %chf = linspace(1.35,0.25,mix(1).NZ)'.*chf;                     % Correction for HPCHF case
-            %chf = linspace(1.36,0.25,mix(1).NZ)'.*chf; 
-
             % Apply input multiplier
-            mult = str2func(strcat('@(z) ',model.CBTMULT));
+            mult = str2func(strcat('@(z) ',lower(model.CBTMULT)));
             chf = mult(mix.Z).*chf;
+            
+            %TODO: Allow input multiplier function, e.g., model.CBTMULT = 'interp1([0 max(mix.Z)],[1.36 0.25],z)';
+            %chf = linspace(1.36,0.25,mix(1).NZ)'.*chf; 
             
             % CBT flag
             cbt = mix.HFLUX(1:mix.NZ,:) > chf;                             % CBT indicator
+            
+            %TODO: Rewetting model and behavior downstream
             %cbt = cumsum(cbt,1) >= 1;                                      % No rewetting downstream CBT
             %cbt(mix.XEQ>=1,:) = true;                                      % Set cbt to 1 for Xeq >= 1
             

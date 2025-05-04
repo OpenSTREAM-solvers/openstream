@@ -505,13 +505,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
         %   NOTE: currently supports only single elevation
             arguments
                 mixSolver
-                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = mixSolver.NZ
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','H','U','VR','T','X','ALL'})} = {'HFLUX','W','DP','H','U','VR'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
-                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NTIME
-                opt.reverseTime (1,1) logical                                                             = false
-                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                    = 'K'
+                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                       = mixSolver.NZ
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','H','U','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                  = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                              = 1:mixSolver.inputSet.geometry.NWALL
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                              = 1:mixSolver.NTIME
+                opt.reverseTime (1,1) logical                                                                         = false
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                = 'K'
             end
             
             if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
@@ -582,7 +582,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('liquid.W','zIdx',zIdx)','Liquid' );
                 plotter.plotz(mix.transient( 'vapor.W','zIdx',zIdx)','Vapor'  );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('TRELAX.WV','zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
+                    plotter.plotz(mix.transient('TRELAX.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor vapor' );
                 end
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -627,7 +627,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('liquid.H','zIdx',zIdx)','Liquid'                           );
                 plotter.plotz(mix.transient( 'vapor.H','zIdx',zIdx)','Vapor'                            );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('TRELAX.H','zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
+                    plotter.plotz(mix.transient('TRELAX.HV','zIdx',zIdx)','WallVapor','DisplayName','Wall vapor' );
                 end
                 plotter.plotz(fld.transient('HF')'                  ,'SatLiq','DisplayName','Sat liquid');
                 plotter.plotz(fld.transient('HG')'                  ,'SatVap','DisplayName','Sat vapor' );
@@ -646,7 +646,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('XEQ','zIdx',zIdx)','Equil','DisplayName','Equilibrium quality');
                 plotter.plotz(mix.transient('X'  ,'zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('TRELAX.X','zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
+                    plotter.plotz(mix.transient('TRELAX.X','zIdx',zIdx)','WallVapor','DisplayName','Wall vapor quality' );
                 end
                 plotter.plotz(mix.transient('VF' ,'zIdx',zIdx)','VF'   ,'DisplayName','Void faction'       );
                 plotter.legend("show", "Location", 'best');

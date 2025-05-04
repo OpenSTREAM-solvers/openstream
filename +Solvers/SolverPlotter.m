@@ -182,6 +182,16 @@ classdef SolverPlotter < handle
                 end
             end
         end
+        
+        function ylabels(plotters, labels)
+            
+            % Loop through plotters
+            for idx = 1:length(plotters)
+                plotter = plotters(idx);
+                yticks(plotter.ahs(plotter.currentAhIdx),1:length(labels));
+                yticklabels(plotter.ahs(plotter.currentAhIdx),labels);
+            end
+        end
 
         function setZs(plotters, Zs)
 
