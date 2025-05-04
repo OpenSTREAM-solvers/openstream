@@ -1,5 +1,5 @@
-classdef DROPDRAG
-%DROPDRAG drop drag model
+classdef BUBBLEDRAG
+%BUBBLEDRAG bubble drag model
 %   Detailed explanation goes here
     enumeration
         CONSTANT

@@ -1,5 +1,5 @@
 classdef REGIMES < double
-    %REGIMES Enum class of the 6 regimes considered
+    %REGIMES Enum class of the 6 two-phase flow regimes considered
     %
     %   The 6 regimes are defined as a enum class to increase computational
     %   efficiency while increasing readability of code, particularly when

@@ -154,6 +154,27 @@ classdef Drop < Solvers.AbstractField
             re = 4.*drop.W(zIdx)./drop.MU(zIdx)./sum(perim);               % [-]
         end
         
+        function vr = VR(drop,zIdx)
+        %VR Local relative velocity [m/s]
+        %Only AREAMEAN option has been iplemented
+            
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            vr = drop.mix.vapor.U(zIdx) - drop.U(zIdx);                    % [m/s]
+        end
+        
+        function rev = REV(drop,zIdx)
+        %REV Reynolds number with respect to vapor properties and relative phase velocity [-]
+        
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            RHOV = drop.fluid.RHOV(drop.H(zIdx));
+            MUV  = drop.fluid.MUV(drop.H(zIdx));  
+            VR   = drop.VR(zIdx);
+            
+            rev = RHOV.*abs(VR).*drop.DIAM(zIdx)./MUV;                     % [-]
+        end
+        
         function diam = DIAM(drop,zIdx)
         %DIAM drop diameter
         %
@@ -199,18 +220,37 @@ classdef Drop < Solvers.AbstractField
             ai = drop.DENSITY(zIdx).*drop.AREA(zIdx);                      % [m^-1]
         end
         
-        function drag = DRAG(drop,zIdx)
+        function cd = DRAG(drop,zIdx)
         %DRAG drop drag coefficient
         %
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            Re = drop.REV(zIdx);
+            Re(Re <= 1E-3) = 1E-3;                                       % [-] Avoid division by 0 
             
             model = drop.inputSet.model;
             
             switch model.DROPDRAG
                 case InputEnums.DROPDRAG.CONSTANT
                     % Constant drag model
-                    drag = repmat(model.DROPDRAGCOEF,length(zIdx),1);      % [-]
+                    cd = repmat(model.DROPDRAGCOEF,length(zIdx),1);        % [-]
+
+                case InputEnums.DROPDRAG.STOKES
+                % Stokes model    
+                    cd = 24./Re;                                           % [-]
+                    
+                case InputEnums.DROPDRAG.VISCOUS
+                % Viscous model    
+                    cd = 24./Re.*(1+0.15.*Re.^0.687);                      % [-]
+                    
+                case InputEnums.DROPDRAG.DISTORDED
+                 % Distorted fluid particle (bubbly flow n=2.5)
+                    %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
+                    mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
+                    cd = liquid.VISCL(zIdx).*Re.*mult;                     % [-]    
             end
+            
+            cd = min(cd,1);
         end
         
         function Fbuoy = FBUOY(drop,zIdx)
@@ -244,7 +284,7 @@ classdef Drop < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            UVAP = drop.mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
+            UVAP = drop.mix.vapor.U(zIdx);                                 % [m/s] Vapor velocity
             rhog = drop.fluid.RHOG;                                        % [kg/m^3] Vapor density
             
             sgn = sign(UVAP-drop.U(zIdx));
