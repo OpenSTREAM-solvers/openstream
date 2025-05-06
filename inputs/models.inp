@@ -35,7 +35,6 @@ TPFM       ! Two-phase friction multiplier [-]                              > ho
 KLOC       ! Elevation of local perturbations [m]                           >
 KLOSS      ! corresponding pressure loss coefficients [-]                   >
 TPKM       ! Two-phase local loss multiplier [-]                            > homogeneous
-SCBOIL     ! Subcooled boiling model                                        > none
 VOID       ! Void fraction model                                            > homogeneous
 SLIP       ! Phase velocity ratio [-]                                       > 1
 OAF        ! Onset of annular flow model                                    > WALLIS_SIMP
