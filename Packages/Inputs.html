@@ -97,6 +97,25 @@
 <span id="inputs"></span><h1>Inputs<a class="headerlink" href="#module-Inputs" title="Link to this heading"></a></h1>
 <p><a class="reference internal" href="#module-Inputs" title="Inputs"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs</span></code></a> is pretty cool.</p>
 <dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.InputSet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet" title="Link to this definition"></a></dt>
+<dd><p>INPUTSET Creates set of input objects
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.InputSet.InputSet">
+<span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.InputSet" title="Link to this definition"></a></dt>
+<dd><p>INPUTSET Construct an instance of this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">FluidProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">P</span></em>, <em class="sig-param"><span class="pre">modelObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties" title="Link to this definition"></a></dt>
 <dd><p>FLUIDPROPERTIES Summary of this class goes here
@@ -280,6 +299,119 @@ Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
+<p>BOUNDARYCONDITIONS Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.BoundaryConditions">
+<span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.BoundaryConditions" title="Link to this definition"></a></dt>
+<dd><p>BOUNDARYCONDITIONS Construct an instance of this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Inputs.BoundaryConditions.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.PRESSURE">
+<span class="sig-name descname"><span class="pre">PRESSURE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.PRESSURE" title="Link to this definition"></a></dt>
+<dd><p>System pressure [Pa]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HIN">
+<span class="sig-name descname"><span class="pre">HIN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.HIN" title="Link to this definition"></a></dt>
+<dd><p>Inlet enthalpy [J/kg]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.MFLOW">
+<span class="sig-name descname"><span class="pre">MFLOW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.MFLOW" title="Link to this definition"></a></dt>
+<dd><p>Mass flow rate [kg/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.POWER">
+<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.POWER" title="Link to this definition"></a></dt>
+<dd><p>Total power [W]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WMESH">
+<span class="sig-name descname"><span class="pre">WMESH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WMESH" title="Link to this definition"></a></dt>
+<dd><p>Relative power node size distribution [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WPOWER">
+<span class="sig-name descname"><span class="pre">WPOWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WPOWER" title="Link to this definition"></a></dt>
+<dd><p>Relative power distribution(s) [-]</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TSAT">
+<span class="sig-name descname"><span class="pre">TSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TSAT" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TSAT" title="Inputs.BoundaryConditions.TSAT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TSAT()</span></code></a> [K] Saturation temperature given fluidObj</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HF">
+<span class="sig-name descname"><span class="pre">HF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HF" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.HF" title="Inputs.BoundaryConditions.HF"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">HF()</span></code></a> [J/kg] Liquid saturation given fluidObj</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HG">
+<span class="sig-name descname"><span class="pre">HG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HG" title="Link to this definition"></a></dt>
+<dd><p>HF [J/kg] Vapor saturation given fluidObj</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIN">
+<span class="sig-name descname"><span class="pre">TIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TIN" title="Inputs.BoundaryConditions.TIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TIN()</span></code></a> [K] Inlet temperature</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DTIN">
+<span class="sig-name descname"><span class="pre">DTIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DTIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DTIN" title="Inputs.BoundaryConditions.DTIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DTIN()</span></code></a> [K] Inlet subcooling temperature difference given fluidObj</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DHIN">
+<span class="sig-name descname"><span class="pre">DHIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DHIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DHIN" title="Inputs.BoundaryConditions.DHIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DHIN()</span></code></a> [J/kg] Inlet subcooling enthalpy difference given fluidObj</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.XIN">
+<span class="sig-name descname"><span class="pre">XIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.XIN" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.XIN" title="Inputs.BoundaryConditions.XIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">XIN()</span></code></a> [-] Inlet equilibrium quality</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.plot" title="Link to this definition"></a></dt>
+<dd><p>PLOT Plot boundary conditions
+usage: bc.plot(fluidObj)</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Inputs.Geometry">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
@@ -336,6 +468,54 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Inputs.Geometry.NWALL">
 <span class="sig-name descname"><span class="pre">NWALL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.NWALL" title="Link to this definition"></a></dt>
 <dd><p><a class="reference internal" href="#Inputs.Geometry.NWALL" title="Inputs.Geometry.NWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">NWALL()</span></code></a> Number of walls</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.Input">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">dynamicprops</span></code></p>
+<p>INPUT Su
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.Input">
+<span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.Input" title="Link to this definition"></a></dt>
+<dd><p>INPUT Parse inputFile to construct this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.validateInputEntry">
+<span class="sig-name descname"><span class="pre">validateInputEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">objPropname</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.validateInputEntry" title="Link to this definition"></a></dt>
+<dd><p>VALIDATEINPUTENTRY
+Description</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.listInputProperties">
+<span class="sig-name descname"><span class="pre">listInputProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.listInputProperties" title="Link to this definition"></a></dt>
+<dd><p>LISTINPUTPROPERTIES
+List of protected obj property names</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Input.defaultValueUsedReport">
+<span class="sig-name descname"><span class="pre">defaultValueUsedReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">propNames</span></em>, <em class="sig-param"><span class="pre">propValues</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.defaultValueUsedReport" title="Link to this definition"></a></dt>
+<dd><p>DEFAULTVALUEUSEDREPORT Report of properties in which the default
+values were used.</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="Inputs.Input.convert2JSON">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">convert2JSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.convert2JSON" title="Link to this definition"></a></dt>
+<dd><p>Read inputFilePath</p>
 </dd></dl>
 
 </dd>
@@ -585,54 +765,6 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Inputs.Options.RELAXFW">
 <span class="sig-name descname"><span class="pre">RELAXFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXFW" title="Link to this definition"></a></dt>
 <dd><p>Relaxation factor for the wave number conservation equation</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.Input">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">dynamicprops</span></code></p>
-<p>INPUT Su
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.Input">
-<span class="sig-name descname"><span class="pre">Input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em>, <em class="sig-param"><span class="pre">key</span></em>, <em class="sig-param"><span class="pre">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.Input" title="Link to this definition"></a></dt>
-<dd><p>INPUT Parse inputFile to construct this class
-Detailed explanation goes here</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.validateInputEntry">
-<span class="sig-name descname"><span class="pre">validateInputEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">objPropname</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.validateInputEntry" title="Link to this definition"></a></dt>
-<dd><p>VALIDATEINPUTENTRY
-Description</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.listInputProperties">
-<span class="sig-name descname"><span class="pre">listInputProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.listInputProperties" title="Link to this definition"></a></dt>
-<dd><p>LISTINPUTPROPERTIES
-List of protected obj property names</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Input.defaultValueUsedReport">
-<span class="sig-name descname"><span class="pre">defaultValueUsedReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">propNames</span></em>, <em class="sig-param"><span class="pre">propValues</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.defaultValueUsedReport" title="Link to this definition"></a></dt>
-<dd><p>DEFAULTVALUEUSEDREPORT Report of properties in which the default
-values were used.</p>
-</dd></dl>
-
-<dl class="mat staticmethod">
-<dt class="sig sig-object mat" id="Inputs.Input.convert2JSON">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">convert2JSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputFilePath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.convert2JSON" title="Link to this definition"></a></dt>
-<dd><p>Read inputFilePath</p>
 </dd></dl>
 
 </dd>
@@ -1008,138 +1140,6 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Inputs.Model.G">
 <span class="sig-name descname"><span class="pre">G</span></span><em class="property"> <span class="pre">=</span> <span class="pre">9.81</span></em><a class="headerlink" href="#Inputs.Model.G" title="Link to this definition"></a></dt>
 <dd><p>[m/s^2] Gravitational acceleration</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
-<p>BOUNDARYCONDITIONS Summary of this class goes here
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.BoundaryConditions">
-<span class="sig-name descname"><span class="pre">BoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryObjInput</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.BoundaryConditions" title="Link to this definition"></a></dt>
-<dd><p>BOUNDARYCONDITIONS Construct an instance of this class
-Detailed explanation goes here</p>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Inputs.BoundaryConditions.TIME" title="Link to this definition"></a></dt>
-<dd><p>Time [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.PRESSURE">
-<span class="sig-name descname"><span class="pre">PRESSURE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.PRESSURE" title="Link to this definition"></a></dt>
-<dd><p>System pressure [Pa]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HIN">
-<span class="sig-name descname"><span class="pre">HIN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.HIN" title="Link to this definition"></a></dt>
-<dd><p>Inlet enthalpy [J/kg]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.MFLOW">
-<span class="sig-name descname"><span class="pre">MFLOW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.MFLOW" title="Link to this definition"></a></dt>
-<dd><p>Mass flow rate [kg/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.POWER">
-<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.POWER" title="Link to this definition"></a></dt>
-<dd><p>Total power [W]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WMESH">
-<span class="sig-name descname"><span class="pre">WMESH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WMESH" title="Link to this definition"></a></dt>
-<dd><p>Relative power node size distribution [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WPOWER">
-<span class="sig-name descname"><span class="pre">WPOWER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WPOWER" title="Link to this definition"></a></dt>
-<dd><p>Relative power distribution(s) [-]</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TSAT">
-<span class="sig-name descname"><span class="pre">TSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TSAT" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TSAT" title="Inputs.BoundaryConditions.TSAT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TSAT()</span></code></a> [K] Saturation temperature given fluidObj</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HF">
-<span class="sig-name descname"><span class="pre">HF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HF" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.HF" title="Inputs.BoundaryConditions.HF"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">HF()</span></code></a> [J/kg] Liquid saturation given fluidObj</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HG">
-<span class="sig-name descname"><span class="pre">HG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HG" title="Link to this definition"></a></dt>
-<dd><p>HF [J/kg] Vapor saturation given fluidObj</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIN">
-<span class="sig-name descname"><span class="pre">TIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.TIN" title="Inputs.BoundaryConditions.TIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TIN()</span></code></a> [K] Inlet temperature</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DTIN">
-<span class="sig-name descname"><span class="pre">DTIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DTIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DTIN" title="Inputs.BoundaryConditions.DTIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DTIN()</span></code></a> [K] Inlet subcooling temperature difference given fluidObj</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DHIN">
-<span class="sig-name descname"><span class="pre">DHIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DHIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.DHIN" title="Inputs.BoundaryConditions.DHIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DHIN()</span></code></a> [J/kg] Inlet subcooling enthalpy difference given fluidObj</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.XIN">
-<span class="sig-name descname"><span class="pre">XIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.XIN" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Inputs.BoundaryConditions.XIN" title="Inputs.BoundaryConditions.XIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">XIN()</span></code></a> [-] Inlet equilibrium quality</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.BoundaryConditions.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.plot" title="Link to this definition"></a></dt>
-<dd><p>PLOT Plot boundary conditions
-usage: bc.plot(fluidObj)</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.InputSet">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet" title="Link to this definition"></a></dt>
-<dd><p>INPUTSET Creates set of input objects
-Detailed explanation goes here</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.InputSet.InputSet">
-<span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.InputSet" title="Link to this definition"></a></dt>
-<dd><p>INPUTSET Construct an instance of this class
-Detailed explanation goes here</p>
 </dd></dl>
 
 </dd>

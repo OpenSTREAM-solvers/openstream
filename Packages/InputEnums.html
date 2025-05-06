@@ -96,42 +96,70 @@
   <section id="inputenums">
 <h1>InputEnums<a class="headerlink" href="#inputenums" title="Link to this heading"></a></h1>
 <dl class="mat class" id="module-InputEnums">
-<dt class="sig sig-object mat" id="InputEnums.SCBOIL">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SCBOIL</span></span><a class="headerlink" href="#InputEnums.SCBOIL" title="Link to this definition"></a></dt>
-<dd><p>SCBOIL Subcooled boiling model
+<dt class="sig sig-object mat" id="InputEnums.INTLENGTH">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTLENGTH</span></span><a class="headerlink" href="#InputEnums.INTLENGTH" title="Link to this definition"></a></dt>
+<dd><p>INTLENGTH Interfacial length scale
+Defines the interfacial length scale model</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.VAPORFRIC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VAPORFRIC</span></span><a class="headerlink" href="#InputEnums.VAPORFRIC" title="Link to this definition"></a></dt>
+<dd><p>VAPORFRIC Vapor to film friction model
 Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.ENTRAINMENT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">ENTRAINMENT</span></span><a class="headerlink" href="#InputEnums.ENTRAINMENT" title="Link to this definition"></a></dt>
-<dd><p>ENTRAINMENT Entrainment models
-Defines which droplet entrainment mass flux model is used.
-NOTE: the entrainment and deposition correlations are coupled, i.e. the
-same model should be used for both entrainment and deposotion mass flux</p>
+<dt class="sig sig-object mat" id="InputEnums.BASEEQTHICK">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BASEEQTHICK</span></span><a class="headerlink" href="#InputEnums.BASEEQTHICK" title="Link to this definition"></a></dt>
+<dd><p>BASEEQTHICK Base film equilibrium thickness model
+Defines which base film equilibrium model to use</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.MOMENTGAS">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTGAS</span></span><a class="headerlink" href="#InputEnums.MOMENTGAS" title="Link to this definition"></a></dt>
-<dd><p>MOMENTGAS Gas momentum conservation model
-This defines the type of conservation model used on the gas phase in
-the gas class.</p>
+<dt class="sig sig-object mat" id="InputEnums.INTNU">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTNU</span></span><a class="headerlink" href="#InputEnums.INTNU" title="Link to this definition"></a></dt>
+<dd><p>INTNU Interfacial Nusselt number
+Defines the interfacial Nusselt number model</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.TPKM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPKM</span></span><a class="headerlink" href="#InputEnums.TPKM" title="Link to this definition"></a></dt>
-<dd><p>TPKM Two-phase local loss multiplier
+<dt class="sig sig-object mat" id="InputEnums.MOMENTBASE">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTBASE</span></span><a class="headerlink" href="#InputEnums.MOMENTBASE" title="Link to this definition"></a></dt>
+<dd><p>MOMENTBASE Base film momentum conservation model
+Defines the type of momentum conservation used on the liquid film. The
+conservation equations are used to solve for liquid-film velocity</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.DROPDRAG">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DROPDRAG</span></span><a class="headerlink" href="#InputEnums.DROPDRAG" title="Link to this definition"></a></dt>
+<dd><p>DROPDRAG drop drag model
 Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.MOMENTLIQUID">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTLIQUID</span></span><a class="headerlink" href="#InputEnums.MOMENTLIQUID" title="Link to this definition"></a></dt>
-<dd><p>MOMENTLIQUID Liquid momentum conservation model
-This defines the type of conservation model used on the liquid phase in
-the liquid class.</p>
+<dt class="sig sig-object mat" id="InputEnums.OAFFILMSPLIT">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><a class="headerlink" href="#InputEnums.OAFFILMSPLIT" title="Link to this definition"></a></dt>
+<dd><p>OAFFILMSPLIT Film mass flow ratio at onset of annular flow
+Detailed explanation goes here</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.MOMENTWAVE">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTWAVE</span></span><a class="headerlink" href="#InputEnums.MOMENTWAVE" title="Link to this definition"></a></dt>
+<dd><p>MOMENTWAVE Film momentum conservation model
+Defines the type of momentum conservation used on the liquid film. The
+conservation equations are used to solve for liquid-film velocity</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.VOID">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VOID</span></span><a class="headerlink" href="#InputEnums.VOID" title="Link to this definition"></a></dt>
+<dd><p>VOID Void fraction model
+This defines the type of void fraction model used. The homogenous model
+assumes the velocity of the fields is the same. The slip model assigns
+a slip ratio. The Bestion model is a correlation.</p>
 </dd></dl>
 
 <dl class="mat class">
@@ -144,24 +172,40 @@ same model should be used for both entrainment and deposotion mass flux</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.WAVEFREQUENCY">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">WAVEFREQUENCY</span></span><a class="headerlink" href="#InputEnums.WAVEFREQUENCY" title="Link to this definition"></a></dt>
-<dd><p>WAVEFREQUENCY Wave number conservation model
-This defines the type of conservation model used on the wave number in
-the Wave class.</p>
+<dt class="sig sig-object mat" id="InputEnums.ENTRAINMENT">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">ENTRAINMENT</span></span><a class="headerlink" href="#InputEnums.ENTRAINMENT" title="Link to this definition"></a></dt>
+<dd><p>ENTRAINMENT Entrainment models
+Defines which droplet entrainment mass flux model is used.
+NOTE: the entrainment and deposition correlations are coupled, i.e. the
+same model should be used for both entrainment and deposotion mass flux</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.INTAREA">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTAREA</span></span><a class="headerlink" href="#InputEnums.INTAREA" title="Link to this definition"></a></dt>
-<dd><p>INTAREA Interfacial area
-Defines the interfacial area model</p>
+<dt class="sig sig-object mat" id="InputEnums.MOMENTDROP">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTDROP</span></span><a class="headerlink" href="#InputEnums.MOMENTDROP" title="Link to this definition"></a></dt>
+<dd><p>MOMENTDROP Drop momentum conservation model
+This defines the type of conservation model used on the droplets in
+the Drop class.</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.THINFILMFRIC">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THINFILMFRIC</span></span><a class="headerlink" href="#InputEnums.THINFILMFRIC" title="Link to this definition"></a></dt>
-<dd><p>THINFILMFRIC Thin film friction model
+<dt class="sig sig-object mat" id="InputEnums.FLUIDPROPERTIES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">FLUIDPROPERTIES</span></span><a class="headerlink" href="#InputEnums.FLUIDPROPERTIES" title="Link to this definition"></a></dt>
+<dd><p>FLUIDPROPERTIES Fluid property calculation assumptions
+Defines the pressure to be used for calculating fluid properties</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.LOCRELVEL">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">LOCRELVEL</span></span><a class="headerlink" href="#InputEnums.LOCRELVEL" title="Link to this definition"></a></dt>
+<dd><p>LOCRELVEL Local relative velocity between liquid and vapor phase
+Defines the model for the local relative velocity</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.TPFM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPFM</span></span><a class="headerlink" href="#InputEnums.TPFM" title="Link to this definition"></a></dt>
+<dd><p>TPFM Two-phase friction multiplier
 Detailed explanation goes here</p>
 </dd></dl>
 
@@ -174,47 +218,18 @@ The mass can be transfered either at phase bulk enthalpy, or at saturated enthap
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.MOMENTWAVE">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTWAVE</span></span><a class="headerlink" href="#InputEnums.MOMENTWAVE" title="Link to this definition"></a></dt>
-<dd><p>MOMENTWAVE Film momentum conservation model
-Defines the type of momentum conservation used on the liquid film. The
-conservation equations are used to solve for liquid-film velocity</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.FLUIDPROPERTIES">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">FLUIDPROPERTIES</span></span><a class="headerlink" href="#InputEnums.FLUIDPROPERTIES" title="Link to this definition"></a></dt>
-<dd><p>FLUIDPROPERTIES Fluid property calculation assumptions
-Defines the pressure to be used for calculating fluid properties</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.MOMENTFILM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTFILM</span></span><a class="headerlink" href="#InputEnums.MOMENTFILM" title="Link to this definition"></a></dt>
-<dd><p>MOMENTFILM Film momentum conservation model
-Defines the type of momentum conservation used on the liquid film. The
-conservation equations are used to solve for liquid-film velocity</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.TPFM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPFM</span></span><a class="headerlink" href="#InputEnums.TPFM" title="Link to this definition"></a></dt>
-<dd><p>TPFM Two-phase friction multiplier
+<dt class="sig sig-object mat" id="InputEnums.THINFILMFRIC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THINFILMFRIC</span></span><a class="headerlink" href="#InputEnums.THINFILMFRIC" title="Link to this definition"></a></dt>
+<dd><p>THINFILMFRIC Thin film friction model
 Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.BASEEQTHICK">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BASEEQTHICK</span></span><a class="headerlink" href="#InputEnums.BASEEQTHICK" title="Link to this definition"></a></dt>
-<dd><p>BASEEQTHICK Base film equilibrium thickness model
-Defines which base film equilibrium model to use</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.LOCRELVEL">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">LOCRELVEL</span></span><a class="headerlink" href="#InputEnums.LOCRELVEL" title="Link to this definition"></a></dt>
-<dd><p>LOCRELVEL Local relative velocity between liquid and vapor phase
-Defines the model for the local relative velocity</p>
+<dt class="sig sig-object mat" id="InputEnums.MOMENTLIQUID">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTLIQUID</span></span><a class="headerlink" href="#InputEnums.MOMENTLIQUID" title="Link to this definition"></a></dt>
+<dd><p>MOMENTLIQUID Liquid momentum conservation model
+This defines the type of conservation model used on the liquid phase in
+the liquid class.</p>
 </dd></dl>
 
 <dl class="mat class">
@@ -225,32 +240,18 @@ Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.INTLENGTH">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTLENGTH</span></span><a class="headerlink" href="#InputEnums.INTLENGTH" title="Link to this definition"></a></dt>
-<dd><p>INTLENGTH Interfacial length scale
-Defines the interfacial length scale model</p>
+<dt class="sig sig-object mat" id="InputEnums.INTAREA">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTAREA</span></span><a class="headerlink" href="#InputEnums.INTAREA" title="Link to this definition"></a></dt>
+<dd><p>INTAREA Interfacial area
+Defines the interfacial area model</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.INTNU">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTNU</span></span><a class="headerlink" href="#InputEnums.INTNU" title="Link to this definition"></a></dt>
-<dd><p>INTNU Interfacial Nusselt number
-Defines the interfacial Nusselt number model</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.MOMENTDROP">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTDROP</span></span><a class="headerlink" href="#InputEnums.MOMENTDROP" title="Link to this definition"></a></dt>
-<dd><p>MOMENTDROP Drop momentum conservation model
-This defines the type of conservation model used on the droplets in
-the Drop class.</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.OAFFILMSPLIT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><a class="headerlink" href="#InputEnums.OAFFILMSPLIT" title="Link to this definition"></a></dt>
-<dd><p>OAFFILMSPLIT Film mass flow ratio at onset of annular flow
-Detailed explanation goes here</p>
+<dt class="sig sig-object mat" id="InputEnums.MOMENTFILM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTFILM</span></span><a class="headerlink" href="#InputEnums.MOMENTFILM" title="Link to this definition"></a></dt>
+<dd><p>MOMENTFILM Film momentum conservation model
+Defines the type of momentum conservation used on the liquid film. The
+conservation equations are used to solve for liquid-film velocity</p>
 </dd></dl>
 
 <dl class="mat class">
@@ -264,18 +265,33 @@ The correlation was built using air-water data.</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.DROPDRAG">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DROPDRAG</span></span><a class="headerlink" href="#InputEnums.DROPDRAG" title="Link to this definition"></a></dt>
-<dd><p>DROPDRAG drop drag model
+<dt class="sig sig-object mat" id="InputEnums.SCBOIL">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SCBOIL</span></span><a class="headerlink" href="#InputEnums.SCBOIL" title="Link to this definition"></a></dt>
+<dd><p>SCBOIL Subcooled boiling model
 Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.MOMENTBASE">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTBASE</span></span><a class="headerlink" href="#InputEnums.MOMENTBASE" title="Link to this definition"></a></dt>
-<dd><p>MOMENTBASE Base film momentum conservation model
-Defines the type of momentum conservation used on the liquid film. The
-conservation equations are used to solve for liquid-film velocity</p>
+<dt class="sig sig-object mat" id="InputEnums.BOILCOEF">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BOILCOEF</span></span><a class="headerlink" href="#InputEnums.BOILCOEF" title="Link to this definition"></a></dt>
+<dd><p>BOILCOEF Wall boiling coefficient interpolation for subcooled boiling
+Detailed explanation goes here</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.MOMENTGAS">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTGAS</span></span><a class="headerlink" href="#InputEnums.MOMENTGAS" title="Link to this definition"></a></dt>
+<dd><p>MOMENTGAS Gas momentum conservation model
+This defines the type of conservation model used on the gas phase in
+the gas class.</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.WAVEFREQUENCY">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">WAVEFREQUENCY</span></span><a class="headerlink" href="#InputEnums.WAVEFREQUENCY" title="Link to this definition"></a></dt>
+<dd><p>WAVEFREQUENCY Wave number conservation model
+This defines the type of conservation model used on the wave number in
+the Wave class.</p>
 </dd></dl>
 
 <dl class="mat class">
@@ -286,25 +302,9 @@ Defines which base film equilibrium model to use</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.VOID">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VOID</span></span><a class="headerlink" href="#InputEnums.VOID" title="Link to this definition"></a></dt>
-<dd><p>VOID Void fraction model
-This defines the type of void fraction model used. The homogenous model
-assumes the velocity of the fields is the same. The slip model assigns
-a slip ratio. The Bestion model is a correlation.</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.VAPORFRIC">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VAPORFRIC</span></span><a class="headerlink" href="#InputEnums.VAPORFRIC" title="Link to this definition"></a></dt>
-<dd><p>VAPORFRIC Vapor to film friction model
-Detailed explanation goes here</p>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="InputEnums.BOILCOEF">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BOILCOEF</span></span><a class="headerlink" href="#InputEnums.BOILCOEF" title="Link to this definition"></a></dt>
-<dd><p>BOILCOEF Wall boiling coefficient interpolation for subcooled boiling
+<dt class="sig sig-object mat" id="InputEnums.TPKM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPKM</span></span><a class="headerlink" href="#InputEnums.TPKM" title="Link to this definition"></a></dt>
+<dd><p>TPKM Two-phase local loss multiplier
 Detailed explanation goes here</p>
 </dd></dl>
 
