@@ -201,6 +201,10 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     if addBrackets
                         propValue = sprintf('[%s]', propValue);
                     end
+                elseif isa(propValue, "function_handle")
+                    % Convert to string
+                    propValue = sprintf('%s ', func2str(propValue));
+
                 else
                     % TODO: Throw error or handle it somehow
                 end
@@ -347,7 +351,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     %   Capture comments, indicated by '#' symbol
                     entryExpr{2} = '(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
-                    entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>.*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\+\.]*)?';
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>.*)? >{1}[\s]*(?<VALUE>[\@\(\)\w\f\s\-\+\.]*)?';
                     %   Join parts together and remove spaces (use \s instead).
                     entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
                     
@@ -506,6 +510,24 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
             % Close file
             fclose(fid);
+
+        end
+
+        function validateFunctionHandleInput(handleString)
+            arguments
+                handleString    {mustBeTextScalar}
+            end
+
+            restrictedKeywords = ["eval", "feval", "system", "fopen", "delete", "!", ...
+                                     "load", "save", "assignin", "clear", "global", "import", ...
+                                     "java", "py\.", "web", "dir", "cd", "run", "builtin", ...
+                                     "uigetfile", "input", "persistent", "classdef", "meta\."];
+            
+            for restrictedKeyword = restrictedKeywords
+                if ~isempty(regexp(handleString, restrictedKeyword, 'once', 'ignorecase'))
+                    error("Unsafe content detected: '%s' in function handle: %s", restrictedKeyword, handleString);
+                end
+            end
 
         end
 
