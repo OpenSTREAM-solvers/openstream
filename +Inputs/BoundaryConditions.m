@@ -62,7 +62,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
-                [isSpecified, useDefault] = obj.validateInputEntry(objPropname);
+                [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname);
                 if ~useDefault
                     [objs.(objPropname)] = ...
                                     deal(obj.inputStruct.(objPropname));

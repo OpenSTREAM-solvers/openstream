@@ -47,7 +47,7 @@ classdef Geometry < Inputs.Input
                 
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
-                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=geometryID);
+                [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname,id=geometryID);
                 if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
