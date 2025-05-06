@@ -349,7 +349,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     %   Capture the "END" tag
                     entryExpr{1} = '(?<PARAMETER>(end|END))';
                     %   Capture comments, indicated by '#' symbol
-                    entryExpr{2} = '(?<PARAMETER>(#|\/\/|%).*)';
+                    entryExpr{2} = '(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
                     entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*(?<VALUE>[@><=&|()\*\[\],\w\s\+\-\.]*)?';
                     %   Join parts together and remove spaces (use \s instead).
