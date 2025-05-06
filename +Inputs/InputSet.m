@@ -81,10 +81,14 @@ classdef InputSet
             
             % procss warnings
             inputsWithWarnings = {obj.model, obj.options, obj.geometry, obj.bc};
-            for i=1:length(inputsWithWarnings)
-                inputObj = inputsWithWarnings{i};
-                for j = 1:length(inputObj.warnings)
-                    obj.session.log.warning(inputObj.warnings(j).warnID, sprintf("%s\n",inputObj.warnings(j).msg));
+            for inputTypeIdx=1:length(inputsWithWarnings)
+                inputObjs = inputsWithWarnings{inputTypeIdx};
+               
+                % inputObjs is an array for obj.bc in transient situations.
+                for inputObj = inputObjs
+                    for warningIdx = 1:length(inputObj.warnings)
+                        obj.session.log.warning(inputObj.warnings(warningIdx).warnID, sprintf("%s\n",inputObj.warnings(warningIdx).msg));
+                    end
                 end
             end
 
