@@ -5,11 +5,15 @@ classdef Log < handle
     properties (SetAccess = protected)
 
         LOGMODE               (1,1) Session.LogMode
-        diaryIsOn               (1,1) logical         = false
+        diaryIsOn             (1,1) logical         = false
 
         % log file
         LOGFID                              = -1                                 % Logging file ID
         logFileName           (1,1) string
+
+        % Warnings
+        showWarnings          (1,1) logical = true
+
     end
 
     properties (Access = private)
@@ -30,7 +34,8 @@ classdef Log < handle
                 LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
                                                                             % LogMode
                 opts.session   (1,1)    Session.Session      
-                opts.LOGFID    (1,1)    double                = -1
+                opts.LOGFID    (1,1)    double               = -1
+                opts.showWarnings (1,1) logical              = true
             end
 
             % Store LOGMODE and LOGFID
@@ -44,6 +49,13 @@ classdef Log < handle
                 obj.session = opts.session;
             else
                 return;
+            end
+
+            % Show warnings
+            if isfield(opts, 'showWarnings')
+                obj.showWarnings = opts.showWarnings;
+            else
+                obj.showWarnings = true;
             end
 
             % Make logging filesystem as needed
@@ -91,6 +103,34 @@ classdef Log < handle
             end
         end
 
+        function warning(obj, varargin)
+        %WARNING Log warnings
+        %
+
+        import Session.LogMode
+
+        if obj.showWarnings == true
+            
+            % Use built-in warning function
+            builtin('warning', varargin{:});
+
+            % Since the warning is displayed using the built-in function,
+            % recording-to-file depends on diary on or off.
+
+        else
+            % If LOGTOFILEONLY, open and write to log
+            if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+               obj.LOGMODE == LogMode.BOTH 
+                obj.openLog();
+                    builtin('fprintf',obj.LOGFID, 'Warning:\n');
+                    builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
+                    if ~obj.keepLogOpen
+                        obj.closeLog();
+                    end
+            end            
+        end
+
+        end
         function diaryOff(obj)
         %DIARYOFF   Turn diary off
             diary('off');

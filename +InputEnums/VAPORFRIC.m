@@ -5,6 +5,7 @@ classdef VAPORFRIC
         CONSTANT
         WALLIS
         WALLISTHICK
+        SOLVER_DEPENDENT
     end
 end
     

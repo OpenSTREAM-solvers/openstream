@@ -66,7 +66,6 @@ classdef InputSet
                                 "overwriteFiles", opts.overwriteSessionFiles);
             obj.session.setupLog(opts.LOGMODE);
             
-            
             % Create input objects
             obj.session.log.diaryOn();
             try
@@ -79,9 +78,33 @@ classdef InputSet
                 obj.session.log.diaryOn();
                 rethrow(ME)
             end
+            
+            % procss warnings
+            inputsWithWarnings = {obj.model, obj.options, obj.geometry, obj.bc};
+            for i=1:length(inputsWithWarnings)
+                inputObj = inputsWithWarnings{i};
+                for j = 1:length(inputObj.warnings)
+                    obj.session.log.warning(inputObj.warnings(j).warnID, sprintf("%s\n",inputObj.warnings(j).msg));
+                end
+            end
+
             obj.session.log.diaryOff();
 
         end
+        
+        function inputSet = applySolverDependentProps(inputSet, solverName)
+            arguments
+                inputSet        Inputs.InputSet
+                solverName      {mustBeTextScalar}
+            end
+            
+            inputSet.model = inputSet.model.applySolverDependentProperties(solverName);
+            inputSet.options = inputSet.options.applySolverDependentProperties(solverName);
+            inputSet.geometry = inputSet.geometry.applySolverDependentProperties(solverName);
+            inputSet.bc = inputSet.bc.applySolverDependentProperties(solverName);
+
+        end
+    
     end
 
     

@@ -2,7 +2,7 @@ classdef Model < Inputs.Input
     %MODEL Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         ID               (1,1) string  {mustBeTextScalar}                                                    % Model ID 
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
@@ -70,7 +70,8 @@ classdef Model < Inputs.Input
         OKAWACOEFS       (1,:) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1]           % Coefficients of Okawa entrainment model [-]
         
         MOMENTFILM       (1,1) InputEnums.MOMENTFILM                       = 'ALGEBRAIC'                     % Film momentum conservation model
-        VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'                        % Vapor friction model
+        %VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'WALLIS'                        % Vapor friction model
+        VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'SOLVER_DEPENDENT'    % Vapor friction model [-]  
         VAPORFRICCST     (1,1) double  {mustBePositive}                    = 0.005                           % Vapor friction constant [-]
         THINFILMFRIC     (1,1) InputEnums.THINFILMFRIC                     = 'TURBULENT'                     % Thin film wall friction model
         THINFILMTHICK    (1,1) double  {mustBePositive}                    = 1E-4                            % Minimum thin film thickness [m]        
@@ -103,7 +104,13 @@ classdef Model < Inputs.Input
     end
 
     properties (Constant)
-        G                (1,1) double  {mustBeNumeric}                     = 9.81                            % [m/s^2] Gravitational acceleration
+        G             (1,1) double  {mustBeNumeric}                        = 9.81                            % [m/s^2] Gravitational acceleration
+        SOLVERDEPENDENTPROPS                                               = struct("VAPORFRIC", ...
+                                                                                    struct('THREEFIELD', InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'FOURFIELD', InputEnums.VAPORFRIC.CONSTANT, ...
+                                                                                            'DEFAULT', InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'DEP_FLAG', InputEnums.VAPORFRIC.SOLVER_DEPENDENT) ...
+                                                                                    );
     end
 
     methods
@@ -131,6 +138,7 @@ classdef Model < Inputs.Input
             
             % Array of fieldnames using default values
             defaultValueFieldNames = string().empty();
+            defaultValues = {};
 
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -140,17 +148,35 @@ classdef Model < Inputs.Input
                 
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
-                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=modelID);
+                [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname,id=modelID);
                 if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
+                    defaultValues{end+1} = defaultValue;
                 end
-                
-                if isSpecified
+
+                if isSpecified 
                     % Remove objPropname from inputStruct
                     obj.inputStruct = rmfield(obj.inputStruct, objPropname);
+                end
+            end
+
+            % Default value used warning
+            if ~isempty(defaultValueFieldNames)
+                defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+                if nargout == 0
+                    warning('Model:defaultValueUsedWarning', ...
+                        sprintf('%s\n',defaultValueWarningString));
+                else
+                    w = struct('warnID', 'Model:defaultValueUsedWarning', ...
+                               'msg', defaultValueWarningString);
+                    if isempty(obj.warnings)
+                        obj.warnings = w;
+                    else
+                        obj.warnings(end+1) = w;
+                    end
                 end
             end
 

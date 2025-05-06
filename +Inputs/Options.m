@@ -2,7 +2,7 @@ classdef Options < Inputs.Input
     %OPTIONS Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties (SetAccess=protected)
+    properties (SetAccess=?Inputs.Input)
         
         ID               (1,1) string  {mustBeTextScalar}                                          % Option ID
         AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Axial power interpolation method
@@ -76,6 +76,10 @@ classdef Options < Inputs.Input
             %
             % List of immutable obj property names
             objPropnames = obj.listInputProperties();
+
+            % Array of fieldnames using default values
+            defaultValueFieldNames = string().empty();
+            defaultValues = {};
             
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
@@ -85,10 +89,13 @@ classdef Options < Inputs.Input
                 
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
-                [isSpecified, useDefault] = obj.validateInputEntry(objPropname,id=optionsID);
+                [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname,id=optionsID);
                 if ~useDefault
                     obj.(objPropname) = ...
                                     upper(obj.inputStruct.(objPropname));
+                elseif useDefault
+                    defaultValueFieldNames(end+1) = objPropname;
+                    defaultValues{end+1} = defaultValue;
                 end
                 
                 if isSpecified
@@ -102,11 +109,29 @@ classdef Options < Inputs.Input
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
                 warning( ...
-                    'BOUNDARY_CONDITIONS: These inputs were not used: %s ', ...
+                    'Options: These inputs were not used: %s ', ...
                     remainingInputStructFields{:} ...
                     );
                 obj.extra = obj.inputStruct;
             end
+
+            % Default value used warning
+            if ~isempty(defaultValueFieldNames)
+                defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
+                if nargout == 0
+                    warning('Options:defaultValueUsedWarning', ...
+                        sprintf('%s\n',defaultValueWarningString));
+                else
+                    w = struct('warnID', 'Options:defaultValueUsedWarning', ...
+                               'msg', defaultValueWarningString);
+                    if isempty(obj.warnings)
+                        obj.warnings = w;
+                    else
+                        obj.warnings(end+1) = w;
+                    end
+                end
+            end
+            
 
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
