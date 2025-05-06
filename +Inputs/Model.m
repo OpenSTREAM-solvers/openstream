@@ -18,8 +18,8 @@ classdef Model < Inputs.Input
         OAF              (1,1) InputEnums.OAF                              = 'WALLIS'                        % Onset of annular flow model
         OAFTRANSITION    (1,2) double  {mustBeNumeric}                     = [0.10 0.0]                      % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         CBT              (1,1) InputEnums.CBT                              = 'NONE'                          % Critical Boiling Transition model 
-        CBTMULT          (1,1) string  {mustBeTextScalar}                  = '1'                             % Critical boiling Heat flux multiplier function
-        
+        CBTMULT          (1,1) function_handle                             = @(z) 1                          % Critical boiling Heat flux multiplier function
+
         % Mixture solver models
         FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
         TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'                   % Two-phase friction multiplier
@@ -148,9 +148,24 @@ classdef Model < Inputs.Input
                 % Check if the objPropname entry is specified, and if the
                 % default value should be used
                 [isSpecified, useDefault, defaultValue] = obj.validateInputEntry(objPropname,id=modelID);
+
                 if ~useDefault
-                    obj.(objPropname) = ...
-                                    upper(obj.inputStruct.(objPropname));
+                    
+                    % Take care of special cases
+                    % Function handles provided in string format cannot be
+                    % automatiaclly cast to a function_handle. Here, a
+                    % validation is first performed to detect restricted
+                    % keywords, then converted.
+                    if isa(obj.(objPropname), "function_handle") && isstring(obj.inputStruct.(objPropname))
+                        
+                        % Check for insecure keywords in function handle
+                        obj.validateFunctionHandleInput(obj.inputStruct.(objPropname))    ;
+                        obj.(objPropname) = ...
+                                        str2func(obj.inputStruct.(objPropname));
+                    else
+                        obj.(objPropname) = ...
+                                        upper(obj.inputStruct.(objPropname));
+                    end
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
                     defaultValues{end+1} = defaultValue;
