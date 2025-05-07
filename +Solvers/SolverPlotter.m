@@ -169,6 +169,19 @@ classdef SolverPlotter < handle
 
             fh = plotters.fh;
         end
+        
+        function out = xlim(plotters, newLim)
+
+            % Loop through plotters
+            for idx = 1:length(plotters)
+                plotter = plotters(idx);
+                if nargin < 2
+                    out(idx) = xlim(plotter.ahs(plotter.currentAhIdx));
+                else
+                    xlim(plotter.ahs(plotter.currentAhIdx), newLim);
+                end
+            end
+        end
 
         function out = ylim(plotters, newLim)
 
@@ -283,7 +296,7 @@ classdef SolverPlotter < handle
                 case {'OAF'}
                     plotStyle = {'red', '--', '.'};
                 case {'FILM'}
-                    plotStyle = {colors(2), '--', '.'};
+                    plotStyle = {colors(2), '--', 'o'};
                 case {'DROP'}
                     plotStyle = {colors(5), '--', 'o'};
                 case {'DROP+FILM', 'FILM+DROP'}
