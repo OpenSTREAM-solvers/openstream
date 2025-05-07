@@ -236,6 +236,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.CHF(opt.zIdx)         ,'CHF'                                           );
                 end
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Mass flow rates
@@ -249,6 +250,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(liq.W(opt.zIdx) ,'Liquid' );
                 plotter.plotz(vap.W(opt.zIdx) ,'Vapor'  );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Phase velocities
@@ -262,6 +264,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(liq.U(opt.zIdx) ,'Liquid' );
                 plotter.plotz(vap.U(opt.zIdx) ,'Vapor'  );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Phase enthalpies
@@ -278,6 +281,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(repmat(twfSolver.fluid(tIdx).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
                 plotter.plotz(repmat(twfSolver.fluid(tIdx).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Vapor ratios (void fraction and qualities)
@@ -291,6 +295,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(vap.X(opt.zIdx)     ,'Vapor'       ,'DisplayName','Vapor mass quality' )
                 plotter.plotz(vap.VF(liq,opt.zIdx),'VoidFraction','DisplayName','Void fraction'      )
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Phase temperatures
@@ -304,6 +309,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(vap.T(opt.zIdx)+dTemp, 'Vapor');
                 plotter.plotz(repmat(twfSolver.fluid(tIdx).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Vapor and liquid mass exchanges
@@ -317,6 +323,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(vap.MINTCOND(liq,opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plotz(vap.MTOT(liq,opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
                 
@@ -329,6 +336,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(liq.MINTCOND(vap,opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plotz(liq.MTOT(vap,opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
                 
@@ -353,6 +361,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(vap.FINTEVAP(liq,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation');
                 plotter.plotz(vap.FTOT(liq,opt.zIdx)    ,'Total'                                                  );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
                 
@@ -367,6 +376,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(liq.FINTCOND(vap,opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plotz(liq.FTOT(vap,opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
                 
@@ -389,6 +399,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(vap.HINTCOND(liq,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
                 plotter.plotz(vap.HTOT(liq,opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
                 
@@ -402,6 +413,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(liq.HINTCOND(vap,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
                 plotter.plotz(liq.HTOT(vap,opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
                 
@@ -419,6 +431,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'xlabel'   ,          'Axial position [m]', ...
                     'ylabel'   ,    'Interfacial area [m^-^1]');
                 plotter.plotz(liq.INTAREA(vap,opt.zIdx),'Interfacial')
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Two-phase flow regimes
@@ -430,6 +443,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 labels = strrep(cellstr(unique(liq.FLOWREGIME)),'_',' ');
                 plotter.ylabels(labels);
                 plotter.ylim([0 length(labels)+1]);
+                plotter.xlim([min(z) max(z)]);
             end
 
         end

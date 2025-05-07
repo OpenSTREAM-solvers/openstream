@@ -341,6 +341,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.CHF(opt.zIdx)               ,'CHF'                                         );
                 end
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
@@ -363,6 +364,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
 
             % Pressure drops
@@ -378,6 +380,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.DPSUM.K(opt.zIdx)    ,'Local'                             )
                 plotter.plotz(mix.DPSUM.Tot(opt.zIdx)  ,'Total'                             )
                 plotter.legend('show', "Location", 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
              % Velocities
@@ -390,6 +393,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.liquid.U(opt.zIdx),'Liquid' )
                 plotter.plotz(mix.vapor.U(opt.zIdx) ,'Vapor'  )
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Enthalpies
@@ -408,6 +412,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(repmat(mixSolver.fluid(tIdx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
                 plotter.plotz(repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
@@ -426,6 +431,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 end
                 plotter.plotz(mix.VF(opt.zIdx) ,'VoidFraction','DisplayName','Void fraction'      )
                 plotter.legend('show', "Location", 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
@@ -444,6 +450,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.TWALL(opt.zIdx)   +dTemp,'Wall'   );
                 plotter.plotz(repmat(mixSolver.fluid(tIdx).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
@@ -461,6 +468,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.MINTCOND(opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plotz(mix.MTOT(opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
             end
@@ -478,6 +486,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.HINTCOND(opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plotz(mix.HTOT(opt.zIdx)    ,'Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
             end
@@ -493,6 +502,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.TRELAX.XTH(opt.zIdx,:),'RelaxEquil','DisplayName','Wall thermo. quality')
                 plotter.plotz(mix.TRELAX.X(opt.zIdx,:)  ,'WallVapor' ,'DisplayName','Wall vapor quality'  )
                 plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
