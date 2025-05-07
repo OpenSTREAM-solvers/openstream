@@ -53,7 +53,6 @@ function solver(solveINIT)
         vapor  = twfSolver.vaporInit;
         fluid  = twfSolver.fluidInit;
         mix    = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
-        %solveMODE = 'INITIAL';
     else
         if length(twfSolver.liquid) < 2
             return
@@ -63,7 +62,6 @@ function solver(solveINIT)
         vapor  = twfSolver.vapor;
         fluid  = twfSolver.fluid;
         mix    = tfSolver.mixSolver.mixture;
-        %solveMODE = 'SPECIFIED';
     end
 
     % set SOLVED flag to SOLVECONVERGED

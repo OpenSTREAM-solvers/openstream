@@ -56,7 +56,6 @@ function solver(solveINIT)
         drop = tfSolver.dropInit;
         fluid = tfSolver.fluidInit;
         mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
-        %solveMODE = 'INITIAL';
     else
         if length(tfSolver.film) < 2
             return
@@ -66,7 +65,6 @@ function solver(solveINIT)
         drop = tfSolver.drop;
         fluid = tfSolver.fluid;
         mix = tfSolver.mixSolver.mixture;
-        %solveMODE = 'SPECIFIED';
     end
     
     % set SOLVED flag to SOLVECONVERGED

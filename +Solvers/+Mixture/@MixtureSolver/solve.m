@@ -52,7 +52,6 @@ function solver(solveINIT)
     if solveINIT
         mixSolver.log('\nSolve steady-state ...\n');
         mix = mixSolver.mixtureInit;
-        %solveMODE = 'INITIAL';
         fluid   = repmat(mixSolver.fluid(1),1,length(mix));
     else
         if length(mixSolver.mixture) < 2
@@ -60,7 +59,6 @@ function solver(solveINIT)
         end
         mixSolver.log('\nSolve transient ...\n');
         mix = mixSolver.mixture;
-        %solveMODE = 'SPECIFIED';
         fluid   = mixSolver.fluid;
     end
     

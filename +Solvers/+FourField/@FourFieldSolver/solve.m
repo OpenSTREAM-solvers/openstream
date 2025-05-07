@@ -59,7 +59,6 @@ function solver(solveINIT)
         drop = ffSolver.dropInit;
         fluid = ffSolver.fluidInit;
         mix = copy(repmat(ffSolver.mixSolver.mixture(1),1,ffSolver.inputSet.options.SSMAXITER));
-        %solveMODE = 'INITIAL';
     else
         if length(ffSolver.film) < 2
             return
@@ -71,7 +70,6 @@ function solver(solveINIT)
         drop = ffSolver.drop;
         fluid = ffSolver.fluid;
         mix = ffSolver.mixSolver.mixture;
-        %solveMODE = 'SPECIFIED';
     end
     
     % set SOLVED flag to SOLVECONVERGED
