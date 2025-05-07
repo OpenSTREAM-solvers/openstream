@@ -351,7 +351,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     %   Capture comments, indicated by '#' symbol
                     entryExpr{2} = '(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
-                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[@><=&|()\\\*\[\],\w\s\+\-\.]*)?"*';
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[@><=&|()\/\*\[\],\w\s\+\-\.]*)?"*';
                     %   Join parts together and remove spaces (use \s instead).
                     entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
                     
@@ -482,8 +482,10 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     varValue = num2str(reshape(varValue,1,[]),'%.11f ');
                 elseif islogical(varValue)
                     varValue = string(varValue);
-                elseif isa(varValue, 'function_handle') || ((isStringScalar(varValue) || ischar(varValue)) && startsWith(varValue, '@'))
+                elseif isa(varValue, 'function_handle')
                     varValue = func2str(varValue);
+                elseif ((isStringScalar(varValue) || ischar(varValue)) && startsWith(strtrim(varValue), '@'))
+                    % Don't modify value
                 else
                     varValue = upper(varValue);
                 end
