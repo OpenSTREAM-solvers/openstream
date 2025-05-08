@@ -1152,12 +1152,7 @@ classdef Mixture < Solvers.AbstractField
                     chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
             end
             
-            % Apply input multiplier
-            mult = str2func(strcat('@(z) ',lower(model.CBTMULT)));
-            chf = mult(mix.Z).*chf;
-            
-            %TODO: Allow input multiplier function, e.g., model.CBTMULT = 'interp1([0 max(mix.Z)],[1.36 0.25],z)';
-            %chf = linspace(1.36,0.25,mix(1).NZ)'.*chf; 
+            chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
             
             % CBT flag
             cbt = mix.HFLUX(1:mix.NZ,:) > chf;                             % CBT indicator
