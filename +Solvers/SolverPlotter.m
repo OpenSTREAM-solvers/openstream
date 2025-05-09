@@ -1,6 +1,7 @@
 classdef SolverPlotter < handle
     %SOLVERPLOTTER Framework for generating solver plots
-    %   Detailed explanation goes here
+    %
+    %   TODO: Detailed explanations
     
     properties
         FontSize            {mustBePositive, isnumeric}             = 14            % Font size of text in plots
@@ -23,8 +24,8 @@ classdef SolverPlotter < handle
     
     methods
         function plotters = SolverPlotter(Titles, WallIdxs)
-            %SOLVERPLOTTER Construct an instance of this class
-            %   Detailed explanation goes here
+        %SOLVERPLOTTER Creates a solver plotter
+        %
 
             if nargin == 0, return; end
             if ischar(Titles)
@@ -45,6 +46,8 @@ classdef SolverPlotter < handle
         end
 
         function new_ah = newTile(plotters, opts)
+        %newTile Creates a new tile
+        %
             arguments
                 plotters
                 opts.tileTitle = ""
@@ -87,8 +90,8 @@ classdef SolverPlotter < handle
         end
         
         function plotz(plotters,YData, fieldName, opts)
-            %PLOTZ Summary of this method goes here
-            %   Detailed explanation goes here
+        %PLOTZ Plot input (YData) distributions (in space or time)
+        %
             arguments
                 plotters
                 YData
@@ -143,11 +146,11 @@ classdef SolverPlotter < handle
                 lh.Marker = plotStyles.Marker;
 
             end
-            
         end
 
         function plotOAF(plotters, oafIdx)
-
+        %plotOAF Plot onset of annular flow boundary
+        %
             if isscalar(oafIdx)
                 oafIdx = repmat(oafIdx, 1, 2);
             end
@@ -157,7 +160,8 @@ classdef SolverPlotter < handle
         end
 
         function ahs = gca(plotters)
-
+        %gca Get current plotter axes properties
+        %
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -166,12 +170,14 @@ classdef SolverPlotter < handle
         end
 
         function fh = gcf(plotters)
-
+        %gcf Get current plotter handle properties
+        %
             fh = plotters.fh;
         end
         
         function out = xlim(plotters, newLim)
-
+        %xlim Set or query plotter x-axis limits
+        %
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -184,7 +190,8 @@ classdef SolverPlotter < handle
         end
 
         function out = ylim(plotters, newLim)
-
+        %ylim Set or query plotter y-axis limits
+        %
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -197,7 +204,8 @@ classdef SolverPlotter < handle
         end
         
         function ylabels(plotters, labels)
-            
+        %ylabel Label the plotter y-axis
+        %
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -207,7 +215,8 @@ classdef SolverPlotter < handle
         end
 
         function setZs(plotters, Zs)
-
+        %setZs Set the parameter on the plotter x-axis (space or time)
+        %
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -216,7 +225,8 @@ classdef SolverPlotter < handle
         end
 
         function legend(plotters, varargin)
-            
+        %legend Create a plotter legend.
+        %
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -229,6 +239,8 @@ classdef SolverPlotter < handle
     methods (Static)
 
         function plotStyle = fieldName2plotStyle(fieldName)
+        %plotStyle Indicate the plot style (color, marker, etc) for each
+        %fieldName
             
             % Default colors
             colors = ["#0072BD","#D95319","#EDB120","#7E2F8E","#77AC30","#4DBEEE","#A2142F"];
@@ -341,7 +353,7 @@ classdef SolverPlotter < handle
 
         end
 
-
-        end
+    end
+     
 end
 

@@ -1,6 +1,8 @@
 classdef (Abstract) AbstractPhase < handle
-    %ABSTRACTPHASE Summary of this class goes here
-    %   Detailed explanation goes here
+    %ABSTRACTPHASE defines all methods shared by all phase class
+    %definitions across all solvers
+    %
+    %   TODO: Detailed explanations
     
 end
 

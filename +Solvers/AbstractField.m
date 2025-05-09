@@ -1,23 +1,18 @@
 classdef (Abstract) AbstractField < matlab.mixin.Copyable
-    %ABSTRACTFIELD Summary of this class goes here
+    %ABSTRACTFIELD defines all methods shared by all field class definitions across all
+    %solvers
     %
-    %   Detailed explanation goes here
+    %   TODO: Detailed explanations
     
     properties (Abstract=true, SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
-        NZ           (1,1) double  {mustBeNumeric}                          % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                          % [-] Number of time steps
-        TIME         (1,1) double  {mustBeNumeric}                          % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                          % [s] Time step size
-        TIDX         (1,1) double  {mustBeNumeric}                          % [-] Time step index
-        Z            (:,1) double  {mustBeNumeric}                          % [m] Elevation
+        NZ           (1,1) double  {mustBeNumeric}                         % Number of axial steps [-]
+        NTIME        (1,1) double  {mustBeNumeric}                         % Number of time steps [-]
+        TIME         (1,1) double  {mustBeNumeric}                         % Time series [s]
+        DT           (1,1) double  {mustBeNumeric}                         % Time step size [s]
+        TIDX         (1,1) double  {mustBeNumeric}                         % Time step index [-]
+        Z            (:,1) double  {mustBeNumeric}                         % Elevation [m]
 
-        % Flow properties
-        % W            (:,:) double  {mustBeNumeric}                          % [kg/s] Mass flow rate
-        % U            (:,:) double  {mustBeNumeric}                          % [m/s] Velocity
-        % H            (:,:) double  {mustBeNumeric}                          % [J/kg] Enthalpy
-
-        % Iteration properties
-        ITR          (1,1) struct
+        ITR          (1,1) struct                                          % Iteration properties
     end
 
     properties (Access = protected)
@@ -37,8 +32,9 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
         
         function paramData = transient(obj, param, subobj, opt)
-            %TRANSIENT Generate transient distribution array for parameter param
-            %
+        %TRANSIENT Generate transient distribution array for parameter
+        %param
+        %
             
             arguments
                 obj
@@ -135,8 +131,8 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         %
         %  Adapted from https://stackoverflow.com/a/75037451
         %
-            %For the first call with a particular method, create and
-            %memoize a function handle view of the method
+        %For the first call with a particular method, create and
+        %memoize a function handle view of the method
             if ~isConfigured(obj.memoizedFunctions) || ~obj.memoizedFunctions.isKey(methodStr)
                 fn_method = @(varargin)methodHandle(varargin{:});
                 fn = memoize(fn_method);
@@ -177,7 +173,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
 
         function copyFlowProperties(srcObj, targetObj, opts)
-        %COPYFLOWPROPERTIES
+        %COPYFLOWPROPERTIES Copy source object into target object
         %
             arguments
                 srcObj
@@ -219,10 +215,8 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                         else
                             targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
                         end
-                        
                     end
                 end
-
 
             end
 

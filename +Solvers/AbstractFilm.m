@@ -1,24 +1,23 @@
 classdef (Abstract) AbstractFilm < Solvers.AbstractField
-    %ABSTRACTFILM Summary of this class goes here
+    %ABSTRACTFILM defines all methods shared by all liquid film class
+    %definitions in the three- and four-field solvers
     %
-    %   Detailed explanation goes here
+    %   TODO: Detailed explanations
 
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
         
-        DZ           (1,1) double  {mustBeNumeric}                         =0      % [m] Axial step size
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}
-        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}    = NaN
+        DZ           (1,1) double  {mustBeNumeric}                         =0      % Axial step size [m]
+        inputSet                   {isa(inputSet,'Inputs.InputSet')}               % Input set
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}           % Fluid properties
+        mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % Mixture property of the mixture solver
     end
    
 
     methods
         
         function absfilm = AbstractFilm(inputSet, fluid)
-            %ABSFILM Creates an abstract film, absfilm
+            %AbstractFilm Creates an abstract film
             %
-            %   Detailed explanation goes here
-
             if nargin > 0
                 % Store inputSet as object property
                 absfilm.inputSet = inputSet;
@@ -30,8 +29,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
         
         function wl = WL(absfilm,zIdx)
-        %WL Film mass flow rate per unit perimeter
-        %    
+        %WL Film mass flow rate per unit perimeter [kg/s/m]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -41,8 +39,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
         
         function thick = THICK(absfilm,zIdx)
-        %THICK Film thickness
-        %
+        %THICK Film thickness [m]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -54,7 +51,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         function re = RE(absfilm,zIdx)
         %RE Film Reynolds number [-]
         %
-        %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             muf   = absfilm.fluid.MUF;                                     % [kg/m^3] Saturated liquid viscosity
@@ -63,7 +59,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
         
         function ment = MENT(absfilm,zIdx)
-        %MENT Film entrainment mass flux
+        %MENT Film entrainment mass flux [kg/m^2/s]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -81,14 +77,14 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 case InputEnums.ENTRAINMENT.GOVAN
                     % Govan & Hewitt film entrainment model
                     vapor = absfilm.mix.vapor;
-                    rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
-                    rhog  = absfilm.fluid.RHOG;                                    % [kg/m^3] Saturated vapor density
-                    muf   = absfilm.fluid.MUF;                                     % [kg/m^3] Saturated liquid viscosity
-                    mug   = absfilm.fluid.MUG;                                     % [kg/m^3] Saturated vapor viscosity
-                    sig   = absfilm.fluid.SIGMA;                                   % [N/m] Surface tension
-                    hdiam = absfilm.inputSet.geometry.HDIAM;                       % [m] Hydraulic diameter
-                    area  = absfilm.inputSet.geometry.AREA;                        % [m^2] Coolant area
-                    perim = absfilm.inputSet.geometry.PERIM;                       % [m^2] Coolant area
+                    rhof  = absfilm.fluid.RHOF;                            % [kg/m^3] Saturated liquid density
+                    rhog  = absfilm.fluid.RHOG;                            % [kg/m^3] Saturated vapor density
+                    muf   = absfilm.fluid.MUF;                             % [kg/m^3] Saturated liquid viscosity
+                    mug   = absfilm.fluid.MUG;                             % [kg/m^3] Saturated vapor viscosity
+                    sig   = absfilm.fluid.SIGMA;                           % [N/m] Surface tension
+                    hdiam = absfilm.inputSet.geometry.HDIAM;               % [m] Hydraulic diameter
+                    area  = absfilm.inputSet.geometry.AREA;                % [m^2] Coolant area
+                    perim = absfilm.inputSet.geometry.PERIM;               % [m^2] Coolant area
                     
                     k = 5.75e-5; n1 = 0.316; n2 = 0.632;                   % Model constants
                     Wfc = muf.*exp(5.8504+0.4249*mug/muf*sqrt(rhof/rhog)).*perim./4; % [kg/s] Critical film flow rate
@@ -118,20 +114,19 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
             ment(negfilm)=-ment(negfilm);
             ment = -absfilm.mix.AFDISTR(0,ment,zIdx);                      % [kg/m^2/s] Entrainment mass flux, in annular flow region only
-
         end
         
         function Mtot = MTOT(absfilm,drop,zIdx)
-        %MTOT Total
+        %MTOT Total film mass transfer [kg/m^2/s]
         %
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
             
             %TODO: incorporate mix as a property?
-            Mtot  = absfilm.MEVAP(zIdx,:)+absfilm.MENT(zIdx)+drop.MDEP(zIdx);   
+            Mtot  = absfilm.MEVAP(zIdx,:)+absfilm.MENT(zIdx)+drop.MDEP(zIdx);  % [kg/m^2/s]
         end
         
         function Cw = CW(absfilm,zIdx)
-        %CW Wall friction factor
+        %CW Film wall friction factor [-]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -149,47 +144,43 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             end
             
             Cw  = absfilm.mix.AFDISTR(C,Cw,zIdx);
-            
         end
         
         function Fwall = FWALL(absfilm,zIdx)
-        %FWALL Film wall shear stress
+        %FWALL Film wall shear stress [N/m^2]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             Fwall  = -0.5.*absfilm.CW(zIdx).*absfilm.fluid.RHOF.*absfilm.U(zIdx,:).^2; % [N/m^2]
-            
         end
 
         function Uwall = UWALL(absfilm,zIdx)
-        %UWALL [m/s] Film wall velocity 
+        %UWALL Film wall friction velocity [m/s]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             rho_ls = absfilm.fluid.RHOF;
-            Uwall  = (-absfilm.FWALL(zIdx)./rho_ls).^0.5;                    % [m/s] Wall friction velocity
-
+            Uwall  = (-absfilm.FWALL(zIdx)./rho_ls).^0.5;                  % [m/s]
         end
 
         function thick = YPLUS2THICK(absfilm, yplus, zIdx)
-        %YPLUS2THICK Calculate thickness from wall unit value
+        %YPLUS2THICK Thickness based on wall unit value [m]
         %
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
 
-            rho_ls = absfilm.fluid.RHOF;                                    % Saturated liquid mass density
-            mu_ls = absfilm.fluid.MUF;                                      % Saturated liquid viscosity
-            nu_ls = mu_ls./rho_ls;                                          % Saturated liquid kinematic viscosity
-            thick = yplus./absfilm.UWALL(zIdx).*nu_ls;                      % [m] Converted thickness
-
+            rho_ls = absfilm.fluid.RHOF;                                   % Saturated liquid mass density
+            mu_ls = absfilm.fluid.MUF;                                     % Saturated liquid viscosity
+            nu_ls = mu_ls./rho_ls;                                         % Saturated liquid kinematic viscosity
+            thick = yplus./absfilm.UWALL(zIdx).*nu_ls;                     % Converted thickness [m]
         end
         
         function Cv = CV(absfilm,zIdx)
-        %CV Film/vapor interfacial friction factor
+        %CV Film/vapor interfacial friction factor [-]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             model = absfilm.inputSet.model;
-            nwall = absfilm.inputSet.geometry.NWALL;                          % Number of walls
+            nwall = absfilm.inputSet.geometry.NWALL;                       % Number of walls
             C = model.VAPORFRICCST;                                        % [-] Friction constant
             
             switch model.VAPORFRIC
@@ -199,33 +190,31 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                     
                 case InputEnums.VAPORFRIC.WALLIS
                     %
-                    vf = absfilm.mix.vapor.VF(zIdx);                               % [-]
+                    vf = absfilm.mix.vapor.VF(zIdx);                       % [-]
                     Cv = C.*(1+75.*(1-vf));                                % [-]
                     Cv = repmat(Cv,1,nwall);                               % [-]
                     
                 case InputEnums.VAPORFRIC.WALLISTHICK
                     %
-                    thick = abs(absfilm.THICK(zIdx));                         % [m] Film thickness
-                    Cv = absfilm.CV_WALLISTHICK_CALC(thick,C);                 % Call private method
+                    thick = abs(absfilm.THICK(zIdx));                      % [m] Film thickness
+                    Cv = absfilm.CV_WALLISTHICK_CALC(thick,C);             % Call private method
             end
             
-            Cv  = absfilm.mix.AFDISTR(0,Cv,zIdx);   
-            
+            Cv  = absfilm.mix.AFDISTR(0,Cv,zIdx);                          % [-]
         end
         
         function Fvapor = FVAPOR(absfilm,zIdx)
-        %FVAPOR Film vapor shear stress
+        %FVAPOR Film vapor shear stress [N/m^2]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
-            UVAP = absfilm.mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
+            UVAP = absfilm.mix.vapor.U(zIdx);                              % [m/s] Vapor velocity
             
             Fvapor = 0.5.*absfilm.CV(zIdx).*absfilm.fluid.RHOG.*(UVAP-absfilm.U(zIdx,:)).^2; % [N/m^2]
-            
         end
         
         function Fbuoy = FBUOY(absfilm,zIdx)
-        %FBUOY Film buoyancy
+        %FBUOY Film buoyancy [N/m^2]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -235,62 +224,57 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             Fbuoy = thick.*(DPDZ);                                         % [N/m^2]
             
             Fbuoy = absfilm.mix.AFDISTR(0,Fbuoy,zIdx);   
-            
         end
         
         function Fgrav = FGRAV(absfilm,zIdx)
-        %FGRAV Film gravity
+        %FGRAV Film gravity [N/m^2]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
             model = absfilm.inputSet.model;
-            thick = abs(absfilm.THICK(zIdx));                                 % [m] Film thickness
+            thick = abs(absfilm.THICK(zIdx));                              % [m] Film thickness
             
             Fgrav = -thick.*(model.G*cos(model.ANGLE*pi/180)*absfilm.fluid.RHOF); % [N/m^2]
             
             Fgrav = absfilm.mix.AFDISTR(0,Fgrav,zIdx);
-
         end
         
         function Fdep = FDEP(absfilm,drop,zIdx)
-        %FDEP Drop deposition shear
+        %FDEP Drop deposition shear [N/m^2]
         %
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
             
-            dep  = drop.MDEP(zIdx);                                    % [kg/m^2/s] Drop deposition mass flux
+            dep  = drop.MDEP(zIdx);                                        % [kg/m^2/s] Drop deposition mass flux
             
-            Fdep = (drop.U(zIdx)-absfilm.U(zIdx,:)).*dep;                     % [N/m^2]
+            Fdep = (drop.U(zIdx)-absfilm.U(zIdx,:)).*dep;                  % [N/m^2]
             
             Fdep = absfilm.mix.AFDISTR(0,Fdep,zIdx);   
-            
         end
         
         function Ftot = FTOT(absfilm,drop,zIdx)
-        %FTOT Total
+        %FTOT Total film forces per unit wall area [N/m^2]
         %
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
             
-            %Ftot  = film.FWALL(zIdx)+film.FVAPOR(zIdx)+film.FBUOY(zIdx)+film.FDEP(drop,zIdx);   
-            Ftot  = absfilm.FWALL(zIdx)+absfilm.FVAPOR(zIdx)+absfilm.FBUOY(zIdx)+absfilm.FGRAV(zIdx)+absfilm.FDEP(drop,zIdx);   
-            
+            Ftot  = absfilm.FWALL(zIdx)+absfilm.FVAPOR(zIdx)+absfilm.FBUOY(zIdx)+absfilm.FGRAV(zIdx)+absfilm.FDEP(drop,zIdx);  % [N/m^2]
         end
         
         function Ualgebr = UALGEBR(absfilm,zIdx)
-        %UALGEBR Film velocity based on simple algebraic model
+        %UALGEBR Film velocity based on simple algebraic model [m/s]
         %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
-            TAUW  = absfilm.mix.TAUW(zIdx);                                        % [Pa] Wall shear stress
+            TAUW  = absfilm.mix.TAUW(zIdx);                                % [Pa] Wall shear stress
             Cw = absfilm.CW(zIdx);
             
-            Ualgebr = sqrt((2*TAUW/absfilm.fluid.RHOF)./Cw);                  % [m/s] 
+            Ualgebr = sqrt((2*TAUW/absfilm.fluid.RHOF)./Cw);               % [m/s] 
             
             Ualgebr  = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),Ualgebr,zIdx);  
-
         end
         
         function Uequil = UEQUILS(absfilm,zIdx)
-            %UEQUILS Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)
+            %UEQUILS Film velocity based on simple equilibrium model (Fwall
+            %+ Fvapor = 0)  [m/s]
             %
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -315,11 +299,11 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             end
             
             Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),absfilm.U(zIdx,:),zIdx);
-            
         end
         
         function Uequil = UEQUIL(absfilm,drop,zIdx)
-            %UEQUIL Film velocity based on complete equilibrium model (Ftot = 0)
+            %UEQUIL Film velocity based on complete equilibrium model (Ftot
+            %= 0) [m/s]
             %
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
             
@@ -344,7 +328,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             end
             
             Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),absfilm.U(zIdx,:),zIdx);
-            
         end
         
     end
@@ -353,34 +336,32 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         
         function Cw = CW_TURB_CALC(absfilm,zIdx,C)
         %CW_TURB_CALC Private method to calculate the turbulent wall
-        %friction factor
+        %friction factor [-]
 
-            nwall = absfilm.inputSet.geometry.NWALL;                  % Number of walls
-            Cw = repmat(C,length(zIdx),nwall);                     % [-]
-
+            nwall = absfilm.inputSet.geometry.NWALL;                       % Number of walls
+            Cw = repmat(C,length(zIdx),nwall);                             % [-]
         end
 
         function Cw = CW_LAM_CALC(absfilm,zIdx,C)
         %CW_LAM_CALC Private method to calculate the laminar wall
-        %friction factor
+        %friction factor [-]
 
             RE = max(absfilm.RE(zIdx),1E-6);
-            Cw = max(16./RE,C);                                    % [-]
+            Cw = max(16./RE,C);                                            % [-]
         end
 
         function Cv = CV_WALLISTHICK_CALC(absfilm, thick, C)
         %CV_WALLISTHICK_CALC Private method to calculate the interfacial
-        %shear using the WALLISTHICK model
+        %shear factor using the WALLISTHICK model [-]
 
-            area = absfilm.inputSet.geometry.AREA;                    % [m^2] Cross-section area
-            perim = absfilm.inputSet.geometry.PERIM;                  % [m]   Perimeter(s)
-            Cv = C.*(1+(75/area).*sum(perim.*thick,2));            % [-]
-
+            area = absfilm.inputSet.geometry.AREA;                         % [m^2] Cross-section area
+            perim = absfilm.inputSet.geometry.PERIM;                       % [m]   Perimeter(s)
+            Cv = C.*(1+(75/area).*sum(perim.*thick,2));                    % [-]
         end
         
         function entnum = ENTNUM(absfilm, zIdx)
         %ENTNUM Private method to calculate the entrainment number
-        %based on Okawa model assumptions
+        %based on Okawa model assumptions [-]
         
             vapor = absfilm.mix.vapor;
             rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
@@ -398,7 +379,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;              % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
             slip = ones(size(Wf)); err=1;                                  % [-, -] Set initial guess and error for delta search
             for it = 1:100
-                delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim;  % [m] Film thicknesse(s)
+                delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim; % [m] Film thicknesse(s)
                 Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);            % [-] Interfacial friction factor, thick=delta, C=0.005
                 newslip = sqrt(Cw./Cv.*(rhof/rhog));                       % [-] Slip formulation
                 err = max(abs((newslip)./(slip)-1));                       % [-] Error
@@ -411,13 +392,12 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             end
             
             entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
-            
         end
         
         function ment = OKAWAMENT(absfilm, zIdx, coefs)
         %OKAWAMENT Private method to calculate the entrainment mass flux
-        %based on Okawa models
-            
+        %based on Okawa models [kg/m^2/s]
+        %    
             rhof   = absfilm.fluid.RHOF;                                   % [kg/m^3] Saturated liquid density
             rhog   = absfilm.fluid.RHOG;                                   % [kg/m^3] Saturated vapor density
             entnum = absfilm.ENTNUM(zIdx);                                 % [-] Entrainment number
@@ -431,13 +411,12 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             deltaRe = 100;                                                 % [-] Set a Re window size across critical film Reynolds
             mult = min(1,max(0,(absfilm.RE(zIdx)-(Refc-deltaRe/2))./deltaRe)); % Set to 0 (linearly across Re window to avoid potential non-convergence)
             ment = mult.*ment;
-            
         end
         
         function [ke, n2] = OKAWACOEFS(absfilm, entnum, coefs)
         %OKAWACOEFS Private method to determine the coefficients used in
         %OKAWA entrainment models based on the calculated entrainment number
-        
+        %
             n2array = coefs(4:2:end);
             entbp = coefs(5:2:end);
             
@@ -450,7 +429,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 n2(k) = n2array(length(kearray));
             end
             ke = reshape(ke,size(entnum)); n2 = reshape(n2,size(entnum)); 
-            
         end
         
     end
@@ -459,12 +437,12 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
     
         function cpObj = copyElement(obj)
         %COPYELEMENT Override copyElement method to create correct references
-        %with properties liquid and vapor 
-
+        %with properties liquid and vapor
+        %
             % Make a shallow copy of all four properties
             cpObj = copyElement@matlab.mixin.Copyable(obj);
-           
         end
+        
     end
 
 end

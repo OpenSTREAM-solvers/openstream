@@ -9,7 +9,7 @@ Solvers
    /Packages/Solvers-*
 
 
-:mod:`Solvers` is pretty cool.
+:mod:`Solvers` defines the individual solver packages and related superclasses.
 
 .. automodule:: Solvers
    :show-inheritance:
