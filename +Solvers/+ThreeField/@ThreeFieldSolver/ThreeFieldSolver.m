@@ -1,15 +1,16 @@
 classdef ThreeFieldSolver < Solvers.AbstractSolver
-    %THREEFIELDSOLVER Summary of this class goes here
-    %   Detailed explanation goes here
+    %THREEFIELDSOLVER defines any task related to initalizing, solving and plotting the results based on the three-field approach.
+    %
+    %   TODO: Detailed explanations
     
      properties (SetAccess=protected)
         
-        NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
-        TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
-        Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
-        DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
+        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+        NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
+        TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
+        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
+        DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
         fluid       {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
@@ -34,6 +35,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
     end
 
     methods
+        
         function tfSolver = ThreeFieldSolver(inputSet,mixSolver)
             %THREEFIELDSOLVER Creates a ThreeField solver
             %   Detailed explanation goes here
@@ -55,13 +57,11 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             
             % Initialize solver parameters
             tfSolver.initializeSolver();
-
         end
         
         function initializeSolver(tfSolver)
         %INITIALIZESOLVER Initialize solver using the stored inputSet
         %
-            
             import Inputs.*
             import Solvers.ThreeField.*
             import Solvers.*
@@ -218,13 +218,11 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             % set STATE to UNSOLVED
             tfSolver.STATE = SolverState.UNSOLVED;
-            
         end
         
         function e0 = EQUIL(tfSolver,flm,drp,mix,zIdx)
         %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
         %
-            
             errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
             nwall = tfSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = tfSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
@@ -264,12 +262,13 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
             
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
- 
         end
 
         function plotter = plotz(tfSolver, tIdx, opt)
-        %PLOTZ
+        %PLOTZ Plot spatial distributions of three-field parameters
+        %
         %   NOTE: currently supports only single timeStep
+        %
             arguments
                 tfSolver
                 tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = 1
@@ -435,8 +434,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
         
         function plotter = plott(tfSolver, zIdx, opt)
-        %PLOTT 
+        %PLOTT Plot temporal distributions of three-field parameters
+        %
         %   NOTE: currently supports only single elevation
+        %
             arguments
                 tfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = tfSolver.NZ
@@ -587,9 +588,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
         
         function plotzt(tfSolver, opt)
-        %PLOTZT: 2d plot, position z on horizontal and time t on vertical axis
+        %PLOTZT: Plot 2D time/elevation distributions of three-field parameters
         %
-            
             arguments
                 tfSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U'}
@@ -663,7 +663,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     end
                 end
             end
-
         end
         
         function saveResults(tfSolver, opts)
@@ -698,9 +697,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()');
                     end
             end
-
         end
 
     end
+    
 end
 

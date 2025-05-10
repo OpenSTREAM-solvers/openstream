@@ -1,7 +1,7 @@
 Two-fluid solver
 =================
 
-:mod:`TwoFluid Solver` is pretty cool.
+:mod:`TwoFluid Solver` defines a set of solver and field classes related to the two-fluid approach.
    
 .. automodule:: Solvers.TwoFluid
    :show-inheritance:

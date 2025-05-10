@@ -1,7 +1,7 @@
 InputEnums
 ==========
 
-:mod:`InputEnums` defines a set of enumaration classes used to specify allowable options for selected physical models.
+:mod:`InputEnums` defines a set of enumeration classes used to specify allowable options for selected physical models.
 
 .. automodule:: InputEnums
    :show-inheritance:

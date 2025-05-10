@@ -1,24 +1,25 @@
 classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
-    %FOURFIELDSOLVER Summary of this class goes here
-    %   Detailed explanation goes here
+    %FOURFIELDSOLVER defines any task related to initalizing, solving and plotting the results based on the four-field approach.
+    %
+    %   TODO: Detailed explanations
     
      properties (SetAccess=protected)
         
-        % NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
-        % NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
-        % TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
-        % DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
-        % Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
-        % DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
-        % 
-        % fluid       {isa(fluid,'Inputs.FluidProperties')}
-        % boundaryConditions
-        % 
-        % filmInit
-        % dropInit
-        % fluidInit
-        % film
-        % drop
+%         NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+%         NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
+%         TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
+%         DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+%         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
+%         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
+%         
+%         fluid       {isa(fluid,'Inputs.FluidProperties')}
+%         boundaryConditions
+%         
+%         filmInit
+%         dropInit
+%         fluidInit
+%         film
+%         drop
 
      end
 
@@ -34,9 +35,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
     end
 
     methods
+        
         function ffSolver = FourFieldSolver(inputSet,mixSolver)
             %FOURFIELDSOLVER Creates a FourField solver
-            %   Detailed explanation goes here
+            %
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
@@ -55,13 +57,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % 
             % % Initialize solver parameters
             % ffSolver.initializeSolver();
-
         end
         
         function initializeSolver(ffSolver)
         %INITIALIZESOLVER Initialize solver using the stored inputSet
         %
-            
             import Inputs.*
             import Solvers.FourField.*
             import Solvers.SolverState
@@ -223,13 +223,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             % set STATE to UNSOLVED
             ffSolver.STATE = SolverState.UNSOLVED;
-            
         end
         
         function e0 = EQUIL(ffSolver,flm,drp,mix,zIdx)
         %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
         %
-            
             errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
             nwall = ffSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = ffSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
@@ -269,12 +267,13 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             end
             
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
-            
         end
 
         function plotter = plotz(ffSolver, tIdx, opt)
-        %PLOTZ
+        %PLOTZ Plot spatial distributions of four-field parameters
+        %
         %   NOTE: currently supports only single timeStep
+        %
             arguments
                 ffSolver
                 tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = 1
@@ -571,8 +570,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         end
         
         function plotter = plott(ffSolver, zIdx, opt)
-        %PLOTT 
+        %PLOTT Plot temporal distributions of four-field parameters
+        %
         %   NOTE: currently supports only single elevation
+        %
             arguments
                 ffSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = ffSolver.NZ
@@ -836,13 +837,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(drp.transient('FTOT' ,flm,'zIdx',zIdx)','Total'                                       );
                 plotter.legend('show', 'Location', 'best');
             end
-            
         end
         
         function plotzt(ffSolver, opt)
-        %PLOTZT: 2d plot, position z on horizontal and time t on vertical axis
+        %PLOTZT: Plot 2D time/elevation distributions of four-field parameters
         %
-            
             arguments
                 ffSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U','FREQUENCY'}
@@ -942,7 +941,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     end
                 end
             end
-
         end
         
         function saveResults(ffSolver, opts)
@@ -979,9 +977,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()');
                     end
             end
-
         end
 
     end
+    
 end
 

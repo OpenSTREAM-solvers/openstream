@@ -1,15 +1,16 @@
 classdef TwoFluidSolver < Solvers.AbstractSolver
-    %TWOFLUIDSOLVER Summary of this class goes here
-    %   Detailed explanation goes here
+    %TWOFLUIDSOLVER defines any task related to initalizing, solving and plotting the results based on the two-fluid approach.
+    %
+    %   TODO: Detailed explanations
     
      properties (SetAccess=protected)
         
-        NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
-        TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
-        Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
-        DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
+        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+        NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
+        TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
+        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
+        DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
         fluid       {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
@@ -34,9 +35,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
     end
 
     methods
+        
         function twfSolver = TwoFluidSolver(inputSet,mixSolver)
             %TWOFLUIDSOLVER Creates a TwoFluid solver
-            %   Detailed explanation goes here
+            %
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
@@ -61,7 +63,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         function initializeSolver(twfSolver)
         %INITIALIZESOLVER Initialize solver using the stored inputSet
         %
-            
             import Inputs.*
             import Solvers.TwoFluid.*
             import Solvers.*
@@ -178,8 +179,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         end
 
         function plotter = plotz(twfSolver, tIdx, opt)
-        %PLOTZ
+        %PLOTZ Plot spatial distributions of two-fluid parameters
+        %
         %   NOTE: currently supports only single timeSteps
+        %
             arguments
                 twfSolver
                 tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = 1
@@ -445,12 +448,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.ylim([0 length(labels)+1]);
                 plotter.xlim([min(z) max(z)]);
             end
-
         end
         
         function plotter = plott(twfSolver, zIdx, opt)
-        %PLOTT
+        %PLOTT Plot temporal distributions of two-fluid parameters
+        %
         %   NOTE: currently supports only single elevation
+        %
             arguments
                 twfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = twfSolver.NZ
@@ -711,13 +715,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.ylabels(labels);
                 plotter.ylim([0 length(labels)+1]);
             end
-            
         end
         
         function plotzt(twfSolver, opt)
-        %PLOTZT: 2d plot, position z on horizontal and time t on vertical axis
+        %PLOTZT: Plot 2D time/elevation distributions of two-fluid parameters
         %
-            
             arguments
                 twfSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',                     'W',               'U',               'H',           'X',                 'VF'}
@@ -778,7 +780,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     end
                 end
             end
-
         end
         
         function saveResults(twfSolver, opts)
@@ -813,10 +814,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()');
                     end
             end
-
-
         end
 
     end
+    
 end
 

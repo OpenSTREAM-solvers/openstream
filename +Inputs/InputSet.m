@@ -1,6 +1,7 @@
 classdef InputSet
     %INPUTSET Creates set of input objects
-    %   Detailed explanation goes here
+    %
+    %   TODO: Detailed explanations
     
     properties (SetAccess = private)
         model
@@ -13,8 +14,10 @@ classdef InputSet
     
     methods
         function obj = InputSet(opts)
-            %INPUTSET Construct an instance of this class
-            %   Detailed explanation goes here
+        %INPUTSET Construct an instance of this class
+        %
+        %   Detailed explanation goes here
+        %
             arguments
                 opts.modelFilePath      {isfile}            = ''        % Model input file (inp/json)
                 opts.modelID            {mustBeTextScalar}  = ''        % Model ID
@@ -93,10 +96,11 @@ classdef InputSet
             end
 
             obj.session.log.diaryOff();
-
         end
         
         function inputSet = applySolverDependentProps(inputSet, solverName)
+        %APPLYSOLVERDEPENDENTPROPS
+        %
             arguments
                 inputSet        Inputs.InputSet
                 solverName      {mustBeTextScalar}
@@ -106,11 +110,9 @@ classdef InputSet
             inputSet.options = inputSet.options.applySolverDependentProperties(solverName);
             inputSet.geometry = inputSet.geometry.applySolverDependentProperties(solverName);
             inputSet.bc = inputSet.bc.applySolverDependentProperties(solverName);
-
         end
     
     end
-
     
 end
 

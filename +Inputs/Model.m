@@ -1,6 +1,7 @@
 classdef Model < Inputs.Input
-    %MODEL Summary of this class goes here
-    %   Detailed explanation goes here
+    %MODEL Defines all physical model options.
+    %
+    %   TODO: Detailed explanations
     
     properties (SetAccess=?Inputs.Input)
         
@@ -113,9 +114,10 @@ classdef Model < Inputs.Input
     end
 
     methods
+        
         function obj = Model(filePath,modelID)
-            %MODEL Construct an instance of this class
-            %   Detailed explanation goes here
+            %MODEL Construct an instance of model
+            %
             arguments
                 filePath = ""
                 modelID = ""
@@ -131,7 +133,6 @@ classdef Model < Inputs.Input
                 return
             end
             
-            %
             % List of immutable obj property names
             objPropnames = obj.listInputProperties();
             
@@ -207,14 +208,13 @@ classdef Model < Inputs.Input
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
-            
         end
-        
 
     end
     
     methods (Static)
         function writeInputFile(filePathName, ID, varargin)
+        %WRITEINPUTFILE
             Inputs.Input.writeInputFile(filePathName, "a+", "ID", ID, varargin{:});
         end
     end

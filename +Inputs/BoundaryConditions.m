@@ -1,6 +1,7 @@
 classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
-    %BOUNDARYCONDITIONS Summary of this class goes here
-    %   Detailed explanation goes here
+    %BOUNDARYCONDITIONS Defines all boundary parameters.
+    %
+    %   TODO: Detailed explanations
     
     properties (SetAccess=?Inputs.Input)
         

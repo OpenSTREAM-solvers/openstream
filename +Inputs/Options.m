@@ -1,6 +1,7 @@
 classdef Options < Inputs.Input
-    %OPTIONS Summary of this class goes here
-    %   Detailed explanation goes here
+    %OPTIONS Defines all numerical options.
+    %
+    %   TODO: Detailed explanations
     
     properties (SetAccess=?Inputs.Input)
         

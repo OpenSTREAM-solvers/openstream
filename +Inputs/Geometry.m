@@ -1,6 +1,7 @@
 classdef Geometry < Inputs.Input
-    %GEOMETRY Summary of this class goes here
-    %   Detailed explanation goes here
+    %GEOMETRY Defines all geometrical inputs.
+    %
+    %   TODO: Detailed explanations
     
     properties (SetAccess=?Inputs.Input)
         
@@ -14,8 +15,8 @@ classdef Geometry < Inputs.Input
 
     methods
         function obj = Geometry(filePath,geometryID)
-            %MODEL Construct an instance of this class
-            %   Detailed explanation goes here
+        %Geometry Construct an instance of Geometry
+        %
             arguments
                 filePath = ""
                 geometryID = ""
@@ -92,37 +93,31 @@ classdef Geometry < Inputs.Input
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
-
         end
 
         function dh = HDIAM(obj)
-            % HDIAM Hydraulic diameter
-            
+        % HDIAM Hydraulic diameter
+        %
             dh = 4*obj.AREA/sum(obj.PERIM);
-            
         end
         
         function da = ADIAM(obj)
-            % ADIAM Diameter based on coolant cross-section area
-            
+        % ADIAM Diameter based on coolant cross-section area
+        %
             da = 2*sqrt(obj.AREA/pi);
-            
         end
         
         function N = NWALL(obj)
-            % NWALL Number of walls
-            
+        % NWALL Number of walls
+        %
             N = length(obj.PERIM);
-            
         end
         
         function R = RWALL(obj)
-            % RWALL Wall perimeter ratio
-            
+        % RWALL Wall perimeter ratio
+        %    
             R = obj.PERIM./sum(obj.PERIM); 
-            
         end
-        
 
     end
     

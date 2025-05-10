@@ -1,15 +1,16 @@
 classdef MixtureSolver < Solvers.AbstractSolver
-    %MIXTURESOLVER Summary of this class goes here
-    %   Detailed explanation goes here
+    %MIXTURESOLVER defines any task related to initalizing, solving and plotting the results based on the mixture approach.
+    %
+    %   TODO: Detailed explanations
     
      properties (SetAccess=private)
         
-        NZ           (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of axial steps
-        NTIME        (1,1) double  {mustBeNumeric}                          = 0         % [-] Number of time steps
-        TIME         (:,1) double  {mustBeNumeric}                          = 0         % [s] Time series
-        DT           (1,1) double  {mustBeNumeric}                          = 0         % [s] Time step size
-        Z            (:,1) double  {mustBeNumeric}                          = 1.        % [m] Elevation
-        DZ           (1,1) double  {mustBeNumeric}                          = 0         % [m] Axial step size
+        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+        NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
+        TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
+        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
+        DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
         fluid        {isa(fluid,'Inputs.FluidProperties')}
         boundaryConditions
@@ -30,9 +31,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
     end
 
     methods
+        
         function mixSolver = MixtureSolver(inputSet)
-            %MIXTURESOLVER Creates a Mixture solver
-            %   Detailed explanation goes here
+        %MIXTURESOLVER Creates a Mixture solver
+        %
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
             end
@@ -42,13 +44,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
             
             % Initialize solver parameters
             mixSolver.initializeSolver();
-
         end
         
         function initializeSolver(mixSolver)
         %INITIALIZESOLVER Initialize solver using the stored inputSet
         %
-            
             import Inputs.*
             import Solvers.Mixture.*
             import Solvers.*
@@ -70,7 +70,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Interpolate BCs in time and space (z)
             mixSolver.interpBoundaryConditions();
             
-            %
             % Create mixture array (by timestep)
 
             % Setup DP structure
@@ -197,9 +196,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function mixSolver = interpBoundaryConditions(mixSolver)
-            %INTERPBOUNDARYCONDITIONS Expand specified boundary conditions
-            %to every node and timestep defined by the model and geometry.
-            %   Detailed explanation goes here
+        %INTERPBOUNDARYCONDITIONS Expand specified boundary conditions
+        %to every node and timestep defined by the model and geometry.
+        %
             
             % Retrieve list of boundary condition properties
             bcFields = mixSolver.inputSet.bc.listInputProperties();
@@ -278,14 +277,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         );
                     end
                 end
-
             end
 
         end
 
         function plotter = plotz(mixSolver, tIdx, opt)
-        %PLOTZ
+        %PLOTZ Plot spatial distributions of mixture parameters
+        %
         %   NOTE: currently supports only single timeStep
+        %
             arguments
                 mixSolver
                 tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = 1
@@ -507,12 +507,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
             end
-
         end
         
         function plotter = plott(mixSolver, zIdx, opt)
-        %PLOTT
+        %PLOTT Plot temporal distributions of mixture parameters
+        %
         %   NOTE: currently supports only single elevation
+        %
             arguments
                 mixSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                       = mixSolver.NZ
@@ -730,13 +731,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
             end
-            
         end
 
         function fh = plotzt(mixSolver, opt)
-        %PLOTZT: 2d plot, position z on horizontal and time t on vertical axis
+        %PLOTZT: Plot 2D time/elevation distributions of mixture parameters
         %
-            
             arguments
                 mixSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF'}
@@ -809,7 +808,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     end
                 end
             end
-
         end
         
         function saveResults(mixSolver, opts)
@@ -842,11 +840,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         error('%s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
                     end
             end
-
-
         end
 
         function interpOut = timeInterpolate(mix, y)
+        %TIMEINTERPOLATE
+        %
             if isscalar([mix.inputSet.bc.TIME])
                 interpOut = y;
             else
@@ -858,8 +856,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function interpOut = axialInterpolate(mix, x, y)
-        %AXIALINTERPOLATE
-        % Linear extrapolation is used for cases where interpolation returns NaN (for instance, point slightly outside allowed tolerance when 'next' interpolation methos is selected)
+        %AXIALINTERPOLATE Linear extrapolation is used for cases where
+        %interpolation returns NaN (for instance, point slightly outside
+        %allowed tolerance when 'next' interpolation method is selected)
+        %
             interpOut = interp1(x, ...
                                 y, ...
                                 mix.Z, ...
@@ -871,6 +871,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                                 'linear', ...
                                 "extrap");               
         end
+        
     end
+    
 end
 
