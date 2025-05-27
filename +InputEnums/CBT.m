@@ -1,9 +1,12 @@
 classdef CBT
 %CBT Critical Boiling Transition model
-%   Detailed explanation goes here
+%
+%   Defines the model used to evaluate the Critical Boilign Transition.
+%   Used by the mixture solver.
+%
     enumeration
-        NONE
-        BIASI
+        NONE                 % No CBT transition
+        BIASI                % Biasi model
     end
+
 end
-    

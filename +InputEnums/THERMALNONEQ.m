@@ -1,11 +1,14 @@
 classdef THERMALNONEQ
 %THERMAL Thermal non-equilibrium model
-%   Detailed explanation goes here
+%
+%   Defines the model used to calculate the phase thermal non-equilibrium
+%   Used by the mixture solver
+%
     enumeration
-        EQUILIBRIUM % Equilibrium model
-        SAHAZUBER   % Saha-Zuber subcooled boiling
-        EPRI        % EPRI subcooled boiling
-        RELAXATION  % Time relaxation subcooled boiling & post-CHF model
+        EQUILIBRIUM          % Equilibrium model (X = XEQ)
+        SAHAZUBER            % Saha-Zuber subcooled boiling model
+        EPRI                 % EPRI subcooled boiling model
+        RELAXATION           % Time relaxation subcooled boiling & post-CHF model
     end
+
 end
-    

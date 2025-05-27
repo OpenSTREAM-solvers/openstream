@@ -1,11 +1,14 @@
 classdef MOMENTWAVE
 %MOMENTWAVE Film momentum conservation model
-%   Defines the type of momentum conservation used on the wave field. These
-%   momentum conservation equations are used to solve for wave velocity
+%
+%   Defines the momentum conservation model for the wave field. This
+%   equation is used to solve for the wave velocity.
+%   Used by the four-field solver.
+%
     enumeration
-        ALGEBRAIC  % Consistent with mixture model (tau_wall = tau_f_wall)
-        EQUILIBRIUM % (tau_int = tau_wall)
-        FULL 
+        ALGEBRAIC            % Simple algebraic model
+        EQUILIBRIUM          % Equilibrium model
+        FULL                 % Full non-equilibrium model
     end
+
 end
-    
