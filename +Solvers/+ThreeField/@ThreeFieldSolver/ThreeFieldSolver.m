@@ -73,6 +73,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
             
             % Local parameters
+            mixSolver_mixArr = tfSolver.mixSolver.mixture;
+            % TODO: implement ThreeField Mixture class and retrieve
+            % necessary data from mixSolver_mixArr to replace mixArr.
+            
             mixArr = tfSolver.mixSolver.mixture;                            % Mixture solution
             model  = tfSolver.inputSet.model;                               % Models
             geom   = tfSolver.inputSet.geometry;                            % Geometry

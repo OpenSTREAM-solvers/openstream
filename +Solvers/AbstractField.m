@@ -178,6 +178,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             arguments
                 srcObj
                 targetObj (1,:) Solvers.AbstractField
+                opts.propNames = srcObj.flowProperties
                 opts.all  (1,1) logical = false
             end
 
@@ -197,7 +198,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                 end
                 
                 % Copy properties
-                propNames = srcObj.flowProperties;
+                propNames = opts.propNames;
                 for j = 1:length(propNames)
                     % Full copy
                     if opts.all

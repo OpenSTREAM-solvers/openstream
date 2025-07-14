@@ -1,42 +1,25 @@
-classdef Mixture < Solvers.AbstractField
+classdef Mixture < Solvers.AbstractMixture
     %MIXTURE Summary of this class goes here
     %   Detailed explanation goes here
     
+    % Inherited properties
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
-        % Solver properties
-        NZ                                                                 = 0                    % [-] Number of axial steps
-        NTIME                                                              = 0                    % [-] Number of time steps
-        TIME                                                               = 0                    % [s] Time series
-        DT                                                                 = 0                    % [s] Time step size
-        TIDX                                                               = 1                    % [-] Time step index
-        Z                                                                  = 1.                   % [m] Elevation
-        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Wall heat flux
-        
         % Flow properties
-        W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
-        P            (:,1) double  {mustBeNumeric}                         = 7E6                  % [Pa] Pressure
-        H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
-        DP           (1,1) struct                                                                 % Saved detailed pressure drops
-        DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
-        ACC          (1,1) struct                                                                 % Saved detailed acceleration terms
-        TRELAX       (1,1) struct                                                                 % Time relaxation terms
-        
-        % Iteration properties
-        ITR
+        W                                                                  = 1.                   % [kg/s] Mass flow rate
+        P                                                                  = 7E6                  % [Pa] Pressure
+        H                                                                  = 1E6                  % [J/kg] Enthalpy
+        DP                                                                                        % Saved detailed pressure drops
+        DPSUM                                                                                     % Saved detailed cumulative pressure drops
+        ACC                                                                                       % Saved detailed acceleration terms
+        TRELAX                                                                                    % Time relaxation terms
 
         % Phases
         liquid
         vapor
     end
 
-    properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
-        
-        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}
-    end
-
+    % Concrete class properties
     properties (Access=private)
         
         mflux        (:,1) double  {mustBeNumeric}                         = 1.                 % [kg/m^2-s] Mass flux
@@ -51,7 +34,7 @@ classdef Mixture < Solvers.AbstractField
         relaxtevap   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
         relaxtcond   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
     
-    end       
+    end 
     
     %% Constructor method
     methods
@@ -917,18 +900,18 @@ classdef Mixture < Solvers.AbstractField
     %% Helper functions
     methods(Access = protected, Hidden = true)
 
-        function MFLUX_CALC(mix, zIdx)
-        %MFLUX_CALC Helper function to calculate mass flux [kg/m^2-s]
-        %
-        
-            mix.mflux(zIdx) = mix.W(zIdx)./mix.inputSet.geometry.AREA;
-        end
-
-        function XEQ_CALC(mix, zIdx)
-        %XEQ_CALC Helper function to calculate equilibrium quality [-]
-        %  
-            mix.xeq(zIdx) = (mix.H(zIdx)-mix.fluid.HF)./ mix.fluid.HFG;
-        end
+        % function MFLUX_CALC(mix, zIdx)
+        % %MFLUX_CALC Helper function to calculate mass flux [kg/m^2-s]
+        % %
+        % 
+        %     mix.mflux(zIdx) = mix.W(zIdx)./mix.inputSet.geometry.AREA;
+        % end
+        % 
+        % function XEQ_CALC(mix, zIdx)
+        % %XEQ_CALC Helper function to calculate equilibrium quality [-]
+        % %  
+        %     mix.xeq(zIdx) = (mix.H(zIdx)-mix.fluid.HF)./ mix.fluid.HFG;
+        % end
 
         function X_CALC(mix, zIdx)
         %X_CALC Helper function to calculate vapor quality [-]
