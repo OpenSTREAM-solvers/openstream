@@ -64,7 +64,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         %
             import Inputs.*
             import Solvers.ThreeField.*
-            import Solvers.*
+            %import Solvers.*
             
             % Copy relevant properties from mixSolver
             props = {'NZ','NTIME','TIME','DT','Z','DZ','fluid','boundaryConditions'}; % mixSolver properties
@@ -73,11 +73,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
             
             % Local parameters
-            mixSolver_mixArr = tfSolver.mixSolver.mixture;
-            % TODO: implement ThreeField Mixture class and retrieve
-            % necessary data from mixSolver_mixArr to replace mixArr.
-            
-            mixArr = tfSolver.mixSolver.mixture;                            % Mixture solution
+            mixSolver_mixArr = tfSolver.mixSolver.mixture;            
             model  = tfSolver.inputSet.model;                               % Models
             geom   = tfSolver.inputSet.geometry;                            % Geometry
             
@@ -92,29 +88,33 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Create film and drop arrays (by timestep)
             flmArr(tfSolver.NTIME) = Film();
             drpArr(tfSolver.NTIME) = Drop();
-            props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
+            props = {'NZ','DZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
+            
+            %mixArr = tfSolver.mixSolver.mixture;                            % Mixture solution
+            liquidArr(tfSolver.NTIME) = Solvers.ThreeField.Liquid();
+            mixArr(tfSolver.NTIME) = Solvers.ThreeField.Mixture();
             
             for tIdx = 1:tfSolver.NTIME
 
                 % Convenience variables (handles)
-                flm         = flmArr(tIdx);
-                drp         = drpArr(tIdx);
-                mix         = mixArr(tIdx);
-                fluid       = tfSolver.fluid(tIdx);
+                flm             = flmArr(tIdx);
+                drp             = drpArr(tIdx);
+                liq             = liquidArr(tIdx);
+                mixSolver_mix   = mixSolver_mixArr(tIdx);
+                mix             = mixArr(tIdx);
+                fluid           = tfSolver.fluid(tIdx);
                 
                 % Inputset, fluid                
                 flm.inputSet = tfSolver.inputSet;
                 flm.fluid    = fluid;
                 flm.mix      = mix;
                 
-                % Axial Steps
-                drp.DZ = tfSolver.DZ;
-                
+                % Axial Steps               
                 flm.NZ = tfSolver.NZ;
                 flm.DZ = tfSolver.DZ;
                 flm.Z  = tfSolver.Z;
                 
-                % Time step
+                % Time steps
                 flm.NTIME = tfSolver.NTIME;
                 flm.DT    = tfSolver.DT;
                 flm.TIME  = tfSolver.TIME(tIdx);
@@ -124,7 +124,14 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 for p = props
                     drp.(p{:}) = flm.(p{:});
                 end
-                    
+
+                % update liquid
+                liq.updatePhases(flm, drp);
+                
+                % update mix
+                mix.initialize(mixSolver_mix, liq);
+                mix.updateProperties();
+
                 % Wall/film evaporation heat flux
                 HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
@@ -206,6 +213,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 tfSolver.filmInit(i).NTIME = initNTIME;
                 tfSolver.filmInit(i).TIDX = initTIDX(i);
 
+                % TODO: figure out how to incorporate new tfsolver-specific
+                % mixture here. Seems fine for initial testing as is.
                 tfSolver.filmInit(i).mix       = copy(tfSolver.mixSolver.mixtureInit(end));
                 tfSolver.filmInit(i).mix.TIME  = initTIME(i);
                 tfSolver.filmInit(i).mix.DT    = initTIMEDT;
@@ -221,7 +230,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
 
             % set STATE to UNSOLVED
-            tfSolver.STATE = SolverState.UNSOLVED;
+            tfSolver.STATE = Solvers.SolverState.UNSOLVED;
         end
         
         function e0 = EQUIL(tfSolver,flm,drp,mix,zIdx)

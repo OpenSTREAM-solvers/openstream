@@ -17,7 +17,7 @@ classdef Mixture < Solvers.AbstractMixture
         % Phases
         mixSolver_mix (:,1) Solvers.Mixture.Mixture                                             % Mixture handles from MixtureSolver
         liquid                                                                                  % Liquid handle from ThreeFieldSolver
-        vapor                                                                                   % A TF-specific vapor can be imp.
+        vapor                                                                                   % A TF-specific vapor can be implemented
     end
 
     properties (Access=protected) % TODO: is this the best access setting?
@@ -27,22 +27,29 @@ classdef Mixture < Solvers.AbstractMixture
 
     end
     
-    properties (Access=private)
+    % Concrete class properties
+    properties (Access=protected)
         
-        
-        mflux         (:,1) double  {mustBeNumeric}                        = 1.                 % [kg/m^2-s] Mass flux
-        xeq           (:,1) double  {mustBeNumeric}                        = 1.                 % [-] Equilibrium quality
-        x             (:,1) double  {mustBeNumeric}                        = 1.                 % [-] Vapor quality
-        vf            (:,1) double  {mustBeNumeric}                        = 1.                 % [-] Void fraction
-        chf           (:,:) double  {mustBeNumeric}                                             % [-] Critical Heat Flux
-        cbt           (:,:) logical                                                             % [-] Critical Boiling Transition flag
-        rho           (:,1) double  {mustBeNumeric}                        = 1.                 % [kg/m^3] Mixture density
-        oafidx_const        double  {mustBeNumeric}                        = []                 % [-] Solved index for onset of annular flow
-        sigm_const    (:,1) double  {mustBeNumeric}                        = []                 % [-] Solved sigmoid fnc value
-        relaxtevap    (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
-        relaxtcond    (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
+        mflux                                                              = 1.                 % [kg/m^2-s] Mass flux
+        xeq                                                                = 1.                 % [-] Equilibrium quality
+        x                                                                  = 1.                 % [-] Vapor quality
+        vf                                                                 = 1.                 % [-] Void fraction
+        chf                                                                                     % [-] Critical Heat Flux
+        cbt                                                                                     % [-] Critical Boiling Transition flag
+        rho                                                                = 1.                 % [kg/m^3] Mixture density
+        oafidx_const                                                       = []                 % [-] Solved index for onset of annular flow
+        sigm_const                                                         = []                 % [-] Solved sigmoid fnc value
+        relaxtevap                                                                              % [-] Time relaxation for interfacial evaporation
+        relaxtcond                                                                              % [-] Time relaxation for interfacal condensation
     
-    end 
+    end
+
+    properties (SetAccess=?Solvers.AbstractSolver, GetAccess={?Solvers.AbstractField, ?Solvers.AbstractPhase})
+        
+        DZ                                                                 = 0                    % [m] Axial step size
+        inputSet                   
+        fluid                      
+    end
 
     %% Constructor method
     methods
@@ -50,38 +57,77 @@ classdef Mixture < Solvers.AbstractMixture
         function mix = Mixture(mixSolver_mix, liquid)
             %MIXTURE Creates a Mixture, mix
             %   Detailed explanation goes here
-            arguments
-                mixSolver_mix   Solvers.Mixture.MixtureSolver
-                liquid          Solvers.ThreeField.Liquid
-            end
+            
+            % arguments
+            %     mixSolver_mix   Solvers.Mixture.Mixture            
+            %     liquid          Solvers.ThreeField.Liquid 
+            % end
+
+            % Overload copyable properties (order is important due to the setter functions)
+            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','ACC','ITR'};
 
             if nargin > 0
 
-                % Store inputSet as object property
-                mix.inputSet = mixSolver_mix(1).inputSet;
-                mix.fluid  = mixSolver_mix(1).fluid;
+                % Initialize the mixture
+                mix.initialize(mixSolver_mix, liquid);
 
-                % Overload copyable properties (order is important due to the setter functions)
-                mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','ACC','ITR'};
-
-                %TODO: loop through multiple mix and liquids?
-
-                % Store mixSolver_mix and liquid
-                mix.mixSolver_mix = mixSolver_mix;
-                mix.liquid = liquid;
-                mix.vapor = mixSolver_mix.vapor;
-
-                % Calculate combined W, P, H
-                mix.W_CALC();
-                mix.P_CALC();
-                mix.H_CALC();
-
-                % Copy flow properties
-                % TODO: only copy a subset of the mix.flowProperties
-                mixSolver_mix.copyFlowProperties(mix, propNames={'TRELAX','DP','DPSUM','ACC','ITR'}, all=true);
+                % Update properties using mix.liquid and mix.vapor
+                mix.updateProperties();
+                mix.copyFlowProperties();
 
             end
 
+        end
+
+        function initialize(mix, mixSolver_mix, liquid)
+
+            % Store inputSet as object property
+            mix.inputSet = mixSolver_mix(1).inputSet;
+            mix.fluid  = mixSolver_mix(1).fluid;
+
+            %TODO: loop through multiple mix and liquids?
+
+            % Store mixSolver_mix and liquid
+            mix.mixSolver_mix = mixSolver_mix;
+            mix.liquid = liquid;
+            mix.vapor = mixSolver_mix.vapor;
+
+            % Copy setup from mixSolver_mix
+            mix.copySetup();
+
+            % Copy flow properties from mixSolver_mix
+            mix.copyFlowProperties();
+
+        end
+
+        function updateProperties(mix)
+            
+            % Calculate combined W, P, H
+            mix.W_CALC();
+            % mix.P_CALC();
+            % mix.H_CALC();
+
+        end
+
+        function copySetup(mix)
+            
+            props = {'NZ','DZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid'};
+            for p = props
+                mix.(p{:}) = mix.mixSolver_mix.(p{:});
+            end
+        end
+
+
+        function copyFlowProperties(mix)
+
+            % Copy flow properties
+            % TODO: only copy a subset of the mix.flowProperties
+            % NOTE: maybe the full set can be copied directly?
+            mix.mixSolver_mix.copyFlowProperties(mix, propNames={'P', 'H', 'TRELAX','DP','DPSUM','ACC','ITR', 'HFLUX'}, all=true);
+            props = {'mflux', 'xeq', 'x', 'vf', 'chf', 'cbt', 'rho', 'relaxtevap', 'relaxtcond'};
+            for p=props
+                mix.(p{:}) = mix.mixSolver_mix.(upper(p{:}));
+            end
         end
 
         
@@ -91,33 +137,32 @@ classdef Mixture < Solvers.AbstractMixture
     methods
         
         function W_CALC(mix)
-            mix.W = mix.liquid.W + mix.vapor.W;
+
+            % While initializing ThreeFieldSolver, length of liquid.W may be
+            % 1. Use value from mixsolver_mix
+            if length(mix.liquid.W) == 1
+                mix.W = mix.mixSolver_mix.W;
+            else
+                mix.W = mix.liquid.W + mix.vapor.W;
+            end
         end
 
-        function P_CALC(mix)
-            % TODO: check if there are edge cases here...
-            mix.P = mix.vapor.P;
-        end
-
-        function H_CALC(mix)
-            % TODO:
-            % something to do with the liquid (film, drop) quality and
-            % enthalpy
-            %
-            %   mix.liquid.X;
-            %   mix.liquid.H;
-            %
-            % and vapor quality and enthalpy
-            %   
-            %   mix.vapor.X;
-            %   mix.vapor.H;
-            %
-            % But also consider superheat/subcool conditions...
-        end
-
-        function DP_CALC(mix)
-            mix.DP = mix.mixSolver_mix.DP;
-        end
+        % function H_CALC(mix)
+        %     % TODO:
+        %     % something to do with the liquid (film, drop) quality and
+        %     % enthalpy
+        %     %
+        %     %   mix.liquid.X;
+        %     %   mix.liquid.H;
+        %     %
+        %     % and vapor quality and enthalpy
+        %     %   
+        %     %   mix.vapor.X;
+        %     %   mix.vapor.H;
+        %     %
+        %     % But also consider superheat/subcool conditions...
+        % end
+       
     end
 
 end
