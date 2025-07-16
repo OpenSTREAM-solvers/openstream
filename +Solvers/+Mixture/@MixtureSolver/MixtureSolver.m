@@ -281,231 +281,252 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
         end
 
-        function plotter = plotz(mixSolver, tIdx, opt)
+        function plotter = plotz(mixSolver, tIdx, opts)
         %PLOTZ Plot spatial distributions of mixture parameters
         %
         %   NOTE: currently supports only single timeStep
         %
             arguments
                 mixSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','DP','H','U','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
-                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                  = 'K'
+                tIdx          (:,1) double {mustBeInteger,mustBePositive}           = 1
+                opts.display   {mustBeMember(opts.display,{'HFLUX','W','DP','H','U','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
+                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
+                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
+                opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                  = 'K'
             end
             
-            if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
-            if length(opt.zIdx) < 2
+            if length(opts.zIdx) < 2
+                %TODO: implement/overload logging errors in Session.Log
                 mixSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
                 return
             end
             
-            z     = mixSolver.Z(opt.zIdx);
+            % Shorthand variables
+            z     = mixSolver.Z(opts.zIdx);
             bc    = mixSolver.boundaryConditions;
             model = mixSolver.inputSet.model;
             geom  = mixSolver.inputSet.geometry;
             
-            switch opt.solveMode
+
+            switch opts.solveMode
                 case 'TRANSIENT'
-                    mix = mixSolver.mixture(tIdx);
+                    mixs = mixSolver.mixture(tIdx);
                 case 'STEADY'
-                    mix = mixSolver.mixtureInit(tIdx);
+                    mixs = mixSolver.mixtureInit(tIdx);
                     tIdx = 1;
             end
             
-            dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
+            % Temperature unit offset between C and K
+            dTemp = 0; if strcmpi(opts.unitTemp,'C'), dTemp = -273.15; end
 
-            bcHFLUX = bc.HFLUX(opt.zIdx,:,tIdx);
 
-            plotter = Solvers.SolverPlotter( ...
-                                sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mix.TIME, opt.solveMode), ...
-                                opt.wall);
+            % Set up plotter
+            if isscalar(tIdx)
+                plotter = Solvers.SolverPlotter( ...
+                            sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mixs(1).TIME, opts.solveMode), ...
+                            opts.wall);
+            else
+                plotter = Solvers.SolverPlotter( ...
+                            sprintf('Axial distributions of mixture parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                            opts.wall, ...
+                            "isAnimation", true, ...
+                            "animationSeries", [mixs.TIME]);
+            end
             plotter.setZs(z);
-            
-            % Wall heat flux
-            if any(ismember({'HFLUX','ALL'},opt.display))
-                plotter.newTile( ...
-                    "tileTitle",         'Wall heat flux', ...
-                    'xlabel'   ,     'Axial position [m]', ...
-                    'ylabel'   , 'Wall heat flux [W/m^2]');
-                plotter.plotz(  bcHFLUX                       ,'bc'         ,'DisplayName','Boundary Condition');
-                plotter.plotz(mix.HFLUX(opt.zIdx,:)           ,'Mixture'                                       );
-                if ismember('RELAXATION',model.THERMALNONEQ)
-                    plotter.plotz(mix.liquid.HFLUX(opt.zIdx)      ,'Liquid'                                      );
-                    plotter.plotz(mix.vapor.HFLUX(opt.zIdx)       ,'Vapor'                                       );
-                    plotter.plotz(mix.vapor.HFLUXWALEVAP(opt.zIdx),'Evaporation','DisplayName','Wall evaporation');
-                end
-                if ~strcmp(model.CBT,'NONE')
-                    plotter.plotz(mix.CHF(opt.zIdx)               ,'CHF'                                         );
-                end
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                plotter.ylim([ymin ymax]);
-            end
 
-            % Mass flow rates
-            if any(ismember({'W','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',       'Mass flow rates', ...
-                    'xlabel'   ,    'Axial position [m]', ...
-                    'ylabel'   , 'Mass flow rate [kg/s]');
-                
-                plotter.plotz(mix.W(opt.zIdx)       ,'Mixture');
-                plotter.plotz(mix.liquid.W(opt.zIdx),'Liquid' );
-                plotter.plotz(mix.vapor.W(opt.zIdx) ,'Vapor'  );
-                if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.TRELAX.WV(opt.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
-                end
-                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                plotter.ylim([ymin ymax]);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
+            function tf = displayVariable(memberList)
+                tf = any(ismember(memberList,opts.display));
             end
+            
+            % Loop through each mix
+            for mix = mixs
 
-            % Pressure drops
-            if any(ismember({'DP','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',     'Pressure drops', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   , 'Pressure drop [Pa]');
-                plotter.plotz(mix.DPSUM.Grav(opt.zIdx) ,'Gravitational'                     )
-                plotter.plotz(mix.DPSUM.Wall(opt.zIdx) ,'Wall'                              )
-                plotter.plotz(mix.DPSUM.Acc_z(opt.zIdx),'Z'           ,'DisplayName','Acc Z')
-                plotter.plotz(mix.DPSUM.Acc_t(opt.zIdx),'T'           ,'DisplayName','Acc t')
-                plotter.plotz(mix.DPSUM.K(opt.zIdx)    ,'Local'                             )
-                plotter.plotz(mix.DPSUM.Tot(opt.zIdx)  ,'Total'                             )
-                plotter.legend('show', "Location", 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-             % Velocities
-            if any(ismember({'U','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',         'Velocities', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,     'Velocity [m/s]');
-                plotter.plotz(mix.U(opt.zIdx)       ,'Mixture')
-                plotter.plotz(mix.liquid.U(opt.zIdx),'Liquid' )
-                plotter.plotz(mix.vapor.U(opt.zIdx) ,'Vapor'  )
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Enthalpies
-            if any(ismember({'H','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',         'Enthalpies', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,    'Enthalpy [J/kg]');
-                
-                plotter.plotz(mix.H(opt.zIdx)       ,'Mixture');
-                plotter.plotz(mix.liquid.H(opt.zIdx),'Liquid' );
-                plotter.plotz(mix.vapor.H(opt.zIdx) ,'Vapor'  );
-                if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.TRELAX.HV(opt.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
+                % Wall heat flux
+                if displayVariable({'HFLUX','ALL'})
+                    plotter.newTile( ...
+                        "tileTitle",         'Wall heat flux', ...
+                        'xlabel'   ,     'Axial position [m]', ...
+                        'ylabel'   , 'Wall heat flux [W/m^2]');
+                    bcHFLUX = bc.HFLUX(opts.zIdx,:,tIdx);
+                    plotter.plotz(  bcHFLUX                       ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plotz(mix.HFLUX(opts.zIdx,:)           ,'Mixture'                                       );
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION
+                        plotter.plotz(mix.liquid.HFLUX(opts.zIdx)      ,'Liquid'                                      );
+                        plotter.plotz(mix.vapor.HFLUX(opts.zIdx)       ,'Vapor'                                       );
+                        plotter.plotz(mix.vapor.HFLUXWALEVAP(opts.zIdx),'Evaporation','DisplayName','Wall evaporation');
+                    end
+                    if model.CBT ~= InputEnums.CBT.NONE
+                        plotter.plotz(mix.CHF(opts.zIdx)               ,'CHF'                                         );
+                    end
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
                 end
-                plotter.plotz(repmat(mixSolver.fluid(tIdx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                plotter.plotz(repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                plotter.ylim([ymin ymax]);
-            end
-            
-            % Vapor ratios (void fraction and qualities)
-            if any(ismember({'VR','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Void fractions and qualities', ...
-                    'xlabel'   ,           'Axial position [m]', ...
-                    'ylabel'   ,  'Quality / Void fraction [-]');
-                plotter.plotz(mix.XEQ(opt.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
-                plotter.plotz(mix.X(opt.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
-                if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.TRELAX.X(opt.zIdx,:) ,'WallVapor','DisplayName','Wall vapor quality');
+    
+                % Mass flow rates
+                if displayVariable({'W','ALL'})
+                    plotter.newTile( ...
+                        'tileTitle',       'Mass flow rates', ...
+                        'xlabel'   ,    'Axial position [m]', ...
+                        'ylabel'   , 'Mass flow rate [kg/s]');
+                    
+                    plotter.plotz(mix.W(opts.zIdx)       ,'Mixture');
+                    plotter.plotz(mix.liquid.W(opts.zIdx),'Liquid' );
+                    plotter.plotz(mix.vapor.W(opts.zIdx) ,'Vapor'  );
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION && geom.NWALL > 1
+                        plotter.plotz(mix.TRELAX.WV(opts.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
+                    end
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
                 end
-                plotter.plotz(mix.VF(opt.zIdx) ,'VoidFraction','DisplayName','Void fraction'      )
-                plotter.legend('show', "Location", 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                plotter.ylim([ymin ymax]);
-            end
-            
-            % Temperatures
-            if any(ismember({'T','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',                    'Temperatures', ...
-                    'xlabel'   ,              'Axial position [m]', ...
-                    'ylabel'   , ['Temperature [' opt.unitTemp ']']);
+    
+                % Pressure drops
+                if displayVariable({'DP','ALL'})
+                    plotter.newTile( ...
+                        'tileTitle',     'Pressure drops', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   , 'Pressure drop [Pa]');
+                    plotter.plotz(mix.DPSUM.Grav(opts.zIdx) ,'Gravitational'                     )
+                    plotter.plotz(mix.DPSUM.Wall(opts.zIdx) ,'Wall'                              )
+                    plotter.plotz(mix.DPSUM.Acc_z(opts.zIdx),'Z'           ,'DisplayName','Acc Z')
+                    plotter.plotz(mix.DPSUM.Acc_t(opts.zIdx),'T'           ,'DisplayName','Acc t')
+                    plotter.plotz(mix.DPSUM.K(opts.zIdx)    ,'Local'                             )
+                    plotter.plotz(mix.DPSUM.Tot(opts.zIdx)  ,'Total'                             )
+                    plotter.legend('show', "Location", 'best');
+                    plotter.xlim([min(z) max(z)]);
+                end
                 
-                plotter.plotz(mix.T(opt.zIdx)       +dTemp,'Mixture');
-                plotter.plotz(mix.liquid.T(opt.zIdx)+dTemp,'Liquid' );
-                plotter.plotz(mix.vapor.T(opt.zIdx) +dTemp,'Vapor'  );
-                plotter.plotz(mix.TWALL(opt.zIdx)   +dTemp,'Wall'   );
-                plotter.plotz(repmat(mixSolver.fluid(tIdx).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                plotter.ylim([ymin ymax]);
-            end
-            
-            % Mass exchanges
-            if all([any(ismember({'PWE','ALL'},opt.display)) ismember('RELAXATION',model.THERMALNONEQ)])
-                plotter.newTile( ...
-                    'tileTitle',   'Vapor mass exchanges', ...
-                    'xlabel'   ,     'Axial position [m]', ...
-                    'ylabel'   , 'Mass exchange [kg/s/m]');
+                 % Velocities
+                if displayVariable({'U','ALL'})
+                    plotter.newTile( ...
+                        'tileTitle',         'Velocities', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,     'Velocity [m/s]');
+                    plotter.plotz(mix.U(opts.zIdx)       ,'Mixture')
+                    plotter.plotz(mix.liquid.U(opts.zIdx),'Liquid' )
+                    plotter.plotz(mix.vapor.U(opts.zIdx) ,'Vapor'  )
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                end
                 
-                plotter.plotz(mix.MWALEVAP(opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(mix.MINTEVAP(opt.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(mix.MINTCOND(opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(mix.MTOT(opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-            end
-            
-            % Energy exchanges
-            if all([any(ismember({'PEE','ALL'},opt.display)) ismember('RELAXATION',model.THERMALNONEQ)])
-                plotter.newTile( ...
-                    'tileTitle', 'Vapor energy exchanges', ...
-                    'xlabel'   ,     'Axial position [m]', ...
-                    'ylabel'   ,  'Energy exchange [W/m]');
+                % Enthalpies
+                if displayVariable({'H','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',         'Enthalpies', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,    'Enthalpy [J/kg]');
+                    
+                    plotter.plotz(mix.H(opts.zIdx)       ,'Mixture');
+                    plotter.plotz(mix.liquid.H(opts.zIdx),'Liquid' );
+                    plotter.plotz(mix.vapor.H(opts.zIdx) ,'Vapor'  );
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION && geom.NWALL > 1
+                        plotter.plotz(mix.TRELAX.HV(opts.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
+                    end
+                    plotter.plotz(repmat(mixSolver.fluid(tIdx(1)).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plotz(repmat(mixSolver.fluid(tIdx(1)).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
+                end
                 
-                plotter.plotz(mix.HWALHEAT(opt.zIdx),'Wall'           ,'DisplayName','Wall heat rate'          );
-                plotter.plotz(mix.HWALEVAP(opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(mix.HINTEVAP(opt.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(mix.HINTCOND(opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(mix.HTOT(opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-            end
-            
-            % Qualities and relaxed qualities
-            if any(ismember({'X','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Qualities and relaxed qualities', ...
-                    'xlabel'   ,              'Axial position [m]', ...
-                    'ylabel'   ,                     'Quality [-]');
-                plotter.plotz(mix.XEQ(opt.zIdx)         ,'Equil'     ,'DisplayName','Equilibrium quality' )
-                plotter.plotz(mix.X(opt.zIdx)           ,'Vapor'     ,'DisplayName','Vapor mass quality'  )
-                plotter.plotz(mix.TRELAX.XTH(opt.zIdx,:),'RelaxEquil','DisplayName','Wall thermo. quality')
-                plotter.plotz(mix.TRELAX.X(opt.zIdx,:)  ,'WallVapor' ,'DisplayName','Wall vapor quality'  )
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                plotter.ylim([ymin ymax]);
+                % Vapor ratios (void fraction and qualities)
+                if displayVariable({'VR','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Void fractions and qualities', ...
+                        'xlabel'   ,           'Axial position [m]', ...
+                        'ylabel'   ,  'Quality / Void fraction [-]');
+                    plotter.plotz(mix.XEQ(opts.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
+                    plotter.plotz(mix.X(opts.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION && geom.NWALL > 1
+                        plotter.plotz(mix.TRELAX.X(opts.zIdx,:) ,'WallVapor','DisplayName','Wall vapor quality');
+                    end
+                    plotter.plotz(mix.VF(opts.zIdx) ,'VoidFraction','DisplayName','Void fraction'      )
+                    plotter.legend('show', "Location", 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
+                end
+                
+                % Temperatures
+                if displayVariable({'T','ALL'})
+                    plotter.newTile( ...
+                        'tileTitle',                    'Temperatures', ...
+                        'xlabel'   ,              'Axial position [m]', ...
+                        'ylabel'   , ['Temperature [' opts.unitTemp ']']);
+                    
+                    plotter.plotz(mix.T(opts.zIdx)       +dTemp,'Mixture');
+                    plotter.plotz(mix.liquid.T(opts.zIdx)+dTemp,'Liquid' );
+                    plotter.plotz(mix.vapor.T(opts.zIdx) +dTemp,'Vapor'  );
+                    plotter.plotz(mix.TWALL(opts.zIdx)   +dTemp,'Wall'   );
+                    plotter.plotz(repmat(mixSolver.fluid(tIdx(1)).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
+                end
+                
+                % Mass exchanges
+                if displayVariable({'PWE','ALL'}) && model.THERMALNONEQ =="RELAXATION"
+                    plotter.newTile( ...
+                        'tileTitle',   'Vapor mass exchanges', ...
+                        'xlabel'   ,     'Axial position [m]', ...
+                        'ylabel'   , 'Mass exchange [kg/s/m]');
+                    
+                    plotter.plotz(mix.MWALEVAP(opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plotz(mix.MINTEVAP(opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plotz(mix.MINTCOND(opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plotz(mix.MTOT(opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+                end
+                
+                % Energy exchanges
+                if displayVariable({'PEE','ALL'}) && model.THERMALNONEQ =="RELAXATION"
+                    plotter.newTile( ...
+                        'tileTitle', 'Vapor energy exchanges', ...
+                        'xlabel'   ,     'Axial position [m]', ...
+                        'ylabel'   ,  'Energy exchange [W/m]');
+                    
+                    plotter.plotz(mix.HWALHEAT(opts.zIdx),'Wall'           ,'DisplayName','Wall heat rate'          );
+                    plotter.plotz(mix.HWALEVAP(opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plotz(mix.HINTEVAP(opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plotz(mix.HINTCOND(opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plotz(mix.HTOT(opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+                end
+                
+                % Qualities and relaxed qualities
+                if displayVariable({'X','ALL'})
+                    plotter.newTile( ...
+                        'tileTitle', 'Qualities and relaxed qualities', ...
+                        'xlabel'   ,              'Axial position [m]', ...
+                        'ylabel'   ,                     'Quality [-]');
+                    plotter.plotz(mix.XEQ(opts.zIdx)         ,'Equil'     ,'DisplayName','Equilibrium quality' )
+                    plotter.plotz(mix.X(opts.zIdx)           ,'Vapor'     ,'DisplayName','Vapor mass quality'  )
+                    plotter.plotz(mix.TRELAX.XTH(opts.zIdx,:),'RelaxEquil','DisplayName','Wall thermo. quality')
+                    plotter.plotz(mix.TRELAX.X(opts.zIdx,:)  ,'WallVapor' ,'DisplayName','Wall vapor quality'  )
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
+                end
+
             end
         end
         

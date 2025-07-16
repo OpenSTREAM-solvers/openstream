@@ -20,29 +20,193 @@ classdef SolverPlotter < handle
         fh          (1,1) matlab.ui.Figure       
         th          (1,1) matlab.graphics.layout.TiledChartLayout
         ahs               matlab.graphics.axis.Axes
+
+        isAnimation             (1,1) logical                                   = false
+        animationTitleFormat    (1,1) string                                = ""
+        animationSeries         (:,1) {isnumeric}                           = 1
     end
     
     methods
-        function plotters = SolverPlotter(Titles, WallIdxs)
+        function plotters = SolverPlotter(titles, WallIdxs, opts)
         %SOLVERPLOTTER Creates a solver plotter
         %
 
+        arguments
+            titles                  = ""
+            WallIdxs                = 1
+            opts.isAnimation        = false;
+            opts.animationSeries    = 1;
+        end
+
             if nargin == 0, return; end
-            if ischar(Titles)
-                Titles = string(Titles);
+            if ischar(titles)
+                titles = string(titles);
             end
-            if isscalar(Titles) && ~isscalar(WallIdxs)
-                Titles = repmat(Titles,1,length(WallIdxs));
+            if isscalar(titles) && ~isscalar(WallIdxs)
+                titles = repmat(titles,1,length(WallIdxs));
             end
 
             % Create plotter objects
             plotters(length(WallIdxs)) = Solvers.SolverPlotter();
             for idx = 1:length(plotters)
+                
+                % Check if is an animated series
+                if opts.isAnimation
+                    plotters(idx).isAnimation = true;
+                    plotters(idx).animationSeries = opts.animationSeries;
+                    plotters(idx).animationTitleFormat = titles(idx);
+                    titles(idx) = sprintf(titles(idx), opts.animationSeries(1));
+                end
+
                 plotters(idx).WallIdx = WallIdxs(idx);
-                plotters(idx).Title = sprintf('%s - Wall %u', Titles(idx), plotters(idx).WallIdx);
+                plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
                 plotters(idx).fh = figure("Name", plotters(idx).Title);
                 plotters(idx).th = tiledlayout(plotters(idx).fh, "flow","TileSpacing","loose","Padding","loose");
+
+                % Store animation title data in fh
+                if opts.isAnimation
+                    plotters(idx).fh.UserData = struct("NameFormat", plotters(idx).animationTitleFormat, "NameSeries", plotters(idx).animationSeries);
+                end
+
+                % Add UI if is an animated series
+                if opts.isAnimation
+                    rewindButton = uicontrol(Style="pushbutton", String="<");
+                    rewindButton.Units = 'pixels';
+                    rewindButton.Position = [20,20,30,20];
+                    rewindButton.Callback = @animationCallback;
+
+                    advanceButton = uicontrol(Style="pushbutton", String=">");
+                    advanceButton.Units = "pixels";
+                    advanceButton.Position = [110,20,30,20];
+                    advanceButton.Callback = @animationCallback;
+
+                    % TODO: counter? Update figure title?
+                    animationCounter = uicontrol(Style="edit");
+                    animationCounter.Units = 'pixels';
+                    animationCounter.Position = [60,20,40,20];
+                    animationCounter.Callback = @animationCallback;
+                    animationCounter.String = 1;
+                end
+
+                    
             end
+
+            function animationCallback(src, event)
+
+                % retrieve figure and axes handles
+                fh = event.Source(1).Parent;
+                tlh = findobj(fh, 'type', 'tiledlayout');
+                ahs = findobj(tlh, 'type', 'axes');
+
+                % Loop through each ahs
+                for ah_idx=1:length(ahs)
+                    
+                    % Retrieve ah
+                    ah = ahs(ah_idx);
+
+                    % Line handles
+                    lhs = findobj(ah, 'type', 'line');
+
+                    % Loop through each lhs
+                    for lh_idx = 1:length(lhs)
+                    
+                        % Retrieve lh
+                        lh = lhs(lh_idx);
+
+                        % TODO: check struct in lhuserdata
+                        
+                        % Save index of what is last displayed
+                        lastIndex = lh.UserData.currentIndex;
+
+                        % Rewind/Advance
+                        if string(src.String) == "<"
+                            currentIndex = lastIndex-1;
+                        elseif string(src.String) == ">"
+                            currentIndex = lastIndex+1;
+                        elseif (src.Style == "edit") 
+                            currentIndex = str2double(src.String);
+                        end
+
+                        % Continue to next lh if at last YData
+                        if isnan(currentIndex) || currentIndex > length(lh.UserData.YData) || currentIndex < 1
+                            if src.Style == "edit"
+                                src.String = string(lastIndex);
+                            end
+                            continue;
+                        end
+
+                        % Retrieve new YData
+                        currentYData = lh.UserData.YData(currentIndex).data;
+                        
+                        % update lh.YData
+                        lh.YData = currentYData;
+                        
+                        % update userdata struct
+                        lh.UserData.currentIndex = currentIndex;
+
+                        % update counter
+                        if src.Style == "pushbutton"
+                            animationCounter.String = string(currentIndex);
+                        end
+
+                        % update figure name
+                        fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
+
+
+                    end
+
+                end
+            end
+        end
+
+        function add_ah = addTile(plotters, opts)
+        %ADDTILE Finds existing tile by tileTitle, or create new one if non
+        %is found.
+            arguments
+                plotters
+                opts.tileTitle = ""
+                opts.xlabel = ""
+                opts.ylabel = ""
+            end
+
+            % Loop through each plotter
+            for plotterIdx = 1:length(plotters)
+
+                % Current plotter
+                plotter = plotters(plotterIdx);
+
+                % Axes handles in plotter
+                plotter_ahs = plotter.ahs;
+
+                % opts in cell format
+                opts_cell = namedargs2cell(opts);
+
+                % Check if tilelayout is empty
+                if isempty(plotter_ahs)
+                    
+                    % Simply create new tile if empty
+                    add_ah(plotterIdx) = plotter.newTile(opts_cell{:});
+                else
+
+                    % Get title strings
+                    titles = [plotter_ahs.Title];
+                    titleStrings = string({titles.String});
+    
+                    % Find index of opts.tileTitle in titleStrings
+                    tileIdx = find(titleStrings == opts.tileTitle);
+                    % If none found, make new tile
+                    if isempty(tileIdx)
+                        add_ah(plotterIdx) = plotter.newTile(opts_cell{:});
+                    
+                    % Otherwise, use existing
+                    else
+                        add_ah(plotterIdx) = plotter_ahs(tileIdx);
+                        plotter.currentAhIdx = tileIdx;
+                    end
+                end
+            end
+
+
         end
 
         function new_ah = newTile(plotters, opts)
@@ -55,7 +219,7 @@ classdef SolverPlotter < handle
                 opts.ylabel = ""
             end
 
-            % Create new tile for each plotters
+            % Create new tile for each plotter
             for idx = 1:length(plotters)
 
                 plotter = plotters(idx);
@@ -89,7 +253,7 @@ classdef SolverPlotter < handle
             end
         end
         
-        function plotz(plotters,YData, fieldName, opts)
+        function plotz(plotters, YData, fieldName, opts)
         %PLOTZ Plot input (YData) distributions (in space or time)
         %
             arguments
@@ -132,18 +296,70 @@ classdef SolverPlotter < handle
                     yyaxis(ah, opts.yyaxis)
                 end
 
-                % Custom plot by YData
-                if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                    lh = plot(ah, XData, ylim(ah), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
-                elseif isvector(YData)
-                    lh = plot(ah, XData, YData(opts.subset), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
-                else
-                    lh = plot(ah, XData, YData(opts.subset, plotter.WallIdx), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+                matchingLineExists = false;
+
+                % Check if isAnimation
+                if plotter.isAnimation
+
+                    % Check if lh with DisplayName that match
+                    % opts.DisplayName exists
+                    
+                    % Existing Line handles
+                    lhs = findobj(ah, 'type', 'Line');
+
+                    % Check if there are any lines at all
+                    if ~isempty(lhs)
+                        
+                        % lh DisplayNames
+                        dispNames = string({lhs.DisplayName});
+
+                        % Find matching lh index
+                        lh_idx = find(dispNames == opts.DisplayName);
+
+                        % if not empty, set flag to true
+                        if ~isempty(lh_idx)
+                            matchingLineExists = true;
+                            
+                            % Then store YData to lh.userData
+                            lh = lhs(lh_idx);
+                            if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
+                                YData= ylim(ah);
+                            elseif isvector(YData)
+                                YData = YData(opts.subset);
+                            else
+                                YData = YData(opts.subset, plotter.WallIdx);
+                            end
+                            lh.UserData.YData = [lh.UserData.YData, struct('index', length(lh.UserData.YData), 'data', YData)];
+                        end
+                    end
+
+
                 end
 
-                lh.Color = plotStyles.Color;
-                lh.LineStyle = plotStyles.LineStyle;
-                lh.Marker = plotStyles.Marker;
+                if ~matchingLineExists
+                    % Custom plot by YData
+                    if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
+                        lh = plot(ah, XData, ylim(ah), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+                    elseif isvector(YData)
+                        lh = plot(ah, XData, YData(opts.subset), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+                    else
+                        lh = plot(ah, XData, YData(opts.subset, plotter.WallIdx), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+                    end
+
+                    % Set line styles
+                    lh.Color = plotStyles.Color;
+                    lh.LineStyle = plotStyles.LineStyle;
+                    lh.Marker = plotStyles.Marker;
+
+                    % Store YData if isAnimation
+                    if plotter.isAnimation
+                        % Store YData
+                        lh.UserData = struct('currentIndex', 1, 'YData', struct('index', 1, 'data', lh.YData));
+                    end
+
+                end
+
+                
 
             end
         end
