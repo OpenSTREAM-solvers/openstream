@@ -601,8 +601,8 @@ classdef Mixture < Solvers.AbstractField
             
             % Restrict to reasonable bounds
             %TODO: Find a more physical bound
-            Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./mix.DZ);            % [kg/s/m] Condensation (<0)
-            Mevap =  min( Mevap,mix.liquid.W(zIdx)./mix.DZ);               % [kg/s/m] Evaporation  (>0)
+            %Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./mix.DZ);            % [kg/s/m] Condensation (<0)
+            %Mevap =  min( Mevap,mix.liquid.W(zIdx)./mix.DZ);               % [kg/s/m] Evaporation  (>0)
             
             %Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./UVeq./0.03);        % [kg/s/m] Condensation (<0)
             %Mevap =  min( Mevap,mix.liquid.W(zIdx)./UVeq./0.03);           % [kg/s/m] Evaporation  (>0)
@@ -1197,7 +1197,7 @@ classdef Mixture < Solvers.AbstractField
             %geom  = mix.inputSet.geometry;
             %t = repmat(t,1,geom.NWALL);                                    % Expand to all wall
             
-            t(mix.KLOSS(zIdx)>0,:) = model.RELAXTCOND(end);                % [s] Time relaxation ot local perturbations
+            t(mix.KLOSS(zIdx)>0,:) = model.RELAXTCOND(end);                % [s] Time relaxation at local perturbations
             t = max(1E-6,t);
             mix.relaxtcond(zIdx,:) = t;
         end
