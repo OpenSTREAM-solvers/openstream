@@ -276,13 +276,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         %
             arguments
                 ffSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.NZ
-                opt.annular   (1,1) logical                                                                                                       = true
-                opt.unitTemp  {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
+                tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = 1
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.inputSet.geometry.NWALL
+                opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.NZ
+                opt.annular     (1,1) logical                                                                                                       = true
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                     = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
@@ -320,7 +321,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(z);
 
             % Wall heat flux
@@ -583,6 +584,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.NTIME
                 opt.reverseTime (1,1) logical                                                                                                       = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                     = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
@@ -619,7 +621,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             z = ffSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

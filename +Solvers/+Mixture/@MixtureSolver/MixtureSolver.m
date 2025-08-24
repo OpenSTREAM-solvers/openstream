@@ -288,12 +288,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
         %
             arguments
                 mixSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','DP','H','U','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
-                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                  = 'K'
+                tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = 1
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','ACCU','H','ACCH','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
+                opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                    = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}           = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
@@ -321,7 +322,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mix.TIME, opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(z);
             
             % Wall heat flux
@@ -395,6 +396,19 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 plotter.xlim([min(z) max(z)]);
             end
+
+            % Hydrodynamic accelerations
+            if any(ismember({'ACCU','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle','Hydrodynamic accelerations', ...
+                    'xlabel'   ,        'Axial position [m]', ...
+                    'ylabel'   ,      'Acceleration [m/s^2]');
+                plotter.plotz(mix.ACC.U_z(opt.zIdx),'Z','DisplayName','Spatial' )
+                plotter.plotz(mix.ACC.U_t(opt.zIdx),'T','DisplayName','Temporal')
+                plotter.plotz(mix.ACC.U(opt.zIdx)  ,'Mixture'                   )
+                plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
+            end
             
             % Enthalpies
             if any(ismember({'H','ALL'},opt.display))
@@ -416,6 +430,19 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
+            end
+            
+            % Thermal accelerations
+            if any(ismember({'ACCH','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Thermal accelerations', ...
+                    'xlabel'   ,    'Axial position [m]', ...
+                    'ylabel'   , 'Acceleration [J/kg/s]');
+                plotter.plotz(mix.ACC.H_z(opt.zIdx),'Z','DisplayName','Spatial' )
+                plotter.plotz(mix.ACC.H_t(opt.zIdx),'T','DisplayName','Temporal')
+                plotter.plotz(mix.ACC.H(opt.zIdx)  ,'Mixture'                   )
+                plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
             end
             
             % Vapor ratios (void fraction and qualities)
@@ -516,13 +543,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
         %
             arguments
                 mixSolver
-                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                       = mixSolver.NZ
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','H','U','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                  = 'TRANSIENT'
-                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                              = 1:mixSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                              = 1:mixSolver.NTIME
-                opt.reverseTime (1,1) logical                                                                         = false
-                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                = 'K'
+                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                     = mixSolver.NZ
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','ACCU','H','ACCH','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                            = 1:mixSolver.inputSet.geometry.NWALL
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                            = 1:mixSolver.NTIME
+                opt.reverseTime (1,1) logical                                                                                       = false
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                              = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                     = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
@@ -558,7 +586,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             z = mixSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of mixture parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux
@@ -627,6 +655,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient( 'vapor.U','zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
+
+            % Hydrodynamic accelerations
+            if any(ismember({'ACCU','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle','Hydrodynamic accelerations', ...
+                    'xlabel'   ,                  'Time [s]', ...
+                    'ylabel'   ,      'Acceleration [m/s^2]');
+                plotter.plotz(mix.transient('ACC.U_z','zIdx',zIdx)','Z','DisplayName','Spatial' )
+                plotter.plotz(mix.transient('ACC.U_t','zIdx',zIdx)','T','DisplayName','Temporal')
+                plotter.plotz(mix.transient('ACC.U'  ,'zIdx',zIdx)','Mixture'                   )
+                plotter.legend('show', 'Location', 'best');
+            end
             
             % Enthalpies
             if any(ismember({'H','ALL'},opt.display))
@@ -646,6 +686,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
+            end
+
+            % Thermal accelerations
+            if any(ismember({'ACCH','ALL'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Thermal accelerations', ...
+                    'xlabel'   ,              'Time [s]', ...
+                    'ylabel'   , 'Acceleration [J/kg/s]');
+                plotter.plotz(mix.transient('ACC.H_z','zIdx',zIdx)','Z','DisplayName','Spatial' )
+                plotter.plotz(mix.transient('ACC.H_t','zIdx',zIdx)','T','DisplayName','Temporal')
+                plotter.plotz(mix.transient('ACC.H'  ,'zIdx',zIdx)','Mixture'                   )
+                plotter.legend('show', 'Location', 'best');
             end
             
             % Vapor ratios (void fraction and qualities)
@@ -741,13 +793,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF'}
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction'}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',           'Pa',     'm/s',    'J/kg',                 '-',            '-'}
-                opt.field        {mustBeMember(opt.field,{'mixture','liquid','vapor'})}   = {'mixture'}
+                opt.field         {mustBeMember(opt.field,{'mixture','liquid','vapor'})}    = {'mixture'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}     = 'TRANSIENT'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.inputSet.geometry.NWALL
                 opt.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.NZ
                 opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.NTIME
                 opt.reverseTime  (1,1) logical                                            = false
-                opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
+                opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}   = 'interp'
                 opt.view         (1,2) double                                             = [0 90]
             end
             
