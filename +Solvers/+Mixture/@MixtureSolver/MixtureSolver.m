@@ -284,16 +284,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
         function plotter = plotz(mixSolver, tIdx, opts)
         %PLOTZ Plot spatial distributions of mixture parameters
         %
-        %   NOTE: currently supports only single timeStep
-        %
             arguments
                 mixSolver
-                tIdx          (:,1) double {mustBeInteger,mustBePositive}           = 1
+                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                = 1:mixSolver.NTIME
                 opts.display   {mustBeMember(opts.display,{'HFLUX','W','DP','H','U','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
                 opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
-                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
-                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
-                opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                  = 'K'
+                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.inputSet.geometry.NWALL
+                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.NZ
+                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                    = 'K'
             end
             
             if length(opts.zIdx) < 2
@@ -348,7 +346,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         "tileTitle",         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    bcHFLUX = bc.HFLUX(opts.zIdx,:,tIdx);
+                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
                     plotter.plotz(  bcHFLUX                       ,'bc'         ,'DisplayName','Boundary Condition');
                     plotter.plotz(mix.HFLUX(opts.zIdx,:)           ,'Mixture'                                       );
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION

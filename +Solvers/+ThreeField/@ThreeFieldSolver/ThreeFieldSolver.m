@@ -267,16 +267,14 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         function plotter = plotz(tfSolver, tIdx, opts)
         %PLOTZ Plot spatial distributions of three-field parameters
         %
-        %   NOTE: currently supports only single timeStep
-        %
             arguments
                 tfSolver
-                tIdx          (:,1) double {mustBeInteger,mustBePositive}                    = 1
+                tIdx          (:,1) double {mustBeInteger,mustBePositive}                                          = 1:tfSolver.NTIME
                 opts.display   {mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
                 opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
-                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
-                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NZ
-                opts.annular   (1,1) logical                                                                      = true
+                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
+                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
+                opts.annular   (1,1) logical                                                                       = true
                 opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                             = 'K'
             end
             
@@ -342,10 +340,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 % Wall heat flux
                 if displayVariable({'HFLUX','ALL'})
                     plotter.addTile( ...
-                        'tileTitle',         'Wall heat flux', ...
-                        'xlabel'   ,     'Axial position [m]', ...
+                        'tileTitle',        'Wall heat flux', ...
+                        'xlabel'   ,    'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    bcHFLUX = bc.HFLUX(opts.zIdx,:,tIdx);
+                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
                     plotter.plotz(  bcHFLUX            ,'bc','DisplayName','Boundary Condition');
                     plotter.plotz(flm.HFLUX(opts.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
