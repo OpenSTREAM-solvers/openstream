@@ -19,7 +19,7 @@ classdef Mixture < Solvers.AbstractField
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
         DP           (1,1) struct                                                                 % Saved detailed pressure drops
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
-        ACC          (1,1) struct                                                                 % Saved detailed acceleration terms
+        MDER         (1,1) struct                                                                 % Saved detailed material derivative terms
         TRELAX       (1,1) struct                                                                 % Time relaxation terms
         
         % Iteration properties
@@ -67,7 +67,7 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Overload copyable properties (order is important due to the setter functions)
-            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','ACC','ITR'};
+            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR'};
         end
         
     end

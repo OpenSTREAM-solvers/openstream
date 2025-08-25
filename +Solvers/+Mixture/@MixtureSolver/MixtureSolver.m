@@ -85,17 +85,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             DP    = cell2struct(DPCell, DPFields, 1);                      % Convert cell to struct with fieldnames
             DPSUM = cell2struct(DPCell, DPFields, 1);                      % Convert cell to struct with fieldnames
             
-            % Setup ACC structure
-            % U_z:    [m/s^2] Spatial  hydrodynamic acceleration
-            % U_t:    [m/s^2] Temporal hydrodynamic acceleration
-            % U  :    [m/s^2] Total    hydrodynamic acceleration
-            % H_z:    [m/s^2] Spatial  thermal acceleration
-            % H_t:    [m/s^2] Temporal thermal acceleration
-            % H  :    [m/s^2] Total    thermal acceleration
-            ACCFields =  ["U_z","U_t","U","H_z","H_t","H"];                % Fieldnames for ACC struct
-            ACCCell = cell(numel(ACCFields),1);                            % Cell structure to convert into struct
-            ACCCell(:) = {zeros(mixSolver.NZ,1)};                          % Initialize with zeros
-            ACC = cell2struct(ACCCell, ACCFields, 1);                      % Convert cell to struct with fieldnames
+            % Setup MDER structure
+            % U_z:    [m/s^2] Convective acceleration
+            % U_t:    [m/s^2] Local acceleration
+            % U  :    [m/s^2] Total acceleration
+            % H_z:    [J/kg/s] Convective transport of enthalpy
+            % H_t:    [J/kg/s] Local rate of change of enthalpy
+            % H  :    [J/kg/s] Total rate of change of enthalpy
+            MDERFields =  ["U_z","U_t","U","H_z","H_t","H"];               % Fieldnames for MDER struct
+            MDERCell = cell(numel(MDERFields),1);                          % Cell structure to convert into struct
+            MDERCell(:) = {zeros(mixSolver.NZ,1)};                         % Initialize with zeros
+            MDER = cell2struct(MDERCell, MDERFields, 1);                   % Convert cell to struct with fieldnames
             
             % Setup TRELAX structure
             % WV  :  [kg/s] Vapor mass flow rate
@@ -144,10 +144,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         [] ...
                         );
                 
-                % DP, DPSUM, ACC, TRELAX, ITR
+                % DP, DPSUM, MDER, TRELAX, ITR
                 mixArr(tIdx).DP     = DP;
                 mixArr(tIdx).DPSUM  = DPSUM;
-                mixArr(tIdx).ACC    = ACC;
+                mixArr(tIdx).MDER   = MDER;
                 mixArr(tIdx).TRELAX = TRELAX;
                 mixArr(tIdx).ITR    = ITR;
                 
@@ -289,7 +289,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             arguments
                 mixSolver
                 tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = 1
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','ACCU','H','ACCH','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
                 opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
                 opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
@@ -398,14 +398,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Hydrodynamic accelerations
-            if any(ismember({'ACCU','ALL'},opt.display))
+            if any(ismember({'DUDT','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle','Hydrodynamic accelerations', ...
                     'xlabel'   ,        'Axial position [m]', ...
                     'ylabel'   ,      'Acceleration [m/s^2]');
-                plotter.plotz(mix.ACC.U_z(opt.zIdx),'Z','DisplayName','Spatial' )
-                plotter.plotz(mix.ACC.U_t(opt.zIdx),'T','DisplayName','Temporal')
-                plotter.plotz(mix.ACC.U(opt.zIdx)  ,'Mixture'                   )
+                plotter.plotz(mix.MDER.U_z(opt.zIdx),'Z','DisplayName','Convective')
+                plotter.plotz(mix.MDER.U_t(opt.zIdx),'T','DisplayName','Local'     )
+                plotter.plotz(mix.MDER.U(opt.zIdx)  ,'Mixture'                     )
                 plotter.legend('show', 'Location', 'best');
                 plotter.xlim([min(z) max(z)]);
             end
@@ -432,15 +432,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.ylim([ymin ymax]);
             end
             
-            % Thermal accelerations
-            if any(ismember({'ACCH','ALL'},opt.display))
+            % Rates of change of enthalpy
+            if any(ismember({'DHDT','ALL'},opt.display))
                 plotter.newTile( ...
-                    'tileTitle', 'Thermal accelerations', ...
-                    'xlabel'   ,    'Axial position [m]', ...
-                    'ylabel'   , 'Acceleration [J/kg/s]');
-                plotter.plotz(mix.ACC.H_z(opt.zIdx),'Z','DisplayName','Spatial' )
-                plotter.plotz(mix.ACC.H_t(opt.zIdx),'T','DisplayName','Temporal')
-                plotter.plotz(mix.ACC.H(opt.zIdx)  ,'Mixture'                   )
+                    'tileTitle',         'Rates of change of enthalpy', ...
+                    'xlabel'   ,                  'Axial position [m]', ...
+                    'ylabel'   , 'Rate of change of enthalpy [J/kg/s]');
+                plotter.plotz(mix.MDER.H_z(opt.zIdx),'Z','DisplayName','Convective')
+                plotter.plotz(mix.MDER.H_t(opt.zIdx),'T','DisplayName',     'Local')
+                plotter.plotz(mix.MDER.H(opt.zIdx)  ,'Mixture'                     )
                 plotter.legend('show', 'Location', 'best');
                 plotter.xlim([min(z) max(z)]);
             end
@@ -544,7 +544,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             arguments
                 mixSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                     = mixSolver.NZ
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','ACCU','H','ACCH','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
                 opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                = 'TRANSIENT'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                            = 1:mixSolver.inputSet.geometry.NWALL
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                            = 1:mixSolver.NTIME
@@ -657,14 +657,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Hydrodynamic accelerations
-            if any(ismember({'ACCU','ALL'},opt.display))
+            if any(ismember({'DUDT','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle','Hydrodynamic accelerations', ...
                     'xlabel'   ,                  'Time [s]', ...
                     'ylabel'   ,      'Acceleration [m/s^2]');
-                plotter.plotz(mix.transient('ACC.U_z','zIdx',zIdx)','Z','DisplayName','Spatial' )
-                plotter.plotz(mix.transient('ACC.U_t','zIdx',zIdx)','T','DisplayName','Temporal')
-                plotter.plotz(mix.transient('ACC.U'  ,'zIdx',zIdx)','Mixture'                   )
+                plotter.plotz(mix.transient('MDER.U_z','zIdx',zIdx)','Z','DisplayName','Convective' )
+                plotter.plotz(mix.transient('MDER.U_t','zIdx',zIdx)','T','DisplayName','Local'      )
+                plotter.plotz(mix.transient('MDER.U'  ,'zIdx',zIdx)','Mixture'                      )
                 plotter.legend('show', 'Location', 'best');
             end
             
@@ -688,15 +688,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.ylim([ymin ymax]);
             end
 
-            % Thermal accelerations
-            if any(ismember({'ACCH','ALL'},opt.display))
+            % Rates fo change of enthalpy
+            if any(ismember({'DUDH','ALL'},opt.display))
                 plotter.newTile( ...
-                    'tileTitle', 'Thermal accelerations', ...
-                    'xlabel'   ,              'Time [s]', ...
-                    'ylabel'   , 'Acceleration [J/kg/s]');
-                plotter.plotz(mix.transient('ACC.H_z','zIdx',zIdx)','Z','DisplayName','Spatial' )
-                plotter.plotz(mix.transient('ACC.H_t','zIdx',zIdx)','T','DisplayName','Temporal')
-                plotter.plotz(mix.transient('ACC.H'  ,'zIdx',zIdx)','Mixture'                   )
+                    'tileTitle',         'Rates of change of enthalpy', ...
+                    'xlabel'   ,                            'Time [s]', ...
+                    'ylabel'   , 'Rate of change of enthalpy [J/kg/s]');
+                plotter.plotz(mix.transient('MDER.H_z','zIdx',zIdx)','Z','DisplayName','Convective')
+                plotter.plotz(mix.transient('MDER.H_t','zIdx',zIdx)','T','DisplayName','Local'     )
+                plotter.plotz(mix.transient('MDER.H'  ,'zIdx',zIdx)','Mixture'                     )
                 plotter.legend('show', 'Location', 'best');
             end
             
