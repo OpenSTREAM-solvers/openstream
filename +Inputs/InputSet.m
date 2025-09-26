@@ -1,6 +1,7 @@
 classdef InputSet
     %INPUTSET Creates set of input objects
-    %   Detailed explanation goes here
+    %
+    %   TODO: Detailed explanations
     
     properties (SetAccess = private)
         model
@@ -13,8 +14,10 @@ classdef InputSet
     
     methods
         function obj = InputSet(opts)
-            %INPUTSET Construct an instance of this class
-            %   Detailed explanation goes here
+        %INPUTSET Construct an instance of this class
+        %
+        %   Detailed explanation goes here
+        %
             arguments
                 opts.modelFilePath      {isfile}            = ''        % Model input file (inp/json)
                 opts.modelID            {mustBeTextScalar}  = ''        % Model ID
@@ -35,7 +38,7 @@ classdef InputSet
                                         {islogical}         = false     % Flag to overwrite existing session files
             end
 
-            % Import pacakges
+            % Import packages
             import Inputs.*
             
             %
@@ -66,7 +69,6 @@ classdef InputSet
                                 "overwriteFiles", opts.overwriteSessionFiles);
             obj.session.setupLog(opts.LOGMODE);
             
-            
             % Create input objects
             obj.session.log.diaryOn();
             try
@@ -79,11 +81,38 @@ classdef InputSet
                 obj.session.log.diaryOn();
                 rethrow(ME)
             end
+            
+            % procss warnings
+            inputsWithWarnings = {obj.model, obj.options, obj.geometry, obj.bc};
+            for inputTypeIdx=1:length(inputsWithWarnings)
+                inputObjs = inputsWithWarnings{inputTypeIdx};
+               
+                % inputObjs is an array for obj.bc in transient situations.
+                for inputObj = inputObjs
+                    for warningIdx = 1:length(inputObj.warnings)
+                        obj.session.log.warning(inputObj.warnings(warningIdx).warnID, sprintf("%s\n",inputObj.warnings(warningIdx).msg));
+                    end
+                end
+            end
+
             obj.session.log.diaryOff();
-
         end
+        
+        function inputSet = applySolverDependentProps(inputSet, solverName)
+        %APPLYSOLVERDEPENDENTPROPS
+        %
+            arguments
+                inputSet        Inputs.InputSet
+                solverName      {mustBeTextScalar}
+            end
+            
+            inputSet.model = inputSet.model.applySolverDependentProperties(solverName);
+            inputSet.options = inputSet.options.applySolverDependentProperties(solverName);
+            inputSet.geometry = inputSet.geometry.applySolverDependentProperties(solverName);
+            inputSet.bc = inputSet.bc.applySolverDependentProperties(solverName);
+        end
+    
     end
-
     
 end
 

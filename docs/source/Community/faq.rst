@@ -1,4 +1,4 @@
-TwoPhaseSolver FAQ
+OpenSTREAM FAQ
 ==================
 
 This documentation is made with `Sphinx <https://www.sphinx-doc.org/>`_ using the `Read the Docs <https://sphinx-rtd-theme.readthedocs.io/>`_ theme. 

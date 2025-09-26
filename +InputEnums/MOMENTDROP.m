@@ -1,13 +1,16 @@
 classdef MOMENTDROP
 %MOMENTDROP Drop momentum conservation model
-%   This defines the type of conservation model used on the droplets in
-%   the Drop class. 
+%
+%   Defines the momentum conservation model for the drops. This equation is
+%   used to solve for drop velocity.
+%   Used by the three-field and four-field solvers.
+%
     enumeration
-        ALGEBRAIC
-        SLIP % ratio between droplet velocity and vapor core
-        EQUILIBRIUMS % considers only core drops
-        EQUILIBRIUM % takes into account low-velocity drops
-        FULL % considers inertial terms, need to accelerate slow drops
+        ALGEBRAIC            % Simple algebraic model consistent with mixture solver
+        SLIP                 % Slip ratio model(droplet/gas velocity)
+        EQUILIBRIUM          % Equilibrium model
+        EQUILIBRIUMS         % Equilibrium model based on simple force balance (Fdrag + Fgrav + Fbuoy = 0)
+        FULL                 % Full non-equilibrium model
     end
+
 end
-    

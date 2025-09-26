@@ -49,6 +49,9 @@ classdef Drop < Solvers.AbstractField
                 drop.fluid  = fluid;
             end
 
+            % Overload copyable properties
+            %mix.flowProperties = {'W','U','H'};
+
         end
         
         function conc = CONC(drop,zIdx)
@@ -68,6 +71,44 @@ classdef Drop < Solvers.AbstractField
             conc(negdrop) = -conc(negdrop);
         end
         
+        function kenh = KENH(drop,zIdx)
+        % Drop deposition enhancement factor
+        % Model documented in Le Corre, 2024.
+            
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            model = drop.inputSet.model;
+            kdist = drop.mix.KDIST(zIdx);
+            
+            switch model.DEPENHANCEMENT
+                case InputEnums.DEPENHANCEMENT.NONE
+                    % No drop deposition enhancement
+                    kenh = ones(length(zIdx),1);
+                case InputEnums.DEPENHANCEMENT.WINDECKER
+                    % Windecker drop depositon endhancement model
+                    B = 7.898; D = 4.791;                                  % [-] Model coefficients
+                    zRef = [0.05 0.15 0.45];                               % [m] Reference locations from upstream spacer
+                    
+                    % Blockage ratio effect
+                    BR = [0 model.KBLOCKRATIO];                            % [-] Blockage ratios of local obstructions (including at inlet)
+                    BR = BR(discretize(drop.Z(zIdx),[0 model.KLOC drop.Z(end)])); % [-] Corresponding axial distribution of blockage ratios
+                    kenhmax = 0.95.*(D.*BR(:)+1).*(B.*BR(:)+1);            % [-] Corresponding axial distribution of max drop deposition enhancement factor
+                    
+                    kfunc = @(z,kenhmax) ((kenhmax-1).*z/zRef(1)+1).*(z<=zRef(1)) + ...
+                        kenhmax.*(z>zRef(1) & z<=zRef(2)) + ...
+                        1./((1-1./kenhmax).*(z-zRef(2))./(zRef(3)-zRef(2))+1./kenhmax).*(z>zRef(2) & z<=zRef(3)) + ...
+                        1.*(z>zRef(3));                                    % [-] Piece-wise axial enhancement function
+                    
+                    kenh = kfunc(kdist,kenhmax);                           % [-] Axial distribution of drop deposition enhancement factor
+                    
+                    % Empirical multiplier
+                    KG = [0 model.KTUNING];                                % [-] Tuning coefficients of drop deposition enhancement (including at inlet)
+                    KG = KG(discretize(drop.Z(zIdx),[0 model.KLOC drop.Z(end)])); % [-] Corresponding axial distribution of tuning coefficients
+                    
+                    kenh = KG(:).*(kenh-1)+1;                              % [-] Final axial distribution of drop deposition enhancement factor
+            end
+        end
+        
         function mdep = MDEP(drop,zIdx)
         % Drop deposition mass flux
     
@@ -78,13 +119,17 @@ classdef Drop < Solvers.AbstractField
             sig   = drop.fluid.SIGMA;                                      % [N/m] Surface tension
             hdiam = drop.inputSet.geometry.HDIAM;                          % [m] Hydraulic diameter
             
-            conc = abs(drop.CONC(zIdx));                               % [kg/m^3] Drop concentration
+            conc = abs(drop.CONC(zIdx));                                   % [kg/m^3] Drop concentration
+            conc = conc + 1E-6;                                            % Avoid division by 0 in mded correlations
             
             Wd = drop.W(zIdx);
             negdrop = find(Wd<0);
             %Wd = abs(Wd);
             
             switch model.DEPOSITION
+                case InputEnums.DEPOSITION.NONE
+                    % Supress drop deposition
+                    mdep = zeros(length(zIdx),1);
                 case InputEnums.DEPOSITION.GOVAN
                     % Govan & Hewitt drop deposition model
                     if conc/rhog < 0.3
@@ -101,7 +146,8 @@ classdef Drop < Solvers.AbstractField
             k_enh_dep = drop.ENHANCEDEP(zIdx);
             mdep = k_enh_dep .* mdep;
             mdep(negdrop)=-mdep(negdrop);
-            mdep = drop.mix.AFDISTR(0,mdep,zIdx);                               % [kg/m^2/s] Deposition mass flux, in annular flow region only
+            mdep = drop.KENH(zIdx).*mdep;                                  % [kg/m^2/s] Enhanced drop deposition
+            mdep = drop.mix.AFDISTR(0,mdep,zIdx);                          % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
         function re = RE(drop, zIdx)
@@ -112,6 +158,27 @@ classdef Drop < Solvers.AbstractField
             perim = drop.inputSet.geometry.PERIM;                          % [m] Perimeter
             
             re = 4.*drop.W(zIdx)./drop.MU(zIdx)./sum(perim);               % [-]
+        end
+        
+        function vr = VR(drop,zIdx)
+        %VR Local relative velocity [m/s]
+        %Only AREAMEAN option has been iplemented
+            
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            vr = drop.mix.vapor.U(zIdx) - drop.U(zIdx);                    % [m/s]
+        end
+        
+        function rev = REV(drop,zIdx)
+        %REV Reynolds number with respect to vapor properties and relative phase velocity [-]
+        
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            RHOV = drop.fluid.RHOV(drop.H(zIdx));
+            MUV  = drop.fluid.MUV(drop.H(zIdx));  
+            VR   = drop.VR(zIdx);
+            
+            rev = RHOV.*abs(VR).*drop.DIAM(zIdx)./MUV;                     % [-]
         end
         
         function diam = DIAM(drop,zIdx)
@@ -159,18 +226,37 @@ classdef Drop < Solvers.AbstractField
             ai = drop.DENSITY(zIdx).*drop.AREA(zIdx);                      % [m^-1]
         end
         
-        function drag = DRAG(drop,zIdx)
+        function cd = DRAG(drop,zIdx)
         %DRAG drop drag coefficient
         %
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            
+            Re = drop.REV(zIdx);
+            Re(Re <= 1E-3) = 1E-3;                                       % [-] Avoid division by 0 
             
             model = drop.inputSet.model;
             
             switch model.DROPDRAG
                 case InputEnums.DROPDRAG.CONSTANT
                     % Constant drag model
-                    drag = repmat(model.DROPDRAGCOEF,length(zIdx),1);      % [-]
+                    cd = repmat(model.DROPDRAGCOEF,length(zIdx),1);        % [-]
+
+                case InputEnums.DROPDRAG.STOKES
+                % Stokes model    
+                    cd = 24./Re;                                           % [-]
+                    
+                case InputEnums.DROPDRAG.VISCOUS
+                % Viscous model    
+                    cd = 24./Re.*(1+0.15.*Re.^0.687);                      % [-]
+                    
+                case InputEnums.DROPDRAG.DISTORDED
+                 % Distorted fluid particle (bubbly flow n=2.5)
+                    %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
+                    mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
+                    cd = liquid.VISCL(zIdx).*Re.*mult;                     % [-]    
             end
+            
+            cd = min(cd,1);
         end
         
         function Fbuoy = FBUOY(drop,zIdx)
@@ -178,9 +264,9 @@ classdef Drop < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            DPDZ = -drop.mix.DP.Tot(zIdx)/drop.DZ;                              % [Pa/m] Pressure gradient
+            DPDZ = drop.mix.DP.Tot(zIdx)/drop.DZ;                          % [Pa/m] Pressure gradient
             
-            Fbuoy = -DPDZ;                                                 % [N/m^3]
+            Fbuoy = DPDZ;                                                  % [N/m^3]
             
             Fbuoy = drop.mix.AFDISTR(0,Fbuoy,zIdx);   
         end
@@ -204,7 +290,7 @@ classdef Drop < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
             
-            UVAP = drop.mix.vapor.U(zIdx);                                      % [m/s] Vapor velocity
+            UVAP = drop.mix.vapor.U(zIdx);                                 % [m/s] Vapor velocity
             rhog = drop.fluid.RHOG;                                        % [kg/m^3] Vapor density
             
             sgn = sign(UVAP-drop.U(zIdx));
@@ -296,54 +382,6 @@ classdef Drop < Solvers.AbstractField
             Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),drop.U(zIdx),zIdx);
         end
 
-        function out = struct(obj)
-        %STRUCT Converter to struct
-        %
-            for i = length(obj):-1:1
-                out(i) = struct('TIME', obj(i).TIME, ...
-                                'W',   obj(i).W, ...
-                                'U',   obj(i).U, ...
-                                'H',   obj(i).H, ...
-                                'ITR', obj(i).ITR);
-            end
-        end
-
-        function copyFlowProperties(srcObj, targetObj, opts)
-        %COPYFLOWPROPERTIES
-        %
-            arguments
-                srcObj
-                targetObj (1,:) Solvers.ThreeField.Drop
-                opts.all  (1,1) logical = false
-            end
-
-            for i = 1:length(targetObj)
-                
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                            'DropError:copyFlowPropertiesError', ...
-                            'Source and target objects have mismatched spatial meshes' ...
-                            ) ...
-                        );
-                end
-                
-                % Copy properties
-                propNames = {'W','U','H'};
-                for j = 1:length(propNames)
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                    else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                    end
-                end
-
-
-            end
-
-        end
-    
     end
 
     methods(Access=private)

@@ -2,7 +2,7 @@ classdef Film < Solvers.AbstractFilm
     %FILM Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess=?Solvers.AbstractSolver)
+     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
         % Solver properties
         NZ                                                                 = 0                    % [-] Number of axial steps
@@ -67,7 +67,7 @@ classdef Film < Solvers.AbstractFilm
             u(film.W==0) = film.base.U(film.W==0);
         end
 
-        function distributeOAFW(film, W, zIdx)
+        function eb = distributeOAFW(film, Wf, zIdx)
         % DISTRIBUTEOAFW Distributes film mass flow rate at onset of 
         % annular flow to base and wave, based on option: OAFFILMSPLIT
 
@@ -79,22 +79,22 @@ classdef Film < Solvers.AbstractFilm
                 case InputEnums.OAFFILMSPLIT.RATIO
                     eb = model.OAFBASERATIO;
                 case InputEnums.OAFFILMSPLIT.EQUILIBRIUM
-                    eb = film.EQUIL(W, zIdx);
+                    eb = film.EQUIL(Wf, zIdx);
             end
-            if isscalar(zIdx) && size(W,1)~=1
+            if isscalar(zIdx) && size(Wf,1)~=1
                 error('Film.DISTRIBUTEOAFW: Matrix W cannot be used with scalar zIdx');
-            elseif ~isscalar(zIdx) && size(W,1)~=length(zIdx)
+            elseif ~isscalar(zIdx) && size(Wf,1)~=length(zIdx)
                 error('Film.DISTRIBUTEOAFW: Matrix W and zIdx size mismatch');
-            elseif ~isscalar(zIdx) && size(W,1)==1
-                W = repmat(W,length(zIdx),1);
+            elseif ~isscalar(zIdx) && size(Wf,1)==1
+                Wf = repmat(Wf,length(zIdx),1);
             end
             
             if ~isobject(film.wave) || ~isobject(film.base)
                 error('Film.DISTRIBUTEOAFW: base or wave not initialized');
             end
     
-            film.wave.W(zIdx,:) = (1-eb) .* W;
-            film.base.W(zIdx,:) = eb .* W;
+            film.wave.W(zIdx,:) = (1-eb) .* Wf;
+            film.base.W(zIdx,:) = eb .* Wf;
 
         end
 
@@ -115,7 +115,7 @@ classdef Film < Solvers.AbstractFilm
         end
         
         function initializeBaseAndWave(film, WIN, ITR)
-        %INITIALIZEBASEANDWAVE Initialize base and wave arrays given WTOT
+        %INITIALIZEBASEANDWAVE Initialize base and wave arrays given WIN, according to OAF film split model
             
             %% Constant properties
 
@@ -131,24 +131,27 @@ classdef Film < Solvers.AbstractFilm
             %% Mass flow rate and velocity
 
             model = film.inputSet.model;
-            geom = film.inputSet.geometry;
+            geom  = film.inputSet.geometry;
 
             % [kg/s] Distribute film at inlet uniformly on all walls
             film.base.W(1,1:geom.NWALL) = WIN.*geom.PERIM./sum(geom.PERIM);
 
-            % [kg/s] Apply simple mass conservation
-            film.base.W = film.base.W(1,:)+cumsum(film.base.MEVAP).*geom.PERIM.*film.DZ;
+            % [kg/s] Apply simple mass conservation, all evaporation in base film for now
+            film.base.W = film.base.W(1,:)+cumsum(film.MEVAP).*geom.PERIM.*film.DZ;
             
-            % Limit film mass flux minimum to 0 [kg/s]
+            % Limit film mass flux minimum to 0 [kg/s], all liquid in base film for now
             film.base.W = max(0, film.base.W);
+            film.wave.W = 0.*film.base.W;
 
             % Distribute film between base and wave (order matters)
             % Film mass flow rate at onset of annular flow
-            film.distributeOAFW(film.base.W);
+            %film.distributeOAFW(film.base.W);
 
             % Velocity
-            film.base.U = film.UALGEBR();                                   % [m/s] Base velocity
-            film.wave.U = film.base.U;                                      % [m/s] Wave velocity
+            film.base.U = film.UALGEBR();                                  % [m/s] Base velocity
+            film.wave.U = film.base.U;                                     % [m/s] Wave velocity
+
+            film.distributeOAFW(film.base.W);
 
             % Set minimum of wave velocity to 1 m/s
             % TODO: Maybe revisit in the future...
@@ -163,6 +166,8 @@ classdef Film < Solvers.AbstractFilm
             %TODO: consider using wave number density
             %TODO: consi
             film.wave.FREQUENCY(1:film.NZ,1:geom.NWALL) = film.wave.EQFREQUENCY();
+            oafIdx = film.mix.OAFIDX;
+            film.wave.FREQUENCY(1:oafIdx,1:geom.NWALL) = repmat(film.wave.EQFREQUENCY(oafIdx),oafIdx,1);
 
             % Setup iteration struct
             film.base.ITR = ITR;

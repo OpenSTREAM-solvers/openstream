@@ -1,12 +1,16 @@
 classdef MOMENTBASE
 %MOMENTBASE Base film momentum conservation model
-%   Defines the type of momentum conservation used on the liquid film. The
-%   conservation equations are used to solve for liquid-film velocity
+%
+%   Defines the momentum conservation model for the base film. This
+%   equation is used to solve for base film velocity.
+%   Used by the four-field solver.
+%
     enumeration
-        ALGEBRAIC  % Consistent with mixture model (tau_wall = tau_f_wall)
-        EQUILIBRIUM % (tau_int = tau_wall)
-        EQUILIBRIUMS 
-        FULL 
+        ALGEBRAIC            % Simple algebraic model
+        EQUILIBRIUM          % Equilibrium model
+        EQUILIBRIUMS         % Equilibrium model based on simple force balance (Fwall + Fvapor = 0)
+        FULL                 % Full non-equilibrium model
+        FULLNOP              % Full non-equilibrium model without considering pressure terms (gravity and buoyancy)
     end
+
 end
-    

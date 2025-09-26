@@ -1,10 +1,13 @@
 classdef WAVEFREQUENCY
-%WAVEFREQUENCY Wave number conservation model
-%   This defines the type of conservation model used on the wave number in
-%   the Wave class. 
+%WAVEFREQUENCY Wave number density transport model
+%
+%   Defines the wave number density transport model. This equation is used
+%   to solve for the wave number density (or wave frequency). 
+%   Used by the four-field solver.
+%
     enumeration
-        EQUILIBRIUM
-        RELAXATION
+        EQUILIBRIUM          % Equilibrium model
+        RELAXATION           % Full model with time relaxation approximation
     end
+
 end
-    

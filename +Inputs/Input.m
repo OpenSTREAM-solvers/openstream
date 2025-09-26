@@ -1,15 +1,17 @@
-classdef (HandleCompatible) Input < dynamicprops
-    %INPUT Su
-    %   Detailed explanation goes here
+classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
+    %INPUT Superclass to other input classes
+    %
+    %   TODO: Detailed explanations
 
     properties (SetAccess=protected)
-        extra   = struct.empty()
+        extra       = struct.empty()
+        warnings    = struct.empty()
     end
     
     methods
         function obj = Input(inputFilePath, key, val)
-            %INPUT Parse inputFile to construct this class
-            %   Detailed explanation goes here
+        %INPUT Parse inputFile to construct this class
+        %
             arguments
                 inputFilePath {mustBeText}                                  = ""
                 key {mustBeText}                                            = ""
@@ -49,12 +51,13 @@ classdef (HandleCompatible) Input < dynamicprops
                 else
                     obj.inputStruct = obj.inputStruct(entryIdx);
                 end
+                
             end
         end
 
-        function [isSpecifiedEntry, defaultUsed] = validateInputEntry(obj, objPropname, opts)
-            % VALIDATEINPUTENTRY 
-            %   Description
+        function [isSpecifiedEntry, defaultUsed, defaultValue] = validateInputEntry(obj, objPropname, opts)
+        % VALIDATEINPUTENTRY 
+        %
             arguments
                 obj
                 objPropname
@@ -69,6 +72,7 @@ classdef (HandleCompatible) Input < dynamicprops
             % Default false isValidEntry and defaultUsed
             isSpecifiedEntry = false;
             defaultUsed = false;
+            defaultValue = [];
 
             % List of properties set in inputStruct 
             inputStructFieldnames = fieldnames(obj.inputStruct);
@@ -81,6 +85,9 @@ classdef (HandleCompatible) Input < dynamicprops
             % Find propname in inputStructFieldnames
             if find(strcmp(inputStructFieldnames, objPropname))
                 
+                % Variable is specified
+                isSpecifiedEntry = true;
+
                 % assign field entry as inputField
                 inputField = obj.inputStruct.(objPropname);
 
@@ -99,13 +106,13 @@ classdef (HandleCompatible) Input < dynamicprops
                 elseif ~propIsRequired && inputFieldIsEmpty
                 % Provide warning if property is optional and a
                 % value was not specified. Use default instead.
-                    warning('%s: Value for entry %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
+                    % warning('%s: Value for entry %s was not set. Default value used: %s', ...
+                    %     objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
+                    defaultValue = propProps.DefaultValue;
                 else
                     % Assign specified non-empty value to property
                     % Let MATLAB throw errors from parameter validation
-                    isSpecifiedEntry = true;
                 end
             else
                 if propIsRequired
@@ -118,9 +125,10 @@ classdef (HandleCompatible) Input < dynamicprops
                 else
                 % An optional property was not specified
                     
-                    warning('%s: Value for optional property %s was not set. Default value used: %s', ...
-                        objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
+                    % warning('%s: Value for optional property %s was not set. Default value used: %s', ...
+                    %     objClassName, objPropname, Inputs.Input.defaultValueString(propProps.DefaultValue));
                     defaultUsed = true;
+                    defaultValue = propProps.DefaultValue;
                 end
             end
 
@@ -129,33 +137,160 @@ classdef (HandleCompatible) Input < dynamicprops
         end
         
         function objPropnames = listInputProperties(obj, opts)
-            %LISTINPUTPROPERTIES 
-            % List of protected obj property names
+        %LISTINPUTPROPERTIES List of protected obj property names
+        %
             arguments
                 obj
                 opts.exclude = {}   % Cell array of properties to exclude from the list
             end
             objPropnames = string({metaclass(obj).PropertyList.Name}.');
             objPropnames = objPropnames( ...
-                strcmp(string({metaclass(obj).PropertyList.SetAccess}),'protected')...
-                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra'));
+                cellfun(@(setaccess) isa(setaccess, 'meta.class'), [metaclass(obj).PropertyList.SetAccess]) ...
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'SOLVERDEPENDENTPROPS')...
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra')...
+                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'warnings'));
 
             % Exclude properties specified in opts.exclude
             for idx = 1:length(opts.exclude)
                 objPropnames = objPropnames( ...
                     ~strcmpi(objPropnames,opts.exclude{idx}));
             end
+        end
+
+        function [varargout] = defaultValueUsedReport(obj, propNames, propValues)
+        %DEFAULTVALUEUSEDREPORT Report of properties in which the default
+        %values were used.
+        %
+        arguments
+            obj
+            propNames   string
+            propValues  cell
+        end
+
+            % TODO: Check propNames and propValues size matches
+    
+            % Init. string array
+            rep = "";
+    
+            % Title line
+            rep(end+1) = sprintf("Default values were used for the following variables in %s:", upper(class(obj)));
+
+            % Max propname length
+            propName_max = max(arrayfun(@(n) strlength(n),propNames));
+    
+            % For each propName, add entry to rep
+            for i = 1:length(propNames)
+                
+                % Get propname, propvalue
+                propName = propNames(i);
+                propValue = propValues{i};
+    
+                % Identify propValue type format
+                if isstring(propValue) || ischar(propValue)
+                    %propValue = propValue;
+                elseif isnumeric(propValue)
+                    % Check if is scalar
+                    if isscalar(propValue)
+                        addBrackets = false;
+                    else
+                        addBrackets = true;
+                    end
+                    % Convert to string and add brackets
+                    % NOTE: 2D+ arrays will be reshaped...
+                    propValue = sprintf('%f ', propValue);
+                    if addBrackets
+                        propValue = sprintf('[%s]', propValue);
+                    end
+                elseif isa(propValue, "function_handle")
+                    % Convert to string
+                    propValue = sprintf('%s ', func2str(propValue));
+
+                else
+                    % TODO: Throw error or handle it somehow
+                end
+    
+                % Create string
+                rep(end+1) = sprintf(sprintf('%%-%ds: %%s ',propName_max+2), propName, propValue);
+    
+            end
+    
+            
+            if nargout == 1
+                % return if nargout == 1
+                varargout(1) = {rep};
+            elseif nargout == 0
+                % print if no outputs requested
+                fprintf('%s\n', rep)
+            else
+                % TODO: Throw error for requesting too many outputs
+            end
 
         end
 
+        function out = applySolverDependentProperties(obj, solverName)
+        %APPLYSOLVERDEPENDENTPROPERTIES Make copy of obj to avoid
+        %overwriting the dependency specification
+        %
+            out = copy(obj);
+
+            % Convert solvername to upper
+            solverName = upper(solverName);
+
+            % Check if SOLVERDEPENDENTPROPS is a property
+            %   simply exit if not
+            if ~isprop(out, 'SOLVERDEPENDENTPROPS')
+                return;
+            end
+
+            % Iterate through each field in SOLVERDEPENDENTPROPS
+            depPropNames = fields(out.SOLVERDEPENDENTPROPS);
+            for i = length(depPropNames)
+                % Name of property
+                depPropName = depPropNames{i};
+                
+                % Details of the solver dependency
+                depProp = out.SOLVERDEPENDENTPROPS.(depPropName);
+                
+                % Retrieve flag that shows property is solver dependent
+                dep_flag = depProp.DEP_FLAG;
+                
+                % See if property is set to be dependent
+                if out.(depPropName) == dep_flag
+                    
+                    % Find solver in depProp details
+                    if isfield(depProp, solverName)
+                        % Identify detail type
+                        if isenum(depProp.(solverName)) || out.(depPropName)
+                            % Simply replace an enum or numeric value
+                            out.(depPropName) = depProp.(solverName);
+                        elseif isstruct(depProp.(solverName))
+                            % Expect a field called value
+                             out.(depPropName) = depProp.(solverName).value;
+                             % TODO: Handle further instructions. For
+                             % example, models that require different
+                             % coefficients can be specified and applied
+                             % here. This case is not tested.
+                        end
+                    % Apply default if
+                    elseif isfield(depProp, 'DEFAULT')
+                        out.(depPropName) = depProp.DEFAULT;
+                    end
+                    
+                end
+                
+            end
+    
+        end
     end
     
     methods(Static, Access=protected)
         
         function inputStruct = readInputFile(filePath)
-            %READINPUTFILE input file parser
-            % This function accepts the uniform input file format and 
-            % converts it to a struct array for each entry. 
+        %READINPUTFILE input file parser
+        %
+        % This function accepts the uniform input file format and 
+        % converts it to a struct array for each entry.
+        %
             arguments
                 filePath {mustBeFile}
             end
@@ -219,7 +354,7 @@ classdef (HandleCompatible) Input < dynamicprops
                     %   Capture comments, indicated by '#' symbol
                     entryExpr{2} = '(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
-                    entryExpr{3} = '(?<PARAMETER>[\w]+)?[\s]* \!{1}[\s]*(?<DESC>.*)? >{1}[\s]*(?<VALUE>[\w\f\s\-\+\.]*)?';
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[@><=&|()\/\*\[\],\w\s\+\-\.]*)?"*';
                     %   Join parts together and remove spaces (use \s instead).
                     entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
                     
@@ -296,27 +431,24 @@ classdef (HandleCompatible) Input < dynamicprops
                     );
             end
 
-            
-
         end
-        
-        
 
         function defVal = defaultValueString(defVal)
         %DEFAULTVALUESTRING Convert numeric default value to string
+        %
             if isnumeric(defVal)
                 defVal = num2str(defVal);
             elseif islogical(defVal)
                 defVal = string(defVal);
             end
         end
-
         
     end
 
     methods(Static)
         function writeInputFile(filePathName, fidMode, varargin)
-            
+        %WRITEINPUTFILE
+        %    
             if mod(length(varargin),2) == 1
                 error('An even number of inputs after filePath is required.');
             end
@@ -350,6 +482,10 @@ classdef (HandleCompatible) Input < dynamicprops
                     varValue = num2str(reshape(varValue,1,[]),'%.11f ');
                 elseif islogical(varValue)
                     varValue = string(varValue);
+                elseif isa(varValue, 'function_handle')
+                    varValue = func2str(varValue);
+                elseif ((isStringScalar(varValue) || ischar(varValue)) && startsWith(strtrim(varValue), '@'))
+                    % Don't modify value
                 else
                     varValue = upper(varValue);
                 end
@@ -381,8 +517,29 @@ classdef (HandleCompatible) Input < dynamicprops
 
         end
 
-        function jsonText = convert2JSON(inputFilePath)
+        function validateFunctionHandleInput(handleString)
+        %VALIDATEFUNCTIONHANDLEINPUT
+        %
+            arguments
+                handleString    {mustBeTextScalar}
+            end
+
+            restrictedKeywords = ["eval", "feval", "system", "fopen", "delete", "!", ...
+                                     "load", "save", "assignin", "clear", "global", "import", ...
+                                     "java", "py\.", "web", "dir", "cd", "run", "builtin", ...
+                                     "uigetfile", "input", "persistent", "classdef", "meta\."];
             
+            for restrictedKeyword = restrictedKeywords
+                if ~isempty(regexp(handleString, restrictedKeyword, 'once', 'ignorecase'))
+                    error("Unsafe content detected: '%s' in function handle: %s", restrictedKeyword, handleString);
+                end
+            end
+
+        end
+
+        function jsonText = convert2JSON(inputFilePath)
+        %CONVERT2JSON
+        %
             % Read inputFilePath
             inputStruct = Inputs.Input.readInputFile(inputFilePath);
             

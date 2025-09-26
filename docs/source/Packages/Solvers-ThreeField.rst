@@ -1,9 +1,9 @@
-FourField Solver
-================
+ThreeField Solver
+=================
 
-:mod:`FourField Solver` is pretty cool.
+:mod:`ThreeField Solver` defines a set of solver and field classes related to the three-field approach.
    
-.. automodule:: Solvers.FourField
+.. automodule:: Solvers.ThreeField
    :show-inheritance:
    :members:
 .. :exclude-members: 

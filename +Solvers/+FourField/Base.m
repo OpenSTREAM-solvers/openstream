@@ -2,7 +2,7 @@ classdef Base < Solvers.AbstractFilm
     %BASE Summary of this class goes here
     %   Detailed explanation goes here
     
-     properties (SetAccess={?Solvers.AbstractFilm,?Solvers.AbstractSolver})
+     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
         % % Solver properties
         NZ                                                                 = 0                    % [-] Number of axial steps
@@ -83,13 +83,16 @@ classdef Base < Solvers.AbstractFilm
 
         function betap = BETAP(base, zIdx)
         %BETAP Base film heat flux fraction
+        % Supression of heat flux to base film in pre-annular region is required to impose target base film thickness at OAF
+        % The entire film evaporation hence occurs in the wave field
         %
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
             % assuming split according to interfacial fraction, BETA
             % TODO: add as model option later
             betap = base.BETA(zIdx);
-
+            
+            betap = base.mix.AFDISTR(0,betap,zIdx);                        % Supress heat flux in pre-annular region
         end
 
         function eta = ETA(base, zIdx)
@@ -117,6 +120,14 @@ classdef Base < Solvers.AbstractFilm
 
             mevap = base.BETAP(zIdx) .* base.film.MEVAP(zIdx,:);
         end
+        
+        function mdep = MDEP(base,drop,zIdx)
+        %MDEP Base deposition mass flux
+        %
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
+
+            mdep = base.ETA(zIdx).*drop.MDEP(zIdx);
+        end
 
         function Mturb = MTURB(base, zIdx)
         %MTURB Turbulent mass exchange
@@ -125,14 +136,13 @@ classdef Base < Solvers.AbstractFilm
 
             wave = base.film.wave;
             Kw_recp = base.inputSet.model.WAVEMIXCOEF;
-            Mturb = min(base.WL(zIdx), wave.WL(zIdx)) .* Kw_recp ./ wave.WIDTH(zIdx);
-
+            Mturb = min(abs(base.WL(zIdx)), wave.WL(zIdx)) ./ Kw_recp ./ wave.WIDTH(zIdx);
+            Mturb = min(Mturb,10);
             Mturb = base.mix.AFDISTR(0,Mturb,zIdx);
-
         end
         
-        function [Mwave, Mturb] = MWAVE(base,drop,zIdx)
-        %MWAVE Net Mass flux interaction with wave
+        function [Mwave, Mnet] = MWAVE(base,drop,zIdx)
+        %MWAVE Base Mass flux interaction with wave
         %   Defined as a source term, Mwave is the 
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
@@ -143,12 +153,12 @@ classdef Base < Solvers.AbstractFilm
             % Relaxation term
             relaxTB = base.inputSet.model.RELAXTB;
 
-            % Net exchange term
-            Mwave = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.ETA(zIdx).*drop.MDEP(zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
+            % Net exchange term (eq. 32)
+            Mnet = -base.MEVAP(zIdx)-base.MENT(zIdx)-base.MDEP(drop,zIdx)+rho_ls.*(base.EQTHICK(zIdx)-base.THICK(zIdx))./relaxTB;
 
-            % Add turbuluent mixing term (eq.7)
+            % Wave exchange + turbulent mixing term (eq.7)
             Mturb = base.MTURB(zIdx);
-            Mwave = max(0, Mwave) + Mturb;
+            Mwave = max(Mnet, 0) + Mturb;
 
             % TODO: requires further investigation
             % if base.inputSet.model.POSFILM
@@ -158,7 +168,6 @@ classdef Base < Solvers.AbstractFilm
             % end
 
             Mwave = base.mix.AFDISTR(0,Mwave,zIdx);
-            
         end
         
         function Mtot = MTOT(base,drop,zIdx)
@@ -166,19 +175,22 @@ classdef Base < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
-            % TODO: potentially move the MDEP method
-            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.ETA(zIdx).*drop.MDEP(zIdx)+base.MWAVE(drop,zIdx)-base.film.wave.MBASE(drop,zIdx);
+            % TODO: Create the MDEP method
+            Mtot  = base.MEVAP(zIdx)+base.MENT(zIdx)+base.MDEP(drop,zIdx)+base.MWAVE(drop,zIdx)-base.film.wave.MBASE(drop,zIdx);
 
         end
         
-        function Fwave = FWAVE(base,zIdx)
+        function Fwave = FWAVE(base,drop,zIdx)
         %FWAVE Wave interfacial force
         %
-            if nargin < 2, zIdx = (1:base(1).NZ).'; end
+            if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
-            %TODO: add model option
-            Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx); % [N/m^2]
-            
+            switch base.inputSet.model.WAVEBASEINT
+                case 'VAPORSHEAR'
+                    Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx);  % [N/m^2]
+                case 'VAPORSHEARDROPMASS'
+                    Fwave = base.film.wave.BETA(zIdx).*base.FVAPOR(zIdx) + base.film.wave.FDEP(drop,zIdx); % [N/m^2]
+            end
         end
 
         function Fwavemass = FWAVEMASS(base,drop,zIdx)
@@ -191,7 +203,6 @@ classdef Base < Solvers.AbstractFilm
             Fwavemass = base.MWAVE(drop,zIdx).*deltaU; % [N/m^2]
 
             Fwavemass = base.mix.AFDISTR(0,Fwavemass,zIdx);
-            
         end
 
         function Fbasevapor = FBASEVAPOR(base,zIdx)
@@ -201,18 +212,19 @@ classdef Base < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
             
             % TODO: debug syntax
-            Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx); % [N/m^2]
+            Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx);              % [N/m^2]
             
         end
 
         function Fdep = FDEP(base,drop,zIdx)
-        %FWAVE Droplet
+        %FDEP Droplet
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
             deltaU = drop.U(zIdx) - base.U(zIdx,:);
-            Fdep = base.ETA(zIdx).*drop.MDEP(zIdx) .* deltaU;   % [N/m^2]
+            Fdep = base.MDEP(drop,zIdx) .* deltaU;                         % [N/m^2]
             
+            Fdep = base.mix.AFDISTR(0,Fdep,zIdx);
         end
 
         function Ftot = FTOT(base,drop,zIdx)
@@ -220,8 +232,12 @@ classdef Base < Solvers.AbstractFilm
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
             
-            Ftot  = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);   
-            %Ftot = base.FWALL(zIdx)+base.FWAVE(zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);
+            switch base.inputSet.model.MOMENTBASE
+                case 'FULLNOP'
+                    Ftot  = base.FWALL(zIdx)+base.FWAVE(drop,zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FDEP(drop,zIdx);
+                otherwise
+                    Ftot  = base.FWALL(zIdx)+base.FWAVE(drop,zIdx)+base.FWAVEMASS(drop,zIdx)+base.FBASEVAPOR(zIdx)+base.FBUOY(zIdx)+base.FGRAV(zIdx)+base.FDEP(drop,zIdx);
+            end
         end
 
         function eqthick = EQTHICK(base,zIdx)
@@ -229,10 +245,10 @@ classdef Base < Solvers.AbstractFilm
         %   
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            D_H = base.inputSet.geometry.HDIAM();
+            D_H = base.inputSet.geometry.HDIAM;
             
             switch base.inputSet.model.BASEEQTHICK
-                case 'DEFAULT'
+                case 'RISO'
                     coefs = [5.37E-5 -0.64 1.21];
                     eqthick = ReMethod();
                 case 'MFVAL'
@@ -286,10 +302,10 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
-            per = base.inputSet.geometry.PERIM();
+            per = base.inputSet.geometry.PERIM;
             Wb = base.W(zIdx,:);
             Ub = base.U(zIdx,:);
-            DeltaM=-base.MEVAP(zIdx) - base.ETA(zIdx).*drop.MDEP(zIdx);
+            DeltaM=-base.MEVAP(zIdx) - base.MDEP(drop,zIdx);
             betaB = base.BETA(zIdx);
             
             tdry = base.TBASE(zIdx) - Wb.*betaB./per./Ub./DeltaM;
@@ -320,10 +336,10 @@ classdef Base < Solvers.AbstractFilm
             
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
-            per = base.inputSet.geometry.PERIM();
+            per = base.inputSet.geometry.PERIM;
             Wb = base.W(zIdx,:);
             Ub = base.U(zIdx,:);
-            DeltaM=-base.MEVAP(zIdx) - base.ETA(zIdx).*drop.MDEP(zIdx);
+            DeltaM=-base.MEVAP(zIdx) - base.MDEP(drop,zIdx);
             Betab = base.BETA(zIdx);
             wmin = Wb-per.*Ub.*DeltaM./Betab.*base.TBASE(zIdx);
 
@@ -337,7 +353,7 @@ classdef Base < Solvers.AbstractFilm
         % WMINL Minimum base film mass flow rate per perimeter
         %
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
-            wminl = base.WMIN(drop, zIdx) ./ base.inputSet.geometry.PERIM();
+            wminl = base.WMIN(drop, zIdx) ./ base.inputSet.geometry.PERIM;
         end
 
         function thickmin = THICKMIN(base, drop, zIdx)
@@ -348,7 +364,7 @@ classdef Base < Solvers.AbstractFilm
 
             rho_ls = base.fluid.RHOF;
             Ub = base.U(zIdx,:);
-            per = base.inputSet.geometry.PERIM();
+            per = base.inputSet.geometry.PERIM;
                 
             thickmin = base.WMIN(drop, zIdx)./(rho_ls.*Ub.*per);
         end

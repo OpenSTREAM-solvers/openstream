@@ -4,20 +4,20 @@ Getting started
 Prerequisites and installation
 ------------------------------
 
-TwoPhaseSolver is a MATLAB program for simulating two-phase flow
+OpenSTREAM is a MATLAB program for simulating two-phase flow
 behaviors. The Python version of
 `CoolProp <http://www.coolprop.org/index.html#what-is-coolprop>`__ is
 used for calculating the fluid properties.
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
 MATLAB interface that interacts with CoolProp through Python. Both
-TwoPhaseSolver and CoolProp are hosted here on GitHub. Making a copy
+OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
 (cloning) of these programs will be our first step.
 
 Install using Git and Github
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  There are two main ways of interacting with GitHub to use and
-   contribute to the TwoPhaseSolver project: `Git Command Line Interface
+   contribute to the OpenSTREAM project: `Git Command Line Interface
    (CLI) <https://docs.github.com/en/get-started/getting-started-with-git/set-up-git>`__,
    and the `GitHub Desktop <https://desktop.github.com/>`__ program. Use
    the links to set up one of the methods.
@@ -28,13 +28,13 @@ Install using Git and Github
    -  **Command line interface**
 
       -  Clone (make a copy of) the **repo**\ sitory using:
-         ``git clone --recursive git@github.com:mfval/TwoPhaseSolver.git``
+         ``git clone --recursive git@github.com:OpenSTREAM-solvers/openstream.git``
          (`SSH
          authentication <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>`__)
 
          or
 
-         ``git clone --recursive https://github.com/mfval/TwoPhaseSolver.git``
+         ``git clone --recursive https://github.com/OpenSTREAM-solvers/openstream.git``
          (`HTTPS
          authentication <https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git>`_).
          
@@ -43,7 +43,7 @@ Install using Git and Github
          such as the
          `mfval/CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_,
          in one command.)
-      -  Then, use ``cd TwoPhaseSolver`` to enter the newly created
+      -  Then, use ``cd openstream`` to enter the newly created
          folder. You should see the newly downloaded files for the
          project.
 
@@ -56,9 +56,9 @@ Install using Git and Github
 MATLAB-Python compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before using the TwoPhaseSolver, we need to make sure Python with the
-appropriate version is installed, and MATLAB knows the location of the
-Python executable. The following instructions are from the
+Before using OpenSTREAM, we need to make sure Python with the appropriate
+version is installed, and MATLAB knows the location of the Python
+executable. The following instructions are from the
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_ repo.
 
 1. Determine which versions of Python are compatible with your version
@@ -91,7 +91,7 @@ Python executable. The following instructions are from the
 
 4. Specify Python installation location in MATLAB:
 
-   -  Run ``pyenv('pathtopython')``, where ``pathtopython`` is the path
+   -  Run ``pyenv('Version', pathtopython')``, where ``pathtopython`` is the path
       to where Python is installed. Here are some typical locations
       depending on your OS:
 
@@ -107,7 +107,7 @@ Python executable. The following instructions are from the
    -  Run ``cp=CoolPropWrapper()``.
 
       -  If you are using the CoolPropWrapper as MATLAB Package in
-         TwoPhaseSolver, use ``cp=CoolPropWrapper.CoolPropWrapper()``.
+         OpenSTREAM, use ``cp=CoolPropWrapper.CoolPropWrapper()``.
 
    -  If the CoolProp module is not installed, you will be prompted to
       do so automatically. If you prefer to do this manually, in your

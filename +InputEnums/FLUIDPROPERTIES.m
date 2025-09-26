@@ -1,9 +1,12 @@
 classdef FLUIDPROPERTIES
 %FLUIDPROPERTIES Fluid property calculation assumptions
-%   Defines the pressure to be used for calculating fluid properties
+%
+%   Defines the input parameters used to calculate the fluid properties.
+%   Used by all solvers.
+%
     enumeration
-        SATURATED   %Assuming P = P_sat for the entirety of the flow channel
-        PSYSTEM %Considers the pressure change along the flow channel
+        SATURATED            % Properties based on saturated assumption (at system pressure)
+        PSYSTEM              % Properties based on system pressure and local phase enthalpy
     end
+
 end
-    

@@ -10,6 +10,9 @@ classdef Session < handle
                     (1,1) logical       = false
 
         log         (1,1) Session.Log
+        
+        % Warnings
+        showWarnings          (1,1) logical = true
     end
 
     properties (Dependent)
@@ -42,15 +45,23 @@ classdef Session < handle
         %SETUPLOG Setup log
         %
             arguments
-                session
+                session                 Session.Session
                 LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
                                                                             % LogMode
                 opts.LOGFID    (1,1)    int32            = -1
             end
             
+            switch LOGMODE
+                case {Session.LogMode.NONE, Session.LogMode.LOGTOFILEONLY}
+                    session.showWarnings = false;
+                otherwise
+                    session.showWarnings = true;
+            end
+
             session.log = Session.Log(LOGMODE, ...
                                       "session",session, ...
-                                      "LOGFID",opts.LOGFID);
+                                      "LOGFID",opts.LOGFID,...
+                                      "showWarnings", session.showWarnings);
         end
 
         function makeSessionDirectory(obj)
@@ -73,15 +84,54 @@ classdef Session < handle
                         ) ...
                     );
                 else
-                    %TODO: add warning about deletion
+                    % Check if there are any open files through fopen
+                    if isMATLABReleaseOlderThan("R2024a")
+                        openFileIDs = fopen('all');
+                    else
+                        openFileIDs = openedFiles();
+                    end
+                    for fid = openFileIDs
+                        % Retrieve file directory
+                        floc = fopen(fid);
+                        fdir = fileparts(floc);
+                        % See if file is in obj.directory
+                        if fdir == obj.directory
+                            % Close the file
+                            fclose(fid);
+                            warning('File closed: %s', floc);
+                        end
+                    end
+
+                    % Check if diary file is open
+                    if get(0,'Diary') == "on"
+                        diaryLoc = get(0,'DiaryFile');
+                        diaryDir = fileparts(diaryLoc);
+                        % See if file is in obj.directory
+                        if diaryDir == obj.directory
+                            % Close diary
+                            set(0, 'Diary', 'off');
+                            warning('Opened diary closed: %s', diaryLoc);
+                        end
+                    end
+                    
                     [status, msg, msgID] = rmdir(obj.directory,'s');
                     if status ~= 1
-                        throw( ...
-                            MException(msgID,msg) ...
-                        );
-                    else
-                        warning('%s was removed.', obj.directory);
+                        % Sometimes, setting diary off fixes this
+                        diary off;
+                        [status, msg, msgID] = rmdir(obj.directory,'s');
+                        if status ~= 1
+                            msg = sprintf("%s\n%s", msg, ...
+                                    "Try deleting existing instances of the solver.\n" + ...
+                                    "This error is likely caused by abandoned fopen files " + ...
+                                    "that were not properly closed. Try running `fopen('all')` " + ...
+                                    "to list all open fids.");
+                            throw( ...
+                                MException(msgID,msg) ...
+                            );
+                        end
                     end
+                        warning('%s was removed.', obj.directory);
+                    
                 end
             end
 

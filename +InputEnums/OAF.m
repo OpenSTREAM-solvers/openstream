@@ -1,12 +1,12 @@
 classdef OAF
 %OAF Onset of annular flow model
-%  Defines the model to predict the position at which the onset of
-%  annualr flow occurs based on local flow conditions. Wallis correlation 
-%  is Equation 11.1019  in One-dimensional two-phase flow. Wallis (1969).
-%  The correlation was built using air-water data.
+%
+%   Defines the model used to predict the onset of annular flow. 
+%   Used by three-field and four-field solvers.
+%
     enumeration
-        WALLIS % Full Wallis correlation
-        WALLIS_SIMP % Simplifed Wallis correlation (Justification?)
+        WALLIS               % Full Wallis correlation (Equation 11.1019 in One-dimensional two-phase flow, 1969)
+        WALLIS_SIMP          % Simplifed Wallis correlation (used when comparing against codes that use this approach)
     end
+
 end
-    
