@@ -22,6 +22,8 @@ classdef FluidProperties
         KG         (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor thermal conductivity [W/m/K]
         CPF        (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid constant pressure specific heat [J/kg/K]
         CPG        (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor constant pressure specific heat [J/kg/K]
+        ALPHAF     (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid thermal diffusivity [m^2/s]
+        ALPHAG     (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor thermal diffusivity [m^2/s]
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
@@ -71,6 +73,8 @@ classdef FluidProperties
             KG       = coolpropH.conductivity('P',P,'Q',1);                % [W/m/K] Saturated vapor thermal conductivity
             CPF      = coolpropH.cp('P',P,'Q',0);                          % [J/kg/K] Saturated liquid constant pressure specific heat
             CPG      = coolpropH.cp('P',P,'Q',1);                          % [J/kg/K] Saturated vapor constant pressure specific heat
+            ALPHAF   = KF./RHOF./CPF;                                      % [m^2/s] Saturated liquid thermal diffusivity
+            ALPHAG   = KG./RHOG./CPG;                                      % [m^2/s] Saturated vapor thermal diffusivity
             PRANDTLF = coolpropH.prandtl('P',P,'Q',0);                     % [-] Saturated liquid Prandtl number
             PRANDTLG = coolpropH.prandtl('P',P,'Q',1);                     % [-] Saturated vapor Prandtl number
             coolpropH.setSpecifyPhase('');
@@ -103,6 +107,8 @@ classdef FluidProperties
                 obj(i).KG       = KG(i);                                   % [W/m/K] Saturated vapor thermal conductivity
                 obj(i).CPF      = CPF(i);                                  % [J/kg/K] Saturated liquid constant pressure specific heat
                 obj(i).CPG      = CPG(i);                                  % [J/kg/K] Saturated vapor constant pressure specific heat
+                obj(i).ALPHAF   = ALPHAF(i);                               % [m^2/s] Saturated liquid thermal diffusivity
+                obj(i).ALPHAG   = ALPHAG(i);                               % [m^2/s] Saturated vapor thermal diffusivity
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
                 obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
@@ -247,6 +253,38 @@ classdef FluidProperties
                     cpv = repmat(obj.CPG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
                     cpv = obj.coolpropH.cp('P',obj.PRESSURE,'H',max(H,obj.HG));
+            end
+        end
+
+        function alphal = ALPHAL(obj,H)
+        %ALPHAL [m^2/s] Liquid thermal diffusivity (subcooled to saturated)
+        %
+            arguments
+                obj
+                H
+            end
+            
+            switch obj.PROPERTIES
+                case InputEnums.FLUIDPROPERTIES.SATURATED
+                    alphal = repmat(obj.ALPHAF,numel(H),1);
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
+                    alphal = obj.KL(H)./obj.RHOL(H)./obj.CPL(H);
+            end
+        end
+        
+        function alphav = ALPHAV(obj,H)
+        %ALPHAV [m^2/s] Vapor thermal diffusivity (saturated to superheated)
+        %
+            arguments
+                obj
+                H
+            end
+            
+            switch obj.PROPERTIES
+                case InputEnums.FLUIDPROPERTIES.SATURATED
+                    alphav = repmat(obj.ALPHAG,numel(H),1);
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
+                    alphav = obj.KV(H)./obj.RHOV(H)./obj.CPV(H);
             end
         end
         
