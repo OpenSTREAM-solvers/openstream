@@ -301,9 +301,9 @@ classdef SolverPlotter < handle
                 case {'INTERFACIAL'}
                     plotStyle = {colors(1), '-', 'O'};
                 case {'INTERFACIALEVAP'}
-                    plotStyle = {colors(1), '-', '+'};
+                    plotStyle = {colors(1), '-', '.'};
                 case {'INTERFACIALCOND'}
-                    plotStyle = {colors(1), '-', '.'};  
+                    plotStyle = {colors(2), '-', '.'};  
                 
                 % Three-field solver
                 case {'OAF'}
