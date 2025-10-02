@@ -344,7 +344,7 @@ classdef Mixture < Solvers.AbstractField
             model = mix.inputSet.model;
             
             RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
-            RHOV = mix.fluid.RHOV(mix.liquid.H(zIdx));
+            RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
             
             switch model.TPFM
                 case 'HOMOGENEOUS'
@@ -385,7 +385,7 @@ classdef Mixture < Solvers.AbstractField
             kloss(ind) = model.KLOSS;                                      % [-] Apply loss
             kloss = kloss(zIdx);                                           % [-] Restrict to selected input nodes
         end
-        
+
         function phi2k = PHI2K(mix, zIdx)
         %PHI2F Two-phase local pressure drop multiplier [-]
         % TODO: NEED TO BE VERIFIED
@@ -395,7 +395,7 @@ classdef Mixture < Solvers.AbstractField
             model = mix.inputSet.model;
             
             RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
-            RHOV = mix.fluid.RHOV(mix.liquid.H(zIdx));
+            RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
             
             switch model.TPKM
                 case 'HOMOGENEOUS'
@@ -583,6 +583,19 @@ classdef Mixture < Solvers.AbstractField
             geom  = mix.inputSet.geometry;
             w = geom.RWALL.*mix.W(zIdx);                                   % [kg/s]
         end
+
+        function ktrelax = KTRELAX(mix, zIdx)
+        %KTRELAX Local relaxation time [s]
+        % TODO: NEED TO BE VERIFIED
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            
+            model = mix.inputSet.model;
+
+            ktrelax = nan(length(mix.Z),1);                                % [s] Initialize local relaxation time array to 0
+            [~,ind] = min(abs(mix.Z-model.KLOC));                          % Find local loss elevation indexes (closest node)
+            ktrelax(ind) = model.KTRELAX;                                  % [s] Apply relaxation time
+            ktrelax = ktrelax(zIdx);                                       % [s] Restrict to selected input nodes
+        end
         
         function [Mcond, Mevap] = MINT(mix, zIdx)
         %MINT Linear interfacial mass transfer rates based on time relaxation [kg/s/m]
@@ -590,9 +603,10 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             UVeq = mix.vapor.U(zIdx);                                      % [m/s] Approximated equilibrium vapor velocity
-            %WVeq = mix.WWALL(zIdx).*max(0,mix.XEQ(zIdx));                  % [kg/s] Equilibrium vapor mass flow rate per wall
+            %WVeq = mix.WWALL(zIdx).*min(1,max(0,mix.XEQ(zIdx)));           % [kg/s] Equilibrium vapor mass flow rate per wall
             WVeq = mix.WWALL(zIdx).*mix.XEQ(zIdx);                         % [kg/s] Equilibrium vapor mass flow rate per wall
             Wint = WVeq-mix.TRELAX.WV(zIdx,:);                             % [kg/s] Vapor mass deviation from equilibrium
+            %Wint = Wint.*double(mix.WWALL(zIdx) > mix.TRELAX.WV(zIdx,:));
 
             Wint = sum(Wint,2).*mix.WWALL(zIdx)./mix.W(zIdx);              % [kg/s] Lumped approach required when no transversal transfer is considered
             
@@ -1184,20 +1198,32 @@ classdef Mixture < Solvers.AbstractField
         %TODO: Investigate of this parameter should be walld dependant or not
         %TODO: interp1 takes time, should be treated like the void fraction, etc...
         %    
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            X = model.RELAXX;                                              % [-] Equilibrium quality array
-            T = model.RELAXTCOND(1:length(model.RELAXX));                  % [-] Corresponding time relaxation
+        if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');              % [s] Interpolated time relaxation
-            t(mix.XEQ(zIdx)<X(1))   = T(1);                                % [s] Lower bound limit
-            t(mix.XEQ(zIdx)>X(end)) = T(end);                              % [s] Upper bound limit
-            
+        model = mix.inputSet.model;
+
+        switch model.THERMALRELAX
+            case InputEnums.THERMALRELAX.QUALITY
+                X = model.RELAXX;                                          % [-] Equilibrium quality array
+                T = model.RELAXTCOND(1:length(model.RELAXX));              % [-] Corresponding time relaxation
+
+                t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
+                t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
+                t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
+
+            case InputEnums.THERMALRELAX.VOID
+                d0     = model.RELAXCONDCOEF(1);                           % [m] Reference fluid particlae Sauter mean diameter
+                n      = model.RELAXCONDCOEF(2);                           % [-] Exponent of phase volumetric ratio
+                dvf    = model.RELAXCONDCOEF(3);                           % [-] Small phase volumetric ratio bias to avoid singularity
+                ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
+                t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;            % [s] Time relaxation
+        end
+
             %geom  = mix.inputSet.geometry;
             %t = repmat(t,1,geom.NWALL);                                    % Expand to all wall
             
-            t(mix.KLOSS(zIdx)>0,:) = model.RELAXTCOND(end);                % [s] Time relaxation at local perturbations
+            idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
+            t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
             t = max(1E-6,t);
             mix.relaxtcond(zIdx,:) = t;
         end
@@ -1206,18 +1232,30 @@ classdef Mixture < Solvers.AbstractField
         %RELAXTEVAP Relaxation time model for wall dependant interfacial evaporation
         %TODO: Investigate of this parameter should be walld dependant or not
         %TODO: interp1 takes time, should be treated like the void fraction, etc...
-        %    
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            X = model.RELAXX;                                              % [-] Equilibrium quality array
-            T = model.RELAXTEVAP(1:length(model.RELAXX));                  % [-] Corresponding time relaxation
+        %
+        if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');              % [s] Interpolated time relaxation
-            t(mix.XEQ(zIdx)<X(1))   = T(1);                                % [s] Lower bound limit
-            t(mix.XEQ(zIdx)>X(end)) = T(end);                              % [s] Upper bound limit
-           
-            t(mix.KLOSS(zIdx)>0,:) = model.RELAXTEVAP(end);                % [s] Time relaxation ot local perturbations
+        model = mix.inputSet.model;
+
+        switch model.THERMALRELAX
+            case InputEnums.THERMALRELAX.QUALITY
+                X = model.RELAXX;                                          % [-] Equilibrium quality array
+                T = model.RELAXTEVAP(1:length(model.RELAXX));              % [-] Corresponding time relaxation
+
+                t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
+                t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
+                t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
+
+            case InputEnums.THERMALRELAX.VOID
+                d0     = model.RELAXEVAPCOEF(1);                           % [m] Reference fluid particlae Sauter mean diameter
+                n      = model.RELAXEVAPCOEF(2);                           % [-] Exponent of phase volumetric ratio
+                dvf    = model.RELAXEVAPCOEF(3);                           % [-] Small phase volumetric ratio bias to avoid singularity
+                ALPHAV = mix.fluid.ALPHAV(mix.vapor.H(zIdx));
+                t = d0.^2./ALPHAV./(mix.liquid.VF(zIdx)+dvf).^n;           % [s] Time relaxation
+        end
+
+            idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
+            t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
             t = max(1E-6,t);
             mix.relaxtevap(zIdx,:) = t;
         end

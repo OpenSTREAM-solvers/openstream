@@ -30,12 +30,17 @@ classdef Model < Inputs.Input
         TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'                   % Two-phase local loss multiplier
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'                   % Void fraction model 
         SLIP             (1,1) double  {mustBePositive}                    = 1                               % Phase velocity ratio [-]
-        
         THERMALNONEQ     (1,1) InputEnums.THERMALNONEQ                     = 'EQUILIBRIUM'                   % Thermal non-equilibrum model
+
+        % Mixture (HRM) solver models
+        THERMALRELAX     (1,1) InputEnums.THERMALRELAX                     = 'QUALITY'                       % Thermal non-equilibrium time relaxation model
         RELAXX           (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Interfacial phase change relaxation time thermodynamic quality [-]
-        RELAXTCOND       (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1 0.01]  % Interfacial condensation relaxation time array and at local perturbations [s]
-        RELAXTEVAP       (1,:) double                                      = [ 0.3  0.3   0.3 0.3 0.3 0.01]  % Interfacial evaporation  relaxation time array and at local perturbations [s]
-        
+        RELAXTCOND       (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Interfacial condensation relaxation time array and at local perturbations [s]
+        RELAXTEVAP       (1,:) double                                      = [ 0.3  0.3   0.3 0.3 0.3]       % Interfacial evaporation  relaxation time array and at local perturbations [s]
+        RELAXCONDCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05]               % Interfacial condensation time relaxation coefficients for void option
+        RELAXEVAPCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5]               % Interfacial evaporation  time relaxation coefficients for void option
+        KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
+
         % Two-fluid solver models
         INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'                      % Interfacial length scale model model
         INTAREA          (1,1) InputEnums.INTAREA                          = 'DISPGAS2DISPLIQ'               % Interfacial area model

@@ -139,16 +139,19 @@ function solver(solveINIT)
                         % Vapor mass conservation
                         Mvtot = mix(tIdx).MTOT(zIdx);                                                      % [kg/s/m] Linear vapor mass transfer rate
                         Wvnew = Uv.*(mix(tIdx).TRELAX.WV(zIdx-1,:)+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
-                        Wvnew = max(0,Wvnew);
+                        Wvnew = max(0,Wvnew);                                                              % [kg/s] Constrain solution so that Wv cannot be negative
+                        %Wvnew = min(mix(tIdx).WWALL(zIdx),Wvnew);
                         mix(tIdx).TRELAX.WV(zIdx,:) = (1-options.RELAXWV).*Wviter+options.RELAXWV.*Wvnew;  % [kg/s] Apply relaxation
 
                         mix(tIdx).TRELAX.X(zIdx,:)  = mix(tIdx).TRELAX.WV(zIdx,:)./mix(tIdx).WWALL(zIdx);  % [-] Relaxed vapor quality
                         
                         % Vapor energy conservation
-                        Hvtot = mix(tIdx).HVTOT(zIdx);                                                   % [J/kg/m] Linear vapor enthalpy transfer
-                        Htot  = Hvtot.*Uv;                                                               % [W/kg]
-                        Hvnew = (Uv.*mix(tIdx).TRELAX.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);    % [J/kg] Update vapor enthalpy
-                        Hvnew = max(fluid(tIdx).HG,Hvnew);
+                        Hvtot = mix(tIdx).HVTOT(zIdx);                                                     % [J/kg/m] Linear vapor enthalpy transfer
+                        Htot  = Hvtot.*Uv;                                                                 % [W/kg]
+                        %Htot  = Htot.*double(mix(tIdx).WWALL(zIdx)>Wvnew);
+                        Hvnew = (Uv.*mix(tIdx).TRELAX.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);      % [J/kg] Update vapor enthalpy
+                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                  % [J/kg] Constrain solution so that Hv > Hg
+                        Hvnew = max(mix(tIdx).H(zIdx),Hvnew);                                              % [J/kg] Constrain solution so that Hv > H
                         mix(tIdx).TRELAX.HV(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;  % [J/kg] Apply relaxation
                         
                         % Check convergence
@@ -171,10 +174,11 @@ function solver(solveINIT)
             end
             
             % Save time relaxation terms (including near-wall terms)
-            mix(tIdx).TRELAX.TIME(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);                               % [s] Time relaxation
-            mix(tIdx).TRELAX.TV(zIdx,:)   = fluid(tIdx).T(mix(tIdx).TRELAX.HV(zIdx,:))';              % [J/kg] Relaxed vapor temperature
-            mix(tIdx).TRELAX.WVTH(zIdx,:) = mix(tIdx).WVTH(zIdx,WvTHold,Uold);                        % [kg/s] Relaxed thermodynamic vapor mass flow
-            mix(tIdx).TRELAX.XTH(zIdx,:)  = mix(tIdx).TRELAX.WVTH(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Relaxed thermodynamic vapor quality
+            mix(tIdx).TRELAX.TCOND(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);                               % [s] Condensation time relaxation
+            mix(tIdx).TRELAX.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);                               % [s] Condensation time relaxation
+            mix(tIdx).TRELAX.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).TRELAX.HV(zIdx,:))';               % [J/kg] Relaxed vapor temperature
+            mix(tIdx).TRELAX.WVTH(zIdx,:)  = mix(tIdx).WVTH(zIdx,WvTHold,Uold);                        % [kg/s] Relaxed thermodynamic vapor mass flow
+            mix(tIdx).TRELAX.XTH(zIdx,:)   = mix(tIdx).TRELAX.WVTH(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Relaxed thermodynamic vapor quality
             
             % Save pressure drop components
             DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                       % [Pa] Pressure drop components

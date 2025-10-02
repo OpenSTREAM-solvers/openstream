@@ -102,7 +102,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % WVTH:  [J/kg] Thermodynamic vapor mass flow rate
             % X   :  [-] Vapor mass quality
             % XTH :  [-] Thermodynamic mass quality
-            TRELAXFields =  ["TIME","WV","X","HV","TV","WVTH","XTH"];      % Fieldnames for TRELAX struct
+            TRELAXFields =  ["TCOND","TEVAP","WV","X","HV","TV","WVTH","XTH"]; % Fieldnames for TRELAX struct
             TRELAXCell = cell(numel(TRELAXFields),1);                      % Cell structure to convert into struct
             TRELAXCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
             TRELAX = cell2struct(TRELAXCell, TRELAXFields, 1);             % Convert cell to struct with fieldnames
@@ -288,13 +288,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
         %
             arguments
                 mixSolver
-                tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}           = 1
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
-                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.inputSet.geometry.NWALL
-                opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                  = 1:mixSolver.NZ
-                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                    = 'K'
-                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}           = 'flow'
+                tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} = 1
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','X','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}            = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}        = 1:mixSolver.inputSet.geometry.NWALL
+                opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}        = 1:mixSolver.NZ
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                          = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})} = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
@@ -534,6 +534,22 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
             end
+
+            % Thermal time relaxations
+            if any(ismember({'TRELAX'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Thermal time relaxations', ...
+                    'xlabel'   ,       'Axial position [m]', ...
+                    'ylabel'   ,      'Relaxation time [s]');
+                plotter.plotz(mix.TRELAX.TEVAP(opt.zIdx,:),'InterfacialEvap','DisplayName','Interfacial evaporation')
+                plotter.plotz(mix.TRELAX.TCOND(opt.zIdx,:),'InterfacialCond','DisplayName','Interfacial condensation')
+                plotter.legend('show', 'Location', 'best');
+                plotter.xlim([min(z) max(z)]);
+                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                plotter.ylim([ymin ymax]);
+            end
+
         end
         
         function plotter = plott(mixSolver, zIdx, opt)
@@ -543,14 +559,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
         %
             arguments
                 mixSolver
-                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                     = mixSolver.NZ
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','X','PWE','PEE','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                = 'TRANSIENT'
-                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                            = 1:mixSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                            = 1:mixSolver.NTIME
-                opt.reverseTime (1,1) logical                                                                                       = false
-                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                              = 'K'
-                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                     = 'flow'
+                zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} = mixSolver.NZ
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','X','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}            = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}        = 1:mixSolver.inputSet.geometry.NWALL
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}        = 1:mixSolver.NTIME
+                opt.reverseTime (1,1) logical                                                   = false
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                          = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})} = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
@@ -783,6 +799,20 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
             end
+
+            % Thermal time relaxations
+            if any(ismember({'TRELAX'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Thermal time relaxations', ...
+                    'xlabel'   ,                 'Time [s]', ...
+                    'ylabel'   ,      'Relaxation time [s]');
+                plotter.plotz(mix.transient('TRELAX.TEVAP','zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation')
+                plotter.plotz(mix.transient('TRELAX.TCOND','zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation')
+                plotter.legend('show', 'Location', 'best');
+                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                plotter.ylim([ymin ymax]);
+            end
         end
 
         function fh = plotzt(mixSolver, opt)
@@ -807,9 +837,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
             if strcmp('ALL',opt.display)
-                opt.display = {         'HFLUX',             'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
+                opt.display = {        'HFLUX',            'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
                 opt.label   = {'Wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction','temperature','wall temperature'};
-                opt.unit    = {         'W/m^2',          'kg/s',           'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
+                opt.unit    = {        'W/m^2',          'kg/s',          'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
             end
             switch opt.solveMode
                 case 'TRANSIENT'
