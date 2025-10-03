@@ -78,9 +78,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             geom   = ffSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
-            ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU"]);
+            ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU","DFW"]);
             ITRf.DWL = repmat(ITRf.DWL,1,geom.NWALL);
             ITRf.DU  = repmat(ITRf.DU,1,geom.NWALL);
+            ITRf.DFW = repmat(ITRf.DFW,1,geom.NWALL);
             ITRd = ffSolver.CreateITR(ffSolver.NZ, ["N","DU"]);
 
             % Create film and drop arrays (by timestep)
