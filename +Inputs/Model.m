@@ -1,7 +1,9 @@
 classdef Model < Inputs.Input
     %MODEL Defines all physical model options.
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the physical models
+    %   Data are read from the model input file using InputSet
+    %
     
     properties (SetAccess=?Inputs.Input)
         
@@ -109,7 +111,7 @@ classdef Model < Inputs.Input
     end
 
     properties (Constant)
-        G             (1,1) double  {mustBeNumeric}                        = 9.81                  % [m/s^2] Gravitational acceleration
+        G             (1,1) double  {mustBeNumeric}                        = 9.81                            % [m/s^2] Gravitational acceleration
         SOLVERDEPENDENTPROPS                                               = struct("VAPORFRIC", ...
                                                                                     struct('THREEFIELD', InputEnums.VAPORFRIC.WALLIS, ...
                                                                                             'FOURFIELD', InputEnums.VAPORFRIC.CONSTANT, ...
@@ -121,7 +123,7 @@ classdef Model < Inputs.Input
     methods
         
         function obj = Model(filePath,modelID)
-            %MODEL Construct an instance of model
+            %MODEL Construct an instance of this class
             %
             arguments
                 filePath = ""

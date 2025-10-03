@@ -1,7 +1,9 @@
 classdef Options < Inputs.Input
     %OPTIONS Defines all numerical options.
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the numerical options
+    %   Data are read from the options input file using InputSet
+    %
     
     properties (SetAccess=?Inputs.Input)
         
@@ -24,6 +26,7 @@ classdef Options < Inputs.Input
         RELAXPM          (1,1) double  {mustBeInRange(RELAXPM,0,1)}        = 1                     % Relaxation factor for the mixture momentum conservation equation [-]
         RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1                     % Relaxation factor for the mixture energy conservation equation [-]
         
+        % Mixture (HRM) solver models
         RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.8                   % Relaxation factor for the vapor  mass conservation equation [-]
         RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 1                     % Relaxation factor for the vapor  energy conservation equation [-]
         
@@ -47,6 +50,8 @@ classdef Options < Inputs.Input
         RELAXUD          (1,1) double  {mustBeInRange(RELAXUD,0,1)}        = 0.2                   % Relaxation factor for the drop momentum conservation equation [-]
         
         % Four-field solver options
+        ERRORFW          (1,1) double  {mustBeNumeric}                     = 1E-1                  % Wave frequency error target in inner iterations [Hz]
+        SSCONVFW         (1,1) double  {mustBeNumeric}                     = 1E-1                  % Wave frequency steady-state convergence criterion [Hz]
         RELAXWB          (1,1) double  {mustBeInRange(RELAXWB,0,1)}        = 0.5                   % Relaxation factor for the base mass conservation equation [-]
         RELAXUB          (1,1) double  {mustBeInRange(RELAXUB,0,1)}        = 0.2                   % Relaxation factor for the base momentum conservation equation [-]
         RELAXWW          (1,1) double  {mustBeInRange(RELAXWW,0,1)}        = 0.5                   % Relaxation factor for the wave mass conservation equation [-]
@@ -58,7 +63,7 @@ classdef Options < Inputs.Input
     methods
         function obj = Options(filePath,optionsID)
             %MODEL Construct an instance of this class
-            %   Detailed explanation goes here
+            %
             arguments
                 filePath = ""
                 optionsID = ""

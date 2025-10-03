@@ -2,7 +2,11 @@ classdef FluidProperties
     %FLUIDPROPERTIES Defines all thermophysical properties for the selected
     %simulation fluid
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the fluid properties
+    %   Saturated properties are set as properties, based on the sytem pressure
+    %   Generic properties are set as methods, based on system pressure and
+    %   phase enthalpy
+    %
     
     properties (SetAccess=immutable)
         

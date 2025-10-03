@@ -6,7 +6,7 @@ classdef Session < handle
         name        (1,1) string        = ""
         dirName     (1,1) string        = ""
         parentDir         {isfolder}    = ""
-        overwriteFiles ...                              % Flag to overwrite existing session files
+        overwriteFiles ...                                                 % Flag to overwrite existing session files
                     (1,1) logical       = false
 
         log         (1,1) Session.Log
@@ -22,7 +22,7 @@ classdef Session < handle
     methods
         function session = Session(opt)
             %SESSION Construct an instance of this class
-            %   Detailed explanation goes here
+            %
             arguments
                 opt.name        (1,1) string        = ""
                 opt.dirName     (1,1) string        = ""
@@ -47,7 +47,7 @@ classdef Session < handle
             arguments
                 session                 Session.Session
                 LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
-                                                                            % LogMode
+                                                                           % LogMode
                 opts.LOGFID    (1,1)    int32            = -1
             end
             
