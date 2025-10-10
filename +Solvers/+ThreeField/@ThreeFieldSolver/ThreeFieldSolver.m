@@ -179,9 +179,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 drp.H = repmat(fluid.HF,tfSolver.NZ,1);
                 flm.H = repmat(fluid.HF,tfSolver.NZ,1);
 
-                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
+                %flm.U = repmat(mix.liquid.U,1,geom.NWALL);                 % [m/s]
                 %flm.U = flm.UALGEBR();                                     % [m/s] Film velocity
-                flm.U = mix.mixSolver_mix.liquid.U;                        % Updated to this parameter due to dependency with mix.liquid.U
+                flm.U = repmat(mix.mixSolver_mix.liquid.U,1,geom.NWALL);   % Updated to this parameter due to dependency with mix.liquid.U
                 
                 % ITR
                 flm.ITR = ITRf;

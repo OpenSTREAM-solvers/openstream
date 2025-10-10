@@ -71,7 +71,7 @@ classdef Liquid < Solvers.AbstractPhase
             geom = liquid.inputSet.geometry;
             fluid = liquid.film.mix.fluid;
 
-            Af = liquid.film.THICK(zIdx).*geom.PERIM;                      % [m^2]
+            Af = sum(liquid.film.THICK(zIdx).*geom.PERIM,2);               % [m^2]
             Ad = liquid.drop.W(zIdx)./liquid.drop.U(zIdx)./fluid.RHOL(liquid.H(zIdx)); % [m^2]
             vf = (Af+Ad)./geom.AREA;
         end
@@ -88,7 +88,7 @@ classdef Liquid < Solvers.AbstractPhase
             if length(liquid.film.W) == 1
                 w = liquid.film.mix.mixSolver_mix.liquid.W(zIdx);
             else
-                w = liquid.film.W(zIdx) + liquid.drop.W(zIdx);
+                w = sum(liquid.film.W(zIdx,:),2) + liquid.drop.W(zIdx);
             end
         end
 
@@ -100,7 +100,7 @@ classdef Liquid < Solvers.AbstractPhase
             if length(liquid.film.W) == 1
                 u = liquid.film.mix.mixSolver_mix.liquid.U(zIdx);
             else
-                u = liquid.W(zIdx)./(liquid.drop.W(zIdx)./liquid.drop.U(zIdx)+liquid.film.W(zIdx)./liquid.film.U(zIdx));
+                u = liquid.W(zIdx)./(liquid.drop.W(zIdx)./liquid.drop.U(zIdx)+sum(liquid.film.W(zIdx,:)./liquid.film.U(zIdx,:),2));
             end
         end
 
@@ -112,7 +112,7 @@ classdef Liquid < Solvers.AbstractPhase
             if length(liquid.film.W) == 1
                 h = liquid.film.mix.mixSolver_mix.liquid.H(zIdx);
             else
-                h = (liquid.film.W(zIdx).*liquid.film.H(zIdx) + liquid.drop.W(zIdx).*liquid.drop.H(zIdx))./liquid.W(zIdx);
+                h = (sum(liquid.film.W(zIdx,:).*liquid.film.H(zIdx,:),2) + liquid.drop.W(zIdx).*liquid.drop.H(zIdx))./liquid.W(zIdx);
             end
         end
 
