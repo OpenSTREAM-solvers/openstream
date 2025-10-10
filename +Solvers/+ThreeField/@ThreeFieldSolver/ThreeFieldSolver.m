@@ -171,15 +171,17 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 
                 
                 % Initialize field velocities [m/s]
-                %drp.U = mix.liquid.U;                                     % [m/s] Drop velocity
-                drp.U = drp.USLIP();                                        % [m/s] Drop velocity
-                
-                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
-                flm.U = flm.UALGEBR();                                     % [m/s] Film velocity
-                                
+                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
+                %drp.U = drp.USLIP();                                       % [m/s] Drop velocity
+                drp.U = mix.mixSolver_mix.liquid.U;                         % Updates to this parameter due to dependency with mix.liquid.U
+                             
                 % Initialize field enthalpies [J/kg] by number of spatial nodes, NZ
                 drp.H = repmat(fluid.HF,tfSolver.NZ,1);
                 flm.H = repmat(fluid.HF,tfSolver.NZ,1);
+
+                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
+                %flm.U = flm.UALGEBR();                                     % [m/s] Film velocity
+                flm.U = mix.mixSolver_mix.liquid.U;                        % Updated to this parameter due to dependency with mix.liquid.U
                 
                 % ITR
                 flm.ITR = ITRf;

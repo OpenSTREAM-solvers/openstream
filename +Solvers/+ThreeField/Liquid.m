@@ -45,13 +45,13 @@ classdef Liquid < Solvers.AbstractPhase
         
         function time = TIME(liquid)
         %TIME Time series [s]
-        %   Detailed explanation goes here
-            time = liquid.mix.TIME;
+        %
+            time = liquid.film.TIME;
         end
 
         function z = Z(liquid, zIdx)
         %Z Axial nodes [m]
-        %   Detailed explanation goes here
+        %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             z = liquid.film.Z(zIdx);
         end
@@ -59,20 +59,21 @@ classdef Liquid < Solvers.AbstractPhase
         function x = X(liquid, zIdx)
         %X Mass fraction [-]
         %
-            warning('ThreeFieldSolver.Liquid.X is not a properly implemented method');
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            x = 1-liquid.mix.X(zIdx);
+            x = liquid.W(zIdx)./liquid.film.mix.W(zIdx);
         end
         
         function vf = VF(liquid, zIdx)
         %VF Void fraction [-]
         %
-            warning('ThreeFieldSolver.Liquid.VF is not a properly implemented method; old implementation used');
-            vf = liquid.film.mix.mixSolver_mix.liquid.VF(zIdx);
-            return;
-
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            vf = 1-liquid.mix.VF(zIdx);
+
+            geom = liquid.inputSet.geometry;
+            fluid = liquid.film.mix.fluid;
+
+            Af = liquid.film.THICK(zIdx).*geom.PERIM;                      % [m^2]
+            Ad = liquid.drop.W(zIdx)./liquid.drop.U(zIdx)./fluid.RHOL(liquid.H(zIdx)); % [m^2]
+            vf = (Af+Ad)./geom.AREA;
         end
 
         function w = W(liquid, zIdx)
@@ -85,7 +86,7 @@ classdef Liquid < Solvers.AbstractPhase
             % 1. Use value from mixsolver_mix
             % TODO: find better way of doing this in TFsolver init.
             if length(liquid.film.W) == 1
-                w = liquid.film.mix.mixSolver_mix.W(zIdx);
+                w = liquid.film.mix.mixSolver_mix.liquid.W(zIdx);
             else
                 w = liquid.film.W(zIdx) + liquid.drop.W(zIdx);
             end
@@ -94,48 +95,25 @@ classdef Liquid < Solvers.AbstractPhase
         function u = U(liquid, zIdx)
         %U Velocity [m/s]
         %
-            warning('ThreeFieldSolver.Liquid.U is not a properly implemented method; old implementation used');
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            u = liquid.film.mix.mixSolver_mix.liquid.U(zIdx);
-            return;
-
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            u = liquid.MFLUX(zIdx)./liquid.VF(zIdx)./liquid.mix.fluid.RHOL(liquid.H(zIdx));
             
-            % Set to the mixture velocity in the single-phase vapor region
-            mixU           = liquid.mix.U(zIdx);
-            singlePhaseIdx = isnan(u);
-            u(singlePhaseIdx) = mixU(singlePhaseIdx);
+            if length(liquid.film.W) == 1
+                u = liquid.film.mix.mixSolver_mix.liquid.U(zIdx);
+            else
+                u = liquid.W(zIdx)./(liquid.drop.W(zIdx)./liquid.drop.U(zIdx)+liquid.film.W(zIdx)./liquid.film.U(zIdx));
+            end
         end
 
         function h = H(liquid, zIdx)
         %H Enthalpy [J/kg]
-        %Calculated based on mixture & vapor enthalpies and vapor quality
-        %TODO: Check and clean up
-        %TODO: Find a better way to prevent division by small 1-X and negative h
         %
-            warning('ThreeFieldSolver.Liquid.H is not a properly implemented method; old implementation used');
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            h = liquid.film.mix.mixSolver_mix.liquid.H(zIdx);
-            return;
 
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            
-%              X = max(liquid.mix.X(zIdx),liquid.mix.XEQ(zIdx));              % Account for potential subcooled liquid
-%             h = (liquid.mix.H(zIdx)-X.*liquid.mix.fluid.HG)./(1-X);
-%             %h = min(h,liquid.mix.fluid.HF);                                % No superheated liquid
-%             %h = max(h,liquid.mix.H(1));
-            
-            X = liquid.mix.X(zIdx);  
-            h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
-            
-            %mix = liquid.mix;
-            %h = (mix.W(zIdx).*mix.H(zIdx)-mix.TRELAX.WV(zIdx,:).*mix.TRELAX.HV(zIdx,:))./liquid.W(zIdx);
-            
-            h(isnan(h)) = liquid.mix.fluid.HF;
-            h(isinf(h)) = liquid.mix.fluid.HF;
-            %h = max(h,liquid.mix.H(1));
-            h = max(h,1E5);
+            if length(liquid.film.W) == 1
+                h = liquid.film.mix.mixSolver_mix.liquid.H(zIdx);
+            else
+                h = (liquid.film.W(zIdx).*liquid.film.H(zIdx) + liquid.drop.W(zIdx).*liquid.drop.H(zIdx))./liquid.W(zIdx);
+            end
         end
 
         function mflux = MFLUX(liquid, zIdx)
@@ -147,29 +125,31 @@ classdef Liquid < Solvers.AbstractPhase
 
         function re = RE(liquid, zIdx)
         %RE Reynolds number [-]
-        %TODO: Check definition
         %
-            error('ThreeFieldSolver.Liquid.RE is not a properly implemented method');
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            re = 4.*liquid.W(zIdx)./liquid.mix.fluid.MUL(liquid.H(zIdx))...
-                    ./sum(liquid.mix.inputSet.geometry.PERIM);
+
+            geom = liquid.inputSet.geometry;
+            fluid = liquid.film.mix.fluid;
+
+            re = 4.*liquid.W(zIdx)./fluid.MUL(liquid.H(zIdx))./sum(geom.PERIM);
         end
         
-        function hfluxwalheat = HFLUX(liquid, zIdx)
+        function hflux = HFLUX(liquid, zIdx)
         %HFLUX Wall field heat flux [W/m^2]
         %
-            error('ThreeFieldSolver.Liquid.HFLUX is not a properly implemented method');
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            
-            hfluxwalheat = liquid.mix.HFLUX(zIdx,:)-liquid.mix.vapor.HFLUX(zIdx)-liquid.mix.vapor.HFLUXWALEVAP(zIdx);
+
+            hflux = liquid.film.mix.HFLUX(zIdx,:);
         end
         
         function t = T(liquid, zIdx)
         %T Temperature [K]
         %
-            error('ThreeFieldSolver.Liquid.T is not a properly implemented method');
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            t = liquid.mix.fluid.T(liquid.H(zIdx));
+
+            fluid = liquid.film.mix.fluid;
+
+            t = fluid.T(liquid.H(zIdx));
         end   
 
     end
