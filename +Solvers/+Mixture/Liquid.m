@@ -84,13 +84,10 @@ classdef Liquid < Solvers.AbstractPhase
             X = liquid.mix.X(zIdx);  
             h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
             
-            %mix = liquid.mix;
-            %h = (mix.W(zIdx).*mix.H(zIdx)-mix.TRELAX.WV(zIdx,:).*mix.TRELAX.HV(zIdx,:))./liquid.W(zIdx);
-            
             h(isnan(h)) = liquid.mix.fluid.HF;
             h(isinf(h)) = liquid.mix.fluid.HF;
             %h = max(h,liquid.mix.H(1));
-            h = max(h,1E5);
+            %h = max(h,1E5);
         end
 
         function mflux = MFLUX(liquid, zIdx)

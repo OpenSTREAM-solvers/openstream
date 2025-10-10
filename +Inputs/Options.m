@@ -9,7 +9,7 @@ classdef Options < Inputs.Input
         
         ID               (1,1) string  {mustBeTextScalar}                                          % Option ID
         AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Axial power interpolation method
-        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Time-dependant boundary conditions interpolation method
+        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Time-dependent boundary conditions interpolation method
         TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step [s]
         MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Max number of inner (point) iterations
         SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step for steady-state iterations [s]
@@ -17,8 +17,8 @@ classdef Options < Inputs.Input
         
         % Mixture solver options
         ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
-        ERRORP           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Pressure error target in inner ierations [Pa]
-        ERRORH           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Enthalpy error target in inner ierations [J/kg]
+        ERRORP           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Pressure error target in inner iterations [Pa]
+        ERRORH           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Enthalpy error target in inner iterations [J/kg]
         SSCONVW          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate steady-state convergence criterion [kg/s]
         SSCONVP          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Pressure steady-state convergence criterion [Pa]
         SSCONVH          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Enthalpy steady-state convergence criterion [J/kg]

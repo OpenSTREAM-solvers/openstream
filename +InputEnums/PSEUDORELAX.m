@@ -1,8 +1,8 @@
-classdef THERMALRELAX
-%THERMALRELAX Thermal non-equilibrium time relaxation model
+classdef PSEUDORELAX
+%PSEUDORELAX Pseudo-equilibrium quality time relaxation model
 %
-%   Defines the thermal non-equilibrium time relaxation model used when
-%   THERMALNONEQ is set to 'RELAXATION'
+%   Defines the Pseudo-equilibrium quality time relaxation model
+%
 %
     enumeration
         QUALITY              % Simple model relating relaxation time to equilibrium quality

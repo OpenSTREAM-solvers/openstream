@@ -98,15 +98,26 @@ classdef MixtureSolver < Solvers.AbstractSolver
             MDER = cell2struct(MDERCell, MDERFields, 1);                   % Convert cell to struct with fieldnames
             
             % Setup TRELAX structure
-            % WV  :  [kg/s] Vapor mass flow rate
-            % WVTH:  [J/kg] Thermodynamic vapor mass flow rate
-            % X   :  [-] Vapor mass quality
-            % XTH :  [-] Thermodynamic mass quality
-            TRELAXFields =  ["TCOND","TEVAP","WV","X","HV","TV","WVTH","XTH"]; % Fieldnames for TRELAX struct
+            % TCOND: [s] Relaxation time for interfacial condensation
+            % TEVAP: [s] Relaxation time for interfacial evaporation
+            % WV   : [kg/s] Vapor mass flow rate
+            % X    : [-] Vapor mass quality
+            % HV   : [J/kg] Vapor enthalpy
+            % TV   : [K] Vapor temperarure
+            TRELAXFields =  ["TCOND","TEVAP","WV","X","HV","TV"];          % Fieldnames for TRELAX struct
             TRELAXCell = cell(numel(TRELAXFields),1);                      % Cell structure to convert into struct
             TRELAXCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
             TRELAX = cell2struct(TRELAXCell, TRELAXFields, 1);             % Convert cell to struct with fieldnames
             
+            % Setup PSEUDO structure
+            % TRELAX: [s] Relaxation time
+            % WV    : [kg/s] Pseudo vapor mass flow rate
+            % XEQ   : [-] Pseudo equilibrium quality
+            PSEUDOFields =  ["TRELAX","WV","XEQ"];                         % Fieldnames for PSEUDO struct
+            PSEUDOCell = cell(numel(PSEUDOFields),1);                      % Cell structure to convert into struct
+            PSEUDOCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
+            PSEUDO = cell2struct(PSEUDOCell, PSEUDOFields, 1);             % Convert cell to struct with fieldnames
+
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DP","DPSUM","DH","DWV","DHV"];
             ITR = mixSolver.CreateITR(mixSolver.NZ, ITRFields);
@@ -144,11 +155,12 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         [] ...
                         );
                 
-                % DP, DPSUM, MDER, TRELAX, ITR
+                % DP, DPSUM, MDER, TRELAX, PSEUDO, ITR
                 mixArr(tIdx).DP     = DP;
                 mixArr(tIdx).DPSUM  = DPSUM;
                 mixArr(tIdx).MDER   = MDER;
                 mixArr(tIdx).TRELAX = TRELAX;
+                mixArr(tIdx).PSEUDO = PSEUDO;
                 mixArr(tIdx).ITR    = ITR;
                 
                 % Phases
@@ -165,8 +177,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixArr(tIdx).TRELAX.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
                 mixArr(tIdx).TRELAX.HV   = repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,NWALL);
                 mixArr(tIdx).TRELAX.TV   = reshape(mixSolver.fluid(tIdx).T(mixArr(tIdx).TRELAX.HV),[],NWALL);
-                mixArr(tIdx).TRELAX.WVTH = mixArr(tIdx).XEQ.*mixArr(tIdx).WNEARWALL;
-                mixArr(tIdx).TRELAX.XTH  = repmat(mixArr(tIdx).XEQ,1,NWALL);
+                
+                % Initialize PSEUDO
+                mixArr(tIdx).PSEUDO.WV   = mixArr(tIdx).XEQ.*mixArr(tIdx).WNEARWALL;
+                mixArr(tIdx).PSEUDO.XEQ  = repmat(mixArr(tIdx).XEQ,1,NWALL);
 
             end
 
@@ -359,7 +373,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.liquid.W(opt.zIdx),'Liquid' );
                 plotter.plotz(mix.vapor.W(opt.zIdx) ,'Vapor'  );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.TRELAX.WV(opt.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
+                    plotter.plotz(mix.TRELAX.WV(opt.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
                 end
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
@@ -421,7 +435,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.liquid.H(opt.zIdx),'Liquid' );
                 plotter.plotz(mix.vapor.H(opt.zIdx) ,'Vapor'  );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.TRELAX.HV(opt.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
+                    plotter.plotz(mix.TRELAX.HV(opt.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
                 end
                 plotter.plotz(repmat(mixSolver.fluid(tIdx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
                 plotter.plotz(repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
@@ -454,7 +468,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.XEQ(opt.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
                 plotter.plotz(mix.X(opt.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.TRELAX.X(opt.zIdx,:) ,'WallVapor','DisplayName','Wall vapor quality');
+                    plotter.plotz(mix.TRELAX.X(opt.zIdx,:) ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
                 end
                 plotter.plotz(mix.VF(opt.zIdx) ,'VoidFraction','DisplayName','Void fraction'      )
                 plotter.legend('show', "Location", 'best');
@@ -518,16 +532,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.ylim([-ymax ymax]);
             end
             
-            % Qualities and relaxed qualities
+            % Qualities
             if any(ismember({'X','ALL'},opt.display))
                 plotter.newTile( ...
-                    'tileTitle', 'Qualities and relaxed qualities', ...
-                    'xlabel'   ,              'Axial position [m]', ...
-                    'ylabel'   ,                     'Quality [-]');
+                    'tileTitle',          'Qualities', ...
+                    'xlabel'   , 'Axial position [m]', ...
+                    'ylabel'   ,        'Quality [-]');
                 plotter.plotz(mix.XEQ(opt.zIdx)         ,'Equil'     ,'DisplayName','Equilibrium quality' )
                 plotter.plotz(mix.X(opt.zIdx)           ,'Vapor'     ,'DisplayName','Vapor mass quality'  )
-                plotter.plotz(mix.TRELAX.XTH(opt.zIdx,:),'RelaxEquil','DisplayName','Wall thermo. quality')
-                plotter.plotz(mix.TRELAX.X(opt.zIdx,:)  ,'WallVapor' ,'DisplayName','Wall vapor quality'  )
+                if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
+                    plotter.plotz(mix.TRELAX.X(opt.zIdx,:)  ,'WallVapor' ,'DisplayName','Vapor mass quality (wall level)')
+                end
+                plotter.plotz(mix.PSEUDO.XEQ(opt.zIdx,:),'PseudoEquil','DisplayName','Pseudo-equilibrium quality')
                 plotter.legend('show', 'Location', 'best');
                 plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -543,6 +559,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'ylabel'   ,      'Relaxation time [s]');
                 plotter.plotz(mix.TRELAX.TEVAP(opt.zIdx,:),'InterfacialEvap','DisplayName','Interfacial evaporation')
                 plotter.plotz(mix.TRELAX.TCOND(opt.zIdx,:),'InterfacialCond','DisplayName','Interfacial condensation')
+                plotter.plotz(mix.PSEUDO.TRELAX(opt.zIdx,:),'PseudoEquil','DisplayName','Pseudo-equilibrium quality')
                 plotter.legend('show', 'Location', 'best');
                 plotter.xlim([min(z) max(z)]);
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -637,7 +654,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('liquid.W','zIdx',zIdx)','Liquid' );
                 plotter.plotz(mix.transient( 'vapor.W','zIdx',zIdx)','Vapor'  );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('TRELAX.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor vapor' );
+                    plotter.plotz(mix.transient('TRELAX.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor (wall level)' );
                 end
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -694,7 +711,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('liquid.H','zIdx',zIdx)','Liquid'                           );
                 plotter.plotz(mix.transient( 'vapor.H','zIdx',zIdx)','Vapor'                            );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('TRELAX.HV','zIdx',zIdx)','WallVapor','DisplayName','Wall vapor' );
+                    plotter.plotz(mix.transient('TRELAX.HV','zIdx',zIdx)','WallVapor','DisplayName','Vapor (wall level)' );
                 end
                 plotter.plotz(fld.transient('HF')'                  ,'SatLiq','DisplayName','Sat liquid');
                 plotter.plotz(fld.transient('HG')'                  ,'SatVap','DisplayName','Sat vapor' );
@@ -725,7 +742,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('XEQ','zIdx',zIdx)','Equil','DisplayName','Equilibrium quality');
                 plotter.plotz(mix.transient('X'  ,'zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
                 if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('TRELAX.X','zIdx',zIdx)','WallVapor','DisplayName','Wall vapor quality' );
+                    plotter.plotz(mix.transient('TRELAX.X','zIdx',zIdx)','WallVapor','DisplayName','Vapor mass quality (wall level)' );
                 end
                 plotter.plotz(mix.transient('VF' ,'zIdx',zIdx)','VF'   ,'DisplayName','Void faction'       );
                 plotter.legend("show", "Location", 'best');
@@ -784,16 +801,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.ylim([-ymax ymax]);
             end
             
-            % Qualities and relaxed qualities
+            % Qualities
             if any(ismember({'X','ALL'},opt.display))
                 plotter.newTile( ...
-                    'tileTitle', 'Qualities and relaxed qualities', ...
-                    'xlabel'   ,                        'Time [s]', ...
-                    'ylabel'   ,                     'Quality [-]');
+                    'tileTitle',   'Qualities', ...
+                    'xlabel'   ,    'Time [s]', ...
+                    'ylabel'   , 'Quality [-]');
                 plotter.plotz(mix.transient(       'XEQ','zIdx',zIdx)','Equil'     ,'DisplayName','Equilibrium quality' );
                 plotter.plotz(mix.transient(       'X'  ,'zIdx',zIdx)','Vapor'     ,'DisplayName','Vapor mass quality'  );
-                plotter.plotz(mix.transient('TRELAX.XTH','zIdx',zIdx)','RelaxEquil','DisplayName','Wall thermo. quality');
-                plotter.plotz(mix.transient('TRELAX.X'  ,'zIdx',zIdx)','RelaxVapor','DisplayName','Wall vapor quality'  );
+                if all([ismember('RELAXATION',model.THERMALNONEQ) geom.NWALL > 1])
+                    plotter.plotz(mix.transient('TRELAX.X'  ,'zIdx',zIdx)','RelaxVapor','DisplayName','Vapor mass quality (wall level)');
+                end
+                plotter.plotz(mix.transient('PSEUDO.XEQ','zIdx',zIdx)','PseudoEquil','DisplayName','Pseudo-equilibrium quality');
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
@@ -806,8 +825,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle', 'Thermal time relaxations', ...
                     'xlabel'   ,                 'Time [s]', ...
                     'ylabel'   ,      'Relaxation time [s]');
-                plotter.plotz(mix.transient('TRELAX.TEVAP','zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation')
-                plotter.plotz(mix.transient('TRELAX.TCOND','zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation')
+                plotter.plotz(mix.transient('TRELAX.TEVAP','zIdx',zIdx)' ,'InterfacialEvap','DisplayName','Interfacial evaporation')
+                plotter.plotz(mix.transient('TRELAX.TCOND','zIdx',zIdx)' ,'InterfacialCond','DisplayName','Interfacial condensation')
+                plotter.plotz(mix.transient('PSEUDO.TRELAX','zIdx',zIdx)','PseudoEquil','DisplayName','Pseudo.equilibrium quality')
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;

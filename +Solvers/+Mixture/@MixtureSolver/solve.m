@@ -98,8 +98,8 @@ function solver(solveINIT)
             Hold    = mix(tIdx-1).H(zIdx);                                 % [J/kg] Mixture enthalpy at previous time step
             Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
             Wvold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                       % [m/s] Relaxed vapor mass flow rate at previous time step
-            WvTHold = mix(tIdx-1).TRELAX.WVTH(zIdx,:);                     % [m/s] Relaxed thermodynamic vapor mass flow rate at previous time step
             Hvold   = mix(tIdx-1).TRELAX.HV(zIdx,:);                       % [J/kg] Relaxed vapor enthalpy at previous time step
+            WvPSold = mix(tIdx-1).PSEUDO.WV(zIdx,:);                       % [m/s] Pseudo vapor mass flow rate at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -174,12 +174,18 @@ function solver(solveINIT)
             end
             
             % Save time relaxation terms (including near-wall terms)
-            mix(tIdx).TRELAX.TCOND(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);                               % [s] Condensation time relaxation
-            mix(tIdx).TRELAX.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);                               % [s] Condensation time relaxation
-            mix(tIdx).TRELAX.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).TRELAX.HV(zIdx,:))';               % [J/kg] Relaxed vapor temperature
-            mix(tIdx).TRELAX.WVTH(zIdx,:)  = mix(tIdx).WVTH(zIdx,WvTHold,Uold);                        % [kg/s] Relaxed thermodynamic vapor mass flow
-            mix(tIdx).TRELAX.XTH(zIdx,:)   = mix(tIdx).TRELAX.WVTH(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Relaxed thermodynamic vapor quality
+            mix(tIdx).TRELAX.TCOND(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);                  % [s] Condensation time relaxation
+            mix(tIdx).TRELAX.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);                  % [s] Condensation time relaxation
+            mix(tIdx).TRELAX.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).TRELAX.HV(zIdx,:))'; % [J/kg] Relaxed vapor temperature
             
+            % Save pseudo terms
+            Wveq   = mix(tIdx).XEQ(zIdx).*mix(tIdx).WNEARWALL(zIdx);                               % [kg/s] Equilibrium pseudo vapor mass flow rate
+            Mwall  = mix(tIdx).LHGR(zIdx)./(fluid(tIdx).HG - fluid(tIdx).HF);                      % [kg/s/m] Linear wall evaporation rate of pseudo vapor
+            trelax = mix(tIdx).PSEUDOTRELAX(zIdx);                                                 % [s] Time relaxation for pseudo equilibrium quality
+            mix(tIdx).PSEUDO.TRELAX(zIdx,:) = trelax;
+            mix(tIdx).PSEUDO.WV(zIdx,:) = U.*(mix(tIdx).PSEUDO.WV(zIdx-1,:)+(WvPSold./Uold./DT+Mwall).*DZ+Wveq./U.*DZ./trelax)./(U+DZ/DT+DZ./trelax); % [kg/s] Pseudo vapor mass flow rate
+            mix(tIdx).PSEUDO.XEQ(zIdx,:) = mix(tIdx).PSEUDO.WV(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Pseudo equilibrium quality  
+
             % Save pressure drop components
             DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                       % [Pa] Pressure drop components
             mix(tIdx).DP.Grav(zIdx)  = -DPparts.GRAV;                      % [Pa] Gravitational pressure drop

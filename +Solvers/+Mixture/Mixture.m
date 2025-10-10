@@ -21,6 +21,7 @@ classdef Mixture < Solvers.AbstractField
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
         MDER         (1,1) struct                                                                 % Saved detailed material derivative terms
         TRELAX       (1,1) struct                                                                 % Time relaxation terms
+        PSEUDO       (1,1) struct                                                                 % Pseudo terms
         
         % Iteration properties
         ITR
@@ -50,6 +51,7 @@ classdef Mixture < Solvers.AbstractField
         sigm_const   (:,1) double  {mustBeNumeric}                         = []                 % [-] Solved sigmoid fnc value
         relaxtevap   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
         relaxtcond   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
+        pseudotrelax (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for pseudo-equilibrium quality
     
     end       
     
@@ -67,7 +69,7 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Overload copyable properties (order is important due to the setter functions)
-            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR'};
+            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR','PSEUDO'};
         end
         
     end
@@ -228,6 +230,20 @@ classdef Mixture < Solvers.AbstractField
                 t = mix.relaxtcond; 
             else
                 t = mix.relaxtcond(zIdx); 
+            end
+        end
+
+        function t = PSEUDOTRELAX(mix, zIdx)
+        %PSEUDOTRELAX Time relaxation for pseudo-equilibrium quality [s]
+        %   This function only retrieves the mix.pseudotrelax values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.PSEUDOTRELAX_CALC()
+        %
+            if nargin < 2
+                t = mix.pseudotrelax; 
+            else
+                t = mix.pseudotrelax(zIdx); 
             end
         end
         
@@ -603,12 +619,12 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
             UVeq = mix.vapor.U(zIdx);                                      % [m/s] Approximated equilibrium vapor velocity
-            %WVeq = mix.WWALL(zIdx).*min(1,max(0,mix.XEQ(zIdx)));           % [kg/s] Equilibrium vapor mass flow rate per wall
+            %WVeq = mix.WWALL(zIdx).*min(1,max(0,mix.XEQ(zIdx)));           % [kg/s] Equilibrium vapor mass flow rate per wall (option not used)
             WVeq = mix.WWALL(zIdx).*mix.XEQ(zIdx);                         % [kg/s] Equilibrium vapor mass flow rate per wall
             Wint = WVeq-mix.TRELAX.WV(zIdx,:);                             % [kg/s] Vapor mass deviation from equilibrium
-            %Wint = Wint.*double(mix.WWALL(zIdx) > mix.TRELAX.WV(zIdx,:));
 
-            Wint = sum(Wint,2).*mix.WWALL(zIdx)./mix.W(zIdx);              % [kg/s] Lumped approach required when no transversal transfer is considered
+            % NOT USED FOR NOW: transerval transfer across wall regions
+            %Wint = sum(Wint,2).*mix.WWALL(zIdx)./mix.W(zIdx);              % [kg/s] Lumped approach required if used with separate transversal transfer (MTRANSV)
             
             Mcond = min(0,Wint./UVeq./mix.RELAXTCOND(zIdx));               % [kg/s/m] Condensation (<0)
             Mevap = max(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));               % [kg/s/m] Evaporation  (>0)
@@ -640,8 +656,9 @@ classdef Mixture < Solvers.AbstractField
         
         function Mtrans = MTRANSV(mix, zIdx)
         %MTRANSV Linear transversal mass exchange
+        % NOT USED FOR NOW
         % Model transverse exchange between wall regions with time relaxation model
-        % TODO: Note used for now, implement also enthalpy exchange and include in total mass/energy echange terms
+        % TODO: Implement also enthalpy exchange and include in total mass/energy echange terms
             
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
@@ -691,10 +708,11 @@ classdef Mixture < Solvers.AbstractField
                     %HFG = mix.vapor.H(zIdx) - mix.liquid.H(zIdx);          % [J/kg] Vapor is generated at bulk enthalpy
                     HFG = mix.TRELAX.HV(zIdx,:) - mix.liquid.H(zIdx);      % [J/kg] Vapor is generated at bulk enthalpy
                 case 'SATURATED'
-                    HFG = mix.fluid.HG - mix.liquid.H(zIdx);               % [J/kg] Vapor is generated at saturation
+                    HFG = mix.fluid.HG - mix.liquid.H(zIdx);                % [J/kg] Vapor is generated at saturation
             end
             
-            Mwalevap = mix.WALEVAPRATIO(zIdx).*mix.LHGR(zIdx)./HFG;        % [kg/s/m] 
+            Mwall = mix.LHGR(zIdx)./HFG;                                   % [kg/s/m]
+            Mwalevap = mix.WALEVAPRATIO(zIdx).*Mwall;                      % [kg/s/m] 
         end
         
         function Mtot = MTOT(mix, zIdx)
@@ -803,30 +821,12 @@ classdef Mixture < Solvers.AbstractField
         
         function w = WNEARWALL(mix, zIdx)
         %WNEARWALL Near-wall mass flow distribution per wall [kg/s]
-        %TODO: WNEARWALL should correspond to a near wall region (otherwise TRELAX.XEQ and XEQ would be equal for azymuthal equal heat flux)
+        %TODO: WNEARWALL should correspond to a near wall region (otherwise PSEUDO.XEQ and XEQ would be equal for azymuthal equal heat flux)
         %      Arbitrary division by 2 for now
 
         if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            w = mix.WWALL(zIdx)./1;                                        % [kg/s]
-        end
-        
-        function wvth = WVTH(mix, zIdx, WVTHold, Uold)
-        %WVTH Near-eall time relaxed modified (thermodynamic) vapor mass flow rate [kg/s]
-        %Use for direct substitution scheme in solver
-        %Time relaxation based on condensation for simplicity, since mainly targeted for pre-CBT applications 
-        %Part of the heat input (to the liquid) is currently missing leading to heat inptu oncinsistentcy below boiling
-        %TODO: Implement implicit scheme to allow different time relaxation for condensation and evaporation
-        %TODO: Change to an (equivalent) energy equation instead, is the near wall approach necessary?
- 
-            WNW      = mix.WNEARWALL(zIdx);                                % [kg/s] Mass flow distribution per wall
-            UV       = mix.vapor.U(zIdx);                                  % [m/s] Vapor velocity
-            MWALEVAP = mix.MWALEVAP(zIdx);                                 % [kg/s/m] Linear mass wall evaporation rate
-            TRELAXL  = mix.RELAXTCOND(zIdx);                               % [s] Time relaxation model
-            
-            wvth = (mix.TRELAX.WVTH(zIdx-1,:) + (WVTHold./Uold./mix.DT ...
-                + mix.XEQ(zIdx).*WNW./UV./TRELAXL + MWALEVAP).*mix.DZ) ...
-                ./(1 + mix.DZ./UV.*(1/mix.DT + 1./TRELAXL));               % [kg/s] Update relaxed modified vapor mass flow
+            w = mix.WWALL(zIdx)./2;                                        % [kg/s]
         end
         
     end
@@ -1187,6 +1187,7 @@ classdef Mixture < Solvers.AbstractField
             mix.CHF_CALC(zIdx);
             mix.RELAXTEVAP_CALC(zIdx);
             mix.RELAXTCOND_CALC(zIdx);
+            mix.PSEUDOTRELAX_CALC(zIdx);
             
             vf = mix.VF(zIdx);
             mix.rho(zIdx) = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx)) + ...
@@ -1196,7 +1197,6 @@ classdef Mixture < Solvers.AbstractField
         function RELAXTCOND_CALC(mix, zIdx)
         %RELAXTCOND Relaxation time model for wall dependant interfacial condensation
         %TODO: Investigate of this parameter should be walld dependant or not
-        %TODO: interp1 takes time, should be treated like the void fraction, etc...
         %    
         if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1212,7 +1212,7 @@ classdef Mixture < Solvers.AbstractField
                 t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
 
             case InputEnums.THERMALRELAX.VOID
-                d0     = model.RELAXCONDCOEF(1);                           % [m] Reference fluid particlae Sauter mean diameter
+                d0     = model.RELAXCONDCOEF(1);                           % [m] Reference fluid particle Sauter mean diameter
                 n      = model.RELAXCONDCOEF(2);                           % [-] Exponent of phase volumetric ratio
                 dvf    = model.RELAXCONDCOEF(3);                           % [-] Small phase volumetric ratio bias to avoid singularity
                 ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
@@ -1231,7 +1231,6 @@ classdef Mixture < Solvers.AbstractField
         function t = RELAXTEVAP_CALC(mix, zIdx)
         %RELAXTEVAP Relaxation time model for wall dependant interfacial evaporation
         %TODO: Investigate of this parameter should be walld dependant or not
-        %TODO: interp1 takes time, should be treated like the void fraction, etc...
         %
         if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1247,7 +1246,7 @@ classdef Mixture < Solvers.AbstractField
                 t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
 
             case InputEnums.THERMALRELAX.VOID
-                d0     = model.RELAXEVAPCOEF(1);                           % [m] Reference fluid particlae Sauter mean diameter
+                d0     = model.RELAXEVAPCOEF(1);                           % [m] Reference fluid particle Sauter mean diameter
                 n      = model.RELAXEVAPCOEF(2);                           % [-] Exponent of phase volumetric ratio
                 dvf    = model.RELAXEVAPCOEF(3);                           % [-] Small phase volumetric ratio bias to avoid singularity
                 ALPHAV = mix.fluid.ALPHAV(mix.vapor.H(zIdx));
@@ -1258,6 +1257,37 @@ classdef Mixture < Solvers.AbstractField
             t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
             t = max(1E-6,t);
             mix.relaxtevap(zIdx,:) = t;
+        end
+
+        function PSEUDOTRELAX_CALC(mix, zIdx)
+        %PSEUDOTRELAX Relaxation time model for wall dependant pseuso-equilibrium quality
+        %TODO: Investigate of this parameter should be walld dependant or not
+        %    
+        if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+        model = mix.inputSet.model;
+
+        switch model.PSEUDORELAX
+            case InputEnums.PSEUDORELAX.QUALITY
+                X = model.RELAXX;                                          % [-] Equilibrium quality array
+                T = model.PSEUDOTRELAX(1:length(model.RELAXX));            % [-] Corresponding time relaxation
+
+                t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
+                t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
+                t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
+
+            case InputEnums.PSEUDORELAX.VOID
+                d0     = model.PSEUDORELAXCOEF(1);                         % [m] Reference fluid particle Sauter mean diameter
+                n      = model.PSEUDORELAXCOEF(2);                         % [-] Exponent of phase volumetric ratio
+                dvf    = model.PSEUDORELAXCOEF(3);                         % [-] Small phase volumetric ratio bias to avoid singularity
+                ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
+                t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;            % [s] Time relaxation
+        end
+            
+            idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
+            t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
+            t = max(1E-6,t);
+            mix.pseudotrelax(zIdx,:) = t;
         end
         
     end
