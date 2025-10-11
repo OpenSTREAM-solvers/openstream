@@ -337,8 +337,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 tf = any(ismember(memberList,opts.display));
             end
             
-            % Loop through each mix
-            for mix = mixs
+            % Loop through each tIdx
+            for idx = 1:length(tIdx)
+
+                mix = mixs(idx);
 
                 % Wall heat flux
                 if displayVariable({'HFLUX','ALL'})
@@ -426,8 +428,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION && geom.NWALL > 1
                         plotter.plotz(mix.TRELAX.HV(opts.zIdx,:) ,'WallVapor','DisplayName','Wall vapor');
                     end
-                    plotter.plotz(repmat(mixSolver.fluid(tIdx(1)).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                    plotter.plotz(repmat(mixSolver.fluid(tIdx(1)).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
+                    plotter.plotz(repmat(mixSolver.fluid(tIdx(idx)).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plotz(repmat(mixSolver.fluid(tIdx(idx)).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -465,7 +467,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.liquid.T(opts.zIdx)+dTemp,'Liquid' );
                     plotter.plotz(mix.vapor.T(opts.zIdx) +dTemp,'Vapor'  );
                     plotter.plotz(mix.TWALL(opts.zIdx)   +dTemp,'Wall'   );
-                    plotter.plotz(repmat(mixSolver.fluid(tIdx(1)).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.plotz(repmat(mixSolver.fluid(tIdx(idx)).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
