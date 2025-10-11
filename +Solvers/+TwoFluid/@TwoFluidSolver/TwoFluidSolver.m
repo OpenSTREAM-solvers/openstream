@@ -178,275 +178,289 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
         end
 
-        function plotter = plotz(twfSolver, tIdx, opt)
+        function plotter = plotz(twfSolver, tIdx, opts)
         %PLOTZ Plot spatial distributions of two-fluid parameters
-        %
-        %   NOTE: currently supports only single timeSteps
         %
             arguments
                 twfSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                             = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.NZ
-                opt.unitTemp  {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
+                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                     = 1:twfSolver.NTIME
+                opts.display   {mustBeMember(opts.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
+                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                           = 'TRANSIENT'
+                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
+                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
+                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'
             end
             
-            if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
-            if length(opt.zIdx) < 2
+            if length(opts.zIdx) < 2
                 twfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
                 return
             end
             
-            z     = twfSolver.Z(opt.zIdx);
+            z     = twfSolver.Z(opts.zIdx);
             bc    = twfSolver.boundaryConditions;
             model = twfSolver.inputSet.model;
             
-            switch opt.solveMode
+            switch opts.solveMode
                 case 'TRANSIENT'
-                    liq = twfSolver.liquid(tIdx);
-                    vap = twfSolver.vapor(tIdx);
+                    liqs = twfSolver.liquid(tIdx);
+                    vaps = twfSolver.vapor(tIdx);
                 case 'STEADY'
-                    liq = twfSolver.liquidInit(tIdx);
-                    vap = twfSolver.vaporInit(tIdx);
+                    liqs = twfSolver.liquidInit(tIdx);
+                    vaps = twfSolver.vaporInit(tIdx);
                     tIdx = 1;
             end
+
+            mixs = twfSolver.mixSolver.mixture(tIdx);
             
-            dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
+            % Temperature unit offset between C and K
+            dTemp = 0; if strcmp(opts.unitTemp,'C'), dTemp = -273.15; end
             
-            %mix0 = twfSolver.mixSolver.mixture(tIdx);
-            mix  = liq.mix;
-            bcHFLUX = bc.HFLUX(opt.zIdx,:,tIdx);
-            
-            plotter = Solvers.SolverPlotter( ...
-                                sprintf('Axial distributions of two-field parameters at %0.3f [s] - %s', liq.TIME, opt.solveMode), ...
-                                opt.wall);
+             % Set up plotter
+            if isscalar(tIdx)
+                plotter = Solvers.SolverPlotter( ...
+                    sprintf('Axial distributions of two-fluid parameters at %0.3f [s] - %s', liqs(1).TIME, opts.solveMode), ...
+                    opts.wall);
+            else
+                plotter = Solvers.SolverPlotter( ...
+                    sprintf('Axial distributions of two-fluid parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                    opts.wall, ...
+                    "isAnimation", true, ...
+                    "animationSeries", [liqs.TIME]);
+            end
             plotter.setZs(z);
-            
-            % Wall heat flux
-            if any(ismember({'HFLUX','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',         'Wall heat flux', ...
-                    'xlabel'   ,     'Axial position [m]', ...
-                    'ylabel'   , 'Wall heat flux [W/m^2]');
-                plotter.plotz(  bcHFLUX                     ,'bc'         ,'DisplayName','Boundary Condition');
-                plotter.plotz(mix.HFLUX(opt.zIdx)           ,'Mixture'                                       );
-                plotter.plotz(liq.HFLUX(opt.zIdx)           ,'Liquid'                                        );
-                plotter.plotz(vap.HFLUX(opt.zIdx)           ,'Vapor'                                         );
-                plotter.plotz(vap.HFLUXWALEVAP(liq,opt.zIdx),'Evaporation','DisplayName','Wall evaporation'  );
-                if ~strcmp(model.CBT,'NONE')
-                    plotter.plotz(mix.CHF(opt.zIdx)         ,'CHF'                                           );
+
+            function tf = displayVariable(memberList)
+                tf = any(ismember(memberList,opts.display));
+            end
+
+            % Loop through each tIdx
+            for idx = 1:length(tIdx)
+
+                liq = liqs(idx);
+                vap = vaps(idx);
+                mix = mixs(idx);
+
+                % Wall heat flux
+                if displayVariable({'HFLUX','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',         'Wall heat flux', ...
+                        'xlabel'   ,     'Axial position [m]', ...
+                        'ylabel'   , 'Wall heat flux [W/m^2]');
+                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
+                    plotter.plotz(  bcHFLUX                      ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plotz(mix.HFLUX(opts.zIdx)           ,'Mixture'                                       );
+                    plotter.plotz(liq.HFLUX(opts.zIdx)           ,'Liquid'                                        );
+                    plotter.plotz(vap.HFLUX(opts.zIdx)           ,'Vapor'                                         );
+                    plotter.plotz(vap.HFLUXWALEVAP(liq,opts.zIdx),'Evaporation','DisplayName','Wall evaporation'  );
+                    if ~strcmp(model.CBT,'NONE')
+                        plotter.plotz(mix.CHF(opts.zIdx)         ,'CHF'                                           );
+                    end
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
                 end
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Mass flow rates
-            if any(ismember({'W','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Phase mass flow rates', ...
-                    'xlabel',       'Axial position [m]', ...
-                    'ylabel',    'Mass flow rate [kg/s]');
-                %plotter.plotz(mix0.W(opt.zIdx),'Mixture');
-                plotter.plotz(mix.W(opt.zIdx) ,'Mixture');
-                plotter.plotz(liq.W(opt.zIdx) ,'Liquid' );
-                plotter.plotz(vap.W(opt.zIdx) ,'Vapor'  );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Phase velocities
-            if any(ismember({'U','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',   'Phase velocities', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,     'Velocity [m/s]');
-                %plotter.plotz(mix0.U(opt.zIdx),'Mixture');
-                plotter.plotz(mix.U(opt.zIdx) ,'Mixture');
-                plotter.plotz(liq.U(opt.zIdx) ,'Liquid' );
-                plotter.plotz(vap.U(opt.zIdx) ,'Vapor'  );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Phase enthalpies
-            if any(ismember({'H','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',   'Phase enthalpies', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,    'Enthalpy [J/kg]');
-                
-                %plotter.plotz(mix0.H(opt.zIdx),'Mixture');
-                plotter.plotz(mix.H(opt.zIdx) ,'Mixture');
-                plotter.plotz(liq.H(opt.zIdx) ,'Liquid' );
-                plotter.plotz(vap.H(opt.zIdx) ,'Vapor'  );
-                plotter.plotz(repmat(twfSolver.fluid(tIdx).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                plotter.plotz(repmat(twfSolver.fluid(tIdx).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Vapor ratios (void fraction and qualities)
-            if any(ismember({'VR','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Void fractions and qualities', ...
-                    'xlabel'   ,           'Axial position [m]', ...
-                    'ylabel'   ,  'Quality / Void fraction [-]');
-                %plotter.plotz(mix0.XEQ(opt.zIdx)  ,'Equil'       ,'DisplayName','Equilibrium quality')
-                plotter.plotz(mix.XEQ(opt.zIdx)   ,'Equil'       ,'DisplayName','Equilibrium quality')
-                plotter.plotz(vap.X(opt.zIdx)     ,'Vapor'       ,'DisplayName','Vapor mass quality' )
-                plotter.plotz(vap.VF(liq,opt.zIdx),'VoidFraction','DisplayName','Void fraction'      )
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Phase temperatures
-            if any(ismember({'T','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',              'Phase temperatures', ...
-                    'xlabel'   ,              'Axial position [m]', ...
-                    'ylabel'   , ['Temperature [' opt.unitTemp ']']);
-                
-                plotter.plotz(liq.T(opt.zIdx)+dTemp,'Liquid');
-                plotter.plotz(vap.T(opt.zIdx)+dTemp, 'Vapor');
-                plotter.plotz(repmat(twfSolver.fluid(tIdx).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Vapor and liquid mass exchanges
-            if any(ismember({'PWE','ALL'},opt.display))
-                ah_vap = plotter.newTile( ...
-                    'tileTitle', 'Vapor mass exchanges', ...
-                    'xlabel',      'Axial position [m]', ...
-                    'ylabel',  'Mass exchange [kg/s/m]');
-                plotter.plotz(vap.MWALEVAP(liq,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(vap.MINTEVAP(liq,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(vap.MINTCOND(liq,opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(vap.MTOT(liq,opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-                
-                ah_liq = plotter.newTile( ...
-                    'tileTitle', 'Liquid mass exchanges', ...
-                    'xlabel',       'Axial position [m]', ...
-                    'ylabel',   'Mass exchange [kg/s/m]');
-                plotter.plotz(liq.MWALEVAP(vap,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(liq.MINTEVAP(vap,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(liq.MINTCOND(vap,opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(liq.MTOT(vap,opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-                
-                % Link exchange axes
-                % TODO: this can be a plotter method
-                for wallIdx = 1:length(ah_liq)
-                    linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+
+                % Mass flow rates
+                if displayVariable({'W','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Phase mass flow rates', ...
+                        'xlabel',       'Axial position [m]', ...
+                        'ylabel',    'Mass flow rate [kg/s]');
+                    plotter.plotz(mix.W(opts.zIdx) ,'Mixture');
+                    plotter.plotz(liq.W(opts.zIdx) ,'Liquid' );
+                    plotter.plotz(vap.W(opts.zIdx) ,'Vapor'  );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
                 end
-            end
-            
-            % Vapor and liquid momentum Exchanges
-            if any(ismember({'PME','ALL'},opt.display))
-                ah_vap = plotter.newTile( ...
-                    'tileTitle', 'Vapor momentum exchanges', ...
-                    'xlabel',          'Axial position [m]', ...
-                    'ylabel',          'Shear stress [N/m]');
-                plotter.plotz(vap.FWALL(liq,opt.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'             );
-                plotter.plotz(vap.FDRAG(liq,opt.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'      );
-                plotter.plotz(vap.FBUOY(liq,opt.zIdx)   ,'Buoyancy'                                               );
-                plotter.plotz(vap.FGRAV(liq,opt.zIdx)   ,'Gravity'                                                );
-                plotter.plotz(vap.FWALEVAP(liq,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'       );
-                plotter.plotz(vap.FINTEVAP(liq,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation');
-                plotter.plotz(vap.FTOT(liq,opt.zIdx)    ,'Total'                                                  );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-                
-                ah_liq = plotter.newTile( ...
-                    'tileTitle', 'Liquid momentum exchanges', ...
-                    'xlabel',           'Axial position [m]', ...
-                    'ylabel',           'Shear stress [N/m]');
-                plotter.plotz(liq.FWALL(vap,opt.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'              );
-                plotter.plotz(liq.FDRAG(vap,opt.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'       );
-                plotter.plotz(liq.FBUOY(vap,opt.zIdx)   ,'Buoyancy'                                                );
-                plotter.plotz(liq.FGRAV(vap,opt.zIdx)   ,'Gravity'                                                 );
-                plotter.plotz(liq.FINTCOND(vap,opt.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(liq.FTOT(vap,opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-                
-                % Link exchange axes
-                % TODO: this can be a plotter method
-                for wallIdx = 1:length(ah_liq)
-                    linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+
+                % Phase velocities
+                if displayVariable({'U','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',   'Phase velocities', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,     'Velocity [m/s]');
+                    plotter.plotz(mix.U(opts.zIdx) ,'Mixture');
+                    plotter.plotz(liq.U(opts.zIdx) ,'Liquid' );
+                    plotter.plotz(vap.U(opts.zIdx) ,'Vapor'  );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
                 end
-            end
-            
-            % Vapor and liquid energy Exchanges
-            if any(ismember({'PEE','ALL'},opt.display))
-                ah_vap = plotter.newTile( ...
-                    'tileTitle', 'Vapor energy exchanges', ...
-                    'xlabel',        'Axial position [m]', ...
-                    'ylabel',     'Energy transfer [W/m]');
-                plotter.plotz(vap.HWALHEAT(opt.zIdx)    ,'Wall'                                                    );
-                plotter.plotz(vap.HWALEVAP(liq,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(vap.HINTEVAP(liq,opt.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
-                plotter.plotz(vap.HINTCOND(liq,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
-                plotter.plotz(vap.HTOT(liq,opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-                
-                ah_liq = plotter.newTile( ...
-                    'tileTitle', 'Liquid energy exchanges', ...
-                    'xlabel',         'Axial position [m]', ...
-                    'ylabel',      'Energy transfer [W/m]');
-                plotter.plotz(liq.HWALHEAT(opt.zIdx)    ,'Wall'                                                    );
-                plotter.plotz(liq.HWALEVAP(vap,opt.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(liq.HINTEVAP(vap,opt.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
-                plotter.plotz(liq.HINTCOND(vap,opt.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
-                plotter.plotz(liq.HTOT(vap,opt.zIdx)    ,'Total'                                                   );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
-                plotter.ylim([-ymax ymax]);
-                
-                % Link exchange axes
-                % TODO: this can be a plotter method
-                for wallIdx = 1:length(ah_liq)
-                    linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+
+                % Phase enthalpies
+                if displayVariable({'H','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',   'Phase enthalpies', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,    'Enthalpy [J/kg]');
+
+                    plotter.plotz(mix.H(opts.zIdx) ,'Mixture');
+                    plotter.plotz(liq.H(opts.zIdx) ,'Liquid' );
+                    plotter.plotz(vap.H(opts.zIdx) ,'Vapor'  );
+                    plotter.plotz(repmat(twfSolver.fluid(tIdx(idx)).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plotz(repmat(twfSolver.fluid(tIdx(idx)).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
                 end
-            end
-            
-             % Volumetric interfacial area
-            if any(ismember({'INTAREA','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Volumetric interfacial area', ...
-                    'xlabel'   ,          'Axial position [m]', ...
-                    'ylabel'   ,    'Interfacial area [m^-^1]');
-                plotter.plotz(liq.INTAREA(vap,opt.zIdx),'Interfacial')
-                plotter.xlim([min(z) max(z)]);
-            end
-            
-            % Two-phase flow regimes
-            if any(ismember({'REGIME','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Two-phase flow regimes', ...
-                    'xlabel'   ,     'Axial position [m]');
-                plotter.plotz(liq.FLOWREGIME(opt.zIdx),'Interfacial')
-                labels = strrep(cellstr(unique(liq.FLOWREGIME)),'_',' ');
-                plotter.ylabels(labels);
-                plotter.ylim([0 length(labels)+1]);
-                plotter.xlim([min(z) max(z)]);
+
+                % Vapor ratios (void fraction and qualities)
+                if displayVariable({'VR','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Void fractions and qualities', ...
+                        'xlabel'   ,           'Axial position [m]', ...
+                        'ylabel'   ,  'Quality / Void fraction [-]');
+                    plotter.plotz(mix.XEQ(opts.zIdx)   ,'Equil'       ,'DisplayName','Equilibrium quality')
+                    plotter.plotz(vap.X(opts.zIdx)     ,'Vapor'       ,'DisplayName','Vapor mass quality' )
+                    plotter.plotz(vap.VF(liq,opts.zIdx),'VoidFraction','DisplayName','Void fraction'      )
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                end
+
+                % Phase temperatures
+                if displayVariable({'T','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',              'Phase temperatures', ...
+                        'xlabel'   ,              'Axial position [m]', ...
+                        'ylabel'   , ['Temperature [' opts.unitTemp ']']);
+
+                    plotter.plotz(liq.T(opts.zIdx)+dTemp,'Liquid');
+                    plotter.plotz(vap.T(opts.zIdx)+dTemp, 'Vapor');
+                    plotter.plotz(repmat(twfSolver.fluid(tIdx(idx)).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                end
+
+                % Vapor and liquid mass exchanges
+                if displayVariable({'PWE','ALL'})
+                    ah_vap = plotter.addTile( ...
+                        'tileTitle', 'Vapor mass exchanges', ...
+                        'xlabel',      'Axial position [m]', ...
+                        'ylabel',  'Mass exchange [kg/s/m]');
+                    plotter.plotz(vap.MWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plotz(vap.MINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plotz(vap.MINTCOND(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plotz(vap.MTOT(liq,opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+
+                    ah_liq = plotter.addTile( ...
+                        'tileTitle', 'Liquid mass exchanges', ...
+                        'xlabel',       'Axial position [m]', ...
+                        'ylabel',   'Mass exchange [kg/s/m]');
+                    plotter.plotz(liq.MWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plotz(liq.MINTEVAP(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plotz(liq.MINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plotz(liq.MTOT(vap,opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+
+                    % Link exchange axes
+                    % TODO: this can be a plotter method
+                    for wallIdx = 1:length(ah_liq)
+                        linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+                    end
+                end
+
+                % Vapor and liquid momentum Exchanges
+                if displayVariable({'PME','ALL'})
+                    ah_vap = plotter.addTile( ...
+                        'tileTitle', 'Vapor momentum exchanges', ...
+                        'xlabel',          'Axial position [m]', ...
+                        'ylabel',          'Shear stress [N/m]');
+                    plotter.plotz(vap.FWALL(liq,opts.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'             );
+                    plotter.plotz(vap.FDRAG(liq,opts.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'      );
+                    plotter.plotz(vap.FBUOY(liq,opts.zIdx)   ,'Buoyancy'                                               );
+                    plotter.plotz(vap.FGRAV(liq,opts.zIdx)   ,'Gravity'                                                );
+                    plotter.plotz(vap.FWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'       );
+                    plotter.plotz(vap.FINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation');
+                    plotter.plotz(vap.FTOT(liq,opts.zIdx)    ,'Total'                                                  );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+
+                    ah_liq = plotter.addTile( ...
+                        'tileTitle', 'Liquid momentum exchanges', ...
+                        'xlabel',           'Axial position [m]', ...
+                        'ylabel',           'Shear stress [N/m]');
+                    plotter.plotz(liq.FWALL(vap,opts.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'              );
+                    plotter.plotz(liq.FDRAG(vap,opts.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'       );
+                    plotter.plotz(liq.FBUOY(vap,opts.zIdx)   ,'Buoyancy'                                                );
+                    plotter.plotz(liq.FGRAV(vap,opts.zIdx)   ,'Gravity'                                                 );
+                    plotter.plotz(liq.FINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plotz(liq.FTOT(vap,opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+
+                    % Link exchange axes
+                    % TODO: this can be a plotter method
+                    for wallIdx = 1:length(ah_liq)
+                        linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+                    end
+                end
+
+                % Vapor and liquid energy Exchanges
+                if displayVariable({'PEE','ALL'})
+                    ah_vap = plotter.addTile( ...
+                        'tileTitle', 'Vapor energy exchanges', ...
+                        'xlabel',        'Axial position [m]', ...
+                        'ylabel',     'Energy transfer [W/m]');
+                    plotter.plotz(vap.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
+                    plotter.plotz(vap.HWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plotz(vap.HINTEVAP(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
+                    plotter.plotz(vap.HINTCOND(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
+                    plotter.plotz(vap.HTOT(liq,opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+
+                    ah_liq = plotter.addTile( ...
+                        'tileTitle', 'Liquid energy exchanges', ...
+                        'xlabel',         'Axial position [m]', ...
+                        'ylabel',      'Energy transfer [W/m]');
+                    plotter.plotz(liq.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
+                    plotter.plotz(liq.HWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plotz(liq.HINTEVAP(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
+                    plotter.plotz(liq.HINTCOND(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
+                    plotter.plotz(liq.HTOT(vap,opts.zIdx)    ,'Total'                                                   );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
+                    plotter.ylim([-ymax ymax]);
+
+                    % Link exchange axes
+                    % TODO: this can be a plotter method
+                    for wallIdx = 1:length(ah_liq)
+                        linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+                    end
+                end
+
+                % Volumetric interfacial area
+                if displayVariable({'INTAREA','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Volumetric interfacial area', ...
+                        'xlabel'   ,          'Axial position [m]', ...
+                        'ylabel'   ,    'Interfacial area [m^-^1]');
+                    plotter.plotz(liq.INTAREA(vap,opts.zIdx),'Interfacial')
+                    plotter.xlim([min(z) max(z)]);
+                end
+
+                % Two-phase flow regimes
+                if displayVariable({'REGIME','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Two-phase flow regimes', ...
+                        'xlabel'   ,     'Axial position [m]');
+                    plotter.plotz(liq.FLOWREGIME(opts.zIdx),'Interfacial')
+                    labels = strrep(cellstr(unique(liq.FLOWREGIME)),'_',' ');
+                    plotter.ylabels(labels);
+                    plotter.ylim([0 length(labels)+1]);
+                    plotter.xlim([min(z) max(z)]);
+                end
             end
         end
         
