@@ -61,7 +61,7 @@ function solver(solveINIT)
         liquid = twfSolver.liquid;
         vapor  = twfSolver.vapor;
         fluid  = twfSolver.fluid;
-        mix    = tfSolver.mixSolver.mixture;
+        mix    = twfSolver.mixSolver.mixture;
     end
 
     % set SOLVED flag to SOLVECONVERGED
