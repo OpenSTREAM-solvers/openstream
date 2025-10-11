@@ -269,303 +269,323 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
         end
 
-        function plotter = plotz(ffSolver, tIdx, opt)
+        function plotter = plotz(ffSolver, tIdx, opts)
         %PLOTZ Plot spatial distributions of four-field parameters
-        %
-        %   NOTE: currently supports only single timeStep
         %
             arguments
                 ffSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.NZ
-                opt.annular   (1,1) logical                                                                                                       = true
-                opt.unitTemp  {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
+                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                                          = 1:ffSolver.NTIME
+                opts.display   {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
+                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
+                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
+                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
+                opts.annular   (1,1) logical                                                                                                        = true
+                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                                              = 'K'
             end
-            
-            if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
-            if length(opt.zIdx) < 2
+
+            if length(opts.zIdx) < 2
                 ffSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
                 return
             end
-            
-            z   = ffSolver.Z(opt.zIdx);
+
+            z   = ffSolver.Z(opts.zIdx);
             bc  = ffSolver.boundaryConditions;
-        
-            switch opt.solveMode
+
+            switch opts.solveMode
                 case 'TRANSIENT'
-                    flm = ffSolver.film(tIdx);
-                    drp = ffSolver.drop(tIdx);
+                    flms = ffSolver.film(tIdx);
+                    drps = ffSolver.drop(tIdx);
                 case 'STEADY'
-                    flm = ffSolver.filmInit(tIdx);
-                    drp = ffSolver.dropInit(tIdx);
+                    flms = ffSolver.filmInit(tIdx);
+                    drps = ffSolver.dropInit(tIdx);
                     tIdx = 1;
             end
-            
-            if opt.annular
-                zaf    = z(z >= flm.mix.OAFZ);
-                zafIdx = opt.zIdx(opt.zIdx >= flm.mix.OAFIDX) - opt.zIdx(1) + 1;
+
+            mixs = ffSolver.mixSolver.mixture(tIdx);
+
+            % Temperature unit offset between C and K
+            dTemp = 0; if strcmp(opts.unitTemp,'C'), dTemp = -273.15; end
+
+            % Set up plotter
+            if isscalar(tIdx)
+                plotter = Solvers.SolverPlotter( ...
+                    sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm(1).TIME, opts.solveMode), ...
+                    opts.wall);
             else
-                zaf    = z;
-                zafIdx = opt.zIdx;
+                plotter = Solvers.SolverPlotter( ...
+                    sprintf('Axial distributions of four-field parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                    opts.wall, ...
+                    "isAnimation", true, ...
+                    "animationSeries", [flms.TIME]);
             end
-
-            dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
-            
-            mix = flm.mix;
-            bcHFLUX = bc.HFLUX(opt.zIdx,:,tIdx);
-            oafZ = repmat(mix.OAFZ,1,2);
-
-            plotter = Solvers.SolverPlotter( ...
-                                sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
-                                opt.wall);
             plotter.setZs(z);
 
-            % Wall heat flux
-            if any(ismember({'HFLUX','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',         'Wall heat flux', ...
-                    'xlabel'   ,     'Axial position [m]', ...
-                    'ylabel'   , 'Wall heat flux [W/m^2]');
-                plotter.plotz(  bcHFLUX            ,'bc'  ,'DisplayName','Boundary Condition');
-                plotter.plotz(flm.HFLUX(opt.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
+            function tf = displayVariable(memberList)
+                tf = any(ismember(memberList,opts.display));
             end
 
-            % Mass flow rates
-            if any(ismember({'W','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Field mass flow rates', ...
-                    'xlabel'   ,    'Axial position [m]', ...
-                    'ylabel'   , 'Mass flow rate [kg/s]');
-                plotter.plotz(sum([drp.W(opt.zIdx) flm.W(opt.zIdx,:)],2),'Liquid'                              );
-                plotter.plotz(drp.W(opt.zIdx)                           ,'Drop'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.W(opt.zIdx)                           ,'Film'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.W(opt.zIdx,:)                    ,'Wave'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.W(opt.zIdx,:)                    ,'Base'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.WMIN(drp,opt.zIdx)               ,'Base min','XData',zaf,'subset',zafIdx);
-                plotter.plotz(mix.vapor.W(opt.zIdx)                     ,'Vapor'                               );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-            end
+            % Loop through each tIdx
+            for idx = 1:length(tIdx)
 
-            % Film WL
-            if any(ismember({'WL','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Film mass flow rates per unit perimeter', ...
-                    'xlabel'   ,                      'Axial position [m]', ...
-                    'ylabel'   ,            'Film mass flow rate [kg/s/m]');
-                plotter.plotz(flm.WL(opt.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.WL(opt.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.WL(opt.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.WMINL(drp,opt.zIdx),'Base min','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location',  'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-            end
-            
-            % Reynolds numbers
-            if any(ismember({'RE','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',               'Reynolds numbers', ...
-                    'xlabel'   ,             'Axial position [m]', ...
-                    'ylabel'   , {'Vapor Re [-]', 'Liquid Re [-]'});
-                plotter.plotz(mix.vapor.RE(opt.zIdx),'Vapor','yyaxis', 'left');
-                plotter.plotz(flm.wave.RE(opt.zIdx) , 'Wave','yyaxis','right','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.RE(opt.zIdx) , 'Base','yyaxis','right','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-            end
-            
-            % Field velocities
-            if any(ismember({'U','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',     'Field velocities', ...
-                    'xlabel'   ,   'Axial position [m]', ...
-                    'ylabel'   , 'Field velocity [m/s]');
-                plotter.plotz(drp.U(opt.zIdx)       ,'Drop' ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.U(opt.zIdx)       ,'Film' ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.U(opt.zIdx,:),'Wave' ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.U(opt.zIdx,:),'Base' ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(mix.vapor.U(opt.zIdx) ,'Vapor'                            );
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-            end
-            
-            % Film thicknesses
-            if any(ismember({'THICK','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',   'Film thicknesses', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   , 'Film thickness [m]');
-                plotter.plotz(flm.THICK(opt.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.THICK(opt.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.AMPLITUDE(opt.zIdx)   ,'Wave Amp','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.THICK(opt.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.EQTHICK(opt.zIdx)     ,'Base Eq' ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.THICKMIN(drp,opt.zIdx),'Base Min','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                %plotters.ylim([0 1E-3]);
-            end
+                flm = flms(idx);
+                drp = drps(idx);
+                mix = mixs(idx);
 
-            % Wave frequencies
-            if any(ismember({'FREQUENCY','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',   'Wave frequencies', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,     'Frequency [Hz]');
-                plotter.plotz(flm.wave.FREQUENCY(opt.zIdx,:),'Wave'   ,'DisplayName','Non-equilibrium','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.EQFREQUENCY(opt.zIdx),'Wave Eq','DisplayName',    'Equilibrium','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-            end
-
-            % Wave axial lengths
-            if any(ismember({'WAL','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',  'Wave axial lengths', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,   'Axial length [m]');
-                plotter.plotz(flm.wave.SPACING(opt.zIdx),'Spacing','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.WIDTH(opt.zIdx)  ,  'Width','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-            end
-
-            % Base film/Film ratios
-            if any(ismember({'BR','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Base film/Film ratios', ...
-                    'xlabel'   ,    'Axial position [m]', ...
-                    'ylabel'   ,          'Fraction [-]');
-                plotter.plotz(flm.base.EPSILON(opt.zIdx) ,'Vapor','DisplayName',        'Mass','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.BETA(opt.zIdx)    ,'Interfacial'                       ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.BETAP(opt.zIdx)   ,'Evaporation'                       ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.ETA(opt.zIdx)     ,'Deposition'                        ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FDRY(drp,opt.zIdx),'Base','DisplayName','Base dry time','XData',zaf,'subset',zafIdx);
-                plotter.legend("show", 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                plotter.ylim([0 1]);
-            end
-
-            % Wave/Film ratios
-            if any(ismember({'WR','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle',   'Wave/Film ratios', ...
-                    'xlabel'   , 'Axial position [m]', ...
-                    'ylabel'   ,       'Fraction [-]');
-                plotter.plotz(flm.wave.EPSILON(opt.zIdx)    ,'Vapor'      ,'DisplayName', 'Mass','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.BETA(opt.zIdx)       ,'Interfacial'                      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.BETAP(opt.zIdx)      ,'Evaporation'                      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.ETA(opt.zIdx)        ,'Deposition'                       ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.SHAPEFACTOR(opt.zIdx),'Wave'       ,'DisplayName','Shape','XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                plotter.ylim([0 1]);
-            end
-            
-            % Base film and wave mass exchanges
-            if any(ismember({'FWE','ALL'},opt.display))
-                ah_base = plotter.newTile( ...
-                    'tileTitle', 'Base film mass exchanges', ...
-                    'xlabel'   ,      'Axial position [m]', ...
-                    'ylabel'   ,    'Mass flux [kg/s/m^2]');
-                plotter.plotz(flm.base.MDEP(drp,opt.zIdx) , 'Deposition','DisplayName','Drop deposition'      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.MENT(opt.zIdx)     ,'Entrainment','DisplayName','Base film entrainment','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.MEVAP(opt.zIdx)    ,'Evaporation','DisplayName','Base film evaporation','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.MWAVE(drp,opt.zIdx),'Wave'       ,'DisplayName','Exchange from wave'   ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.MTOT(drp,opt.zIdx) ,'Total'                                            ,'XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                
-                ah_wave = plotter.newTile( ...
-                    "tileTitle",  'Wave mass exchanges', ...
-                    'xlabel'   ,   'Axial position [m]', ...
-                    'ylabel'   , 'Mass flux [kg/s/m^2]');
-                plotter.plotz(flm.wave.MDEP(drp,opt.zIdx) ,'Deposition' ,'DisplayName','Drop deposition'   ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.MENT(opt.zIdx)     ,'Entrainment','DisplayName','Wave entrainment'  ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.MEVAP(opt.zIdx)    ,'Evaporation','DisplayName','Wave evaporation'  ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.MBASE(drp,opt.zIdx),'Wave'       ,'DisplayName','Exchange from base','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.MTOT(drp,opt.zIdx) ,'Total'                                         ,'XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                
-                % Link exchange axes
-                % TODO: this can be a plotter method
-                for wallIdx = 1:length(ah_base)
-                    linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
+                if opts.annular
+                    zaf    = z(z >= flm.mix.OAFZ);
+                    zafIdx = opts.zIdx(opts.zIdx >= flm.mix.OAFIDX) - opts.zIdx(1) + 1;
+                else
+                    zaf    = z;
+                    zafIdx = opts.zIdx;
                 end
-            end
 
-            % Base film and wave momentum exchanges
-            if any(ismember({'FME','ALL'},opt.display))
-                ah_base = plotter.newTile( ...
-                    'tileTitle', 'Base momentum exchanges', ...
-                    'xlabel'   ,      'Axial position [m]', ...
-                    'ylabel'   ,    'Shear stress [N/m^2]');
-                plotter.plotz(flm.base.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FWALL()       ,'Wall'                                      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FBASEVAPOR()  ,'Vapor'                                     ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FWAVE(drp)    ,'Wave'                                      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FWAVEMASS(drp),'WaveMass'  ,'DisplayName',      'Wave mass','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.base.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                
-                ah_wave = plotter.newTile( ...
-                    'tileTitle', 'Wave momentum exchanges', ...
-                    'xlabel'   ,      'Axial position [m]', ...
-                    'ylabel'   ,    'Shear stress [N/m^2]');
-                plotter.plotz(flm.wave.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FSHEAR()      ,'Vapor'     ,'DisplayName','Vapor shear'    ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FDRAG()       ,'VaporDrag' ,'DisplayName','Vapor drag'     ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FBASE(drp)    ,'Wave'      ,'DisplayName','Base'           ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FBASEMASS(drp),'WaveMass'  ,'DisplayName','Base mass'      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(flm.wave.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
-                
-                % Link exchange axes
-                for wallIdx = 1:length(ah_base)
-                    linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
+                oafZ = repmat(mix.OAFZ,1,2);
+
+                % Wall heat flux
+                if displayVariable({'HFLUX','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',         'Wall heat flux', ...
+                        'xlabel'   ,     'Axial position [m]', ...
+                        'ylabel'   , 'Wall heat flux [W/m^2]');
+                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
+                    plotter.plotz(  bcHFLUX             ,'bc'  ,'DisplayName','Boundary Condition');
+                    plotter.plotz(flm.HFLUX(opts.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
                 end
-            end
 
-            % Drop momentum exchanges
-            if any(ismember({'DME','ALL'},opt.display))
-                plotter.newTile( ...
-                    'tileTitle', 'Drop momentum exchanges', ...
-                    'xlabel'   ,      'Axial position [m]', ...
-                    'ylabel'   ,    'Shear stress [N/m^3]');
-                plotter.plotz(drp.FENT(flm),'Entrainment', 'DisplayName', 'Film entrainment','XData',zaf,'subset',zafIdx);
-                plotter.plotz(drp.FDRAG()  ,'Vapor'                                         ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(drp.FBUOY()  ,'Buoyancy'                                      ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(drp.FGRAV()  ,'Gravity'                                       ,'XData',zaf,'subset',zafIdx);
-                plotter.plotz(drp.FTOT(flm),'Total'                                         ,'XData',zaf,'subset',zafIdx);
-                plotter.legend('show', 'Location', 'best');
-                plotter.xlim([min(z) max(z)]);
-                plotter.plotOAF(oafZ);
+                % Mass flow rates
+                if displayVariable({'W','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Field mass flow rates', ...
+                        'xlabel'   ,    'Axial position [m]', ...
+                        'ylabel'   , 'Mass flow rate [kg/s]');
+                    plotter.plotz(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                              );
+                    plotter.plotz(drp.W(opts.zIdx)                            ,'Drop'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.W(opts.zIdx)                            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.W(opts.zIdx,:)                     ,'Wave'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.W(opts.zIdx,:)                     ,'Base'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.WMIN(drp,opts.zIdx)                 ,'Base min','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(mix.vapor.W(opts.zIdx)                      ,'Vapor'                               );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
+
+                % Film WL
+                if displayVariable({'WL','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Film mass flow rates per unit perimeter', ...
+                        'xlabel'   ,                      'Axial position [m]', ...
+                        'ylabel'   ,            'Film mass flow rate [kg/s/m]');
+                    plotter.plotz(flm.WL(opts.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.WL(opts.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.WL(opts.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.WMINL(drp,opts.zIdx),'Base min','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location',  'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
+
+                % Reynolds numbers
+                if displayVariable({'RE','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',               'Reynolds numbers', ...
+                        'xlabel'   ,             'Axial position [m]', ...
+                        'ylabel'   , {'Vapor Re [-]', 'Liquid Re [-]'});
+                    plotter.plotz(mix.vapor.RE(opts.zIdx),'Vapor','yyaxis', 'left');
+                    plotter.plotz(flm.wave.RE(opts.zIdx) , 'Wave','yyaxis','right','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.RE(opts.zIdx) , 'Base','yyaxis','right','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
+
+                % Field velocities
+                if displayVariable({'U','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',     'Field velocities', ...
+                        'xlabel'   ,   'Axial position [m]', ...
+                        'ylabel'   , 'Field velocity [m/s]');
+                    plotter.plotz(drp.U(opts.zIdx)       ,'Drop' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.U(opts.zIdx)       ,'Film' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.U(opts.zIdx,:),'Wave' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.U(opts.zIdx,:),'Base' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(mix.vapor.U(opts.zIdx) ,'Vapor'                            );
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
+
+                % Film thicknesses
+                if displayVariable({'THICK','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',   'Film thicknesses', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   , 'Film thickness [m]');
+                    plotter.plotz(flm.THICK(opts.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.THICK(opts.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.AMPLITUDE(opts.zIdx)   ,'Wave Amp','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.THICK(opts.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.EQTHICK(opts.zIdx)     ,'Base Eq' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.THICKMIN(drp,opts.zIdx),'Base Min','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                    %plotters.ylim([0 1E-3]);
+                end
+
+                % Wave frequencies
+                if displayVariable({'FREQUENCY','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',   'Wave frequencies', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,     'Frequency [Hz]');
+                    plotter.plotz(flm.wave.FREQUENCY(opts.zIdx,:),'Wave'   ,'DisplayName','Non-equilibrium','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.EQFREQUENCY(opts.zIdx),'Wave Eq','DisplayName',    'Equilibrium','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
+
+                % Wave axial lengths
+                if displayVariable({'WAL','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',  'Wave axial lengths', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,   'Axial length [m]');
+                    plotter.plotz(flm.wave.SPACING(opts.zIdx),'Spacing','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.WIDTH(opts.zIdx)  ,  'Width','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
+
+                % Base film/Film ratios
+                if displayVariable({'BR','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Base film/Film ratios', ...
+                        'xlabel'   ,    'Axial position [m]', ...
+                        'ylabel'   ,          'Fraction [-]');
+                    plotter.plotz(flm.base.EPSILON(opts.zIdx) ,'Vapor','DisplayName',        'Mass','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.BETA(opts.zIdx)    ,'Interfacial'                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.BETAP(opts.zIdx)   ,'Evaporation'                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.ETA(opts.zIdx)     ,'Deposition'                        ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FDRY(drp,opts.zIdx),'Base','DisplayName','Base dry time','XData',zaf,'subset',zafIdx);
+                    plotter.legend("show", 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                    plotter.ylim([0 1]);
+                end
+
+                % Wave/Film ratios
+                if displayVariable({'WR','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle',   'Wave/Film ratios', ...
+                        'xlabel'   , 'Axial position [m]', ...
+                        'ylabel'   ,       'Fraction [-]');
+                    plotter.plotz(flm.wave.EPSILON(opts.zIdx)    ,'Vapor'      ,'DisplayName', 'Mass','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.BETA(opts.zIdx)       ,'Interfacial'                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.BETAP(opts.zIdx)      ,'Evaporation'                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.ETA(opts.zIdx)        ,'Deposition'                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.SHAPEFACTOR(opts.zIdx),'Wave'       ,'DisplayName','Shape','XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                    plotter.ylim([0 1]);
+                end
+
+                % Base film and wave mass exchanges
+                if displayVariable({'FWE','ALL'})
+                    ah_base = plotter.addTile( ...
+                        'tileTitle', 'Base film mass exchanges', ...
+                        'xlabel'   ,      'Axial position [m]', ...
+                        'ylabel'   ,    'Mass flux [kg/s/m^2]');
+                    plotter.plotz(flm.base.MDEP(drp,opts.zIdx) , 'Deposition','DisplayName','Drop deposition'      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.MENT(opts.zIdx)     ,'Entrainment','DisplayName','Base film entrainment','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.MEVAP(opts.zIdx)    ,'Evaporation','DisplayName','Base film evaporation','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.MWAVE(drp,opts.zIdx),'Wave'       ,'DisplayName','Exchange from wave'   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.MTOT(drp,opts.zIdx) ,'Total'                                            ,'XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+
+                    ah_wave = plotter.addTile( ...
+                        "tileTitle",  'Wave mass exchanges', ...
+                        'xlabel'   ,   'Axial position [m]', ...
+                        'ylabel'   , 'Mass flux [kg/s/m^2]');
+                    plotter.plotz(flm.wave.MDEP(drp,opts.zIdx) ,'Deposition' ,'DisplayName','Drop deposition'   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.MENT(opts.zIdx)     ,'Entrainment','DisplayName','Wave entrainment'  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.MEVAP(opts.zIdx)    ,'Evaporation','DisplayName','Wave evaporation'  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.MBASE(drp,opts.zIdx),'Wave'       ,'DisplayName','Exchange from base','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.MTOT(drp,opts.zIdx) ,'Total'                                         ,'XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+
+                    % Link exchange axes
+                    % TODO: this can be a plotter method
+                    for wallIdx = 1:length(ah_base)
+                        linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
+                    end
+                end
+
+                % Base film and wave momentum exchanges
+                if displayVariable({'FME','ALL'})
+                    ah_base = plotter.addTile( ...
+                        'tileTitle', 'Base momentum exchanges', ...
+                        'xlabel'   ,      'Axial position [m]', ...
+                        'ylabel'   ,    'Shear stress [N/m^2]');
+                    plotter.plotz(flm.base.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FWALL()       ,'Wall'                                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FBASEVAPOR()  ,'Vapor'                                     ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FWAVE(drp)    ,'Wave'                                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FWAVEMASS(drp),'WaveMass'  ,'DisplayName',      'Wave mass','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.base.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+
+                    ah_wave = plotter.addTile( ...
+                        'tileTitle', 'Wave momentum exchanges', ...
+                        'xlabel'   ,      'Axial position [m]', ...
+                        'ylabel'   ,    'Shear stress [N/m^2]');
+                    plotter.plotz(flm.wave.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FSHEAR()      ,'Vapor'     ,'DisplayName','Vapor shear'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FDRAG()       ,'VaporDrag' ,'DisplayName','Vapor drag'     ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FBASE(drp)    ,'Wave'      ,'DisplayName','Base'           ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FBASEMASS(drp),'WaveMass'  ,'DisplayName','Base mass'      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.wave.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+
+                    % Link exchange axes
+                    for wallIdx = 1:length(ah_base)
+                        linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
+                    end
+                end
+
+                % Drop momentum exchanges
+                if displayVariable({'DME','ALL'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Drop momentum exchanges', ...
+                        'xlabel'   ,      'Axial position [m]', ...
+                        'ylabel'   ,    'Shear stress [N/m^3]');
+                    plotter.plotz(drp.FENT(flm),'Entrainment', 'DisplayName', 'Film entrainment','XData',zaf,'subset',zafIdx);
+                    plotter.plotz(drp.FDRAG()  ,'Vapor'                                         ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(drp.FBUOY()  ,'Buoyancy'                                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(drp.FGRAV()  ,'Gravity'                                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(drp.FTOT(flm),'Total'                                         ,'XData',zaf,'subset',zafIdx);
+                    plotter.legend('show', 'Location', 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    plotter.plotOAF(oafZ);
+                end
             end
         end
         
