@@ -63,6 +63,7 @@ classdef SolverPlotter < handle
                 plotters(idx).fh = figure("Name", plotters(idx).Title);
                 plotters(idx).th = tiledlayout(plotters(idx).fh, "flow","TileSpacing","loose","Padding","loose");
                 plotters(idx).th.Title.String = plotters(idx).Title;
+                plotters(idx).th.Title.FontSize = 18;
 
                 % Store animation title data in fh
                 if opts.isAnimation
@@ -212,7 +213,7 @@ classdef SolverPlotter < handle
                         % update figure name
                         fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
                         tlh.Title.String = fh.Name;
-
+                        tlh.Title.FontSize = 18;
 
                     end
 
@@ -288,17 +289,41 @@ classdef SolverPlotter < handle
                 assert(str2double(fpsEdit.String) > 0 , "Desired fps must be positive.");
 
                 % Pick file to save
-                [filename, pathname] = uiputfile({'*.mp4', 'MPEG-4 Files'}, 'Save animation as ...', [pwd '\']);
+                if ispc || ismac
+                    profile     = 'MPEG-4';
+                    defaultExt  = '*.mp4';
+                    defaultName = 'animation.mp4';
+                else
+                    profile     = 'Motion JPEG AVI';
+                    defaultExt  = '*.avi';
+                    defaultName = 'animation.avi';
+                end
+
+                [filename, pathname] = uiputfile({defaultExt, 'Video Files'}, 'Save animation as ...', fullfile(pwd, defaultName));
                 filepath = fullfile(pathname, filename);
 
+                % Add correction file extension if missing
+                [~, ~, ext] = fileparts(filename);
+                if isempty(ext)
+                    [~, ~, extDefault] = fileparts(defaultName);
+                    filename = [filename, extDefault];
+                    filepath = fullfile(pathname, filename);
+                end
+
                 % Create videowriter object, for now limiting to only mp4
-                vid = VideoWriter(filepath, "MPEG-4");
+                vid = VideoWriter(filepath, profile);
 
                 %
                 % Set video properties
                 %
-                % TODO: for windows, max 172 fps
-                vid.FrameRate = str2double(fpsEdit.String);
+                % Limit FPS for MPEG-4 on Windows
+                fps = str2double(fpsEdit.String);
+                if ispc && strcmp(vid.VideoCompressionMethod, 'MPEG-4') && fps > 172
+                    warning('Frame rate exceeds 172 fps limit for MPEG-4 on Windows. Setting to 172.');
+                    fps = 172;
+                end
+                vid.FrameRate = fps;
+
                 % TODO: use best quality for now
                 vid.Quality = 100;
 
