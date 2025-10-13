@@ -43,10 +43,11 @@ classdef Model < Inputs.Input
         RELAXEVAPCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5]               % Interfacial evaporation  time relaxation coefficients for void option
         KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
 
-        % Mixture pseudo models
-        PSEUDORELAX      (1,1) InputEnums.PSEUDORELAX                      = 'QUALITY'                       % Pseudo-equilibrium quality time relaxation model
-        PSEUDOTRELAX     (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Pseudo-equilibrium quality relaxation time array [s]
-        PSEUDORELAXCOEF  (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05]               % Pseudo-equilibrium quality time relaxation coefficients for void option
+        % Mixture near-wall models
+        NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1)}  = 0.5                             % Near-wall mass flow distribution ratio [-]
+        NEARWALLRELAX    (1,1) InputEnums.NEARWALLRELAX                    = 'QUALITY'                       % Near-wall energy transfer time relaxation model
+        NEARWALLTRELAX   (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Near-wall energy transfer relaxation time array [s]
+        NEARWALLRELAXCOEF (1,3) double  {mustBeNumeric}                    = [0.1E-3 1/3 0.05]               % Near-wall energy transfer time relaxation coefficients for void option
 
         % Two-fluid solver models
         INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'                      % Interfacial length scale model model

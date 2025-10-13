@@ -272,8 +272,10 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(1), '--', 'o' };
                 case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
                     plotStyle = {colors(5), '-', '.'};
-                case {'PSEUDOEQUIL'}
+                case {'NEARWALL'}
                     plotStyle = {colors(5), '--', '+'};
+                case {'BULK'}
+                    plotStyle = {colors(6), '--', '+'};    
                 case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'EQQUAL', 'EQUILIBRIUMQUAL', 'EQUILQ'}

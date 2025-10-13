@@ -1,7 +1,7 @@
-classdef PSEUDORELAX
-%PSEUDORELAX Pseudo-equilibrium quality time relaxation model
+classdef NEARWALLRELAX
+%NEARWALLRELAX near-wall energy transfer time relaxation model
 %
-%   Defines the Pseudo-equilibrium quality time relaxation model
+%   Defines the near-wall energy transfer time relaxation model
 %
 %
     enumeration

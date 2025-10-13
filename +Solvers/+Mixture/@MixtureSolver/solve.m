@@ -99,7 +99,6 @@ function solver(solveINIT)
             Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
             Wvold   = mix(tIdx-1).TRELAX.WV(zIdx,:);                       % [m/s] Relaxed vapor mass flow rate at previous time step
             Hvold   = mix(tIdx-1).TRELAX.HV(zIdx,:);                       % [J/kg] Relaxed vapor enthalpy at previous time step
-            WvPSold = mix(tIdx-1).PSEUDO.WV(zIdx,:);                       % [m/s] Pseudo vapor mass flow rate at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -150,7 +149,7 @@ function solver(solveINIT)
                         Htot  = Hvtot.*Uv;                                                                 % [W/kg]
                         %Htot  = Htot.*double(mix(tIdx).WWALL(zIdx)>Wvnew);
                         Hvnew = (Uv.*mix(tIdx).TRELAX.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);      % [J/kg] Update vapor enthalpy
-                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                  % [J/kg] Constrain solution so that Hv > Hg
+                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                 % [J/kg] Constrain solution so that Hv > Hg
                         Hvnew = max(mix(tIdx).H(zIdx),Hvnew);                                              % [J/kg] Constrain solution so that Hv > H
                         mix(tIdx).TRELAX.HV(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;  % [J/kg] Apply relaxation
                         
@@ -178,13 +177,18 @@ function solver(solveINIT)
             mix(tIdx).TRELAX.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);                  % [s] Condensation time relaxation
             mix(tIdx).TRELAX.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).TRELAX.HV(zIdx,:))'; % [J/kg] Relaxed vapor temperature
             
-            % Save pseudo terms
-            Wveq   = mix(tIdx).XEQ(zIdx).*mix(tIdx).WNEARWALL(zIdx);                               % [kg/s] Equilibrium pseudo vapor mass flow rate
-            Mwall  = mix(tIdx).LHGR(zIdx)./(fluid(tIdx).HG - fluid(tIdx).HF);                      % [kg/s/m] Linear wall evaporation rate of pseudo vapor
-            trelax = mix(tIdx).PSEUDOTRELAX(zIdx);                                                 % [s] Time relaxation for pseudo equilibrium quality
-            mix(tIdx).PSEUDO.TRELAX(zIdx,:) = trelax;
-            mix(tIdx).PSEUDO.WV(zIdx,:) = U.*(mix(tIdx).PSEUDO.WV(zIdx-1,:)+(WvPSold./Uold./DT+Mwall).*DZ+Wveq./U.*DZ./trelax)./(U+DZ/DT+DZ./trelax); % [kg/s] Pseudo vapor mass flow rate
-            mix(tIdx).PSEUDO.XEQ(zIdx,:) = mix(tIdx).PSEUDO.WV(zIdx,:)./mix(tIdx).WNEARWALL(zIdx); % [-] Pseudo equilibrium quality  
+            % Save near-wall terms
+            trelax = mix(tIdx).NEARWALLTRELAX(zIdx);                                                    % [s]    Near-wall energy transfer relaxation time
+            HPSold = mix(tIdx-1).NEARWALL.H(zIdx,:);                                                    % [J/kg] Near-wall mixture enthalpy at previous time step
+            Hrate  = mix(tIdx).LHGR(zIdx)./(mix(tIdx).RHO(zIdx)*mix(tIdx).ANEARWALL);                   % [W/kg] Near-wall energy transfer rate per unit mass (from the wall heat flux)
+            HF = fluid(tIdx).HF; HG = fluid(tIdx).HG;                                                   % [J/kg] Phase saturated enthalpies
+            mix(tIdx).NEARWALL.TRELAX(zIdx,:) = trelax;                                                 % [s]    Near-wall energy transfer relaxation time
+            mix(tIdx).NEARWALL.W(zIdx,:)      = mix(tIdx).WNEARWALL(zIdx);                              % [kg/s] Near-wall mass flow rate
+            mix(tIdx).NEARWALL.H(zIdx,:)      = (mix(tIdx).NEARWALL.H(zIdx-1,:).*U+HPSold.*(DZ/DT)+Hrate.*DZ+mix(tIdx).H(zIdx).*DZ./trelax)./(U+DZ/DT+DZ./trelax); % [J/kg] Near-wall mixture enthalpy
+            mix(tIdx).NEARWALL.HFLUX(zIdx,:)  = -(mix(tIdx).H(zIdx)-mix(tIdx).NEARWALL.H(zIdx,:)).*mix(tIdx).WNEARWALL(zIdx)./U./trelax./geom.PERIM;               % [W/m2] Heat flux from the near-wall region
+            mix(tIdx).NEARWALL.XEQ(zIdx,:)    = (mix(tIdx).NEARWALL.H(zIdx,:)-HF)./(HG - HF);           % [-] Near-wall thermodynamic equilibrium quality 
+            mix(tIdx).NEARWALL.WBULK(zIdx)    =  mix(tIdx).W(zIdx)-sum(mix(tIdx).NEARWALL.W(zIdx,:),2); % [kg/s] Bulk mass flow rate
+            mix(tIdx).NEARWALL.HBULK(zIdx)    = (mix(tIdx).W(zIdx)*mix(tIdx).H(zIdx)-sum(mix(tIdx).NEARWALL.W(zIdx,:).*mix(tIdx).NEARWALL.H(zIdx,:),2))/mix(tIdx).NEARWALL.WBULK(zIdx); % [J/kg] Bulk mixture enthalpy
 
             % Save pressure drop components
             DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                       % [Pa] Pressure drop components

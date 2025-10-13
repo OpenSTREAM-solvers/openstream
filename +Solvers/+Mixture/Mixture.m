@@ -21,7 +21,7 @@ classdef Mixture < Solvers.AbstractField
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
         MDER         (1,1) struct                                                                 % Saved detailed material derivative terms
         TRELAX       (1,1) struct                                                                 % Time relaxation terms
-        PSEUDO       (1,1) struct                                                                 % Pseudo terms
+        NEARWALL     (1,1) struct                                                                 % Near-wall terms
         
         % Iteration properties
         ITR
@@ -40,19 +40,19 @@ classdef Mixture < Solvers.AbstractField
 
     properties (Access=private)
         
-        mflux        (:,1) double  {mustBeNumeric}                         = 1.                 % [kg/m^2-s] Mass flux
-        xeq          (:,1) double  {mustBeNumeric}                         = 1.                 % [-] Equilibrium quality
-        x            (:,1) double  {mustBeNumeric}                         = 1.                 % [-] Vapor quality
-        vf           (:,1) double  {mustBeNumeric}                         = 1.                 % [-] Void fraction
-        chf          (:,:) double  {mustBeNumeric}                                              % [-] Critical Heat Flux
-        cbt          (:,:) logical                                                              % [-] Critical Boiling Transition flag
-        rho          (:,1) double  {mustBeNumeric}                         = 1.                 % [kg/m^3] Mixture density
-        oafidx_const       double  {mustBeNumeric}                         = []                 % [-] Solved index for onset of annular flow
-        sigm_const   (:,1) double  {mustBeNumeric}                         = []                 % [-] Solved sigmoid fnc value
-        relaxtevap   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
-        relaxtcond   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
-        pseudotrelax (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for pseudo-equilibrium quality
-    
+        mflux          (:,1) double  {mustBeNumeric}                       = 1.                 % [kg/m^2-s] Mass flux
+        xeq            (:,1) double  {mustBeNumeric}                       = 1.                 % [-] Equilibrium quality
+        x              (:,1) double  {mustBeNumeric}                       = 1.                 % [-] Vapor quality
+        vf             (:,1) double  {mustBeNumeric}                       = 1.                 % [-] Void fraction
+        chf            (:,:) double  {mustBeNumeric}                                            % [-] Critical Heat Flux
+        cbt            (:,:) logical                                                            % [-] Critical Boiling Transition flag
+        rho            (:,1) double  {mustBeNumeric}                       = 1.                 % [kg/m^3] Mixture density
+        oafidx_const         double  {mustBeNumeric}                       = []                 % [-] Solved index for onset of annular flow
+        sigm_const     (:,1) double  {mustBeNumeric}                       = []                 % [-] Solved sigmoid fnc value
+        relaxtevap     (:,:) double  {mustBeNumeric}                                            % [-] Time relaxation for interfacial evaporation
+        relaxtcond     (:,:) double  {mustBeNumeric}                                            % [-] Time relaxation for interfacal condensation
+        nearwalltrelax (:,:) double  {mustBeNumeric}                                            % [-] Time relaxation for near-wall energy transfer
+  
     end       
     
     %% Constructor method
@@ -69,7 +69,7 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Overload copyable properties (order is important due to the setter functions)
-            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR','PSEUDO'};
+            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR','NEARWALL'};
         end
         
     end
@@ -233,20 +233,6 @@ classdef Mixture < Solvers.AbstractField
             end
         end
 
-        function t = PSEUDOTRELAX(mix, zIdx)
-        %PSEUDOTRELAX Time relaxation for pseudo-equilibrium quality [s]
-        %   This function only retrieves the mix.pseudotrelax values pre-calculated
-        %   when mix.H is set. This is to eliminate the redundant
-        %   calculation as a result of frequent function calls. The values
-        %   are calculated via mix.PSEUDOTRELAX_CALC()
-        %
-            if nargin < 2
-                t = mix.pseudotrelax; 
-            else
-                t = mix.pseudotrelax(zIdx); 
-            end
-        end
-        
     end
     
     %% Fluid transport methods
@@ -818,15 +804,46 @@ classdef Mixture < Solvers.AbstractField
     
     %% Near-wall methods
     methods (Hidden = true)
+
+        function t = NEARWALLTRELAX(mix, zIdx)
+        %NEARWALLTRELAX Time relaxation for near-wall energy transfer [s]
+        %   This function only retrieves the mix.nearwalltrelax values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.NEARWALLTRELAX_CALC()
+        %
+            if nargin < 2
+                t = mix.nearwalltrelax; 
+            else
+                t = mix.nearwalltrelax(zIdx); 
+            end
+        end
+
+        function lambda = NEARWALLRATIO(mix)
+        %NEARWALLRATIO Near-wall mass flow distribution ratio [-]
+        % Should be less than 1 (otherwise NEARWALL.XEQ and XEQ would be equal for azymuthal equal heat flux)
+            
+            model = mix.inputSet.model;
+
+            lambda = model.NEARWALLRATIO;
+        end
         
         function w = WNEARWALL(mix, zIdx)
-        %WNEARWALL Near-wall mass flow distribution per wall [kg/s]
-        %TODO: WNEARWALL should correspond to a near wall region (otherwise PSEUDO.XEQ and XEQ would be equal for azymuthal equal heat flux)
-        %      Arbitrary division by 2 for now
+        %WNEARWALL Near-wall mass flow rate per wall [kg/s]
+        %
 
         if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            w = mix.WWALL(zIdx)./2;                                        % [kg/s]
+            w = mix.WWALL(zIdx).*mix.NEARWALLRATIO;
+        end
+
+        function area = ANEARWALL(mix)
+        %ANEARWALL Near-wall flow area [m^2]
+        %
+
+            geom = mix.inputSet.geometry;
+
+            area = mix.NEARWALLRATIO.*geom.RWALL.*geom.AREA;
         end
         
     end
@@ -1187,7 +1204,7 @@ classdef Mixture < Solvers.AbstractField
             mix.CHF_CALC(zIdx);
             mix.RELAXTEVAP_CALC(zIdx);
             mix.RELAXTCOND_CALC(zIdx);
-            mix.PSEUDOTRELAX_CALC(zIdx);
+            mix.NEARWALLTRELAX_CALC(zIdx);
             
             vf = mix.VF(zIdx);
             mix.rho(zIdx) = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx)) + ...
@@ -1259,27 +1276,26 @@ classdef Mixture < Solvers.AbstractField
             mix.relaxtevap(zIdx,:) = t;
         end
 
-        function PSEUDOTRELAX_CALC(mix, zIdx)
-        %PSEUDOTRELAX Relaxation time model for wall dependant pseuso-equilibrium quality
-        %TODO: Investigate of this parameter should be walld dependant or not
+        function NEARWALLTRELAX_CALC(mix, zIdx)
+        %NEARWALLTRELAX Relaxation time model for wall dependant near-wall equilibrium quality
         %    
         if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
         model = mix.inputSet.model;
 
-        switch model.PSEUDORELAX
-            case InputEnums.PSEUDORELAX.QUALITY
+        switch model.NEARWALLRELAX
+            case InputEnums.NEARWALLRELAX.QUALITY
                 X = model.RELAXX;                                          % [-] Equilibrium quality array
-                T = model.PSEUDOTRELAX(1:length(model.RELAXX));            % [-] Corresponding time relaxation
+                T = model.NEARWALLTRELAX(1:length(model.RELAXX));          % [-] Corresponding time relaxation
 
                 t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
                 t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
                 t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
 
-            case InputEnums.PSEUDORELAX.VOID
-                d0     = model.PSEUDORELAXCOEF(1);                         % [m] Reference fluid particle Sauter mean diameter
-                n      = model.PSEUDORELAXCOEF(2);                         % [-] Exponent of phase volumetric ratio
-                dvf    = model.PSEUDORELAXCOEF(3);                         % [-] Small phase volumetric ratio bias to avoid singularity
+            case InputEnums.NEARWALLRELAX.VOID
+                d0     = model.NEARWALLRELAXCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
+                n      = model.NEARWALLRELAXCOEF(2);                       % [-] Exponent of phase volumetric ratio
+                dvf    = model.NEARWALLRELAXCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
                 ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
                 t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;            % [s] Time relaxation
         end
@@ -1287,7 +1303,7 @@ classdef Mixture < Solvers.AbstractField
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
             t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
             t = max(1E-6,t);
-            mix.pseudotrelax(zIdx,:) = t;
+            mix.nearwalltrelax(zIdx,:) = t;
         end
         
     end
