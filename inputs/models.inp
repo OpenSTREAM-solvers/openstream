@@ -1,4 +1,4 @@
-ID            ! Model ID                                                   > TUTORIAL1
+ID            ! Models ID                                                  > TUTORIAL1
 NNODES        ! Number of axial nodes                                      > 100
 FLUID         ! Fluid ID                                                   > WATER
 INTNU         ! Interfacial heat transfer model                            > RELAXATION
@@ -12,4 +12,22 @@ WAVEBASEINT   ! Wave / base film interfacial momentum transfer model       > VAP
 OAFFILMSPLIT  ! Film mass flow split model at onset of annular flow        > RATIO
 OAFBASERATIO  ! Base/Film mass ratio at onset of annular flow [-]          > 0.2
 BASEEQTHICK   ! Equlibrium base film thickness model                       > YPLUS
+END
+
+ID            ! Model ID                                                   > TUTORIAL2A
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+END
+
+ID            ! Model ID                                                   > TUTORIAL2B
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > SLIP
+SLIP          ! Phase velocity ratio [-]                                   > 2
+END
+
+ID            ! Model ID                                                   > TUTORIAL2C
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
 END

@@ -31,10 +31,6 @@ classdef Drop < Solvers.AbstractField
         inputSet                   {isa(inputSet,'Inputs.InputSet')}
         fluid                      {isa(fluid,'Inputs.FluidProperties')}
      end
-
-     properties (Access=private)
-        dep_enh_facs  (:,1) double  {mustBeNumeric}                         = []                   % solved deposition enhancement factors
-     end
     
     
 
@@ -143,8 +139,6 @@ classdef Drop < Solvers.AbstractField
                     mdep = kd.*conc;                                       % [kg/m^2/s] Deposition mass flux
             end
             
-            k_enh_dep = drop.ENHANCEDEP(zIdx);
-            mdep = k_enh_dep .* mdep;
             mdep(negdrop)=-mdep(negdrop);
             mdep = drop.KENH(zIdx).*mdep;                                  % [kg/m^2/s] Enhanced drop deposition
             mdep = drop.mix.AFDISTR(0,mdep,zIdx);                          % [kg/m^2/s] Deposition mass flux, in annular flow region only
@@ -380,52 +374,6 @@ classdef Drop < Solvers.AbstractField
             end
             
             Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),drop.U(zIdx),zIdx);
-        end
-
-    end
-
-    methods(Access=private)
-
-        function k_enh_dep = ENHANCEDEP(drop, zIdx)
-            %ENHANCEDEP Private function to calculate the enhancement deposition factor
-
-            % Use saved value if it has been calculated already
-            if ~isempty(drop.dep_enh_facs)
-                k_enh_dep = drop.dep_enh_facs(zIdx);
-                return
-            end
-
-            model = drop.inputSet.model;
-
-            % Model coefficients
-            % In the future, allow these to be user defined
-            B = 7.898;
-            D = 4.791;
-            k_enh_dep_MAX = (D * model.KBLOCKRATIO + 1) .* (B * model.KBLOCKRATIO + 1);
-
-            spacer_locs = find(drop.mix.DP.K);
-            kg = model.KTUNING;
-
-            drop.dep_enh_facs = ones(drop.NZ,1);
-
-            for i = 1:length(spacer_locs)
-                zId = spacer_locs(i);
-                while drop.Z(zId) - drop.Z(spacer_locs(i)) <= 0.45
-                    if drop.Z(zId) - drop.Z(spacer_locs(i)) <= 0.05
-                        drop.dep_enh_facs(zId) = model.KTUNING(i) * ((0.95 * k_enh_dep_MAX(i) - 1) * (drop.Z(zId) - drop.Z(spacer_locs(i))) / 0.05 + 1 - 1) + 1; 
-                    elseif drop.Z(zId) - drop.Z(spacer_locs(i)) <= 0.15
-                        drop.dep_enh_facs(zId) = model.KTUNING(i) * (0.95 * k_enh_dep_MAX(i) - 1) + 1;
-                    else
-                        drop.dep_enh_facs(zId) = model.KTUNING(i) * (1 / ((1 - 1 / (0.95 * k_enh_dep_MAX(i))) * (drop.Z(zId) - drop.Z(spacer_locs(i)) - 0.15) / 0.3 + 1 / (0.95 * k_enh_dep_MAX(i))) - 1) + 1;
-                    end
-                    zId = zId + 1;
-                    if zId > drop.NZ
-                        break
-                    end
-                end
-            end
-
-            k_enh_dep = drop.dep_enh_facs(zIdx);
         end
 
     end

@@ -271,13 +271,14 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         %
             arguments
                 tfSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NZ
-                opt.annular   (1,1) logical                                                                      = true
-                opt.unitTemp  {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
+                tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = 1
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
+                opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NZ
+                opt.annular     (1,1) logical                                                                      = true
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                    = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
@@ -315,7 +316,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of three-field parameters at %0.3f [s] - %s', flm.TIME, opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(z);
             
             % Wall heat flux
@@ -447,6 +448,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NTIME
                 opt.reverseTime (1,1) logical                                                                      = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                    = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
@@ -483,7 +485,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             z = tfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of three-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

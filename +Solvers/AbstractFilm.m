@@ -11,12 +11,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         fluid                      {isa(fluid,'Inputs.FluidProperties')}           % Fluid properties
         mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % Mixture property of the mixture solver
     end
+   
 
-    properties (Access=private)
-        okawa_coefs (:,1) double  {mustBeNumeric}                         = []                   % OKAWA entrainment model coefficients and thresholds
-    end
-    
-    
     methods
         
         function absfilm = AbstractFilm(inputSet, fluid)
@@ -51,7 +47,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
             thick = absfilm.WL(zIdx)./absfilm.U(zIdx,:)./rhof;             % [m] Film thickness
         end
-        
+
         function re = RE(absfilm,zIdx)
         %RE Film Reynolds number [-]
         %
@@ -157,7 +153,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             
             Fwall  = -0.5.*absfilm.CW(zIdx).*absfilm.fluid.RHOF.*absfilm.U(zIdx,:).^2; % [N/m^2]
         end
-        
+
         function Uwall = UWALL(absfilm,zIdx)
         %UWALL Film wall friction velocity [m/s]
         %
@@ -166,7 +162,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             rho_ls = absfilm.fluid.RHOF;
             Uwall  = (-absfilm.FWALL(zIdx)./rho_ls).^0.5;                  % [m/s]
         end
-        
+
         function thick = YPLUS2THICK(absfilm, yplus, zIdx)
         %YPLUS2THICK Thickness based on wall unit value [m]
         %
@@ -335,7 +331,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
         
     end
-    
+
     methods(Access = private)
         
         function Cw = CW_TURB_CALC(absfilm,zIdx,C)
@@ -436,9 +432,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
         
     end
-    
+
     methods(Access = protected)
-        
+    
         function cpObj = copyElement(obj)
         %COPYELEMENT Override copyElement method to create correct references
         %with properties liquid and vapor
@@ -448,6 +444,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
         
     end
-    
+
 end
 

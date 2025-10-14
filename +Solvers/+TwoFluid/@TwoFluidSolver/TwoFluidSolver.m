@@ -185,12 +185,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         %
             arguments
                 twfSolver
-                tIdx          (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = 1
-                opt.display   {mustBeMember(opt.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
-                opt.solveMode {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                             = 'TRANSIENT'
-                opt.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.inputSet.geometry.NWALL
-                opt.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.NZ
-                opt.unitTemp  {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
+                tIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = 1
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
+                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                             = 'TRANSIENT'
+                opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.inputSet.geometry.NWALL
+                opt.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.NZ
+                opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                  = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
@@ -221,7 +222,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Axial distributions of two-field parameters at %0.3f [s] - %s', liq.TIME, opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(z);
             
             % Wall heat flux
@@ -464,6 +465,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.NTIME
                 opt.reverseTime (1,1) logical                                                                                    = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                  = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
@@ -502,7 +504,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             z = twfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of two-fluid parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

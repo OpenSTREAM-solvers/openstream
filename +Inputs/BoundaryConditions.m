@@ -1,7 +1,10 @@
 classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
     %BOUNDARYCONDITIONS Defines all boundary parameters.
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the boundary conditions.
+    %   Provide acess to saturated fluid properties at system pressure
+    %   using methods.
+    %   
     
     properties (SetAccess=?Inputs.Input)
         
@@ -23,7 +26,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         
         function obj = BoundaryConditions(filePath, geometryObjInput)
             %BOUNDARYCONDITIONS Construct an instance of this class
-            %   Detailed explanation goes here
+            %
             arguments
                 filePath = ""
                 geometryObjInput = Inputs.Geometry();
@@ -42,7 +45,6 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 return
             end
             
-            %
             % List of immutable obj property names
             objPropnames = obj.listInputProperties();
 
@@ -110,8 +112,8 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
             
             % Transpose WMESH
             % COMMENT: Not sure why this is necessary
-%             obj.WMESH = obj.WMESH.';
-%             obj.WPOWER = obj.WPOWER.';
+            % obj.WMESH = obj.WMESH.';
+            % obj.WPOWER = obj.WPOWER.';
             
             % check if WMESH size is consistent with geometry
             %if any(cellfun(@sum,{objs.WMESH}) ~= obj.geometryObj.LENGTH)
@@ -141,17 +143,12 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                                 'All elements of WPOWER at time index %u is 0. Using 1 instead.', ...
                                 idx);
                     end
-
                 end
-            end
-            
-            
+            end 
 
-            %
             % Calculate private properties
             % NOTE: Nothing here for now
 
-            %
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
@@ -161,39 +158,43 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         end
         
         function  tsat = TSAT(obj,fluidObj)
-            %TSAT [K] Saturation temperature given fluidObj
+            %TSAT [K] Saturation temperature given fluid object
+            %
             tsat = fluidObj.coolpropH.TsatP(obj.PRESSURE);
         end
         
         function hf = HF(obj,fluidObj)
-            %HF [J/kg] Liquid saturation given fluidObj
+            %HF [J/kg] Liquid saturation given fluid object
+            %
             hf = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',0);
         end
         
         function hg = HG(obj,fluidObj)
-            %HF [J/kg] Vapor saturation given fluidObj
+            %HF [J/kg] Vapor saturation given fluid object
             hg = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',1);
         end
         
         function tin = TIN(obj,fluidObj)
             %TIN [K] Inlet temperature
+            %
             tin = fluidObj.coolpropH.temperature('P',obj.PRESSURE,'H', obj.HIN);
         end
         
         function dtin = DTIN(obj,fluidObj)
-            %DTIN [K] Inlet subcooling temperature difference given fluidObj    
+            %DTIN [K] Inlet subcooling temperature given fluid object   
+            %
             dtin = obj.TSAT(fluidObj)-obj.TIN(fluidObj);
         end
         
-        % Inlet subcooling, usage: obj.DHIN(model)
         function dhin = DHIN(obj,fluidObj)
-            %DHIN [J/kg] Inlet subcooling enthalpy difference given fluidObj    
+            %DHIN [J/kg] Inlet subcooling enthalpy given fluid object   
+            %
             dhin = obj.HF(fluidObj)-obj.HIN;
         end
         
-        % Inlet equilibrium quality, usage: obj.XIN(model)
         function xin = XIN(obj,fluidObj)
-            %XIN [-] Inlet equilibrium quality
+            %XIN [-] Inlet equilibrium quality given fluid object
+            %
             xin = -obj.DHIN(fluidObj)./(obj.HG(fluidObj)-obj.HF(fluidObj));
         end
 
@@ -202,9 +203,8 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
 %         end
 
         function plot(obj,fluidObj,opt)
-            %PLOT Plot boundary conditions
-            % usage: bc.plot(fluidObj)
-
+            %PLOT Plot boundary conditions given fluid object
+            %
             arguments
                 obj
                 fluidObj
@@ -267,12 +267,12 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 ylabel(label)
                 set(gca,'fontSize',14)
             end
-
         end
 
     end
     
     methods (Static)
+
         function writeInputFile(filePathName, ...
                                     TIME, PRESSURE, HIN, MFLOW, ...
                                     varargin)
@@ -290,11 +290,8 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                 varargin{:} ...
             );
         end
+        
     end
-
-    
-    
-    
 
 end
 
