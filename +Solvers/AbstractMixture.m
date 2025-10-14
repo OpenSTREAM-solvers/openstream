@@ -12,7 +12,7 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         DP           (1,1) struct                                                                 % Saved detailed pressure drops
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
         ACC          (1,1) struct                                                                 % Saved detailed acceleration terms
-        TRELAX       (1,1) struct                                                                 % Time relaxation terms
+        %TRELAX       (1,1) struct                                                                 % Time relaxation terms
 
         % Phases
         liquid
@@ -46,8 +46,8 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         rho          (:,1) double  {mustBeNumeric}                                              % [kg/m^3] Mixture density
         oafidx_const       double  {mustBeNumeric}                                              % [-] Solved index for onset of annular flow
         sigm_const   (:,1) double  {mustBeNumeric}                                              % [-] Solved sigmoid fnc value
-        relaxtevap   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
-        relaxtcond   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
+        %relaxtevap   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
+        %relaxtcond   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
     
     end
 
@@ -160,33 +160,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
             end
         end
         
-        function t = RELAXTEVAP(mix, zIdx)
-        %RELAXTEVAP Time relaxation for interfacial evaporation [s]
-        %   This function only retrieves the mix.relaxtevap values pre-calculated
-        %   when mix.H is set. This is to eliminate the redundant
-        %   calculation as a result of frequent function calls. The values
-        %   are calculated via mix.RELAXTEVAP_CALC()
-        %
-            if nargin < 2
-                t = mix.relaxtevap; 
-            else
-                t = mix.relaxtevap(zIdx); 
-            end
-        end
-        
-        function t = RELAXTCOND(mix, zIdx)
-        %RELAXTCOND Time relaxation for interfacial evaporation [s]
-        %   This function only retrieves the mix.relaxtevap values pre-calculated
-        %   when mix.H is set. This is to eliminate the redundant
-        %   calculation as a result of frequent function calls. The values
-        %   are calculated via mix.RELAXTCOND_CALC()
-        %
-            if nargin < 2
-                t = mix.relaxtcond; 
-            else
-                t = mix.relaxtcond(zIdx); 
-            end
-        end
         
     end
 
@@ -630,177 +603,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
     
     %% Vapor transport methods
     methods    
-        
-        function w = WWALL(mix, zIdx)
-        %WWALL Mixture mass flow distribution per wall, based on wall perimeter ratio [kg/s]
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            geom  = mix.inputSet.geometry;
-            w = geom.RWALL.*mix.W(zIdx);                                   % [kg/s]
-        end
-        
-        function [Mcond, Mevap] = MINT(mix, zIdx)
-        %MINT Linear interfacial mass transfer rates based on time relaxation [kg/s/m]
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            UVeq = mix.vapor.U(zIdx);                                      % [m/s] Approximated equilibrium vapor velocity
-            %WVeq = mix.WWALL(zIdx).*max(0,mix.XEQ(zIdx));                  % [kg/s] Equilibrium vapor mass flow rate per wall
-            WVeq = mix.WWALL(zIdx).*mix.XEQ(zIdx);                         % [kg/s] Equilibrium vapor mass flow rate per wall
-            Wint = WVeq-mix.TRELAX.WV(zIdx,:);                             % [kg/s] Vapor mass deviation from equilibrium
-
-            Wint = sum(Wint,2).*mix.WWALL(zIdx)./mix.W(zIdx);              % [kg/s] Lumped approach required when no transversal transfer is considered
-            
-            Mcond = min(0,Wint./UVeq./mix.RELAXTCOND(zIdx));               % [kg/s/m] Condensation (<0)
-            Mevap = max(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));               % [kg/s/m] Evaporation  (>0)
-            
-            % Restrict to reasonable bounds
-            %TODO: Find a more physical bound
-            Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./mix.DZ);            % [kg/s/m] Condensation (<0)
-            Mevap =  min( Mevap,mix.liquid.W(zIdx)./mix.DZ);               % [kg/s/m] Evaporation  (>0)
-            
-            %Mcond = -min(-Mcond,mix.TRELAX.WV(zIdx,:)./UVeq./0.03);        % [kg/s/m] Condensation (<0)
-            %Mevap =  min( Mevap,mix.liquid.W(zIdx)./UVeq./0.03);           % [kg/s/m] Evaporation  (>0)
-        end
-        
-        function Mintevap = MINTEVAP(mix, zIdx)
-        %MINTEVAP Linear interfacial evaporation rates based on time relaxation [kg/s/m]
-        
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            [~, Mintevap] = mix.MINT(zIdx);                                % [kg/s/m]
-        end
-        
-        function Mintcond = MINTCOND(mix, zIdx)
-        %MINTCOND Linear interfacial condensation rates based on time relaxation [kg/s/m]
-        
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            Mintcond = mix.MINT(zIdx);                                     % [kg/s/m]
-        end
-        
-        function Mtrans = MTRANSV(mix, zIdx)
-        %MTRANSV Linear transversal mass exchange
-        % Model transverse exchange between wall regions with time relaxation model
-        % TODO: Note used for now, implement also enthalpy exchange and include in total mass/energy echange terms
-            
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            UVeq   = mix.vapor.U(zIdx);                                    % [m/s] Approximated equilibrium vapor velocity
-            WVeq   = sum(mix.TRELAX.WV(zIdx,:),2).*(mix.WWALL(zIdx)./mix.W(zIdx));                   
-            Wtrans = WVeq-mix.TRELAX.WV(zIdx,:);  
-            RELAXT = 0.01; % [s]
-            
-            Mtrans = Wtrans./UVeq./RELAXT;                                 % [kg/s/m]
-        end
-        
-        function walevapratio = WALEVAPRATIO(mix, zIdx)
-        %WALEVAPRATIO Wall mass evaporation ratio [-]
-        %Liquid mass boiling ratio driven by wall heat flux
-        %Set to 0 upstream subcooled boiling, 1 downstream saturated boiling and 0 at CBT
-        %TODO: Implement models for the onsets of subcooled and saturated wall boiling, as needed.
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            
-            xsub = model.WBOILINGXSUB;                                     % Equilibrium quality at onset of subcooled wall boiling [-]
-            xsat = model.WBOILINGXSAT;                                     % Equilibrium quality at onset of saturated wall boiling [-]
-            n    = model.WBOILINGN;                                        % Exponent of wall boiling function [-]
-            
-            xeq = mix.XEQ(zIdx);                                           % [-]
-            walevapratio = min(1,max(0,((xeq-xsub)./(xsat-xsub)).^n));     % [-]
-            
-            cbt = mix.CBT(zIdx);                                           % CBT flag
-            walevapratio = walevapratio.*double(~cbt);                     % [-]
-            
-            % Correction for transition nodes
-            %xeq0 = mix.XEQ(zIdx-1);
-            %r = min(1,max(0,(xeq-xsat)./(xeq-xeq0)));
-            %wboilingratio = r.*wboilingratio;
-        end
-        
-        function Mwalevap = MWALEVAP(mix, zIdx)
-        %MWALEVAP Linear wall mass evaporation (i.e., boiling) rate [kg/s/m]
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            model = mix.inputSet.model;
-            
-            switch model.INTTRANSH
-                case 'BULK'
-                    %HFG = mix.vapor.H(zIdx) - mix.liquid.H(zIdx);          % [J/kg] Vapor is generated at bulk enthalpy
-                    HFG = mix.TRELAX.HV(zIdx,:) - mix.liquid.H(zIdx);      % [J/kg] Vapor is generated at bulk enthalpy
-                case 'SATURATED'
-                    HFG = mix.fluid.HG - mix.liquid.H(zIdx);               % [J/kg] Vapor is generated at saturation
-            end
-            
-            Mwalevap = mix.WALEVAPRATIO(zIdx).*mix.LHGR(zIdx)./HFG;        % [kg/s/m] 
-        end
-        
-        function Mtot = MTOT(mix, zIdx)
-        %MTOT Total linear vapor mass transfer rate [kg/s/m]
-        %    
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            [Mcond, Mevap] = mix.MINT(zIdx);                               % [kg/s/m]
-            Mtot = Mcond + Mevap + mix.MWALEVAP(zIdx);                     % [kg/s/m]
-        end
-        
-        function [Hcond, Hevap] = HINT(mix, zIdx)
-        %HINT Linear interfacial heat transfer rate [W/m]
-        %    
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            geom = mix.inputSet.geometry;
-            
-            [Mcond, Mevap] = mix.MINT(zIdx);                               % [kg/s] Interfacial mass flows
-            HV = mix.TRELAX.HV(zIdx,:);                                    % [J/kg] Vapor enthalpy
-            %HV = repmat(mix.vapor.H(zIdx),1,geom.NWALL);                   % [J/kg] Vapor enthalpy
-            
-            switch mix.inputSet.model.INTTRANSH
-                case 'BULK'
-                    Hcond = zeros(length(zIdx),geom.NWALL);                % [W/m]
-                    Hevap = Mevap.*(mix.liquid.H(zIdx)-HV);                % [W/m]
-                case 'SATURATED'
-                    Hcond = Mcond.*(mix.fluid.HG-HV);                      % [W/m]
-                    Hevap = Mevap.*(mix.fluid.HF-HV);                      % [W/m]
-            end
-        end
-        
-        function Hintevap = HINTEVAP(mix, zIdx)
-        %HINTEVAP Linear interfacial heat evaporation rate [W/m]
-            
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            [~, Hintevap] = mix.HINT(zIdx);                                % [W/m]
-        end
-        
-        function Hintcond = HINTCOND(mix, zIdx)
-        %HINTCOND Linear interfacial heat condensation rate [W/m]
-        
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            Hintcond = mix.HINT(zIdx);                                     % [W/m]
-        end
-        
-        function Hwalevap = HWALEVAP(mix, zIdx)
-        %HWALEVAP Linear wall heat evaporation (i.e., boiling)) rate [W/m]
-            
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            geom = mix.inputSet.geometry;
-            
-            switch mix.inputSet.model.INTTRANSH
-                case 'BULK'
-                    Hwalevap = zeros(length(zIdx),geom.NWALL);             % [W/m]
-                case 'SATURATED'
-                    Mwalevap = mix.MWALEVAP(zIdx);                         % [kg/s] Linear mass wall boiling rate
-                    HV = mix.TRELAX.HV(zIdx,:);                            % [J/kg] Vapor enthalpy
-                    Hwalevap = Mwalevap.*(mix.fluid.HG-HV);                % [W/m]
-            end
-        end
         
         function Hwalheat = HWALHEAT(mix, zIdx)
         %HWALHEAT Linear wall heat to vapor rate [W/m]
