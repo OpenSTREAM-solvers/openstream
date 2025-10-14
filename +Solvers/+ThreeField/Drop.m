@@ -401,10 +401,10 @@ classdef Drop < Solvers.AbstractField
             % In the future, allow these to be user defined
             B = 7.898;
             D = 4.791;
-            k_enh_dep_MAX = (D * model.BLOCKRATIO + 1) .* (B * model.BLOCKRATIO + 1);
+            k_enh_dep_MAX = (D * model.KBLOCKRATIO + 1) .* (B * model.KBLOCKRATIO + 1);
 
             spacer_locs = find(drop.mix.DP.K);
-            kg = model.BLOCKTUNING;
+            kg = model.KTUNING;
 
             drop.dep_enh_facs = ones(drop.NZ,1);
 
@@ -412,11 +412,11 @@ classdef Drop < Solvers.AbstractField
                 zId = spacer_locs(i);
                 while drop.Z(zId) - drop.Z(spacer_locs(i)) <= 0.45
                     if drop.Z(zId) - drop.Z(spacer_locs(i)) <= 0.05
-                        drop.dep_enh_facs(zId) = model.BLOCKTUNING(i) * ((0.95 * k_enh_dep_MAX(i) - 1) * (drop.Z(zId) - drop.Z(spacer_locs(i))) / 0.05 + 1 - 1) + 1; 
+                        drop.dep_enh_facs(zId) = model.KTUNING(i) * ((0.95 * k_enh_dep_MAX(i) - 1) * (drop.Z(zId) - drop.Z(spacer_locs(i))) / 0.05 + 1 - 1) + 1; 
                     elseif drop.Z(zId) - drop.Z(spacer_locs(i)) <= 0.15
-                        drop.dep_enh_facs(zId) = model.BLOCKTUNING(i) * (0.95 * k_enh_dep_MAX(i) - 1) + 1;
+                        drop.dep_enh_facs(zId) = model.KTUNING(i) * (0.95 * k_enh_dep_MAX(i) - 1) + 1;
                     else
-                        drop.dep_enh_facs(zId) = model.BLOCKTUNING(i) * (1 / ((1 - 1 / (0.95 * k_enh_dep_MAX(i))) * (drop.Z(zId) - drop.Z(spacer_locs(i)) - 0.15) / 0.3 + 1 / (0.95 * k_enh_dep_MAX(i))) - 1) + 1;
+                        drop.dep_enh_facs(zId) = model.KTUNING(i) * (1 / ((1 - 1 / (0.95 * k_enh_dep_MAX(i))) * (drop.Z(zId) - drop.Z(spacer_locs(i)) - 0.15) / 0.3 + 1 / (0.95 * k_enh_dep_MAX(i))) - 1) + 1;
                     end
                     zId = zId + 1;
                     if zId > drop.NZ
