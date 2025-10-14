@@ -86,7 +86,7 @@ classdef Liquid < Solvers.AbstractPhase
             % 1. Use value from mixsolver_mix
             % TODO: find better way of doing this in TFsolver init.
             if length(liquid.film.W) == 1
-                w = liquid.film.mix.mixSolver_mix.liquid.W(zIdx);
+                w = liquid.film.mix.liquid.W(zIdx);
             else
                 w = sum(liquid.film.W(zIdx,:),2) + liquid.drop.W(zIdx);
             end
@@ -98,7 +98,7 @@ classdef Liquid < Solvers.AbstractPhase
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
             if length(liquid.film.W) == 1
-                u = liquid.film.mix.mixSolver_mix.liquid.U(zIdx);
+                u = liquid.film.mix.liquid.U(zIdx);
             else
                 u = liquid.W(zIdx)./(liquid.drop.W(zIdx)./liquid.drop.U(zIdx)+sum(liquid.film.W(zIdx,:)./liquid.film.U(zIdx,:),2));
             end
@@ -110,7 +110,7 @@ classdef Liquid < Solvers.AbstractPhase
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
 
             if length(liquid.film.W) == 1
-                h = liquid.film.mix.mixSolver_mix.liquid.H(zIdx);
+                h = liquid.film.mix.liquid.H(zIdx);
             else
                 h = (sum(liquid.film.W(zIdx,:).*liquid.film.H(zIdx,:),2) + liquid.drop.W(zIdx).*liquid.drop.H(zIdx))./liquid.W(zIdx);
             end

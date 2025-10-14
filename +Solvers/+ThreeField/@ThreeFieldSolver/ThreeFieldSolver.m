@@ -92,16 +92,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             
             %mixArr = tfSolver.mixSolver.mixture;                            % Mixture solution
             liquidArr(tfSolver.NTIME) = Solvers.ThreeField.Liquid();
-            mixArr(tfSolver.NTIME) = Solvers.ThreeField.Mixture();
+            smixArr(tfSolver.NTIME) = Solvers.ThreeField.Mixture();
             
             for tIdx = 1:tfSolver.NTIME
 
                 % Convenience variables (handles)
                 flm             = flmArr(tIdx);
                 drp             = drpArr(tIdx);
+
                 liq             = liquidArr(tIdx);
-                %mixSolver_mix   = mixSolver_mixArr(tIdx);
-                %mix             = mixArr(tIdx);
+                smix             =smixArr(tIdx);
                 mix             = mixSolver_mixArr(tIdx);
                 fluid           = tfSolver.fluid(tIdx);
                 
@@ -109,6 +109,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 flm.inputSet = tfSolver.inputSet;
                 flm.fluid    = fluid;
                 flm.mix      = mix;
+                flm.smix     = smix;
                 
                 % Axial Steps               
                 flm.NZ = tfSolver.NZ;
@@ -129,9 +130,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 % update liquid
                 liq.updatePhases(flm, drp);
                 
-                % update mix
-                %mix.initialize(mixSolver_mix, liq);
-                %mix.updateProperties();
+                % update smix
+                smix.initialize(mix, liq);
+                smix.updateProperties();
 
                 % Wall/film evaporation heat flux
                 HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
