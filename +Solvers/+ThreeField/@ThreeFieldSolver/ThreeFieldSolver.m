@@ -100,8 +100,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 flm             = flmArr(tIdx);
                 drp             = drpArr(tIdx);
                 liq             = liquidArr(tIdx);
-                mixSolver_mix   = mixSolver_mixArr(tIdx);
-                mix             = mixArr(tIdx);
+                %mixSolver_mix   = mixSolver_mixArr(tIdx);
+                %mix             = mixArr(tIdx);
+                mix             = mixSolver_mixArr(tIdx);
                 fluid           = tfSolver.fluid(tIdx);
                 
                 % Inputset, fluid                
@@ -129,8 +130,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 liq.updatePhases(flm, drp);
                 
                 % update mix
-                mix.initialize(mixSolver_mix, liq);
-                mix.updateProperties();
+                %mix.initialize(mixSolver_mix, liq);
+                %mix.updateProperties();
 
                 % Wall/film evaporation heat flux
                 HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
@@ -171,17 +172,17 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 
                 
                 % Initialize field velocities [m/s]
-                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
+                drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
                 %drp.U = drp.USLIP();                                       % [m/s] Drop velocity
-                drp.U = mix.mixSolver_mix.liquid.U;                         % Updates to this parameter due to dependency with mix.liquid.U
+                %drp.U = mix.mixSolver_mix.liquid.U;                         % Updates to this parameter due to dependency with mix.liquid.U
                              
                 % Initialize field enthalpies [J/kg] by number of spatial nodes, NZ
                 drp.H = repmat(fluid.HF,tfSolver.NZ,1);
                 flm.H = repmat(fluid.HF,tfSolver.NZ,1);
 
-                %flm.U = repmat(mix.liquid.U,1,geom.NWALL);                 % [m/s]
+                flm.U = repmat(mix.liquid.U,1,geom.NWALL);                 % [m/s]
                 %flm.U = flm.UALGEBR();                                     % [m/s] Film velocity
-                flm.U = repmat(mix.mixSolver_mix.liquid.U,1,geom.NWALL);   % Updated to this parameter due to dependency with mix.liquid.U
+                %flm.U = repmat(mix.mixSolver_mix.liquid.U,1,geom.NWALL);   % Updated to this parameter due to dependency with mix.liquid.U
                 
                 % ITR
                 flm.ITR = ITRf;
