@@ -643,7 +643,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             z = ffSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall, "arrangement", opt.arrangement);
+                                opt.wall, 'arrangement', opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

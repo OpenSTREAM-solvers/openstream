@@ -298,12 +298,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     tIdx = 1;
             end
             
+            mixs = tfSolver.mixSolver.mixture(tIdx);
+
             % Temperature unit offset between C and K
             dTemp = 0; if strcmpi(opts.unitTemp,'C'), dTemp = -273.15; end
-
-            mixs = tfSolver.mixSolver.mixture(tIdx);
-            bcHFLUX = bc.HFLUX(opts.zIdx,:,tIdx);
-            oafZ = repmat(mix.OAFZ,1,2);
             
             % Set up plotter
             if isscalar(tIdx)
@@ -341,7 +339,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 end
                             
                 oafZ = repmat(mix.OAFZ,1,2);
-
             
                 % Wall heat flux
                 if displayVariable({'HFLUX','ALL'})
@@ -511,7 +508,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             z = tfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of three-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall,opt.arrangement);
+                                opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

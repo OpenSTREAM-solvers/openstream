@@ -212,7 +212,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     tIdx = 1;
             end
 
-
             mixs = twfSolver.mixSolver.mixture(tIdx);
             
             % Temperature unit offset between C and K
@@ -521,7 +520,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             z = twfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of two-fluid parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall,opt.arrangement);
+                                opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

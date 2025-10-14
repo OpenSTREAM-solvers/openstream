@@ -371,12 +371,12 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 % Wall heat flux
                 if displayVariable({'HFLUX','ALL'})
                     plotter.addTile( ...
-                        "tileTitle",         'Wall heat flux', ...
+                        'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
                     bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
-                    plotter.plotz(  bcHFLUX                       ,'bc'         ,'DisplayName','Boundary Condition');
-                    plotter.plotz(mix.HFLUX(opts.zIdx,:)           ,'Mixture'                                       );
+                    plotter.plotz(  bcHFLUX             ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plotz(mix.HFLUX(opts.zIdx,:),'Mixture'                                       );
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION
                         plotter.plotz(mix.liquid.HFLUX(opts.zIdx)      ,'Liquid'                                      );
                         plotter.plotz(mix.vapor.HFLUX(opts.zIdx)       ,'Vapor'                                       );
@@ -387,7 +387,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     end
                     
                     if opts.nearWall
-                      plotter.plotz(mix.NEARWALL.HFLUX(opts.zIdx,:)  ,'NearWall','DisplayName','Near-wall heat flux to bulk');
+                      plotter.plotz(mix.NEARWALL.HFLUX(opts.zIdx,:)    ,'NearWall','DisplayName','Near-wall heat flux to bulk');
                     end
                     
                     plotter.legend('show', 'Location', 'best');
@@ -576,27 +576,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
                 end
-                
-                % Qualities and relaxed qualities
-                if displayVariable({'X','ALL'})
-                    plotter.addTile( ...
-                        'tileTitle', 'Qualities and relaxed qualities', ...
-                        'xlabel'   ,              'Axial position [m]', ...
-                        'ylabel'   ,                     'Quality [-]');
-                    plotter.plotz(mix.XEQ(opts.zIdx)         ,'Equil'     ,'DisplayName','Equilibrium quality' )
-                    plotter.plotz(mix.X(opts.zIdx)           ,'Vapor'     ,'DisplayName','Vapor mass quality'  )
-                    plotter.plotz(mix.TRELAX.XTH(opts.zIdx,:),'RelaxEquil','DisplayName','Wall thermo. quality')
-                    plotter.plotz(mix.TRELAX.X(opts.zIdx,:)  ,'WallVapor' ,'DisplayName','Wall vapor quality'  )
-                    plotter.legend('show', 'Location', 'best');
-                    plotter.xlim([min(z) max(z)]);
-                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
-                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
-                    plotter.ylim([ymin ymax]);
-                end
 
                 % Time relaxations
                 if displayVariable({'TRELAX'})
-                    plotter.newTile( ...
+                    plotter.addTile( ...
                         'tileTitle',    'Time relaxations', ...
                         'xlabel'   ,  'Axial position [m]', ...
                         'ylabel'   , 'Relaxation time [s]');
@@ -612,9 +595,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                     plotter.ylim([ymin ymax]);
-
                 end
-
+            end
         end
         
         function plotter = plott(mixSolver, zIdx, opt)
@@ -668,7 +650,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             z = mixSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of mixture parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall,opt.arrangement);
+                                opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux
