@@ -1,7 +1,10 @@
 classdef InputSet
     %INPUTSET Creates set of input objects
     %
-    %   TODO: Detailed explanations
+    %   Class definition handling code inputs
+    %   InputSet is called to load all inputs
+    %   The outcome is, in turn, used to initialize the selected solvers
+    %
     
     properties (SetAccess = private)
         model
@@ -15,8 +18,6 @@ classdef InputSet
     methods
         function obj = InputSet(opts)
         %INPUTSET Construct an instance of this class
-        %
-        %   Detailed explanation goes here
         %
             arguments
                 opts.modelFilePath      {isfile}            = ''        % Model input file (inp/json)

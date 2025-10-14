@@ -272,8 +272,9 @@ function solver(solveINIT)
                 dUb  = abs((base(tIdx).U(zIdx,:)-Ubiter));                 % [m/s]    Base velocity error between inner iterations
                 dWLw = abs((wave(tIdx).WL(zIdx)-WLwiter));                 % [kg/s/m] Wave mass flow rate error between inner iterations
                 dUw  = abs((wave(tIdx).U(zIdx,:)-Uwiter));                 % [m/s]    Wave velocity error between inner iterations
+                dFw  = abs((wave(tIdx).FREQUENCY(zIdx,:)-Fwiter));         % [Hz]     Wave frequency error between inner iterations
                 dUd  = abs((drop(tIdx).U(zIdx)-Uditer));                   % [m/s]    Drop velocity error between inner iterations
-                if all([dWLb < options.ERRORWF, dUb < options.ERRORUF, dWLw < options.ERRORWF, dUw < options.ERRORUF, dUd < options.ERRORUD])
+                if all([dWLb < options.ERRORWF, dUb < options.ERRORUF, dWLw < options.ERRORWF, dUw < options.ERRORUF, dFw < options.ERRORFW, dUd < options.ERRORUD])
                     break;                                                 % Exit point iteration when converged
                 
                 elseif itr == options.MAXITER
@@ -285,52 +286,55 @@ function solver(solveINIT)
             end
             
             % Iteration parameters
-            base(tIdx).ITR.N(zIdx)  = itr;
+            base(tIdx).ITR.N(zIdx)           = itr;
             base(tIdx).ITR.DWL(zIdx,1:nwall) = dWLb;
             base(tIdx).ITR.DU(zIdx,1:nwall)  = dUb;
 
-            wave(tIdx).ITR.N(zIdx)  = itr;
+            wave(tIdx).ITR.N(zIdx)           = itr;
             wave(tIdx).ITR.DWL(zIdx,1:nwall) = dWLw;
             wave(tIdx).ITR.DU(zIdx,1:nwall)  = dUw;
+            wave(tIdx).ITR.DF(zIdx,1:nwall)  = dFw;
 
-            drop(tIdx).ITR.N(zIdx)  = itr;
-            drop(tIdx).ITR.DU(zIdx) = dUd;
+            drop(tIdx).ITR.N(zIdx)           = itr;
+            drop(tIdx).ITR.DU(zIdx)          = dUd;
             
         end
         
         [maxNb,maxzIdxb] = max([base(tIdx).ITR.N]);
         maxDWLb = max(base(tIdx).ITR.DWL,[],'all');
-        maxDUb = max(base(tIdx).ITR.DU,[],'all');
+        maxDUb  = max(base(tIdx).ITR.DU,[],'all');
 
         [maxNw,maxzIdxw] = max([wave(tIdx).ITR.N]);
         maxDWLw = max(wave(tIdx).ITR.DWL,[],'all');
-        maxDUw = max(wave(tIdx).ITR.DU,[],'all');
+        maxDUw  = max(wave(tIdx).ITR.DU,[],'all');
+        maxDFw  = max(wave(tIdx).ITR.DF,[],'all');
 
         maxDUd = max(drop(tIdx).ITR.DU,[],'all');
         
         maxzIdxs = [maxzIdxb, maxzIdxw];
         [maxN, maxzIdx] = max([maxNb, maxNw]);
         maxzIdx = maxzIdxs(maxzIdx);
-        ffSolver.log('\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]                    \r',maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDUd)
+        ffSolver.log('\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]                    \r',maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDFw,maxDUd)
         
         % Temporal deviations in W and U
         timeDWLb = max(abs((base(tIdx).WL - base(tIdx-1).WL)),[],'all');
-        timeDUb  = max(abs((base(tIdx).U - base(tIdx-1).U)),[],'all');
+        timeDUb  = max(abs((base(tIdx).U  - base(tIdx-1).U)),[],'all');
         timeDWLw = max(abs((wave(tIdx).WL - wave(tIdx-1).WL)),[],'all');
-        timeDUw  = max(abs((wave(tIdx).U - wave(tIdx-1).U)),[],'all');
-        timeDUd = max(abs((drop(tIdx).U - drop(tIdx-1).U)),[],'all');
+        timeDUw  = max(abs((wave(tIdx).U  - wave(tIdx-1).U)),[],'all');
+        timeDFw  = max(abs((wave(tIdx).FREQUENCY  - wave(tIdx-1).FREQUENCY)),[],'all');
+        timeDUd  = max(abs((drop(tIdx).U  - drop(tIdx-1).U)),[],'all');
         
         if solveINIT
-            % Finish steady state solver when SS convergence criterions are met
+            % Finish steady state solver when SS convergence criteria are met
             if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF,timeDWLw < options.SSCONVWF , timeDUw < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
-                ffSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
+                ffSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
     
                 % Replace filmInit and dropInit with subset up to this tIdx
-                ffSolver.filmInit = ffSolver.filmInit(1:tIdx);
+                ffSolver.filmInit  = ffSolver.filmInit(1:tIdx);
                 ffSolver.dropInit = ffSolver.dropInit(1:tIdx);
                
                 % Replace first transient time step flow data with this tIdx
@@ -348,7 +352,7 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 ffSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                ffSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDUd)
+                ffSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
                 ffSolver.log('\n\t\tIncreasing steady state iterations (options.SSMAXITER) may help.');
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence

@@ -1,7 +1,9 @@
 classdef Geometry < Inputs.Input
     %GEOMETRY Defines all geometrical inputs.
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the geometrical inputs
+    %   Data are read from the geometry input file using InputSet
+    %
     
     properties (SetAccess=?Inputs.Input)
         
@@ -15,7 +17,7 @@ classdef Geometry < Inputs.Input
 
     methods
         function obj = Geometry(filePath,geometryID)
-        %Geometry Construct an instance of Geometry
+        %Geometry Construct an instance of this class
         %
             arguments
                 filePath = ""

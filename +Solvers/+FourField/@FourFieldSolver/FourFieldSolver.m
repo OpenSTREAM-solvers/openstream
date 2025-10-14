@@ -78,9 +78,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             geom   = ffSolver.inputSet.geometry;                            % Geometry
             
             % Setup inner iteration value struct
-            ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU"]);
+            ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU","DFW"]);
             ITRf.DWL = repmat(ITRf.DWL,1,geom.NWALL);
             ITRf.DU  = repmat(ITRf.DU,1,geom.NWALL);
+            ITRf.DFW = repmat(ITRf.DFW,1,geom.NWALL);
             ITRd = ffSolver.CreateITR(ffSolver.NZ, ["N","DU"]);
 
             % Create film and drop arrays (by timestep)
@@ -274,13 +275,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         %
             arguments
                 ffSolver
-                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                                          = 1:ffSolver.NTIME
-                opts.display   {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
-                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
-                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
-                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
-                opts.annular   (1,1) logical                                                                                                        = true
-                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                                              = 'K'
+                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                                                          = 1:ffSolver.NTIME
+                opts.display     {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
+                opts.solveMode   {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
+                opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
+                opts.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
+                opts.annular     (1,1) logical                                                                                                        = true
+                opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                                                              = 'K'
+                opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                                                    = 'flow'
             end
 
             if length(opts.zIdx) < 2
@@ -310,11 +312,12 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
                     sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm(1).TIME, opts.solveMode), ...
-                    opts.wall);
+                    opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
                     sprintf('Axial distributions of four-field parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
                     opts.wall, ...
+                    "arrangement", opts.arrangement, ...
                     "isAnimation", true, ...
                     "animationSeries", [flms.TIME]);
             end
@@ -603,6 +606,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.NTIME
                 opt.reverseTime (1,1) logical                                                                                                       = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                     = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
@@ -639,7 +643,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             z = ffSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall, "arrangement", opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

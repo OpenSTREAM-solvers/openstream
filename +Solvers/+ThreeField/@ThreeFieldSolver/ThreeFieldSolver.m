@@ -276,6 +276,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
                 opts.annular   (1,1) logical                                                                       = true
                 opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                             = 'K'
+                opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                 = 'flow'
+
             end
             
             if length(opts.zIdx) < 2
@@ -295,24 +297,28 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     drps = tfSolver.dropInit(tIdx);
                     tIdx = 1;
             end
-
-            mixs = tfSolver.mixSolver.mixture(tIdx);
-
+            
             % Temperature unit offset between C and K
             dTemp = 0; if strcmpi(opts.unitTemp,'C'), dTemp = -273.15; end
+
+            mixs = tfSolver.mixSolver.mixture(tIdx);
+            bcHFLUX = bc.HFLUX(opts.zIdx,:,tIdx);
+            oafZ = repmat(mix.OAFZ,1,2);
             
             % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
                             sprintf('Axial distributions of three-field parameters at %0.3f [s] - %s', flms(1).TIME, opts.solveMode), ...
-                            opts.wall);
+                            opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
                             sprintf('Axial distributions of three-field parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
                             opts.wall, ...
+                            "arrangement", opts.arrangement, ...
                             "isAnimation", true, ...
                             "animationSeries", [flms.TIME]);
             end
+
             plotter.setZs(z);
 
             function tf = displayVariable(memberList)
@@ -468,6 +474,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NTIME
                 opt.reverseTime (1,1) logical                                                                      = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                    = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
@@ -504,7 +511,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             z = tfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of three-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

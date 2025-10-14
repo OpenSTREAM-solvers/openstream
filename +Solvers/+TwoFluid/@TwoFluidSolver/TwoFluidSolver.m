@@ -188,7 +188,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                           = 'TRANSIENT'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
-                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'
+                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'                
+                opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                             = 'flow'
+
             end
             
             if length(opts.zIdx) < 2
@@ -210,6 +212,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     tIdx = 1;
             end
 
+
             mixs = twfSolver.mixSolver.mixture(tIdx);
             
             % Temperature unit offset between C and K
@@ -219,15 +222,16 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
                     sprintf('Axial distributions of two-fluid parameters at %0.3f [s] - %s', liqs(1).TIME, opts.solveMode), ...
-                    opts.wall);
+                    opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
                     sprintf('Axial distributions of two-fluid parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
                     opts.wall, ...
+                    "arrangement", opts.arrangement, ...
                     "isAnimation", true, ...
                     "animationSeries", [liqs.TIME]);
             end
-            plotter.setZs(z);
+            plotter.setZs(z);           
 
             function tf = displayVariable(memberList)
                 tf = any(ismember(memberList,opts.display));
@@ -478,6 +482,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.NTIME
                 opt.reverseTime (1,1) logical                                                                                    = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                  = 'flow'
             end
             
             if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
@@ -516,7 +521,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             z = twfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
                                 sprintf('Time distributions of two-fluid parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
-                                opt.wall);
+                                opt.wall,opt.arrangement);
             plotter.setZs(time);
             
             % Wall heat flux

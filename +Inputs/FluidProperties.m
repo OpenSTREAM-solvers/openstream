@@ -2,7 +2,11 @@ classdef FluidProperties
     %FLUIDPROPERTIES Defines all thermophysical properties for the selected
     %simulation fluid
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the fluid properties
+    %   Saturated properties are set as properties, based on the sytem pressure
+    %   Generic properties are set as methods, based on system pressure and
+    %   phase enthalpy
+    %
     
     properties (SetAccess=immutable)
         
@@ -22,6 +26,8 @@ classdef FluidProperties
         KG         (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor thermal conductivity [W/m/K]
         CPF        (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid constant pressure specific heat [J/kg/K]
         CPG        (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor constant pressure specific heat [J/kg/K]
+        ALPHAF     (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid thermal diffusivity [m^2/s]
+        ALPHAG     (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor thermal diffusivity [m^2/s]
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
@@ -35,7 +41,7 @@ classdef FluidProperties
     
     methods
         function obj = FluidProperties(P, modelObj)
-            %FluidProperties Construct an instance of FluidProperties
+            %FluidProperties Construct an instance of this class
             %
             arguments
                 P        
@@ -71,6 +77,8 @@ classdef FluidProperties
             KG       = coolpropH.conductivity('P',P,'Q',1);                % [W/m/K] Saturated vapor thermal conductivity
             CPF      = coolpropH.cp('P',P,'Q',0);                          % [J/kg/K] Saturated liquid constant pressure specific heat
             CPG      = coolpropH.cp('P',P,'Q',1);                          % [J/kg/K] Saturated vapor constant pressure specific heat
+            ALPHAF   = KF./RHOF./CPF;                                      % [m^2/s] Saturated liquid thermal diffusivity
+            ALPHAG   = KG./RHOG./CPG;                                      % [m^2/s] Saturated vapor thermal diffusivity
             PRANDTLF = coolpropH.prandtl('P',P,'Q',0);                     % [-] Saturated liquid Prandtl number
             PRANDTLG = coolpropH.prandtl('P',P,'Q',1);                     % [-] Saturated vapor Prandtl number
             coolpropH.setSpecifyPhase('');
@@ -103,6 +111,8 @@ classdef FluidProperties
                 obj(i).KG       = KG(i);                                   % [W/m/K] Saturated vapor thermal conductivity
                 obj(i).CPF      = CPF(i);                                  % [J/kg/K] Saturated liquid constant pressure specific heat
                 obj(i).CPG      = CPG(i);                                  % [J/kg/K] Saturated vapor constant pressure specific heat
+                obj(i).ALPHAF   = ALPHAF(i);                               % [m^2/s] Saturated liquid thermal diffusivity
+                obj(i).ALPHAG   = ALPHAG(i);                               % [m^2/s] Saturated vapor thermal diffusivity
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
                 obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
@@ -113,19 +123,19 @@ classdef FluidProperties
         
         
         function t = T(obj,H)
-        %T Fluid temperature [K] at obj.PRESSURE and H
+        %T [K] Fluid temperature at obj.PRESSURE and given H
         %
             t = obj.coolpropH.temperature('P',obj.PRESSURE,'H',H); 
         end
         
         function h = H(obj,T)
-        %H Fluid enthalpy [J/kg] at obj.PRESSURE and T
+        %H [J/kg] Fluid enthalpy at obj.PRESSURE and given T
         %
             h = obj.coolpropH.enthalpy('P',obj.PRESSURE,'T',T);
         end
         
         function rhol = RHOL(obj,H)
-        %RHOL Liquid mass density (subcooled to saturated) [kg/m^3]
+        %RHOL [kg/m^3] Liquid mass density (subcooled to saturated)
         %
             arguments
                 obj
@@ -141,8 +151,8 @@ classdef FluidProperties
         end
         
         function rhov = RHOV(obj,H)
-        %RHOV Vapor mass density (saturated to superheated) [kg/m^3]
-            
+        %RHOV [kg/m^3] Vapor mass density (saturated to superheated)
+        %    
             arguments
                 obj
                 H
@@ -157,7 +167,7 @@ classdef FluidProperties
         end
         
         function mul = MUL(obj,H)
-        %MUL Liquid dynamic viscosity [Pa-s]
+        %MUL [Pa.s] Liquid dynamic viscosity
         %
             arguments
                 obj
@@ -172,7 +182,7 @@ classdef FluidProperties
         end
         
         function muv = MUV(obj,H)
-        %MUV Vapor dynamic viscosity [Pa-s]
+        %MUV [Pa.s] Vapor dynamic viscosity
         %
             arguments
                 obj
@@ -187,7 +197,7 @@ classdef FluidProperties
         end
         
         function kl = KL(obj,H)
-        %KL Liquid thermal conductivity (subcooled to saturated) [W/m/K]
+        %KL [W/m/K] Liquid thermal conductivity (subcooled to saturated)
         %
             arguments
                 obj
@@ -203,7 +213,7 @@ classdef FluidProperties
         end
         
         function kv = KV(obj,H)
-        %KV Vapor thermal conductivity (saturated to superheated) [W/m/K]
+        %KV [W/m/K] Vapor thermal conductivity (saturated to superheated)
         %
             arguments
                 obj
@@ -219,7 +229,7 @@ classdef FluidProperties
         end
         
         function cpl = CPL(obj,H)
-        %CPL Liquid constant pressure specific heat (subcooled to saturated) [J/kg/K]
+        %CPL [J/kg/K] Liquid constant pressure specific heat (subcooled to saturated)
         %
             arguments
                 obj
@@ -235,7 +245,7 @@ classdef FluidProperties
         end
         
         function cpv = CPV(obj,H)
-        %CPV Vapor constant pressure specific heat (subcooled to saturated) [J/kg/K]
+        %CPV [J/kg/K] Vapor constant pressure specific heat (subcooled to saturated)
         %
             arguments
                 obj
@@ -249,9 +259,41 @@ classdef FluidProperties
                     cpv = obj.coolpropH.cp('P',obj.PRESSURE,'H',max(H,obj.HG));
             end
         end
+
+        function alphal = ALPHAL(obj,H)
+        %ALPHAL [m^2/s] Liquid thermal diffusivity (subcooled to saturated)
+        %
+            arguments
+                obj
+                H
+            end
+            
+            switch obj.PROPERTIES
+                case InputEnums.FLUIDPROPERTIES.SATURATED
+                    alphal = repmat(obj.ALPHAF,numel(H),1);
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
+                    alphal = obj.KL(H)./obj.RHOL(H)./obj.CPL(H);
+            end
+        end
+        
+        function alphav = ALPHAV(obj,H)
+        %ALPHAV [m^2/s] Vapor thermal diffusivity (saturated to superheated)
+        %
+            arguments
+                obj
+                H
+            end
+            
+            switch obj.PROPERTIES
+                case InputEnums.FLUIDPROPERTIES.SATURATED
+                    alphav = repmat(obj.ALPHAG,numel(H),1);
+                case InputEnums.FLUIDPROPERTIES.PSYSTEM
+                    alphav = obj.KV(H)./obj.RHOV(H)./obj.CPV(H);
+            end
+        end
         
         function prandtll = PRANDTLL(obj,H)
-        %PRANDTLL Liquid Prandtl number (subcooled to saturated) [-]
+        %PRANDTLL [-] Liquid Prandtl number (subcooled to saturated)
         %
             arguments
                 obj
@@ -267,7 +309,7 @@ classdef FluidProperties
         end
         
         function prandtlv = PRANDTLV(obj,H)
-        %PRANDTLV Vapor Prandtl number (saturated to superheated) [-]
+        %PRANDTLV [-] Vapor Prandtl number (saturated to superheated)
         %
             arguments
                 obj

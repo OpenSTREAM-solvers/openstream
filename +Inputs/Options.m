@@ -1,13 +1,15 @@
 classdef Options < Inputs.Input
     %OPTIONS Defines all numerical options.
     %
-    %   TODO: Detailed explanations
+    %   Class definition for the numerical options
+    %   Data are read from the options input file using InputSet
+    %
     
     properties (SetAccess=?Inputs.Input)
         
         ID               (1,1) string  {mustBeTextScalar}                                          % Option ID
         AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Axial power interpolation method
-        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Time-dependant boundary conditions interpolation method
+        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Time-dependent boundary conditions interpolation method
         TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step [s]
         MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Max number of inner (point) iterations
         SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step for steady-state iterations [s]
@@ -15,8 +17,8 @@ classdef Options < Inputs.Input
         
         % Mixture solver options
         ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
-        ERRORP           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Pressure error target in inner ierations [Pa]
-        ERRORH           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Enthalpy error target in inner ierations [J/kg]
+        ERRORP           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Pressure error target in inner iterations [Pa]
+        ERRORH           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Enthalpy error target in inner iterations [J/kg]
         SSCONVW          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate steady-state convergence criterion [kg/s]
         SSCONVP          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Pressure steady-state convergence criterion [Pa]
         SSCONVH          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Enthalpy steady-state convergence criterion [J/kg]
@@ -24,6 +26,7 @@ classdef Options < Inputs.Input
         RELAXPM          (1,1) double  {mustBeInRange(RELAXPM,0,1)}        = 1                     % Relaxation factor for the mixture momentum conservation equation [-]
         RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1                     % Relaxation factor for the mixture energy conservation equation [-]
         
+        % Mixture (HRM) solver models
         RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.8                   % Relaxation factor for the vapor  mass conservation equation [-]
         RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 1                     % Relaxation factor for the vapor  energy conservation equation [-]
         
@@ -47,6 +50,8 @@ classdef Options < Inputs.Input
         RELAXUD          (1,1) double  {mustBeInRange(RELAXUD,0,1)}        = 0.2                   % Relaxation factor for the drop momentum conservation equation [-]
         
         % Four-field solver options
+        ERRORFW          (1,1) double  {mustBeNumeric}                     = 1E-1                  % Wave frequency error target in inner iterations [Hz]
+        SSCONVFW         (1,1) double  {mustBeNumeric}                     = 1E-1                  % Wave frequency steady-state convergence criterion [Hz]
         RELAXWB          (1,1) double  {mustBeInRange(RELAXWB,0,1)}        = 0.5                   % Relaxation factor for the base mass conservation equation [-]
         RELAXUB          (1,1) double  {mustBeInRange(RELAXUB,0,1)}        = 0.2                   % Relaxation factor for the base momentum conservation equation [-]
         RELAXWW          (1,1) double  {mustBeInRange(RELAXWW,0,1)}        = 0.5                   % Relaxation factor for the wave mass conservation equation [-]
@@ -58,7 +63,7 @@ classdef Options < Inputs.Input
     methods
         function obj = Options(filePath,optionsID)
             %MODEL Construct an instance of this class
-            %   Detailed explanation goes here
+            %
             arguments
                 filePath = ""
                 optionsID = ""

@@ -34,6 +34,7 @@ classdef SolverPlotter < handle
         arguments
             titles                  = ""
             WallIdxs                = 1
+            opts.arrangement        = 'flow'
             opts.isAnimation        = false;
             opts.animationSeries    = 1;
         end
@@ -61,7 +62,8 @@ classdef SolverPlotter < handle
                 plotters(idx).WallIdx = WallIdxs(idx);
                 plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
                 plotters(idx).fh = figure("Name", plotters(idx).Title);
-                plotters(idx).th = tiledlayout(plotters(idx).fh, "flow","TileSpacing","loose","Padding","loose");
+
+                plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
                 plotters(idx).th.Title.String = plotters(idx).Title;
                 plotters(idx).th.Title.FontSize = 18;
 
@@ -278,9 +280,7 @@ classdef SolverPlotter < handle
                     end
 
                 end
-
-                % 
-
+                
             end
         
             function animationSaveCallback(src, ~)
@@ -734,9 +734,11 @@ classdef SolverPlotter < handle
                 case {'RELAXVAPOR','WALLVAPOR','VAPORDRAG'}
                     plotStyle = {colors(1), '--', 'o' };
                 case {'EQ', 'EQUILIBRIUM', 'EQUIL'}
-                    plotStyle = {colors(5), '-', 'o'};
-                case {'RELAXEQUIL'}
+                    plotStyle = {colors(5), '-', '.'};
+                case {'NEARWALL'}
                     plotStyle = {colors(5), '--', '+'};
+                case {'BULK'}
+                    plotStyle = {colors(6), '--', '+'};    
                 case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'EQQUAL', 'EQUILIBRIUMQUAL', 'EQUILQ'}
@@ -764,9 +766,9 @@ classdef SolverPlotter < handle
                 case {'INTERFACIAL'}
                     plotStyle = {colors(1), '-', 'O'};
                 case {'INTERFACIALEVAP'}
-                    plotStyle = {colors(1), '-', '+'};
+                    plotStyle = {colors(1), '-', '.'};
                 case {'INTERFACIALCOND'}
-                    plotStyle = {colors(1), '-', '.'};  
+                    plotStyle = {colors(2), '-', '.'};  
                 
                 % Three-field solver
                 case {'OAF'}
