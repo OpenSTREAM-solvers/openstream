@@ -50,16 +50,17 @@ classdef SolverPlotter < handle
             % Create plotter objects
             plotters(length(WallIdxs)) = Solvers.SolverPlotter();
             for idx = 1:length(plotters)
+
+                plotters(idx).WallIdx = WallIdxs(idx);
                 
                 % Check if is an animated series
                 if opts.isAnimation
                     plotters(idx).isAnimation = true;
                     plotters(idx).animationSeries = opts.animationSeries;
-                    plotters(idx).animationTitleFormat = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);;
+                    plotters(idx).animationTitleFormat = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
                     titles(idx) = sprintf(titles(idx), opts.animationSeries(1));
                 end
 
-                plotters(idx).WallIdx = WallIdxs(idx);
                 plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
                 plotters(idx).fh = figure("Name", plotters(idx).Title);
 
@@ -90,8 +91,9 @@ classdef SolverPlotter < handle
                                              Position=[110,20,30,20], ...
                                              Callback=@animationCallback);
 
-                    animationCounter = uicontrol(plotters(idx).fh, ...
+                    counter = uicontrol(plotters(idx).fh, ...
                                                  Style="edit", ...
+                                                 Tag='animationCounter', ...
                                                  Units="pixels", ...
                                                  Position=[60,20,40,20], ...
                                                  Callback= @animationCallback, ...
@@ -100,17 +102,21 @@ classdef SolverPlotter < handle
                     playButton = uicontrol(plotters(idx).fh, ...
                                            Style="togglebutton", ...
                                            String=char(9658), ...   % play; pause: char([124 32 124])
+                                           UserData=struct('originalSymbol', char(9658)), ...
                                            Position=[150,20,30,20], ...
                                            Callback={@playAnimationCallback, false});
+
                     loopButton = uicontrol(plotters(idx).fh, ...
                                            Style="togglebutton", ...
                                            String=char(11156), ...
+                                           UserData=struct('originalSymbol', char(11156)), ...
                                            Position=[190,20,30,20], ...
                                            Callback={@playAnimationCallback, true});
 
 
                     fpsEdit = uicontrol(plotters(idx).fh, ...
                                         Style="edit", ...
+                                        Tag='fpsEdit', ...
                                         String="30", ...
                                         Position=[230, 20, 30, 20] ...
                                         );
@@ -207,9 +213,10 @@ classdef SolverPlotter < handle
                         % update userdata struct
                         lh.UserData.currentIndex = currentIndex;
 
-                        % update counter
-                        if src.Style == "pushbutton"
-                            animationCounter.String = string(currentIndex);
+                        % Update counter UI if available
+                        counter = findobj(fh, 'Tag', 'animationCounter');
+                        if ~isempty(counter)
+                            counter.String = string(currentIndex);
                         end
 
                         % update figure name
@@ -223,42 +230,149 @@ classdef SolverPlotter < handle
             end
             
             function playAnimationCallback(src, ~, loop)
-                
-                % Check if isPlaying
-                if plotters(idx).fh.UserData.isPlaying
-                    
-                    % Flip isPlaying flag to false and return
-                    plotters(idx).fh.UserData.isPlaying = false;
+
+                % Get figure and layout
+                fh = src.Parent;
+                tlh = findobj(fh, 'type', 'tiledlayout');
+                ahs = findobj(tlh, 'type', 'axes');
+
+                % Toggle play/pause state
+                if isfield(fh.UserData, 'isPlaying') && fh.UserData.isPlaying
+                    fh.UserData.isPlaying = false;
+                    src.String = char(11156);  % Play symbol
                     return;
-                
+                else
+                    fh.UserData.isPlaying = true;
+                    src.String = char([124 32 124]);  % Pause symbol
+                end
+
+                % Animation loop
+                while isvalid(fh) && fh.UserData.isPlaying
+
+                    startTime = tic();
+
+                    % Loop through all axes and lines
+                    for ah_idx = 1:length(ahs)
+                        ah = ahs(ah_idx);
+                        lhs = findall(ah, 'type', 'line');
+
+                        for lh_idx = 1:length(lhs)
+                            lh = lhs(lh_idx);
+
+                            % Skip if no animation data
+                            if ~isfield(lh.UserData, 'Data') || isempty(lh.UserData.Data)
+                                continue;
+                            end
+
+                            % Get current index
+                            lastIndex = lh.UserData.currentIndex;
+                            currentIndex = lastIndex + 1;
+
+                            % Loop or stop
+                            if currentIndex > length(lh.UserData.Data)
+                                if loop
+                                    currentIndex = 1;
+                                else
+                                    fh.UserData.isPlaying = false;
+                                    break;
+                                end
+                            end
+                            % Update line data
+                            currentYData = lh.UserData.Data(currentIndex).yData;
+                            if isfield(lh.UserData.Data(currentIndex), "xData")
+                                currentXData = lh.UserData.Data(currentIndex).xData;
+                                set(lh, "XData", currentXData, "YData", currentYData);
+                            else
+                                set(lh, "YData", currentYData);
+                            end
+
+                            % Update index
+                            lh.UserData.currentIndex = currentIndex;
+                        end
+                    end
+
+                    % Update figure title and counter if available
+                    if isfield(fh.UserData, 'NameFormat') && isfield(fh.UserData, 'NameSeries')
+                        fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
+                        tlh.Title.String = fh.Name;
+                        tlh.Title.FontSize = 18;
+                    end
+
+                    % Update counter UI if available
+                    counter = findobj(fh, 'Tag', 'animationCounter');
+                    if ~isempty(counter)
+                        counter.String = string(currentIndex);
+                    end
+
+                    drawnow();
+
+                    % Frame rate control
+                    fpsEdit = findobj(fh, 'Tag', 'fpsEdit');
+                    if ~isempty(fpsEdit)
+                        period = 1 / str2double(fpsEdit.String);
+                    else
+                        period = 0.1;  % default fallback
+                    end
+
+                    elapsedTime = toc(startTime);
+                    pause(max(0, period - elapsedTime));
+                end
+
+                % Reset toggle
+                if isvalid(src)
+                    src.Value = false;
+                    if isfield(src.UserData, 'originalSymbol')
+                        src.String = src.UserData.originalSymbol;
+                    else
+                        src.String = char(9658);  % Default fallback
+                    end
+                end
+            end
+            
+            function playAnimationCallback2(src, ~, loop)
+
+
+                % Get figure and layout
+                fh = src.Parent;
+                tlh = findobj(fh, 'type', 'tiledlayout');
+                ahs = findobj(tlh, 'type', 'axes');
+
+
+                % Check if isPlaying
+                if fh.UserData.isPlaying
+
+                    % Flip isPlaying flag to false and return
+                    fh.UserData.isPlaying = false;
+                    return;
+
                 else
 
                     % Otherwise toggle to true
-                    plotters(idx).fh.UserData.isPlaying = true;
+                    fh.UserData.isPlaying = true;
                     if src.String ~= char(11156)
                         src.String = char([124 32 124]);   % pause symbol
                     end
 
-                    while isvalid(plotters(idx).fh) && plotters(idx).fh.UserData.isPlaying
-    
+                    while isvalid(fh) && fh.UserData.isPlaying
+
                         % Start time
                         startTime = tic();
                         % Get counter string
-                        lastIdx = str2double(animationCounter.String);
-                        animationCounter.String = lastIdx+1;
-    
+                        lastIdx = str2double(counter.String);
+                        counter.String = lastIdx+1;
+
                         % Invoke callback
                         % TODO: better to create separate function
-                        animationCounter.Callback(animationCounter, []);
+                        counter.Callback(counter, []);
 
                         % Check if looped when loop == false
-                        if ~loop && str2double(animationCounter.String) < lastIdx
-                            plotters(idx).fh.UserData.isPlaying = false;
-                            animationCounter.String = lastIdx;
-                            animationCounter.Callback(animationCounter, []);                            
+                        if ~loop && str2double(counter.String) < lastIdx
+                            fh.UserData.isPlaying = false;
+                            counter.String = lastIdx;
+                            counter.Callback(counter, []);
                             break;
                         end
-    
+
                         % Draw, then Pause
                         drawnow();
 
@@ -280,12 +394,17 @@ classdef SolverPlotter < handle
                     end
 
                 end
-                
+
             end
         
             function animationSaveCallback(src, ~)
+
+
+                fh = src.Parent.Parent;
+                idx = find(arrayfun(@(p) isequal(p.fh, fh), plotters));
                 
                 % Check if fps is positive
+                fpsEdit = findobj(plotters(idx).fh, 'Tag', 'fpsEdit');
                 assert(str2double(fpsEdit.String) > 0 , "Desired fps must be positive.");
 
                 % Pick file to save
@@ -310,7 +429,7 @@ classdef SolverPlotter < handle
                     filepath = fullfile(pathname, filename);
                 end
 
-                % Create videowriter object, for now limiting to only mp4
+                % Create videowriter object
                 vid = VideoWriter(filepath, profile);
 
                 %
@@ -331,7 +450,7 @@ classdef SolverPlotter < handle
                 numFrames = length(plotters(idx).ahs(1).Children(end).UserData.Data);
 
                 % Collection of uicontrols
-                fh_uicontrols = findall(src.Parent.Parent, 'type', 'uicontrol');
+                fh_uicontrols = findall(plotters(idx).fh, 'type', 'uicontrol');
                 % Hide uicontrols
                 uimenu_showUIControls = findobj(src.Parent, 'text', 'Show UI Controls');
                 if ~uimenu_showUIControls.Checked
@@ -342,6 +461,7 @@ classdef SolverPlotter < handle
 
                 % Open video
                 open(vid);
+                counter = findobj(plotters(idx).fh, 'Tag', 'animationCounter');
 
                 try
                     % Loop through frames
@@ -349,12 +469,12 @@ classdef SolverPlotter < handle
     
                         % Set frame to frameIdx
                         % TODO: this can be a function
-                        animationCounter.String = string(frameIdx);
-                        animationCounter.Callback(animationCounter, []);
+                        counter.String = string(frameIdx);
+                        counter.Callback(counter, []);
                         drawnow();
                         
                         % capture frame for video
-                        writeVideo(vid, getframe(src.Parent.Parent));
+                        writeVideo(vid, getframe(plotters(idx).fh));
     
                     end
                 catch ME
@@ -492,6 +612,9 @@ classdef SolverPlotter < handle
             % Determine plot style and color from fieldName
             plotStyles = Solvers.SolverPlotter.fieldName2plotStyle(fieldName);
 
+            % Save input YData
+            YData0 = YData;
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 
@@ -500,6 +623,9 @@ classdef SolverPlotter < handle
 
                 % Current axes
                 ah = plotter.gca();
+
+                %Restore Ydata
+                YData = YData0;
 
                 % Custom and standard XData
                 if isfield(opts, 'XData') && ~isempty(opts.XData)
@@ -536,6 +662,15 @@ classdef SolverPlotter < handle
 
                     % Check if there are any lines at all
                     if ~isempty(lhs)
+
+                        % Update YData
+                        if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
+                            YData= ylim(ah);
+                        elseif isvector(YData)
+                            YData = YData(opts.subset);
+                        else
+                            YData = YData(opts.subset, plotter.WallIdx);
+                        end
                         
                         % lh DisplayNames
                         dispNames = string({lhs.DisplayName});
@@ -549,27 +684,19 @@ classdef SolverPlotter < handle
                             
                             % Then store XData (as needed) and YData to lh.UserData
                             lh = lhs(lh_idx);
-                            if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                                YData= ylim(ah);
-                            elseif isvector(YData)
-                                YData = YData(opts.subset);
-                            else
-                                YData = YData(opts.subset, plotter.WallIdx);
-                            end
-
                             if isfield(lh.UserData.Data, "xData")
                                 lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData, 'xData', XData)];
                             else
                                 lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData)];
                             end
-
                         end
                     end
-
 
                 end
 
                 if ~matchingLineExists
+                    YData = YData0;
+                    
                     % Custom plot by YData
                     if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
                         drawnow();
@@ -602,6 +729,7 @@ classdef SolverPlotter < handle
                 if isempty(ah.UserData.ylim)
                     ylim(ah, 'auto');
                 else
+                    if size(YData,2)>1, YData = YData(:,plotter.WallIdx); end
                     ylim(ah, [min(ah.UserData.ylim(1), min(YData)) max(ah.UserData.ylim(2), max(YData))]);
                 end
 
