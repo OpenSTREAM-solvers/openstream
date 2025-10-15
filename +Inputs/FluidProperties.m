@@ -31,6 +31,8 @@ classdef FluidProperties
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
+        TMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum temperature [K]
+        HMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum enthalpy [J/kg]
     end
 
     properties (SetAccess=private)
@@ -85,6 +87,10 @@ classdef FluidProperties
 
             % Critical properties
             PCRIT    = coolpropH.CoolProp.p_critical;                      % [Pa] Critical pressure
+
+            % Limiting properties for which CoolProp has valid data for the fluid
+            TMIN     = coolpropH.CoolProp.Tmin+1;                          % [K] Minimum temperature
+            HMIN     = coolpropH.enthalpy('P',P,'T',TMIN);                 % [J/kg] Minimum enthalpy
             
             % Assign properties to each object
             for i = 1:length(obj)
@@ -116,7 +122,9 @@ classdef FluidProperties
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
                 obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
-                
+                obj(i).TMIN     = TMIN;                                    % [K] Minimum temperature
+                obj(i).HMIN     = HMIN(i);                                 % [J/kg] Minimum enthalpy
+
             end
             
         end

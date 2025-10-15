@@ -76,18 +76,17 @@ classdef Liquid < Solvers.AbstractPhase
         %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
-%              X = max(liquid.mix.X(zIdx),liquid.mix.XEQ(zIdx));              % Account for potential subcooled liquid
+%             X = max(liquid.mix.X(zIdx),liquid.mix.XEQ(zIdx));             % Account for potential subcooled liquid
 %             h = (liquid.mix.H(zIdx)-X.*liquid.mix.fluid.HG)./(1-X);
-%             %h = min(h,liquid.mix.fluid.HF);                                % No superheated liquid
+%             %h = min(h,liquid.mix.fluid.HF);                              % No superheated liquid
 %             %h = max(h,liquid.mix.H(1));
             
             X = liquid.mix.X(zIdx);  
             h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
-            
-            h(isnan(h)) = liquid.mix.fluid.HF;
-            h(isinf(h)) = liquid.mix.fluid.HF;
-            %h = max(h,liquid.mix.H(1));
-            %h = max(h,1E5);
+
+            fluid = liquid.mix.fluid;
+            h(isnan(h) | isinf(h)) = fluid.HF;
+            h = max(h,fluid.HMIN);
         end
 
         function mflux = MFLUX(liquid, zIdx)
