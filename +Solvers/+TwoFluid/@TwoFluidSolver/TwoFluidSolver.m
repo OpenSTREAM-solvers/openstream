@@ -207,9 +207,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     liqs = twfSolver.liquid(tIdx);
                     vaps = twfSolver.vapor(tIdx);
                 case 'STEADY'
+                    tIdx = tIdx(ismember(tIdx,1:length(twfSolver.liquidInit)));
                     liqs = twfSolver.liquidInit(tIdx);
                     vaps = twfSolver.vaporInit(tIdx);
-                    tIdx = 1;
             end
 
             mixs = twfSolver.mixSolver.mixture(tIdx);

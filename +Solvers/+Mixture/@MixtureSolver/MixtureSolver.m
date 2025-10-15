@@ -336,8 +336,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 case 'TRANSIENT'
                     mixs = mixSolver.mixture(tIdx);
                 case 'STEADY'
+                    tIdx = tIdx(ismember(tIdx,1:length(mixSolver.mixtureInit)));
                     mixs = mixSolver.mixtureInit(tIdx);
-                    tIdx = 1;
             end
             
             % Temperature unit offset between C and K

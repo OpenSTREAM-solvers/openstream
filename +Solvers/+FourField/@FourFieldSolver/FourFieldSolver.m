@@ -298,9 +298,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     flms = ffSolver.film(tIdx);
                     drps = ffSolver.drop(tIdx);
                 case 'STEADY'
+                    tIdx = tIdx(ismember(tIdx,1:length(ffSolver.filmInit)));
                     flms = ffSolver.filmInit(tIdx);
                     drps = ffSolver.dropInit(tIdx);
-                    tIdx = 1;
             end
 
             mixs = ffSolver.mixSolver.mixture(tIdx);

@@ -293,9 +293,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     flms = tfSolver.film(tIdx);
                     drps = tfSolver.drop(tIdx);
                 case 'STEADY'
+                    tIdx = tIdx(ismember(tIdx,1:length(tfSolver.filmInit)));
                     flms = tfSolver.filmInit(tIdx);
                     drps = tfSolver.dropInit(tIdx);
-                    tIdx = 1;
             end
             
             mixs = tfSolver.mixSolver.mixture(tIdx);
