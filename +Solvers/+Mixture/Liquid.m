@@ -86,7 +86,11 @@ classdef Liquid < Solvers.AbstractPhase
             
             h(isnan(h)) = liquid.mix.fluid.HF;
             h(isinf(h)) = liquid.mix.fluid.HF;
+
+            h = min(max(h,liquid.mix.H(1)),liquid.mix.fluid.HF);
+            %h(any(h<0)) = liquid.mix.fluid.HF;
             %h = max(h,liquid.mix.H(1));
+            %h = max(h,liquid.mix.fluid.HF);
             %h = max(h,1E5);
         end
 
