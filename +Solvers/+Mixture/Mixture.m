@@ -1285,8 +1285,8 @@ classdef Mixture < Solvers.AbstractField
 
         switch model.NEARWALLRELAX
             case InputEnums.NEARWALLRELAX.QUALITY
-                X = model.RELAXX;                                          % [-] Equilibrium quality array
-                T = model.NEARWALLTRELAX(1:length(model.RELAXX));          % [-] Corresponding time relaxation
+                X = model.NEARWALLRELAXX;                                  % [-] Equilibrium quality array
+                T = model.NEARWALLRELAXT(1:length(model.NEARWALLRELAXX));  % [-] Corresponding time relaxation
 
                 t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
                 t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
