@@ -1541,7 +1541,7 @@ classdef Mixture < Solvers.AbstractField
                     K1 = max(min(sqrt(0.008 / D),sqrt(0.008/0.003)),sqrt(0.008/0.025));
 
                     % Heated Length K4 factor
-                    K4 = ones(length(zIdx,1));
+                    K4 = ones(length(zIdx),1);
                     range = find(zIdx./D>=5,1):length(K4);
                     K4(range) = exp(D./zIdx(range).*exp(2*mix.VF(zIdx(range)))); 
 
