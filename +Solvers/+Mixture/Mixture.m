@@ -1545,7 +1545,7 @@ classdef Mixture < Solvers.AbstractField
                     range = find(zIdx./D>=5,1):length(K4);
                     K4(range) = exp(D./zIdx(range).*exp(2*mix.VF(zIdx(range)))); 
 
-                    chf = K1 * K4 .* chf;
+                    chf(zIdx) = K1 * K4 .* chf(zIdx);
 
             end
             
