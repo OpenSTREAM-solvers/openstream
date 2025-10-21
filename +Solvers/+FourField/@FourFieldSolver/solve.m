@@ -57,7 +57,7 @@ function solver(solveINIT)
         base = [film.base];
         wave = [film.wave];
         drop = ffSolver.dropInit;
-        fluid = ffSolver.fluidInit;
+        fluid = repmat(ffSolver.fluid(1),1,length(film));
         mix = copy(repmat(ffSolver.mixSolver.mixture(1),1,ffSolver.inputSet.options.SSMAXITER));
     else
         if length(ffSolver.film) < 2

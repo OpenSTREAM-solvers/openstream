@@ -17,7 +17,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         
         filmInit
         dropInit
-        fluidInit
         film
         drop
 
@@ -185,9 +184,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 repmat(flmArr(1),1,tfSolver.inputSet.options.SSMAXITER));
             tfSolver.dropInit = copy( ...
                 repmat(drpArr(1),1,tfSolver.inputSet.options.SSMAXITER));
-            tfSolver.fluidInit = FluidProperties( ...
-                                    tfSolver.boundaryConditions.PRESSURE(1), ...
-                                    tfSolver.inputSet.model);
 
             % Update filmInit and dropInit times and timesteps
             initTIMEDT = tfSolver.inputSet.options.SSTSTEP;

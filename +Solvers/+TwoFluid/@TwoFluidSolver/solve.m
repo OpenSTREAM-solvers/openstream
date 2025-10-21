@@ -51,7 +51,7 @@ function solver(solveINIT)
         twfSolver.log('\nSolve steady-state ...\n');
         liquid = twfSolver.liquidInit;
         vapor  = twfSolver.vaporInit;
-        fluid  = twfSolver.fluidInit;
+        fluid = repmat(twfSolver.fluid(1),1,length(liquid));
         mix    = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
     else
         if length(twfSolver.liquid) < 2

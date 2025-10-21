@@ -54,7 +54,7 @@ function solver(solveINIT)
         tfSolver.log('\nSolve steady-state ...\n');
         film = tfSolver.filmInit;
         drop = tfSolver.dropInit;
-        fluid = tfSolver.fluidInit;
+        fluid = repmat(tfSolver.fluid(1),1,length(film));
         mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
     else
         if length(tfSolver.film) < 2

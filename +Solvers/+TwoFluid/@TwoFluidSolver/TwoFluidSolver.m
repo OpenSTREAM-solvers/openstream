@@ -17,7 +17,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         
         liquidInit
         vaporInit
-        fluidInit
         liquid
         vapor
 
@@ -151,9 +150,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 repmat(liqArr(1),1,twfSolver.inputSet.options.SSMAXITER));
             twfSolver.vaporInit  = copy( ...
                 repmat(vapArr(1),1,twfSolver.inputSet.options.SSMAXITER));
-            twfSolver.fluidInit  = FluidProperties( ...
-                                    twfSolver.boundaryConditions.PRESSURE(1), ...
-                                    twfSolver.inputSet.model);
 
             % Update liquidInit and vaporInit times and timesteps
             initTIMEDT = twfSolver.inputSet.options.SSTSTEP;

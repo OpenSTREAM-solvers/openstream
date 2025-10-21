@@ -17,7 +17,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 %         
 %         filmInit
 %         dropInit
-%         fluidInit
 %         film
 %         drop
 
@@ -186,11 +185,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             ffSolver.dropInit = copy( ...
                 repmat(drpArr(1),1,ffSolver.inputSet.options.SSMAXITER));
             
-            % Steady state fluidProperties
-            ffSolver.fluidInit = FluidProperties( ...
-                                    ffSolver.boundaryConditions.PRESSURE(1), ...
-                                    ffSolver.inputSet.model);
-
             % Update filmInit and dropInit times and timesteps
             initTIMEDT = ffSolver.inputSet.options.SSTSTEP;
             initNTIME = length(ffSolver.filmInit);
@@ -311,7 +305,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
-                    sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flm(1).TIME, opts.solveMode), ...
+                    sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flms(1).TIME, opts.solveMode), ...
                     opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
