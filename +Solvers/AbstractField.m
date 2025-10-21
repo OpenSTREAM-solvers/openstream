@@ -78,13 +78,14 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             
         end
         
-        function ax = plotzt(obj, param ,ylabelText ,ylabelUnit ,k ,opt, subobj, annular)
+        function ax = plotzt(obj, param ,ylabelText ,ylabelUnit ,k ,opt, subobj, annular,time)
             %PLOTZT 2D space/time distribution plot
             
             if nargin < 8, annular = false; end
+            if nargin < 9, time = []; end
             
             z     = obj(1).Z(opt.zIdx);                                    % [m]
-            time = [obj(opt.tIdx).TIME];                                   % [s]
+            if isempty(time), time = [obj(opt.tIdx).TIME];  end            % [s]
             if opt.reverseTime
                 time = time -time(end);
             end

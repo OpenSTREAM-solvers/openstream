@@ -267,7 +267,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 tfSolver
                 tIdx           (:,1) double {mustBeInteger,mustBePositive}                                         = []
                 opts.display   {mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
-                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
+                opts.solveMode {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                      = 'REAL'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
                 opts.annular   (1,1) logical                                                                       = true
@@ -285,19 +285,20 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             bc  = tfSolver.boundaryConditions;
         
             switch opts.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
                     if isempty(tIdx), tIdx = 1:tfSolver.NTIME; end
                     mixs = tfSolver.mixSolver.mixture(tIdx);
                     flms = tfSolver.film(tIdx);
                     drps = tfSolver.drop(tIdx);
                     bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,flms(idx).TIDX),1:length(tIdx),'uni',0);
-
-                case 'STEADY'
+                    solveMode = '';
+                case 'NULL'
                     if isempty(tIdx), tIdx = 1:length(tfSolver.filmInit); end
                     mixs = repmat(tfSolver.mixSolver.mixtureInit(end),1,length(tIdx));
                     flms = tfSolver.filmInit(tIdx);
                     drps = tfSolver.dropInit(tIdx);
                     bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
+                    solveMode = '- Null transient';
             end
            
             % Temperature unit offset between C and K
@@ -306,11 +307,11 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
-                            sprintf('Axial distributions of three-field parameters at %0.3f [s] - %s', flms(1).TIME, opts.solveMode), ...
+                            sprintf('Axial distributions of three-field parameters at %0.3f [s] %s', flms(1).TIME, solveMode), ...
                             opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
-                            sprintf('Axial distributions of three-field parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                            sprintf('Axial distributions of three-field parameters at %s [s] %s', '%0.3f', solveMode), ...
                             opts.wall, ...
                             "arrangement", opts.arrangement, ...
                             "isAnimation", true, ...
@@ -465,9 +466,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 tfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = tfSolver.NZ
                 opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
+                opt.solveMode   {mustBeMember(opt.solveMode,{'REAL','NULL'})}                                      = 'REAL'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.NTIME
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = []
                 opt.reverseTime (1,1) logical                                                                      = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                    = 'flow'
@@ -476,21 +477,22 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
             
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:tfSolver.NTIME; end
                     mix = tfSolver.mixSolver.mixture(opt.tIdx);
                     %fld = tfSolver.mixSolver.fluid(opt.tIdx);
                     flm = tfSolver.film(opt.tIdx);
                     drp = tfSolver.drop(opt.tIdx);
                     bcHFLUX = permute(tfSolver.boundaryConditions.HFLUX(zIdx,:,:),[3 2 1]);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:tfSolver.NTIME]')
-                        opt.tIdx = 1:length(tfSolver.filmInit);
-                    end
-                    mix = tfSolver.mixSolver.mixtureInit(opt.tIdx);
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(tfSolver.filmInit);  end
+                    mix = repmat(tfSolver.mixSolver.mixtureInit(end),1,length(opt.tIdx));
                     %fld = repmat(tfSolver.mixSolver.fluid(1),1,length(opt.tIdx));
                     flm = tfSolver.filmInit(opt.tIdx);
                     drp = tfSolver.dropInit(opt.tIdx);
                     bcHFLUX = repmat(tfSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
+                    solveMode = '- Null transient';
             end
             
             time = [flm.TIME];
@@ -506,7 +508,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             z = tfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
-                                sprintf('Time distributions of three-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
+                                sprintf('Time distributions of three-field parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
                                 opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
             
@@ -620,10 +622,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','velocity'}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',     'm/s'}
                 opt.field        {mustBeMember(opt.field,{'drop','film'})}                = {'drop','film'}
-                opt.solveMode    {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}     = 'TRANSIENT'
+                opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.inputSet.geometry.NWALL
                 opt.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.NZ
-                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.NTIME
+                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = []
                 opt.annular      (1,1) logical                                            = true
                 opt.reverseTime  (1,1) logical                                            = false
                 opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
@@ -639,17 +641,19 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     opt.unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm'};
             end
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:tfSolver.NTIME; end
                     mix = tfSolver.mixSolver.mixture(opt.tIdx);
                     drp = tfSolver.drop(opt.tIdx);
                     flm = tfSolver.film(opt.tIdx);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:tfSolver.NTIME]')
-                        opt.tIdx = 1:length(tfSolver.filmInit);
-                    end
-                    mix = tfSolver.mixSolver.mixtureInit(opt.tIdx);
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(tfSolver.filmInit);  end
+                    mix = repmat(tfSolver.mixSolver.mixtureInit(end),1,length(opt.tIdx));
                     drp = tfSolver.dropInit(opt.tIdx);
                     flm = tfSolver.filmInit(opt.tIdx);
+                    solveMode = '- Null transient';
+                    time = [drp(opt.tIdx).TIME];
             end
             if isempty(opt.wall)
                 opt.wall = 1:tfSolver.inputSet.geometry.NWALL;
@@ -665,26 +669,30 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             
             for k = opt.wall
                 if ismember('drop',opt.field)
-                    fh_drp = figure('name',['Time/axial distributions of three-field (drop) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of three-field (drop) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_drp = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         elseif contains(opt.display{i},{'WL','THICK'})
                             continue
                         else
                             ax_drp(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
                         end
                     end
+                    sgtitle(fh_drp,name,'FontSize',18);
                 end
                 if ismember('film',opt.field)
-                    fh_flm = figure('name',['Time/axial distributions of three-field (film) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of three-field (film) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_flm = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         else
                             ax_flm(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
+                    sgtitle(fh_flm,name,'FontSize',18);
                 end
             end
         end

@@ -181,7 +181,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 twfSolver
                 tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                     = []
                 opts.display   {mustBeMember(opts.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
-                opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                           = 'TRANSIENT'
+                opts.solveMode {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                  = 'REAL'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
                 opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'                
@@ -199,20 +199,22 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             model = twfSolver.inputSet.model;
             
             switch opts.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
                     if isempty(tIdx), tIdx = 1:twfSolver.NTIME; end
                     mixs = twfSolver.mixSolver.mixture(tIdx);
                     liqs = twfSolver.liquid(tIdx);
                     vaps = twfSolver.vapor(tIdx);
                     fld     = twfSolver.fluid;
                     bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,liqs(idx).TIDX),1:length(tIdx),'uni',0);
-                case 'STEADY'
+                    solveMode = '';
+                case 'NULL'
                     if isempty(tIdx), tIdx = 1:length(twfSolver.liquidInit); end
                     mixs = repmat(twfSolver.mixSolver.mixtureInit(end),1,length(tIdx));
                     liqs = twfSolver.liquidInit(tIdx);
                     vaps = twfSolver.vaporInit(tIdx);
                     fld     = repmat(twfSolver.fluid(1),1,length(tIdx));
                     bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
+                    solveMode = '- Null transient';
             end
             
             % Temperature unit offset between C and K
@@ -221,11 +223,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
              % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
-                    sprintf('Axial distributions of two-fluid parameters at %0.3f [s] - %s', liqs(1).TIME, opts.solveMode), ...
+                    sprintf('Axial distributions of two-fluid parameters at %0.3f [s] %s', liqs(1).TIME, solveMode), ...
                     opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
-                    sprintf('Axial distributions of two-fluid parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                    sprintf('Axial distributions of two-fluid parameters at %s [s] %s', '%0.3f', solveMode), ...
                     opts.wall, ...
                     "arrangement", opts.arrangement, ...
                     "isAnimation", true, ...
@@ -476,9 +478,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 twfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = twfSolver.NZ
                 opt.display     {mustBeMember(opt.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                             = 'TRANSIENT'
+                opt.solveMode   {mustBeMember(opt.solveMode,{'REAL','NULL'})}                                                    = 'REAL'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = 1:twfSolver.NTIME
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = []
                 opt.reverseTime (1,1) logical                                                                                    = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                  = 'flow'
@@ -489,21 +491,22 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             model = twfSolver.inputSet.model;
             
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:twfSolver.NTIME; end
                     mix = twfSolver.mixSolver.mixture(opt.tIdx);
                     fld = twfSolver.mixSolver.fluid(opt.tIdx);
                     liq = twfSolver.liquid(opt.tIdx);
                     vap = twfSolver.vapor(opt.tIdx);
                     bcHFLUX = permute(twfSolver.boundaryConditions.HFLUX(zIdx,:,:),[3 2 1]);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:twfSolver.NTIME]')
-                        opt.tIdx = 1:length(twfSolver.liquidInit);
-                    end
-                    %mix = twfSolver.mixSolver.mixtureInit(opt.tIdx);
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(twfSolver.liquidInit);  end
+                    mix = repmat(twfSolver.mixSolver.mixtureInit(end),1,length(opt.tIdx));
                     fld = repmat(twfSolver.mixSolver.fluid(1),1,length(opt.tIdx));
                     liq = twfSolver.liquidInit(opt.tIdx);
                     vap = twfSolver.vaporInit(opt.tIdx);
                     bcHFLUX = repmat(twfSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
+                    solveMode = '- Null transient';
             end
             
             time = [liq.TIME];
@@ -519,7 +522,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             z = twfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
-                                sprintf('Time distributions of two-fluid parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
+                                sprintf('Time distributions of two-fluid parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
                                 opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
             
@@ -744,10 +747,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mixture mass flow rate','mixture velocity','mixture enthalpy','mass quality','volumetric fraction'}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',                  'kg/s',             'm/s',            'J/kg',           '-',                  '-'}
                 opt.field        {mustBeMember(opt.field,{'liquid','vapor'})}             = {'liquid','vapor'}
-                opt.solveMode    {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}     = 'TRANSIENT'
+                opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:twfSolver.inputSet.geometry.NWALL
                 opt.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:twfSolver.NZ
-                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:twfSolver.NTIME
+                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = []
                 opt.reverseTime  (1,1) logical                                            = false
                 opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
                 opt.view         (1,2) double                                             = [0 90]
@@ -762,15 +765,19 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     opt.unit    = {         'W/m^2',          'kg/s',     'm/s',    'J/kg',           '-',                  '-',          'K',                      'm^-^1'};
             end
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:twfSolver.NTIME; end
+                    mix = twfSolver.mixSolver.mixture(opt.tIdx);
                     liq = twfSolver.liquid(opt.tIdx);
                     vap = twfSolver.vapor(opt.tIdx);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:twfSolver.NTIME]')
-                        opt.tIdx = 1:length(twfSolver.liquidInit);
-                    end
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(twfSolver.liquidInit);  end
+                    mix = repmat(twfSolver.mixSolver.mixtureInit(end),1,length(opt.tIdx));
                     liq = twfSolver.liquidInit(opt.tIdx);
                     vap = twfSolver.vaporInit(opt.tIdx);
+                    solveMode = '- Null transient';
+                    time = [liq(opt.tIdx).TIME];
             end
             if isempty(opt.wall)
                 opt.wall = 1:twfSolver.inputSet.geometry.NWALL;
@@ -786,16 +793,20 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             
             for k = opt.wall
                 if ismember('liquid',opt.field)
-                    fh_liq = figure('name',['Time/axial distributions of two-fluid (liquid) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of two-fluid (liquid) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_liq = figure('name',name);
                     for i = 1:length(opt.display)
                         ax_liq(i) = liq.plotzt(opt.display{i},['Liquid ' opt.label{i}],opt.unit{i},k,opt,vap);
                     end
+                    sgtitle(fh_liq,name,'FontSize',18);
                 end
                 if ismember('vapor',opt.field)
-                    fh_vap = figure('name',['Time/axial distributions of two-fluid (vapor) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of two-fluid (vapor) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_vap = figure('name',name);
                     for i = 1:length(opt.display)
                         ax_vap(i) = vap.plotzt(opt.display{i},['Vapor '  opt.label{i}],opt.unit{i},k,opt,liq);
                     end
+                    sgtitle(fh_vap,name,'FontSize',18);
                 end
             end
         end

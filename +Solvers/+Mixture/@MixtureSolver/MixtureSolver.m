@@ -310,7 +310,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixSolver
                 tIdx             (:,1) double {mustBeInteger,mustBePositive}                                = []
                 opts.display     {mustBeMember(opts.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opts.solveMode   {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
+                opts.solveMode   {mustBeMember(opts.solveMode,{'REAL','NULL'})}                             = 'REAL'
                 opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.inputSet.geometry.NWALL
                 opts.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.NZ
                 opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                    = 'K'
@@ -332,16 +332,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
             geom  = mixSolver.inputSet.geometry;
 
             switch opts.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
                     if isempty(tIdx), tIdx = 1:mixSolver.NTIME; end
                     mixs = mixSolver.mixture(tIdx);
                     fld     = mixSolver.fluid;
                     bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,mixs(idx).TIDX),1:length(tIdx),'uni',0);
-                case 'STEADY'
+                    solveMode = '';
+                case 'NULL'
                     if isempty(tIdx), tIdx = 1:length(mixSolver.mixtureInit); end
                     mixs = mixSolver.mixtureInit(tIdx);
                     fld     = repmat(mixSolver.fluid(1),1,length(tIdx));
                     bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
+                    solveMode = '- Null transient';
             end
             
             % Temperature unit offset between C and K
@@ -350,11 +352,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
-                            sprintf('Axial distributions of mixture parameters at %0.3f [s] - %s', mixs(1).TIME, opts.solveMode), ...
+                            sprintf('Axial distributions of mixture parameters at %0.3f [s] %s', mixs(1).TIME, solveMode), ...
                             opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
-                            sprintf('Axial distributions of mixture parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                            sprintf('Axial distributions of mixture parameters at %s [s] %s', '%0.3f', solveMode), ...
                             opts.wall, ...
                             "arrangement", opts.arrangement, ...
                             "isAnimation", true, ...
@@ -611,9 +613,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}  = mixSolver.NZ
                 opt.display     {mustBeMember(opt.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}             = 'TRANSIENT'
+                opt.solveMode   {mustBeMember(opt.solveMode,{'REAL','NULL'})}                    = 'REAL'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}         = 1:mixSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}         = 1:mixSolver.NTIME
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}         = []
                 opt.reverseTime (1,1) logical                                                    = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                           = 'K'
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})} = 'flow'
@@ -626,17 +628,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
             geom  = mixSolver.inputSet.geometry;
 
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:mixSolver.NTIME; end
                     mix = mixSolver.mixture(opt.tIdx);
                     fld = mixSolver.fluid(opt.tIdx);
                     bcHFLUX = permute(mixSolver.boundaryConditions.HFLUX(zIdx,:,:),[3 2 1]);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:mixSolver.NTIME]')
-                        opt.tIdx = 1:length(mixSolver.mixtureInit);
-                    end
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(mixSolver.mixtureInit);  end
                     mix = mixSolver.mixtureInit(opt.tIdx);
                     fld = repmat(mixSolver.fluid(1),1,length(opt.tIdx));
                     bcHFLUX = repmat(mixSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
+                    solveMode = '- Null transient';
             end
             
             time = [mix.TIME];
@@ -652,7 +655,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             z = mixSolver.Z;
             plotter = Solvers.SolverPlotter( ...
-                                sprintf('Time distributions of mixture parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
+                                sprintf('Time distributions of mixture parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
                                 opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
             
@@ -875,10 +878,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction'}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',           'Pa',     'm/s',    'J/kg',                 '-',            '-'}
                 opt.field        {mustBeMember(opt.field,{'mixture','liquid','vapor'})}   = {'mixture'}
-                opt.solveMode    {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}     = 'TRANSIENT'
+                opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.inputSet.geometry.NWALL
                 opt.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.NZ
-                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.NTIME
+                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = []
                 opt.reverseTime  (1,1) logical                                            = false
                 opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
                 opt.view         (1,2) double                                             = [0 90]
@@ -893,13 +896,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.unit    = {        'W/m^2',          'kg/s',          'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
             end
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:mixSolver.NTIME; end
                     mix = mixSolver.mixture(opt.tIdx);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:mixSolver.NTIME]')
-                        opt.tIdx = 1:length(mixSolver.mixtureInit);
-                    end
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(mixSolver.mixtureInit);  end
                     mix = mixSolver.mixtureInit(opt.tIdx);
+                    solveMode = '- Null transient';
             end
             if isempty(opt.wall)
                 opt.wall = 1:mixSolver.inputSet.geometry.NWALL;
@@ -915,13 +919,16 @@ classdef MixtureSolver < Solvers.AbstractSolver
             
             for k = opt.wall
                 if ismember('mixture',opt.field)
-                    fh = figure('name',['Time/axial distributions of mixture parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of mixture parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh = figure('name',name);
                     for i = 1:length(opt.display)
                         mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                     end
+                    sgtitle(fh,name,'FontSize',18);
                 end
                 if ismember('liquid',opt.field)
-                    fh = figure('name',['Time/axial distributions of mixture (liquid) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of mixture (liquid) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP','TWALL'})
                             mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
@@ -929,9 +936,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             mix.plotzt(['liquid.' opt.display{i}],['Liquid ' opt.label{i}],opt.unit{i},k,opt);
                         end
                     end
+                    sgtitle(fh,name,'FontSize',18);
                 end
-                if ismember('liquid',opt.field)
-                    fh = figure('name',['Time/axial distributions of mixture (vapor) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                if ismember('vapor',opt.field)
+                    name = ['Time/axial distributions of mixture (vapor) parameters - ' opt.solveMode ' - Wall ' num2str(k)];
+                    fh = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP','TWALL'})
                             mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
@@ -939,6 +948,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             mix.plotzt(['vapor.' opt.display{i}],['Vapor ' opt.label{i}],opt.unit{i},k,opt);
                         end
                     end
+                    sgtitle(fh,name,'FontSize',18);
                 end
             end
         end

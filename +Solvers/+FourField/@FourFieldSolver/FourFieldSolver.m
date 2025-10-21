@@ -271,7 +271,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver
                 tIdx             (:,1) double {mustBeInteger,mustBePositive}                                                                          = []
                 opts.display     {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
-                opts.solveMode   {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
+                opts.solveMode   {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                                       = 'REAL'
                 opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
                 opts.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
                 opts.annular     (1,1) logical                                                                                                        = true
@@ -288,18 +288,20 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             bc  = ffSolver.boundaryConditions;
 
             switch opts.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
                     if isempty(tIdx), tIdx = 1:ffSolver.NTIME; end
                     mixs = ffSolver.mixSolver.mixture(tIdx);
                     flms = ffSolver.film(tIdx);
                     drps = ffSolver.drop(tIdx);
                     bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,flms(idx).TIDX),1:length(tIdx),'uni',0);
-                case 'STEADY'
+                    solveMode = '';
+                case 'NULL'
                     if isempty(tIdx), tIdx = 1:length(ffSolver.filmInit); end
                     mixs = repmat(ffSolver.mixSolver.mixtureInit(end),1,length(tIdx));
                     flms = ffSolver.filmInit(tIdx);
                     drps = ffSolver.dropInit(tIdx);
                     bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
+                    solveMode = '- Null transient';
             end
 
             % Temperature unit offset between C and K
@@ -308,11 +310,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
-                    sprintf('Axial distributions of four-field parameters at %0.3f [s] - %s', flms(1).TIME, opts.solveMode), ...
+                    sprintf('Axial distributions of four-field parameters at %0.3f [s] %s', flms(1).TIME, solveMode), ...
                     opts.wall, "arrangement", opts.arrangement);
             else
                 plotter = Solvers.SolverPlotter( ...
-                    sprintf('Axial distributions of four-field parameters at %s [s] - %s', '%0.3f', opts.solveMode), ...
+                    sprintf('Axial distributions of four-field parameters at %s [s] %s', '%0.3f', solveMode), ...
                     opts.wall, ...
                     "arrangement", opts.arrangement, ...
                     "isAnimation", true, ...
@@ -597,9 +599,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = ffSolver.NZ
                 opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
-                opt.solveMode   {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
+                opt.solveMode   {mustBeMember(opt.solveMode,{'REAL','NULL'})}                                                                       = 'REAL'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.inputSet.geometry.NWALL
-                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = 1:ffSolver.NTIME
+                opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = []
                 opt.reverseTime (1,1) logical                                                                                                       = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                     = 'flow'
@@ -608,21 +610,22 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
             
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:ffSolver.NTIME; end
                     mix = ffSolver.mixSolver.mixture(opt.tIdx);
                     %fld = ffSolver.mixSolver.fluid(opt.tIdx);
                     flm = ffSolver.film(opt.tIdx);
                     drp = ffSolver.drop(opt.tIdx);
                     bcHFLUX = permute(ffSolver.boundaryConditions.HFLUX(zIdx,:,:),[3 2 1]);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:ffSolver.NTIME]')
-                        opt.tIdx = 1:length(ffSolver.filmInit);
-                    end
-                    mix = ffSolver.mixSolver.mixtureInit(opt.tIdx);
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(ffSolver.filmInit);  end
+                    mix = repmat(ffSolver.mixSolver.mixtureInit(end),1,length(opt.tIdx));
                     %fld = repmat(ffSolver.mixSolver.fluid(1),1,length(opt.tIdx));
                     flm = ffSolver.filmInit(opt.tIdx);
                     drp = ffSolver.dropInit(opt.tIdx);
                     bcHFLUX = repmat(ffSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
+                    solveMode = '- Null transient';
             end
             
             time = [flm.TIME];
@@ -638,7 +641,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             z = ffSolver.Z;
             plotter = Solvers.SolverPlotter( ...
-                                sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), opt.solveMode), ...
+                                sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), solveMode), ...
                                 opt.wall, 'arrangement', opt.arrangement);
             plotter.setZs(time);
             
@@ -868,10 +871,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','velocity','frequency'}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',     'm/s',       'Hz'}
                 opt.field        {mustBeMember(opt.field,{'drop','film','wave','base'})}  = {'wave','base'}
-                opt.solveMode    {mustBeMember(opt.solveMode,{'TRANSIENT','STEADY'})}     = 'TRANSIENT'
+                opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:ffSolver.inputSet.geometry.NWALL
                 opt.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:ffSolver.NZ
-                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:ffSolver.NTIME
+                opt.tIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = []
                 opt.annular      (1,1) logical                                            = true
                 opt.reverseTime  (1,1) logical                                            = false
                 opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
@@ -887,17 +890,19 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     opt.unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm',        'm',       'Hz',      'm',    'm',            '-',                   '-',                   '-',                  '-',                '-',           '-'};
             end
             switch opt.solveMode
-                case 'TRANSIENT'
+                case 'REAL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:ffSolver.NTIME; end
                     mix = ffSolver.mixSolver.mixture(opt.tIdx);
                     drp = ffSolver.drop(opt.tIdx);
                     flm = ffSolver.film(opt.tIdx);
-                case 'STEADY'
-                    if isequal(opt.tIdx,[1:ffSolver.NTIME]')
-                        opt.tIdx = 1:length(ffSolver.filmInit);
-                    end
-                    mix = ffSolver.mixSolver.mixtureInit(opt.tIdx);
+                    solveMode = '';
+                case 'NULL'
+                    if isempty(opt.tIdx), opt.tIdx = 1:length(ffSolver.filmInit);  end
+                    mix = repmat(ffSolver.mixSolver.mixtureInit(end),1,length(opt.tIdx));
                     drp = ffSolver.dropInit(opt.tIdx);
                     flm = ffSolver.filmInit(opt.tIdx);
+                    solveMode = '- Null transient';
+                    time = [drp(opt.tIdx).TIME];
             end
             if isempty(opt.wall)
                 opt.wall = 1:ffSolver.inputSet.geometry.NWALL;
@@ -913,52 +918,60 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
             for k = opt.wall
                 if ismember('drop',opt.field)
-                    fh_drp = figure('name',['Time/axial distributions of four-field (drop) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of four-field (drop) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_drp = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         elseif contains(opt.display{i},{'WL','THICK','AMPLITUDE','FREQUENCY','SPACING','WIDTH','EPSILON','BETA','BETAP','ETA','FDRY','SHAPEFACTOR'})
                             continue
                         else
                             ax_drp(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
                         end
                     end
+                    sgtitle(fh_drp,name,'FontSize',18);
                 end
                 if ismember('film',opt.field)
-                    fh_flm = figure('name',['Time/axial distributions of four-field (film) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of four-field (film) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_flm = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         elseif contains(opt.display{i},{'AMPLITUDE','FREQUENCY','SPACING','WIDTH','EPSILON','BETA','BETAP','ETA','FDRY','SHAPEFACTOR'})
                             continue
                         else
                             ax_flm(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
+                    sgtitle(fh_flm,name,'FontSize',18);
                 end
                 if ismember('wave',opt.field)
-                    fh_wav = figure('name',['Time/axial distributions of four-field (wave) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of four-field (wave) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_wav = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                            ax_wav(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         elseif contains(opt.display{i},{'FDRY'})
                             continue    
                         else
-                            ax_flm(i) = flm.plotzt(['wave.' opt.display{i}],['Wave '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
+                            ax_wav(i) = flm.plotzt(['wave.' opt.display{i}],['Wave '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
+                    sgtitle(fh_wav,name,'FontSize',18);
                 end
                 if ismember('base',opt.field)
-                    fh_wav = figure('name',['Time/axial distributions of four-field (wave) parameters - ' opt.solveMode ' - Wall ' num2str(k)]);
+                    name = ['Time/axial distributions of four-field (wave) parameters ' solveMode ' - Wall ' num2str(k)];
+                    fh_bas = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_bas(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                            ax_bas(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         elseif contains(opt.display{i},{'AMPLITUDE','FREQUENCY','SPACING','WIDTH','SHAPEFACTOR'})
                             continue
                         else
                             ax_bas(i) = flm.plotzt(['base.' opt.display{i}],['Base film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
+                    sgtitle(fh_bas,name,'FontSize',18);
                 end
             end
         end
