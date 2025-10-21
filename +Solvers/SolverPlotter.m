@@ -273,6 +273,7 @@ classdef SolverPlotter < handle
                                 if loop
                                     currentIndex = 1;
                                 else
+                                    currentIndex = lastIndex;
                                     fh.UserData.isPlaying = false;
                                     break;
                                 end
