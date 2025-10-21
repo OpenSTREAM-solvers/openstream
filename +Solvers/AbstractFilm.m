@@ -9,9 +9,12 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         DZ           (1,1) double  {mustBeNumeric}                         =0      % Axial step size [m]
         inputSet                   {isa(inputSet,'Inputs.InputSet')}               % Input set
         fluid                      {isa(fluid,'Inputs.FluidProperties')}           % Fluid properties
-        mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % Mixture property of the mixture solver
-
         smix         (1,1)         {isa(smix, 'Solvers.AbstractMixture')}          % Mixture property of the multi-field solver
+    end
+
+    properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver}, Hidden)
+        
+       mix          (1,1)          {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % Mixture property of the mixture solver
     end
    
 

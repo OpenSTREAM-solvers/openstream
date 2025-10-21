@@ -4,7 +4,7 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
     %
     %   TODO: Detailed explanations
 
-    properties (Abstract,  SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
+    properties (Abstract, SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         % Flow properties
         W            (:,1) double  {mustBeNumeric}                                                % [kg/s] Mass flow rate
         P            (:,1) double  {mustBeNumeric}                                                % [Pa] Pressure
@@ -12,7 +12,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         DP           (1,1) struct                                                                 % Saved detailed pressure drops
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
         ACC          (1,1) struct                                                                 % Saved detailed acceleration terms
-        %TRELAX       (1,1) struct                                                                 % Time relaxation terms
 
         % Phases
         liquid
@@ -32,7 +31,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         
         % Iteration properties
         ITR
- 
     end
 
     properties (Abstract, Access=protected)
@@ -45,10 +43,7 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         cbt          (:,:) logical                                                              % [-] Critical Boiling Transition flag
         rho          (:,1) double  {mustBeNumeric}                                              % [kg/m^3] Mixture density
         oafidx_const       double  {mustBeNumeric}                                              % [-] Solved index for onset of annular flow
-        sigm_const   (:,1) double  {mustBeNumeric}                                              % [-] Solved sigmoid fnc value
-        %relaxtevap   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
-        %relaxtcond   (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
-    
+        sigm_const   (:,1) double  {mustBeNumeric}                                              % [-] Solved sigmoid fnc value    
     end
 
     properties (Abstract, SetAccess=?Solvers.AbstractSolver, GetAccess={?Solvers.AbstractField, ?Solvers.AbstractPhase})
@@ -159,7 +154,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
                 rho = mix.rho(zIdx); 
             end
         end
-        
         
     end
 
@@ -501,8 +495,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         
     end
     
-    
-    
     %% Wall heat transfer methods
     methods
         
@@ -601,46 +593,6 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         
     end
     
-    %% Vapor transport methods
-    methods    
-        
-        function Hwalheat = HWALHEAT(mix, zIdx)
-        %HWALHEAT Linear wall heat to vapor rate [W/m]
-        %Set to LHGR beyond CBT
-        %
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            cbt = mix.CBT(zIdx);                                           % CBT flag
-            Hwalheat = double(cbt).*mix.LHGR(zIdx);                        % [W/m]
-        end
-        
-        function Htot = HTOT(mix, zIdx)
-        %HTOT Total linear vapor heat rate [W/m]
-        %    
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            [Hcond, Hevap] = mix.HINT(zIdx);
-            Htot = Hcond + Hevap + mix.HWALEVAP(zIdx) + mix.HWALHEAT(zIdx); % [W/m]
-        end
-        
-        function Hvtot = HVTOT(mix, zIdx)
-        %HVTOT Total linear vapor specific enthalpy transfer [J/kg/m]
-        % This term represents the additional energy input to the vapor per unit vapor mass
-        % Only the wall lump approach (i.e. same vapor heat input to all walls) is working correctly for now
-        % Otherwise, the liquid can become subcooled in post CHF calculations
-        % TODO: Fix issue and allow wall specific approach. This can be useful for DNB -> inverted film boiling
-        
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-            
-            WV   = mix.TRELAX.WV(zIdx,:);                                  % [kg/s] Vapor mass flow rate
-            Htot = mix.HTOT(zIdx);                                         % [W/m] Total linear vapor heat rate
-            WV   = sum(WV,2); Htot = sum(Htot,2);                          % [kg/s,W/m] Wall lump approach
-            
-            Hvtot = Htot./WV;                                              % [J/kg/m]
-            Hvtot(WV <= 1E-8) = 0;
-        end
-        
-    end
 
     %% Helper functions
     methods(Access = protected, Hidden = true)
@@ -657,6 +609,76 @@ classdef (Abstract) AbstractMixture < Solvers.AbstractField
         %  
             mix.xeq(zIdx) = (mix.H(zIdx)-mix.fluid.HF)./ mix.fluid.HFG;
         end
+
+        function CHF_CALC(mix, zIdx)
+        %CHF_CALC Helper function to calculate Critical Heat Flux [W/m^2] and CBT flag    
+        %TODO: Implement additional CHF correlations
+        %      Investigate potential rewetting after CBT, this would require access to CBT and Twall at previous time step
+            
+            model = mix.inputSet.model;
+            geom = mix.inputSet.geometry;
+            
+            Pr  = mix.P(end);                                              % [Pa] System pressure
+            G   = mix.MFLUX(1:mix(1).NZ);                                  % [kg/m^2/s] Mass flux
+            XEQ = mix.XEQ(1:mix(1).NZ);                                    % [-] Equilibrium quality
+            D   = geom.HDIAM;                                              % [m] Diameter
+            
+            switch model.CBT
+                case InputEnums.CBT.NONE
+                    chf = nan(mix(1).NZ,geom.NWALL);
+                    
+                case InputEnums.CBT.BIASI
+                    % Biasi correlation
+                    % BIAS!, L . et al.: A new correlation for round ducts and uniform
+                    % heating and its comparison with world data, EURAEC report 1874, 1967.
+                    
+                    Pr = Pr/1.01235E5;                                     % [ata] System pressure    
+                    G  = G./10;                                            % [g/cm^2/s] Mass flux
+                    D  = D*1E2;                                            % [cm] Diameter
+
+                    n = 0.6 - 0.2*double(D>=1);
+                    
+                    HP = -1.159+0.149*Pr*exp(-0.019*Pr)+8.99*Pr/(10+Pr^2);
+                    YP = 0.7249+0.099*Pr*exp(-0.032*Pr);
+                    
+                    q1 = (3.780E3/D^n)./G.^0.6.*HP.*(1-XEQ);               % [W/cm^2] High quality
+                    q2 = (1.883E3/D^n)./G.^(1/6).*(YP./G.^(1/6)-XEQ);      % [W/cm^2] Low quality
+                    
+                    chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
+            end
+            
+            chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
+            
+            % CBT flag
+            cbt = mix.HFLUX(1:mix.NZ,:) > chf;                             % CBT indicator
+            
+            %TODO: Rewetting model and behavior downstream
+            %cbt = cumsum(cbt,1) >= 1;                                      % No rewetting downstream CBT
+            %cbt(mix.XEQ>=1,:) = true;                                      % Set cbt to 1 for Xeq >= 1
+            
+            mix.chf(zIdx,:) = chf(zIdx,:);                                 % [W/m^2] Critical heat flux
+            mix.cbt(zIdx,:) = cbt(zIdx,:);                                 % [-] CBT flag
+        end
+        
+        function RHO_CALC(mix, zIdx)
+        %RHO_CALC Helper function to calculate density [kg/m^3]
+        %
+            % Call VF and CHF first
+            mix.VF_CALC(zIdx);
+            mix.CHF_CALC(zIdx);
+            
+            vf = mix.VF(zIdx);
+            mix.rho(zIdx) = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx)) + ...
+                (1-vf).*mix.fluid.RHOL(mix.liquid.H(zIdx));    
+        end
+
     end
+
+    methods (Abstract, Access = protected)
+
+        VF_CALC(obj, zIdx)
+
+    end
+
 end
 

@@ -10,6 +10,7 @@ classdef Liquid < Solvers.AbstractPhase
     end
     
     methods
+
         function liquids = Liquid(films, drops)
         %LIQUID Construct an instance of this class
         %   Detailed explanation goes here
@@ -21,9 +22,9 @@ classdef Liquid < Solvers.AbstractPhase
             if nargin > 0
                 liquids(1:length(films)) = Solvers.ThreeField.Liquid();
                 for i = 1:length(films)
-                    liquids(i).film = films(i);
-                    liquids(i).drop = drops(i);
-                    liquids(i).NZ = films(i).NZ;
+                    liquids(i).film     = films(i);
+                    liquids(i).drop     = drops(i);
+                    liquids(i).NZ       = films(i).NZ;
                     liquids(i).inputSet = films(i).inputSet;
                 end
             end
@@ -32,13 +33,13 @@ classdef Liquid < Solvers.AbstractPhase
         function updatePhases(liquid, film, drop)
             arguments
                 liquid
-                film Solvers.ThreeField.Film
-                drop Solvers.ThreeField.Drop
+                film    Solvers.ThreeField.Film
+                drop    Solvers.ThreeField.Drop
             end
 
-            liquid.film = film;
-            liquid.drop = drop;
-            liquid.NZ = film.NZ;
+            liquid.film     = film;
+            liquid.drop     = drop;
+            liquid.NZ       = film.NZ;
             liquid.inputSet = film.inputSet;
         end
 
@@ -85,7 +86,7 @@ classdef Liquid < Solvers.AbstractPhase
             % While initializing ThreeFieldSolver, length of film.W may be
             % 1. Use value from mixsolver_mix
             % TODO: find better way of doing this in TFsolver init.
-            if length(liquid.film.W) == 1
+            if isscalar(liquid.film.W)
                 w = liquid.film.mix.liquid.W(zIdx);
             else
                 w = sum(liquid.film.W(zIdx,:),2) + liquid.drop.W(zIdx);
@@ -97,7 +98,7 @@ classdef Liquid < Solvers.AbstractPhase
         %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
-            if length(liquid.film.W) == 1
+            if isscalar(liquid.film.W)
                 u = liquid.film.mix.liquid.U(zIdx);
             else
                 u = liquid.W(zIdx)./(liquid.drop.W(zIdx)./liquid.drop.U(zIdx)+sum(liquid.film.W(zIdx,:)./liquid.film.U(zIdx,:),2));
@@ -109,7 +110,7 @@ classdef Liquid < Solvers.AbstractPhase
         %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
 
-            if length(liquid.film.W) == 1
+            if isscalar(liquid.film.W)
                 h = liquid.film.mix.liquid.H(zIdx);
             else
                 h = (sum(liquid.film.W(zIdx,:).*liquid.film.H(zIdx,:),2) + liquid.drop.W(zIdx).*liquid.drop.H(zIdx))./liquid.W(zIdx);
@@ -120,6 +121,7 @@ classdef Liquid < Solvers.AbstractPhase
         %MFLUX Mass flux [kg/m^2/s]
         %
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+
             mflux = liquid.W(zIdx)./liquid.film.inputSet.geometry.AREA;
         end
 
@@ -153,5 +155,6 @@ classdef Liquid < Solvers.AbstractPhase
         end   
 
     end
+    
 end
 

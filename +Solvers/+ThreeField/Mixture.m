@@ -12,12 +12,15 @@ classdef Mixture < Solvers.AbstractMixture
         DP                                                                                        % Saved detailed pressure drops
         DPSUM                                                                                     % Saved detailed cumulative pressure drops
         ACC                                                                                       % Saved detailed acceleration terms
-        TRELAX                                                                                    % Time relaxation terms
 
         % Phases
-        mixSolver_mix (:,1) Solvers.Mixture.Mixture                                             % Mixture handles from MixtureSolver
         liquid                                                                                  % Liquid handle from ThreeFieldSolver
         vapor                                                                                   % A TF-specific vapor can be implemented
+    end
+
+    properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField}, Hidden)
+
+        mixSolver_mix (:,1) Solvers.Mixture.Mixture                                             % Mixture handles from MixtureSolver
     end
 
     properties (Access=protected) % TODO: is this the best access setting?
@@ -39,8 +42,6 @@ classdef Mixture < Solvers.AbstractMixture
         rho                                                                = 1.                 % [kg/m^3] Mixture density
         oafidx_const                                                       = []                 % [-] Solved index for onset of annular flow
         sigm_const                                                         = []                 % [-] Solved sigmoid fnc value
-        relaxtevap                                                                              % [-] Time relaxation for interfacial evaporation
-        relaxtcond                                                                              % [-] Time relaxation for interfacal condensation
     
     end
 
@@ -64,7 +65,7 @@ classdef Mixture < Solvers.AbstractMixture
             % end
 
             % Overload copyable properties (order is important due to the setter functions)
-            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','ACC','ITR'};
+            mix.flowProperties = {'W','P','H','DP','DPSUM','ACC'};
 
             if nargin > 0
 
@@ -117,24 +118,22 @@ classdef Mixture < Solvers.AbstractMixture
             end
         end
 
-
         function copyFlowProperties(mix)
 
             % Copy flow properties
             % TODO: only copy a subset of the mix.flowProperties
             % NOTE: maybe the full set can be copied directly?
-            mix.mixSolver_mix.copyFlowProperties(mix, propNames={'P', 'H', 'TRELAX','DP','DPSUM','ACC','ITR', 'HFLUX'}, all=true);
-            props = {'mflux', 'xeq', 'x', 'vf', 'chf', 'cbt', 'rho', 'relaxtevap', 'relaxtcond'};
+            mix.mixSolver_mix.copyFlowProperties(mix, propNames={'P', 'H', 'DP','DPSUM','ACC', 'HFLUX'}, all=true);
+            props = {'mflux', 'xeq', 'x', 'vf', 'chf', 'cbt', 'rho'};
             for p=props
                 mix.(p{:}) = mix.mixSolver_mix.(upper(p{:}));
             end
         end
-
         
     end
 
     %% Helper methods
-    methods
+    methods(Access = protected, Hidden = true)
         
         function W_CALC(mix)
 
@@ -162,6 +161,14 @@ classdef Mixture < Solvers.AbstractMixture
         %     %
         %     % But also consider superheat/subcool conditions...
         % end
+
+        function vf = VF_CALC(mix, zIdx)
+        %VF Void fraction [-]
+        %
+            if nargin < 2, zIdx = (1:miv(1).NZ).'; end
+
+            vf = 1- mix.liquid.vf(zIdx);
+        end
        
     end
 
