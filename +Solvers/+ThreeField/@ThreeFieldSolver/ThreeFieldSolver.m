@@ -265,7 +265,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         %
             arguments
                 tfSolver
-                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                         = 1:tfSolver.NTIME
+                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                         = []
                 opts.display   {mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
                 opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                               = 'TRANSIENT'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
@@ -286,16 +286,20 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         
             switch opts.solveMode
                 case 'TRANSIENT'
+                    if isempty(tIdx), tIdx = 1:tfSolver.NTIME; end
+                    mixs = tfSolver.mixSolver.mixture(tIdx);
                     flms = tfSolver.film(tIdx);
                     drps = tfSolver.drop(tIdx);
+                    bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,flms(idx).TIDX),1:length(tIdx),'uni',0);
+
                 case 'STEADY'
-                    tIdx = tIdx(ismember(tIdx,1:length(tfSolver.filmInit)));
+                    if isempty(tIdx), tIdx = 1:length(tfSolver.filmInit); end
+                    mixs = repmat(tfSolver.mixSolver.mixtureInit(end),1,length(tIdx));
                     flms = tfSolver.filmInit(tIdx);
                     drps = tfSolver.dropInit(tIdx);
+                    bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
             end
-            
-            mixs = tfSolver.mixSolver.mixture(tIdx);
-
+           
             % Temperature unit offset between C and K
             dTemp = 0; if strcmpi(opts.unitTemp,'C'), dTemp = -273.15; end
             
@@ -342,8 +346,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
-                    plotter.plotz(  bcHFLUX             ,'bc'  ,'DisplayName','Boundary Condition');
+                    plotter.plotz(  bcHFLUX{idx}        ,'bc'  ,'DisplayName','Boundary Condition');
                     plotter.plotz(flm.HFLUX(opts.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);

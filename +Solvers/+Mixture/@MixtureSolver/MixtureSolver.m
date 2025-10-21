@@ -308,7 +308,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         %
             arguments
                 mixSolver
-                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                = 1:mixSolver.NTIME
+                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                = []
                 opts.display     {mustBeMember(opts.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
                 opts.solveMode   {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                      = 'TRANSIENT'
                 opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.inputSet.geometry.NWALL
@@ -330,14 +330,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
             bc    = mixSolver.boundaryConditions;
             model = mixSolver.inputSet.model;
             geom  = mixSolver.inputSet.geometry;
-            
 
             switch opts.solveMode
                 case 'TRANSIENT'
+                    if isempty(tIdx), tIdx = 1:mixSolver.NTIME; end
                     mixs = mixSolver.mixture(tIdx);
+                    fld     = mixSolver.fluid;
+                    bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,mixs(idx).TIDX),1:length(tIdx),'uni',0);
                 case 'STEADY'
-                    tIdx = tIdx(ismember(tIdx,1:length(mixSolver.mixtureInit)));
+                    if isempty(tIdx), tIdx = 1:length(mixSolver.mixtureInit); end
                     mixs = mixSolver.mixtureInit(tIdx);
+                    fld     = repmat(mixSolver.fluid(1),1,length(tIdx));
+                    bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
             end
             
             % Temperature unit offset between C and K
@@ -374,8 +378,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
-                    plotter.plotz(  bcHFLUX             ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plotz(  bcHFLUX{idx}        ,'bc'         ,'DisplayName','Boundary Condition');
                     plotter.plotz(mix.HFLUX(opts.zIdx,:),'Mixture'                                       );
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION
                         plotter.plotz(mix.liquid.HFLUX(opts.zIdx)      ,'Liquid'                                      );
@@ -479,8 +482,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         plotter.plotz(mix.NEARWALL.HBULK(opts.zIdx,:) ,'Bulk'    ,'DisplayName','Bulk equilibrium quality');
                     end
                 
-                    plotter.plotz(repmat(mixSolver.fluid(tIdx(idx)).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                    plotter.plotz(repmat(mixSolver.fluid(tIdx(idx)).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
+                    plotter.plotz(repmat(fld(idx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plotz(repmat(fld(idx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -534,7 +537,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.liquid.T(opts.zIdx)+dTemp,'Liquid' );
                     plotter.plotz(mix.vapor.T(opts.zIdx) +dTemp,'Vapor'  );
                     plotter.plotz(mix.TWALL(opts.zIdx)   +dTemp,'Wall'   );
-                    plotter.plotz(repmat(mixSolver.fluid(tIdx(idx)).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.plotz(repmat(fld(idx).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;

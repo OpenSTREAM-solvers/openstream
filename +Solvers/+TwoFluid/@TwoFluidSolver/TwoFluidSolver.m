@@ -179,7 +179,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         %
             arguments
                 twfSolver
-                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                     = 1:twfSolver.NTIME
+                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                     = []
                 opts.display   {mustBeMember(opts.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
                 opts.solveMode {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                           = 'TRANSIENT'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
@@ -200,15 +200,20 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             
             switch opts.solveMode
                 case 'TRANSIENT'
+                    if isempty(tIdx), tIdx = 1:twfSolver.NTIME; end
+                    mixs = twfSolver.mixSolver.mixture(tIdx);
                     liqs = twfSolver.liquid(tIdx);
                     vaps = twfSolver.vapor(tIdx);
+                    fld     = twfSolver.fluid;
+                    bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,liqs(idx).TIDX),1:length(tIdx),'uni',0);
                 case 'STEADY'
-                    tIdx = tIdx(ismember(tIdx,1:length(twfSolver.liquidInit)));
+                    if isempty(tIdx), tIdx = 1:length(twfSolver.liquidInit); end
+                    mixs = repmat(twfSolver.mixSolver.mixtureInit(end),1,length(tIdx));
                     liqs = twfSolver.liquidInit(tIdx);
                     vaps = twfSolver.vaporInit(tIdx);
+                    fld     = repmat(twfSolver.fluid(1),1,length(tIdx));
+                    bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
             end
-
-            mixs = twfSolver.mixSolver.mixture(tIdx);
             
             % Temperature unit offset between C and K
             dTemp = 0; if strcmp(opts.unitTemp,'C'), dTemp = -273.15; end
@@ -245,9 +250,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
-                    plotter.plotz(  bcHFLUX                      ,'bc'         ,'DisplayName','Boundary Condition');
-                    plotter.plotz(mix.HFLUX(opts.zIdx)           ,'Mixture'                                       );
+                    plotter.plotz(  bcHFLUX{idx}                 ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plotz(mix.HFLUX(opts.zIdx,:)         ,'Mixture'                                       );
                     plotter.plotz(liq.HFLUX(opts.zIdx)           ,'Liquid'                                        );
                     plotter.plotz(vap.HFLUX(opts.zIdx)           ,'Vapor'                                         );
                     plotter.plotz(vap.HFLUXWALEVAP(liq,opts.zIdx),'Evaporation','DisplayName','Wall evaporation'  );
@@ -294,8 +298,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.H(opts.zIdx) ,'Mixture');
                     plotter.plotz(liq.H(opts.zIdx) ,'Liquid' );
                     plotter.plotz(vap.H(opts.zIdx) ,'Vapor'  );
-                    plotter.plotz(repmat(twfSolver.fluid(tIdx(idx)).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                    plotter.plotz(repmat(twfSolver.fluid(tIdx(idx)).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
+                    plotter.plotz(repmat(fld(idx).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plotz(repmat(fld(idx).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                 end
@@ -322,7 +326,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
                     plotter.plotz(liq.T(opts.zIdx)+dTemp,'Liquid');
                     plotter.plotz(vap.T(opts.zIdx)+dTemp, 'Vapor');
-                    plotter.plotz(repmat(twfSolver.fluid(tIdx(idx)).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.plotz(repmat(fld(idx).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                 end

@@ -269,7 +269,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         %
             arguments
                 ffSolver
-                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                                                          = 1:ffSolver.NTIME
+                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                                                          = []
                 opts.display     {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
                 opts.solveMode   {mustBeMember(opts.solveMode,{'TRANSIENT','STEADY'})}                                                                = 'TRANSIENT'
                 opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
@@ -289,15 +289,18 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             switch opts.solveMode
                 case 'TRANSIENT'
+                    if isempty(tIdx), tIdx = 1:ffSolver.NTIME; end
+                    mixs = ffSolver.mixSolver.mixture(tIdx);
                     flms = ffSolver.film(tIdx);
                     drps = ffSolver.drop(tIdx);
+                    bcHFLUX = arrayfun(@(idx) bc.HFLUX(opts.zIdx,:,flms(idx).TIDX),1:length(tIdx),'uni',0);
                 case 'STEADY'
-                    tIdx = tIdx(ismember(tIdx,1:length(ffSolver.filmInit)));
+                    if isempty(tIdx), tIdx = 1:length(ffSolver.filmInit); end
+                    mixs = repmat(ffSolver.mixSolver.mixtureInit(end),1,length(tIdx));
                     flms = ffSolver.filmInit(tIdx);
                     drps = ffSolver.dropInit(tIdx);
+                    bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
             end
-
-            mixs = ffSolver.mixSolver.mixture(tIdx);
 
             % Temperature unit offset between C and K
             dTemp = 0; if strcmp(opts.unitTemp,'C'), dTemp = -273.15; end
@@ -344,8 +347,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    bcHFLUX = bc.HFLUX(opts.zIdx,:,mix.TIDX);
-                    plotter.plotz(  bcHFLUX             ,'bc'  ,'DisplayName','Boundary Condition');
+                    plotter.plotz(  bcHFLUX{idx}        ,'bc'  ,'DisplayName','Boundary Condition');
                     plotter.plotz(flm.HFLUX(opts.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
