@@ -890,10 +890,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
+
+            display = {        'HFLUX',            'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
+            label   = {'Wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction','temperature','wall temperature'};
+            unit    = {        'W/m^2',          'kg/s',          'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
             if strcmp('ALL',opt.display)
-                opt.display = {        'HFLUX',            'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
-                opt.label   = {'Wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction','temperature','wall temperature'};
-                opt.unit    = {        'W/m^2',          'kg/s',          'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
+                opt.display = display;
+                opt.label   = label;
+                opt.unit    = unit;
+            else
+                opt.label   = label(ismember(display,opt.display));
+                opt.unit    = unit(ismember(display,opt.display));
             end
             switch opt.solveMode
                 case 'REAL'

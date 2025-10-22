@@ -759,10 +759,17 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
+
+            display = {         'HFLUX',             'W',       'U',       'H',           'X',                 'VF',          'T',                    'INTAREA'};
+            label   = {'wall heat flux','mass flow rate','velocity','enthalpy','mass quality','volumetric fraction','temperature','volumetric interfacial area'};
+            unit    = {         'W/m^2',          'kg/s',     'm/s',    'J/kg',           '-',                  '-',          'K',                      'm^-^1'};
             if strcmp('ALL',opt.display)
-                    opt.display = {         'HFLUX',             'W',       'U',       'H',           'X',                 'VF',          'T',                    'INTAREA'};
-                    opt.label   = {'wall heat flux','mass flow rate','velocity','enthalpy','mass quality','volumetric fraction','temperature','volumetric interfacial area'};
-                    opt.unit    = {         'W/m^2',          'kg/s',     'm/s',    'J/kg',           '-',                  '-',          'K',                      'm^-^1'};
+                opt.display = display;
+                opt.label   = label;
+                opt.unit    = unit;
+            else
+                opt.label   = label(ismember(display,opt.display));
+                opt.unit    = unit(ismember(display,opt.display));
             end
             switch opt.solveMode
                 case 'REAL'

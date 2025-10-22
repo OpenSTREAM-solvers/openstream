@@ -635,10 +635,17 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
+
+            display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK'};
+            label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness'};
+            unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm'};
             if strcmp('ALL',opt.display)
-                    opt.display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK'};
-                    opt.label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness'};
-                    opt.unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm'};
+                opt.display = display;
+                opt.label   = label;
+                opt.unit    = unit;
+            else
+                opt.label   = label(ismember(display,opt.display));
+                opt.unit    = unit(ismember(display,opt.display));
             end
             switch opt.solveMode
                 case 'REAL'
@@ -653,8 +660,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     drp = tfSolver.dropInit(opt.tIdx);
                     flm = tfSolver.filmInit(opt.tIdx);
                     solveMode = '- Null transient';
-                    time = [drp(opt.tIdx).TIME];
             end
+            time = [drp(opt.tIdx).TIME];
             if isempty(opt.wall)
                 opt.wall = 1:tfSolver.inputSet.geometry.NWALL;
             end

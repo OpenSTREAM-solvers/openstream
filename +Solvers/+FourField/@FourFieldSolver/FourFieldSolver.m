@@ -884,10 +884,17 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
+
+            display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK','AMPLITUDE','FREQUENCY','SPACING','WIDTH',      'EPSILON',                'BETA',               'BETAP',                'ETA',             'FDRY', 'SHAPEFACTOR'};
+            label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness','amplitude','frequency','spacing','width','mass fraction','interfacial fraction','evaporation fraction','deposition fraction','dry time fraction','shape factor'};
+            unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm',        'm',       'Hz',      'm',    'm',            '-',                   '-',                   '-',                  '-',                '-',           '-'};
             if strcmp('ALL',opt.display)
-                    opt.display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK','AMPLITUDE','FREQUENCY','SPACING','WIDTH',      'EPSILON',                'BETA',               'BETAP',                'ETA',             'FDRY', 'SHAPEFACTOR'};
-                    opt.label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness','amplitude','frequency','spacing','width','mass fraction','interfacial fraction','evaporation fraction','deposition fraction','dry time fraction','shape factor'};
-                    opt.unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm',        'm',       'Hz',      'm',    'm',            '-',                   '-',                   '-',                  '-',                '-',           '-'};
+                opt.display = display;
+                opt.label   = label;
+                opt.unit    = unit;
+            else
+                opt.label   = label(ismember(display,opt.display));
+                opt.unit    = unit(ismember(display,opt.display));
             end
             switch opt.solveMode
                 case 'REAL'
@@ -902,8 +909,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     drp = ffSolver.dropInit(opt.tIdx);
                     flm = ffSolver.filmInit(opt.tIdx);
                     solveMode = '- Null transient';
-                    time = [drp(opt.tIdx).TIME];
             end
+            time = [drp(opt.tIdx).TIME];
             if isempty(opt.wall)
                 opt.wall = 1:ffSolver.inputSet.geometry.NWALL;
             end
@@ -960,7 +967,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     sgtitle(fh_wav,name,'FontSize',18);
                 end
                 if ismember('base',opt.field)
-                    name = ['Time/axial distributions of four-field (wave) parameters ' solveMode ' - Wall ' num2str(k)];
+                    name = ['Time/axial distributions of four-field (base) parameters ' solveMode ' - Wall ' num2str(k)];
                     fh_bas = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
