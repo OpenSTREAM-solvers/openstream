@@ -1154,18 +1154,19 @@ classdef Mixture < Solvers.AbstractField
             model = mix.inputSet.model;
             geom = mix.inputSet.geometry;
             
+            % CHF
             Pr  = mix.P(end);                                              % [Pa] System pressure
             G   = mix.MFLUX(1:mix(1).NZ);                                  % [kg/m^2/s] Mass flux
             XEQ = mix.XEQ(1:mix(1).NZ);                                    % [-] Equilibrium quality
             D   = geom.HDIAM;                                              % [m] Diameter
             
             switch model.CBT
-                case InputEnums.CBT.NONE
-                    chf = nan(mix(1).NZ,geom.NWALL);
+                case {InputEnums.CBT.NONE,InputEnums.CBT.ELEVATION}
+                    chf = nan(mix(1).NZ,geom.NWALL);                       % Skip CHF calculation
                     
                 case InputEnums.CBT.BIASI
                     % Biasi correlation
-                    % BIAS!, L . et al.: A new correlation for round ducts and uniform
+                    % BIASI, L . et al.: A new correlation for round ducts and uniform
                     % heating and its comparison with world data, EURAEC report 1874, 1967.
                     
                     Pr = Pr/1.01235E5;                                     % [ata] System pressure    
@@ -1184,10 +1185,16 @@ classdef Mixture < Solvers.AbstractField
             end
             
             chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
-            
+
             % CBT flag
-            cbt = mix.HFLUX(1:mix.NZ,:) > chf;                             % CBT indicator
-            
+            switch model.CBT
+                case InputEnums.CBT.ELEVATION
+                    cbt = mix.Z >= model.CBTELEVATION;                     % CBT indicator based on input elevation
+
+                otherwise
+                    cbt = mix.HFLUX(1:mix.NZ,:) > chf;                     % CBT indicator based on CHF value
+            end
+
             %TODO: Rewetting model and behavior downstream
             %cbt = cumsum(cbt,1) >= 1;                                      % No rewetting downstream CBT
             %cbt(mix.XEQ>=1,:) = true;                                      % Set cbt to 1 for Xeq >= 1

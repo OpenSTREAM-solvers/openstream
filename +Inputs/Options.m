@@ -28,7 +28,7 @@ classdef Options < Inputs.Input
         
         % Mixture (HRM) solver models
         RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.8                   % Relaxation factor for the vapor  mass conservation equation [-]
-        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 1                     % Relaxation factor for the vapor  energy conservation equation [-]
+        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 0.8                   % Relaxation factor for the vapor  energy conservation equation [-]
         
         % Two-fluid solver options
         ERRORU           (1,1) double  {mustBeNumeric}                     = 1E-4                  % Velocity error target in inner iterations [m/s]

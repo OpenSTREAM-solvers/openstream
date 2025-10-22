@@ -7,6 +7,7 @@ classdef CBT
     enumeration
         NONE                 % No CBT transition
         BIASI                % Biasi model
+        ELEVATION            % CBT from given elevation
     end
 
 end
