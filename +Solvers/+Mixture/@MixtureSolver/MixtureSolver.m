@@ -167,6 +167,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixArr(tIdx).NEARWALL = NEARWALL;
                 mixArr(tIdx).ITR      = ITR;
                 
+                % Wall heat transfer transition flags
+                mixArr(tIdx).cbt  = false(mixSolver.NZ,NWALL);
+                mixArr(tIdx).mfbt = false(mixSolver.NZ,NWALL);
+
                 % Phases
                 mixArr(tIdx).liquid = Liquid(mixArr(tIdx));
                 mixArr(tIdx).vapor  = Vapor(mixArr(tIdx));

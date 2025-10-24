@@ -1,7 +1,7 @@
 classdef CBT
 %CBT Critical Boiling Transition model
 %
-%   Defines the model used to evaluate the Critical Boilign Transition.
+%   Defines the model used to evaluate the Critical Boiling Transition.
 %   Used by the mixture solver.
 %
     enumeration

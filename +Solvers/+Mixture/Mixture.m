@@ -33,26 +33,36 @@ classdef Mixture < Solvers.AbstractField
 
     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
         
-        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}
+        DZ             (1,1) double  {mustBeNumeric}                       = 0                    % [m] Axial step size
+        inputSet                     {isa(inputSet,'Inputs.InputSet')}
+        fluid                        {isa(fluid,'Inputs.FluidProperties')}
+    end
+
+    properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField}, GetAccess=?Solvers.AbstractField)
+
+        % Wall heat transfer transition flags
+        cbt            (:,:) logical                                       = false                % [-] Critical Boiling Transition flag
+        mfbt           (:,:) logical                                       = false                % [-] Minimum Film  Boiling Transition flag
     end
 
     properties (Access=private)
         
-        mflux          (:,1) double  {mustBeNumeric}                       = 1.                 % [kg/m^2-s] Mass flux
-        xeq            (:,1) double  {mustBeNumeric}                       = 1.                 % [-] Equilibrium quality
-        x              (:,1) double  {mustBeNumeric}                       = 1.                 % [-] Vapor quality
-        vf             (:,1) double  {mustBeNumeric}                       = 1.                 % [-] Void fraction
-        chf            (:,:) double  {mustBeNumeric}                                            % [-] Critical Heat Flux
-        cbt            (:,:) logical                                                            % [-] Critical Boiling Transition flag
-        rho            (:,1) double  {mustBeNumeric}                       = 1.                 % [kg/m^3] Mixture density
-        oafidx_const         double  {mustBeNumeric}                       = []                 % [-] Solved index for onset of annular flow
-        sigm_const     (:,1) double  {mustBeNumeric}                       = []                 % [-] Solved sigmoid fnc value
-        relaxtevap     (:,:) double  {mustBeNumeric}                                            % [-] Time relaxation for interfacial evaporation
-        relaxtcond     (:,:) double  {mustBeNumeric}                                            % [-] Time relaxation for interfacal condensation
-        nearwalltrelax (:,:) double  {mustBeNumeric}                                            % [-] Time relaxation for near-wall energy transfer
-  
+        % Flow properties
+        mflux          (:,1) double  {mustBeNumeric}                       = 1.                   % [kg/m^2-s] Mass flux
+        xeq            (:,1) double  {mustBeNumeric}                       = 1.                   % [-] Equilibrium quality
+        x              (:,1) double  {mustBeNumeric}                       = 1.                   % [-] Vapor quality
+        vf             (:,1) double  {mustBeNumeric}                       = 1.                   % [-] Void fraction
+        chf            (:,:) double  {mustBeNumeric}                                              % [-] Critical Heat Flux
+        rho            (:,1) double  {mustBeNumeric}                       = 1.                   % [kg/m^3] Mixture density
+
+        % Onset of annular flow
+        oafidx_const         double  {mustBeNumeric}                       = []                   % [-] Solved index for onset of annular flow
+        sigm_const     (:,1) double  {mustBeNumeric}                       = []                   % [-] Solved sigmoid fnc value
+
+        % Time relaxations
+        relaxtevap     (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
+        relaxtcond     (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacal condensation
+        nearwalltrelax (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for near-wall energy transfer
     end       
     
     %% Constructor method
@@ -69,7 +79,7 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Overload copyable properties (order is important due to the setter functions)
-            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR','NEARWALL'};
+            mix.flowProperties = {'TRELAX','W','P','H','DP','DPSUM','MDER','ITR','NEARWALL','cbt','mfbt'};
         end
         
     end
@@ -168,7 +178,7 @@ classdef Mixture < Solvers.AbstractField
         %   This function only retrieves the mix.chf values pre-calculated
         %   when mix.H is set. This is to eliminate the redundant
         %   calculation as a result of frequent function calls. The values
-        %   are calculated via mix.CHF_CALC()
+        %   are calculated via mix.CBT_CALC()
         %    
             if nargin < 2
                 chf = mix.chf; 
@@ -182,12 +192,26 @@ classdef Mixture < Solvers.AbstractField
         %   This function only retrieves the mix.cbt values pre-calculated
         %   when mix.H is set. This is to eliminate the redundant
         %   calculation as a result of frequent function calls. The values
-        %   are calculated via mix.CHF_CALC()
+        %   are calculated via mix.CBT_CALC()
         %    
             if nargin < 2
                 cbt = mix.cbt; 
             else
                 cbt = mix.cbt(zIdx,:); 
+            end
+        end
+
+        function mfbt =MFBT(mix, zIdx)
+        %MFBT Minimum Film Boiling Trnasition flag [-], wall dependant
+        %   This function only retrieves the mix.mfbt values pre-calculated
+        %   when mix.H is set. This is to eliminate the redundant
+        %   calculation as a result of frequent function calls. The values
+        %   are calculated via mix.MFBT_CALC()
+        %
+            if nargin < 2
+                mfbt = mix.mfbt;
+            else
+                mfbt = mix.mfbt(zIdx,:);
             end
         end
         
@@ -497,9 +521,9 @@ classdef Mixture < Solvers.AbstractField
             Recbt = mix.vapor.RE(zIdx);                                    % [-] Vapor Reynolds number
             Prcbt = mix.fluid.PRANDTLV(mix.vapor.H(zIdx));                 % [-] Vapor Prandtl number
             Recbt = repmat(Recbt,1,NWALL); Prcbt = repmat(Prcbt,1,NWALL);  % Extent to all walls
-            idxcbt = mix.CBT(zIdx);
-            Re(idxcbt) = Recbt(idxcbt);                                    % [-]
-            Pr(idxcbt) = Prcbt(idxcbt);                                    % [-]
+            idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);
+            Re(idxbt) = Recbt(idxbt);                                      % [-]
+            Pr(idxbt) = Prcbt(idxbt);                                      % [-]
             
             %
             nu = 0.023.*Re.^0.8.*Pr.^0.4;                                  % [-]
@@ -549,8 +573,8 @@ classdef Mixture < Solvers.AbstractField
             
             % Post CBT
             hwallcbt = mix.HWALLVAP(zIdx);                                 % [W/m^2/K] Single-phase vapor
-            idxcbt = mix.CBT(zIdx);
-            hwall(idxcbt) = hwallcbt(idxcbt);                              % [W/m^2/K] Post-CBT
+            idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);
+            hwall(idxbt) = hwallcbt(idxbt);                                % [W/m^2/K] Post-CBT
         end
         
         function twall = TWALL(mix, zIdx)
@@ -568,8 +592,8 @@ classdef Mixture < Solvers.AbstractField
             % Post-CBT
             Tb       = mix.vapor.T(zIdx);                                  % [K] Fluid bulk temperature based on vapor phase
             twallcbt = Tb + q./hwall;                                      % [K]
-            idxcbt = mix.CBT(zIdx);
-            twall(idxcbt) = twallcbt(idxcbt);                              % [K]
+            idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);
+            twall(idxbt) = twallcbt(idxbt);                                % [K]
         end
         
     end
@@ -673,7 +697,8 @@ classdef Mixture < Solvers.AbstractField
             xeq = mix.XEQ(zIdx);                                           % [-]
             walevapratio = min(1,max(0,((xeq-xsub)./(xsat-xsub)).^n));     % [-]
             
-            cbt = mix.CBT(zIdx);                                           % CBT flag
+            %cbt = mix.CBT(zIdx);                                           % CBT flag
+            cbt = mix.CBT(zIdx) | mix.MFBT(zIdx);
             walevapratio = walevapratio.*double(~cbt);                     % [-]
             
             % Correction for transition nodes
@@ -770,7 +795,8 @@ classdef Mixture < Solvers.AbstractField
         %
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
             
-            cbt = mix.CBT(zIdx);                                           % CBT flag
+            %cbt = mix.CBT(zIdx);                                           % CBT flag
+            cbt = mix.CBT(zIdx) | mix.MFBT(zIdx);
             Hwalheat = double(cbt).*mix.LHGR(zIdx);                        % [W/m]
         end
         
@@ -1146,13 +1172,13 @@ classdef Mixture < Solvers.AbstractField
             end
         end
         
-        function CHF_CALC(mix, zIdx)
-        %CHF_CALC Helper function to calculate Critical Heat Flux [W/m^2] and CBT flag    
+        function CBT_CALC(mix, zIdx)
+        %CBT_CALC Helper function to calculate Critical Heat Flux [W/m^2] and CBT flag    
         %TODO: Implement additional CHF correlations
-        %      Investigate potential rewetting after CBT, this would require access to CBT and Twall at previous time step
             
+            %fld   = mix.fluid;
             model = mix.inputSet.model;
-            geom = mix.inputSet.geometry;
+            geom  = mix.inputSet.geometry;
             
             % CHF
             Pr  = mix.P(end);                                              % [Pa] System pressure
@@ -1185,6 +1211,7 @@ classdef Mixture < Solvers.AbstractField
             end
             
             chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
+            mix.chf(zIdx,:) = chf(zIdx,:);                                 % [W/m^2] Critical heat flux
 
             % CBT flag
             switch model.CBT
@@ -1195,12 +1222,25 @@ classdef Mixture < Solvers.AbstractField
                     cbt = mix.HFLUX(1:mix.NZ,:) > chf;                     % CBT indicator based on CHF value
             end
 
-            %TODO: Rewetting model and behavior downstream
-            %cbt = cumsum(cbt,1) >= 1;                                      % No rewetting downstream CBT
             %cbt(mix.XEQ>=1,:) = true;                                      % Set cbt to 1 for Xeq >= 1
             
-            mix.chf(zIdx,:) = chf(zIdx,:);                                 % [W/m^2] Critical heat flux
             mix.cbt(zIdx,:) = cbt(zIdx,:);                                 % [-] CBT flag
+        end
+
+        function MFBT_CALC(mix, zIdx)
+
+            fld   = mix.fluid;
+            model = mix.inputSet.model;
+            geom  = mix.inputSet.geometry;
+
+            switch model.MFBT
+                case InputEnums.MFBT.NONE
+                    mfbt = false(length(zIdx),geom.NWALL);
+                case InputEnums.MFBT.CONSTANT
+                    mfbt = mix.TWALL(zIdx) > fld.TSAT+model.DTMFB;
+            end
+
+            mix.mfbt(zIdx,:) = mfbt;
         end
         
         function RHO_CALC(mix, zIdx)
@@ -1208,14 +1248,16 @@ classdef Mixture < Solvers.AbstractField
         %
             % Call VF and CHF first
             mix.VF_CALC(zIdx);
-            mix.CHF_CALC(zIdx);
-            mix.RELAXTEVAP_CALC(zIdx);
-            mix.RELAXTCOND_CALC(zIdx);
-            mix.NEARWALLTRELAX_CALC(zIdx);
             
             vf = mix.VF(zIdx);
             mix.rho(zIdx) = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx)) + ...
-                (1-vf).*mix.fluid.RHOL(mix.liquid.H(zIdx));    
+                (1-vf).*mix.fluid.RHOL(mix.liquid.H(zIdx));
+
+            mix.CBT_CALC(zIdx);
+            mix.MFBT_CALC(zIdx);
+            mix.RELAXTEVAP_CALC(zIdx);
+            mix.RELAXTCOND_CALC(zIdx);
+            mix.NEARWALLTRELAX_CALC(zIdx);
         end
         
         function RELAXTCOND_CALC(mix, zIdx)
