@@ -1,16 +1,16 @@
 classdef (Abstract) AbstractSolver < handle
-    %ABSTRACTSOLVER defines all methods shared by all solver class
-    %definitions
-    %
-    %   TODO: Detailed explanations
+    %ABSTRACTSOLVER
+    %   Defines the base interface and shared functionality for all solver classes.
+    %   Subclasses must implement the abstract methods and properties defined here.
 
     properties (SetAccess=protected, Abstract)
+        % Input configuration object of type Inputs.InputSet
         inputSet    {isa(inputSet,'Inputs.InputSet')}
     end
 
     properties (SetAccess=protected, Abstract)
-
-        STATE (1,1) Solvers.SolverState                                    % Solver state defined by SolverState enum
+        % Solver state, defined by the SolverState enumeration
+        STATE (1,1) Solvers.SolverState
 
     end
 
@@ -20,35 +20,73 @@ classdef (Abstract) AbstractSolver < handle
         plotz
         plott
         plotzt
-        saveResults
     end
 
     methods
 
         function solver = AbstractSolver(inputSet)
-        %ABSTRACTSOLVER Creates an abstract solver
-        %
-            % Extract Solver name
-            solverName = regexpi(metaclass(solver).Name, '(?<=\.)[^.]+(?=\.)', 'match','once');
-            % Apply solver dependent inputset values
-            % Store inputSet as object property
-            solver.inputSet = inputSet.applySolverDependentProps(solverName);
+            %ABSTRACTSOLVER Constructor for AbstractSolver
+            %
+            %   Initializes the solver with a given inputSet and applies
+            %   solver-specific properties.
 
+            solverName = regexpi(metaclass(solver).Name, '(?<=\.)[^.]+(?=\.)', 'match','once'); % Extract Solver name            
+            solver.inputSet = inputSet.applySolverDependentProps(solverName);
         end
         
         function log(solver, varargin)
-        %LOG Log events
-        %
+            %LOG Log messages to the session log
+            %
             solver.inputSet.session.log.log(varargin{:});
         end
-        
+
+        function save(solver, opts)
+            %SAVE Save the solver object to a .mat file with a customizable name.
+            %
+            %   save(solver, opts)
+            %
+            %   Inputs:
+            %       solver        - The solver object to be saved.
+            %       opts.name     - (string) Name of the variable under which to save the solver. Default: 'solver'.'
+            %       opts.showpath - (logical) Whether to display the save path. Default: true.
+
+            arguments
+                solver
+                opts.name     (1,1) string  {mustBeTextScalar}             = 'solver'
+                opts.showpath (1,1) logical                                = true              
+            end
+
+            session = solver.inputSet.session;
+
+            if ~isfolder(session.directory)
+                error('Directory %s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
+            end
+
+            outputFile = fullfile(session.directory, session.name + '.mat');
+            dataStruct = struct();
+            dataStruct.(opts.name) = solver;
+
+            save(outputFile,'-struct','dataStruct');
+
+            if opts.showpath
+                fprintf('\nOutput file save to %s\n\n',outputFile)
+            end
+        end
+
     end
 
     methods (Static)
         
         function ITR = CreateITR(NZ, ITRFields)
-        %CreateITR Create inner iteration value struct
-        %
+            %CreateITR Create a structure for inner iteration values
+            %
+            %   Inputs:
+            %       NZ        - Number of axial nodes (scalar)
+            %       ITRFields - (string array) Names of fields to include in the struct
+            %
+            %   Output:
+            %       ITR - Struct with fields initialized to zero vectors of length NZ
+
             arguments
                 NZ        (1,1) double  
                 ITRFields (1,:) string  = ["N","DW","DU"]                  % Cell structure to convert into struct

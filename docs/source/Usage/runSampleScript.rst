@@ -40,7 +40,7 @@ At this point, you are ready to run the sample script. You will see some of the 
 	mixSolver.plotzt(mixSolver.NZ,'solveMode','REAL');     % Spatial-temporal map of transient solution at channel exit
 	
 	% Save results
-	mixSolver.saveResults(saveFormat="MAT");
+	mixSolver.save();
 
 
 .. figure:: sample_mix_plotz.png
