@@ -33,6 +33,8 @@ classdef FluidProperties
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
         TMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum temperature [K]
         HMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum enthalpy [J/kg]
+        TMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum temperature [K]
+        HMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum enthalpy [J/kg]
     end
 
     properties (SetAccess=private)
@@ -91,6 +93,8 @@ classdef FluidProperties
             % Limiting properties for which CoolProp has valid data for the fluid
             TMIN     = coolpropH.CoolProp.Tmin+1;                          % [K] Minimum temperature
             HMIN     = coolpropH.enthalpy('P',P,'T',TMIN);                 % [J/kg] Minimum enthalpy
+            TMAX     = coolpropH.CoolProp.Tmax-1;                          % [K] Maximum temperature
+            HMAX     = coolpropH.enthalpy('P',P,'T',TMAX);                 % [J/kg] Maximum enthalpy
             
             % Assign properties to each object
             for i = 1:length(obj)
@@ -124,6 +128,8 @@ classdef FluidProperties
                 obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
                 obj(i).TMIN     = TMIN;                                    % [K] Minimum temperature
                 obj(i).HMIN     = HMIN(i);                                 % [J/kg] Minimum enthalpy
+                obj(i).TMAX     = TMAX;                                    % [K] Maximum temperature
+                obj(i).HMAX     = HMAX(i);                                 % [J/kg] Maximum enthalpy
 
             end
             
@@ -133,6 +139,7 @@ classdef FluidProperties
         function t = T(obj,H)
         %T [K] Fluid temperature at obj.PRESSURE and given H
         %
+            H = min(max(H,obj.HMIN),obj.HMAX);                             % [J/kg]
             t = obj.coolpropH.temperature('P',obj.PRESSURE,'H',H); 
         end
         
@@ -154,7 +161,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     rhol = repmat(obj.RHOF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    rhol = obj.coolpropH.density('P',obj.PRESSURE,'H',min(H,obj.HF));
+                    H = max(min(H,obj.HF),obj.HMIN);
+                    rhol = obj.coolpropH.density('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -170,7 +178,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     rhov = repmat(obj.RHOG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    rhov = obj.coolpropH.density('P',obj.PRESSURE,'H',max(H,obj.HG));
+                    H = min(max(H,obj.HG),obj.HMAX);                       % [J/kg]
+                    rhov = obj.coolpropH.density('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -185,7 +194,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     mul = repmat(obj.MUF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    mul = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',min(H,obj.HF));
+                    H = max(min(H,obj.HF),obj.HMIN);
+                    mul = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -200,7 +210,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     muv = repmat(obj.MUG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    muv = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',max(H,obj.HG));
+                    H = min(max(H,obj.HG),obj.HMAX);                       % [J/kg]
+                    muv = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -216,7 +227,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     kl = repmat(obj.KF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    kl = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',min(H,obj.HF));
+                    H = max(min(H,obj.HF),obj.HMIN);
+                    kl = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -232,7 +244,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     kv = repmat(obj.KG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    kv = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',max(H,obj.HG));
+                    H = min(max(H,obj.HG),obj.HMAX);                       % [J/kg]
+                    kv = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -248,7 +261,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     cpl = repmat(obj.CPF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    cpl = obj.coolpropH.cp('P',obj.PRESSURE,'H',min(H,obj.HF));
+                    H = max(min(H,obj.HF),obj.HMIN);                       % [J/kg]
+                    cpl = obj.coolpropH.cp('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -264,7 +278,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     cpv = repmat(obj.CPG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    cpv = obj.coolpropH.cp('P',obj.PRESSURE,'H',max(H,obj.HG));
+                    H = min(max(H,obj.HG),obj.HMAX);                       % [J/kg]
+                    cpv = obj.coolpropH.cp('P',obj.PRESSURE,'H',H);
             end
         end
 
@@ -312,7 +327,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     prandtll = repmat(obj.PRANDTLF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    prandtll = obj.coolpropH.prandtl('P',obj.PRESSURE,'H',min(H,obj.HF));
+                    H = max(min(H,obj.HF),obj.HMIN);                       % [J/kg]
+                    prandtll = obj.coolpropH.prandtl('P',obj.PRESSURE,'H',H);
             end
         end
         
@@ -328,7 +344,8 @@ classdef FluidProperties
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     prandtlv = repmat(obj.PRANDTLG,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    prandtlv = obj.coolpropH.prandtl('P',obj.PRESSURE,'H',max(H,obj.HG));
+                    H = min(max(H,obj.HG),obj.HMAX);                       % [J/kg]
+                    prandtlv = obj.coolpropH.prandtl('P',obj.PRESSURE,'H',H);
             end
         end
         

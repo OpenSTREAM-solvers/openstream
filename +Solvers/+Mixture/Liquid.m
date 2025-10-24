@@ -86,7 +86,6 @@ classdef Liquid < Solvers.AbstractPhase
 
             fluid = liquid.mix.fluid;
             h(isnan(h) | isinf(h)) = fluid.HF;
-            h = max(h,fluid.HMIN);
         end
 
         function mflux = MFLUX(liquid, zIdx)
