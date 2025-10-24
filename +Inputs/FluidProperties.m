@@ -31,13 +31,15 @@ classdef FluidProperties
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
+        
+    end
+
+    properties (SetAccess=private, Hidden)
+
         TMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum temperature [K]
         HMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum enthalpy [J/kg]
         TMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum temperature [K]
         HMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum enthalpy [J/kg]
-    end
-
-    properties (SetAccess=private)
 
         coolpropH   CoolPropWrapper.CoolPropWrapper
    

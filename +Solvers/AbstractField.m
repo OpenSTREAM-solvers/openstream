@@ -21,7 +21,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         memoizedFunctions = containers.Map();
     end
 
-    properties (SetAccess = protected)
+    properties (SetAccess = protected, Hidden)
         flowProperties (:,:) cell = {'W','U','H','ITR'}                    % Flow properties used for copying
     end
 
