@@ -1,28 +1,44 @@
 classdef Session < handle
-    %SESSION Summary of this class goes here
-    %   Detailed explanation goes here
-    
+    %SESSION Class for managing simulation session metadata and logging
+    %
+    % This class handles session naming, directory creation, and logging setup.
+    % It ensures that session directories are valid and manages file overwriting behavior.
+    % It also integrates with the Log class to control output and warnings.
+
     properties (SetAccess = protected)
-        name        (1,1) string        = ""
-        dirName     (1,1) string        = ""
-        parentDir         {isfolder}    = ""
-        overwriteFiles ...                                                 % Flag to overwrite existing session files
+
+        name        (1,1) string        = ""                               % Name of the session (used for log file naming)
+        dirName     (1,1) string        = ""                               % Name of the session directory
+        parentDir         {isfolder}    = ""                               % Parent directory where session folder will be created
+        overwriteFiles ...                                                 % Flag to allow overwriting existing session files
                     (1,1) logical       = false
 
-        log         (1,1) Session.Log
+        log         (1,1) Session.Log                                      % Log object for managing output and warnings
         
         % Warnings
-        showWarnings          (1,1) logical = true
+        showWarnings          (1,1) logical = true                         % Flag to control display of warnings
+    
     end
 
     properties (Dependent)
-        directory   (1,1) string
+
+        directory   (1,1) string                                           % Full path to the session directory
+   
     end
     
     methods
+
         function session = Session(opt)
-            %SESSION Construct an instance of this class
+            %SESSION Constructor for Session class
             %
+            % Initializes session metadata including name, directory, and overwrite behavior.
+            %
+            % Inputs:
+            %   opt.name            - Session name
+            %   opt.dirName         - Directory name
+            %   opt.parentDir       - Parent directory path
+            %   opt.overwriteFiles  - Flag to allow overwriting existing session files
+
             arguments
                 opt.name        (1,1) string        = ""
                 opt.dirName     (1,1) string        = ""
@@ -38,15 +54,21 @@ classdef Session < handle
         end
 
         function directory = get.directory(session)
+            % Returns full path to the session directory
+
             directory = fullfile(session.parentDir,session.dirName);
         end
 
         function setupLog(session, LOGMODE, opts)
-        %SETUPLOG Setup log
-        %
+            %SETUPLOG Initializes the Log object for the session
+            %
+            % Inputs:
+            %   LOGMODE - Logging mode (console, file, both, none)
+            %   opts.LOGFID - Optional file ID for logging
+
             arguments
                 session                 Session.Session
-                LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
+                LOGMODE        (1,1)    Session.LogMode  = Session.LogMode.LOGTOCONSOLEONLY               
                                                                            % LogMode
                 opts.LOGFID    (1,1)    int32            = -1
             end
@@ -65,8 +87,11 @@ classdef Session < handle
         end
 
         function makeSessionDirectory(obj)
-        %MAKESESSIONDIRECTORY Make the session directory
-        %
+            %MAKESESSIONDIRECTORY Creates the session directory
+            %
+            % Validates path legality, handles existing directories,
+            % closes open files and diaries if necessary, and creates the directory.
+
             % Check if session directory is legal and/or exists
             if ~Session.isLegalPath(obj.directory)
                 throw( ...
@@ -145,4 +170,5 @@ classdef Session < handle
         end
         
     end
+    
 end

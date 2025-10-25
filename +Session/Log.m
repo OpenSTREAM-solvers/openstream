@@ -1,41 +1,52 @@
 classdef Log < handle
-    %LOG Console log manager
-    %   Detailed explanation goes here
+    %LOG Console and file-based logging manager
+    %
+    % This class manages logging of messages and warnings to console and/or file.
+    % It supports multiple logging modes, integrates with session management,
+    % and provides diary functionality for persistent logs.
     
     properties (SetAccess = protected)
 
-        LOGMODE               (1,1) Session.LogMode
-        diaryIsOn             (1,1) logical         = false
+        LOGMODE               (1,1) Session.LogMode                        % Logging mode (console only, file only, both, or none)
+        diaryIsOn             (1,1) logical         = false                % Flag indicating whether MATLAB diary is active
 
         % log file
-        LOGFID                              = -1                                 % Logging file ID
-        logFileName           (1,1) string
+        LOGFID                                      = -1                   % File ID for log file
+        logFileName           (1,1) string                                 % Name of the log file (without extension)
 
         % Warnings
-        showWarnings          (1,1) logical = true
+        showWarnings          (1,1) logical         = true                 % Flag to control display of warnings
 
     end
 
     properties (Access = private)
-        session         (1,1)
-        keepLogOpen     (1,1) logical                     = false
+
+        session         (1,1)                                              % Session object for directory and naming context
+        keepLogOpen     (1,1) logical               = false                % Flag to keep log file open between writes
+    
     end
     
     properties (Dependent)
-        logFilePath           (1,1) string
-        diaryFilePath         (1,1) string
+
+        logFilePath           (1,1) string                                 % Full path to the log file
+        diaryFilePath         (1,1) string                                 % Full path to the diary file
+    
     end
 
     methods
+
         function obj = Log(LOGMODE, opts)
-            %LOG Construct an instance of this class
-            %   Detailed explanation goes here
+            %LOG Constructor for Log class
+            %
+            % Initializes logging mode, session context, and warning settings.
+            % Creates log file and session directory if needed.
+
             arguments
-                LOGMODE        (1,1)    Session.LogMode      = Session.LogMode.LOGTOCONSOLEONLY               
-                                                                            % LogMode
+                LOGMODE        (1,1)    Session.LogMode  = Session.LogMode.LOGTOCONSOLEONLY               
+                                                                           % LogMode
                 opts.session   (1,1)    Session.Session      
-                opts.LOGFID    (1,1)    double               = -1
-                opts.showWarnings (1,1) logical              = true
+                opts.LOGFID    (1,1)    double           = -1
+                opts.showWarnings (1,1) logical          = true
             end
 
             % Store LOGMODE and LOGFID
@@ -72,16 +83,12 @@ classdef Log < handle
 
                     % Close log
                     obj.closeLog();
-                    
             end
-
         end
-
-        
         
         function log(obj, varargin)
-        %LOG Log events
-        %
+            %LOG Logs messages to console and/or file depending on LOGMODE
+        
             import Session.LogMode
 
             if obj.LOGMODE == LogMode.NONE
@@ -104,63 +111,68 @@ classdef Log < handle
         end
 
         function warning(obj, varargin)
-        %WARNING Log warnings
-        %
+            %WARNING Logs warnings using MATLAB's built-in warning mechanism
+            % Optionally writes to file if warnings are suppressed
 
-        import Session.LogMode
+            import Session.LogMode
 
-        if obj.showWarnings == true
-            
-            % Use built-in warning function
-            builtin('warning', varargin{:});
+            if obj.showWarnings == true
 
-            % Since the warning is displayed using the built-in function,
-            % recording-to-file depends on diary on or off.
+                % Use built-in warning function
+                builtin('warning', varargin{:});
 
-        else
-            % If LOGTOFILEONLY, open and write to log
-            if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
-               obj.LOGMODE == LogMode.BOTH 
-                obj.openLog();
+                % Since the warning is displayed using the built-in function,
+                % recording-to-file depends on diary on or off.
+
+            else
+                % If LOGTOFILEONLY, open and write to log
+                if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+                        obj.LOGMODE == LogMode.BOTH
+                    obj.openLog();
                     builtin('fprintf',obj.LOGFID, 'Warning:\n');
                     builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
                     if ~obj.keepLogOpen
                         obj.closeLog();
                     end
-            end            
+                end
+            end
         end
 
-        end
         function diaryOff(obj)
-        %DIARYOFF   Turn diary off
+            %DIARYOFF Turn off diary logging
+
             diary('off');
             obj.diaryIsOn = false;
         end
 
         function diaryOn(obj)
-        %DIARYON    Turn diary on
+            %DIARYON Turn on diary logging if applicable
+
             if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
                 obj.LOGMODE == Session.LogMode.BOTH) && ~obj.diaryIsOn
                 
                 diary(obj.diaryFilePath)
                 obj.diaryIsOn = true;
             end
-
         end
 
         function out = get.logFilePath(obj)
+        % Returns full path to log file
+
             out = fullfile(obj.session.directory, ...
                             strcat(obj.logFileName,'.log'));
         end
 
         function out = get.diaryFilePath(obj)
+        % Returns full path to diary file
+
             out = fullfile(obj.session.directory, ...
                             strcat(obj.logFileName,'.diary'));
         end
 
         function delete(obj)
-        %DELETE Deconstructor of Log
-        %
+            %DELETE Destructor for log class
+            % Ensures log file and diary are properly closed
 
             if obj.LOGFID >= 0
                 try
@@ -169,12 +181,12 @@ classdef Log < handle
                 catch
                 end
             end
-
         end
 
         function openLog(obj, opts)
-        %SETUPLOG Open/Setup the logging file
-        %
+            %OPENLOG Opens log file for writing
+            % Optionally keeps it open between writes
+
         arguments
             obj
             opts.keepLogOpen = false         % Keep log open
@@ -193,13 +205,11 @@ classdef Log < handle
                 if opts.keepLogOpen
                     obj.keepLogOpen = true;
                 end
-
             end
         end
 
         function closeLog(obj)
-        %CLOSELOG Close log file reference
-        %
+        %CLOSELOG Closes log file and resets file ID
             if obj.LOGFID >= 0
                 fclose(obj.LOGFID);
                 obj.LOGFID = -1;
@@ -208,7 +218,6 @@ classdef Log < handle
                 obj.keepLogOpen = false;
             end
         end
-
 
     end    
 
