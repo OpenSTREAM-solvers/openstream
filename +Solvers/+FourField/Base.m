@@ -258,7 +258,7 @@ classdef Base < Solvers.AbstractFilm
                     coefs = base.inputSet.model.BASEEQTHICKCOEF;
                     eqthick = ReMethod();
                 case 'YPLUS'
-                    yplus = 15;
+                    yplus = base.inputSet.model.BASEYPLUS;
                     eqthick = base.YPLUS2THICK(yplus, zIdx);
             end
 

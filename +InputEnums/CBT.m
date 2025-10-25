@@ -1,13 +1,18 @@
 classdef CBT
-%CBT Critical Boiling Transition model
-%
-%   Defines the model used to evaluate the Critical Boiling Transition.
-%   Used by the mixture solver.
-%
-    enumeration
-        NONE                 % No CBT transition
-        BIASI                % Biasi model
-        ELEVATION            % CBT from given elevation
-    end
+    %CBT Enumeration of Critical Boiling Transition (CBT) models
+    %
+    %   This class defines the available models for evaluating the
+    %   Critical Boiling Transition, used by the mixture field.
+    %
+    %   Models:
+    %       NONE       - No CBT transition applied
+    %       BIASI      - Biasi correlation model
+    %       ELEVATION  - CBT determined from specified elevation using
+    %                    user-defined CBTELEVATION
 
+    enumeration
+        NONE                 % No Critical Boiling Transition
+        BIASI                % Biasi model fro CBT prediction
+        ELEVATION            % CBT based on specified elevation (CBTELEVATION)
+    end
 end

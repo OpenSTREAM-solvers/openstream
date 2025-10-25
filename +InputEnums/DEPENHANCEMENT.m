@@ -1,12 +1,16 @@
 classdef DEPENHANCEMENT
-%DEPENHANCEMENT Deposition enhancement models
-%
-%   Defines the model used to calculate the droplet deposition enhancement.
-%   Used by the three-field and four-field solvers.
-%
-    enumeration
-        NONE                 % No enhancement
-        WINDECKER            % Model adapted from Windecker (1999) documented in Le Corre (2024)
-    end
+    %DEPENHANCEMENT Enumeration of droplet deposition enhancement models
+    %
+    %   This class defines the available models for calculating local droplet
+    %   deposition enhancement, used by the three-field and four-field solvers.
+    %
+    %   Models:
+    %       NONE       - No enhancement applied
+    %       WINDECKER  - Model adapted from Windecker (1999), as documented
+    %                    in Le Corre (2024), using user defined KTUNING
 
+    enumeration
+        NONE                 % No deposition enhancement
+        WINDECKER            % Windecker-based enhancement model (Le Corre, 2024)
+    end
 end

@@ -103,6 +103,7 @@ classdef Model < Inputs.Input
         
         BASEEQTHICK      (1,1) InputEnums.BASEEQTHICK                      = 'RISO'                          % Equilibrium base film thickness model
         BASEEQTHICKCOEF  (:,1) double  {mustBeNumeric}                     = [5.37E-5 -0.64 1.21]            % Equilibrium base film thickness coefficients [-]
+        BASEYPLUS        (1,1) double  {mustBePositive}                    = 15                              % Equilibrium base film y+ value [-]
         RELAXTB          (:,1) double  {mustBeNonnegative}                 = 0.2                             % Base film / wave mass exchange relaxation time [s]
         
         WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 2                               % Base film / wave turbulent mixing coefficient

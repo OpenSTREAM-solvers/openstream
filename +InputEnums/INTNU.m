@@ -1,13 +1,21 @@
 classdef INTNU
-%INTNU Interfacial Nusselt number
-%
-%   Defines the model used to calculate the interfacial Nusselt number.
-%   Used by the two-fluid solver.
-%
+    %INTNU Enumeration of interfacial Nusselt number models
+    %
+    %   This class defines the available models for calculating the
+    %   interfacial Nusselt number, used by the two-fluid solver.
+    %
+    %   Models:
+    %       CONSTANT      - Assumes a constant Nusselt number using
+    %                       user-defined INTNUVCST and INTNULCST for the dispersed
+    %                       gas and liquid phases, respectively
+    %       RANZMARSHALL  - Ranz-Marshall correlation-based model using
+    %                       user-defined RANZMARSHALLVCST and RANZMARSHALLLCST for the dispersed
+    %                       gas and liquid phases, respectively
+    %       RELAXATION    - Time relaxation-based model
+
     enumeration
-        CONSTANT             % Constant Nu
-        RANZMARSHALL         % Ranz-Marshall model
+        CONSTANT             % Constant Nusselt number
+        RANZMARSHALL         % Ranz-Marshall correlation
         RELAXATION           % Time relaxation model
     end
-
 end

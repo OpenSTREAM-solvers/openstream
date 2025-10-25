@@ -1,15 +1,20 @@
 classdef LOCRELVEL
-%LOCRELVEL Local relative velocity between liquid and vapor phase
-%
-%   Defines the model used for the calculation of local relative velocity
-%   between phases.
-%   Used by the two-fluid solver.
-%
-    enumeration
-        AREAMEAN             % Assumes the difference between area averaged phase velocities
-        SCALED               % Multiplies the difference between area averaged phase velocities with a input constant
-        DRIFT                % Assumes drift velocity as local relative velocity
-        SIMPLE               % Simple assumptions for bubbly and annular flow
-    end
+    %LOCRELVEL Enumeration of local relative velocity models
+    %
+    %   This class defines the available models for calculating the local
+    %   relative velocity between liquid and vapor phases, used by the
+    %   two-fluid solver.
+    %
+    %   Models:
+    %       AREAMEAN   - Difference between area-averaged phase velocities
+    %       SCALED     - Scaled difference using user-defined RELVELCST
+    %       DRIFT      - Uses drift velocity as the local relative velocity
+    %       SIMPLE     - Simplified assumptions for bubbly and annular flow regimes
 
+    enumeration
+        AREAMEAN             % Area-averaged velocity difference
+        SCALED               % Scaled area-averaged velocity difference
+        DRIFT                % Drift velocity model
+        SIMPLE               % Simplified model for bubbly and annular flow
+    end
 end

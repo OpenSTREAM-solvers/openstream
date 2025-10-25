@@ -1,15 +1,22 @@
 classdef MOMENTFILM
-%MOMENTFILM Film momentum conservation model
-%
-%   Defines momentum conservation model for the liquid film. This equation
-%   is used to solve for the liquid film velocity.
-%   Used by the three-field solver.
-%
+    %MOMENTFILM Enumeration of film momentum conservation models
+    %
+    %   This class defines the available models for solving the momentum
+    %   conservation equation for the liquid film, used to compute film
+    %   velocity in the three-field solver.
+    %
+    %   Models:
+    %       ALGEBRAIC     - Simple algebraic model
+    %       EQUILIBRIUM   - Equilibrium model
+    %       EQUILIBRIUMS  - Simplified equilibrium model based on force balance
+    %                       (Fwall + Fvapor = 0)
+    %       FULL          - Full non-equilibrium momentum model
+
     enumeration
-        ALGEBRAIC            % Simple algebraic model
-        EQUILIBRIUM          % Equilibrium model
-        EQUILIBRIUMS         % Equilibrium model based on simple force balance (Fwall + Fvapor = 0)
-        FULL                 % Full non-equilibrium model
+        ALGEBRAIC            % Algebraic momentum model
+        EQUILIBRIUM          % Equilibrium momentum model
+        EQUILIBRIUMS         % Simplified force balance model (Fwall + Fvapor = 0)
+        FULL                 % Full non-equilibrium momentum model
     end
 
 end

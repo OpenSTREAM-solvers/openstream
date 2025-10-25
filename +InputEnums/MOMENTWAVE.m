@@ -1,14 +1,18 @@
 classdef MOMENTWAVE
-%MOMENTWAVE Film momentum conservation model
-%
-%   Defines the momentum conservation model for the wave field. This
-%   equation is used to solve for the wave velocity.
-%   Used by the four-field solver.
-%
-    enumeration
-        ALGEBRAIC            % Simple algebraic model
-        EQUILIBRIUM          % Equilibrium model
-        FULL                 % Full non-equilibrium model
-    end
+    %MOMENTWAVE Enumeration of film momentum conservation models
+    %
+    %   This class defines the available models for solving the momentum
+    %   conservation equation for the wave field, used to compute wave velocity
+    %   in the four-field solver.
+    %
+    %   Models:
+    %       ALGEBRAIC   - Simple algebraic model
+    %       EQUILIBRIUM - Equilibrium model
+    %       FULL        - Full non-equilibrium momentum model
 
+    enumeration
+        ALGEBRAIC            % Algebraic momentum model
+        EQUILIBRIUM          % Equilibrium momentum model
+        FULL                 % Full non-equilibrium momentum model
+    end
 end

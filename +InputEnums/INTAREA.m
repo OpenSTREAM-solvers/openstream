@@ -1,11 +1,13 @@
 classdef INTAREA
-%INTAREA Interfacial area
-%
-%   Defines the model used to calculate the volumetric interfacial area.
-%   Used by the two-fluid solver.
-%
-    enumeration
-        DISPGAS2DISPLIQ      % Switches from spherical bubbles to spherical droplets 
-    end
+    %INTAREA Enumeration of volumetric interfacial area calculation models
+    %
+    %   This class defines the available models for calculating the
+    %   volumetric interfacial area, used by the two-fluid solver.
+    %
+    %   Models:
+    %       DISPGAS2DISPLIQ - Transition from spherical bubbles to spherical droplets
 
+    enumeration
+        DISPGAS2DISPLIQ      % Transition from spherical bubbles to spherical droplets 
+    end
 end

@@ -1,13 +1,17 @@
 classdef OAFFILMSPLIT
-%OAFFILMSPLIT Film mass flow ratio at onset of annular flow
-%
-%   Defines the model use to calculate the base film mass flow arte at the
-%   onset fo annualr flow.
-%   Used the four-field solver
-%
+    %OAFFILMSPLIT Enumeration of film mass flow ratio models at onset of annular flow
+    %
+    %   This class defines the available models for splitting the base film
+    %   and wave mass flow rates at the onset of annular flow, used by the
+    %   four-field solver
+    %
+    %   Models:
+    %       RATIO       - Ratio of base film to film mass flow rates using
+    %                     user-defined OAFBASERATIO
+    %       EQUILIBRIUM - Equilibrium model (film thickness equals equilibrium film thickness)
+
     enumeration
-        RATIO                % Ratio (base/film mass flow rates)
+        RATIO                % Ratio model (base/film mass flow rates)
         EQUILIBRIUM          % Equilibrium model (Film thickness = Equilibrium film thickness)
     end
-
 end

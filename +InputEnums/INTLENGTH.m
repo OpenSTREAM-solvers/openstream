@@ -1,11 +1,15 @@
 classdef INTLENGTH
-%INTLENGTH Interfacial length scale
-%
-%   Defines the model used to calculate the interfacial length scale.
-%   Used by the two-fluid solver.
-%
-    enumeration
-        CONSTANT           % Constant length scale
-    end
+    %INTLENGTH Enumeration of interfacial length scale models
+    %
+    %   This class defines the available models for calculating the
+    %   interfacial length scale, used by the two-fluid solver.
+    %
+    %   Models:
+    %       CONSTANT - Assumes a constant interfacial length scale using
+    %                  user-defined INTLENGTHVCST and INTLENGTHLCST for the dispersed
+    %                  gas and liquid phases, respectively
 
+    enumeration
+        CONSTANT           % Constant interfacial length scale
+    end
 end

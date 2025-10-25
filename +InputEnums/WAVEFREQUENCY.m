@@ -1,13 +1,16 @@
 classdef WAVEFREQUENCY
-%WAVEFREQUENCY Wave number density transport model
-%
-%   Defines the wave number density transport model. This equation is used
-%   to solve for the wave number density (or wave frequency). 
-%   Used by the four-field solver.
-%
-    enumeration
-        EQUILIBRIUM          % Equilibrium model
-        RELAXATION           % Full model with time relaxation approximation
-    end
+    %WAVEFREQUENCY Enumeration of wave number density transport models
+    %
+    %   This class defines the models used to solve the wave number density (or
+    %    wave frequency) transport equation, used in the four-field solver.
+    %
+    %   Available Models:
+    %       EQUILIBRIUM - Assumes instantaneous equilibrium between wave generation and dissipation.
+    %       RELAXATION  - Full transport model including time relaxation
+    %                     effects set by user-defined RELAXTW
 
+    enumeration
+        EQUILIBRIUM          % Equilibrium model (instantaneous wave number density adjustment)
+        RELAXATION           % Time relaxation model
+    end
 end
