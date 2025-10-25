@@ -1,17 +1,18 @@
 classdef Model < Inputs.Input
-    %MODEL Defines all physical model options.
+    %MODEL Class for defining and managing physical model configuration
     %
-    %   Class definition for the physical models
-    %   Data are read from the model input file using InputSet
-    %
+    % This class encapsulates all physical modeling parameters used in the simulations,
+    % including fluid properties, regime transitions, wall and interfacial
+    % exchange models for all solvers. It reads model data from input files 
+    % and handles default values as well as input validation.
     
     properties (SetAccess=?Inputs.Input)
         
-        ID               (1,1) string  {mustBeTextScalar}                                                    % Model ID 
+        ID               (1,1) string  {mustBeTextScalar}                                                    % Identifier for the model configuration
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
-                                                                           = 100                             % Number of axial nodes 
-        FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % Fluid ID
-        PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Fluid property assumptions
+                                                                           = 100                             % Number of axial nodes used in the simulation
+        FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % Fluid identifier
+        PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
         
         % Two-phase flow regime transitions
@@ -24,7 +25,7 @@ classdef Model < Inputs.Input
         CBTMULT          (1,1) function_handle                             = @(z) 1                          % Critical boiling Heat flux multiplier function
         CBTELEVATION     (1,1) double  {mustBePositive}                    = 1                               % Critical Boiling Transition Elevation [m]
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model
-        DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperarure from saturation [K]
+        DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
 
         % Mixture solver models
         FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
@@ -76,7 +77,7 @@ classdef Model < Inputs.Input
         INTTRANSH        (1,1) InputEnums.INTTRANSH                        = 'BULK'                          % Interfacial enthalpy transfer model
         
         % Three-field solver models
-        POSFILM          (1,1) logical                                     = true                            % Positive film flowrate/thickness model
+        POSFILM          (1,1) logical                                     = true                            % Positive film flow rate/thickness model
         
         OAFENTRAINED     (1,1) InputEnums.OAFENTRAINED                     = 'EQUILIBRIUM'                   % Entrained drop model at onset of annular flow
         OAFDROPRATIO     (1,1) double  {mustBeInRange(OAFDROPRATIO,0,1)}   = 0.7                             % Drop/Liquid mass ratio at onset of annular flow [-]
@@ -122,20 +123,28 @@ classdef Model < Inputs.Input
     end
 
     properties (Constant)
-        G             (1,1) double  {mustBeNumeric}                        = 9.81                            % [m/s^2] Gravitational acceleration
+
+        G             (1,1) double  {mustBeNumeric}                        = 9.81                            % Gravitational acceleration [m/s^2]
         SOLVERDEPENDENTPROPS                                               = struct("VAPORFRIC", ...
                                                                                     struct('THREEFIELD', InputEnums.VAPORFRIC.WALLIS, ...
                                                                                             'FOURFIELD', InputEnums.VAPORFRIC.CONSTANT, ...
-                                                                                            'DEFAULT', InputEnums.VAPORFRIC.WALLIS, ...
-                                                                                            'DEP_FLAG', InputEnums.VAPORFRIC.SOLVER_DEPENDENT) ...
-                                                                                    );
+                                                                                            'DEFAULT',   InputEnums.VAPORFRIC.WALLIS, ...
+                                                                                            'DEP_FLAG',  InputEnums.VAPORFRIC.SOLVER_DEPENDENT) ...
+                                                                                    );                       % Mapping of solver-dependent properties and their values
     end
 
     methods
         
         function obj = Model(filePath,modelID)
-            %MODEL Construct an instance of this class
+            %MODEL Constructor for Model class
             %
+            % Parses model input file and initializes properties.
+            % Applies default values and validates entries.
+            %
+            % Inputs:
+            %   filePath - Path to model input file
+            %   modelID  - Identifier for model configuration
+
             arguments
                 filePath = ""
                 modelID = ""
@@ -172,7 +181,7 @@ classdef Model < Inputs.Input
                     
                     % Take care of special cases
                     % Function handles provided in string format cannot be
-                    % automatiaclly cast to a function_handle. Here, a
+                    % automatically cast to a function_handle. Here, a
                     % validation is first performed to detect restricted
                     % keywords, then converted.
                     if isa(obj.(objPropname), "function_handle") && isstring(obj.inputStruct.(objPropname))
@@ -231,11 +240,18 @@ classdef Model < Inputs.Input
     end
     
     methods (Static)
+
         function writeInputFile(filePathName, ID, varargin)
-        %WRITEINPUTFILE
+            %WRITEINPUTFILE Writes model configuration data to input file
+            %
+            % Inputs:
+            %   filePathName - Path to output file
+            %   ID           - Model identifier
+            %   varargin     - Additional name-value pairs for model properties
+
             Inputs.Input.writeInputFile(filePathName, "a+", "ID", ID, varargin{:});
         end
+
     end
 
 end
-

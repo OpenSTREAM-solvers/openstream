@@ -1,24 +1,32 @@
 classdef Geometry < Inputs.Input
-    %GEOMETRY Defines all geometrical inputs.
+    %GEOMETRY Class for defining and managing geometrical input parameters
     %
-    %   Class definition for the geometrical inputs
-    %   Data are read from the geometry input file using InputSet
-    %
-    
+    % This class reads and stores geometrical parameters from an input file.
+    % It supports calculations of derived quantities such as hydraulic diameter,
+    % area-based diameter, and wall perimeter ratios.
+
     properties (SetAccess=?Inputs.Input)
         
-        ID         (1,1) string  {mustBeTextScalar}                                                % Channel ID
+        ID         (1,1) string  {mustBeTextScalar}                                                % Channel identifier
         LENGTH     (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Axial length [m]
         AREA       (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Coolant area [m^2] 
-        PERIM      (1,:) double  {mustBePositive,mustBeNonempty}           = 1                     % Perimeters [m]
-        ANGLE      (1,1) double  {mustBeNumeric}                           = 0                     % Angle [rad] 
+        PERIM      (1,:) double  {mustBePositive,mustBeNonempty}           = 1                     % Perimeter(s) of the channel walls [m]
+        ANGLE      (1,1) double  {mustBeNumeric}                           = 0                     % Inclination angle [rad] 
         
     end
 
     methods
+        
         function obj = Geometry(filePath,geometryID)
-        %Geometry Construct an instance of this class
-        %
+            %GEOMETRY Constructor for Geometry class
+            %
+            % Parses geometry input file and initializes properties.
+            % Applies default values if no input is provided.
+            %
+            % Inputs:
+            %   filePath   - Path to geometry input file
+            %   geometryID - Identifier for geometry configuration
+
             arguments
                 filePath = ""
                 geometryID = ""
@@ -98,35 +106,46 @@ classdef Geometry < Inputs.Input
         end
 
         function dh = HDIAM(obj)
-        % HDIAM Hydraulic diameter
-        %
+        % HDIAM [m] Hydraulic diameter
+        % Formula: 4 * AREA / total perimeter
+
             dh = 4*obj.AREA/sum(obj.PERIM);
         end
         
         function da = ADIAM(obj)
-        % ADIAM Diameter based on coolant cross-section area
-        %
+        % ADIAM [m] Diameter based on coolant cross-section area
+        % Formula: 2 * sqrt(AREA / pi)
+
             da = 2*sqrt(obj.AREA/pi);
         end
         
         function N = NWALL(obj)
-        % NWALL Number of walls
-        %
+        % NWALL Number of wall segments defined by PERIM
+
             N = length(obj.PERIM);
         end
         
         function R = RWALL(obj)
-        % RWALL Wall perimeter ratio
-        %    
+        % RWALL [-] Relative contribution of each wall segment to total perimeter
+
             R = obj.PERIM./sum(obj.PERIM); 
         end
 
     end
     
     methods (Static)
+
         function writeInputFile(filePathName, ID, varargin)
+            % Writes geometry input data to file
+            %
+            % Inputs:
+            %   filePathName - Path to output file
+            %   ID           - Geometry identifier
+            %   varargin     - Additional name-value pairs for geometry properties
+
             Inputs.Input.writeInputFile(filePathName, "a+", "ID", ID, varargin{:});
         end
+
     end
 
 end

@@ -4,22 +4,27 @@ classdef (Abstract) AbstractSolver < handle
     %   Subclasses must implement the abstract methods and properties defined here.
 
     properties (SetAccess=protected, Abstract)
+
         % Input configuration object of type Inputs.InputSet
         inputSet    {isa(inputSet,'Inputs.InputSet')}
+    
     end
 
     properties (SetAccess=protected, Abstract)
+
         % Solver state, defined by the SolverState enumeration
         STATE (1,1) Solvers.SolverState
 
     end
 
     methods (Abstract)
+
         initializeSolver
         solve
         plotz
         plott
         plotzt
+        
     end
 
     methods

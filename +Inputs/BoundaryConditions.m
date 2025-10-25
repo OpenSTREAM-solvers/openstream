@@ -1,14 +1,20 @@
-classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
-    %BOUNDARYCONDITIONS Defines all boundary parameters.
+classdef BoundaryConditions < Inputs.Input
+    %BOUNDARYCONDITIONS Class for defining and managing boundary condition parameters
     %
-    %   Class definition for the boundary conditions.
-    %   Provide acess to saturated fluid properties at system pressure
-    %   using methods.
-    %   
+    %   This class provides access to boundary condition inputs and saturated
+    %   fluid properties at system pressure. It is used by the solvers to initialize
+    %   and manage inlet conditions, power distributions, and fluid state calculations.
+    %
+    %   Key Features:
+    %     - Parses input files and assigns values to boundary condition fields.
+    %     - Interfaces with fluid property libraries to compute saturation and
+    %       inlet thermodynamic states.
+    %     - Validates consistency between geometry and power mesh definitions.
+    %     - Supports plotting of boundary condition time series.
     
     properties (SetAccess=?Inputs.Input)
         
-        TIME             double  {mustBeNumeric, mustBeScalarOrEmpty}                              % Time [s]
+        TIME             double  {mustBeNumeric, mustBeScalarOrEmpty}                              % Simulation time [s]
         PRESSURE         double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % System pressure [Pa]
         HIN              double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Inlet enthalpy [J/kg]
         MFLOW            double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Mass flow rate [kg/s]
@@ -19,14 +25,23 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
     end
 
     properties (SetAccess=private, GetAccess=private)
-        geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}
+
+        geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}                                    % Geometry object used for consistency checks
+    
     end
 
     methods (Access=public)
         
         function obj = BoundaryConditions(filePath, geometryObjInput)
-            %BOUNDARYCONDITIONS Construct an instance of this class
+            %BOUNDARYCONDITIONS Constructor for BoundaryConditions class
             %
+            % Parses input file and initializes boundary condition parameters.
+            % Validates consistency with geometry and applies default values if needed.
+            %
+            % Inputs:
+            %   filePath         - Path to input file (optional)
+            %   geometryObjInput - Geometry object for validation
+
             arguments
                 filePath = ""
                 geometryObjInput = Inputs.Geometry();
@@ -60,7 +75,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
             % Iterate through obj property names
             for idx = 1:length(objPropnames)
                 
-                 % Retrieve idx-th item in objPropnames
+                % Retrieve idx-th item in objPropnames
                 objPropname = objPropnames(idx);
                 
                 % Check if the objPropname entry is specified, and if the
@@ -109,12 +124,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                     end
                 end
             end
-            
-            % Transpose WMESH
-            % COMMENT: Not sure why this is necessary
-            % obj.WMESH = obj.WMESH.';
-            % obj.WPOWER = obj.WPOWER.';
-            
+                        
             % check if WMESH size is consistent with geometry
             %if any(cellfun(@sum,{objs.WMESH}) ~= obj.geometryObj.LENGTH)
             if any(~ismembertol(cellfun(@sum,{objs.WMESH}),obj.geometryObj.LENGTH,1E-3))    
@@ -124,8 +134,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                      );
             end
 
-            % check if WPOWER size is consistent with geometry
-            % reshape
+            % check if WPOWER size is consistent with geometry reshape
             if any(cellfun(@height,{objs.WPOWER}) ~= cellfun(@width,{objs.WMESH}) .* arrayfun(@(obj) width(obj.geometryObj.PERIM), objs))
                 throw( ...
                     MException('InputError:BoundaryCondtionsInconsistency', ...
@@ -154,57 +163,59 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
             delete(inputStructProp)
 
             obj = objs;
-
         end
         
         function  tsat = TSAT(obj,fluidObj)
-            %TSAT [K] Saturation temperature given fluid object
+            %TSAT [K] Saturation temperature at system pressure using fluid object
             %
             tsat = fluidObj.coolpropH.TsatP(obj.PRESSURE);
         end
         
         function hf = HF(obj,fluidObj)
-            %HF [J/kg] Liquid saturation given fluid object
+            %HF [J/kg] Liquid saturated enthalpy at system pressure using fluid object
             %
             hf = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',0);
         end
         
         function hg = HG(obj,fluidObj)
-            %HF [J/kg] Vapor saturation given fluid object
+            %HG [J/kg] Vapor saturated enthalpy at system pressure using fluid object
             hg = fluidObj.coolpropH.enthalpy('P',obj.PRESSURE,'Q',1);
         end
         
         function tin = TIN(obj,fluidObj)
-            %TIN [K] Inlet temperature
+            %TIN [K] Inlet temperature based on inlet enthalpy and pressure
             %
             tin = fluidObj.coolpropH.temperature('P',obj.PRESSURE,'H', obj.HIN);
         end
         
         function dtin = DTIN(obj,fluidObj)
-            %DTIN [K] Inlet subcooling temperature given fluid object   
+            %DTIN [K] Inlet subcooling temperature (TSAT - TIN)   
             %
             dtin = obj.TSAT(fluidObj)-obj.TIN(fluidObj);
         end
         
         function dhin = DHIN(obj,fluidObj)
-            %DHIN [J/kg] Inlet subcooling enthalpy given fluid object   
+            %DHIN [J/kg] Inlet subcooling enthalpy (HF - HIN)   
             %
             dhin = obj.HF(fluidObj)-obj.HIN;
         end
         
         function xin = XIN(obj,fluidObj)
-            %XIN [-] Inlet equilibrium quality given fluid object
+            %XIN [-] Inlet equilibrium quality
             %
             xin = -obj.DHIN(fluidObj)./(obj.HG(fluidObj)-obj.HF(fluidObj));
         end
 
-%         function varargout = size(obj,varargin)
-%             [varargout{1:nargout}] = size(obj.TIME,varargin{:});
-%         end
-
         function plot(obj,fluidObj,opt)
-            %PLOT Plot boundary conditions given fluid object
+            %PLOT Generates plots of boundary condition parameters over time
             %
+            % Inputs:
+            %   fluidObj - FluidProperties object
+            %   opt      - Struct with fields:
+            %               display   - Cell array of parameters to plot
+            %               tIdx      - Time indices to include
+            %               unitTemp  - Temperature unit ('K' or 'C')
+
             arguments
                 obj
                 fluidObj
@@ -254,7 +265,7 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
                     label = strrep(label,'K','C');
                 end
 
-                nexttile; hold all; grid on;
+                nexttile; hold on; grid on;
                 t = [obj.TIME];
                 switch flag
                     case 0
@@ -276,6 +287,16 @@ classdef BoundaryConditions < Inputs.Input %& Inputs.IndexableInput
         function writeInputFile(filePathName, ...
                                     TIME, PRESSURE, HIN, MFLOW, ...
                                     varargin)
+            % WRITEINPUTFILE Writes boundary condition data to input file
+            %
+            % Inputs:
+            %   filePathName - Path to output file
+            %   TIME         - Time value [s]
+            %   PRESSURE     - Pressure value [Pa]
+            %   HIN          - Enthalpy value [J/kg]
+            %   MFLOW        - Mass flow rate [kg/s]
+            %   varargin     - Additional name-value pairs
+
             if TIME == 0
                 fileAccessMode = 'w+';
             else

@@ -1,17 +1,29 @@
 classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
-    %INPUT Superclass to other input classes
+    %INPUT Abstract superclass for input-handling classes
     %
-    %   TODO: Detailed explanations
+    % Provides core functionality for reading, validating, and managing structured input data.
+    % Supports dynamic property creation, default value handling, and solver-dependent customization.
 
     properties (SetAccess=protected)
-        extra       = struct.empty()
-        warnings    = struct.empty()
+
+        extra       = struct.empty()                             % Stores unused input entries for reference or debugging
+        warnings    = struct.empty()                             % Stores warning messages generated during input parsing
+
     end
     
     methods
+
         function obj = Input(inputFilePath, key, val)
-        %INPUT Parse inputFile to construct this class
-        %
+            %INPUT Constructor for Input class
+            %
+            % Parses input file and optionally filters entries by key-value pair.
+            % Adds dynamic property 'inputStruct' to hold parsed data.
+            %
+            % Inputs:
+            %   inputFilePath - Path to input file (string)
+            %   key           - Field name to filter by (optional)
+            %   val           - Value to match for filtering (optional)
+
             arguments
                 inputFilePath {mustBeText}                                  = ""
                 key {mustBeText}                                            = ""
@@ -56,8 +68,11 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
         end
 
         function [isSpecifiedEntry, defaultUsed, defaultValue] = validateInputEntry(obj, objPropname, opts)
-        % VALIDATEINPUTENTRY 
-        %
+            % VALIDATEINPUTENTRY Validates whether a property entry is specified or defaulted
+            %
+            % Throws error if required entry is missing or empty
+            % Returns flags and default value if applicable
+
             arguments
                 obj
                 objPropname
@@ -137,8 +152,10 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
         end
         
         function objPropnames = listInputProperties(obj, opts)
-        %LISTINPUTPROPERTIES List of protected obj property names
-        %
+            %LISTINPUTPROPERTIES Returns list of protected property names for the object
+            %
+            % Optionally excludes specified properties
+
             arguments
                 obj
                 opts.exclude = {}   % Cell array of properties to exclude from the list
@@ -158,9 +175,9 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
         end
 
         function [varargout] = defaultValueUsedReport(obj, propNames, propValues)
-        %DEFAULTVALUEUSEDREPORT Report of properties in which the default
-        %values were used.
-        %
+            %DEFAULTVALUEUSEDREPORT Generates report of properties for which default values were used
+            % Can print or return formatted string array
+
         arguments
             obj
             propNames   string
@@ -228,9 +245,10 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
         end
 
         function out = applySolverDependentProperties(obj, solverName)
-        %APPLYSOLVERDEPENDENTPROPERTIES Make copy of obj to avoid
-        %overwriting the dependency specification
+        %APPLYSOLVERDEPENDENTPROPERTIES Applies solver-specific property values based on dependency flags
         %
+        % Returns a copy of the object with updated properties
+
             out = copy(obj);
 
             % Convert solvername to upper
@@ -275,22 +293,19 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     elseif isfield(depProp, 'DEFAULT')
                         out.(depPropName) = depProp.DEFAULT;
                     end
-                    
                 end
-                
             end
-    
         end
+
     end
     
     methods(Static, Access=protected)
         
         function inputStruct = readInputFile(filePath)
-        %READINPUTFILE input file parser
-        %
-        % This function accepts the uniform input file format and 
-        % converts it to a struct array for each entry.
-        %
+            %READINPUTFILE Reads and parses input file into structured format
+            % Supports .json and .inp formats
+            % Throws error for unsupported formats or read failures
+
             arguments
                 filePath {mustBeFile}
             end
@@ -430,12 +445,11 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                             'Input file with extension %s is not supported.', fileExt) ...
                     );
             end
-
         end
 
         function defVal = defaultValueString(defVal)
-        %DEFAULTVALUESTRING Convert numeric default value to string
-        %
+            %DEFAULTVALUESTRING Converts default value to string representation for reporting
+
             if isnumeric(defVal)
                 defVal = num2str(defVal);
             elseif islogical(defVal)
@@ -447,8 +461,10 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
     methods(Static)
         function writeInputFile(filePathName, fidMode, varargin)
-        %WRITEINPUTFILE
-        %    
+            %WRITEINPUTFILE Writes input data to file in standard format
+            %
+            % Accepts name-value pairs and optional file mode
+
             if mod(length(varargin),2) == 1
                 error('An even number of inputs after filePath is required.');
             end
@@ -514,12 +530,13 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
             % Close file
             fclose(fid);
-
         end
 
         function validateFunctionHandleInput(handleString)
-        %VALIDATEFUNCTIONHANDLEINPUT
-        %
+            %VALIDATEFUNCTIONHANDLEINPUT Validates safety of function handle string
+            %
+            % Throws error if restricted keywords are detected
+
             arguments
                 handleString    {mustBeTextScalar}
             end
@@ -534,12 +551,11 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     error("Unsafe content detected: '%s' in function handle: %s", restrictedKeyword, handleString);
                 end
             end
-
         end
 
         function jsonText = convert2JSON(inputFilePath)
-        %CONVERT2JSON
-        %
+            %CONVERT2JSON Converts input file contents to JSON-formatted string
+
             % Read inputFilePath
             inputStruct = Inputs.Input.readInputFile(inputFilePath);
             

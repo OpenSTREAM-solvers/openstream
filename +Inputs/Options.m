@@ -1,19 +1,20 @@
 classdef Options < Inputs.Input
-    %OPTIONS Defines all numerical options.
+    %OPTIONS Class for defining and managing numerical solver options
     %
-    %   Class definition for the numerical options
-    %   Data are read from the options input file using InputSet
-    %
-    
+    % This class encapsulates all numerical parameters used in the simulations,
+    % including time stepping, convergence criteria, and relaxation factors
+    % for all solvers. It reads options data from input files and handles default
+    % values as well as input validation.
+   
     properties (SetAccess=?Inputs.Input)
         
-        ID               (1,1) string  {mustBeTextScalar}                                          % Option ID
-        AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Axial power interpolation method
-        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Time-dependent boundary conditions interpolation method
-        TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step [s]
-        MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Max number of inner (point) iterations
-        SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step for steady-state iterations [s]
-        SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 30                    % Max number of steady-state iterations
+        ID               (1,1) string  {mustBeTextScalar}                                          % Identifier for the options configuration
+        AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Method for interpolating axial power distribution
+        TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Method for interpolating time-dependent boundary conditions
+        TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step size for transient simulations [s]
+        MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of inner iterations per time step
+        SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step size for steady-state iterations [s]
+        SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 30                    % Maximum number of steady-state iterations
         
         % Mixture solver options
         ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
@@ -61,9 +62,17 @@ classdef Options < Inputs.Input
     end
 
     methods
+
         function obj = Options(filePath,optionsID)
-            %MODEL Construct an instance of this class
+            %MODEL Constructor for Options class
             %
+            % Parses options input file and initializes properties.
+            % Applies default values and validates entries.
+            %
+            % Inputs:
+            %   filePath   - Path to options input file
+            %   optionsID  - Identifier for options configuration
+
             arguments
                 filePath = ""
                 optionsID = ""
@@ -142,16 +151,23 @@ classdef Options < Inputs.Input
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');
             delete(inputStructProp)
-
         end
         
-
     end
     
     methods (Static)
+
         function writeInputFile(filePathName, ID, varargin)
+            % Writes numerical options configuration to input file
+            %
+            % Inputs:
+            %   filePathName - Path to output file
+            %   ID           - Options identifier
+            %   varargin     - Additional name-value pairs for options properties
+
             Inputs.Input.writeInputFile(filePathName, "a+", "ID", ID, varargin{:});
         end
+
     end
 
 end
