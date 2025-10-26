@@ -1,6 +1,9 @@
 function solve(mixSolver)
-%SOLVE  
-% 
+%SOLVE Executes the mixture solver for steady-state and transient simulations
+%
+% This method manages the full solution process, including initialization,
+% time stepping, inner iterations, convergence checks, and logging.
+
 arguments
     mixSolver
 end
@@ -10,7 +13,7 @@ import Solvers.SolverState
 % Enable diary
 mixSolver.inputSet.session.log.diaryOn();
 
-% Open log in presistent mode
+% Open log in persistent mode
 mixSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if mixSolver.STATE ~= SolverState.UNSOLVED
@@ -45,7 +48,11 @@ mixSolver.inputSet.session.log.diaryOff();
 mixSolver.log('Output directory: %s\n',mixSolver.inputSet.session.directory);
 
 function solver(solveINIT)
-    
+    % Internal solver routine for steady-state and transient modes
+    % Handles time stepping, axial sweeps, and inner iterations
+    % Applies relaxation and convergence checks
+    % Updates mixture properties and logs progress
+
     nwall = mixSolver.inputSet.geometry.NWALL;
 
     % Check if solving mixtureInit

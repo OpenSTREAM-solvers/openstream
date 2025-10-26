@@ -1,35 +1,37 @@
 classdef SolverPlotter < handle
     %SOLVERPLOTTER Framework for generating solver plots
     %
-    %   TODO: Detailed explanations
+    % This class provides a flexible plotting interface for visualizing solver results.
+    % It supports tiled layouts, animated series, and customizable plot styles.
+    % It also includes UI controls for animation playback and export.
     
     properties
-        FontSize            {mustBePositive, isnumeric}             = 14            % Font size of text in plots
-        Title               {isstring}                              = ""            % Figure title
-        WallIdx             {mustBePositive, mustBeInteger}         = 1             % Wall index
-        Zs          (:,1)   {isnumeric}                             = []
-        Ts          (:,1)   {isnumeric}                             = []
-    
-        Grid                {mustBeMember(Grid,{'on','off','minor'})} = 'on'        % Grid option
 
-
-        currentAhIdx (1,1)  {isnumeric}                             = NaN
+        FontSize            {mustBePositive, isnumeric}               = 14            % Font size of text in plots
+        Title               {isstring}                                = ""            % Title of the figure
+        WallIdx             {mustBePositive, mustBeInteger}           = 1             % Wall index for multi-wall simulations
+        Zs          (:,1)   {isnumeric}                               = []            % Axial positions [m]
+        Ts          (:,1)   {isnumeric}                               = []            % Time series [s]
+        Grid                {mustBeMember(Grid,{'on','off','minor'})} = 'on'          % Grid display option
+        currentAhIdx (1,1)  {isnumeric}                               = NaN           % Index of current active axes
+   
     end
 
     properties (Access=protected)
-        fh          (1,1) matlab.ui.Figure       
-        th          (1,1) matlab.graphics.layout.TiledChartLayout
-        ahs               matlab.graphics.axis.Axes
 
-        isAnimation             (1,1) logical                                   = false
-        animationTitleFormat    (1,1) string                                = ""
-        animationSeries         (:,1) {isnumeric}                           = 1
+        fh          (1,1) matlab.ui.Figure                                            % Figure handle 
+        th          (1,1) matlab.graphics.layout.TiledChartLayout                     % Tiled layout handle
+        ahs               matlab.graphics.axis.Axes                                   % Array of axes handles
+        isAnimation             (1,1) logical                         = false         % Flag indicating if animation is enabled
+        animationTitleFormat    (1,1) string                          = ""            % Format string for animation title
+        animationSeries         (:,1) {isnumeric}                     = 1             % Series of time steps or frames for animation
+   
     end
     
     methods
+
         function plotters = SolverPlotter(titles, WallIdxs, opts)
-        %SOLVERPLOTTER Creates a solver plotter
-        %
+            %SOLVERPLOTTER Constructor method to initialize plotter objects and layout
 
         arguments
             titles                  = ""
@@ -132,12 +134,11 @@ classdef SolverPlotter < handle
                     animationMenu_save = uimenu(animationMenu, 'Text', 'Save', 'MenuSelectedFcn', @animationSaveCallback);
                     animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
 
-                end
-
-                    
+                end  
             end
 
             function animationCallback(src, ~)
+                % ANIMATIONCALLBACK Method to handle animation control callbacks (rewind, advance, edit)
 
                 % retrieve figure and axes handles
                 fh = src.Parent;
@@ -224,11 +225,11 @@ classdef SolverPlotter < handle
                         tlh.Title.FontSize = 18;
 
                     end
-
                 end
             end
             
             function playAnimationCallback(src, ~, loop)
+                %PLAYANIMATIONCALLBACK Method to handle play/pause animation loop with optional looping
 
                 % Get figure and layout
                 fh = src.Parent;
@@ -330,7 +331,7 @@ classdef SolverPlotter < handle
             end
         
             function animationSaveCallback(src, ~)
-
+                %ANIMATIONSAVECALLBACK Method to save animation as video file with UI toggle and frame rate control
 
                 fh = src.Parent.Parent;
                 idx = find(arrayfun(@(p) isequal(p.fh, fh), plotters));
@@ -421,14 +422,12 @@ classdef SolverPlotter < handle
                 for uiControl_idx = 1:length(fh_uicontrols)                    
                     fh_uicontrols(uiControl_idx).Visible = true;
                 end
-
             end
-
         end
 
         function add_ah = addTile(plotters, opts)
-        %ADDTILE Finds existing tile by tileTitle, or create new one if non
-        %is found.
+            %ADDTILE Method to add a new tile to the layout or retrieve existing one by title
+
             arguments
                 plotters
                 opts.tileTitle = ""
@@ -472,13 +471,11 @@ classdef SolverPlotter < handle
                     end
                 end
             end
-
-
         end
 
         function new_ah = newTile(plotters, opts)
-        %newTile Creates a new tile
-        %
+            %NEWTILE Method to create a new tile with labels and formatting
+
             arguments
                 plotters
                 opts.tileTitle = ""
@@ -524,8 +521,8 @@ classdef SolverPlotter < handle
         end
         
         function plotz(plotters, YData, fieldName, opts)
-        %PLOTZ Plot input (YData) distributions (in space or time)
-        %
+        %PLOTZ Method to plot spatial or temporal data (YData) on the current axes
+
             arguments
                 plotters
                 YData
@@ -667,14 +664,12 @@ classdef SolverPlotter < handle
 
                 % Save widest ylim
                 ah.UserData.ylim = ylim(ah);
-
             end
-
         end
 
         function plotOAF(plotters, oafIdx)
-        %plotOAF Plot onset of annular flow boundary
-        %
+            %PLOTOAF Method to plot onset of annular flow boundary indicator
+
             if isscalar(oafIdx)
                 oafIdx = repmat(oafIdx, 1, 2);
             end
@@ -684,8 +679,8 @@ classdef SolverPlotter < handle
         end
 
         function ahs = gca(plotters)
-        %gca Get current plotter axes properties
-        %
+            %GCA Get Method to retrieve current axes handle
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -694,14 +689,14 @@ classdef SolverPlotter < handle
         end
 
         function fh = gcf(plotters)
-        %gcf Get current plotter handle properties
-        %
+            %GCF Method to retrieve current plotter handle
+
             fh = plotters.fh;
         end
         
         function out = xlim(plotters, newLim)
-        %xlim Set or query plotter x-axis limits
-        %
+        %xlim Method to get or set x-axis limits for current axes
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -714,8 +709,8 @@ classdef SolverPlotter < handle
         end
 
         function out = ylim(plotters, newLim)
-        %ylim Set or query plotter y-axis limits
-        %
+            %YLIM Method to get or set y-axis limits for current axes
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -728,8 +723,8 @@ classdef SolverPlotter < handle
         end
         
         function ylabels(plotters, labels)
-        %ylabel Label the plotter y-axis
-        %
+            %YLABEL Method to set y-axis tick labels
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -739,8 +734,8 @@ classdef SolverPlotter < handle
         end
 
         function setZs(plotters, Zs)
-        %setZs Set the parameter on the plotter x-axis (space or time)
-        %
+            %SETZS Method to assign the parameter(space or time) on the plotter x-axis
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -749,8 +744,8 @@ classdef SolverPlotter < handle
         end
 
         function legend(plotters, varargin)
-        %legend Create a plotter legend.
-        %
+            %legend Method to add legend to current axes
+
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
@@ -763,8 +758,7 @@ classdef SolverPlotter < handle
     methods (Static)
 
         function plotStyle = fieldName2plotStyle(fieldName)
-        %plotStyle Indicate the plot style (color, marker, etc) for each
-        %fieldName
+        %FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)
             
             % Default colors
             colors = ["#0072BD","#D95319","#EDB120","#7E2F8E","#77AC30","#4DBEEE","#A2142F"];
@@ -876,7 +870,6 @@ classdef SolverPlotter < handle
 
             % Convert cell to struct
             plotStyle = cell2struct(plotStyle, {'Color', 'LineStyle', 'Marker'},2);
-
         end
 
     end

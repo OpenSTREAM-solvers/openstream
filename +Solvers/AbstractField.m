@@ -1,41 +1,47 @@
 classdef (Abstract) AbstractField < matlab.mixin.Copyable
-    %ABSTRACTFIELD defines all methods shared by all field class definitions across all
-    %solvers
+    %ABSTRACTFIELD Base class for field definitions across solvers
     %
-    %   TODO: Detailed explanations
+    % This abstract class defines shared properties and methods for all field-type
+    % classes used in solver implementations. It provides mechanisms for transient
+    % data extraction, plotting, memoization, struct conversion, and property copying.
     
     properties (Abstract=true, SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
+
         NZ           (1,1) double  {mustBeNumeric}                         % Number of axial steps [-]
         NTIME        (1,1) double  {mustBeNumeric}                         % Number of time steps [-]
         TIME         (1,1) double  {mustBeNumeric}                         % Time series [s]
         DT           (1,1) double  {mustBeNumeric}                         % Time step size [s]
         TIDX         (1,1) double  {mustBeNumeric}                         % Time step index [-]
         Z            (:,1) double  {mustBeNumeric}                         % Elevation [m]
-
         ITR          (1,1) struct                                          % Iteration properties
+    
     end
 
     properties (Access = protected)
+
         %memoizedFunctions = dictionary();
         % Currently using containers.Map() for MATLAB version
-        memoizedFunctions = containers.Map();
+        memoizedFunctions = containers.Map();                              % Memoization store for function handles
+    
     end
 
     properties (SetAccess = protected, Hidden)
+
         flowProperties (:,:) cell = {'W','U','H','ITR'}                    % Flow properties used for copying
+   
     end
 
     methods
         
         function absField = AbstractField()
+            %ABSTRACTFIELD Constructor for AbstractField class
             
         end
         
         function paramData = transient(obj, param, subobj, opt)
-        %TRANSIENT Generate transient distribution array for parameter
-        %param
-        %
-            
+        %TRANSIENT Extracts transient distribution array for a given parameter
+        % Supports wall-wise and axial/time slicing with optional subobject access
+
             arguments
                 obj
                 param         (1,1) string {mustBeTextScalar}
@@ -47,7 +53,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             
             % Read parameter
             p = split(param,'.');
-            if length(p) == 1
+            if isscalar(p)
                 if isempty(subobj)
                     paramData = cell2mat(arrayfun(@(x) x.(param),obj(opt.tIdx),'uni',0));
                 else
@@ -72,14 +78,14 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             paramData = reshape(paramData,length(opt.zIdx),length(opt.tIdx),length(opt.wall));
             
             % Special case for single elevation
-            if length(opt.zIdx) == 1
+            if isscalar(opt.zIdx)
                 paramData = permute(paramData,[3 2 1]);
             end
-            
         end
         
         function ax = plotzt(obj, param ,ylabelText ,ylabelUnit ,k ,opt, subobj, annular,time)
-            %PLOTZT 2D space/time distribution plot
+            %PLOTZT 2D Generates a 2D space-time distribution plot for a given parameter
+            % Supports unit conversion, pre-annular flow masking, and customizable view options
             
             if nargin < 8, annular = false; end
             if nargin < 9, time = []; end
@@ -115,7 +121,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                 end
             end
             
-            ax = nexttile; hold all; grid on; title(ylabelText)
+            ax = nexttile; hold on; grid on; title(ylabelText)
             [t_mesh,z_mesh] = meshgrid(time,z);
             surf(z_mesh,t_mesh,paramData,'edgeColor','none');
             xlabel('Axial position [m]'); xlim([min(z)       max(z)]);
@@ -127,29 +133,29 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
 
         function out = memoizeFunction(obj, methodStr, methodHandle, varargin)
-        %MEMOIZEDMETHOD Implement a mechanism for registering memoizeable
-        %functions
-        %
-        %  Adapted from https://stackoverflow.com/a/75037451
-        %
-        %For the first call with a particular method, create and
-        %memoize a function handle view of the method
+            %MEMOIZEDMETHOD Registers and retrieves memoized function handles
+            %
+            % Avoids redundant computation by caching results
+            % Adapted from https://stackoverflow.com/a/75037451
+
+            %For the first call with a particular method, create and
+            %memoize a function handle view of the method
             if ~isConfigured(obj.memoizedFunctions) || ~obj.memoizedFunctions.isKey(methodStr)
                 fn_method = @(varargin)methodHandle(varargin{:});
                 fn = memoize(fn_method);
                 obj.memoizedFunctions(methodStr) = fn;
             end
-            
+
             %For all calls, get the store function handle out of
             %storage, and use it.
             fn = obj.memoizedFunctions(methodStr);
             out = fn(varargin{:});
-            
         end
 
         function out = struct(obj)
-        %STRUCT Converter to struct
-        %
+            %STRUCT Converts field object to a structured array
+            % Includes TIME, ITR, and flow properties
+
             flowProps = obj.flowProperties;
             for i = length(obj):-1:1
                 
@@ -174,8 +180,9 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
 
         function copyFlowProperties(srcObj, targetObj, opts)
-        %COPYFLOWPROPERTIES Copy source object into target object
-        %
+            %COPYFLOWPROPERTIES Copies flow properties from source to target field object
+            % Supports full or partial copying depending on 'opts.all' flag
+
             arguments
                 srcObj
                 targetObj (1,:) Solvers.AbstractField
@@ -185,7 +192,6 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             % TODO: add type check for srcObj and targetObj
 
             for i = 1:length(targetObj)
-                
                 % Make sure obj meshes match
                 if srcObj.Z ~= targetObj(1).Z
                     classType = class(srcObj);
@@ -218,9 +224,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                         end
                     end
                 end
-
             end
-
         end
 
     end
