@@ -8,7 +8,7 @@
 
 project = 'OpenSTREAM'
 author = 'The OpenSTREAM Team'
-copyright = f'2024, {author}'
+copyright = f'2025, {author}'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -51,6 +51,8 @@ autosummary_generate = True
 #html_theme = 'alabaster'
 html_theme = "sphinx_rtd_theme"
 html_static_path = ['_static']
+html_logo = '_static/logo-300px-transparent.png'
+html_favicon = '_static/favicon.ico'
 includehidden = True
 
 # -- Options fpr LaTex output ------------------------------------------------
