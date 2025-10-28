@@ -41,21 +41,28 @@ classdef (Abstract) AbstractSolver < handle
         
         function log(solver, varargin)
             %LOG Log messages to the session log
-            %
+
             solver.inputSet.session.log.log(varargin{:});
+        end
+
+        function name = solverName(solver)
+            %SOLVERNAME returns the name of the solver
+            
+            parts = split(class(solver),'.');
+            name = parts{end};
         end
 
         function save(solver, opts)
             %SAVE Save the solver object to a .mat file with a customizable name.
             %
             %   Inputs:
-	    %       solver        - The solver object to be saved.
-            %       opts.name     - (string) Name of the variable under which to save the solver. Default: 'solver'
+	        %       solver        - The solver object to be saved.
+            %       opts.name     - (string) Name of the variable under which to save the solver. Default set to solver name
             %       opts.showpath - (logical) Whether to display the save path. Default: true.
 
             arguments
                 solver
-                opts.name     (1,1) string  {mustBeTextScalar}             = 'solver'
+                opts.name     (1,1) string  {mustBeTextScalar}             = []
                 opts.showpath (1,1) logical                                = true              
             end
 
@@ -65,7 +72,11 @@ classdef (Abstract) AbstractSolver < handle
                 error('Directory %s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
             end
 
-            outputFile = fullfile(session.directory, session.name + '.mat');
+            if isempty(opts.name)
+                opts.name = solver.solverName();
+            end
+
+            outputFile = fullfile(session.directory, session.name + '_' + solver.solverName() + '.mat');
             dataStruct = struct();
             dataStruct.(opts.name) = solver;
 
