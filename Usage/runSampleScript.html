@@ -37,7 +37,7 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
-              <img src="../_static/logo-200px-transparent.png" class="logo" alt="Logo"/>
+              <img src="../_static/logo-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -99,44 +99,46 @@
   <section id="run-sample-script">
 <h1>Run sample script<a class="headerlink" href="#run-sample-script" title="Link to this heading"></a></h1>
 <p>At this point, you are ready to run the sample script. You will see some of the basic usages of  OpenSTREAM.</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Clear existing variables from workspace</span>
-<span class="nb">clearvars</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="c">% Clear existing variables from workspace</span>
+<span class="w">    </span><span class="nb">clearvars</span>
 
-<span class="c">% Import some of the package classes</span>
-<span class="nb">import</span><span class="w"> </span><span class="n">Inputs</span><span class="o">.*</span>
-<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="o">.*</span>
-<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="o">.*</span>
+<span class="c">% Import the necessary classes for inputs and solvers</span>
+<span class="w">    </span><span class="nb">import</span><span class="w"> </span><span class="n">Inputs</span><span class="o">.*</span>
+<span class="w">    </span><span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="o">.*</span>
+<span class="w">    </span><span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="o">.*</span>
 
-<span class="c">% InputSet is used to create a collection of input settings</span>
-<span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/models.inp&#39;</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/options.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;DEFAULT&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/geom.inp&#39;</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/bc_tutorial1.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">sessionParentDir</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">&#39;outputs&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">LOGMODE</span><span class="w">               </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BOTH&#39;</span><span class="p">);</span>
+<span class="c">% Turn off warnings during input setup</span>
+<span class="nb">warning</span><span class="w"> </span><span class="n">off</span>
+<span class="c">% Create the input set using paths to model, options, geometry, and boundary condition files</span>
+<span class="w">    </span><span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/models.inp&#39;</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/options.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;DEFAULT&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/geom.inp&#39;</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/tutorial1.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">sessionParentDir</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">&#39;outputs&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="n">LOGMODE</span><span class="w">               </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BOTH&#39;</span><span class="p">);</span>
 
-<span class="c">% Create a mixture solver</span>
-<span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
+<span class="w">    </span><span class="c">% Create a mixture solver object</span>
+<span class="w">    </span><span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
 
-<span class="c">% mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">initializeSolver</span><span class="p">();</span>
+<span class="w">    </span><span class="c">% mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.</span>
+<span class="w">    </span><span class="n">mixSolver</span><span class="p">.</span><span class="n">initializeSolver</span><span class="p">();</span>
 
-<span class="c">% Solve (does not accept any argument)</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
+<span class="w">    </span><span class="c">% Solve (does not accept any argument)</span>
+<span class="w">    </span><span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
 
-<span class="c">% Axial and temporal plots</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">                                    </span><span class="c">% Axial plot at 1st time step</span>
+<span class="w">    </span><span class="c">% Axial plots</span>
+<span class="w">    </span><span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">();</span>
 
-<span class="c">% Save results</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">save</span><span class="p">();</span>
+<span class="w">    </span><span class="c">% Save results</span>
+<span class="w">    </span><span class="n">mixSolver</span><span class="p">.</span><span class="n">save</span><span class="p">();</span>
 </pre></div>
 </div>
 <figure class="align-default" id="id1">
 <img alt="../_images/sample_mix_plotz.png" src="../_images/sample_mix_plotz.png" />
 <figcaption>
-<p><span class="caption-text">Sample figure of axial distributions of mixture parameters at 0 [s].</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-text">Sample figure of axial distributions of mixture parameters.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
