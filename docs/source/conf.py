@@ -35,7 +35,7 @@ matlab_auto_link = 'all'
 matlab_show_property_default_value = True
 matlab_class_signature = True
 autoclass_content = 'class'
-autodoc_member_order = 'bysource'
+autodoc_member_order = 'alphabetical'
 autodoc_default_options = {
 	'member-order': 'bysource'
 }
@@ -51,7 +51,7 @@ autosummary_generate = True
 #html_theme = 'alabaster'
 html_theme = "sphinx_rtd_theme"
 html_static_path = ['_static']
-html_logo = '_static/logo-200px-transparent.png'
+html_logo = '_static/logo-transparent.png'
 html_favicon = '_static/favicon.ico'
 includehidden = True
 

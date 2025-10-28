@@ -4,8 +4,8 @@ Getting started
 Prerequisites and installation
 ------------------------------
 
-OpenSTREAM is a MATLAB program for simulating two-phase flow
-behaviors. The Python version of
+OpenSTREAM is a MATLAB program for simulating one-dimensionnal two-phase flows.
+The Python version of
 `CoolProp <http://www.coolprop.org/index.html#what-is-coolprop>`__ is
 used for calculating the fluid properties.
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
@@ -119,4 +119,4 @@ Next steps
 
 Congrats! Hopefully, at this point, you have successfully made a copy of
 this repo and installed the required programs. Next, let’s run the
-Tutorial script to make sure everything is working properly.
+sample script to make sure everything is working properly.

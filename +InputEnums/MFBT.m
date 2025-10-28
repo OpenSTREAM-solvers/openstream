@@ -5,9 +5,9 @@ classdef MFBT
     %   Minimum Film Boiling Transition, used by the mixture field.
     %
     %   Models:
-    %       NONE     - No MFBT transition applied
-    %       CONSTANT - Constant deviation from the saturation temperature
-    %                  using user-defined DTMFB
+    %       - NONE     — No MFBT transition applied
+    %       - CONSTANT — Constant deviation from the saturation temperature
+    %                    using user-defined DTMFB
 
     enumeration
         NONE                 % No MFBT transition
