@@ -28,7 +28,8 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v5
-        with: ${{github.ref}}
+        with: 
+           ref: ${{github.ref}}
 
       - name: Setup Python
         uses: actions/setup-python@v3
