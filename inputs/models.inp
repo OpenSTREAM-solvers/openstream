@@ -31,3 +31,17 @@ NNODES        ! Number of axial nodes                                      > 100
 FLUID         ! Fluid ID                                                   > WATER
 VOID          ! Void fraction model                                        > BESTION
 END
+
+ID            ! Model ID                                                   > TUTORIAL2D
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
+END
+
+ID            ! Model ID                                                   > TUTORIAL2E
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > RELAXATION
+END
