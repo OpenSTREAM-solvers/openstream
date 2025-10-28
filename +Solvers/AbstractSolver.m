@@ -62,7 +62,7 @@ classdef (Abstract) AbstractSolver < handle
 
             arguments
                 solver
-                opts.name     (1,1) string  {mustBeTextScalar}             = []
+                opts.name     (1,1) string  {mustBeTextScalar}             = solver.solverName()
                 opts.showpath (1,1) logical                                = true              
             end
 
@@ -70,10 +70,6 @@ classdef (Abstract) AbstractSolver < handle
 
             if ~isfolder(session.directory)
                 error('Directory %s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
-            end
-
-            if isempty(opts.name)
-                opts.name = solver.solverName();
             end
 
             outputFile = fullfile(session.directory, session.name + '_' + solver.solverName() + '.mat');
