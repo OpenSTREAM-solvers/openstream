@@ -37,7 +37,7 @@ matlab_class_signature = True
 autoclass_content = 'class'
 autodoc_member_order = 'alphabetical'
 autodoc_default_options = {
-	'member-order': 'bysource'
+	'member-order': 'alphabetical'
 }
 toc_object_entries = True
 toc_object_entries_show_parents = 'all'

@@ -6,8 +6,7 @@ classdef MFBT
     %
     %   Models:
     %       - NONE     — No MFBT transition applied
-    %       - CONSTANT — Constant deviation from the saturation temperature
-    %                    using user-defined DTMFB
+    %       - CONSTANT — Constant deviation from the saturation temperature using user-defined DTMFB
 
     enumeration
         NONE                 % No MFBT transition
