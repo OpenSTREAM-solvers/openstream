@@ -7,7 +7,7 @@ classdef SolverPlotter < handle
     
     properties
 
-        FontSize            {mustBePositive, isnumeric}               = 14            % Font size of text in plots
+        FontSize            {mustBePositive, isnumeric}               = 13            % Font size of text in plots
         Title               {isstring}                                = ""            % Title of the figure
         WallIdx             {mustBePositive, mustBeInteger}           = 1             % Wall index for multi-wall simulations
         Zs          (:,1)   {isnumeric}                               = []            % Axial positions [m]
@@ -68,7 +68,7 @@ classdef SolverPlotter < handle
 
                 plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
                 plotters(idx).th.Title.String = plotters(idx).Title;
-                plotters(idx).th.Title.FontSize = 18;
+                plotters(idx).th.Title.FontSize = 15;
 
                 % Store animation title data in fh
                 if opts.isAnimation
@@ -222,7 +222,7 @@ classdef SolverPlotter < handle
                         % update figure name
                         fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
                         tlh.Title.String = fh.Name;
-                        tlh.Title.FontSize = 18;
+                        tlh.Title.FontSize = 15;
 
                     end
                 end
@@ -296,7 +296,7 @@ classdef SolverPlotter < handle
                     if isfield(fh.UserData, 'NameFormat') && isfield(fh.UserData, 'NameSeries')
                         fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
                         tlh.Title.String = fh.Name;
-                        tlh.Title.FontSize = 18;
+                        tlh.Title.FontSize = 15;
                     end
 
                     % Update counter UI if available
