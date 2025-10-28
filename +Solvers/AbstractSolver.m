@@ -48,10 +48,8 @@ classdef (Abstract) AbstractSolver < handle
         function save(solver, opts)
             %SAVE Save the solver object to a .mat file with a customizable name.
             %
-            %   save(solver, opts)
-            %
             %   Inputs:
-            %       solver        - The solver object to be saved.
+	    %       solver        - The solver object to be saved.
             %       opts.name     - (string) Name of the variable under which to save the solver. Default: 'solver'
             %       opts.showpath - (logical) Whether to display the save path. Default: true.
 
