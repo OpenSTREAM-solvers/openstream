@@ -12,6 +12,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -22,7 +23,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Inputs" href="../Packages/Inputs.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
     <link rel="prev" title="Getting started" href="gettingStarted.html" /> 
 </head>
 
@@ -36,6 +37,7 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
+              <img src="../_static/logo-300px-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,6 +51,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Run sample script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
@@ -106,10 +109,10 @@
 
 <span class="c">% InputSet is used to create a collection of input settings</span>
 <span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/models.inp&#39;</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BARCS&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/options.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;STEADY&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/geom.inp&#39;</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BARC&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/bc_barc.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/models.inp&#39;</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/options.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;DEFAULT&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/geom.inp&#39;</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/bc_tutorial1.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
 <span class="w">            </span><span class="n">sessionParentDir</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">&#39;outputs&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
 <span class="w">            </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
 <span class="w">            </span><span class="n">LOGMODE</span><span class="w">               </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BOTH&#39;</span><span class="p">);</span>
@@ -124,14 +127,10 @@
 <span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
 
 <span class="c">% Axial and temporal plots</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">                                     </span><span class="c">% Axial plot at 1st time step</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NTIME</span><span class="p">);</span><span class="w">                      </span><span class="c">% Axial plot at final time step</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NZ</span><span class="p">)</span><span class="w">                          </span><span class="c">% Temporal plot at last spatial node</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NZ</span><span class="p">,</span><span class="s">&#39;solveMode&#39;</span><span class="p">,</span><span class="s">&#39;STEADY&#39;</span><span class="p">)</span><span class="w">     </span><span class="c">% Temporal plot at last spatial node of steady state solution</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotzt</span><span class="p">(</span><span class="n">mixSolver</span><span class="p">.</span><span class="n">NZ</span><span class="p">,</span><span class="s">&quot;solveMode&quot;</span><span class="p">,</span><span class="s">&quot;TRANSIENT&quot;</span><span class="p">);</span><span class="w"> </span><span class="c">% Spatial-temporal map of transient solution at channel exit</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">                                    </span><span class="c">% Axial plot at 1st time step</span>
 
 <span class="c">% Save results</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">saveResults</span><span class="p">(</span><span class="n">saveFormat</span><span class="p">=</span><span class="s">&quot;MAT&quot;</span><span class="p">);</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">save</span><span class="p">();</span>
 </pre></div>
 </div>
 <figure class="align-default" id="id1">
@@ -147,13 +146,13 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="gettingStarted.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../Packages/Inputs.html" class="btn btn-neutral float-right" title="Inputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2025, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

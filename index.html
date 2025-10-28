@@ -6,12 +6,13 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenSTREAM &mdash; OpenSTREAM  documentation</title>
+  <title>OpenSTREAM - Two-Phase Flow Solvers &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
 
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
@@ -35,6 +36,7 @@
           
           <a href="#" class="icon icon-home">
             OpenSTREAM
+              <img src="_static/logo-300px-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -48,6 +50,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Usage/gettingStarted.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Usage/runSampleScript.html">Run sample script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Usage/tutorials.html">Tutorials</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
@@ -82,7 +85,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenSTREAM</li>
+      <li class="breadcrumb-item active">OpenSTREAM - Two-Phase Flow Solvers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,8 +95,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="openstream">
-<h1>OpenSTREAM<a class="headerlink" href="#openstream" title="Link to this heading"></a></h1>
+  <section id="openstream-two-phase-flow-solvers">
+<h1>OpenSTREAM - Two-Phase Flow Solvers<a class="headerlink" href="#openstream-two-phase-flow-solvers" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -104,15 +107,30 @@
 </div>
 <section id="welcome">
 <h2>Welcome<a class="headerlink" href="#welcome" title="Link to this heading"></a></h2>
-<p>OpenSTREAM is a MATLAB program for simulating two-phase flow
-behaviors, inspired by <span id="id1">Le Corre [<a class="reference internal" href="index_content.html#id95" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>.</p>
-<p>Add more descriptive text.</p>
+<p>OpenSTREAM (<strong>Open</strong> <strong>S</strong>olvers for <strong>T</strong>wo-phase flow <a href="#id1"><span class="problematic" id="id2">**</span></a>R**esearch, <a href="#id3"><span class="problematic" id="id4">**</span></a>E**ngineering <a href="#id5"><span class="problematic" id="id6">**</span></a>A**nalysis and <a href="#id7"><span class="problematic" id="id8">**</span></a>M**odeling) is an open-source computational environment for simulating one-dimensional, multi-field, two-phase flows, including phase change. It is designed to support efficient and collaborative model development, performance evaluation, and validation across users and institutions (<span id="id9">Corre <em>et al.</em> [<a class="reference internal" href="index_content.html#id13" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, van T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025.">2025</a>]</span>) (<span id="id10">Corre <em>et al.</em> [<a class="reference internal" href="index_content.html#id14" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: a new open-source platform for two-phase flow model development. In Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025). Toulouse, France, May 12–16 2025.">2025</a>]</span>).</p>
+<p>OpenSTREAM includes several solver frameworks:</p>
+<ul class="simple">
+<li><p>A <strong>mixture solver</strong> with thermal non-equilibrium capabilities</p></li>
+<li><p>A generic <strong>two-fluid solver</strong></p></li>
+<li><p>A <strong>three-field solver</strong> for annular two-phase flow</p></li>
+<li><p>An advanced <strong>four-field solver</strong> for annular two-phase flow (<span id="id11">Le Corre [<a class="reference internal" href="index_content.html#id107" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
+</ul>
+<p>These solvers support single-component, thermally expandable, steady-state and transient boiling two-phase flows in single straight channels, developed under reasonable simplifying assumptions. Basic closure models have been implemented, subject to future improvements.</p>
+<p>OpenSTREAM is aimed at facilitating access to two-phase flow simulation frameworks to support collaborative model development, performance evaluation, and validation across research institutions.</p>
 <p>The purpose of this documentation is to fully describe the usage and thought-process behind the design of the program.</p>
 <p>The PDF version of this manual can be found here: <a class="reference external" href="./files/OpenSTREAM.pdf" rel="noreferrer" target="_blank">OpenSTREAM.pdf</a></p>
-<div class="docutils container" id="id2">
+<div class="docutils container" id="id12">
 <div role="list" class="citation-list">
-<div class="citation" id="id95" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">LeCorre22</a><span class="fn-bracket">]</span></span>
+<div class="citation" id="id14" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">CCW+25a</a><span class="fn-bracket">]</span></span>
+<p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: a new open-source platform for two-phase flow model development. In <em>Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025)</em>. Toulouse, France, May 12–16 2025.</p>
+</div>
+<div class="citation" id="id13" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">CCW+25b</a><span class="fn-bracket">]</span></span>
+<p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, van T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In <em>Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21)</em>. Busan, Korea, August 31–September 5 2025.</p>
+</div>
+<div class="citation" id="id107" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">LeCorre22</a><span class="fn-bracket">]</span></span>
 <p>Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. <em>International Journal of Multiphase Flow</em>, 151:104057, 2022. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0301932222000696" rel="noreferrer" target="_blank">https://www.sciencedirect.com/science/article/pii/S0301932222000696</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057" rel="noreferrer" target="_blank">doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057</a>.</p>
 </div>
 </div>
@@ -139,7 +157,7 @@ behaviors, inspired by <span id="id1">Le Corre [<a class="reference internal" hr
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2025, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

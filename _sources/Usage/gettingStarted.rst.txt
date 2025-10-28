@@ -56,9 +56,9 @@ Install using Git and Github
 MATLAB-Python compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before using the OpenSTREAM, we need to make sure Python with the
-appropriate version is installed, and MATLAB knows the location of the
-Python executable. The following instructions are from the
+Before using OpenSTREAM, we need to make sure Python with the appropriate
+version is installed, and MATLAB knows the location of the Python
+executable. The following instructions are from the
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_ repo.
 
 1. Determine which versions of Python are compatible with your version
