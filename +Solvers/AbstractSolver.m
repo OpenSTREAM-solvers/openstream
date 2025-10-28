@@ -52,7 +52,7 @@ classdef (Abstract) AbstractSolver < handle
             %
             %   Inputs:
             %       solver        - The solver object to be saved.
-            %       opts.name     - (string) Name of the variable under which to save the solver. Default: 'solver'.'
+            %       opts.name     - (string) Name of the variable under which to save the solver. Default: 'solver'
             %       opts.showpath - (logical) Whether to display the save path. Default: true.
 
             arguments
@@ -74,7 +74,7 @@ classdef (Abstract) AbstractSolver < handle
             save(outputFile,'-struct','dataStruct');
 
             if opts.showpath
-                fprintf('\nOutput file save to %s\n\n',outputFile)
+                fprintf('\nOutput file saved to %s\n\n',outputFile)
             end
         end
 
