@@ -106,10 +106,12 @@
 <dd><p>TPKM Enumeration of two-phase local loss multiplier models</p>
 <p>This class defines the available models for calculating the two-phase
 local loss multiplier used by the mixture model</p>
-<p>Models:
-- HOMOGENEOUS — Assumes no slip between phases; both phases move at the same velocity.
-- SLIP        — Accounts for velocity differences (slip) between liquid and vapor phases.
-- ROMIE       — Romie model; behaves like the homogeneous model when a homogeneous void fraction model is applied.</p>
+<p>Models:</p>
+<ul class="simple">
+<li><p>HOMOGENEOUS — Assumes no slip between phases; both phases move at the same velocity.</p></li>
+<li><p>SLIP        — Accounts for velocity differences (slip) between liquid and vapor phases.</p></li>
+<li><p>ROMIE       — Romie model; behaves like the homogeneous model when a homogeneous void fraction model is applied.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat class">
@@ -472,7 +474,7 @@ velocity in the three-field solver.</p>
 <p>Models:
 - ALGEBRAIC     — Simple algebraic model
 - EQUILIBRIUM   — Equilibrium model
-- EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:<a href="#id2"><span class="problematic" id="id3">`</span></a>F_{mathrm{wall}} + F_{mathrm{vapor}} = 0’)
+- EQUILIBRIUMS  — Simplified equilibrium model based on force balance (<span class="math notranslate nohighlight">\(F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0\)</span>)
 - FULL          — Full non-equilibrium momentum model</p>
 </dd></dl>
 
@@ -525,7 +527,7 @@ in the four-field solver.</p>
 <p>Models:
 - ALGEBRAIC     — Simple algebraic model
 - EQUILIBRIUM   — Equilibrium model
-- EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:<a href="#id4"><span class="problematic" id="id5">`</span></a>F_{mathrm{wall}} + F_{mathrm{vapor}} = 0’)
+- EQUILIBRIUMS  — Simplified equilibrium model based on force balance (<span class="math notranslate nohighlight">\(F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0\)</span>)
 - FULL          — Full non-equilibrium model
 - FULLNOP       — Full non-equilibrium model excluding pressure terms (gravity and buoyancy)</p>
 </dd></dl>
