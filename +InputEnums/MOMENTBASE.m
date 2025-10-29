@@ -6,10 +6,11 @@ classdef MOMENTBASE
     % in the four-field solver.
     %
     % Models:
-    % - ALGEBRAIC     — Simple algebraic model
+    %
+    % - ALGEBRAIC     — Simple algebraic model (:cite:t:`ADAMSSON2014316`, Equations 21 or 23)
     % - EQUILIBRIUM   — Equilibrium model
     % - EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:`F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0`)
-    % - FULL          — Full non-equilibrium model
+    % - FULL          — Full non-equilibrium model (:cite:t:`LECORREMODEL`)
     % - FULLNOP       — Full non-equilibrium model excluding pressure terms (gravity and buoyancy)
 
     enumeration

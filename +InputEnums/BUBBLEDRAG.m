@@ -5,10 +5,11 @@ classdef BUBBLEDRAG
     % bubble drag coefficient, used by the two-fluid solver.
     %
     % Models:
+    %
     % - CONSTANT   — Constant drag coefficient using user-defined BUBBLEDRAGCOEF
-    % - STOKES     — Stokes flow regime model
-    % - VISCOUS    — Viscous regime model
-    % - DISTORTED  — Model for distorted bubbles (non-spherical)
+    % - STOKES     — Stokes flow regime model (:math:`\frac{24}{Re_{p}}`)
+    % - VISCOUS    — Viscous regime model (:cite:t:`Walter2024`)
+    % - DISTORTED  — Model for distorted bubbles (non-spherical) (:cite:t:`Walter2024`)
 
     enumeration
         CONSTANT             % User-defined constant drag coefficient 

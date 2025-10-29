@@ -10,11 +10,12 @@ classdef ENTRAINMENT
     % and deposition mass flux to ensure consistency.
     %
     % Models:
+    %
     % - NONE          — No entrainment
-    % - GOVAN         — Hewitt and Govan correlation (1990)
-    % - OKAWA2003     — Okawa et al. correlation (2003)
-    % - OKAWA2004     — Okawa et al. correlation (2004)
-    % - OKAWA2004MOD  — Modified Okawa (2004) model from Adamsson & Le Corre (2011)
+    % - GOVAN         — Hewitt and Govan correlation (:cite:t:`hewitt1990phenomenological`)
+    % - OKAWA2003     — Okawa et al. correlation (:cite:t:`okawa2003`)
+    % - OKAWA2004     — Okawa et al. correlation (:cite:t:`OKAWA2004`)
+    % - OKAWA2004MOD  — Modified Okawa (2004) model from (:cite:t:`ADAMSSON20112843`)
     % - OKAWAGEN      — Generic Okawa-based model using user-defined OKAWACOEFS
 
     enumeration

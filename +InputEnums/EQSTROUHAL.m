@@ -5,8 +5,9 @@ classdef EQSTROUHAL
     % wave equilibrium Strouhal number, used by the four-field solver.
     %
     % Models:
-    % - RISO     — Based on RISO dataset (Le Corre, 2022)
-    % - SAWAI    — Based on SAWAI dataset (Le Corre, 2022)
+    %
+    % - RISO     — Based on RISO dataset (:cite:t:`LECORREMODEL`)
+    % - SAWAI    — Based on SAWAI dataset (:cite:t:`LECORREMODEL`)
     % - MFVAL    — MFVAL model (under development)
     % - CUSTOM   — Custom model using user-defined EQSTROUHALCOEF
 

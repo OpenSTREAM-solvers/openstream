@@ -6,10 +6,11 @@ classdef LOCRELVEL
     % two-fluid solver.
     %
     % Models:
-    % - AREAMEAN  — Difference between area-averaged phase velocities
-    % - SCALED    — Scaled difference using user-defined RELVELCST
-    % - DRIFT     — Uses drift velocity as the local relative velocity
-    % - SIMPLE    — Simplified assumptions for bubbly and annular flow regimes
+    %
+    % - AREAMEAN  — Difference between area-averaged phase velocities (:cite:t:`Walter2024`)
+    % - SCALED    — Scaled difference using user-defined RELVELCST (:cite:t:`Walter2024`)
+    % - DRIFT     — Uses drift velocity as the local relative velocity (:cite:t:`Walter2024`)
+    % - SIMPLE    — Simplified assumptions for bubbly and annular flow regime (:cite:t:`Walter2024`)
 
     enumeration
         AREAMEAN             % Area-averaged velocity difference

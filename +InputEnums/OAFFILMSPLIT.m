@@ -6,8 +6,9 @@ classdef OAFFILMSPLIT
     % four-field solver
     %
     % Models:
+    %
     % - RATIO        — Ratio of base film to film mass flow rates using user-defined OAFBASERATIO
-    % - EQUILIBRIUM  — Equilibrium model (film thickness equals equilibrium film thickness)
+    % - EQUILIBRIUM  — Equilibrium model (film thickness = equilibrium film thickness) (:cite:t:`LECORREMODEL`)
 
     enumeration
         RATIO                % Ratio model (base/film mass flow rates)

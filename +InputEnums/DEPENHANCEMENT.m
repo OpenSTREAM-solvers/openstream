@@ -5,8 +5,9 @@ classdef DEPENHANCEMENT
     % deposition enhancement, used by the three-field and four-field solvers.
     %
     % Models:
+    %
     % - NONE       — No enhancement applied
-    % - WINDECKER  — Model adapted from Windecker (1999), as documented in Le Corre (2024), using user defined KTUNING
+    % - WINDECKER  — Model adapted from :cite:t:`windecker1999`, as documented in :cite:t:`LECORRE2024113613`, using user defined KTUNING
 
     enumeration
         NONE                 % No deposition enhancement

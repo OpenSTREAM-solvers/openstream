@@ -5,9 +5,10 @@ classdef VAPORFRIC
     % friction coefficient used by the three-field and four-field solvers.
     %
     % Models:
+    %
     % - CONSTANT          — Uses a fixed, friction coefficient using user-defined VAPORFRICCST
-    % - WALLIS            — Wallis model based on void fraction.
-    % - WALLISTHICK       — Wallis model based on film thickness.
+    % - WALLIS            — Wallis model based on void fraction (:cite:t:`wallis1969`).
+    % - WALLISTHICK       — Wallis model based on film thickness (:cite:t:`ADAMSSON20112843`, Equation 35).
     % - SOLVER_DEPENDENT  — Friction model determined by the solver configuration.
 
     enumeration

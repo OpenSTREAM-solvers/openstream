@@ -6,9 +6,10 @@ classdef MOMENTWAVE
     % in the four-field solver.
     %
     % Models:
-    % - ALGEBRAIC    — Simple algebraic model
+    %
+    % - ALGEBRAIC    — Simple algebraic model (:cite:t:`ADAMSSON2014316`, Equations 21 or 23)
     % - EQUILIBRIUM  — Equilibrium model
-    % - FULL         — Full non-equilibrium momentum model
+    % - FULL         — Full non-equilibrium momentum model (:cite:t:`LECORREMODEL`)
 
     enumeration
         ALGEBRAIC            % Algebraic momentum model

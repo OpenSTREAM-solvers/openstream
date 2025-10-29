@@ -10,9 +10,10 @@ classdef DEPOSITION
     % and deposition mass flux to ensure consistency.
     %
     % Models:
+    %
     % - NONE   — No deposition applied
-    % - GOVAN  — Hewitt and Govan correlation (1990)
-    % - OKAWA  — Okawa et al. correlation (2003)
+    % - GOVAN  — Hewitt and Govan correlation (:cite:t:`hewitt1990phenomenological`)
+    % - OKAWA  — Okawa et al. correlation (:cite:t:`okawa2003`)
 
     enumeration
         NONE                 % No deposition

@@ -6,11 +6,12 @@ classdef MOMENTDROP
     % in the three-field and four-field solvers.
     %
     % Models:
+    %
     % - ALGEBRAIC     — Simple algebraic model consistent with mixture solver
     % - SLIP          — Slip ratio model (droplet/gas velocity)
     % - EQUILIBRIUM   — Equilibrium model
     % - EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:`F_{\mathrm{drag}} + F_{\mathrm{gravity}} + F_{\mathrm{buoyancy}} = 0`)
-    % - FULL          — Full non-equilibrium momentum model
+    % - FULL          — Full non-equilibrium momentum model (:cite:t:`LeCorre2025OpenSTREAM`)
 
     enumeration
         ALGEBRAIC            % Algebraic model consistent with mixture solver

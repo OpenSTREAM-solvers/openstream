@@ -5,6 +5,7 @@ classdef INTLENGTH
     % interfacial length scale, used by the two-fluid solver.
     %
     % Models:
+    %
     % - CONSTANT  — Assumes a constant interfacial length scale using user-defined INTLENGTHVCST and INTLENGTHLCST for the dispersed gas and liquid phases, respectively
 
     enumeration

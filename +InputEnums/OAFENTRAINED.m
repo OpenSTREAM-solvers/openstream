@@ -6,8 +6,9 @@ classdef OAFENTRAINED
     % three-field and four-field solvers.
     %
     % Models:
+    %
     % - RATIO       — Ratio of droplet to liquid mass flow rates using user-defined OAFDROPRATIO
-    % - EQUILIBRIUM — Equilibrium assumption model (:math:`M_{\mathrm{ent}} = M_{\mathrm{dep}}`)
+    % - EQUILIBRIUM — Equilibrium assumption model (:math:`M_{\mathrm{ent}} = M_{\mathrm{dep}}`) (:cite:t:`ADAMSSON20112843`, Equations 15 and 16)
 
     enumeration
         RATIO                % Ratio model (drop/liquid mass flow rates)

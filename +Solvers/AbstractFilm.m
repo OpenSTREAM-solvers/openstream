@@ -264,6 +264,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         
         function Ualgebr = UALGEBR(absfilm,zIdx)
         %UALGEBR Film velocity using simple algebraic model [m/s]
+        %
+        % (:cite:t:`ADAMSSON2014316`, eq. 21 or 23)
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
             

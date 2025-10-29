@@ -4,7 +4,8 @@ classdef WAVEBASEINT
     % This class defines the models used to calculate the interfacial momentum
     % transfer between wave and base film regions, used by the four-field solver.
     %
-    % Available Models:
+    % Models:
+    %
     % - VAPORSHEAR          — Vapor shear across wave area (consistent with :cite:t:`LECORREMODEL`, Eq. 46).
     % - VAPORSHEARDROPMASS  — Also includes drop deposition momentum transfer, ensuring consistency between wave and base film velocities for thin films.
 

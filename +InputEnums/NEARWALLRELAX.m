@@ -5,6 +5,7 @@ classdef NEARWALLRELAX
     % near-wall energy transfer time relaxation, used in mixture solver.
     %
     % Models:
+    %
     % - QUALITY — Simple model relating relaxation time to equilibrium quality using user-defined NEARWALLRELAXX and NEARWALLRELAXT
     % - VOID    — Physical model based on local phase volumetric fraction using user-defined NEARWALLRELAXCOEF
 

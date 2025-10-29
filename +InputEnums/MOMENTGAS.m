@@ -6,9 +6,10 @@ classdef MOMENTGAS
     % in the two-fluid solver.
     %
     % Models:
+    %
     % - MIXTURE  — Uses the same gas velocity as in the mixture model
     % - SLIP     — Slip ratio model (gas/liquid velocity) using user-defined SLIP
-    % - FULL     — Full non-equilibrium momentum model
+    % - FULL     — Full non-equilibrium momentum model (:cite:t:`LeCorre2025OpenSTREAM`)
 
     enumeration
         MIXTURE              % Gas velocity equal the mixture velocity

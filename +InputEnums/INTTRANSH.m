@@ -6,6 +6,7 @@ classdef INTTRANSH
     % mixture and two-fluid solvers.
     %
     % Models:
+    %
     % - BULK       — Uses bulk phase enthalpy
     % - SATURATED  — Uses saturated phase enthalpy
 

@@ -5,6 +5,7 @@ classdef THINFILMFRIC
     % under thin film conditions, used by the three-field and four-field solvers.
     %
     % Models:
+    %
     % - LAMINAR   — Laminar flow model (16/Ref)
     % - TURBULENT — Turbulent flow model
 
