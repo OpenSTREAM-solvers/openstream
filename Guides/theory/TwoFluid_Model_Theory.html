@@ -1,0 +1,202 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two-Fluid Model Theory &mdash; OpenSTREAM  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenSTREAM
+              <img src="../../_static/logo-transparent.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Usage/gettingStarted.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Usage/runSampleScript.html">Run sample script</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">OpenSTREAM Theory Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">Global Reference List</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/Inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/InputEnums.html">InputEnums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/Session.html">Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/Solvers.html">Solvers</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External Packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/contribute.html">Contribute to the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/authors.html">Authors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenSTREAM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Two-Fluid Model Theory</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/Guides/theory/TwoFluid_Model_Theory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="two-fluid-model-theory">
+<h1>Two-Fluid Model Theory<a class="headerlink" href="#two-fluid-model-theory" title="Link to this heading"></a></h1>
+<p>The Two-Fluid Simulation Framework in OpenSTREAM is based on a six-equation model that separately tracks the conservation of mass, momentum, and energy for both liquid and vapor phases. This model captures hydrodynamic and thermal non-equilibrium effects and is widely used in nuclear reactor system codes.</p>
+<section id="governing-equations">
+<h2>Governing Equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Mass Conservation</strong></p></li>
+</ol>
+<p>Liquid: :math:frac{partial}{partial t}(W_l u_l) + frac{partial W_l}{partial z} = -A a_i Gamma - Lambda - sum Pi_p^n Gamma_{wb,n}
+Vapor: :math:frac{partial}{partial t}(W_v u_v) + frac{partial W_v}{partial z} = A a_i Gamma - Lambda + sum Pi_p^n Gamma_{wb,n}</p>
+<p>Where:</p>
+<ul class="simple">
+<li><p>:math:W_l, :math:W_v are liquid and vapor mass flow rates</p></li>
+<li><p>:math:u_l, :math:u_v are phase velocities</p></li>
+<li><p>:math:Gamma is interfacial mass transfer</p></li>
+<li><p>:math:Lambda is condensation</p></li>
+<li><p>:math:Gamma_{wb,n} is wall boiling mass flux</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p><strong>Momentum Conservation</strong></p></li>
+</ol>
+<p>Liquid: :math:rho_l A_l frac{partial u_l}{partial t} + u_l frac{partial u_l}{partial z} = -A a_i Lambda (u_l - u_v) - A_l frac{partial p}{partial z} + costheta g rho_l + A a_i tau_{v,l} - Pi_p tau_{wall,l}
+Vapor: :math:rho_v A_v frac{partial u_v}{partial t} + u_v frac{partial u_v}{partial z} = A a_i Gamma (u_l - u_v) - A_v frac{partial p}{partial z} + costheta g rho_v - A a_i tau_{v,l} - Pi_p tau_{wall,v}</p>
+<ol class="arabic simple" start="3">
+<li><p><strong>Energy Conservation</strong></p></li>
+</ol>
+<p>Liquid: :math:rho_l A_l frac{partial h_l}{partial t} + u_l frac{partial h_l}{partial z} = -A a_i (h_l - h_v) Lambda + sum Pi_p^n q’’_{wall,l,n} - (h_v - h_l) Gamma_{wb,n}
+Vapor: :math:rho_v A_v frac{partial h_v}{partial t} + u_v frac{partial h_v}{partial z} = A a_i (h_l - h_v) Gamma + sum Pi_p^n q’’_{wall,v,n}</p>
+</section>
+<section id="features-and-assumptions">
+<h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Captures phase-specific velocities and temperatures</p></li>
+<li><p>Includes interfacial mass, momentum, and energy exchange</p></li>
+<li><p>Supports wall boiling and condensation</p></li>
+<li><p>Assumes straight channel geometry and single-component fluid</p></li>
+</ul>
+</section>
+<section id="implementation-notes">
+<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Implemented in the class: TwoFluidSolver</p></li>
+<li><dl class="simple">
+<dt>Key methods:</dt><dd><ul>
+<li><p>TwoFluidSolver.solve_mass_conservation()</p></li>
+<li><p>TwoFluidSolver.solve_momentum_conservation()</p></li>
+<li><p>TwoFluidSolver.solve_energy_conservation()</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Properties:</dt><dd><ul>
+<li><p>TwoFluidSolver.mass_flow_rate_liquid</p></li>
+<li><p>TwoFluidSolver.mass_flow_rate_vapor</p></li>
+<li><p>TwoFluidSolver.velocity_liquid</p></li>
+<li><p>TwoFluidSolver.velocity_vapor</p></li>
+<li><p>TwoFluidSolver.enthalpy_liquid</p></li>
+<li><p>TwoFluidSolver.enthalpy_vapor</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="role-in-openstream">
+<h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
+<p>The two-fluid model is the core framework for simulating non-equilibrium two-phase flows. It is validated against system codes like TRACE and supports both steady-state and transient simulations.</p>
+<p>Next: threefield_model_theory.html</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The OpenSTREAM Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

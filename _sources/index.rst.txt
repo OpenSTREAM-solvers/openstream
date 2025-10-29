@@ -10,7 +10,16 @@
 
    /Usage/gettingStarted
    /Usage/runSampleScript
-   /Usage/tutorials
+
+.. toctree::
+   :maxdepth: 3
+   :glob:
+   :hidden:
+   :caption: Guides
+
+   /Guides/theory
+   /Guides/tutorials
+   /Guides/references
 
 .. toctree::
    :maxdepth: 3
