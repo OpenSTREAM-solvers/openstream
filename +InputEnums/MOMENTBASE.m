@@ -8,7 +8,7 @@ classdef MOMENTBASE
     % Models:
     % - ALGEBRAIC     — Simple algebraic model
     % - EQUILIBRIUM   — Equilibrium model
-    % - EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:`F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0')
+    % - EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:`F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0`)
     % - FULL          — Full non-equilibrium model
     % - FULLNOP       — Full non-equilibrium model excluding pressure terms (gravity and buoyancy)
 
