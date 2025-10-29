@@ -118,21 +118,9 @@ Creates log file and session directory if needed.</p>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Log.LOGFID">
-<span class="sig-name descname"><span class="pre">LOGFID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1</span></em><a class="headerlink" href="#Session.Log.LOGFID" title="Link to this definition"></a></dt>
-<dd><p>log file</p>
-</dd></dl>
-
-<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Log.LOGMODE">
 <span class="sig-name descname"><span class="pre">LOGMODE</span></span><a class="headerlink" href="#Session.Log.LOGMODE" title="Link to this definition"></a></dt>
 <dd><p>Logging mode (console only, file only, both, or none)</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Log.diaryFilePath">
-<span class="sig-name descname"><span class="pre">diaryFilePath</span></span><a class="headerlink" href="#Session.Log.diaryFilePath" title="Link to this definition"></a></dt>
-<dd><p>Full path to the diary file</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -142,9 +130,21 @@ Creates log file and session directory if needed.</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.LOGFID">
+<span class="sig-name descname"><span class="pre">LOGFID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1</span></em><a class="headerlink" href="#Session.Log.LOGFID" title="Link to this definition"></a></dt>
+<dd><p>log file</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Log.logFileName">
 <span class="sig-name descname"><span class="pre">logFileName</span></span><a class="headerlink" href="#Session.Log.logFileName" title="Link to this definition"></a></dt>
 <dd><p>Name of the log file (without extension)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.showWarnings">
+<span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Log.showWarnings" title="Link to this definition"></a></dt>
+<dd><p>Warnings</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -154,23 +154,23 @@ Creates log file and session directory if needed.</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Log.showWarnings">
-<span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Log.showWarnings" title="Link to this definition"></a></dt>
-<dd><p>Warnings</p>
+<dt class="sig sig-object mat" id="Session.Log.diaryFilePath">
+<span class="sig-name descname"><span class="pre">diaryFilePath</span></span><a class="headerlink" href="#Session.Log.diaryFilePath" title="Link to this definition"></a></dt>
+<dd><p>Full path to the diary file</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.closeLog">
-<span class="sig-name descname"><span class="pre">closeLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.closeLog" title="Link to this definition"></a></dt>
-<dd><p>CLOSELOG Closes log file and resets file ID</p>
+<dt class="sig sig-object mat" id="Session.Log.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.log" title="Link to this definition"></a></dt>
+<dd><p>LOG Logs messages to console and/or file depending on LOGMODE</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
-<dd><p>DELETE Destructor for log class
-Ensures log file and diary are properly closed</p>
+<dt class="sig sig-object mat" id="Session.Log.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.warning" title="Link to this definition"></a></dt>
+<dd><p>WARNING Logs warnings using MATLAB’s built-in <a class="reference internal" href="#Session.Log.warning" title="Session.Log.warning"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">warning()</span></code></a> mechanism
+Optionally writes to file if warnings are suppressed</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -186,9 +186,10 @@ Ensures log file and diary are properly closed</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.log" title="Link to this definition"></a></dt>
-<dd><p>LOG Logs messages to console and/or file depending on LOGMODE</p>
+<dt class="sig sig-object mat" id="Session.Log.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
+<dd><p>DELETE Destructor for log class
+Ensures log file and diary are properly closed</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -199,10 +200,9 @@ Optionally keeps it open between writes</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.warning">
-<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.warning" title="Link to this definition"></a></dt>
-<dd><p>WARNING Logs warnings using MATLAB’s built-in <a class="reference internal" href="#Session.Log.warning" title="Session.Log.warning"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">warning()</span></code></a> mechanism
-Optionally writes to file if warnings are suppressed</p>
+<dt class="sig sig-object mat" id="Session.Log.closeLog">
+<span class="sig-name descname"><span class="pre">closeLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.closeLog" title="Link to this definition"></a></dt>
+<dd><p>CLOSELOG Closes log file and resets file ID</p>
 </dd></dl>
 
 </dd>
@@ -262,27 +262,15 @@ opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Session.dirName">
-<span class="sig-name descname"><span class="pre">dirName</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Session.Session.dirName" title="Link to this definition"></a></dt>
-<dd><p>Name of the session directory</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Session.directory">
-<span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#Session.Session.directory" title="Link to this definition"></a></dt>
-<dd><p>Full path to the session <a class="reference internal" href="#Session.Session.directory" title="Session.Session.directory"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">directory</span></code></a></p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Session.log">
-<span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#Session.Session.log" title="Link to this definition"></a></dt>
-<dd><p>Log object for managing output and warnings</p>
-</dd></dl>
-
-<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Session.name">
 <span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Session.Session.name" title="Link to this definition"></a></dt>
 <dd><p>Name of the session (used for log file naming)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.dirName">
+<span class="sig-name descname"><span class="pre">dirName</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Session.Session.dirName" title="Link to this definition"></a></dt>
+<dd><p>Name of the session directory</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -292,21 +280,25 @@ opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.log">
+<span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#Session.Session.log" title="Link to this definition"></a></dt>
+<dd><p>Log object for managing output and warnings</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Session.showWarnings">
 <span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Session.showWarnings" title="Link to this definition"></a></dt>
 <dd><p>Warnings</p>
 </dd></dl>
 
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
-<span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
-<dd><p>MAKESESSIONDIRECTORY Creates the session directory</p>
-<p>Validates path legality, handles existing directories,
-closes open files and diaries if necessary, and creates the directory.</p>
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#Session.Session.directory" title="Link to this definition"></a></dt>
+<dd><p>Full path to the session <a class="reference internal" href="#Session.Session.directory" title="Session.Session.directory"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">directory</span></code></a></p>
 </dd></dl>
 
-<dl class="mat method">
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Session.setupLog">
 <span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
 <dd><p>SETUPLOG Initializes the Log object for the session</p>
@@ -315,6 +307,14 @@ closes open files and diaries if necessary, and creates the directory.</p>
 opts.LOGFID - Optional file ID for logging</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
+<span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
+<dd><p>MAKESESSIONDIRECTORY Creates the session directory</p>
+<p>Validates path legality, handles existing directories,
+closes open files and diaries if necessary, and creates the directory.</p>
 </dd></dl>
 
 </dd>
