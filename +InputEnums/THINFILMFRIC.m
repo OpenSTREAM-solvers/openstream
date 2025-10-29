@@ -6,7 +6,7 @@ classdef THINFILMFRIC
     %
     % Models:
     %
-    % - LAMINAR   — Laminar flow model (16/Ref)
+    % - LAMINAR   — Laminar flow model (:math:`16/\mathrm{Re}_{film}`)
     % - TURBULENT — Turbulent flow model
 
     enumeration
