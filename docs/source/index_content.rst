@@ -21,5 +21,5 @@ The PDF version of this manual can be found here: `OpenSTREAM.pdf <./files/OpenS
 
 
 .. bibliography:: 
-
+   :filter: docname in docnames
 
