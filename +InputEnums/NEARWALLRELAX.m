@@ -1,14 +1,12 @@
 classdef NEARWALLRELAX
     %NEARWALLRELAX Enumeration of near-wall energy transfer time relaxation models
     %
-    %   This class defines the available models for calculating the
-    %   near-wall energy transfer time relaxation, used in mixture solver.
+    % This class defines the available models for calculating the
+    % near-wall energy transfer time relaxation, used in mixture solver.
     %
-    %   Models:
-    %       QUALITY - Simple model relating relaxation time to equilibrium
-    %                 quality using user-defined NEARWALLRELAXX and NEARWALLRELAXT
-    %       VOID    - Physical model based on local phase volumetric
-    %                 fraction using user-defined NEARWALLRELAXCOEF
+    % Models:
+    % - QUALITY — Simple model relating relaxation time to equilibrium quality using user-defined NEARWALLRELAXX and NEARWALLRELAXT
+    % - VOID    — Physical model based on local phase volumetric fraction using user-defined NEARWALLRELAXCOEF
 
     enumeration
         QUALITY              % Relaxation time function of equilibrium quality

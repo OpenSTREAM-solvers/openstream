@@ -1,15 +1,14 @@
 classdef MOMENTGAS
     %MOMENTGAS Enumeration of gas momentum conservation models
     %
-    %   This class defines the available models for solving the momentum
-    %   conservation equation for the gas phase, used to compute gas velocity
-    %   in the two-fluid solver.
+    % This class defines the available models for solving the momentum
+    % conservation equation for the gas phase, used to compute gas velocity
+    % in the two-fluid solver.
     %
-    %   Models:
-    %       MIXTURE  - Uses the same gas velocity as in the mixture model
-    %       SLIP     - Slip ratio model (gas/liquid velocity) using
-    %                  user-defined SLIP
-    %       FULL     - Full non-equilibrium momentum model
+    % Models:
+    % - MIXTURE  — Uses the same gas velocity as in the mixture model
+    % - SLIP     — Slip ratio model (gas/liquid velocity) using user-defined SLIP
+    % - FULL     — Full non-equilibrium momentum model
 
     enumeration
         MIXTURE              % Gas velocity equal the mixture velocity

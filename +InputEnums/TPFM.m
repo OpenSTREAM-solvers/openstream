@@ -1,13 +1,13 @@
 classdef TPFM
     %TPFM Enumeration of two-phase wall friction multiplier models
     %
-    %   This class defines the available models for calculating the two-phase wall
-    %   friction multiplier used by the mixture solver.
+    % This class defines the available models for calculating the two-phase wall
+    % friction multiplier used by the mixture solver.
     %
-    %   Models:
-    %       HOMOGENEOUS - Assumes no slip between phases; both phases move at the same velocity.
-    %       SLIP        - Accounts for velocity differences (slip) between liquid and vapor phases.
-    %       EPRI        - Empirical model developed by the Electric Power Research Institute (EPRI).
+    % Models:
+    % - HOMOGENEOUS  — Assumes no slip between phases; both phases move at the same velocity.
+    % - SLIP         — Accounts for velocity differences (slip) between liquid and vapor phases.
+    % - EPRI         — Empirical model developed by the Electric Power Research Institute (EPRI).
 
     enumeration
         HOMOGENEOUS          % Homogeneous flow model

@@ -5,10 +5,9 @@ classdef CBT
     %   Critical Boiling Transition, used by the mixture field.
     %
     %   Models:
-    %       NONE       - No CBT transition applied
-    %       BIASI      - Biasi correlation model
-    %       ELEVATION  - CBT determined from specified elevation using
-    %                    user-defined CBTELEVATION
+    %       - NONE       — No CBT transition applied
+    %       - BIASI      — Biasi correlation model
+    %       - ELEVATION  — CBT determined from specified elevation using user-defined CBTELEVATION
 
     enumeration
         NONE                 % No Critical Boiling Transition
