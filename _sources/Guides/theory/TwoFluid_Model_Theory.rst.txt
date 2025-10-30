@@ -28,9 +28,9 @@ Vapor: :math:`\rho_v A_v \frac{\partial u_v}{\partial t} + u_v \frac{\partial u_
 
 **3. Energy conservation**
 
-Liquid: :math:`\rho_l A_l \frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z} = -A a_i (h_l - h_v) \Lambda + \sum \Pi_p^n q^{"}_{wall,l}^n - (h_v - h_l) \Gamma_{wb}^n`
+Liquid: :math:`\rho_l A_l \frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z} = -A a_i (h_l - h_v) \Lambda + \sum \Pi_p^n {q^{\prime\prime}}_{wall,l}^n - (h_v - h_l) \Gamma_{wb}^n`
 
-Vapor: :math:`\rho_v A_v \frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z} = A a_i (h_l - h_v) \Gamma + \sum \Pi_p^n q^{"}_{wall,v}^n`
+Vapor: :math:`\rho_v A_v \frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z} = A a_i (h_l - h_v) \Gamma + \sum \Pi_p^n {q^{\prime\prime}}_{wall,v}^n`
 
 Features and assumptions
 ------------------------

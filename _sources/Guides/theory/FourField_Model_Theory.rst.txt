@@ -28,9 +28,9 @@ Disturbance Waves: :math:`\rho_{ls} \delta_w^n \frac{\partial u_w^n}{\partial t}
 
 **3. Energy conservation**
 
-Base Film: :math:`\Gamma_{wb,b}^n = \frac{q^{"}_{wall,b}^n}{h_{vs} - h_{ls}}`
+Base Film: :math:`\Gamma_{wb,b}^n = \frac{{q^{\prime\prime}}_{wall,b}^n}{h_{vs} - h_{ls}}`
 
-Disturbance Waves: :math:`\Gamma_{wb,w}^n = \frac{q^{"}_{wall,w}^n}{h_{vs} - h_{ls}}`
+Disturbance Waves: :math:`\Gamma_{wb,w}^n = \frac{{q^{\prime\prime}}_{wall,w}^n}{h_{vs} - h_{ls}}`
 
 **4. Wave number density transport**
 
