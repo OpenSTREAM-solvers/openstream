@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Four-Field Model Theory &mdash; OpenSTREAM  documentation</title>
+  <title>Theory overview &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -20,11 +20,12 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Tutorials" href="../tutorials.html" />
-    <link rel="prev" title="Three-Field Model Theory" href="ThreeField_Model_Theory.html" /> 
+    <link rel="next" title="Mixture Model Theory" href="Mixture_Model_Theory.html" />
+    <link rel="prev" title="Run sample script" href="../../Usage/runSampleScript.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,18 +55,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture Model Theory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model Theory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-Field Model Theory</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Four-Field Model Theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing Equations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation Notes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model Summaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FourField_Model_Theory.html">Four-Field Model Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-summaries">Model Summaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -104,10 +99,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Theory overview</a></li>
-      <li class="breadcrumb-item active">Four-Field Model Theory</li>
+      <li class="breadcrumb-item active">Theory overview</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/Guides/theory/FourField_Model_Theory.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/Guides/theory/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -115,67 +109,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="four-field-model-theory">
-<h1>Four-Field Model Theory<a class="headerlink" href="#four-field-model-theory" title="Link to this heading"></a></h1>
-<p>The Four-Field Simulation Framework in OpenSTREAM extends the three-field model by explicitly modeling disturbance waves in addition to vapor, droplets, and base liquid film. This framework provides enhanced resolution of annular two-phase flow dynamics.</p>
-<section id="governing-equations">
-<h2>Governing Equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p>Mass Conservation</p></li>
-</ol>
-<p>Base Film: :math:frac{partial}{partial t}(W_b^n u_b^n) + frac{partial W_b^n}{partial z} = Pi_p^n D_b^n - Gamma_{wb,b}^n + Psi_w^n - Psi_b^n</p>
-<p>Disturbance Waves: :math:frac{partial}{partial t}(W_w^n u_w^n) + frac{partial W_w^n}{partial z} = Pi_p^n D_w^n - E^n - Gamma_{wb,w}^n - Psi_w^n + Psi_b^n</p>
-<p>Where:</p>
-<p>:math:W_b^n, :math:W_w^n are base film and wave mass flow rates
-:math:u_b^n, :math:u_w^n are velocities
-:math:D_b^n, :math:D_w^n are deposition fluxes
-:math:Gamma_{wb,b}^n, :math:Gamma_{wb,w}^n are wall boiling fluxes
-:math:Psi_w^n, :math:Psi_b^n are exchange fluxes between film and waves</p>
-<ol class="arabic simple" start="2">
-<li><p>Momentum Conservation</p></li>
-</ol>
-<p>Base Film: :math:rho_{ls} delta_b^n frac{partial u_b^n}{partial t} + u_b^n frac{partial u_b^n}{partial z} = D_b^n (u_d - u_b^n) + Psi_w^n (u_w^n - u_b^n) - delta_b^n frac{partial p}{partial z} + g rho_{ls} + beta_b^n tau_{v,b}^n + (1 - beta_b^n) tau_{w,b}^n - tau_{wall,b}^n</p>
-<p>Disturbance Waves: :math:rho_{ls} delta_w^n frac{partial u_w^n}{partial t} + u_w^n frac{partial u_w^n}{partial z} = D_w^n (u_d - u_w^n) + Psi_b^n (u_b^n - u_w^n) - delta_w^n frac{partial p}{partial z} + g rho_{ls} + (1 - beta_b^n) tau_{v,w}^n - tau_{w,b}^n</p>
-<ol class="arabic simple" start="3">
-<li><p>Energy Conservation</p></li>
-</ol>
-<p>Base Film: :math:Gamma_{wb,b}^n = frac{q’’_{wall,b}^n}{h_{vs} - h_{ls}}</p>
-<p>Disturbance Waves: :math:Gamma_{wb,w}^n = frac{q’’_{wall,w}^n}{h_{vs} - h_{ls}}</p>
-<ol class="arabic simple" start="4">
-<li><p>Wave Number Density Transport</p></li>
-</ol>
-<p>:math:frac{partial N_w^n}{partial t} + frac{partial}{partial z}(u_w^n N_w^n) = frac{N_{w,eq}^n - N_w^n}{t_{wRelax}}
-Where:</p>
-<p>:math:N_w^n is wave number density
-:math:N_{w,eq}^n is equilibrium wave number density
-:math:t_{wRelax} is relaxation time</p>
-</section>
-<section id="features-and-assumptions">
-<h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
-<p>Models intermittent wave transport and non-equilibrium wave dynamics
-Assumes thermal equilibrium for energy equations
-Includes wave-film exchange and wave number density evolution</p>
-</section>
-<section id="implementation-notes">
-<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<p>Implemented in the class:
-FourFieldSolver
-Key methods:
-FourFieldSolver.solve_mass_conservation()
-FourFieldSolver.solve_momentum_conservation()
-FourFieldSolver.solve_energy_conservation()
-FourFieldSolver.solve_wave_density_transport()
-Properties:
-FourFieldSolver.mass_flow_rate_base_film
-FourFieldSolver.mass_flow_rate_waves
-FourFieldSolver.velocity_base_film
-FourFieldSolver.velocity_waves
-FourFieldSolver.wave_number_density</p>
-</section>
-<section id="role-in-openstream">
-<h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
-<p>The four-field model provides state-of-the-art simulation capabilities for annular two-phase flow, especially in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer, validated against experimental data.</p>
-<p>End of theory section.</p>
+  <section id="theory-overview">
+<h1>Theory overview<a class="headerlink" href="#theory-overview" title="Link to this heading"></a></h1>
+<p>This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing complexity and resolution.</p>
+<p>The following models are covered:</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Theory Models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture Model Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-Field Model Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FourField_Model_Theory.html">Four-Field Model Theory</a></li>
+</ul>
+</div>
+<section id="model-summaries">
+<h2>Model Summaries<a class="headerlink" href="#model-summaries" title="Link to this heading"></a></h2>
+<p><strong>Mixture Model</strong></p>
+<ul class="simple">
+<li><p>Purpose: Initialization and robust steady-state predictions.</p></li>
+<li><p>Assumptions: Homogeneous equilibrium, single mixture phase.</p></li>
+<li><p>Equations: Mass, momentum, and energy conservation.</p></li>
+</ul>
+<p><strong>Two-Fluid Model</strong></p>
+<ul class="simple">
+<li><p>Purpose: Captures hydrodynamic and thermal non-equilibrium.</p></li>
+<li><p>Assumptions: Separate conservation equations for liquid and vapor phases.</p></li>
+<li><p>Equations: Six-equation model (mass, momentum, energy for each phase).</p></li>
+</ul>
+<p><strong>Three-Field Model</strong></p>
+<ul class="simple">
+<li><p>Purpose: Simulates annular flow with vapor, droplets, and liquid film.</p></li>
+<li><p>Assumptions: Thermal equilibrium, applicable up to film dryout.</p></li>
+<li><p>Equations: Nine-equation model for mass and momentum conservation.</p></li>
+</ul>
+<p><strong>Four-Field Model</strong></p>
+<ul class="simple">
+<li><p>Purpose: Advanced modeling of disturbance waves in annular flow.</p></li>
+<li><p>Assumptions: Thermal equilibrium, wave transport and non-equilibrium dynamics.</p></li>
+<li><p>Equations: Extended conservation equations + wave number density transport.</p></li>
+</ul>
+<hr class="docutils" />
+<p>For detailed equations and implementation notes, refer to the individual theory pages listed above.</p>
 </section>
 </section>
 
@@ -183,8 +157,8 @@ FourFieldSolver.wave_number_density</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ThreeField_Model_Theory.html" class="btn btn-neutral float-left" title="Three-Field Model Theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../../Usage/runSampleScript.html" class="btn btn-neutral float-left" title="Run sample script" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Mixture_Model_Theory.html" class="btn btn-neutral float-right" title="Mixture Model Theory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
