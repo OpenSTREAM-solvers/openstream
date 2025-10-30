@@ -1,4 +1,4 @@
-Mixture Solver
+Mixture solver
 ==============
 
 :mod:`Mixture Solver` defines a set of solver and field classes related to the mixture approach.

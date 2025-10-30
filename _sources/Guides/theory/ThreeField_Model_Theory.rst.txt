@@ -1,5 +1,5 @@
-Three-Field Model Theory
-=========================
+Three-field model
+=================
 
 The Three-Field Simulation Framework in OpenSTREAM is designed for annular two-phase flow under thermal equilibrium conditions. It explicitly models three distinct flow fields: vapor, entrained droplets, and liquid film.
 

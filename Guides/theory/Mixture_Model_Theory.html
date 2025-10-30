@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mixture Model Theory &mdash; OpenSTREAM  documentation</title>
+  <title>Mixture model &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -20,10 +20,11 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Two-Fluid Model Theory" href="TwoFluid_Model_Theory.html" />
+    <link rel="next" title="Two-Fluid Model" href="TwoFluid_Model_Theory.html" />
     <link rel="prev" title="Theory overview" href="index.html" /> 
 </head>
 
@@ -55,20 +56,26 @@
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Mixture Model Theory</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Mixture model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and Assumptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation Notes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-Field Model Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FourField_Model_Theory.html">Four-Field Model Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model Summaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model summaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">Global Reference List</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/projects.html">Projects</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
@@ -104,7 +111,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory overview</a></li>
-      <li class="breadcrumb-item active">Mixture Model Theory</li>
+      <li class="breadcrumb-item active">Mixture model</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/Guides/theory/Mixture_Model_Theory.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -114,54 +121,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mixture-model-theory">
-<h1>Mixture Model Theory<a class="headerlink" href="#mixture-model-theory" title="Link to this heading"></a></h1>
-<p>The Mixture Simulation Framework in OpenSTREAM is based on a simplified three-equation model that assumes a single mixture phase with averaged properties. It is primarily used for initialization and robust steady-state predictions under homogeneous equilibrium assumptions.
-Governing Equations
-——————-</p>
+  <section id="mixture-model">
+<h1>Mixture model<a class="headerlink" href="#mixture-model" title="Link to this heading"></a></h1>
+<p>The Mixture Simulation Framework in OpenSTREAM is based on a simplified three-equation model that assumes a single mixture phase with averaged properties. It is primarily used for initialization and robust steady-state predictions under homogeneous equilibrium assumptions.</p>
+<section id="governing-equations">
+<h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p>The mixture model solves the following conservation equations:</p>
-<ol class="arabic simple">
-<li><p>Mass Conservation</p></li>
-</ol>
-<p>:math:frac{partial}{partial t}(W u) + frac{partial W}{partial z} = 0</p>
+<p><strong>1. Mass conservation</strong></p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W u) + \frac{\partial W}{\partial z} = 0\)</span></p>
 <p>Where:</p>
-<p>:math:W is the mixture mass flow rate
-:math:u is the mixture velocity</p>
-<ol class="arabic simple" start="2">
-<li><p>Momentum Conservation</p></li>
-</ol>
-<p>:math:rho A frac{partial u}{partial t} + u frac{partial u}{partial z} = -A frac{partial p}{partial z} + frac{partial p K}{partial z} + costheta g rho - Pi_p tau_{wall}</p>
+<p><span class="math notranslate nohighlight">\(W\)</span> is the mixture mass flow rate
+<span class="math notranslate nohighlight">\(u\)</span> is the mixture velocity</p>
+<p><strong>2. Momentum conservation</strong></p>
+<p><span class="math notranslate nohighlight">\(\rho A \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z} = -A \frac{\partial p}{\partial z} + \frac{\partial p K}{\partial z} + \cos\theta g \rho - \Pi_p \tau_{wall}\)</span></p>
 <p>Where:</p>
-<p>:math:rho is the mixture density
-:math:A is the cross-sectional area
-:math:p is pressure
-:math:K is obstruction factor
-:math:tau_{wall} is wall shear stress</p>
-<ol class="arabic simple" start="3">
-<li><p>Energy Conservation</p></li>
-</ol>
-<p>:math:rho A frac{partial h}{partial t} + u frac{partial h}{partial z} = sum Pi_p^n q’’_{wall,n}</p>
+<p><span class="math notranslate nohighlight">\(\rho\)</span> is the mixture density
+<span class="math notranslate nohighlight">\(A\)</span> is the cross-sectional area
+<span class="math notranslate nohighlight">\(p\)</span> is pressure
+<span class="math notranslate nohighlight">\(K\)</span> is obstruction factor
+<span class="math notranslate nohighlight">\(\tau_{wall}\)</span> is wall shear stress</p>
+<p><strong>3. Energy conservation</strong></p>
+<p><span class="math notranslate nohighlight">\(\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q{\\prime\\prime}_{wall}^n\)</span></p>
 <p>Where:</p>
-<p>:math:h is mixture enthalpy
-:math:q’’_{wall,n} is wall heat flux for wall index :math:n</p>
+<p><span class="math notranslate nohighlight">\(h\)</span> is mixture enthalpy
+<span class="math notranslate nohighlight">\(q{\\prime\\prime}_{wall}^n\)</span> is wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p>
+</section>
 <section id="features-and-assumptions">
 <h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
-<p>Supports steady-state and transient simulations
-Can include subcooled boiling via constitutive models
-Allows phase velocity slip via drift flux models
-Neglects surface tension, frictional heating, and pressure gradients in saturated enthalpy</p>
+<ul class="simple">
+<li><p>Supports steady-state and transient simulations</p></li>
+<li><p>Can include subcooled boiling via constitutive models</p></li>
+<li><p>Allows phase velocity slip via drift flux models</p></li>
+<li><p>Neglects surface tension, frictional heating, and pressure gradients in saturated enthalpy</p></li>
+</ul>
 </section>
 <section id="implementation-notes">
 <h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<p>The mixture solver is implemented in the class: MixtureSolver
-Key methods:
-MixtureSolver.solve_mass_conservation()
-MixtureSolver.solve_momentum_conservation()
-MixtureSolver.solve_energy_conservation()
-Properties:
-MixtureSolver.mass_flow_rate
-MixtureSolver.velocity
-MixtureSolver.enthalpy</p>
+<dl class="simple">
+<dt>The mixture solver is implemented in the class:</dt><dd><ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code></p></li>
+</ul>
+</dd>
+<dt>Key methods:</dt><dd><ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.solve()</span></code></p></li>
+</ul>
+</dd>
+<dt>Key properties:</dt><dd><ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.P</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.H</span></code></p></li>
+</ul>
+</dd>
+</dl>
 </section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
@@ -175,7 +186,7 @@ MixtureSolver.enthalpy</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Theory overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="TwoFluid_Model_Theory.html" class="btn btn-neutral float-right" title="Two-Fluid Model Theory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="TwoFluid_Model_Theory.html" class="btn btn-neutral float-right" title="Two-Fluid Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

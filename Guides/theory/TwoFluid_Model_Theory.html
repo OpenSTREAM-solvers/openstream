@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Two-Fluid Model Theory &mdash; OpenSTREAM  documentation</title>
+  <title>Two-Fluid Model &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -24,8 +24,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Three-Field Model Theory" href="ThreeField_Model_Theory.html" />
-    <link rel="prev" title="Mixture Model Theory" href="Mixture_Model_Theory.html" /> 
+    <link rel="next" title="Three-field model" href="ThreeField_Model_Theory.html" />
+    <link rel="prev" title="Mixture model" href="Mixture_Model_Theory.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,21 +56,26 @@
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture Model Theory</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Two-Fluid Model Theory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing Equations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Two-Fluid Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-Field Model Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FourField_Model_Theory.html">Four-Field Model Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model Summaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model summaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">Global Reference List</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/projects.html">Projects</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
@@ -106,7 +111,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory overview</a></li>
-      <li class="breadcrumb-item active">Two-Fluid Model Theory</li>
+      <li class="breadcrumb-item active">Two-Fluid Model</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/Guides/theory/TwoFluid_Model_Theory.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -116,16 +121,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="two-fluid-model-theory">
-<h1>Two-Fluid Model Theory<a class="headerlink" href="#two-fluid-model-theory" title="Link to this heading"></a></h1>
+  <section id="two-fluid-model">
+<h1>Two-Fluid Model<a class="headerlink" href="#two-fluid-model" title="Link to this heading"></a></h1>
 <p>The Two-Fluid Simulation Framework in OpenSTREAM is based on a six-equation model that separately tracks the conservation of mass, momentum, and energy for both liquid and vapor phases. This model captures hydrodynamic and thermal non-equilibrium effects and is widely used in nuclear reactor system codes.</p>
 <section id="governing-equations">
-<h2>Governing Equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p><strong>Mass Conservation</strong></p></li>
-</ol>
-<p>Liquid: <span class="math notranslate nohighlight">\(\frac{\partial W_l u_l}{\partial t} + \frac{\partial W_l}{\partial z} = -A a_i \Gamma - \Lambda - \sum \Pi_p^n \Gamma_{wb}^n\)</span></p>
-<p>Vapor: <span class="math notranslate nohighlight">\(\frac{\partial W_v u_v}{\partial t} + \frac{\partial W_v}{\partial z} = A a_i \Gamma - \Lambda + \sum \Pi_p^n \Gamma_{wb}^n\)</span></p>
+<h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
+<p><strong>1. Mass conservation</strong></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\frac{\partial W_l u_l}{\partial t} + \frac{\partial W_l}{\partial z} = -A a_i (\Gamma - \Lambda) - \sum \Pi_p^n \Gamma_{wb}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\frac{\partial W_v u_v}{\partial t} + \frac{\partial W_v}{\partial z} = A a_i (\Gamma - \Lambda) + \sum \Pi_p^n \Gamma_{wb}^n\)</span></p>
 <p>Where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(W_l\)</span>, <span class="math notranslate nohighlight">\(W_v\)</span> are liquid and vapor mass flow rates</p></li>
@@ -134,19 +137,15 @@
 <li><p><span class="math notranslate nohighlight">\(\Lambda\)</span> is condensation</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is wall boiling mass flux</p></li>
 </ul>
-<ol class="arabic simple" start="2">
-<li><p><strong>Momentum Conservation</strong></p></li>
-</ol>
+<p><strong>2. Momentum conservation</strong></p>
 <p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z} = -A a_i \Lambda (u_l - u_v) - A_l \frac{\partial p}{\partial z} + \cos\theta g \rho_l + A a_i \tau_{v,l} - \Pi_p \tau_{wall,l}\)</span></p>
 <p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z} = A a_i \Gamma (u_l - u_v) - A_v \frac{\partial p}{\partial z} + \cos\theta g \rho_v - A a_i \tau_{v,l} - \Pi_p \tau_{wall,v}\)</span></p>
-<ol class="arabic simple" start="3">
-<li><p><strong>Energy Conservation</strong></p></li>
-</ol>
-<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z} = -A a_i (h_l - h_v) \Lambda + \sum \Pi_p^n q''_{wall,l,n} - (h_v - h_l) \Gamma_{wb}^n\)</span></p>
-<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z} = A a_i (h_l - h_v) \Gamma + \sum \Pi_p^n q''_{wall,v}^n\)</span></p>
+<p><strong>3. Energy conservation</strong></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z} = -A a_i (h_l - h_v) \Lambda + \sum \Pi_p^n q^{\\prime\\prime}_{wall,l}^n - (h_v - h_l) \Gamma_{wb}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z} = A a_i (h_l - h_v) \Gamma + \sum \Pi_p^n q^{\\prime\\prime}_{wall,v}^n\)</span></p>
 </section>
 <section id="features-and-assumptions">
-<h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
+<h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Captures phase-specific velocities and temperatures</p></li>
 <li><p>Includes interfacial mass, momentum, and energy exchange</p></li>
@@ -155,9 +154,15 @@
 </ul>
 </section>
 <section id="implementation-notes">
-<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Implemented in the class: <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluidSolver</span></code></p></li>
+<li><dl class="simple">
+<dt>Implemented in the class:</dt><dd><ul>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluidSolver</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Key methods:</dt><dd><ul>
 <li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluidSolver.solve()</span></code></p></li>
@@ -183,8 +188,6 @@
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
 <p>The two-fluid model is the core framework for simulating non-equilibrium two-phase flows. It is validated against system codes like TRACE and supports both steady-state and transient simulations.</p>
 <hr class="docutils" />
-<p>Previous: <a class="reference external" href="Mixture_Model_Theory.html" rel="noreferrer" target="_blank">Mixture Model Theory</a>
-Next: <a class="reference external" href="threefield_model_theory.html" rel="noreferrer" target="_blank">Three-Field Model Theory</a></p>
 </section>
 </section>
 
@@ -192,8 +195,8 @@ Next: <a class="reference external" href="threefield_model_theory.html" rel="nor
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Mixture_Model_Theory.html" class="btn btn-neutral float-left" title="Mixture Model Theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ThreeField_Model_Theory.html" class="btn btn-neutral float-right" title="Three-Field Model Theory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Mixture_Model_Theory.html" class="btn btn-neutral float-left" title="Mixture model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreeField_Model_Theory.html" class="btn btn-neutral float-right" title="Three-field model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

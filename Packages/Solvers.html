@@ -23,7 +23,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="FourField Solver" href="Solvers-FourField.html" />
+    <link rel="next" title="Mixture solver" href="Solvers-Mixture.html" />
     <link rel="prev" title="Session" href="Session.html" /> 
 </head>
 
@@ -58,16 +58,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global Reference List</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="InputEnums.html">InputEnums</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Session.html">Session</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Solvers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-FourField.html">FourField Solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-Mixture.html">Mixture Solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-ThreeField.html">ThreeField Solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-TwoField.html">Two-fluid solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-Mixture.html">Mixture solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-TwoFluid.html">Two-fluid solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-ThreeField.html">Three-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-FourField.html">Four-field solver</a></li>
 </ul>
 </li>
 </ul>
@@ -109,15 +114,15 @@
              
   <section id="solvers">
 <h1>Solvers<a class="headerlink" href="#solvers" title="Link to this heading"></a></h1>
+<p><a class="reference internal" href="#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a> defines the individual solver packages and related superclasses.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-FourField.html">FourField Solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-Mixture.html">Mixture Solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-ThreeField.html">ThreeField Solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-TwoField.html">Two-fluid solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-Mixture.html">Mixture solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-TwoFluid.html">Two-fluid solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-ThreeField.html">Three-field solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-FourField.html">Four-field solver</a></li>
 </ul>
 </div>
-<p><a class="reference internal" href="#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a> defines the individual solver packages and related superclasses.</p>
 <dl class="mat class" id="module-Solvers">
 <dt class="sig sig-object mat" id="Solvers.AbstractField">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractField</span></span><a class="headerlink" href="#Solvers.AbstractField" title="Link to this definition"></a></dt>
@@ -615,7 +620,7 @@ It also includes UI controls for animation playback and export.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Session.html" class="btn btn-neutral float-left" title="Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Solvers-FourField.html" class="btn btn-neutral float-right" title="FourField Solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Solvers-Mixture.html" class="btn btn-neutral float-right" title="Mixture solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

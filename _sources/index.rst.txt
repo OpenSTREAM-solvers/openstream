@@ -25,13 +25,21 @@
    :maxdepth: 3
    :glob:
    :hidden:
+   :caption: Applications
+
+   /Applications/database
+   /Applications/projects
+
+.. toctree::
+   :maxdepth: 3
+   :glob:
+   :hidden:
    :caption: Packages
 
    /Packages/Inputs
    /Packages/InputEnums
    /Packages/Session
    /Packages/Solvers
-
 
 .. toctree::
    :maxdepth: 3
