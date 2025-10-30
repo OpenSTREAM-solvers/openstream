@@ -1,5 +1,5 @@
-Four-Field Model Theory
-========================
+Four-field model
+================
 
 The Four-Field Simulation Framework in OpenSTREAM extends the three-field model by explicitly modeling disturbance waves in addition to vapor, droplets, and base liquid film. This framework provides enhanced resolution of annular two-phase flow dynamics.
 

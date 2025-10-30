@@ -1,5 +1,5 @@
-FourField Solver
-================
+Four-field solver
+=================
 
 :mod:`FourField Solver` defines a set of solver and field classes related to the four-field approach.
    
