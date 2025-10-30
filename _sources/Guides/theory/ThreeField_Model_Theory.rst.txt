@@ -12,11 +12,11 @@ Governing equations
 
 Where:
 
-:math:`W_f^n` is the liquid film mass flow rate
-:math:`u_f^n` is the film velocity
-:math:`D` is drop deposition mass flux
-:math:`E` is film entrainment mass flux
-:math:`\Gamma_{wb}^n` is wall boiling mass flux
+- :math:`W_f^n` is the liquid film mass flow rate
+- :math:`u_f^n` is the film velocity
+- :math:`D` is drop deposition mass flux
+- :math:`E` is film entrainment mass flux
+- :math:`\Gamma_{wb}^n` is wall boiling mass flux
 
 **2. Momentum conservation**
 
@@ -26,14 +26,14 @@ Droplets: :math:`\rho_{ls} \frac{\partial u_d}{\partial t} + u_d \frac{\partial 
 
 **3. Energy conservation**
 
-Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{q''_{wall}^n}{h_{vs} - h_{ls}}`
+Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{q^{"}_{wall}^n}{h_{vs} - h_{ls}}`
 
 Where:
 
-:math:`\delta_f^n` is film thickness
-:math:`\tau_{v,f}^n`, :math:\tau_{wall,f}^n are interfacial and wall shear stresses
-:math:`A_d, :math:V_d` are drop interfacial area and volume
-:math:`h_{vs}, :math:h_{ls}` are saturated vapor and liquid enthalpies
+- :math:`\delta_f^n` is film thickness
+- :math:`\tau_{v,f}^n`, :math:\tau_{wall,f}^n are interfacial and wall shear stresses
+- :math:`A_d, :math:V_d` are drop interfacial area and volume
+- :math:`h_{vs}, :math:h_{ls}` are saturated vapor and liquid enthalpies
 
 Features and assumptions
 ------------------------

@@ -129,21 +129,25 @@
 <p><strong>1. Mass conservation</strong></p>
 <p><span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W_f^n u_f^n) + \frac{\partial W_f^n}{\partial z} = \Pi_p^n D - E^n - \Gamma_{wb}^n\)</span></p>
 <p>Where:</p>
-<p><span class="math notranslate nohighlight">\(W_f^n\)</span> is the liquid film mass flow rate
-<span class="math notranslate nohighlight">\(u_f^n\)</span> is the film velocity
-<span class="math notranslate nohighlight">\(D\)</span> is drop deposition mass flux
-<span class="math notranslate nohighlight">\(E\)</span> is film entrainment mass flux
-<span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is wall boiling mass flux</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(W_f^n\)</span> is the liquid film mass flow rate</p></li>
+<li><p><span class="math notranslate nohighlight">\(u_f^n\)</span> is the film velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span> is drop deposition mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(E\)</span> is film entrainment mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is wall boiling mass flux</p></li>
+</ul>
 <p><strong>2. Momentum conservation</strong></p>
 <p>Liquid Film: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_f^n \frac{\partial u_f^n}{\partial t} + u_f^n \frac{\partial u_f^n}{\partial z} = (u_d - u_f^n) D - \delta_f^n \frac{\partial p}{\partial z} + \cos\theta g \rho_{ls} + \tau_{v,f}^n - \tau_{wall,f}^n\)</span></p>
 <p>Droplets: <span class="math notranslate nohighlight">\(\rho_{ls} \frac{\partial u_d}{\partial t} + u_d \frac{\partial u_d}{\partial z} = \sum \Pi_p^n (u_f^n - u_d) E^n - \frac{\partial p}{\partial z} + \cos\theta g \rho_{ls} + A_d V_d \tau_{v,d}\)</span></p>
 <p><strong>3. Energy conservation</strong></p>
-<p>Under thermal equilibrium: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n = \frac{q''_{wall}^n}{h_{vs} - h_{ls}}\)</span></p>
+<p>Under thermal equilibrium: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n = \frac{q^{&quot;}_{wall}^n}{h_{vs} - h_{ls}}\)</span></p>
 <p>Where:</p>
-<p><span class="math notranslate nohighlight">\(\delta_f^n\)</span> is film thickness
-<span class="math notranslate nohighlight">\(\tau_{v,f}^n\)</span>, :math:tau_{wall,f}^n are interfacial and wall shear stresses
-<span class="math notranslate nohighlight">\(A_d, :math:V_d\)</span> are drop interfacial area and volume
-<span class="math notranslate nohighlight">\(h_{vs}, :math:h_{ls}\)</span> are saturated vapor and liquid enthalpies</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\delta_f^n\)</span> is film thickness</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{v,f}^n\)</span>, :math:tau_{wall,f}^n are interfacial and wall shear stresses</p></li>
+<li><p><span class="math notranslate nohighlight">\(A_d, :math:V_d\)</span> are drop interfacial area and volume</p></li>
+<li><p><span class="math notranslate nohighlight">\(h_{vs}, :math:h_{ls}\)</span> are saturated vapor and liquid enthalpies</p></li>
+</ul>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>

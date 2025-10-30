@@ -15,8 +15,8 @@ The mixture model solves the following conservation equations:
 
 Where:
 
-:math:`W` is the mixture mass flow rate
-:math:`u` is the mixture velocity
+- :math:`W` is the mixture mass flow rate
+- :math:`u` is the mixture velocity
 
 **2. Momentum conservation**
 
@@ -24,20 +24,20 @@ Where:
 
 Where:
 
-:math:`\rho` is the mixture density
-:math:`A` is the cross-sectional area
-:math:`p` is pressure
-:math:`K` is obstruction factor
-:math:`\tau_{wall}` is wall shear stress
+- :math:`\rho` is the mixture density
+- :math:`A` is the cross-sectional area
+- :math:`p` is pressure
+- :math:`K` is obstruction factor
+- :math:`\tau_{wall}` is wall shear stress
 
 **3. Energy conservation**
 
-:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q"_{wall}^n`
+:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q^{"}_{wall}^n`
 
 Where:
 
-:math:`h` is mixture enthalpy
-:math:`q"_{wall}^n` is wall heat flux for wall index :math:`n`
+- :math:`h` is mixture enthalpy
+- :math:`q^{"}_{wall}^n` is wall heat flux for wall index :math:`n`
 
 Features and Assumptions
 ------------------------
