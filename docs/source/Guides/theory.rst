@@ -1,5 +1,5 @@
-OpenSTREAM Theory Overview
-===========================
+Theory overview
+===============
 
 This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing complexity and resolution.
 
