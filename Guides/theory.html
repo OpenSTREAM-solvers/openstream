@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenSTREAM Theory Overview &mdash; OpenSTREAM  documentation</title>
+  <title>Theory overview &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -54,10 +54,11 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM Theory Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#simulation-frameworks">Simulation Frameworks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#model-hierarchy">Model Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mixture-model">Mixture Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#two-fluid-model">Two-Fluid Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#three-field-model">Three-Field Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#four-field-model">Four-Field Model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
@@ -96,7 +97,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenSTREAM Theory Overview</li>
+      <li class="breadcrumb-item active">Theory overview</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Guides/theory.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,52 +107,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="openstream-theory-overview">
-<h1>OpenSTREAM Theory Overview<a class="headerlink" href="#openstream-theory-overview" title="Link to this heading"></a></h1>
-<p>This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM.</p>
-<section id="simulation-frameworks">
-<h2>Simulation Frameworks<a class="headerlink" href="#simulation-frameworks" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p><strong>Mixture Model</strong></p>
+  <section id="theory-overview">
+<h1>Theory overview<a class="headerlink" href="#theory-overview" title="Link to this heading"></a></h1>
+<p>This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing complexity and resolution.</p>
+<section id="mixture-model">
+<h2>Mixture Model<a class="headerlink" href="#mixture-model" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Homogeneous equilibrium.</p></li>
-<li><p>Link: <a class="reference internal" href="theory/Mixture_Model_Theory.html"><span class="doc">Mixture Model Theory</span></a></p></li>
-</ul>
-</li>
-<li><p><strong>Two-Fluid Model</strong></p>
-<ul class="simple">
-<li><p>Hydrodynamic and thermal non-equilibrium.</p></li>
-<li><p>Link: <a class="reference internal" href="theory/TwoFluid_Model_Theory.html"><span class="doc">Two-Fluid Model Theory</span></a></p></li>
-</ul>
-</li>
-<li><p><strong>Three-Field Model</strong></p>
-<ul class="simple">
-<li><p>Annular flow with vapor, droplets, and liquid film.</p></li>
-<li><p>Link: <a class="reference internal" href="theory/ThreeField_Model_Theory.html"><span class="doc">Three-Field Model Theory</span></a></p></li>
-</ul>
-</li>
-<li><p><strong>Four-Field Model</strong></p>
-<ul class="simple">
-<li><p>Advanced annular flow with base film and disturbance waves.</p></li>
-<li><p>Link: <a class="reference internal" href="theory/FourField_Model_Theory.html"><span class="doc">Four-Field Model Theory</span></a></p></li>
-</ul>
-</li>
-</ol>
-</section>
-<section id="model-hierarchy">
-<h2>Model Hierarchy<a class="headerlink" href="#model-hierarchy" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>Mixture → Two-Fluid → Three-Field → Four-Field</p></li>
+<li><p>Purpose: Initialization and robust steady-state predictions.</p></li>
+<li><p>Assumptions: Homogeneous equilibrium, single mixture phase.</p></li>
+<li><p>Equations: Mass, momentum, and energy conservation.</p></li>
+<li><p>Link: <a class="reference external" href="Guides/Mixture_Model_Theory.html" rel="noreferrer" target="_blank">Mixture Model Theory</a></p></li>
 </ul>
 </section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<section id="two-fluid-model">
+<h2>Two-Fluid Model<a class="headerlink" href="#two-fluid-model" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Ishii &amp; Hibiki (2011)</p></li>
-<li><p>Le Corre et al. (ICMF 2025)</p></li>
-<li><p>Walter et al. (ICMF 2025)</p></li>
-<li><p>Le Corre (IJMF 2022)</p></li>
+<li><p>Purpose: Captures hydrodynamic and thermal non-equilibrium.</p></li>
+<li><p>Assumptions: Separate conservation equations for liquid and vapor phases.</p></li>
+<li><p>Equations: Six-equation model (mass, momentum, energy for each phase).</p></li>
+<li><p>Link: <a class="reference external" href="Guides/TwoFluid_Model_Theory.html" rel="noreferrer" target="_blank">Two-Fluid Model Theory</a></p></li>
 </ul>
+</section>
+<section id="three-field-model">
+<h2>Three-Field Model<a class="headerlink" href="#three-field-model" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Purpose: Simulates annular flow with vapor, droplets, and liquid film.</p></li>
+<li><p>Assumptions: Thermal equilibrium, applicable up to film dryout.</p></li>
+<li><p>Equations: Nine-equation model for mass and momentum conservation.</p></li>
+<li><p>Link: <a class="reference external" href="Guides/ThreeField_Model_Theory.html" rel="noreferrer" target="_blank">Three-Field Model Theory</a></p></li>
+</ul>
+</section>
+<section id="four-field-model">
+<h2>Four-Field Model<a class="headerlink" href="#four-field-model" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Purpose: Advanced modeling of disturbance waves in annular flow.</p></li>
+<li><p>Assumptions: Thermal equilibrium, wave transport and non-equilibrium dynamics.</p></li>
+<li><p>Equations: Extended conservation equations + wave number density transport.</p></li>
+<li><p>Link: <a class="reference external" href="Guides/FourField_Model_Theory.html" rel="noreferrer" target="_blank">Four-Field Model Theory</a></p></li>
+</ul>
+<hr class="docutils" />
+<p>For detailed equations and implementation notes, refer to the individual theory pages linked above.</p>
 </section>
 </section>
 

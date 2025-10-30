@@ -20,7 +20,6 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -53,7 +52,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">OpenSTREAM Theory Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theory overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">Global Reference List</a></li>
 </ul>
@@ -102,33 +101,57 @@
              
   <section id="mixture-model-theory">
 <h1>Mixture Model Theory<a class="headerlink" href="#mixture-model-theory" title="Link to this heading"></a></h1>
-<p>The Mixture Model in OpenSTREAM is a simplified three-equation framework used for initialization and robust steady-state predictions.</p>
-<section id="governing-equations">
-<h2>Governing Equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><strong>Mass Conservation</strong>:
-<span class="math notranslate nohighlight">\(\frac{\partial W}{\partial t} + \frac{\partial (\rho u A)}{\partial z} = 0\)</span></p></li>
-<li><p><strong>Momentum Conservation</strong>:
-<span class="math notranslate nohighlight">\(\frac{\partial p}{\partial t} + \frac{\partial (\rho u^2 A)}{\partial z} = -\tau_{wall} - K + \rho g \cos(\theta)\)</span></p></li>
-<li><p><strong>Energy Conservation</strong>:
-<span class="math notranslate nohighlight">\(\frac{\partial h}{\partial t} + \frac{\partial (\rho u h A)}{\partial z} = \sum_n q''_{wall,n}\)</span></p></li>
-</ul>
+<p>The Mixture Simulation Framework in OpenSTREAM is based on a simplified three-equation model that assumes a single mixture phase with averaged properties. It is primarily used for initialization and robust steady-state predictions under homogeneous equilibrium assumptions.
+Governing Equations
+——————-</p>
+<p>The mixture model solves the following conservation equations:</p>
+<ol class="arabic simple">
+<li><p>Mass Conservation</p></li>
+</ol>
+<p>:math:frac{partial}{partial t}(W u) + frac{partial W}{partial z} = 0</p>
+<p>Where:</p>
+<p>:math:W is the mixture mass flow rate
+:math:u is the mixture velocity</p>
+<ol class="arabic simple" start="2">
+<li><p>Momentum Conservation</p></li>
+</ol>
+<p>:math:rho A frac{partial u}{partial t} + u frac{partial u}{partial z} = -A frac{partial p}{partial z} + frac{partial p K}{partial z} + costheta g rho - Pi_p tau_{wall}</p>
+<p>Where:</p>
+<p>:math:rho is the mixture density
+:math:A is the cross-sectional area
+:math:p is pressure
+:math:K is obstruction factor
+:math:tau_{wall} is wall shear stress</p>
+<ol class="arabic simple" start="3">
+<li><p>Energy Conservation</p></li>
+</ol>
+<p>:math:rho A frac{partial h}{partial t} + u frac{partial h}{partial z} = sum Pi_p^n q’’_{wall,n}</p>
+<p>Where:</p>
+<p>:math:h is mixture enthalpy
+:math:q’’_{wall,n} is wall heat flux for wall index :math:n</p>
+<section id="features-and-assumptions">
+<h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
+<p>Supports steady-state and transient simulations
+Can include subcooled boiling via constitutive models
+Allows phase velocity slip via drift flux models
+Neglects surface tension, frictional heating, and pressure gradients in saturated enthalpy</p>
 </section>
-<section id="features">
-<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>Supports subcooled boiling via constitutive relations.</p></li>
-<li><p>Slip and drift flux models can be added.</p></li>
-<li><p>Used to initialize pressure gradient for all other solvers.</p></li>
-</ul>
+<section id="implementation-notes">
+<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<p>The mixture solver is implemented in the class: MixtureSolver
+Key methods:
+MixtureSolver.solve_mass_conservation()
+MixtureSolver.solve_momentum_conservation()
+MixtureSolver.solve_energy_conservation()
+Properties:
+MixtureSolver.mass_flow_rate
+MixtureSolver.velocity
+MixtureSolver.enthalpy</p>
 </section>
-<section id="related-class">
-<h2>Related Class<a class="headerlink" href="#related-class" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><code class="xref mat mat-class docutils literal notranslate"><span class="pre">MixtureSolver</span></code></p></li>
-<li><p><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MixtureSolver.solve_mass_conservation()</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">MixtureSolver.wallHeatFlux</span></code></p></li>
-</ul>
+<section id="role-in-openstream">
+<h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
+<p>The mixture model provides a robust initialization for more complex solvers (e.g., two-fluid, three-field, four-field). Its pressure gradient solution is reused across all frameworks to improve numerical stability.</p>
+<p>Next: twofluid_model_theory.html</p>
 </section>
 </section>
 

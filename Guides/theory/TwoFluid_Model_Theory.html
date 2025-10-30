@@ -53,7 +53,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">OpenSTREAM Theory Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theory overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../references.html">Global Reference List</a></li>
 </ul>
@@ -108,26 +108,26 @@
 <ol class="arabic simple">
 <li><p><strong>Mass Conservation</strong></p></li>
 </ol>
-<p>Liquid: <span class="math notranslate nohighlight">\(\\frac{\partial}{\partial t}(W_l u_l) + \frac{\partial W_l}{\partial z} = -A a_i \Gamma - \Lambda - \sum \Pi_p^n \Gamma_{wb,n}\)</span>
-Vapor: <span class="math notranslate nohighlight">\(\\frac{\partial}{\partial t}(W_v u_v) + \frac{\partial W_v}{\partial z} = A a_i \Gamma - \Lambda + \sum \Pi_p^n \Gamma_{wb,n}\)</span></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\frac{\partial W_l u_l}{\partial t} + \frac{\partial W_l}{\partial z} = -A a_i \Gamma - \Lambda - \sum \Pi_p^n \Gamma_{wb}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\frac{\partial W_v u_v}{\partial t} + \frac{\partial W_v}{\partial z} = A a_i \Gamma - \Lambda + \sum \Pi_p^n \Gamma_{wb}^n\)</span></p>
 <p>Where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(W_l\)</span>, <span class="math notranslate nohighlight">\(W_v\)</span> are liquid and vapor mass flow rates</p></li>
 <li><p><span class="math notranslate nohighlight">\(u_l\)</span>, <span class="math notranslate nohighlight">\(u_v\)</span> are phase velocities</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Gamma\)</span> is interfacial mass transfer</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Lambda\)</span> is condensation</p></li>
-<li><p><span class="math notranslate nohighlight">\(\Gamma_{wb,n}\)</span> is wall boiling mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is wall boiling mass flux</p></li>
 </ul>
 <ol class="arabic simple" start="2">
 <li><p><strong>Momentum Conservation</strong></p></li>
 </ol>
-<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z} = -A a_i \Lambda (u_l - u_v) - A_l \frac{\partial p}{\partial z} + \cos\theta g \rho_l + A a_i \tau_{v,l} - \Pi_p \tau_{wall,l}\)</span>
-Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z} = A a_i \Gamma (u_l - u_v) - A_v \frac{\partial p}{\partial z} + \cos\theta g \rho_v - A a_i \tau_{v,l} - \Pi_p \tau_{wall,v}\)</span></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z} = -A a_i \Lambda (u_l - u_v) - A_l \frac{\partial p}{\partial z} + \cos\theta g \rho_l + A a_i \tau_{v,l} - \Pi_p \tau_{wall,l}\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z} = A a_i \Gamma (u_l - u_v) - A_v \frac{\partial p}{\partial z} + \cos\theta g \rho_v - A a_i \tau_{v,l} - \Pi_p \tau_{wall,v}\)</span></p>
 <ol class="arabic simple" start="3">
 <li><p><strong>Energy Conservation</strong></p></li>
 </ol>
-<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z} = -A a_i (h_l - h_v) \Lambda + \sum \Pi_p^n q''_{wall,l,n} - (h_v - h_l) \Gamma_{wb,n}\)</span>
-Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z} = A a_i (h_l - h_v) \Gamma + \sum \Pi_p^n q''_{wall,v,n}\)</span></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l \frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z} = -A a_i (h_l - h_v) \Lambda + \sum \Pi_p^n q''_{wall,l,n} - (h_v - h_l) \Gamma_{wb}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z} = A a_i (h_l - h_v) \Gamma + \sum \Pi_p^n q''_{wall,v}^n\)</span></p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
@@ -144,9 +144,7 @@ Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial h_
 <li><p>Implemented in the class: <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluidSolver</span></code></p></li>
 <li><dl class="simple">
 <dt>Key methods:</dt><dd><ul>
-<li><p>:attr:<a href="#id1"><span class="problematic" id="id2">`</span></a>Solvers.TwoFluidSolver.solve_mass_conservation()</p></li>
-<li><p>TwoFluidSolver.solve_momentum_conservation()</p></li>
-<li><p>TwoFluidSolver.solve_energy_conservation()</p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluidSolver.solve()</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -168,7 +166,8 @@ Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v \frac{\partial h_
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
 <p>The two-fluid model is the core framework for simulating non-equilibrium two-phase flows. It is validated against system codes like TRACE and supports both steady-state and transient simulations.</p>
-<p>Previous: <a class="reference external" href="mixture_model_theory.html" rel="noreferrer" target="_blank">Mixture Model Theory</a>
+<hr class="docutils" />
+<p>Previous: <a class="reference external" href="Mixture_Model_Theory.html" rel="noreferrer" target="_blank">Mixture Model Theory</a>
 Next: <a class="reference external" href="threefield_model_theory.html" rel="noreferrer" target="_blank">Three-Field Model Theory</a></p>
 </section>
 </section>
