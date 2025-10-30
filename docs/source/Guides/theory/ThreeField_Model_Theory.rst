@@ -26,7 +26,7 @@ Droplets: :math:`\rho_{ls} \frac{\partial u_d}{\partial t} + u_d \frac{\partial 
 
 **3. Energy conservation**
 
-Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{q^{"}_{wall}^n}{h_{vs} - h_{ls}}`
+Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{wall}^n}{h_{vs} - h_{ls}}`
 
 Where:
 

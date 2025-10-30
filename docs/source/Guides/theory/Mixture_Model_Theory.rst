@@ -32,12 +32,12 @@ Where:
 
 **3. Energy conservation**
 
-:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q^{\prime\prime}_{wall}^n`
+:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n {q^{\prime\prime}}_{wall}^n`
 
 Where:
 
 - :math:`h` is mixture enthalpy
-- :math:`q^{\prime\prime}_{wall}^n` is wall heat flux for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{wall}^n` is wall heat flux for wall index :math:`n`
 
 **4. Homogeneous relaxation model**
 
