@@ -1,40 +1,42 @@
 OpenSTREAM Theory Overview
 ===========================
 
-This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM.
+This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing complexity and resolution.
 
-Simulation Frameworks
----------------------
 
-1. **Mixture Model**
+Mixture Model
+-------------
 
-   - Homogeneous equilibrium.
-   - Link: :doc:`theory/Mixture_Model_Theory`
+- Purpose: Initialization and robust steady-state predictions.
+- Assumptions: Homogeneous equilibrium, single mixture phase.
+- Equations: Mass, momentum, and energy conservation.
+- Link: `Mixture Model Theory <Guides/Mixture_Model_Theory.html>`_
 
-2. **Two-Fluid Model**
-
-   - Hydrodynamic and thermal non-equilibrium.
-   - Link: :doc:`theory/TwoFluid_Model_Theory`
-
-3. **Three-Field Model**
-
-   - Annular flow with vapor, droplets, and liquid film.
-   - Link: :doc:`theory/ThreeField_Model_Theory`
-
-4. **Four-Field Model**
-
-   - Advanced annular flow with base film and disturbance waves.
-   - Link: :doc:`theory/FourField_Model_Theory`
-
-Model Hierarchy
+Two-Fluid Model
 ---------------
 
-- Mixture → Two-Fluid → Three-Field → Four-Field
+- Purpose: Captures hydrodynamic and thermal non-equilibrium.
+- Assumptions: Separate conservation equations for liquid and vapor phases.
+- Equations: Six-equation model (mass, momentum, energy for each phase).
+- Link: `Two-Fluid Model Theory <Guides/TwoFluid_Model_Theory.html>`_
 
-References
-----------
+Three-Field Model
+-----------------
 
-- Ishii & Hibiki (2011)
-- Le Corre et al. (ICMF 2025)
-- Walter et al. (ICMF 2025)
-- Le Corre (IJMF 2022)
+- Purpose: Simulates annular flow with vapor, droplets, and liquid film.
+- Assumptions: Thermal equilibrium, applicable up to film dryout.
+- Equations: Nine-equation model for mass and momentum conservation.
+- Link: `Three-Field Model Theory <Guides/ThreeField_Model_Theory.html>`_
+
+Four-Field Model
+----------------
+
+- Purpose: Advanced modeling of disturbance waves in annular flow.
+- Assumptions: Thermal equilibrium, wave transport and non-equilibrium dynamics.
+- Equations: Extended conservation equations + wave number density transport.
+- Link: `Four-Field Model Theory <Guides/FourField_Model_Theory.html>`_
+
+----
+
+For detailed equations and implementation notes, refer to the individual theory pages linked above.
+
