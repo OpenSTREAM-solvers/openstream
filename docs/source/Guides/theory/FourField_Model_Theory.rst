@@ -8,17 +8,17 @@ Governing Equations
 
 **1. Mass Conservation**
 
-Base Film: :math:\frac{\partial}{\partial t}(W_b^n u_b^n) + \frac{\partial W_b^n}{\partial z} = \Pi_p^n D_b^n - \Gamma_{wb,b}^n + \Psi_w^n - \Psi_b^n
+Base Film: :math:`\frac{\partial}{\partial t}(W_b^n u_b^n) + \frac{\partial W_b^n}{\partial z} = \Pi_p^n D_b^n - \Gamma_{wb,b}^n + \Psi_w^n - \Psi_b^n`
 
-Disturbance Waves: :math:\frac{\partial}{\partial t}(W_w^n u_w^n) + \frac{\partial W_w^n}{\partial z} = \Pi_p^n D_w^n - E^n - \Gamma_{wb,w}^n - \Psi_w^n + \Psi_b^n
+Disturbance Waves: :math:`\frac{\partial}{\partial t}(W_w^n u_w^n) + \frac{\partial W_w^n}{\partial z} = \Pi_p^n D_w^n - E^n - \Gamma_{wb,w}^n - \Psi_w^n + \Psi_b^n`
 
 Where:
 
-:math:`W_b^n`, :math:W_w^n are base film and wave mass flow rates
-:math:`u_b^n`, :math:u_w^n are velocities
-:math:`D_b^n`, :math:D_w^n are deposition fluxes
-:math:`\Gamma_{wb,b}^n`, :math:`\Gamma_{wb,w}^n` are wall boiling fluxes
-:math:`\Psi_w^n`, :math:`\Psi_b^n` are exchange fluxes between film and waves
+- :math:`W_b^n`, :math:W_w^n are base film and wave mass flow rates
+- :math:`u_b^n`, :math:u_w^n are velocities
+- :math:`D_b^n`, :math:D_w^n are deposition fluxes
+- :math:`\Gamma_{wb,b}^n`, :math:`\Gamma_{wb,w}^n` are wall boiling fluxes
+- :math:`\Psi_w^n`, :math:`\Psi_b^n` are exchange fluxes between film and waves
 
 **2. Momentum Conservation**
 
@@ -28,9 +28,9 @@ Disturbance Waves: :math:`\rho_{ls} \delta_w^n \frac{\partial u_w^n}{\partial t}
 
 **3. Energy Conservation**
 
-Base Film: :math:`\Gamma_{wb,b}^n = \frac{q"_{wall,b}^n}{h_{vs} - h_{ls}}`
+Base Film: :math:`\Gamma_{wb,b}^n = \frac{q^{"}_{wall,b}^n}{h_{vs} - h_{ls}}`
 
-Disturbance Waves: :math:\Gamma_{wb,w}^n = \frac{q"_{wall,w}^n}{h_{vs} - h_{ls}}
+Disturbance Waves: :math:\Gamma_{wb,w}^n = \frac{q^{"}_{wall,w}^n}{h_{vs} - h_{ls}}
 
 **4. Wave Number Density Transport**
 
@@ -38,9 +38,9 @@ Disturbance Waves: :math:\Gamma_{wb,w}^n = \frac{q"_{wall,w}^n}{h_{vs} - h_{ls}}
 
 Where:
 
-:math:`N_w^n` is wave number density
-:math:`N_w^{eq,n}` is equilibrium wave number density
-:math:`t_w^{Relax}` is relaxation time
+- :math:`N_w^n` is wave number density
+- :math:`N_w^{eq,n}` is equilibrium wave number density
+- :math:`t_w^{Relax}` is relaxation time
 
 Features and Assumptions
 ------------------------
