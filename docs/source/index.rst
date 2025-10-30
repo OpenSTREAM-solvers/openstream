@@ -17,7 +17,7 @@
    :hidden:
    :caption: Guides
 
-   /Guides/theory
+   /Guides/theory/index
    /Guides/tutorials
    /Guides/references
 
