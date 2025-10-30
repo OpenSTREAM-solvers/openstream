@@ -39,6 +39,10 @@ Where:
 - :math:`h` is mixture enthalpy
 - :math:`q^{\prime\prime}_{wall}^n` is wall heat flux for wall index :math:`n`
 
+**4. Homogeneous relaxation model**
+
+*Coming soon*
+
 Features and Assumptions
 ------------------------
 
