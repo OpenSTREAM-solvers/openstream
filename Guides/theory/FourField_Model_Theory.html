@@ -20,6 +20,7 @@
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -125,62 +126,63 @@
 <p>The Four-Field Simulation Framework in OpenSTREAM extends the three-field model by explicitly modeling disturbance waves in addition to vapor, droplets, and base liquid film. This framework provides enhanced resolution of annular two-phase flow dynamics.</p>
 <section id="governing-equations">
 <h2>Governing Equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p>Mass Conservation</p></li>
-</ol>
+<p><strong>1. Mass Conservation</strong></p>
 <p>Base Film: :math:frac{partial}{partial t}(W_b^n u_b^n) + frac{partial W_b^n}{partial z} = Pi_p^n D_b^n - Gamma_{wb,b}^n + Psi_w^n - Psi_b^n</p>
 <p>Disturbance Waves: :math:frac{partial}{partial t}(W_w^n u_w^n) + frac{partial W_w^n}{partial z} = Pi_p^n D_w^n - E^n - Gamma_{wb,w}^n - Psi_w^n + Psi_b^n</p>
 <p>Where:</p>
-<p>:math:W_b^n, :math:W_w^n are base film and wave mass flow rates
-:math:u_b^n, :math:u_w^n are velocities
-:math:D_b^n, :math:D_w^n are deposition fluxes
-:math:Gamma_{wb,b}^n, :math:Gamma_{wb,w}^n are wall boiling fluxes
-:math:Psi_w^n, :math:Psi_b^n are exchange fluxes between film and waves</p>
-<ol class="arabic simple" start="2">
-<li><p>Momentum Conservation</p></li>
-</ol>
-<p>Base Film: :math:rho_{ls} delta_b^n frac{partial u_b^n}{partial t} + u_b^n frac{partial u_b^n}{partial z} = D_b^n (u_d - u_b^n) + Psi_w^n (u_w^n - u_b^n) - delta_b^n frac{partial p}{partial z} + g rho_{ls} + beta_b^n tau_{v,b}^n + (1 - beta_b^n) tau_{w,b}^n - tau_{wall,b}^n</p>
-<p>Disturbance Waves: :math:rho_{ls} delta_w^n frac{partial u_w^n}{partial t} + u_w^n frac{partial u_w^n}{partial z} = D_w^n (u_d - u_w^n) + Psi_b^n (u_b^n - u_w^n) - delta_w^n frac{partial p}{partial z} + g rho_{ls} + (1 - beta_b^n) tau_{v,w}^n - tau_{w,b}^n</p>
-<ol class="arabic simple" start="3">
-<li><p>Energy Conservation</p></li>
-</ol>
-<p>Base Film: :math:Gamma_{wb,b}^n = frac{q’’_{wall,b}^n}{h_{vs} - h_{ls}}</p>
-<p>Disturbance Waves: :math:Gamma_{wb,w}^n = frac{q’’_{wall,w}^n}{h_{vs} - h_{ls}}</p>
-<ol class="arabic simple" start="4">
-<li><p>Wave Number Density Transport</p></li>
-</ol>
-<p>:math:frac{partial N_w^n}{partial t} + frac{partial}{partial z}(u_w^n N_w^n) = frac{N_{w,eq}^n - N_w^n}{t_{wRelax}}
-Where:</p>
-<p>:math:N_w^n is wave number density
-:math:N_{w,eq}^n is equilibrium wave number density
-:math:t_{wRelax} is relaxation time</p>
+<p><span class="math notranslate nohighlight">\(W_b^n\)</span>, :math:W_w^n are base film and wave mass flow rates
+<span class="math notranslate nohighlight">\(u_b^n\)</span>, :math:u_w^n are velocities
+<span class="math notranslate nohighlight">\(D_b^n\)</span>, :math:D_w^n are deposition fluxes
+<span class="math notranslate nohighlight">\(\Gamma_{wb,b}^n\)</span>, <span class="math notranslate nohighlight">\(\Gamma_{wb,w}^n\)</span> are wall boiling fluxes
+<span class="math notranslate nohighlight">\(\Psi_w^n\)</span>, <span class="math notranslate nohighlight">\(\Psi_b^n\)</span> are exchange fluxes between film and waves</p>
+<p><strong>2. Momentum Conservation</strong></p>
+<p>Base Film: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_b^n \frac{\partial u_b^n}{\partial t} + u_b^n \frac{\partial u_b^n}{\partial z} = D_b^n (u_d - u_b^n) + \Psi_w^n (u_w^n - u_b^n) - \delta_b^n \frac{\partial p}{\partial z} + g \rho_{ls} + \beta_b^n \tau_{v,b}^n + (1 - \beta_b^n) \tau_{w,b}^n - \tau_{wall,b}^n\)</span></p>
+<p>Disturbance Waves: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_w^n \frac{\partial u_w^n}{\partial t} + u_w^n \frac{\partial u_w^n}{\partial z} = D_w^n (u_d - u_w^n) + \Psi_b^n (u_b^n - u_w^n) - \delta_w^n \frac{\partial p}{\partial z} + g \rho_{ls} + (1 - \beta_b^n) \tau_{v,w}^n - \tau_{w,b}^n\)</span></p>
+<p><strong>3. Energy Conservation</strong></p>
+<p>Base Film: <span class="math notranslate nohighlight">\(\Gamma_{wb,b}^n = \frac{q&quot;_{wall,b}^n}{h_{vs} - h_{ls}}\)</span></p>
+<p>Disturbance Waves: :math:Gamma_{wb,w}^n = frac{q”_{wall,w}^n}{h_{vs} - h_{ls}}</p>
+<p><strong>4. Wave Number Density Transport</strong></p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial N_w^n}{\partial t} + \frac{\partial}{\partial z}(u_w^n N_w^n) = \frac{N_w^{eq,n} - N_w^n}{t_w^{Relax}}\)</span></p>
+<p>Where:</p>
+<p><span class="math notranslate nohighlight">\(N_w^n\)</span> is wave number density
+<span class="math notranslate nohighlight">\(N_w^{eq,n}\)</span> is equilibrium wave number density
+<span class="math notranslate nohighlight">\(t_w^{Relax}\)</span> is relaxation time</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
-<p>Models intermittent wave transport and non-equilibrium wave dynamics
-Assumes thermal equilibrium for energy equations
-Includes wave-film exchange and wave number density evolution</p>
+<ul class="simple">
+<li><p>Models intermittent wave transport and non-equilibrium wave dynamics</p></li>
+<li><p>Assumes thermal equilibrium for energy equations</p></li>
+<li><p>Includes wave-film exchange and wave number density evolution</p></li>
+</ul>
 </section>
 <section id="implementation-notes">
 <h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<p>Implemented in the class:
-FourFieldSolver
-Key methods:
-FourFieldSolver.solve_mass_conservation()
-FourFieldSolver.solve_momentum_conservation()
-FourFieldSolver.solve_energy_conservation()
-FourFieldSolver.solve_wave_density_transport()
-Properties:
-FourFieldSolver.mass_flow_rate_base_film
-FourFieldSolver.mass_flow_rate_waves
-FourFieldSolver.velocity_base_film
-FourFieldSolver.velocity_waves
-FourFieldSolver.wave_number_density</p>
+<dl class="simple">
+<dt>Implemented in the class:</dt><dd><ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver</span></code></p></li>
+</ul>
+</dd>
+<dt>Key methods:</dt><dd><ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.solve()</span></code></p></li>
+</ul>
+</dd>
+<dt>Key properties:</dt><dd><ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.wave.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.wave.U</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.wave.FREQUENCY</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.base.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.base.U</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.drop.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.drop.U</span></code></p></li>
+</ul>
+</dd>
+</dl>
 </section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
 <p>The four-field model provides state-of-the-art simulation capabilities for annular two-phase flow, especially in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer, validated against experimental data.</p>
-<p>End of theory section.</p>
+<hr class="docutils" />
 </section>
 </section>
 

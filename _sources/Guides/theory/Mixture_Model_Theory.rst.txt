@@ -32,12 +32,12 @@ Where:
 
 **3. Energy conservation**
 
-:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q{\\prime\\prime}_{wall}^n`
+:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q"_{wall}^n`
 
 Where:
 
 :math:`h` is mixture enthalpy
-:math:`q{\\prime\\prime}_{wall}^n` is wall heat flux for wall index :math:`n`
+:math:`q"_{wall}^n` is wall heat flux for wall index :math:`n`
 
 Features and Assumptions
 ------------------------
@@ -64,5 +64,4 @@ Role in OpenSTREAM
 
 The mixture model provides a robust initialization for more complex solvers (e.g., two-fluid, three-field, four-field). Its pressure gradient solution is reused across all frameworks to improve numerical stability.
 
-
-Next: twofluid_model_theory.html
+----
