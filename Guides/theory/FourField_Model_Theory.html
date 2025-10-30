@@ -60,9 +60,9 @@
 <li class="toctree-l2"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Four-field model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing Equations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and Assumptions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
 </ul>
 </li>
@@ -125,25 +125,25 @@
 <h1>Four-field model<a class="headerlink" href="#four-field-model" title="Link to this heading"></a></h1>
 <p>The Four-Field Simulation Framework in OpenSTREAM extends the three-field model by explicitly modeling disturbance waves in addition to vapor, droplets, and base liquid film. This framework provides enhanced resolution of annular two-phase flow dynamics.</p>
 <section id="governing-equations">
-<h2>Governing Equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
-<p><strong>1. Mass Conservation</strong></p>
+<h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
+<p><strong>1. Mass conservation</strong></p>
 <p>Base Film: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W_b^n u_b^n) + \frac{\partial W_b^n}{\partial z} = \Pi_p^n D_b^n - \Gamma_{wb,b}^n + \Psi_w^n - \Psi_b^n\)</span></p>
 <p>Disturbance Waves: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W_w^n u_w^n) + \frac{\partial W_w^n}{\partial z} = \Pi_p^n D_w^n - E^n - \Gamma_{wb,w}^n - \Psi_w^n + \Psi_b^n\)</span></p>
 <p>Where:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(W_b^n\)</span>, :math:W_w^n are base film and wave mass flow rates</p></li>
-<li><p><span class="math notranslate nohighlight">\(u_b^n\)</span>, :math:u_w^n are velocities</p></li>
-<li><p><span class="math notranslate nohighlight">\(D_b^n\)</span>, :math:D_w^n are deposition fluxes</p></li>
+<li><p><span class="math notranslate nohighlight">\(W_b^n\)</span>, <span class="math notranslate nohighlight">\(W_w^n\)</span> are base film and wave mass flow rates</p></li>
+<li><p><span class="math notranslate nohighlight">\(u_b^n\)</span>, <span class="math notranslate nohighlight">\(u_w^n\)</span> are velocities</p></li>
+<li><p><span class="math notranslate nohighlight">\(D_b^n\)</span>, <span class="math notranslate nohighlight">\(D_w^n\)</span> are deposition fluxes</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Gamma_{wb,b}^n\)</span>, <span class="math notranslate nohighlight">\(\Gamma_{wb,w}^n\)</span> are wall boiling fluxes</p></li>
 <li><p><span class="math notranslate nohighlight">\(\Psi_w^n\)</span>, <span class="math notranslate nohighlight">\(\Psi_b^n\)</span> are exchange fluxes between film and waves</p></li>
 </ul>
-<p><strong>2. Momentum Conservation</strong></p>
+<p><strong>2. Momentum conservation</strong></p>
 <p>Base Film: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_b^n \frac{\partial u_b^n}{\partial t} + u_b^n \frac{\partial u_b^n}{\partial z} = D_b^n (u_d - u_b^n) + \Psi_w^n (u_w^n - u_b^n) - \delta_b^n \frac{\partial p}{\partial z} + g \rho_{ls} + \beta_b^n \tau_{v,b}^n + (1 - \beta_b^n) \tau_{w,b}^n - \tau_{wall,b}^n\)</span></p>
 <p>Disturbance Waves: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_w^n \frac{\partial u_w^n}{\partial t} + u_w^n \frac{\partial u_w^n}{\partial z} = D_w^n (u_d - u_w^n) + \Psi_b^n (u_b^n - u_w^n) - \delta_w^n \frac{\partial p}{\partial z} + g \rho_{ls} + (1 - \beta_b^n) \tau_{v,w}^n - \tau_{w,b}^n\)</span></p>
-<p><strong>3. Energy Conservation</strong></p>
+<p><strong>3. Energy conservation</strong></p>
 <p>Base Film: <span class="math notranslate nohighlight">\(\Gamma_{wb,b}^n = \frac{q^{&quot;}_{wall,b}^n}{h_{vs} - h_{ls}}\)</span></p>
-<p>Disturbance Waves: :math:Gamma_{wb,w}^n = frac{q^{“}_{wall,w}^n}{h_{vs} - h_{ls}}</p>
-<p><strong>4. Wave Number Density Transport</strong></p>
+<p>Disturbance Waves: <span class="math notranslate nohighlight">\(\Gamma_{wb,w}^n = \frac{q^{&quot;}_{wall,w}^n}{h_{vs} - h_{ls}}\)</span></p>
+<p><strong>4. Wave number density transport</strong></p>
 <p><span class="math notranslate nohighlight">\(\frac{\partial N_w^n}{\partial t} + \frac{\partial}{\partial z}(u_w^n N_w^n) = \frac{N_w^{eq,n} - N_w^n}{t_w^{Relax}}\)</span></p>
 <p>Where:</p>
 <ul class="simple">
@@ -153,7 +153,7 @@
 </ul>
 </section>
 <section id="features-and-assumptions">
-<h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
+<h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Models intermittent wave transport and non-equilibrium wave dynamics</p></li>
 <li><p>Assumes thermal equilibrium for energy equations</p></li>
@@ -161,7 +161,7 @@
 </ul>
 </section>
 <section id="implementation-notes">
-<h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Implemented in the class:</dt><dd><ul class="simple">
 <li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver</span></code></p></li>

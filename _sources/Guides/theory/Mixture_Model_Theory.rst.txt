@@ -20,24 +20,24 @@ Where:
 
 **2. Momentum conservation**
 
-:math:`\rho A \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z} = -A \frac{\partial p}{\partial z} + \frac{\partial p K}{\partial z} + \cos\theta g \rho - \Pi_p \tau_{wall}`
+:math:`\rho A \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z} = -A \frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho - \Pi_p \tau_{wall}`
 
 Where:
 
 - :math:`\rho` is the mixture density
 - :math:`A` is the cross-sectional area
 - :math:`p` is pressure
-- :math:`K` is obstruction factor
+- :math:`K` relates to obstruction form loss
 - :math:`\tau_{wall}` is wall shear stress
 
 **3. Energy conservation**
 
-:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q^{"}_{wall}^n`
+:math:`\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n q^{\prime\prime}_{wall}^n`
 
 Where:
 
 - :math:`h` is mixture enthalpy
-- :math:`q^{"}_{wall}^n` is wall heat flux for wall index :math:`n`
+- :math:`q^{\prime\prime}_{wall}^n` is wall heat flux for wall index :math:`n`
 
 Features and Assumptions
 ------------------------

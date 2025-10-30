@@ -31,9 +31,9 @@ Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{q^{"}_{wall}^n}{h_{vs} -
 Where:
 
 - :math:`\delta_f^n` is film thickness
-- :math:`\tau_{v,f}^n`, :math:\tau_{wall,f}^n are interfacial and wall shear stresses
-- :math:`A_d, :math:V_d` are drop interfacial area and volume
-- :math:`h_{vs}, :math:h_{ls}` are saturated vapor and liquid enthalpies
+- :math:`\tau_{v,f}^n`, :math:`\tau_{wall,f}^n` are interfacial and wall shear stresses
+- :math:`A_d`, :math:`V_d` are drop interfacial area and volume
+- :math:`h_{vs}`, :math:`h_{ls}` are saturated vapor and liquid enthalpies
 
 Features and assumptions
 ------------------------
