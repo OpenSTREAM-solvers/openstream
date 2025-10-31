@@ -16,7 +16,7 @@ classdef ENTRAINMENT
     % - OKAWA2003     — Okawa et al. correlation (:cite:t:`okawa2003`)
     % - OKAWA2004     — Okawa et al. correlation (:cite:t:`OKAWA2004`)
     % - OKAWA2004MOD  — Modified Okawa (2004) model from (:cite:t:`ADAMSSON20112843`)
-    % - OKAWAGEN      — Generic Okawa-based model using user-defined OKAWACOEFS
+    % - OKAWAGEN      — Generic Okawa-based model using user-defined :attr:`Inputs.Model.OKAWACOEFS`
 
     enumeration
         NONE                 % No entrainment
