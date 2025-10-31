@@ -542,10 +542,10 @@ classdef Mixture < Solvers.AbstractField
         function nu = NU(mix, zIdx)
             %NU Wall Nusselt number [-]
             %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
-            %TODO: Add other options
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
+            model = mix.inputSet.model;
             NWALL = mix.inputSet.geometry.NWALL;
 
             % Pre-CHF
@@ -561,8 +561,14 @@ classdef Mixture < Solvers.AbstractField
             Re(idxbt) = Recbt(idxbt);                                      % [-]
             Pr(idxbt) = Prcbt(idxbt);                                      % [-]
 
-            %
-            nu = 0.023.*Re.^0.8.*Pr.^0.4;                                  % [-]
+            % Calculate Nusselt number
+            switch model.SPHTM
+                case 'DITTUSBOELTER'
+                    nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                case 'DITTUSBOELTERGEN' 
+                    c = model.DITTUSBOELTERCOEF;
+                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+            end
         end
 
         function hwallliq = HWALLLIQ(mix, zIdx)
@@ -577,13 +583,14 @@ classdef Mixture < Solvers.AbstractField
 
         function hwallthom = HWALLTHOM(mix, zIdx)
             %HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]
-            %
+            % Thom's formulation was modified in term of heat transfer coefficient
+
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            % Thom
-            q  = mix.HFLUX(zIdx,:);                                        % [W/m^2]
+            q  = mix.HFLUX(zIdx,:)+1E-6;                                   % [W/m^2]
             Tb = mix.liquid.T(zIdx);                                       % [K]
             hwallthom = q./(mix.fluid.TSAT-Tb+22.5.*(q./1E6).^0.5.*exp(-mix.P(zIdx)./1E6/8.7)); % [W/m^2/K]
+            hwallthom = max(0,hwallthom);
         end
 
         function hwallvap = HWALLVAP(mix, zIdx)
@@ -602,15 +609,26 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
+            model = mix.inputSet.model;
+
             % Pre-CBT
             hsp = mix.HWALLLIQ(zIdx);                                      % [W/m^2/K] Single-phase liquid
-            htp = mix.HWALLTHOM(zIdx);                                     % [W/m^2/K] Two-phase
+
+            switch model.TPHTM
+                case 'THOM'
+                    htp = mix.HWALLTHOM(zIdx);                             % [W/m^2/K] Two-phase
+            end
+
             hwall = max(hsp,htp);                                          % [W/m^2/K]
 
             % Post CBT
-            hwallcbt = mix.HWALLVAP(zIdx);                                 % [W/m^2/K] Single-phase vapor
+            switch model.BTHTM
+                case 'VAPOR'
+                    hwallbt = mix.HWALLVAP(zIdx);                          % [W/m^2/K] Single-phase vapor
+            end
+
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-            hwall(idxbt) = hwallcbt(idxbt);                                % [W/m^2/K] Post-CBT
+            hwall(idxbt) = hwallbt(idxbt);                                 % [W/m^2/K] Post-CBT
         end
 
         function twall = TWALL(mix, zIdx)

@@ -27,6 +27,12 @@ classdef Model < Inputs.Input
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model
         DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
 
+        % Wall heat transfer
+        SPHTM            (1,1) InputEnums.SPHTM                            = 'DITTUSBOELTER'                 % Single-phase wall heat transfer model
+        DITTUSBOELTERCOEF (1,3) double  {mustBeNumeric}                    = [0.023 0.8 0.4]                 % Dittus-Boelter coefficients [-]
+        TPHTM            (1,1) InputEnums.TPHTM                            = 'THOM'                          % Two-phase wall heat transfer model
+        BTHTM            (1,1) InputEnums.BTHTM                            = 'VAPOR'                         % Boiling transition wall heat transfer model
+
         % Mixture solver models
         FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
         TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'                   % Two-phase friction multiplier
