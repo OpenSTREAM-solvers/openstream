@@ -753,6 +753,62 @@ classdef SolverPlotter < handle
             end
         end
 
+        function resizeFigure(plotters, scaleFactor)
+            % resizeFigure Resizes the figure based on tiledlayout rows/columns
+            % Keeps top-left fixed and goes full-screen if size exceeds screen resolution.
+            %
+            % Usage:
+            %   plotters.resizeFigure();        % default scaleFactor = 1
+            %   plotters.resizeFigure(1.2);     % tiles 20% larger
+            %   plotters.resizeFigure(0.8);     % tiles 20% smaller
+
+            if nargin < 2
+                scaleFactor = 1; % default
+            end
+
+            % Get current figure from plotter
+            fig = plotters.fh;
+
+            % Find tiledlayout object
+            layouts = findall(fig, 'Type', 'tiledlayout');
+            if isempty(layouts)
+                error('No tiledlayout found in the current figure.');
+            end
+            t = layouts(1);
+
+            % Get rows and columns
+            nRows = t.GridSize(1);
+            nCols = t.GridSize(2);
+
+            % Base size per tile
+            tileWidth = 600 * scaleFactor;
+            tileHeight = 450 * scaleFactor;
+
+            % Compute new size
+            newWidth = tileWidth * nCols;
+            newHeight = tileHeight * nRows;
+
+            % Get screen size
+            screenSize = get(0, 'ScreenSize'); % [left bottom width height]
+            screenWidth = screenSize(3);
+            screenHeight = screenSize(4);
+
+            % Current position
+            pos = fig.Position;
+            top = pos(2) + pos(4); % current top
+
+            if newWidth > screenWidth || newHeight > screenHeight
+                % Full-screen mode
+                fig.Units = 'normalized';
+                fig.OuterPosition = [0 0 1 1];
+            else
+                % Keep top-left fixed
+                newBottom = top - newHeight;
+                fig.Position = [pos(1), newBottom, newWidth, newHeight];
+            end
+        end
+
+
     end
 
     methods (Static)

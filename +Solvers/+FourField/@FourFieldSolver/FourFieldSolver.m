@@ -277,6 +277,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opts.annular     (1,1) logical                                                                                                        = true
                 opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                                                              = 'K'
                 opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                                                    = 'flow'
+                opts.resize      (1,1) double {mustBeNonnegative}                                                                                     = 0
             end
 
             if length(opts.zIdx) < 2
@@ -588,6 +589,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.plotOAF(oafZ);
                 end
             end
+
+            if opts.resize > 0
+                plotter.resizeFigure(opts.resize);
+            end
         end
         
         function plotter = plott(ffSolver, zIdx, opt)
@@ -604,7 +609,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                            = []
                 opt.reverseTime (1,1) logical                                                                                                       = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                                              = 'K'
-                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                     = 'flow'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                    = 'flow'
+                opt.resize      (1,1) double {mustBeNonnegative}                                                                                    = 0
             end
             
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
@@ -859,6 +865,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(drp.transient('FGRAV'    ,'zIdx',zIdx)','Gravity'                                     );
                 plotter.plotz(drp.transient('FTOT' ,flm,'zIdx',zIdx)','Total'                                       );
                 plotter.legend('show', 'Location', 'best');
+            end
+
+            if opt.resize > 0
+                plotter.resizeFigure(opt.resize);
             end
         end
         

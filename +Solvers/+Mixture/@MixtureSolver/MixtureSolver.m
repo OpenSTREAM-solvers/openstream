@@ -329,8 +329,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opts.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.NZ
                 opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                    = 'K'
                 opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}          = 'flow'
+                opts.resize      (1,1) double {mustBeNonnegative}                                           = 0
                 opts.nearWall    (1,1) logical                                                              = false
-
             end
 
             if length(opts.zIdx) < 2
@@ -616,6 +616,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.ylim([ymin ymax]);
                 end
             end
+
+            if opts.resize > 0
+                plotter.resizeFigure(opts.resize);
+            end
         end
 
         function plotter = plott(mixSolver, zIdx, opt)
@@ -633,6 +637,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.reverseTime (1,1) logical                                                    = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                           = 'K'
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})} = 'flow'
+                opt.resize      (1,1) double {mustBeNonnegative}                                 = 0
                 opt.nearWall    (1,1) logical                                                    = false
             end
 
@@ -879,6 +884,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                 plotter.ylim([ymin ymax]);
+            end
+
+            if opt.resize > 0
+                plotter.resizeFigure(opt.resize);
             end
         end
 

@@ -273,7 +273,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opts.annular   (1,1) logical                                                                       = true
                 opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                             = 'K'
                 opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                 = 'flow'
-
+                opts.resize    (1,1) double {mustBeNonnegative}                                                    = 0
             end
             
             if length(opts.zIdx) < 2
@@ -455,6 +455,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     plotter.plotOAF(oafZ);
                 end
             end
+
+            if opts.resize > 0
+                plotter.resizeFigure(opts.resize);
+            end
         end
         
         function plotter = plott(tfSolver, zIdx, opt)
@@ -471,7 +475,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = []
                 opt.reverseTime (1,1) logical                                                                      = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
-                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                    = 'flow'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                   = 'flow'
+                opt.resize      (1,1) double {mustBeNonnegative}                                                   = 0
             end
             
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
@@ -611,6 +616,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
             end
             
+            if opt.resize > 0
+                plotter.resizeFigure(opt.resize);
+            end
         end
         
         function plotzt(tfSolver, opt)

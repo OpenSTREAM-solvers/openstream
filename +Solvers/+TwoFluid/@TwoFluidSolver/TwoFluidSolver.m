@@ -186,7 +186,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
                 opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'                
                 opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                             = 'flow'
-
+                opts.resize    (1,1) double {mustBeNonnegative}                                                                = 0
             end
             
             if length(opts.zIdx) < 2
@@ -467,6 +467,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                 end
             end
+
+            if opts.resize > 0
+                plotter.resizeFigure(opts.resize);
+            end
         end
         
         function plotter = plott(twfSolver, zIdx, opt)
@@ -483,7 +487,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                         = []
                 opt.reverseTime (1,1) logical                                                                                    = false
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                                           = 'K'
-                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                  = 'flow'
+                opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                 = 'flow'
+                opt.resize      (1,1) double {mustBeNonnegative}                                                                 = 0
             end
             
             if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
@@ -735,6 +740,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 labels = strrep(cellstr(unique([labels{:}])),'_',' ');
                 plotter.ylabels(labels);
                 plotter.ylim([0 length(labels)+1]);
+            end
+
+            if opt.resize > 0
+                plotter.resizeFigure(opt.resize);
             end
         end
         
