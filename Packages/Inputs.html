@@ -56,7 +56,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/theory/index.html">Theory overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global Reference List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global reference list</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications</span></p>
 <ul>
@@ -471,6 +471,12 @@ modelID  - Identifier for model configuration</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.CBTKEFFECT">
+<span class="sig-name descname"><span class="pre">CBTKEFFECT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.CBTKEFFECT" title="Link to this definition"></a></dt>
+<dd><p>Grid effect coefficients (1+C(1)*exp(C(2)*z)) [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.CBTELEVATION">
 <span class="sig-name descname"><span class="pre">CBTELEVATION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Model.CBTELEVATION" title="Link to this definition"></a></dt>
 <dd><p>Critical Boiling Transition Elevation [m]</p>
@@ -486,6 +492,30 @@ modelID  - Identifier for model configuration</p>
 <dt class="sig sig-object mat" id="Inputs.Model.DTMFB">
 <span class="sig-name descname"><span class="pre">DTMFB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">100</span></em><a class="headerlink" href="#Inputs.Model.DTMFB" title="Link to this definition"></a></dt>
 <dd><p>Minimum film boiling temperature from saturation [K]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.SPHTM">
+<span class="sig-name descname"><span class="pre">SPHTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'DITTUSBOELTER'</span></em><a class="headerlink" href="#Inputs.Model.SPHTM" title="Link to this definition"></a></dt>
+<dd><p>Wall heat transfer</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.DITTUSBOELTERCOEF">
+<span class="sig-name descname"><span class="pre">DITTUSBOELTERCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.0230.80.4]</span></em><a class="headerlink" href="#Inputs.Model.DITTUSBOELTERCOEF" title="Link to this definition"></a></dt>
+<dd><p>Dittus-Boelter coefficients [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.TPHTM">
+<span class="sig-name descname"><span class="pre">TPHTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'THOM'</span></em><a class="headerlink" href="#Inputs.Model.TPHTM" title="Link to this definition"></a></dt>
+<dd><p>Two-phase wall heat transfer model</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.BTHTM">
+<span class="sig-name descname"><span class="pre">BTHTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'VAPOR'</span></em><a class="headerlink" href="#Inputs.Model.BTHTM" title="Link to this definition"></a></dt>
+<dd><p>Boiling transition wall heat transfer model</p>
 </dd></dl>
 
 <dl class="mat attribute">
