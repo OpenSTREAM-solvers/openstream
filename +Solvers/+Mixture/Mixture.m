@@ -1271,7 +1271,14 @@ classdef Mixture < Solvers.AbstractField
                     chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
             end
 
+            % Adjustment factors
             chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
+
+            if max(model.KLOC) > 0
+                z0 = mix.KDIST(); z0(mix.Z < model.KLOC(1)) = 1E6;         % [m] Distance from upstream obstruction (inlet effect ignored)
+                chf = (1+model.CBTKEFFECT(1).*exp(model.CBTKEFFECT(2).*z0./geom.HDIAM)).*chf; % Apply spacer effect
+            end
+
             mix.chf(zIdx,:) = chf(zIdx,:);                                 % [W/m^2] Critical heat flux
 
             % CBT flag

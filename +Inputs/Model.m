@@ -23,6 +23,7 @@ classdef Model < Inputs.Input
         OAFTRANSITION    (1,2) double  {mustBeNumeric}                     = [0.10 0.0]                      % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         CBT              (1,1) InputEnums.CBT                              = 'NONE'                          % Critical Boiling Transition model 
         CBTMULT          (1,1) function_handle                             = @(z) 1                          % Critical boiling Heat flux multiplier function
+        CBTKEFFECT       (1,2) double  {mustBeNumeric}                     = [0 0]                           % Grid effect coefficients (1+C(1)*exp(C(2)*z)) [-]
         CBTELEVATION     (1,1) double  {mustBePositive}                    = 1                               % Critical Boiling Transition Elevation [m]
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model
         DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
