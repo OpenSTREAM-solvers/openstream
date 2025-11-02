@@ -107,10 +107,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-Inputs">
-<span id="inputs"></span><h1>Inputs<a class="headerlink" href="#module-Inputs" title="Link to this heading"></a></h1>
-<p><a class="reference internal" href="#module-Inputs" title="Inputs"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs</span></code></a> defines a set of classes used to specify and import all inputs relevant to the simulations to be performed. This includes the boundary conditions, system geometry, physical models, numerical options and fluid thermophysical properties.</p>
-<dl class="mat class">
+  <section id="inputs">
+<h1>Inputs<a class="headerlink" href="#inputs" title="Link to this heading"></a></h1>
+<p>The <a class="reference internal" href="#module-Inputs" title="Inputs"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs</span></code></a> package defines a set of classes used to configure and import all the necessary parameters for running OpenSTREAM simulations. This includes:</p>
+<ul class="simple">
+<li><p>Boundary conditions</p></li>
+<li><p>System geometry</p></li>
+<li><p>Physical models</p></li>
+<li><p>Numerical options</p></li>
+<li><p>Fluid thermophysical properties</p></li>
+</ul>
+<p>These input definitions form the backbone of each simulation setup, ensuring consistency, flexibility, and clarity across different solver frameworks.</p>
+<dl class="mat class" id="module-Inputs">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">FluidProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">P</span></em>, <em class="sig-param"><span class="pre">modelObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties" title="Link to this definition"></a></dt>
 <dd><p>FLUIDPROPERTIES Class for managing thermophysical properties of a fluid</p>
@@ -1699,7 +1707,7 @@ solverName - Name of the solver to apply dependencies for</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

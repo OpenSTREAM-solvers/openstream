@@ -1,11 +1,14 @@
 Theory overview
 ===============
 
-This page provides a high-level summary of the theoretical foundations behind the simulation frameworks implemented in OpenSTREAM. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing complexity and resolution.
+Welcome to the theory section! This page gives you a high-level overview of the theoretical foundations behind the simulation frameworks implemented in **OpenSTREAM**. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing levels of complexity and physical resolution.
 
+Whether you're just getting started or diving deep into advanced simulations, this guide will help you understand the purpose, assumptions, and structure behind each solver.
 
-The following models are covered:
+Implemented models
+------------------
 
+Explore the theory behing each solver:
 
 .. toctree::
    :maxdepth: 1
@@ -21,29 +24,29 @@ Model summaries
 
 **Mixture model**
 
-- Purpose: Initialization and robust steady-state predictions.
-- Assumptions: Homogeneous equilibrium, single mixture phase.
-- Equations: Mass, momentum, and energy conservation.
+- Purpose: Initialization and robust predictions under relevant simplifications.
+- Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
+- Equations: Conservation of mass, momentum, and energy for the mixture.
 
 **Two-fluid model**
 
-- Purpose: Captures hydrodynamic and thermal non-equilibrium.
-- Assumptions: Separate conservation equations for liquid and vapor phases.
-- Equations: Six-equation model (mass, momentum, energy for each phase).
+- Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.
+- Assumptions: Separate conservation equations for liquid and vapor.
+- Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).
 
 **Three-field model**
 
-- Purpose: Simulates annular flow with vapor, droplets, and liquid film.
-- Assumptions: Thermal equilibrium, applicable up to film dryout.
-- Equations: Nine-equation model for mass and momentum conservation.
+- Purpose: Design for annular flow with vapor, droplets, and liquid film.
+- Assumptions: Thermal equilibrium (for now), valid up to film dryout.
+- Equations: Conservation of mass and momentum for the three fields.
 
 **Four-field model**
 
-- Purpose: Advanced modeling of disturbance waves in annular flow.
-- Assumptions: Thermal equilibrium, wave transport and non-equilibrium dynamics.
-- Equations: Extended conservation equations + wave number density transport.
+- Purpose: Advanced modeling of disturbance waves in annular flow, including non-equilibrium dynamics.
+- Assumptions: Thermal equilibrium (for now).
+- Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 
 ----
 
-For detailed equations and implementation notes, refer to the individual theory pages listed above.
+For detailed equations, derivations, and implementation notes, check out the individual theory pages linked above. Ready to dive deeper? Pick a model and start exploring!
 

@@ -2,15 +2,15 @@
 Welcome
 =======
 
-OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source, object-oriented computational environment designed for simulating one-dimensional, multi-field, two-phase flows. It supports phenomena such as wall boiling and interfacial phase change, making it a relevant tool for researchers working in thermal-hydraulics and two-phase flow (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). 
+OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source, object-oriented computational environment designed for simulating one-dimensional, multi-field, two-phase flows. It supports phenomena such as wall boiling and interfacial phase change, making it a relevant tool for researchers working in thermal-hydraulics and two-phase flow systems (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). 
 
 What's inside?
 --------------
 
-OpenSTREAM offers a suite of solver frameworks tailored to different modling needs:
+OpenSTREAM offers a suite of solver frameworks tailored to different modeling needs:
 
 - A **mixture solver** – with thermal non-equilibrium capabilities
-- A generic **two-fluid solver** – for generic sperate-phase modeling
+- A generic **two-fluid solver** – for generic separate-phase modeling
 - A **three-field solver** – for annular two-phase flow
 - An advanced **four-field solver** – for annular two-phase flow explicitly capturing disturbance waves (:cite:t:`LECORREMODEL`)
 

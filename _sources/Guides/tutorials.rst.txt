@@ -1,10 +1,13 @@
 Tutorials
 =========
 
-You are now ready to explore the tutorials, which showcase OpenSTREAM’s capabilities from foundational features to advanced functionalities.
+Ready to get hands-on with **OpenSTREAM**? These tutorials walk you through everything from basic functionality to advanced simulation features—step by step.
 
-These tutorials are provided as LiveScripts in the 'tutorials' folder. Completed versions are also available as HTML documents, accessible via the links below.
+Each tutorial is provided as a MATLAB LiveScript in the ``tutorials`` folder, so you can run and modify them directly. Completed versions are also available below as HTML documents for quick reference.
 
 .. raw:: html
 
-	<p><a href="../_static/html/tutorial1.html">Tutorial #1: Basic capabilities and functionalities</a></p>
+   <ul>
+     <li><a href="../_static/html/tutorial1.html">Tutorial #1: Basices and functionalities</a></li>
+     <li><a href="../_static/html/tutorial2.html">Tutorial #2: Mixture solver</a></li>
+   </ul>

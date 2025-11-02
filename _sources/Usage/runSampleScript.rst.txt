@@ -1,7 +1,7 @@
 Run sample script
 =================
 
-You're all set to launch your first simulation! To get started, run the sample script using the default Homogeneous Equilibrium Model (HEM). It's the quickest and easiest way to start exploring what OpenSTREAM can do, and to confirm everything is working smoothly under the hood.
+You're all set to launch your first simulation! To get started, run the sample script below which uses the default Homogeneous Equilibrium Model (HEM). It's the quickest and easiest way to start exploring what **OpenSTREAM** can do, and to confirm everything is working smoothly under the hood.
 
 .. code-block:: matlab
 
