@@ -156,7 +156,7 @@ function solver(solveINIT)
                         Htot  = Hvtot.*Uv;                                                                 % [W/kg]
                         %Htot  = Htot.*double(mix(tIdx).WWALL(zIdx)>Wvnew);
                         Hvnew = (Uv.*mix(tIdx).TRELAX.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);      % [J/kg] Update vapor enthalpy
-                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                 % [J/kg] Constrain solution so that Hv > Hg
+                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                 % [J/kg] Constrain solution so that Hv > Hg (no subcooled vapor)
                         Hvnew = max(mix(tIdx).H(zIdx),Hvnew);                                              % [J/kg] Constrain solution so that Hv > H
                         mix(tIdx).TRELAX.HV(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;  % [J/kg] Apply relaxation
                         

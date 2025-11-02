@@ -80,14 +80,13 @@ classdef Liquid < Solvers.AbstractPhase
 
             % X = max(liquid.mix.X(zIdx),liquid.mix.XEQ(zIdx));             % Account for potential subcooled liquid
             % h = (liquid.mix.H(zIdx)-X.*liquid.mix.fluid.HG)./(1-X);
-            % %h = min(h,liquid.mix.fluid.HF);                              % No superheated liquid
-            % %h = max(h,liquid.mix.H(1));
 
             X = liquid.mix.X(zIdx);
             h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
 
             fluid = liquid.mix.fluid;
             h(isnan(h) | isinf(h)) = fluid.HF;
+            h = min(h,liquid.mix.fluid.HF);                                % Constrain solution so that Hl > Hf (no superheated liquid)
         end
 
         function mflux = MFLUX(liquid, zIdx)
