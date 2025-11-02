@@ -1,7 +1,7 @@
 Run sample script
 =================
 
-At this point, you are ready to run the sample script. You will see some of the basic usages of  OpenSTREAM. 
+You're all set to launch your first simulation! To get started, run the sample script using the default Homogeneous Equilibrium Model (HEM). It's the quickest and easiest way to start exploring what OpenSTREAM can do, and to confirm everything is working smoothly under the hood.
 
 .. code-block:: matlab
 
@@ -28,13 +28,10 @@ At this point, you are ready to run the sample script. You will see some of the 
     % Create a mixture solver object
     mixSolver = MixtureSolver(inputSet);
 
-    % mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.
-    mixSolver.initializeSolver(); 
-
-    % Solve (does not accept any argument)
+    % Solve
     mixSolver.solve();
 
-    % Axial plots
+    % Default axial plots
     mixSolver.plotz();
 
     % Save results
