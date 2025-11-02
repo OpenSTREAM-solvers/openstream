@@ -62,6 +62,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Applications/database.html">OpenSTREAM-database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Applications/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Applications/publications.html">Publications</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
@@ -122,35 +123,37 @@
 </div>
 <section id="welcome">
 <h2>Welcome<a class="headerlink" href="#welcome" title="Link to this heading"></a></h2>
-<p>OpenSTREAM (<strong>Open</strong> <strong>S</strong>olvers for <strong>T</strong>wo-phase flow <strong>R</strong>esearch, <strong>E</strong>ngineering <strong>A</strong>nalysis and <strong>M</strong>odeling) is an open-source computational environment for simulating one-dimensional, multi-field, two-phase flows, including phase change. It is designed to support efficient and collaborative model development, performance evaluation, and validation across users and institutions (<span id="id1">Le Corre <em>et al.</em> [<a class="reference internal" href="index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, van T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025.">2025</a>]</span>) (<span id="id2">Le Corre <em>et al.</em> [<a class="reference internal" href="index_content.html#id6" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: a new open-source platform for two-phase flow model development. In Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025). Toulouse, France, May 12–16 2025.">2025</a>]</span>).</p>
+<p>OpenSTREAM (<strong>Open</strong> <strong>S</strong>olvers for <strong>T</strong>wo-phase flow <strong>R</strong>esearch, <strong>E</strong>ngineering <strong>A</strong>nalysis and <strong>M</strong>odeling) is an open-source, object-oriented computational environment for simulating one-dimensional, multi-field, two-phase flows, including wall boiling and interfacial phase change phenomena (<span id="id1">Le Corre <em>et al.</em> [<a class="reference internal" href="index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025.">2025</a>]</span>) (<span id="id2">Le Corre <em>et al.</em> [<a class="reference internal" href="index_content.html#id7" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: a new open-source platform for two-phase flow model development. In Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025). Toulouse, France, May 12–16 2025.">2025</a>]</span>).</p>
 <p>OpenSTREAM includes several solver frameworks:</p>
 <ul class="simple">
 <li><p>A <strong>mixture solver</strong> with thermal non-equilibrium capabilities</p></li>
 <li><p>A generic <strong>two-fluid solver</strong></p></li>
 <li><p>A <strong>three-field solver</strong> for annular two-phase flow</p></li>
-<li><p>An advanced <strong>four-field solver</strong> for annular two-phase flow (<span id="id3">Le Corre [<a class="reference internal" href="index_content.html#id9" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
+<li><p>An advanced <strong>four-field solver</strong> for annular two-phase flow (<span id="id3">Le Corre [<a class="reference internal" href="index_content.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
 </ul>
-<p>These solvers support single-component, thermally expandable, steady-state and transient boiling two-phase flows in single straight channels, developed under reasonable simplifying assumptions. Basic closure models have been implemented, subject to future improvements.</p>
-<p>OpenSTREAM is aimed at facilitating access to two-phase flow simulation frameworks to support collaborative model development, performance evaluation, and validation across research institutions.</p>
-<p>The purpose of this documentation is to fully describe the usage and thought-process behind the design of the program.</p>
+<p>These solvers support single-component, thermally expandable, steady-state and transient boiling two-phase flows in single straight channels, developed under reasonable simplifying assumptions. Basic closure models have been implemented, which can be customized by accessing and editing the relevant class methods in the source code.</p>
+<p>OpenSTREAM is aimed at facilitating access to two-phase flow simulation frameworks to support efficient and collaborative model development, performance evaluation, and validation across research institutions.</p>
+<p>This documentation aims to explain the usage and design rationale of the program, guide users through installation and execution, and showcase typical applications.</p>
 <p>The PDF version of this manual can be found here: <a class="reference external" href="./files/OpenSTREAM.pdf" rel="noreferrer" target="_blank">OpenSTREAM.pdf</a></p>
+<hr class="docutils" />
 <div class="docutils container" id="id4">
 <div role="list" class="citation-list">
-<div class="citation" id="id9" role="doc-biblioentry">
+<div class="citation" id="id12" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">LeCorre22</a><span class="fn-bracket">]</span></span>
 <p>Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. <em>International Journal of Multiphase Flow</em>, 151:104057, 2022. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0301932222000696" rel="noreferrer" target="_blank">https://www.sciencedirect.com/science/article/pii/S0301932222000696</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057" rel="noreferrer" target="_blank">doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057</a>.</p>
 </div>
-<div class="citation" id="id6" role="doc-biblioentry">
+<div class="citation" id="id7" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">LeCorreCW+25a</a><span class="fn-bracket">]</span></span>
 <p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: a new open-source platform for two-phase flow model development. In <em>Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025)</em>. Toulouse, France, May 12–16 2025.</p>
 </div>
 <div class="citation" id="id5" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">LeCorreCW+25b</a><span class="fn-bracket">]</span></span>
-<p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, van T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In <em>Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21)</em>. Busan, Korea, August 31–September 5 2025.</p>
+<p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In <em>Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21)</em>. Busan, Korea, August 31–September 5 2025.</p>
 </div>
 </div>
 </div>
 </section>
+<hr class="docutils" />
 <section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h2>
 <ul class="simple">
