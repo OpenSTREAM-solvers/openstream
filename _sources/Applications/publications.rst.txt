@@ -7,7 +7,7 @@ Overviews
 ---------
 
 .. bibliography:: ../my_bib.bib
-   :filter: LeCorre2025ICMF, LeCorre2025OpenSTREAM
+   :filter: LeCorre2025ICMF,LeCorre2025OpenSTREAM
    :style: plain
 
 
