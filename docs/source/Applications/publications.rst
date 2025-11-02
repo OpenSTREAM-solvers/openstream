@@ -7,9 +7,8 @@ Overviews
 ---------
 
 .. bibliography:: ../my_bib.bib
-
-   LeCorre2025ICMF
-   LeCorre2025OpenSTREAM
+   :filter: LeCorre2025ICMF, LeCorre2025OpenSTREAM
+   :style: plain
 
 
 Two-fluid model
