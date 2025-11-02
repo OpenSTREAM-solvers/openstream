@@ -10,17 +10,24 @@ Overviews
 
 :cite:t:`LeCorre2025OpenSTREAM`
 
-.. bibliography:: ../my_bib.bib
+.. bibliography::
    :keywords: overview
+   :notcite:
    :style: plain
 
 
 Two-fluid model
 ---------------
 
+:cite:t:`Walter2024`
+
+:cite:t:`Walter2025`
+
+
 .. bibliography:: ../my_bib.bib
-   Walter2024
-   Walter2025
+   :keywords: overview
+   :notcite:
+   :style: plain
 
 
 Three-field model
