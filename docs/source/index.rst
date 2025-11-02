@@ -29,6 +29,7 @@
 
    /Applications/database
    /Applications/projects
+   /Applications/publications
 
 .. toctree::
    :maxdepth: 3

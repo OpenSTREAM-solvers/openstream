@@ -2,7 +2,7 @@
 Welcome
 ==========================================
 
-OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source computational environment for simulating one-dimensional, multi-field, two-phase flows, including phase change. It is designed to support efficient and collaborative model development, performance evaluation, and validation across users and institutions (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). 
+OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source, object-oriented computational environment for simulating one-dimensional, multi-field, two-phase flows, including wall boiling and interfacial phase change phenomena (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). 
 
 OpenSTREAM includes several solver frameworks:
 
@@ -11,15 +11,19 @@ OpenSTREAM includes several solver frameworks:
 - A **three-field solver** for annular two-phase flow
 - An advanced **four-field solver** for annular two-phase flow (:cite:t:`LECORREMODEL`)
 
-These solvers support single-component, thermally expandable, steady-state and transient boiling two-phase flows in single straight channels, developed under reasonable simplifying assumptions. Basic closure models have been implemented, subject to future improvements.
+These solvers support single-component, thermally expandable, steady-state and transient boiling two-phase flows in single straight channels, developed under reasonable simplifying assumptions. Basic closure models have been implemented, which can be customized by accessing and editing the relevant class methods in the source code.
 
-OpenSTREAM is aimed at facilitating access to two-phase flow simulation frameworks to support collaborative model development, performance evaluation, and validation across research institutions.
+OpenSTREAM is aimed at facilitating access to two-phase flow simulation frameworks to support efficient and collaborative model development, performance evaluation, and validation across research institutions.
 
-The purpose of this documentation is to fully describe the usage and thought-process behind the design of the program. 
+This documentation aims to explain the usage and design rationale of the program, guide users through installation and execution, and showcase typical applications.
 
 The PDF version of this manual can be found here: `OpenSTREAM.pdf <./files/OpenSTREAM.pdf>`_
 
 
+----
+
 .. bibliography:: 
    :filter: docname in docnames
+
+----
 
