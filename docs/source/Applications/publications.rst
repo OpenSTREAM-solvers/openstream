@@ -7,6 +7,7 @@ Overviews
 ---------
 
 .. bibliography:: my_bib.bib
+
    LeCorre2025ICMF
    LeCorre2025OpenSTREAM
 
@@ -15,6 +16,7 @@ Two-fluid model
 ---------------
 
 .. bibliography:: my_bib.bib
+
    Walter2024
    Walter2025
 
@@ -35,6 +37,7 @@ Three-field model
 	<p><a href="../_static/publications/Chan2025.pdf">Chan et al. 2025</a></p>
 
 .. bibliography:: my_bib.bib
+
    Dunbar2025
    Chan2025
 
@@ -43,6 +46,7 @@ Four-field model
 ----------------
 
 .. bibliography:: my_bib.bib
+
    Chan2025
 
 
