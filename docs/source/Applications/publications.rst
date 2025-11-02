@@ -11,9 +11,8 @@ Overviews
 :cite:t:`LeCorre2025OpenSTREAM`
 
 .. bibliography::
+   :filter: docname in docnames
    :keywords: overview
-   :notcite:
-   :style: plain
 
 
 Two-fluid model
@@ -24,10 +23,9 @@ Two-fluid model
 :cite:t:`Walter2025`
 
 
-.. bibliography:: ../my_bib.bib
+.. bibliography::
    :keywords: overview
    :notcite:
-   :style: plain
 
 
 Three-field model
@@ -45,7 +43,7 @@ Three-field model
 
 	<p><a href="../_static/publications/Chan2025.pdf">Chan et al. 2025</a></p>
 
-.. bibliography:: ../my_bib.bib
+.. bibliography::
    :filter: docname in docnames
 
 
