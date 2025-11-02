@@ -11,7 +11,6 @@ Overviews
 :cite:t:`LeCorre2025OpenSTREAM`
 
 .. bibliography::
-   :filter: docname in docnames
    :keywords: overview
 
 
@@ -52,6 +51,6 @@ Four-field model
 
 .. bibliography:: ../my_bib.bib
 
-   Chan2025
+   CMH+25
 
 
