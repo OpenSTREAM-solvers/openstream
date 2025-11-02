@@ -7,7 +7,7 @@ Overviews
 ---------
 
 .. bibliography:: ../my_bib.bib
-   :filter: LeCorre2025ICMF,LeCorre2025OpenSTREAM
+   :filter: 'overview' in entry.fields['keywords].render().lower()
    :style: plain
 
 
@@ -15,7 +15,6 @@ Two-fluid model
 ---------------
 
 .. bibliography:: ../my_bib.bib
-
    Walter2024
    Walter2025
 
