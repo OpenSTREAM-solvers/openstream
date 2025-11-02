@@ -35,7 +35,7 @@
    :maxdepth: 3
    :glob:
    :hidden:
-   :caption: Packages
+   :caption: Code packages
 
    /Packages/Inputs
    /Packages/InputEnums
@@ -46,7 +46,7 @@
    :maxdepth: 3
    :glob:
    :hidden:
-   :caption: External Packages
+   :caption: External packages
 
    /ExternalPackages/CoolPropWrapper
 
