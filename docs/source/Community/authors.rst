@@ -1,27 +1,33 @@
 Authors
 =======
 
-The **OpenSTREAM solvers** are the outcome of ongoing international collaborations that began in 2023 between Westinghouse Electric Sweden (WSE) and the University of Wisconsin–Madison (UWM). The initiative has since expanded to include contributions from the Royal Institute of Technology (KTH), the Massachusetts Institute of Technology (MIT), and ETH Zurich (ETHZ), with active involvement from MSc and PhD students, supported by their academic supervisors and code developpers, as part of their research and coursework. The collaboration continues to grow, aiming to engage additional academic and research institutions focused on advanced multiphase flow modeling and thermal-hydraulic simulation.
+The development of the **OpenSTREAM solvers** is the result of a dynamic and growing international collaboration that began in 2023 between **Westinghouse Electric Sweden (WSE)** and the **University of Wisconsin–Madison (UWM)**. Since then, the initiative has expanded to include contributions from the **Naval Nuclear Laboratory (NNL)**, the **Royal Institute of Technology (KTH)**, the **Massachusetts Institute of Technology (MIT)**, and the **Federal Institute of Technology Zurich (ETHZ)**.
 
-*Listed alphabetically in firstname, lastname order*
+This effort is driven by the active involvement of MSc and PhD students, supported by their academic supervisors and the OpenSTREAM code developers, as part of their research and coursework. The collaboration continues to grow, with the goal of engaging more academic and research institutions working on advanced multiphase flow modeling and thermal-hydraulic simulation.
+
+*Listed alphabetically by first name, last name.*
 
 Maintainers
 -----------
 
-- `Jason Chan <https://scholar.google.com/citations?user=NFodMKwAAAAJ>`_
-- `Jean-Marie Le Corre <www.linkedin.com/in/lecorrejm>`_
-- `Roman Morse <www.linkedin.com/in/roman-w-morse-1073a0177>`_
+These are the primary maintainers of OpenSTREAM, actively supporting development, reviewing contributions, and guiding the project forward:
+
+- `Jason Chan <https://scholar.google.com/citations?user=NFodMKwAAAAJ>`_ (UWM)
+- `Jean-Marie Le Corre <www.linkedin.com/in/lecorrejm>`_ (WSE)
+- `Roman Morse <www.linkedin.com/in/roman-w-morse-1073a0177>`_ (MIT)
   
 
 Contributors
 ------------
 
-- `Allison Mahvi <www.linkedin.com/in/allison-mahvi-30041164>`_
-- `Cole Dunbar <www.linkedin.com/in/cole-dunbar>`_
-- `Elisabeth Walter <www.linkedin.com/in/elisabeth-walter>`_
-- Evan Hurlburt
-- `Juliana Duarte <www.linkedin.com/in/julianapduarte>`_
-- Haipeng Li
-- `Tyler Lee <www.linkedin.com/in/tyler-lee-6072841b4>`_
+OpenSTREAM is built through the collaborative efforts of many talented individuals. Here are some of the contributors who have helped shape the project:
+
+- `Allison Mahvi <www.linkedin.com/in/allison-mahvi-30041164>`_ (UWM)
+- `Cole Dunbar <www.linkedin.com/in/cole-dunbar>`_ (UWM)
+- `Elisabeth Walter <www.linkedin.com/in/elisabeth-walter>`_ (ETHZ)
+- Evan Hurlburt (NNL)
+- `Juliana Duarte <www.linkedin.com/in/julianapduarte>`_ (UWM)
+- Haipeng Li (KTH)
+- `Tyler Lee <www.linkedin.com/in/tyler-lee-6072841b4>`_ (UWM)
   
-- You!
+- You! — Contributions are welcome. Join us and help improve OpenSTREAM!

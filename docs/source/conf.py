@@ -8,7 +8,8 @@
 
 project = 'OpenSTREAM'
 author = 'The OpenSTREAM Team'
-copyright = f'2025, {author}'
+import datetime
+copyright = f'2024–{datetime.datetime.now().year}, The OpenSTREAM Team'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
