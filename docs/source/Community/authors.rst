@@ -24,5 +24,4 @@ Contributors
 - Haipeng Li
 - `Tyler Lee <www.linkedin.com/in/tyler-lee-6072841b4>`_
 
-
 - You!
