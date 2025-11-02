@@ -7,7 +7,7 @@ Overviews
 ---------
 
 .. bibliography:: ../my_bib.bib
-   :filter: 'overview' in entry.fields['keywords].render().lower()
+   :filter: 'overview' in entry.fields['keywords'].render().lower()
    :style: plain
 
 
@@ -24,7 +24,7 @@ Three-field model
 
 :cite:t:`Dunbar2025`
 
-
+:cite:t:`Chan2025`
 
 .. raw:: html
 
