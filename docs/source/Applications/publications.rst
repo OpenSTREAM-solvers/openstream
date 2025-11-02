@@ -6,7 +6,7 @@ This page provides a curated list of publications in which the OpenSTREAM solver
 Overviews
 ---------
 
-.. bibliography:: my_bib.bib
+.. bibliography:: ../my_bib.bib
 
    LeCorre2025ICMF
    LeCorre2025OpenSTREAM
@@ -15,7 +15,7 @@ Overviews
 Two-fluid model
 ---------------
 
-.. bibliography:: my_bib.bib
+.. bibliography:: ../my_bib.bib
 
    Walter2024
    Walter2025
@@ -24,9 +24,9 @@ Two-fluid model
 Three-field model
 -----------------
 
-:cite:`Dunbar2025`
+:cite:t:`Dunbar2025`
 
-:cite:`Chan2025`
+:cite:t:`Chan2025`
 
 .. raw:: html
 
@@ -36,7 +36,7 @@ Three-field model
 
 	<p><a href="../_static/publications/Chan2025.pdf">Chan et al. 2025</a></p>
 
-.. bibliography:: my_bib.bib
+.. bibliography:: ../my_bib.bib
 
    Dunbar2025
    Chan2025
@@ -45,7 +45,7 @@ Three-field model
 Four-field model
 ----------------
 
-.. bibliography:: my_bib.bib
+.. bibliography:: ../my_bib.bib
 
    Chan2025
 
