@@ -109,7 +109,7 @@
              
   <section id="run-sample-script">
 <h1>Run sample script<a class="headerlink" href="#run-sample-script" title="Link to this heading"></a></h1>
-<p>At this point, you are ready to run the sample script. You will see some of the basic usages of  OpenSTREAM.</p>
+<p>You’re all set to launch your first simulation! To get started, run the sample script using the default Homogeneous Equilibrium Model (HEM). It’s the quickest and easiest way to start exploring what OpenSTREAM can do, and to confirm everything is working smoothly under the hood.</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Clear existing variables from workspace</span>
 <span class="nb">clearvars</span>
 
@@ -133,13 +133,10 @@
 <span class="c">% Create a mixture solver object</span>
 <span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
 
-<span class="c">% mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">initializeSolver</span><span class="p">();</span>
-
-<span class="c">% Solve (does not accept any argument)</span>
+<span class="c">% Solve</span>
 <span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
 
-<span class="c">% Axial plots</span>
+<span class="c">% Default axial plots</span>
 <span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">();</span>
 
 <span class="c">% Save results</span>
