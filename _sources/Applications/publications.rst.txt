@@ -7,7 +7,7 @@ Overviews
 ---------
 
 .. bibliography:: ../my_bib.bib
-   :filter: 'overview' in entry.fields['keywords'].render().lower()
+   :keywords: overview
    :style: plain
 
 
