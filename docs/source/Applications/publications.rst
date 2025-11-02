@@ -11,7 +11,7 @@ Overviews
 :cite:t:`LeCorre2025OpenSTREAM`
 
 .. bibliography::
-   :keywords: overview
+   :filter: keywords % "overview"
 
 
 Two-fluid model
@@ -49,8 +49,5 @@ Three-field model
 Four-field model
 ----------------
 
-.. bibliography:: ../my_bib.bib
-
-   CMH+25
 
 
