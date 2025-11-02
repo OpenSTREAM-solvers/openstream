@@ -184,6 +184,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opts.solveMode {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                  = 'REAL'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
+                opts.obstructions (1,1) logical                                                                                = false
                 opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'                
                 opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                             = 'flow'
                 opts.resize    (1,1) double {mustBeNonnegative}                                                                = 0
@@ -246,6 +247,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 vap = vaps(idx);
                 mix = mixs(idx);
 
+                klocZ = mix.KLOCZ(opts.zIdx);                              % [m] Elevations of obstructions
+
                 % Wall heat flux
                 if displayVariable({'HFLUX','ALL'})
                     plotter.addTile( ...
@@ -262,6 +265,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     end
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Mass flow rates
@@ -275,6 +281,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(vap.W(opts.zIdx) ,'Vapor'  );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Phase velocities
@@ -288,6 +297,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(vap.U(opts.zIdx) ,'Vapor'  );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Phase enthalpies
@@ -304,6 +316,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(repmat(fld(idx).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Vapor ratios (void fraction and qualities)
@@ -317,6 +332,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(vap.VF(liq,opts.zIdx),'VoidFraction','DisplayName','Void fraction'      )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Phase temperatures
@@ -331,6 +349,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.plotz(repmat(fld(idx).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Vapor and liquid mass exchanges
@@ -366,6 +387,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     for wallIdx = 1:length(ah_liq)
                         linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
                     end
+                    if opts.obstructions
+                        plotter.plotK(klocZ,ah_vap);
+                        plotter.plotK(klocZ,ah_liq);
+                    end
                 end
 
                 % Vapor and liquid momentum Exchanges
@@ -385,7 +410,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
-
+                    
                     ah_liq = plotter.addTile( ...
                         'tileTitle', 'Liquid momentum exchanges', ...
                         'xlabel',           'Axial position [m]', ...
@@ -400,11 +425,15 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
-
+                   
                     % Link exchange axes
                     % TODO: this can be a plotter method
                     for wallIdx = 1:length(ah_liq)
                         linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
+                    end
+                    if opts.obstructions
+                        plotter.plotK(klocZ,ah_vap);
+                        plotter.plotK(klocZ,ah_liq);
                     end
                 end
 
@@ -443,6 +472,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     for wallIdx = 1:length(ah_liq)
                         linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
                     end
+                    if opts.obstructions
+                        plotter.plotK(klocZ,ah_vap);
+                        plotter.plotK(klocZ,ah_liq);
+                    end
                 end
 
                 % Volumetric interfacial area
@@ -453,6 +486,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'ylabel'   ,    'Interfacial area [m^-^1]');
                     plotter.plotz(liq.INTAREA(vap,opts.zIdx),'Interfacial')
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Two-phase flow regimes
@@ -465,6 +501,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.ylabels(labels);
                     plotter.ylim([0 length(labels)+1]);
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
             end
 

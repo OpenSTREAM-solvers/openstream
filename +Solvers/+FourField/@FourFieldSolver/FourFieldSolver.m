@@ -269,15 +269,16 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         %
             arguments
                 ffSolver
-                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                                                          = []
-                opts.display     {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
-                opts.solveMode   {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                                       = 'REAL'
-                opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
-                opts.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
-                opts.annular     (1,1) logical                                                                                                        = true
-                opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                                                              = 'K'
-                opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                                                    = 'flow'
-                opts.resize      (1,1) double {mustBeNonnegative}                                                                                     = 0
+                tIdx              (:,1) double {mustBeInteger,mustBePositive}                                                                          = []
+                opts.display      {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
+                opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                                       = 'REAL'
+                opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
+                opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
+                opts.obstructions (1,1) logical                                                                                                        = false
+                opts.annular      (1,1) logical                                                                                                        = true
+                opts.unitTemp     {mustBeMember(opts.unitTemp,{'K','C'})}                                                                              = 'K'
+                opts.arrangement  {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                                                    = 'flow'
+                opts.resize       (1,1) double {mustBeNonnegative}                                                                                     = 0
             end
 
             if length(opts.zIdx) < 2
@@ -334,6 +335,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 drp = drps(idx);
                 mix = mixs(idx);
 
+                klocZ = mix.KLOCZ(opts.zIdx);                              % [m] Elevations of obstructions
+
                 if opts.annular
                     zaf    = z(z >= flm.mix.OAFZ);
                     zafIdx = opts.zIdx(opts.zIdx >= flm.mix.OAFIDX) - opts.zIdx(1) + 1;
@@ -355,6 +358,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Mass flow rates
@@ -373,6 +379,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Film WL
@@ -388,6 +397,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location',  'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Reynolds numbers
@@ -402,6 +414,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Field velocities
@@ -418,6 +433,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Film thicknesses
@@ -436,6 +454,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
                     %plotters.ylim([0 1E-3]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Wave frequencies
@@ -449,6 +470,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Wave axial lengths
@@ -462,6 +486,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Base film/Film ratios
@@ -477,8 +504,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.plotz(flm.base.FDRY(drp,opts.zIdx),'Base','DisplayName','Base dry time','XData',zaf,'subset',zafIdx);
                     plotter.legend("show", 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
-                    plotter.plotOAF(oafZ);
                     plotter.ylim([0 1]);
+                    plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Wave/Film ratios
@@ -494,8 +524,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.plotz(flm.wave.SHAPEFACTOR(opts.zIdx),'Wave'       ,'DisplayName','Shape','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
-                    plotter.plotOAF(oafZ);
                     plotter.ylim([0 1]);
+                    plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Base film and wave mass exchanges
@@ -530,6 +563,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     % TODO: this can be a plotter method
                     for wallIdx = 1:length(ah_base)
                         linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
+                    end
+                    if opts.obstructions
+                        plotter.plotK(klocZ,ah_base);
+                        plotter.plotK(klocZ,ah_wave);
                     end
                 end
 
@@ -571,6 +608,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     for wallIdx = 1:length(ah_base)
                         linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
                     end
+                    if opts.obstructions
+                        plotter.plotK(klocZ,ah_base);
+                        plotter.plotK(klocZ,ah_wave);
+                    end
                 end
 
                 % Drop momentum exchanges
@@ -587,12 +628,16 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
             end
 
             if opts.resize > 0
                 plotter.resizeFigure(opts.resize);
             end
+
         end
         
         function plotter = plott(ffSolver, zIdx, opt)

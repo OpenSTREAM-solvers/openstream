@@ -265,15 +265,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         %
             arguments
                 tfSolver
-                tIdx           (:,1) double {mustBeInteger,mustBePositive}                                         = []
-                opts.display   {mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
-                opts.solveMode {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                      = 'REAL'
-                opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
-                opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
-                opts.annular   (1,1) logical                                                                       = true
-                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                             = 'K'
-                opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                 = 'flow'
-                opts.resize    (1,1) double {mustBeNonnegative}                                                    = 0
+                tIdx              (:,1) double {mustBeInteger,mustBePositive}                                         = []
+                opts.display      {mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                      = 'REAL'
+                opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
+                opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
+                opts.obstructions (1,1) logical                                                                       = false
+                opts.annular      (1,1) logical                                                                       = true
+                opts.unitTemp     {mustBeMember(opts.unitTemp,{'K','C'})}                                             = 'K'
+                opts.arrangement  {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                   = 'flow'
+                opts.resize       (1,1) double {mustBeNonnegative}                                                    = 0
             end
             
             if length(opts.zIdx) < 2
@@ -331,6 +332,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 drp = drps(idx);
                 mix = mixs(idx);
 
+                klocZ = mix.KLOCZ(opts.zIdx);                              % [m] Elevations of obstructions
+
                 if opts.annular
                     zaf    = z(z >= flm.mix.OAFZ);
                     zafIdx = opts.zIdx(opts.zIdx >= flm.mix.OAFIDX) - opts.zIdx(1) + 1;
@@ -352,6 +355,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Mass flow rates
@@ -360,13 +366,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         'tileTitle',    'Field mass flow rates', ...
                         'xlabel',          'Axial position [m]', ...
                         'ylabel', 'Field mass flow rate [kg/s]');
-                    plotter.plotz(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                            );
+                    plotter.plotz(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                           );
                     plotter.plotz(drp.W(opts.zIdx)                           ,'Drop'  ,'XData',zaf,'subset',zafIdx);
                     plotter.plotz(flm.W(opts.zIdx,:)                         ,'Film'  ,'XData',zaf,'subset',zafIdx);
                     plotter.plotz(mix.vapor.W(opts.zIdx)                     ,'Vapor'                             );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Film WL
@@ -379,6 +388,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     %plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Field velocities
@@ -393,6 +405,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Film thickness
@@ -405,6 +420,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     %plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Film mass Exchange
@@ -420,6 +438,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Film momentum exchanges
@@ -437,6 +458,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
                 
                 % Drop momentum exchanges
@@ -453,6 +477,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
             end
 

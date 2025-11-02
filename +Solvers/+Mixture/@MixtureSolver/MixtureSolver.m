@@ -322,15 +322,16 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             arguments
                 mixSolver
-                tIdx             (:,1) double {mustBeInteger,mustBePositive}                                = []
-                opts.display     {mustBeMember(opts.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
-                opts.solveMode   {mustBeMember(opts.solveMode,{'REAL','NULL'})}                             = 'REAL'
-                opts.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.inputSet.geometry.NWALL
-                opts.zIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.NZ
-                opts.unitTemp    {mustBeMember(opts.unitTemp,{'K','C'})}                                    = 'K'
-                opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}          = 'flow'
-                opts.resize      (1,1) double {mustBeNonnegative}                                           = 0
-                opts.nearWall    (1,1) logical                                                              = false
+                tIdx              (:,1) double {mustBeInteger,mustBePositive}                                = []
+                opts.display      {mustBeMember(opts.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                             = 'REAL'
+                opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.inputSet.geometry.NWALL
+                opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.NZ
+                opts.obstructions (1,1) logical                                                              = false
+                opts.unitTemp     {mustBeMember(opts.unitTemp,{'K','C'})}                                    = 'K'
+                opts.arrangement  {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}          = 'flow'
+                opts.resize       (1,1) double {mustBeNonnegative}                                           = 0
+                opts.nearWall     (1,1) logical                                                              = false
             end
 
             if length(opts.zIdx) < 2
@@ -388,6 +389,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
                 mix = mixs(idx);
 
+                klocZ = mix.KLOCZ(opts.zIdx);                              % [m] Elevations of obstructions
+
                 % Wall heat flux
                 if displayVariable({'HFLUX','ALL'})
                     plotter.addTile( ...
@@ -404,16 +407,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     if model.CBT ~= InputEnums.CBT.NONE
                         plotter.plotz(mix.CHF(opts.zIdx)               ,'CHF'                                         );
                     end
-
                     if opts.nearWall
                         plotter.plotz(mix.NEARWALL.HFLUX(opts.zIdx,:)    ,'NearWall','DisplayName','Near-wall heat flux to bulk');
                     end
-
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                     plotter.ylim([ymin ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
 
@@ -435,6 +439,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.ylim([ymin ymax]);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Pressure drops
@@ -451,6 +458,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.DPSUM.Tot(opts.zIdx)  ,'Total'                             )
                     plotter.legend('show', "Location", 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Velocities
@@ -464,6 +474,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.vapor.U(opts.zIdx) ,'Vapor'  )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Hydrodynamic accelerations
@@ -477,6 +490,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.MDER.U(opts.zIdx)  ,'Mixture'                     )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Enthalpies
@@ -492,12 +508,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.RELAXATION && geom.NWALL > 1
                         plotter.plotz(mix.TRELAX.HV(opts.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
                     end
-
                     if opts.nearWall
                         plotter.plotz(mix.NEARWALL.H(opts.zIdx,:)     ,'NearWall','DisplayName','Near-wall equilibrium quality');
                         plotter.plotz(mix.NEARWALL.HBULK(opts.zIdx,:) ,'Bulk'    ,'DisplayName','Bulk equilibrium quality');
                     end
-
                     plotter.plotz(repmat(fld(idx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
                     plotter.plotz(repmat(fld(idx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor');
                     plotter.legend('show', 'Location', 'best');
@@ -505,6 +519,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                     plotter.ylim([ymin ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Rates of change of enthalpy
@@ -518,6 +535,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.MDER.H(opts.zIdx)  ,'Mixture'                     )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Vapor ratios (void fraction and qualities)
@@ -540,6 +560,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                     plotter.ylim([ymin ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Temperatures
@@ -559,6 +582,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                     plotter.ylim([ymin ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Mass exchanges
@@ -576,6 +602,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Energy exchanges
@@ -594,10 +623,13 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
 
                 % Time relaxations
-                if displayVariable({'TRELAX'})
+                if displayVariable({'TRELAX','ALL'}) && (ismember('RELAXATION', model.THERMALNONEQ) || opts.nearWall)
                     plotter.addTile( ...
                         'tileTitle',    'Time relaxations', ...
                         'xlabel'   ,  'Axial position [m]', ...
@@ -614,12 +646,26 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
                     plotter.ylim([ymin ymax]);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
                 end
             end
 
             if opts.resize > 0
                 plotter.resizeFigure(opts.resize);
             end
+
+            % Global indication of obstructions (in progress)
+            % %if opts.obstructions
+            %     fh = arrayfun(@(p) p.gcf,plotter);
+            %     ahs = arrayfun(@(fh) findall(fh, 'Type', 'axes'),fh,'uni',0);
+            %     for i = 1:length(ahs{1})
+            %         ah = cellfun(@(ah) ah(i),ahs);
+            %         ah
+            %         plotter.plotK(klocZ,ah)
+            %     end
+            % %end
         end
 
         function plotter = plott(mixSolver, zIdx, opt)

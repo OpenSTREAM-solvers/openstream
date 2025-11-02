@@ -339,7 +339,7 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function kdist = KDIST(mix,zIdx)
-            %KDIST Distance from upstream spacer (or from inlet)
+            %KDIST Distance from upstream obstruction (or from inlet)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -347,6 +347,18 @@ classdef Mixture < Solvers.AbstractField
 
             dz = arrayfun(@(k) mix.Z(k)-[0 model.KLOC],zIdx,'uni',0);
             kdist = cellfun(@(dz) min(dz(dz>=0)),dz);                      % [m]
+        end
+
+        function klocz = KLOCZ(mix,zIdx)
+            %KLOCZ Obstruction positions [m]
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            model = mix.inputSet.model;
+
+            [~,ind] = min(abs(mix.Z-model.KLOC));                          % Find local loss elevation indexes (closest node)
+            ind = ind(ismember(ind,zIdx));
+            klocz = mix.Z(ind);
         end
 
     end

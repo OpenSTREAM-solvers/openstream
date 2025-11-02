@@ -532,6 +532,7 @@ classdef SolverPlotter < handle
                 opts.plotOptions    = {}
                 opts.XData          = []
                 opts.yyaxis
+                opts.axisHandle     = plotters.gca()
             end
             
             % Check if Zs are set
@@ -551,7 +552,7 @@ classdef SolverPlotter < handle
                 plotter = plotters(idx);
 
                 % Current axes
-                ah = plotter.gca();
+                ah = opts.axisHandle(idx);
 
                 %Restore Ydata
                 YData = YData0;
@@ -594,7 +595,7 @@ classdef SolverPlotter < handle
 
                         % Update YData
                         if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                            YData= ylim(ah);
+                            YData = ylim(ah);
                         elseif isvector(YData)
                             YData = YData(opts.subset);
                         else
@@ -667,15 +668,36 @@ classdef SolverPlotter < handle
             end
         end
 
-        function plotOAF(plotters, oafIdx)
+        function plotOAF(plotters, oafZ)
             %PLOTOAF Method to plot onset of annular flow boundary indicator
 
-            if isscalar(oafIdx)
-                oafIdx = repmat(oafIdx, 1, 2);
+            if isscalar(oafZ)
+                oafZ = repmat(oafZ, 1, 2);
             end
             plotters.plotz('ylim', 'OAF', ...
-                           'XData',oafIdx, ...
+                           'XData',oafZ, ...
                            'plotOptions', {'handleVisibility','off'});
+        end
+
+        function plotK(plotters, klocZ, ah)
+            % PLOTK Method to plot obstruction elevation indicators
+
+            if nargin < 3, ah = plotters.gca(); end
+
+            % Ensure klocZ is a row vector
+            klocZ = klocZ(:)';
+
+            % Get current Y-axis limits
+            yl = plotters.ylim;
+
+            % Prepare X and Y data for vertical lines with NaN separators
+            xdata = reshape([klocZ; klocZ; nan(size(klocZ))], 1, [])';
+            ydata = repmat([yl, nan(length(plotters),1)], 1, numel(klocZ))';
+
+            % Plot vertical lines
+            plotters.plotz(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
+                'XData', xdata, 'subset', 1:numel(xdata), ...
+                'plotOptions', {'handleVisibility', 'off'});
         end
 
         function ahs = gca(plotters)
@@ -701,7 +723,7 @@ classdef SolverPlotter < handle
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
                 if nargin < 2
-                    out(idx) = xlim(plotter.ahs(plotter.currentAhIdx));
+                    out(idx,:) = xlim(plotter.ahs(plotter.currentAhIdx));
                 else
                     xlim(plotter.ahs(plotter.currentAhIdx), newLim);
                 end
@@ -715,7 +737,7 @@ classdef SolverPlotter < handle
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
                 if nargin < 2
-                    out(idx) = ylim(plotter.ahs(plotter.currentAhIdx));
+                    out(idx,:) = ylim(plotter.ahs(plotter.currentAhIdx));
                 else
                     ylim(plotter.ahs(plotter.currentAhIdx), newLim);
                 end
@@ -766,45 +788,49 @@ classdef SolverPlotter < handle
                 scaleFactor = 1; % default
             end
 
-            % Get current figure from plotter
-            fig = plotters.fh;
+            for k = 1:length(plotters)
 
-            % Find tiledlayout object
-            layouts = findall(fig, 'Type', 'tiledlayout');
-            if isempty(layouts)
-                error('No tiledlayout found in the current figure.');
-            end
-            t = layouts(1);
+                % Get current figure from plotter
+                fig = plotters(k).fh;
 
-            % Get rows and columns
-            nRows = t.GridSize(1);
-            nCols = t.GridSize(2);
+                % Find tiledlayout object
+                layouts = findall(fig, 'Type', 'tiledlayout');
+                if isempty(layouts)
+                    error('No tiledlayout found in the current figure.');
+                end
+                t = layouts(1);
 
-            % Base size per tile
-            tileWidth = 600 * scaleFactor;
-            tileHeight = 450 * scaleFactor;
+                % Get rows and columns
+                nRows = t.GridSize(1);
+                nCols = t.GridSize(2);
 
-            % Compute new size
-            newWidth = tileWidth * nCols;
-            newHeight = tileHeight * nRows;
+                % Base size per tile
+                tileWidth = 600 * scaleFactor;
+                tileHeight = 450 * scaleFactor;
 
-            % Get screen size
-            screenSize = get(0, 'ScreenSize'); % [left bottom width height]
-            screenWidth = screenSize(3);
-            screenHeight = screenSize(4);
+                % Compute new size
+                newWidth = tileWidth * nCols;
+                newHeight = tileHeight * nRows;
 
-            % Current position
-            pos = fig.Position;
-            top = pos(2) + pos(4); % current top
+                % Get screen size
+                screenSize = get(0, 'ScreenSize'); % [left bottom width height]
+                screenWidth = screenSize(3);
+                screenHeight = screenSize(4);
 
-            if newWidth > screenWidth || newHeight > screenHeight
-                % Full-screen mode
-                fig.Units = 'normalized';
-                fig.OuterPosition = [0 0 1 1];
-            else
-                % Keep top-left fixed
-                newBottom = top - newHeight;
-                fig.Position = [pos(1), newBottom, newWidth, newHeight];
+                % Current position
+                pos = fig.Position;
+                top = pos(2) + pos(4); % current top
+
+                if newWidth > screenWidth || newHeight > screenHeight
+                    % Full-screen mode
+                    fig.Units = 'normalized';
+                    fig.OuterPosition = [0 0 1 1];
+                else
+                    % Keep top-left fixed
+                    newBottom = top - newHeight;
+                    fig.Position = [pos(1), newBottom, newWidth, newHeight];
+                end
+                
             end
         end
 
@@ -817,7 +843,7 @@ classdef SolverPlotter < handle
         %FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)
             
             % Default colors
-            colors = ["#0072BD","#D95319","#EDB120","#7E2F8E","#77AC30","#4DBEEE","#A2142F"];
+            colors = ["#0072BD","#D95319","#EDB120","#7E2F8E","#77AC30","#4DBEEE","#A2142F","#808080"];
             
             switch upper(fieldName)
                 
@@ -826,17 +852,19 @@ classdef SolverPlotter < handle
                 case {'TIME', 'T'}
                     plotStyle = {colors(3), '-', '+'};
                 case {'SATURATION'}
-                    plotStyle = {colors(1), '--', 'none'};    
+                    plotStyle = {colors(1), '--', 'none'};
                 case {'SATLIQ'}
-                    plotStyle = {colors(2), '--', 'none'};    
+                    plotStyle = {colors(2), '--', 'none'};
                 case {'SATVAP'}
-                    plotStyle = {colors(1), '--', 'none' };    
+                    plotStyle = {colors(1), '--', 'none' };
+                case {'OBSTRUCTION'}
+                    plotStyle = {colors(8), '--', '.'};
                     
                 % Mixture solver
                 case {'MIX', 'MIXTURE'}
                     plotStyle = {colors(7), '-', 's'};
                 case {'LIQUID+VAPOR', 'VAPOR+LIQUID'}
-                    plotStyle = {colors(7), '--', '+'};   
+                    plotStyle = {colors(7), '--', '+'};
                 case {'MIXLIQ', 'MIXTURELIQUID', 'LIQUID'}
                     plotStyle = {colors(2), '-', '.'};
                 case {'VAP', 'VAPOR'}
@@ -870,7 +898,7 @@ classdef SolverPlotter < handle
                 case {'LOCAL'}
                     plotStyle = {'black', '--', '.'};
                 case {'CHF', 'CBT'}
-                    plotStyle = {colors(7), '--', '+'};       
+                    plotStyle = {colors(7), '--', '+'};
                     
                 % Two-fluid solver
                 case {'INTERFACIAL'}
@@ -878,7 +906,7 @@ classdef SolverPlotter < handle
                 case {'INTERFACIALEVAP'}
                     plotStyle = {colors(1), '-', '.'};
                 case {'INTERFACIALCOND'}
-                    plotStyle = {colors(2), '-', '.'};  
+                    plotStyle = {colors(2), '-', '.'};
                 
                 % Three-field solver
                 case {'OAF'}
@@ -900,13 +928,13 @@ classdef SolverPlotter < handle
                 case {'BASE'}
                     plotStyle = {colors(3), '--', '.'};
                 case {'BASE MIN','BASEMIN','BASEMASS'}
-                    plotStyle = {colors(3), '--', 'none'};    
+                    plotStyle = {colors(3), '--', 'none'};
                 case {'EQBASE', 'BASEEQ', 'BASE EQ'}
                     plotStyle = {colors(3), '--', '^'};
                 case {'WAVE'}
                     plotStyle = {colors(4), '--', '.'};
                 case {'WAVEMASS'}
-                    plotStyle = {colors(4), '--', 'none'};    
+                    plotStyle = {colors(4), '--', 'none'};
                 case {'EQWAVE', 'WAVEEQ', 'WAVE EQ'}
                     plotStyle = {colors(4), '--', '^'};
                 case {'WAVEAMP', 'WAVE AMP'}
