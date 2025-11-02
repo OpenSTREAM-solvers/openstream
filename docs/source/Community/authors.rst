@@ -1,7 +1,7 @@
 Authors
 =======
 
-OpenSTREAM is the result of ongoing international collaborations initiated in 2023 between Westinghouse Electric Sweden (WSE) and the University of Wisconsin–Madison (UWM). The initiative has since grown to include contributions from the Royal Institute of Technology (KTH), the Massachusetts Institute of Technology (MIT), and the Federal Institute of Technology Zurich (ETHZ). The collaboration aims to further expand to additional academic and research institutions engaged in advanced multiphase flow modeling and thermal-hydraulic simulations.
+OpenSTREAM is the result of ongoing international collaborations that began in 2023 between Westinghouse Electric Sweden (WSE) and the University of Wisconsin–Madison (UWM). The initiative has since expanded to include contributions from the Royal Institute of Technology (KTH), the Massachusetts Institute of Technology (MIT), and ETH Zurich (ETHZ), with active involvement from MSc and PhD students as part of their academic and research activities. The collaboration continues to grow, aiming to engage additional academic and research institutions focused on advanced multiphase flow modeling and thermal-hydraulic simulation.
 
 *Listed alphabetically in firstname, lastname order*
 

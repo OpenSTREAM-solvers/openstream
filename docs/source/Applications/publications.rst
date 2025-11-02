@@ -6,11 +6,12 @@ This page provides a curated list of publications in which the OpenSTREAM solver
 Overviews
 ---------
 
+:cite:t:`LeCorre2025ICMF`
 
+:cite:t:`LeCorre2025OpenSTREAM`
 
 .. bibliography:: ../my_bib.bib
    :keywords: overview
-   :notcite:
    :style: plain
 
 
