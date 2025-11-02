@@ -16,7 +16,6 @@ Two-fluid model
 
 .. bibliography::
    :filter: keywords % "twofluid"
-   :notcite:
    :style: plain
 
 
@@ -25,12 +24,11 @@ Three-field model
 
 .. bibliography::
    :filter: keywords % "threefield"
-   :notcite:
+   :style: plain
 
 Four-field model
 ----------------
 
 .. bibliography::
    :filter: keywords % "fourfield"
-   :notcite:
-
+   :style: plain
