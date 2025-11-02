@@ -24,7 +24,7 @@ Three-field model
 
 :cite:t:`Dunbar2025`
 
-:cite:t:`Chan2025`
+
 
 .. raw:: html
 
