@@ -7,18 +7,16 @@ Overviews
 ---------
 
 .. bibliography:: 
-   :filter: LeCorre2025ICMF,LeCorre2025OpenSTREAM
-   :notcite:
-   :style: plain
+   LeCorre2025ICMF
+   LeCorre2025OpenSTREAM
 
 
 Two-fluid model
 ---------------
 
 .. bibliography:: 
-   :filter: Walter2024,Walter2025
-   :notcite:
-   :style: plain
+   Walter2024
+   Walter2025
 
 
 Three-field model
@@ -26,7 +24,7 @@ Three-field model
 
 :cite:`Dunbar2025`
 
-:cite:`Chan2025
+:cite:`Chan2025'
 
 .. raw:: html
 
@@ -37,16 +35,14 @@ Three-field model
 	<p><a href="../_static/publications/Chan2025.pdf">Chan et al. 2025</a></p>
 
 .. bibliography:: 
-   :filter: Dunbar2025,Chan2025
-   :style: plain
+   Dunbar2025
+   Chan2025
 
 
 Four-field model
 ----------------
 
 .. bibliography:: 
-   :filter: Chan2025
-   :notcite:
-   :style: plain
+   Chan2025
 
 
