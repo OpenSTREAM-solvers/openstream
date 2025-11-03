@@ -14,9 +14,9 @@ Explore the available solver frameworks:
    /Packages/Solvers-ThreeField
    /Packages/Solvers-FourField
 
-----
-
 The associated superclasses, along with their respective properties and methods, are listed below.
+
+----
 
 .. automodule:: Solvers
    :show-inheritance:

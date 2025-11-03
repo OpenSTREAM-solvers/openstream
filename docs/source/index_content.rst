@@ -2,7 +2,7 @@
 Welcome
 =======
 
-OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source, object-oriented computational environment designed for simulating one-dimensional, multi-field, two-phase flows. It supports phenomena such as wall boiling and interfacial phase change, making it a relevant tool for researchers working in thermal-hydraulics and two-phase flow systems (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). 
+OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source, object-oriented computational environment designed for simulating one-dimensional, multi-field, two-phase flows in straigth geometries (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). It supports phenomena such as wall boiling, phase interactions and non-equilibrium effects, making it a relevant tool for researchers working in thermal-hydraulics and two-phase flow systems. 
 
 What's inside?
 --------------
@@ -19,7 +19,7 @@ These solvers are designed to handle single-component, thermally expandable, ste
 Why OpenSTREAM?
 ---------------
 
-OpenSTREAM is built to lower the barrier to entry for two-phase flow simulations and modeling. Whether you're a researcher or student, the platform supports collaborative model development, performance evaluation, and validation across institutions. It’s a flexible, extensible environment for advancing the state of the art in multiphase flow modeling.
+OpenSTREAM is built to lower the barrier to entry for developing and validating fundamental models in two-phase flow simulations, making advanced thermal-hydraulic research more accessible to engineers and scientists. Whether you're a researcher or student, the platform supports collaborative model development, performance evaluation, and validation across institutions. It’s a flexible, extensible environment for advancing the state of the art in multiphase flow modeling.
 
 About this documentation
 ------------------------

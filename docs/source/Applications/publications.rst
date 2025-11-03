@@ -1,7 +1,7 @@
 Publications
 ============
 
-This page features a curated list of publications where the **OpenSTREAM solvers** have been documented, developed, or applied to research activities in multiphase flow simulation and thermal-hydraulic modeling. Whether you're looking for foundational papers or recent applications, this is the place to explore how OpenSTREAM is contributing to the scientific community.
+This page features a curated list of publications where the **OpenSTREAM solvers** have been documented, developed, or applied to research activities in multiphase flow simulation and thermal-hydraulic modeling.
 
 ----
 
