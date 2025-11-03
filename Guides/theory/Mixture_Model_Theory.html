@@ -127,33 +127,44 @@
              
   <section id="mixture-model">
 <h1>Mixture model<a class="headerlink" href="#mixture-model" title="Link to this heading"></a></h1>
-<p>The Mixture Simulation Framework in OpenSTREAM is based on a simplified three-equation model that assumes a single mixture phase with averaged properties. It is primarily used for initialization and robust steady-state predictions under homogeneous equilibrium assumptions.</p>
+<p>The Mixture Simulation Framework in <strong>OpenSTREAM</strong> provides a simplified yet powerful approach to modeling two-phase flows. Based on a three-equation formulation, it treats the phases as a single continuum with averaged properties. This abstraction enables efficient simulation of systems where phase separation is minimal or where a fully resolved multi-field model is not required.</p>
+<p>The mixture model serves two key roles within OpenSTREAM:</p>
+<ul class="simple">
+<li><p>Robust initialization for more complex solvers, ensuring robust starting conditions.</p></li>
+<li><p>Efficient simulation of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.</p></li>
+</ul>
+<p>In addition, a Homogeneous Relaxation Model (HRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.</p>
+<p>By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p>The mixture model solves the following conservation equations:</p>
 <p><strong>1. Mass conservation</strong></p>
-<p><span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W u) + \frac{\partial W}{\partial z} = 0\)</span></p>
-<p>Where:</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W}{u}) + \frac{\partial W}{\partial z} = 0\)</span></p>
+<p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(W\)</span> is the mixture mass flow rate</p></li>
 <li><p><span class="math notranslate nohighlight">\(u\)</span> is the mixture velocity</p></li>
 </ul>
 <p><strong>2. Momentum conservation</strong></p>
-<p><span class="math notranslate nohighlight">\(\rho A \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z} = -A \frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho - \Pi_p \tau_{wall}\)</span></p>
-<p>Where:</p>
+<p><span class="math notranslate nohighlight">\(\rho A (\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z}) = -A (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho) - \sum \Pi_w^n {\tau}_w^n\)</span></p>
+<p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\rho\)</span> is the mixture density</p></li>
 <li><p><span class="math notranslate nohighlight">\(A\)</span> is the cross-sectional area</p></li>
-<li><p><span class="math notranslate nohighlight">\(p\)</span> is pressure</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span> is the pressure</p></li>
 <li><p><span class="math notranslate nohighlight">\(K\)</span> relates to obstruction form loss</p></li>
-<li><p><span class="math notranslate nohighlight">\(\tau_{wall}\)</span> is wall shear stress</p></li>
+<li><p><span class="math notranslate nohighlight">\(\theta\)</span> is the inclination angle</p></li>
+<li><p><span class="math notranslate nohighlight">\(g\)</span> is the gravitational acceleration</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is the wall index</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pi_w^n\)</span> is the wall perimeter for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_w^n\)</span> is wall shear stress for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 <p><strong>3. Energy conservation</strong></p>
-<p><span class="math notranslate nohighlight">\(\rho A \frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z} = \sum \Pi_p^n {q^{\prime\prime}}_{wall}^n\)</span></p>
-<p>Where:</p>
+<p><span class="math notranslate nohighlight">\(\rho A (\frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z}) = \sum \Pi_p^n {q^{\prime\prime}}_w^n\)</span></p>
+<p>where:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(h\)</span> is mixture enthalpy</p></li>
-<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall}^n\)</span> is wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(h\)</span> is the mixture enthalpy</p></li>
+<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_w^n\)</span> is the wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 <p><strong>4. Homogeneous relaxation model</strong></p>
 <p><em>Coming soon</em></p>
@@ -161,34 +172,46 @@
 <section id="features-and-assumptions">
 <h2>Features and Assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Supports steady-state and transient simulations</p></li>
-<li><p>Can include subcooled boiling via constitutive models</p></li>
-<li><p>Allows phase velocity slip via drift flux models</p></li>
-<li><p>Neglects surface tension, frictional heating, and pressure gradients in saturated enthalpy</p></li>
+<li><p>Supports both steady-state and transient simulations</p></li>
+<li><p>Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or HRM</p></li>
+<li><p>Allows phase velocity slip using drift flux models</p></li>
+<li><p>Neglects minor contributions such as frictional heating and temporal pressure gradient contributions</p></li>
 </ul>
 </section>
 <section id="implementation-notes">
 <h2>Implementation Notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>The mixture solver is implemented in the class:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code></p></li>
+<p>Package</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers.html#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a></p></li>
 </ul>
-</dd>
-<dt>Key methods:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.solve()</span></code></p></li>
+<p>Module</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a></p></li>
 </ul>
-</dd>
-<dt>Key properties:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.P</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.H</span></code></p></li>
+<p>Mixture solver class</p>
+<ul class="simple">
+<li><p><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></p></li>
 </ul>
-</dd>
-</dl>
+<p>Field and phases classes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Liquid" title="Solvers.Mixture.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Liquid</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Vapor" title="Solvers.Mixture.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Vapor</span></code></a></p></li>
+</ul>
+<p>Key solver methods</p>
+<ul class="simple">
+<li><p><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.Mixture.solve()</span></code></p></li>
+</ul>
+<p>Key field properties:</p>
+<ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.Mixture.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.Mixture.P</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.Mixture.H</span></code></p></li>
+</ul>
 </section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
-<p>The mixture model provides a robust initialization for more complex solvers (e.g., two-fluid, three-field, four-field). Its pressure gradient solution is reused across all frameworks to improve numerical stability.</p>
+<p>The mixture model provides a robust initialization framework for more complex solvers (i.e., two-fluid, three-field, four-field). For now, its pressure gradient solution is reused across all frameworks to enhance robusness and numerical stability.</p>
 <hr class="docutils" />
 </section>
 </section>
