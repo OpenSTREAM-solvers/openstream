@@ -1,11 +1,13 @@
 Authors
 =======
 
-The development of the **OpenSTREAM solvers** is the result of a dynamic and growing international collaboration that began in 2023 between **Westinghouse Electric Sweden (WSE)** and the **University of Wisconsin–Madison (UWM)**. Since then, the initiative has expanded to include contributions from the **Naval Nuclear Laboratory (NNL)**, the **Royal Institute of Technology (KTH)**, the **Massachusetts Institute of Technology (MIT)**, and the **Federal Institute of Technology Zurich (ETHZ)**.
+The development of the **OpenSTREAM solvers** is the result of a dynamic and growing international collaboration that began in 2023 between **Westinghouse Electric Sweden** (WSE) and the **University of Wisconsin–Madison** (UWM). Since then, the initiative has expanded to include contributions from the **Naval Nuclear Laboratory** (NNL), the **Royal Institute of Technology** (KTH), the **Massachusetts Institute of Technology** (MIT), and the **Federal Institute of Technology Zurich** (ETHZ).
 
-This effort is driven by the active involvement of MSc and PhD students, supported by their academic supervisors and the OpenSTREAM code developers, as part of their research and coursework. The collaboration continues to grow, with the goal of engaging more academic and research institutions working on advanced multiphase flow modeling and thermal-hydraulic simulation.
+This effort is driven by the OpenSTREAM code development team, with active contributions from MSc and PhD students as part of their research and coursework under the guidance of their academic supervisors. The collaboration continues to grow, with the goal of engaging more academic and research institutions working on advanced multiphase flow modeling and thermal-hydraulic simulation.
 
-*Listed alphabetically by first name, last name.*
+----
+
+*Maintainers and contributors listed alphabetically by first name, last name.*
 
 Maintainers
 -----------
@@ -29,5 +31,7 @@ OpenSTREAM is built through the collaborative efforts of many talented individua
 - `Juliana Duarte <www.linkedin.com/in/julianapduarte>`_ (UWM)
 - Haipeng Li (KTH)
 - `Tyler Lee <www.linkedin.com/in/tyler-lee-6072841b4>`_ (UWM)
-  
+
+..
+
 - You! — Contributions are welcome. Join us and help improve OpenSTREAM!

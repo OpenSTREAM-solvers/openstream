@@ -3,7 +3,7 @@ Tutorials
 
 Ready to get hands-on with **OpenSTREAM**? These tutorials walk you through everything from basic functionality to advanced simulation features—step by step.
 
-Each tutorial is provided as a MATLAB LiveScript in the ``tutorials`` folder, so you can run and modify them directly. Completed versions are also available below as HTML documents for quick reference.
+Each tutorial is provided as a MATLAB LiveScript in the OpenSTREAM ``tutorials`` folder, so you can run and modify them directly. Completed versions are also available below as HTML documents for quick reference.
 
 .. raw:: html
 
