@@ -200,27 +200,40 @@
 <hr class="docutils" />
 <section id="implementation-notes">
 <h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<p>Package
-- <a class="reference internal" href="../../Packages/Solvers.html#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a></p>
-<p>Module
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#module-Solvers.TwoFluid" title="Solvers.TwoFluid"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.TwoFluid</span></code></a></p>
-<p>Mixture solver class
-- <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></p>
-<p>Phase classes
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a>
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a></p>
-<p>Flow regime enumeration class
-- <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.REGIME</span></code></p>
-<p>Key solver methods
-- <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.Mixture.solve()</span></code></p>
-<p>Key field properties:
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.W" title="Solvers.TwoFluid.Liquid.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.W</span></code></a>
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.U" title="Solvers.TwoFluid.Liquid.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.U</span></code></a>
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.H" title="Solvers.TwoFluid.Liquid.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.H</span></code></a>
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.W" title="Solvers.TwoFluid.Vapor.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.W</span></code></a>
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.U" title="Solvers.TwoFluid.Vapor.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.U</span></code></a>
-- <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.H" title="Solvers.TwoFluid.Vapor.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.H</span></code></a></p>
-<hr class="docutils" />
+<p>Package</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers.html#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a></p></li>
+</ul>
+<p>Module</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#module-Solvers.TwoFluid" title="Solvers.TwoFluid"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.TwoFluid</span></code></a></p></li>
+</ul>
+<p>Two-fluid solver class</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a></p></li>
+</ul>
+<p>Phase classes</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a></p></li>
+</ul>
+<p>Flow regime enumeration class</p>
+<ul class="simple">
+<li><p><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.REGIME</span></code></p></li>
+</ul>
+<p>Key solver methods</p>
+<ul class="simple">
+<li><p><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.Mixture.solve()</span></code></p></li>
+</ul>
+<p>Key field properties:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.W" title="Solvers.TwoFluid.Liquid.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.U" title="Solvers.TwoFluid.Liquid.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.U</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.H" title="Solvers.TwoFluid.Liquid.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.H</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.W" title="Solvers.TwoFluid.Vapor.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.U" title="Solvers.TwoFluid.Vapor.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.U</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.H" title="Solvers.TwoFluid.Vapor.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.H</span></code></a></p></li>
+</ul>
 </section>
 </section>
 

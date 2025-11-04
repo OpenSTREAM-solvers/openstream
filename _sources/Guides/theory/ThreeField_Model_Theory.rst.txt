@@ -60,5 +60,3 @@ Role in OpenSTREAM
 ------------------
 
 The three-field model is used for advanced boiling water reactor (BWR) simulations and subchannel analysis. It provides detailed modeling of liquid film and droplet dynamics in annular flow regimes.
-
-----

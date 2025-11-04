@@ -49,4 +49,3 @@ Model summaries
 ----
 
 For detailed equations, derivations, and implementation notes, check out the individual theory pages linked above. Ready to dive deeper? Pick a model and start exploring!
-

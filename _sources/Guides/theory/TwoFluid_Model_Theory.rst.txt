@@ -90,30 +90,35 @@ Implementation notes
 --------------------
 
 Package
+
 - :mod:`Solvers`
 
 Module
+
 - :mod:`Solvers.TwoFluid`
 
-Mixture solver class
+Two-fluid solver class
+
 - :class:`Solvers.TwoFluid.TwoFluidSolver`
 
 Phase classes
+
 - :class:`Solvers.TwoFluid.Liquid`
 - :class:`Solvers.TwoFluid.Vapor`
 
 Flow regime enumeration class
+
 - :class:`Solvers.TwoFluid.REGIME`
 
 Key solver methods
+
 - :meth:`Solvers.TwoFluid.TwoFluidSolver.Mixture.solve()`
 
 Key field properties:
+
 - :attr:`Solvers.TwoFluid.Liquid.W`
 - :attr:`Solvers.TwoFluid.Liquid.U`
 - :attr:`Solvers.TwoFluid.Liquid.H`
 - :attr:`Solvers.TwoFluid.Vapor.W`
 - :attr:`Solvers.TwoFluid.Vapor.U`
 - :attr:`Solvers.TwoFluid.Vapor.H`
-
-----

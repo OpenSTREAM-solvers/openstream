@@ -108,10 +108,107 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-Solvers.ThreeField">
-<span id="three-field-solver"></span><h1>Three-field solver<a class="headerlink" href="#module-Solvers.ThreeField" title="Link to this heading"></a></h1>
+  <section id="three-field-solver">
+<h1>Three-field solver<a class="headerlink" href="#three-field-solver" title="Link to this heading"></a></h1>
 <p><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">ThreeField</span> <span class="pre">Solver</span></code> defines a set of solver and field classes related to the three-field approach.</p>
-<dl class="mat class">
+<hr class="docutils" />
+<dl class="mat class" id="module-Solvers.ThreeField.ThreeFieldSolver">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.</span></span><span class="sig-name descname"><span class="pre">ThreeFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p>
+<p>THREEFIELDSOLVER defines any task related to initalizing, solving and plotting the results based on the three-field approach.</p>
+<p>TODO: Detailed explanations</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.ThreeFieldSolver">
+<span class="sig-name descname"><span class="pre">ThreeFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.ThreeFieldSolver" title="Link to this definition"></a></dt>
+<dd><p>THREEFIELDSOLVER Creates a ThreeField solver
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.NZ" title="Link to this definition"></a></dt>
+<dd><p>Number of axial steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.NTIME" title="Link to this definition"></a></dt>
+<dd><p>Number of time steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time series [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.DT" title="Link to this definition"></a></dt>
+<dd><p>Time step size [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.Z" title="Link to this definition"></a></dt>
+<dd><p>Elevation [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.DZ">
+<span class="sig-name descname"><span class="pre">DZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.DZ" title="Link to this definition"></a></dt>
+<dd><p>Axial step size [m]</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.initializeSolver">
+<span class="sig-name descname"><span class="pre">initializeSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.initializeSolver" title="Link to this definition"></a></dt>
+<dd><p>INITIALIZESOLVER Initialize solver using the stored inputSet</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.EQUIL">
+<span class="sig-name descname"><span class="pre">EQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em>, <em class="sig-param"><span class="pre">flm</span></em>, <em class="sig-param"><span class="pre">drp</span></em>, <em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.EQUIL" title="Link to this definition"></a></dt>
+<dd><p>EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plotz">
+<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em>, <em class="sig-param"><span class="pre">tIdx</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plotz" title="Link to this definition"></a></dt>
+<dd><p>PLOTZ Plot spatial distributions of three-field parameters</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plott">
+<span class="sig-name descname"><span class="pre">plott</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plott" title="Link to this definition"></a></dt>
+<dd><p>PLOTT Plot temporal distributions of three-field parameters</p>
+<p>NOTE: currently supports only single elevation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plotzt">
+<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plotzt" title="Link to this definition"></a></dt>
+<dd><p>PLOTZT: Plot 2D time/elevation distributions of three-field parameters</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat function">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.solve">
+<span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="mat class" id="module-Solvers.ThreeField">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
@@ -406,6 +503,7 @@ Detailed explanation goes here</p>
 </div>
 </dd></dl>
 
+<hr class="docutils" />
 </section>
 
 

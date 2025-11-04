@@ -108,10 +108,69 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-Solvers.FourField">
-<span id="four-field-solver"></span><h1>Four-field solver<a class="headerlink" href="#module-Solvers.FourField" title="Link to this heading"></a></h1>
+  <section id="four-field-solver">
+<h1>Four-field solver<a class="headerlink" href="#four-field-solver" title="Link to this heading"></a></h1>
 <p><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">FourField</span> <span class="pre">Solver</span></code> defines a set of solver and field classes related to the four-field approach.</p>
+<hr class="docutils" />
+<dl class="mat function" id="module-Solvers.FourField.FourFieldSolver">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.solve">
+<span class="sig-prename descclassname"><span class="pre">Solvers.FourField.FourFieldSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE</p>
+</dd></dl>
+
 <dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.FourFieldSolver.</span></span><span class="sig-name descname"><span class="pre">FourFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers-ThreeField.html#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a></p>
+<p>FOURFIELDSOLVER defines any task related to initalizing, solving and plotting the results based on the four-field approach.</p>
+<p>TODO: Detailed explanations</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver.FourFieldSolver">
+<span class="sig-name descname"><span class="pre">FourFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver.FourFieldSolver" title="Link to this definition"></a></dt>
+<dd><p>FOURFIELDSOLVER Creates a FourField solver</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver.initializeSolver">
+<span class="sig-name descname"><span class="pre">initializeSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver.initializeSolver" title="Link to this definition"></a></dt>
+<dd><p>INITIALIZESOLVER Initialize solver using the stored inputSet</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver.EQUIL">
+<span class="sig-name descname"><span class="pre">EQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">flm</span></em>, <em class="sig-param"><span class="pre">drp</span></em>, <em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver.EQUIL" title="Link to this definition"></a></dt>
+<dd><p>EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver.plotz">
+<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">tIdx</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver.plotz" title="Link to this definition"></a></dt>
+<dd><p>PLOTZ Plot spatial distributions of four-field parameters</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver.plott">
+<span class="sig-name descname"><span class="pre">plott</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver.plott" title="Link to this definition"></a></dt>
+<dd><p>PLOTT Plot temporal distributions of four-field parameters</p>
+<p>NOTE: currently supports only single elevation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver.plotzt">
+<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver.plotzt" title="Link to this definition"></a></dt>
+<dd><p>PLOTZT: Plot 2D time/elevation distributions of four-field parameters</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="mat class" id="module-Solvers.FourField">
 <dt class="sig sig-object mat" id="Solvers.FourField.Drop">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><a class="headerlink" href="#Solvers.FourField.Drop" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a></p>
@@ -249,7 +308,7 @@ Detailed explanation goes here</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Wave.NZ" title="Link to this definition"></a></dt>
-<dd><p>% Solver properties</p>
+<dd><p>Solver properties</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -304,7 +363,7 @@ Detailed explanation goes here</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Base.NZ" title="Link to this definition"></a></dt>
-<dd><p>% Solver properties</p>
+<dd><p>Solver properties</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -348,6 +407,7 @@ Detailed explanation goes here</p>
 </div>
 </dd></dl>
 
+<hr class="docutils" />
 </section>
 
 

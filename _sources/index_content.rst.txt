@@ -39,6 +39,3 @@ Looking for a printable version? You can download the full manual here: `OpenSTR
 .. bibliography:: 
    :filter: docname in docnames
    :style: plain
-
-----
-
