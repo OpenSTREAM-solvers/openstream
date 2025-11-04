@@ -89,25 +89,29 @@ Implementation notes
 --------------------
 
 Package
+
 - :mod:`Solvers`
 
 Module
+
 - :mod:`Solvers.Mixture`
 
 Mixture solver class
+
 - :class:`Solvers.Mixture.MixtureSolver`
 
 Field and phase classes:
+
 - :class:`Solvers.Mixture.Mixture`
 - :class:`Solvers.Mixture.Liquid`
 - :class:`Solvers.Mixture.Vapor`
 
 Key solver methods
+
 - :meth:`Solvers.Mixture.MixtureSolver.solve()`
 
 Key field properties:
+
 - :attr:`Solvers.Mixture.Mixture.Mixture.W`
 - :attr:`Solvers.Mixture.Mixture.Mixture.P`
 - :attr:`Solvers.Mixture.Mixture.Mixture.H`
-
-----

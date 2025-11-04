@@ -4,7 +4,7 @@ classdef Base < Solvers.AbstractFilm
     
      properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
-        % % Solver properties
+        % Solver properties
         NZ                                                                 = 0                    % [-] Number of axial steps
         NTIME                                                              = 0                    % [-] Number of time steps
         TIME                                                               = 0                    % [s] Time series
@@ -19,7 +19,7 @@ classdef Base < Solvers.AbstractFilm
         U            (:,:) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
 
-        % % Iteration properties
+        % Iteration properties
         ITR
 
      end

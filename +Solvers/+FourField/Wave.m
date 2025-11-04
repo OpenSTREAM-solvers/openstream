@@ -4,7 +4,7 @@ classdef Wave < Solvers.AbstractFilm
     
      properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
         
-        % % Solver properties
+        % Solver properties
         NZ                                                                 = 0                    % [-] Number of axial steps
         NTIME                                                              = 0                    % [-] Number of time steps
         TIME                                                               = 0                    % [s] Time series
@@ -20,7 +20,7 @@ classdef Wave < Solvers.AbstractFilm
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
         FREQUENCY    (:,:) double  {mustBeNumeric}                         = 1                    % [Hz] Wave frequency
 
-        % % Iteration properties
+        % Iteration properties
         ITR
 
      end

@@ -69,5 +69,3 @@ Role in OpenSTREAM
 ------------------
 
 The four-field model provides state-of-the-art simulation capabilities for annular two-phase flow, especially in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer, validated against experimental data.
-
-----
