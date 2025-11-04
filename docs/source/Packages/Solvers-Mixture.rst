@@ -14,10 +14,9 @@ This module includes:
 ----
 
 .. automodule:: Solvers.Mixture.MixtureSolver
-   :members:
    :show-inheritance:
+   :members:
 
 .. automodule:: Solvers.Mixture
    :show-inheritance:
    :members:
-.. :exclude-members: 
