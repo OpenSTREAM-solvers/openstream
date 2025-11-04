@@ -12,6 +12,7 @@ In addition, a Homogeneous Relaxation Model (HRM) is currently under development
 
 By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.
 
+An overview of the mixture model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM.
 
 Governing equations
 -------------------
@@ -63,12 +64,12 @@ Closure relations
 To complete the conservation equations, several closure relations are required:
 
 - Wall shear stress: :math:`\tau_w^n`
-- Form pressure losses: \frac{\partial p_K}{\partial z}
+- Form pressure losses: :math:\frac{\partial p_K}{\partial z}
 - Equations of state: Appropriate thermodynamic properties for each phase
 
-The selected closure models are defined in the OpenSTREAM :mod:`Inputs.Model`, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Models`. All closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
+For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
 
-The thermodynamic properties for each phase are computed using coolprop, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
+The thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
 Features and assumptions
 ------------------------
@@ -112,6 +113,6 @@ Key solver methods
 
 Key field properties:
 
-- :attr:`Solvers.Mixture.Mixture.Mixture.W`
-- :attr:`Solvers.Mixture.Mixture.Mixture.P`
-- :attr:`Solvers.Mixture.Mixture.Mixture.H`
+- :attr:`Solvers.Mixture.Mixture.W`
+- :attr:`Solvers.Mixture.Mixture.P`
+- :attr:`Solvers.Mixture.Mixture.H`

@@ -15,10 +15,16 @@ copyright = f'2024–{datetime.datetime.now().year}, The OpenSTREAM Team'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-		'sphinxcontrib.matlab', 'sphinx.ext.autodoc', 'sphinx.ext.napoleon', 
-		'sphinx_rtd_theme', 'sphinx_copybutton', 'sphinxcontrib.bibtex', 
-		'sphinx_new_tab_link', 'sphinx.ext.autosectionlabel'
-		]
+    'sphinxcontrib.matlab',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon', 
+    'sphinx_rtd_theme',
+    'sphinx_copybutton',
+    'sphinxcontrib.bibtex', 
+    'sphinx_new_tab_link',
+    'sphinx.ext.autosectionlabel',
+    'sphinx_new_tab_link'
+]
 primary_domain = 'mat'
 
 templates_path = ['_templates']
