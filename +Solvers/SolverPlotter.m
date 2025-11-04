@@ -64,7 +64,7 @@ classdef SolverPlotter < handle
                 end
 
                 plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
-                plotters(idx).fh = figure("Name", plotters(idx).Title);
+                plotters(idx).fh = figure("Name", plotters(idx).Title, SizeChangedFcn=@figureSizeChangeCallback);
 
                 plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
                 plotters(idx).th.Title.String = plotters(idx).Title;
@@ -135,6 +135,30 @@ classdef SolverPlotter < handle
                     animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
 
                 end  
+            end
+
+            function figureSizeChangeCallback(src, ~)
+                
+                % Find legends
+                lhs = src.findobj("Type", "legend");
+
+                % Set Location to best
+                for i=1:length(lhs)
+                    lhs(i).Location = "best";
+                end
+
+                % Update 
+                drawnow();
+
+                % Set back to none
+                for i=1:length(lhs)
+                    lhs(i).Location = "none";
+                end
+
+                % Update
+                drawnow();
+
+
             end
 
             function animationCallback(src, ~)
@@ -771,7 +795,14 @@ classdef SolverPlotter < handle
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
-                legend(plotter.gca, varargin{:});
+                lh = legend(plotter.gca, varargin{:});
+                
+                % Update graphics
+                drawnow limitrate;
+
+                % Set legend locatuion to "none"
+                lh.Location = "none";
+                
             end
         end
 
