@@ -124,7 +124,7 @@ and provides diary functionality for persistent logs.</p>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Log.Log">
 <span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.Log" title="Link to this definition"></a></dt>
-<dd><p>LOG Constructor for <a class="reference internal" href="#Session.Log.Log" title="Session.Log.Log"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Log()</span></code></a> class</p>
+<dd><p>LOG Constructor for Log class</p>
 <p>Initializes logging mode, session context, and warning settings.
 Creates log file and session directory if needed.</p>
 </dd></dl>
@@ -182,7 +182,7 @@ Creates log file and session directory if needed.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Log.warning">
 <span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.warning" title="Link to this definition"></a></dt>
-<dd><p>WARNING Logs warnings using MATLAB’s built-in <a class="reference internal" href="#Session.Log.warning" title="Session.Log.warning"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">warning()</span></code></a> mechanism
+<dd><p>WARNING Logs warnings using MATLAB’s built-in warning mechanism
 Optionally writes to file if warnings are suppressed</p>
 </dd></dl>
 
@@ -262,10 +262,10 @@ It also integrates with the Log class to control output and warnings.</p>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Session.Session">
 <span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.Session" title="Link to this definition"></a></dt>
-<dd><p>SESSION Constructor for <a class="reference internal" href="#Session.Session.Session" title="Session.Session.Session"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Session()</span></code></a> class</p>
+<dd><p>SESSION Constructor for Session class</p>
 <p>Initializes session metadata including name, directory, and overwrite behavior.</p>
 <dl class="simple">
-<dt>Inputs:</dt><dd><p>opt.name            - <a class="reference internal" href="#Session.Session.Session" title="Session.Session.Session"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Session()</span></code></a> name
+<dt>Inputs:</dt><dd><p>opt.name            - Session name
 opt.dirName         - Directory name
 opt.parentDir       - Parent directory path
 opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
@@ -307,7 +307,7 @@ opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Session.directory">
 <span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#Session.Session.directory" title="Link to this definition"></a></dt>
-<dd><p>Full path to the session <a class="reference internal" href="#Session.Session.directory" title="Session.Session.directory"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">directory</span></code></a></p>
+<dd><p>Full path to the session directory</p>
 </dd></dl>
 
 </dd>

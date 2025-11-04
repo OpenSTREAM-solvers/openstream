@@ -13,7 +13,10 @@ This module includes:
 
 ----
 
-.. automodule:: Solvers.Mixture
+.. automodule:: +Solvers.Mixture.MixtureSolver
    :show-inheritance:
    :members:
-.. :exclude-members: 
+
+.. automodule:: +Solvers.Mixture
+   :show-inheritance:
+   :members:

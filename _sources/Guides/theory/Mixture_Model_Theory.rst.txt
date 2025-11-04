@@ -1,7 +1,7 @@
 Mixture model
 =============
 
-The Mixture Simulation Framework in **OpenSTREAM** provides a simplified yet powerful approach to modeling two-phase flows. Based on a three-equation formulation, it treats the phases as a single continuum with averaged properties. This abstraction enables efficient simulation of systems where phase separation is minimal or where a fully resolved multi-field model is not required.
+The mixture simulation framework in **OpenSTREAM** provides a simplified yet powerful approach to modeling two-phase flows. Based on a three-equation formulation, it treats the phases as a single continuum with averaged properties. This abstraction enables efficient simulation of systems where phase separation is minimal or where a fully resolved multi-field model is not required.
 
 The mixture model serves two key roles within OpenSTREAM:
 
@@ -41,7 +41,7 @@ where:
 - :math:`g` is the gravitational acceleration
 - :math:`n` is the wall index
 - :math:`\Pi_w^n` is the wall perimeter for wall index :math:`n`
-- :math:`\tau_w^n` is wall shear stress for wall index :math:`n`
+- :math:`\tau_w^n` is the wall shear stress for wall index :math:`n`
 
 **3. Energy conservation**
 
@@ -49,55 +49,65 @@ where:
 
 where:
 
-- :math:`h` is the mixture enthalpy
+- :math:`h` is the mixture specific enthalpy
 - :math:`{q^{\prime\prime}}_w^n` is the wall heat flux for wall index :math:`n`
 
-**4. Homogeneous relaxation model**
+Homogeneous relaxation model
+----------------------------
 
 *Coming soon*
 
-Features and Assumptions
+Closure relations
+-----------------
+
+To complete the conservation equations, several closure relations are required:
+
+- Wall shear stress: :math:`\tau_w^n`
+- Form pressure losses: \frac{\partial p_K}{\partial z}
+- Equations of state: Appropriate thermodynamic properties for each phase
+
+The selected closure models are defined in the OpenSTREAM :mod:`Inputs.Model`, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Models`. All closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
+
+The thermodynamic properties for each phase are computed using coolprop, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
+
+Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations
 - Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or HRM
 - Allows phase velocity slip using drift flux models
-- Neglects minor contributions such as frictional heating and temporal pressure gradient contributions 
-
-Implementation Notes
---------------------
-
-Package
-
-- :mod:`Solvers`
-
-Module
-
-- :mod:`Solvers.Mixture`
-
-Mixture solver class
-
-- :class:`Solvers.Mixture.MixtureSolver`
-
-Field and phases classes:
-
-- :class:`Solvers.Mixture.Mixture`
-- :class:`Solvers.Mixture.Liquid`
-- :class:`Solvers.Mixture.Vapor`
-
-Key solver methods
-
-- :meth:`Solvers.Mixture.MixtureSolver.Mixture.solve()`
-
-Key field properties:
-
-- :attr:`Solvers.Mixture.MixtureSolver.Mixture.W`
-- :attr:`Solvers.Mixture.MixtureSolver.Mixture.P`
-- :attr:`Solvers.Mixture.MixtureSolver.Mixture.H`
+- Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 
 Role in OpenSTREAM
 ------------------
 
 The mixture model provides a robust initialization framework for more complex solvers (i.e., two-fluid, three-field, four-field). For now, its pressure gradient solution is reused across all frameworks to enhance robusness and numerical stability.
+
+----
+
+Implementation notes
+--------------------
+
+Package
+- :mod:`Solvers`
+
+Module
+- :mod:`Solvers.Mixture`
+
+Mixture solver class
+- :class:`Solvers.Mixture.MixtureSolver`
+
+Field and phase classes:
+- :class:`Solvers.Mixture.Mixture`
+- :class:`Solvers.Mixture.Liquid`
+- :class:`Solvers.Mixture.Vapor`
+
+Key solver methods
+- :meth:`Solvers.Mixture.MixtureSolver.solve()`
+
+Key field properties:
+- :attr:`Solvers.Mixture.Mixture.Mixture.W`
+- :attr:`Solvers.Mixture.Mixture.Mixture.P`
+- :attr:`Solvers.Mixture.Mixture.Mixture.H`
 
 ----

@@ -140,7 +140,7 @@ data extraction, plotting, memoization, struct conversion, and property copying.
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.AbstractField">
 <span class="sig-name descname"><span class="pre">AbstractField</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.AbstractField" title="Link to this definition"></a></dt>
-<dd><p>ABSTRACTFIELD Constructor for <a class="reference internal" href="#Solvers.AbstractField.AbstractField" title="Solvers.AbstractField.AbstractField"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AbstractField()</span></code></a> class</p>
+<dd><p>ABSTRACTFIELD Constructor for AbstractField class</p>
 </dd></dl>
 
 </dd>
@@ -190,7 +190,7 @@ data extraction, plotting, memoization, struct conversion, and property copying.
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.transient">
 <span class="sig-name descname"><span class="pre">transient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.transient" title="Link to this definition"></a></dt>
-<dd><p>TRANSIENT Extracts <a class="reference internal" href="#Solvers.AbstractField.transient" title="Solvers.AbstractField.transient"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">transient()</span></code></a> distribution array for a given parameter
+<dd><p>TRANSIENT Extracts transient distribution array for a given parameter
 Supports wall-wise and axial/time slicing with optional subobject access</p>
 </dd></dl>
 
@@ -261,7 +261,7 @@ Subclasses must implement the abstract methods and properties defined here.</p>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.AbstractSolver">
 <span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.AbstractSolver" title="Link to this definition"></a></dt>
-<dd><p>ABSTRACTSOLVER Constructor for <a class="reference internal" href="#Solvers.AbstractSolver.AbstractSolver" title="Solvers.AbstractSolver.AbstractSolver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AbstractSolver()</span></code></a></p>
+<dd><p>ABSTRACTSOLVER Constructor for AbstractSolver</p>
 <p>Initializes the solver with a given inputSet and applies
 solver-specific properties.</p>
 </dd></dl>
@@ -270,7 +270,7 @@ solver-specific properties.</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.inputSet">
 <span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.AbstractSolver.inputSet" title="Link to this definition"></a></dt>
-<dd><p>Input configuration object of type <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a></p>
+<dd><p>Input configuration object of type Inputs.InputSet</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -283,7 +283,7 @@ solver-specific properties.</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.log">
 <span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">solver</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.log" title="Link to this definition"></a></dt>
-<dd><p>LOG Log messages to the session <a class="reference internal" href="#Solvers.AbstractSolver.log" title="Solvers.AbstractSolver.log"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">log()</span></code></a></p>
+<dd><p>LOG Log messages to the session log</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -298,8 +298,8 @@ solver-specific properties.</p>
 <dd><p>SAVE Save the solver object to a .mat file with a customizable name.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><p>solver        - The solver object to be saved.
-opts.name     - (string) Name of the variable under which to <a class="reference internal" href="#Solvers.AbstractSolver.save" title="Solvers.AbstractSolver.save"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">save()</span></code></a> the solver. Default set to solver name
-opts.showpath - (logical) Whether to display the <a class="reference internal" href="#Solvers.AbstractSolver.save" title="Solvers.AbstractSolver.save"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">save()</span></code></a> path. Default: true.</p>
+opts.name     - (string) Name of the variable under which to save the solver. Default set to solver name
+opts.showpath - (logical) Whether to display the save path. Default: true.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -307,7 +307,7 @@ opts.showpath - (logical) Whether to display the <a class="reference internal" h
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.CreateITR">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">CreateITR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">NZ</span></em>, <em class="sig-param"><span class="pre">ITRFields</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.CreateITR" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractSolver.CreateITR" title="Solvers.AbstractSolver.CreateITR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CreateITR()</span></code></a> Create a structure for inner iteration values</p>
+<dd><p>CreateITR Create a structure for inner iteration values</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><p>NZ        - Number of axial nodes (scalar)
 ITRFields - (string array) Names of fields to include in the struct</p>
@@ -335,7 +335,7 @@ Specific entrainment models (e.g., Okawa, Govan) and friction models are impleme
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.AbstractFilm">
 <span class="sig-name descname"><span class="pre">AbstractFilm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.AbstractFilm" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.AbstractFilm" title="Solvers.AbstractFilm.AbstractFilm"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AbstractFilm()</span></code></a> Constructor for <a class="reference internal" href="#Solvers.AbstractFilm.AbstractFilm" title="Solvers.AbstractFilm.AbstractFilm"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AbstractFilm()</span></code></a> class</p>
+<dd><p>AbstractFilm Constructor for AbstractFilm class</p>
 <p>Initializes inputSet and fluid properties</p>
 </dd></dl>
 
@@ -368,111 +368,111 @@ Specific entrainment models (e.g., Okawa, Govan) and friction models are impleme
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.WL">
 <span class="sig-name descname"><span class="pre">WL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.WL" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.WL" title="Solvers.AbstractFilm.WL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">WL()</span></code></a> Film mass flow rate per unit perimeter [kg/s/m]</p>
+<dd><p>WL Film mass flow rate per unit perimeter [kg/s/m]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.THICK">
 <span class="sig-name descname"><span class="pre">THICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.THICK" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.THICK" title="Solvers.AbstractFilm.THICK"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">THICK()</span></code></a> Film thickness [m]</p>
+<dd><p>THICK Film thickness [m]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.RE">
 <span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.RE" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.RE" title="Solvers.AbstractFilm.RE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">RE()</span></code></a> Film Reynolds number [-]</p>
+<dd><p>RE Film Reynolds number [-]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.MENT">
 <span class="sig-name descname"><span class="pre">MENT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.MENT" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.MENT" title="Solvers.AbstractFilm.MENT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MENT()</span></code></a> Film entrainment mass flux [kg/m^2/s] using selected model</p>
+<dd><p>MENT Film entrainment mass flux [kg/m^2/s] using selected model</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.MTOT">
 <span class="sig-name descname"><span class="pre">MTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.MTOT" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.MTOT" title="Solvers.AbstractFilm.MTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MTOT()</span></code></a> Total film mass transfer [kg/m^2/s]</p>
+<dd><p>MTOT Total film mass transfer [kg/m^2/s]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.CW">
 <span class="sig-name descname"><span class="pre">CW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.CW" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.CW" title="Solvers.AbstractFilm.CW"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CW()</span></code></a> Film wall friction factor [-]</p>
+<dd><p>CW Film wall friction factor [-]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FWALL">
 <span class="sig-name descname"><span class="pre">FWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FWALL" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FWALL" title="Solvers.AbstractFilm.FWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FWALL()</span></code></a> Film wall shear stress [N/m^2]</p>
+<dd><p>FWALL Film wall shear stress [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UWALL">
 <span class="sig-name descname"><span class="pre">UWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UWALL" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UWALL" title="Solvers.AbstractFilm.UWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UWALL()</span></code></a> Film wall friction velocity [m/s]</p>
+<dd><p>UWALL Film wall friction velocity [m/s]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.YPLUS2THICK">
 <span class="sig-name descname"><span class="pre">YPLUS2THICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">yplus</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.YPLUS2THICK" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.YPLUS2THICK" title="Solvers.AbstractFilm.YPLUS2THICK"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">YPLUS2THICK()</span></code></a> Thickness based on wall unit value [m]</p>
+<dd><p>YPLUS2THICK Thickness based on wall unit value [m]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.CV">
 <span class="sig-name descname"><span class="pre">CV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.CV" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.CV" title="Solvers.AbstractFilm.CV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CV()</span></code></a> Film/vapor interfacial friction factor [-]</p>
+<dd><p>CV Film/vapor interfacial friction factor [-]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FVAPOR">
 <span class="sig-name descname"><span class="pre">FVAPOR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FVAPOR" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FVAPOR" title="Solvers.AbstractFilm.FVAPOR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FVAPOR()</span></code></a> Vapor shear stress on film [N/m^2]</p>
+<dd><p>FVAPOR Vapor shear stress on film [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FBUOY">
 <span class="sig-name descname"><span class="pre">FBUOY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FBUOY" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FBUOY" title="Solvers.AbstractFilm.FBUOY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FBUOY()</span></code></a> Film buoyancy force [N/m^2]</p>
+<dd><p>FBUOY Film buoyancy force [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FGRAV">
 <span class="sig-name descname"><span class="pre">FGRAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FGRAV" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FGRAV" title="Solvers.AbstractFilm.FGRAV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FGRAV()</span></code></a> Gravitational force on film [N/m^2]</p>
+<dd><p>FGRAV Gravitational force on film [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FDEP">
 <span class="sig-name descname"><span class="pre">FDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FDEP" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FDEP" title="Solvers.AbstractFilm.FDEP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FDEP()</span></code></a> Drop deposition shear force [N/m^2]</p>
+<dd><p>FDEP Drop deposition shear force [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FTOT">
 <span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FTOT" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FTOT" title="Solvers.AbstractFilm.FTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FTOT()</span></code></a> Total film forces per unit wall area [N/m^2]</p>
+<dd><p>FTOT Total film forces per unit wall area [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UALGEBR">
 <span class="sig-name descname"><span class="pre">UALGEBR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UALGEBR" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UALGEBR" title="Solvers.AbstractFilm.UALGEBR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UALGEBR()</span></code></a> Film velocity using simple algebraic model [m/s]</p>
+<dd><p>UALGEBR Film velocity using simple algebraic model [m/s]</p>
 <p>(<span id="id1">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id13" title="C. Adamsson and J.M. Le Corre. Transient dryout prediction using a computationally efficient method for sub-channel film-flow analysis. Nuclear Engineering and Design, 280:316-325, 2014. URL: https://www.sciencedirect.com/science/article/pii/S0029549314005081, doi:https://doi.org/10.1016/j.nucengdes.2014.09.012.">2014</a>]</span>, eq. 21 or 23)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UEQUILS">
 <span class="sig-name descname"><span class="pre">UEQUILS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UEQUILS" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UEQUILS" title="Solvers.AbstractFilm.UEQUILS"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UEQUILS()</span></code></a> Film velocity assuming equilibrium between wall and vapor
+<dd><p>UEQUILS Film velocity assuming equilibrium between wall and vapor
 shear  [m/s]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UEQUIL">
 <span class="sig-name descname"><span class="pre">UEQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UEQUIL" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UEQUIL" title="Solvers.AbstractFilm.UEQUIL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UEQUIL()</span></code></a> Film velocity using full force equilibrium model [m/s]</p>
+<dd><p>UEQUIL Film velocity using full force equilibrium model [m/s]</p>
 </dd></dl>
 
 </dd>
@@ -506,7 +506,7 @@ It also includes UI controls for animation playback and export.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.Title">
 <span class="sig-name descname"><span class="pre">Title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Title" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.SolverPlotter.Title" title="Solvers.SolverPlotter.Title"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Title</span></code></a> of the figure</p>
+<dd><p>Title of the figure</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -530,7 +530,7 @@ It also includes UI controls for animation playback and export.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.Grid">
 <span class="sig-name descname"><span class="pre">Grid</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'on'</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Grid" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.SolverPlotter.Grid" title="Solvers.SolverPlotter.Grid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Grid</span></code></a> display option</p>
+<dd><p>Grid display option</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -585,7 +585,7 @@ It also includes UI controls for animation playback and export.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.xlim">
 <span class="sig-name descname"><span class="pre">xlim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.xlim" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.SolverPlotter.xlim" title="Solvers.SolverPlotter.xlim"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">xlim()</span></code></a> Method to get or set x-axis limits for current axes</p>
+<dd><p>xlim Method to get or set x-axis limits for current axes</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -609,13 +609,13 @@ It also includes UI controls for animation playback and export.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.legend">
 <span class="sig-name descname"><span class="pre">legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.legend" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.SolverPlotter.legend" title="Solvers.SolverPlotter.legend"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">legend()</span></code></a> Method to add <a class="reference internal" href="#Solvers.SolverPlotter.legend" title="Solvers.SolverPlotter.legend"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">legend()</span></code></a> to current axes</p>
+<dd><p>legend Method to add legend to current axes</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.resizeFigure">
 <span class="sig-name descname"><span class="pre">resizeFigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">scaleFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.resizeFigure" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="#Solvers.SolverPlotter.resizeFigure" title="Solvers.SolverPlotter.resizeFigure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">resizeFigure()</span></code></a> Resizes the figure based on tiledlayout rows/columns
+<dd><p>resizeFigure Resizes the figure based on tiledlayout rows/columns
 Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
 <dl class="simple">
 <dt>Usage:</dt><dd><p>plotters.resizeFigure();        % default scaleFactor = 1
