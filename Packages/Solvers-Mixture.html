@@ -110,16 +110,946 @@
              
   <section id="mixture-solver">
 <h1>Mixture solver<a class="headerlink" href="#mixture-solver" title="Link to this heading"></a></h1>
-<p>The <code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Mixture</span> <span class="pre">Solver</span></code> module in openSTREAM provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved.</p>
+<p>The <a class="reference internal" href="#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Mixture</span> <span class="pre">Solver</span></code></a> module in openSTREAM provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved.</p>
 <p>This module includes:</p>
 <ul class="simple">
-<li><p>Solver (<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code>) class for mixture-based flow simulations.</p></li>
-<li><p>Field (<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code>) and phase (<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Liquid</span></code>, <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Vapor</span></code>) class definitions.</p></li>
-<li><p>Parameter definitions for mixture properties like <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">mass</span> <span class="pre">flow</span> <span class="pre">rate</span></code>, <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">pressure</span></code>, and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">enthalpy</span></code>.</p></li>
-<li><p>Solver class methods to <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">initialize</span></code>, <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve</span></code> mixture equations and to <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">plot</span></code> results.</p></li>
+<li><p>Solver (<a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a>) class for mixture-based flow simulations.</p></li>
+<li><p>Field (<a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>) and phase (<a class="reference internal" href="#Solvers.Mixture.Liquid" title="Solvers.Mixture.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Liquid</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Vapor" title="Solvers.Mixture.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Vapor</span></code></a>) class definitions.</p></li>
+<li><p>Parameter definitions for mixture properties like <a class="reference internal" href="#Solvers.Mixture.Mixture.W" title="Solvers.Mixture.Mixture.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">mass</span> <span class="pre">flow</span> <span class="pre">rate</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Mixture.P" title="Solvers.Mixture.Mixture.P"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">pressure</span></code></a>, and <a class="reference internal" href="#Solvers.Mixture.Mixture.H" title="Solvers.Mixture.Mixture.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">enthalpy</span></code></a>.</p></li>
+<li><p>Solver class methods to <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">initialize</span></code>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.solve" title="Solvers.Mixture.MixtureSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve</span></code></a> mixture equations and to <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">plot</span></code> results.</p></li>
 <li><p>Field class methods for calculating secondary mixture and phase parameters.</p></li>
 </ul>
 <hr class="docutils" />
+<dl class="mat class" id="module-Solvers.Mixture.MixtureSolver">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.MixtureSolver.</span></span><span class="sig-name descname"><span class="pre">MixtureSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p>
+<p>MIXTURESOLVER Solver for initializing, solving, and visualizing the
+mixture solver</p>
+<blockquote>
+<div><p>Handles setup, boundary condition interpolation, mixture construction,
+and plotting of results.</p>
+</div></blockquote>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.MixtureSolver">
+<span class="sig-name descname"><span class="pre">MixtureSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.MixtureSolver" title="Link to this definition"></a></dt>
+<dd><p>MIXTURESOLVER Constructor</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.NZ" title="Link to this definition"></a></dt>
+<dd><p>Number of axial steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.NTIME" title="Link to this definition"></a></dt>
+<dd><p>Number of time steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time series [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.DT" title="Link to this definition"></a></dt>
+<dd><p>Time step size [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.Z" title="Link to this definition"></a></dt>
+<dd><p>Elevation [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.DZ">
+<span class="sig-name descname"><span class="pre">DZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.DZ" title="Link to this definition"></a></dt>
+<dd><p>Axial step size [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.fluid">
+<span class="sig-name descname"><span class="pre">fluid</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.fluid" title="Link to this definition"></a></dt>
+<dd><p>fluid object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.boundaryConditions">
+<span class="sig-name descname"><span class="pre">boundaryConditions</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.boundaryConditions" title="Link to this definition"></a></dt>
+<dd><p>Boundary conditions object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.mixtureInit">
+<span class="sig-name descname"><span class="pre">mixtureInit</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.mixtureInit" title="Link to this definition"></a></dt>
+<dd><p>Steady-state mixture object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.mixture">
+<span class="sig-name descname"><span class="pre">mixture</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.mixture" title="Link to this definition"></a></dt>
+<dd><p>Mixture object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.inputSet">
+<span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.inputSet" title="Link to this definition"></a></dt>
+<dd><p>Input set object</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver">
+<span class="sig-name descname"><span class="pre">initializeSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver" title="Link to this definition"></a></dt>
+<dd><p>INITIALIZESOLVER Initializes solver parameters using the stored
+inputSet and constructs mixture objects.</p>
+<p>Sets up time and axial discretization, boundary conditions,
+and initializes mixture arrays for transient and steady-state simulations.
+Detailed setup of DP, MDER, TRELAX, NEARWALL, and ITR structures.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.interpBoundaryConditions">
+<span class="sig-name descname"><span class="pre">interpBoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.interpBoundaryConditions" title="Link to this definition"></a></dt>
+<dd><p>INTERPBOUNDARYCONDITIONS Interpolates boundary conditions in time and space</p>
+<p>Expands user-defined BCs to match solver grid and time steps</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.plotz">
+<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em>, <em class="sig-param"><span class="pre">tIdx</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotz" title="Link to this definition"></a></dt>
+<dd><p>PLOTZ Plots spatial distributions of mixture parameters</p>
+<p>Supports multiple display modes and wall selections</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.plott">
+<span class="sig-name descname"><span class="pre">plott</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plott" title="Link to this definition"></a></dt>
+<dd><p>PLOTT Plots temporal distributions of mixture parameters at a given axial location</p>
+<p>Supports multiple display modes and wall selections</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.plotzt">
+<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotzt" title="Link to this definition"></a></dt>
+<dd><p>PLOTZT: Plots 2D time/elevation distributions of mixture parameters</p>
+<p>Supports mixture, liquid, and vapor fields</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate">
+<span class="sig-name descname"><span class="pre">timeInterpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate" title="Link to this definition"></a></dt>
+<dd><p>TIMEINTERPOLATE Interpolates data in time using specified interpolation method</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate">
+<span class="sig-name descname"><span class="pre">axialInterpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate" title="Link to this definition"></a></dt>
+<dd><p>AXIALINTERPOLATE Interpolates data in space using specified interpolation
+method</p>
+<p>Handles extrapolation for out-of-bound values
+Linear extrapolation is used for cases where interpolation returns
+NaN (for instance, point slightly outside allowed tolerance when
+‘next’ interpolation method is selected)</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat function">
+<dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.solve">
+<span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.MixtureSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE Executes the mixture solver for steady-state and transient simulations</p>
+<p>This method manages the full solution process, including initialization,
+time stepping, inner iterations, convergence checks, and logging.</p>
+</dd></dl>
+
+<dl class="mat class" id="module-Solvers.Mixture">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
+<p>MIXTURE Class for modeling two-phase mixture flow in mixture solver</p>
+<p>This class encapsulates the physical and numerical properties of a fluid mixture,
+including flow variables, phase interactions, pressure losses, heat transfer,
+and relaxation models. It supports multiple solver models and provides methods
+for computing derived quantities and handling transitions such as boiling and annular flow.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.Mixture">
+<span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.Mixture" title="Link to this definition"></a></dt>
+<dd><p>MIXTURE Constructor for Mixture class</p>
+<p>Initializes the mixture object with input configuration and fluid properties.
+Sets up flow property tracking for simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inputSet</span> <span class="pre">-</span> <span class="pre">Inputs.InputSet</span> <span class="pre">object</span> <span class="pre">containing</span></code></span>)</p></li>
+<li><p><strong>geometry</strong></p></li>
+<li><p><strong>conditions</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">and</span> <span class="pre">boundary</span></code></span>)</p></li>
+<li><p><strong>data</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fluid</span>&#160;&#160;&#160; <span class="pre">-</span> <span class="pre">Inputs.FluidProperties</span> <span class="pre">object</span> <span class="pre">containing</span> <span class="pre">thermophysical</span> <span class="pre">fluid</span></code></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.NZ" title="Link to this definition"></a></dt>
+<dd><p>Solver state</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.NTIME" title="Link to this definition"></a></dt>
+<dd><p>Number of time steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time series [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.DT" title="Link to this definition"></a></dt>
+<dd><p>Time step size [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TIDX">
+<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.TIDX" title="Link to this definition"></a></dt>
+<dd><p>Time step index [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.Z" title="Link to this definition"></a></dt>
+<dd><p>Elevation [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>Wall heat flux</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.W">
+<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.W" title="Link to this definition"></a></dt>
+<dd><p>Flow variables</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.P">
+<span class="sig-name descname"><span class="pre">P</span></span><em class="property"> <span class="pre">=</span> <span class="pre">7E6</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.P" title="Link to this definition"></a></dt>
+<dd><p>Pressure [Pa]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.H">
+<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.H" title="Link to this definition"></a></dt>
+<dd><p>Enthalpy [J/kg]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DP">
+<span class="sig-name descname"><span class="pre">DP</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.DP" title="Link to this definition"></a></dt>
+<dd><p>Detailed flow data (pressure drop, derivative terms, time relaxations)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPSUM">
+<span class="sig-name descname"><span class="pre">DPSUM</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPSUM" title="Link to this definition"></a></dt>
+<dd><p>Saved detailed cumulative pressure drops</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MDER">
+<span class="sig-name descname"><span class="pre">MDER</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.MDER" title="Link to this definition"></a></dt>
+<dd><p>Saved detailed material derivative terms</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TRELAX">
+<span class="sig-name descname"><span class="pre">TRELAX</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.TRELAX" title="Link to this definition"></a></dt>
+<dd><p>Time relaxation terms</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.NEARWALL">
+<span class="sig-name descname"><span class="pre">NEARWALL</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.NEARWALL" title="Link to this definition"></a></dt>
+<dd><p>Near-wall terms</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.ITR">
+<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.ITR" title="Link to this definition"></a></dt>
+<dd><p>Iteration tracking</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.liquid">
+<span class="sig-name descname"><span class="pre">liquid</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.liquid" title="Link to this definition"></a></dt>
+<dd><p>Phase objects</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DZ">
+<span class="sig-name descname"><span class="pre">DZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.DZ" title="Link to this definition"></a></dt>
+<dd><p>Axial step size [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.inputSet">
+<span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.inputSet" title="Link to this definition"></a></dt>
+<dd><p>inputSet object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.fluid">
+<span class="sig-name descname"><span class="pre">fluid</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.fluid" title="Link to this definition"></a></dt>
+<dd><p>fluid object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.cbt">
+<span class="sig-name descname"><span class="pre">cbt</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.cbt" title="Link to this definition"></a></dt>
+<dd><p>Wall heat transfer transition flags</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.mfbt">
+<span class="sig-name descname"><span class="pre">mfbt</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.mfbt" title="Link to this definition"></a></dt>
+<dd><p>Minimum Film  Boiling Transition flag [-]</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MFLUX">
+<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MFLUX" title="Link to this definition"></a></dt>
+<dd><p>MFLUX Mass flux [kg/m^2/s]
+This function only retrieves the mix.mflux values pre-calculated
+when mix.W is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.MFLUX_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.XEQ">
+<span class="sig-name descname"><span class="pre">XEQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.XEQ" title="Link to this definition"></a></dt>
+<dd><p>XEQ Equilibrium quality [-]
+This function only retrieves the mix.xeq values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.XEQ_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.X">
+<span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.X" title="Link to this definition"></a></dt>
+<dd><p>X Vapor quality [-]
+This function only retrieves the mix.x values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.X_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.VF">
+<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.VF" title="Link to this definition"></a></dt>
+<dd><p>VF Void fraction [-]
+This function only retrieves the mix.vf values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.VF_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.CHF">
+<span class="sig-name descname"><span class="pre">CHF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.CHF" title="Link to this definition"></a></dt>
+<dd><p>CHF Critical Heat Flux [W/m^2], wall dependent
+This function only retrieves the mix.chf values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.CBT_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.CBT">
+<span class="sig-name descname"><span class="pre">CBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.CBT" title="Link to this definition"></a></dt>
+<dd><p>CBT Critical Boiling Transition flag [-], wall dependent
+This function only retrieves the mix.cbt values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.CBT_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MFBT">
+<span class="sig-name descname"><span class="pre">MFBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MFBT" title="Link to this definition"></a></dt>
+<dd><p>MFBT Minimum Film Boiling Transition flag [-], wall dependent
+This function only retrieves the mix.mfbt values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.MFBT_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RHO">
+<span class="sig-name descname"><span class="pre">RHO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RHO" title="Link to this definition"></a></dt>
+<dd><p>RHO Density [kg/m^3]
+This function only retrieves the mix.rho values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.RHO_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RELAXTEVAP">
+<span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTEVAP" title="Link to this definition"></a></dt>
+<dd><p>RELAXTEVAP Time relaxation for interfacial evaporation [s]
+This function only retrieves the mix.relaxtevap values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.RELAXTEVAP_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RELAXTCOND">
+<span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
+<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]
+This function only retrieves the mix.relaxtevap values pre-calculated
+when mix.H is set. This is to eliminate the redundant
+calculation as a result of frequent function calls. The values
+are calculated via mix.RELAXTCOND_CALC()</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.LHGR">
+<span class="sig-name descname"><span class="pre">LHGR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.LHGR" title="Link to this definition"></a></dt>
+<dd><p>LHGR Linear heat generation rate [W/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MU">
+<span class="sig-name descname"><span class="pre">MU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MU" title="Link to this definition"></a></dt>
+<dd><p>MU Dynamic viscosity [Pa.s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.U">
+<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.U" title="Link to this definition"></a></dt>
+<dd><p>U Velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.JL">
+<span class="sig-name descname"><span class="pre">JL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.JL" title="Link to this definition"></a></dt>
+<dd><p>JL Superficial liquid velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.JG">
+<span class="sig-name descname"><span class="pre">JG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.JG" title="Link to this definition"></a></dt>
+<dd><p>JG Superficial vapor velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.T">
+<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.T" title="Link to this definition"></a></dt>
+<dd><p>T Temperature [K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.KDIST">
+<span class="sig-name descname"><span class="pre">KDIST</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.KDIST" title="Link to this definition"></a></dt>
+<dd><p>KDIST Distance from upstream obstruction (or from inlet)</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.KLOCZ">
+<span class="sig-name descname"><span class="pre">KLOCZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.KLOCZ" title="Link to this definition"></a></dt>
+<dd><p>KLOCZ Obstruction positions [m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RE">
+<span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RE" title="Link to this definition"></a></dt>
+<dd><p>RE Reynolds number [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.REL">
+<span class="sig-name descname"><span class="pre">REL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.REL" title="Link to this definition"></a></dt>
+<dd><p>REL Liquid-equivalent Reynolds number [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.FW">
+<span class="sig-name descname"><span class="pre">FW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.FW" title="Link to this definition"></a></dt>
+<dd><p>FW Fanning wall friction factor [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.FWL">
+<span class="sig-name descname"><span class="pre">FWL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.FWL" title="Link to this definition"></a></dt>
+<dd><p>FWL Liquid-equivalent Fanning wall friction factor [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.PHI2F">
+<span class="sig-name descname"><span class="pre">PHI2F</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.PHI2F" title="Link to this definition"></a></dt>
+<dd><p>PHI2F Two-phase wall friction multiplier [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TAUW">
+<span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.TAUW" title="Link to this definition"></a></dt>
+<dd><p>TAUW wall shear stress [N/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.KLOSS">
+<span class="sig-name descname"><span class="pre">KLOSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.KLOSS" title="Link to this definition"></a></dt>
+<dd><p>KLOSS Local pressure loss coefficient [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.PHI2K">
+<span class="sig-name descname"><span class="pre">PHI2K</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.PHI2K" title="Link to this definition"></a></dt>
+<dd><p>PHI2F Two-phase local pressure drop multiplier [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPGRAV">
+<span class="sig-name descname"><span class="pre">DPGRAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPGRAV" title="Link to this definition"></a></dt>
+<dd><p>DPK Gravitational pressure loss [Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPWALL">
+<span class="sig-name descname"><span class="pre">DPWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPWALL" title="Link to this definition"></a></dt>
+<dd><p>DPWALL Wall friction pressure drop [Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPACCZ">
+<span class="sig-name descname"><span class="pre">DPACCZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPACCZ" title="Link to this definition"></a></dt>
+<dd><p>DPACCZ Spatial acceleration pressure drop [Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPACCT">
+<span class="sig-name descname"><span class="pre">DPACCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">Uold</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPACCT" title="Link to this definition"></a></dt>
+<dd><p>DPACCT Temporal acceleration pressure drop [Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPK">
+<span class="sig-name descname"><span class="pre">DPK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPK" title="Link to this definition"></a></dt>
+<dd><p>DPK Local pressure loss [Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPTOT">
+<span class="sig-name descname"><span class="pre">DPTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">Uold</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPTOT" title="Link to this definition"></a></dt>
+<dd><p>DPTOT Total pressure loss [Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPPARTS">
+<span class="sig-name descname"><span class="pre">DPPARTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">Uold</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPPARTS" title="Link to this definition"></a></dt>
+<dd><p>DPPARTS All pressure loss components[Pa]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.NU">
+<span class="sig-name descname"><span class="pre">NU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.NU" title="Link to this definition"></a></dt>
+<dd><p>NU Wall Nusselt number [-]
+TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALLLIQ">
+<span class="sig-name descname"><span class="pre">HWALLLIQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALLLIQ" title="Link to this definition"></a></dt>
+<dd><p>HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALLTHOM">
+<span class="sig-name descname"><span class="pre">HWALLTHOM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALLTHOM" title="Link to this definition"></a></dt>
+<dd><p>HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]
+Thom’s formulation was modified in term of heat transfer coefficient</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALLVAP">
+<span class="sig-name descname"><span class="pre">HWALLVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALLVAP" title="Link to this definition"></a></dt>
+<dd><p>HWALLVAP Single-phase vapor wall heat transfer coefficient [W/m^2/K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALL">
+<span class="sig-name descname"><span class="pre">HWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALL" title="Link to this definition"></a></dt>
+<dd><p>HWALL Wall heat transfer coefficient [W/m^2/K]
+TODO: Create wall heat transfer model options</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TWALL">
+<span class="sig-name descname"><span class="pre">TWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.TWALL" title="Link to this definition"></a></dt>
+<dd><p>TWALL Wall temperature [K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.WWALL">
+<span class="sig-name descname"><span class="pre">WWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.WWALL" title="Link to this definition"></a></dt>
+<dd><p>WWALL Mixture mass flow distribution per wall, based on wall perimeter ratio [kg/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.KTRELAX">
+<span class="sig-name descname"><span class="pre">KTRELAX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.KTRELAX" title="Link to this definition"></a></dt>
+<dd><p>KTRELAX Local relaxation time [s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MINT">
+<span class="sig-name descname"><span class="pre">MINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MINT" title="Link to this definition"></a></dt>
+<dd><p>MINT Linear interfacial mass transfer rates based on time relaxation [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MINTEVAP">
+<span class="sig-name descname"><span class="pre">MINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MINTEVAP" title="Link to this definition"></a></dt>
+<dd><p>MINTEVAP Linear interfacial evaporation rates based on time relaxation [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MINTCOND">
+<span class="sig-name descname"><span class="pre">MINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MINTCOND" title="Link to this definition"></a></dt>
+<dd><p>MINTCOND Linear interfacial condensation rates based on time relaxation [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MTRANSV">
+<span class="sig-name descname"><span class="pre">MTRANSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MTRANSV" title="Link to this definition"></a></dt>
+<dd><p>MTRANSV Linear transversal mass exchange
+NOT USED FOR NOW
+Model transverse exchange between wall regions with time relaxation model
+TODO: Implement also enthalpy exchange and include in total mass/energy echange terms</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.WALEVAPRATIO">
+<span class="sig-name descname"><span class="pre">WALEVAPRATIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.WALEVAPRATIO" title="Link to this definition"></a></dt>
+<dd><p>WALEVAPRATIO Wall mass evaporation ratio [-]
+Liquid mass boiling ratio driven by wall heat flux
+Set to 0 upstream subcooled boiling, 1 downstream saturated boiling and 0 at CBT
+TODO: Implement models for the onsets of subcooled and saturated wall boiling, as needed.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MWALEVAP">
+<span class="sig-name descname"><span class="pre">MWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MWALEVAP" title="Link to this definition"></a></dt>
+<dd><p>MWALEVAP Linear wall mass evaporation (i.e., boiling) rate [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MTOT">
+<span class="sig-name descname"><span class="pre">MTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MTOT" title="Link to this definition"></a></dt>
+<dd><p>MTOT Total linear vapor mass transfer rate [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HINT">
+<span class="sig-name descname"><span class="pre">HINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HINT" title="Link to this definition"></a></dt>
+<dd><p>HINT Linear interfacial heat transfer rate [W/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HINTEVAP">
+<span class="sig-name descname"><span class="pre">HINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HINTEVAP" title="Link to this definition"></a></dt>
+<dd><p>HINTEVAP Linear interfacial heat evaporation rate [W/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HINTCOND">
+<span class="sig-name descname"><span class="pre">HINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HINTCOND" title="Link to this definition"></a></dt>
+<dd><p>HINTCOND Linear interfacial heat condensation rate [W/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALEVAP">
+<span class="sig-name descname"><span class="pre">HWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALEVAP" title="Link to this definition"></a></dt>
+<dd><p>HWALEVAP Linear wall heat evaporation (i.e., boiling)) rate [W/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALHEAT">
+<span class="sig-name descname"><span class="pre">HWALHEAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALHEAT" title="Link to this definition"></a></dt>
+<dd><p>HWALHEAT Linear wall heat to vapor rate [W/m]
+Set to LHGR beyond CBT</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HTOT">
+<span class="sig-name descname"><span class="pre">HTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HTOT" title="Link to this definition"></a></dt>
+<dd><p>HTOT Total linear vapor heat rate [W/m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HVTOT">
+<span class="sig-name descname"><span class="pre">HVTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HVTOT" title="Link to this definition"></a></dt>
+<dd><p>HVTOT Total linear vapor specific enthalpy transfer [J/kg/m]
+This term represents the additional energy input to the vapor per unit vapor mass
+Only the wall lump approach (i.e. same vapor heat input to all walls) is working correctly for now
+Otherwise, the liquid can become subcooled in post CHF calculations
+TODO: Fix issue and allow wall specific approach. This can be useful for DNB -&gt; inverted film boiling</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.OAFX">
+<span class="sig-name descname"><span class="pre">OAFX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.OAFX" title="Link to this definition"></a></dt>
+<dd><p>OAFX Onset of annular flow equilibrium quality</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.OAFIDX">
+<span class="sig-name descname"><span class="pre">OAFIDX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.OAFIDX" title="Link to this definition"></a></dt>
+<dd><p>OAFIDX Onset of annular flow node</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.OAFZ">
+<span class="sig-name descname"><span class="pre">OAFZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.OAFZ" title="Link to this definition"></a></dt>
+<dd><p>OAFZ Onset of annular flow elevation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.OAFWL">
+<span class="sig-name descname"><span class="pre">OAFWL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.OAFWL" title="Link to this definition"></a></dt>
+<dd><p>OAFWL Liquid mass flow rate at onset of annular flow</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.AFFNC">
+<span class="sig-name descname"><span class="pre">AFFNC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.AFFNC" title="Link to this definition"></a></dt>
+<dd><p>AFFNC Annular flow function</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.AFDISTR">
+<span class="sig-name descname"><span class="pre">AFDISTR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">param1</span></em>, <em class="sig-param"><span class="pre">param2</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.AFDISTR" title="Link to this definition"></a></dt>
+<dd><p>AFDISTR Annular flow distribution function</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Liquid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
+<p>LIQUID Class representing the liquid phase in a mixture solver simulation</p>
+<p>Provides access to liquid-specific properties and calculations derived
+from the mixture solution.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.Liquid">
+<span class="sig-name descname"><span class="pre">Liquid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.Liquid" title="Link to this definition"></a></dt>
+<dd><p>LIQUID Constructor
+Initializes the liquid object from a Mixture instance.</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.TIME" title="Link to this definition"></a></dt>
+<dd><p>TIME Time series [s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.Z" title="Link to this definition"></a></dt>
+<dd><p>Z Axial node positions [m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.X">
+<span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.X" title="Link to this definition"></a></dt>
+<dd><p>X Liquid mass fraction [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.VF">
+<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.VF" title="Link to this definition"></a></dt>
+<dd><p>VF Liquid volumetric fraction [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.W">
+<span class="sig-name descname"><span class="pre">W</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.W" title="Link to this definition"></a></dt>
+<dd><p>W Liquid mass flow rate [kg/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.U">
+<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.U" title="Link to this definition"></a></dt>
+<dd><p>U Liquid velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.H">
+<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.H" title="Link to this definition"></a></dt>
+<dd><p>H Liquid enthalpy [J/kg]
+Calculated based on mixture &amp; vapor enthalpies and vapor quality
+TODO: Find a better way to prevent division by small 1-X and negative h</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.MFLUX">
+<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.MFLUX" title="Link to this definition"></a></dt>
+<dd><p>MFLUX Liquid mass flux [kg/m^2/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.RE">
+<span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.RE" title="Link to this definition"></a></dt>
+<dd><p>RE Liquid Reynolds number [-]
+TODO: Check definition</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>HFLUX Wall heat flux to liquid phase [W/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.T">
+<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.T" title="Link to this definition"></a></dt>
+<dd><p>T Liquid temperature [K]</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
+<p>VAPOR Class representing the vapor phase in a mixture solver simulation</p>
+<p>Provides access to vapor-specific properties and calculations derived
+from the mixture solution.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Vapor">
+<span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Vapor" title="Link to this definition"></a></dt>
+<dd><p>VAPOR Constructor
+Initializes the vapor object from a Mixture instance.</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.TIME" title="Link to this definition"></a></dt>
+<dd><p>TIME Time series [s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Z" title="Link to this definition"></a></dt>
+<dd><p>Z Axial nodes [m]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.X">
+<span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.X" title="Link to this definition"></a></dt>
+<dd><p>X Vapor mass fraction [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.VF">
+<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.VF" title="Link to this definition"></a></dt>
+<dd><p>VF Void fraction [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.W">
+<span class="sig-name descname"><span class="pre">W</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.W" title="Link to this definition"></a></dt>
+<dd><p>W Vapor mass flow rate [kg/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.U">
+<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.U" title="Link to this definition"></a></dt>
+<dd><p>U Vapor velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.H">
+<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.H" title="Link to this definition"></a></dt>
+<dd><p>H Vapor enthalpy [J/kg]</p>
+<p>Calculation depends on non equilibrium model
+TODO: Find a better way to prevent division by small X</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.MFLUX">
+<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.MFLUX" title="Link to this definition"></a></dt>
+<dd><p>MFLUX Vapor mass flux [kg/m^2-s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.RE">
+<span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.RE" title="Link to this definition"></a></dt>
+<dd><p>RE Vapor Reynolds number [-]
+TODO: Check definition</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HFLUXWALEVAP">
+<span class="sig-name descname"><span class="pre">HFLUXWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HFLUXWALEVAP" title="Link to this definition"></a></dt>
+<dd><p>HFLUX Wall evaporation heat flux [W/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>HFLUX Wall heat flux to vapor [W/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.T">
+<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.T" title="Link to this definition"></a></dt>
+<dd><p>T Vapor temperature [K]</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </section>
 
 
