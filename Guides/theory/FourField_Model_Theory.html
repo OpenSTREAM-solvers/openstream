@@ -58,13 +58,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#implemented-models">Implemented models</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-fluid model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Four-field model</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#closure-relations">Closure relations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#features-and-assumptions">Features and assumptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 </ul>
 </li>
 </ul>
@@ -127,13 +128,21 @@
              
   <section id="four-field-model">
 <h1>Four-field model<a class="headerlink" href="#four-field-model" title="Link to this heading"></a></h1>
-<p>The OpenSTREAM four-field simulation framework extends the traditional three-field model by explicitly representing disturbance waves, in addition to vapor, droplets, and the base liquid film. This modeling approach was originally developed in :cite:t:LECORREMODEL and :cite:t:LeCorre2022NURETH19. It provides improved resolution of annular two-phase flow dynamics, enabling more accurate and detailed simulations.</p>
+<p>The four-field simulation framework in <strong>OpenSTREAM</strong> extends the traditional three-field model by explicitly representing disturbance waves, in addition to vapor, droplets, and the base liquid film. This modeling approach was originally developed in :cite:t:LECORREMODEL and :cite:t:LeCorre2022NURETH19. It provides improved resolution of annular two-phase flow dynamics, enabling more accurate and detailed simulations.</p>
+<p>The four-field model serves several key roles within OpenSTREAM:</p>
+<ul class="simple">
+<li><p>Wave-resolved modeling: Separates the liquid film into base film and disturbance waves, capturing their distinct transport behaviors and interactions.</p></li>
+<li><p>Non-equilibrium dynamics: Includes a Boltzmann-type wave number density transport equation to simulate wave formation, merging, and dissipation.</p></li>
+<li><p>Enhanced predictive capability: Enables detailed simulation of film dryout, wave-driven mass transport, and hydrodynamic transitions in developing annular flow.</p></li>
+</ul>
+<p>By explicitly modeling disturbance waves and their interactions with other flow fields, the four-field framework offers state-of-the-art capabilities for simulating complex annular flow phenomena, including intermittent film dryout.</p>
+<p>An overview of the four-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM and :cite:t:LECORREMODEL.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p><strong>1. Mass conservation</strong></p>
 <p>Base Film: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W_b^n u_b^n) + \frac{\partial W_b^n}{\partial z} = \Pi_p^n D_b^n - \Gamma_{wb,b}^n + \Psi_w^n - \Psi_b^n\)</span></p>
 <p>Disturbance Waves: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W_w^n u_w^n) + \frac{\partial W_w^n}{\partial z} = \Pi_p^n D_w^n - E^n - \Gamma_{wb,w}^n - \Psi_w^n + \Psi_b^n\)</span></p>
-<p>Where:</p>
+<p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(W_b^n\)</span>, <span class="math notranslate nohighlight">\(W_w^n\)</span> are base film and wave mass flow rates</p></li>
 <li><p><span class="math notranslate nohighlight">\(u_b^n\)</span>, <span class="math notranslate nohighlight">\(u_w^n\)</span> are velocities</p></li>
@@ -149,12 +158,22 @@
 <p>Disturbance Waves: <span class="math notranslate nohighlight">\(\Gamma_{wb,w}^n = \frac{{q^{\prime\prime}}_{wall,w}^n}{h_{vs} - h_{ls}}\)</span></p>
 <p><strong>4. Wave number density transport</strong></p>
 <p><span class="math notranslate nohighlight">\(\frac{\partial N_w^n}{\partial t} + \frac{\partial}{\partial z}(u_w^n N_w^n) = \frac{N_w^{eq,n} - N_w^n}{t_w^{Relax}}\)</span></p>
-<p>Where:</p>
+<p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(N_w^n\)</span> is wave number density</p></li>
 <li><p><span class="math notranslate nohighlight">\(N_w^{eq,n}\)</span> is equilibrium wave number density</p></li>
 <li><p><span class="math notranslate nohighlight">\(t_w^{Relax}\)</span> is relaxation time</p></li>
 </ul>
+</section>
+<section id="closure-relations">
+<h2>Closure relations<a class="headerlink" href="#closure-relations" title="Link to this heading"></a></h2>
+<p>To complete the conservation equations, several closure relations are required:</p>
+<ul class="simple">
+<li><p>Same closure relations as for the three-field model</p></li>
+<li></li>
+</ul>
+<p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Wave" title="Solvers.FourField.Wave"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Wave</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a>, which the users can modify to suit specific simulation needs.</p>
+<p>The thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
@@ -164,32 +183,45 @@
 <li><p>Includes wave-film exchange and wave number density evolution</p></li>
 </ul>
 </section>
-<section id="implementation-notes">
-<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>Implemented in the class:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver</span></code></p></li>
-</ul>
-</dd>
-<dt>Key methods:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.solve()</span></code></p></li>
-</ul>
-</dd>
-<dt>Key properties:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.wave.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.wave.U</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.wave.FREQUENCY</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.base.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.base.U</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.drop.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">FourFieldSolver.drop.U</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
 <p>The four-field model provides state-of-the-art simulation capabilities for annular two-phase flow, especially in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer, validated against experimental data.</p>
+</section>
+<hr class="docutils" />
+<section id="implementation-notes">
+<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<p>Package</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers.html#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a></p></li>
+</ul>
+<p>Module</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#module-Solvers.FourField" title="Solvers.FourField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.FourField</span></code></a></p></li>
+</ul>
+<p>Four-field solver class</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#module-Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a></p></li>
+</ul>
+<p>Field classes</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Wave" title="Solvers.FourField.Wave"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Wave</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Drop" title="Solvers.FourField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Drop</span></code></a></p></li>
+</ul>
+<p>Key solver methods</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.solve" title="Solvers.FourField.FourFieldSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.solve()</span></code></a></p></li>
+</ul>
+<p>Key field properties:</p>
+<ul class="simple">
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.U</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.FREQUENCY</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.U</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Drop.W</span></code></p></li>
+<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Drop.U</span></code></p></li>
+</ul>
 </section>
 </section>
 

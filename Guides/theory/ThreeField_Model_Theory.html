@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Four-field model" href="FourField_Model_Theory.html" />
-    <link rel="prev" title="Two-Fluid Model" href="TwoFluid_Model_Theory.html" /> 
+    <link rel="prev" title="Two-fluid model" href="TwoFluid_Model_Theory.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,12 +58,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#implemented-models">Implemented models</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-fluid model</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Three-field model</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#closure-relations">Closure relations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#features-and-assumptions">Features and assumptions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
@@ -127,31 +128,64 @@
              
   <section id="three-field-model">
 <h1>Three-field model<a class="headerlink" href="#three-field-model" title="Link to this heading"></a></h1>
-<p>The Three-Field Simulation Framework in OpenSTREAM is designed for annular two-phase flow under thermal equilibrium conditions. It explicitly models three distinct flow fields: vapor, entrained droplets, and liquid film.</p>
+<p>The three-field simulation framework in <strong>OpenSTREAM</strong> provides a structured representation of annular two-phase flow by solving relevant conservation equations for the liquid film and droplet fields, with the vapor field derived from the mixture solver. This formulation is tailored for saturated flow conditions within a theoretical framework used in other codes, such as in subchannel analysis for Boiling Water Reactor (BWR) fuel simulations (<span id="id1">Adamsson and Le Corre [<a class="reference internal" href="../references.html#id14" title="Carl Adamsson and Jean-Marie Le Corre. Modeling and validation of a mechanistic tool (mefisto) for the prediction of critical power in bwr fuel assemblies. Nuclear Engineering and Design, 241(8):2843-2858, 2011. URL: https://www.sciencedirect.com/science/article/pii/S0029549311000847, doi:https://doi.org/10.1016/j.nucengdes.2011.01.033.">2011</a>]</span>)(<span id="id2">Adamsson and Le Corre [<a class="reference internal" href="../references.html#id13" title="C. Adamsson and J.M. Le Corre. Transient dryout prediction using a computationally efficient method for sub-channel film-flow analysis. Nuclear Engineering and Design, 280:316-325, 2014. URL: https://www.sciencedirect.com/science/article/pii/S0029549314005081, doi:https://doi.org/10.1016/j.nucengdes.2014.09.012.">2014</a>]</span>).</p>
+<p>The three-field model serves several key roles within OpenSTREAM:</p>
+<ul class="simple">
+<li><p>Field separation: Distinguishes between vapor, entrained droplets, and liquid film, enabling detailed modeling of annular flow dynamics.</p></li>
+<li><p>Film and droplet transport: Captures deposition and entrainment processes critical to predicting film dryout and droplet behavior.</p></li>
+<li><p>Thermal equilibrium assumption: Simplifies energy conservation while retaining essential mass and momentum exchanges.</p></li>
+</ul>
+<p>By explicitly modeling the liquid film and droplet fields, the three-field framework enables accurate simulation of saturated annular flow regimes in single channels and supports advanced thermal-hydraulic analysis for various industrial applications.</p>
+<p>An overview of the three-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
+<p>The conservation equations are formulated at the wall level, indexed by <span class="math notranslate nohighlight">\(n\)</span>, supporting multi-wall geometries.</p>
 <p><strong>1. Mass conservation</strong></p>
-<p><span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(W_f^n u_f^n) + \frac{\partial W_f^n}{\partial z} = \Pi_p^n D - E^n - \Gamma_{wb}^n\)</span></p>
-<p>Where:</p>
+<p>Film: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_p^n (D - E^n - \Gamma_{wb}^n)\)</span></p>
+<p>where:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(W_f^n\)</span> is the liquid film mass flow rate</p></li>
-<li><p><span class="math notranslate nohighlight">\(u_f^n\)</span> is the film velocity</p></li>
-<li><p><span class="math notranslate nohighlight">\(D\)</span> is drop deposition mass flux</p></li>
-<li><p><span class="math notranslate nohighlight">\(E\)</span> is film entrainment mass flux</p></li>
-<li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is wall boiling mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(W_f^n\)</span> is the liquid film mass flow rate for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(u_f^n\)</span> is the liquid film velocity for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span> is the drop deposition mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(E\)</span> is the film entrainment mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is the wall boiling mass flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
+<p>The drop mass flow rate, <span class="math notranslate nohighlight">\(W_d\)</span>, is simply computed by subtracting <span class="math notranslate nohighlight">\(W_f\)</span> from the total liquid mass flow rate obtained from the mixture model.</p>
 <p><strong>2. Momentum conservation</strong></p>
-<p>Liquid Film: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_f^n \frac{\partial u_f^n}{\partial t} + u_f^n \frac{\partial u_f^n}{\partial z} = (u_d - u_f^n) D - \delta_f^n \frac{\partial p}{\partial z} + \cos\theta g \rho_{ls} + \tau_{v,f}^n - \tau_{wall,f}^n\)</span></p>
-<p>Droplets: <span class="math notranslate nohighlight">\(\rho_{ls} \frac{\partial u_d}{\partial t} + u_d \frac{\partial u_d}{\partial z} = \sum \Pi_p^n (u_f^n - u_d) E^n - \frac{\partial p}{\partial z} + \cos\theta g \rho_{ls} + A_d V_d \tau_{v,d}\)</span></p>
-<p><strong>3. Energy conservation</strong></p>
-<p>Under thermal equilibrium: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{wall}^n}{h_{vs} - h_{ls}}\)</span></p>
-<p>Where:</p>
+<p>Liquid Film: <span class="math notranslate nohighlight">\(\rho_{ls} \delta_f^n (\frac{\partial u_f^n}{\partial t} + u_f^n \frac{\partial u_f^n}{\partial z}) = (u_d - u_f^n) D - \delta_f^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \tau_{v,f}^n - \tau_{w,f}^n\)</span></p>
+<p>Droplets: <span class="math notranslate nohighlight">\(\rho_{ls} (\frac{\partial u_d}{\partial t} + u_d \frac{\partial u_d}{\partial z}) = (\sum \Pi_p^n (u_f^n - u_d) E^n) \frac{\rho_{ls} u_d}{W_d} - (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \frac{A_d}{V_d} \tau_{v,d}\)</span></p>
+<p>where:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\delta_f^n\)</span> is film thickness</p></li>
-<li><p><span class="math notranslate nohighlight">\(\tau_{v,f}^n\)</span>, <span class="math notranslate nohighlight">\(\tau_{wall,f}^n\)</span> are interfacial and wall shear stresses</p></li>
-<li><p><span class="math notranslate nohighlight">\(A_d\)</span>, <span class="math notranslate nohighlight">\(V_d\)</span> are drop interfacial area and volume</p></li>
-<li><p><span class="math notranslate nohighlight">\(h_{vs}\)</span>, <span class="math notranslate nohighlight">\(h_{ls}\)</span> are saturated vapor and liquid enthalpies</p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho_{ls}\)</span> is the saturated liquid density</p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta_f^n\)</span> is the liquid film thickness for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(u_d\)</span> is the drop velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{v,f}^n\)</span> is the vapor/film interfacial shear stress for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{v,d}^n\)</span> is the vapor/drop interfacial shear stress</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{w,f}^n\)</span> is the wall shear stress on the liquid film for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A_d\)</span>, <span class="math notranslate nohighlight">\(V_d\)</span> are the drop interfacial area and volume (based on surface averaging)</p></li>
 </ul>
+<p><strong>3. Energy conservation</strong></p>
+<p>Under thermal equilibrium: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{w}^n}{h_{vs} - h_{ls}}\)</span></p>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h_{vs}\)</span>, <span class="math notranslate nohighlight">\(h_{ls}\)</span> are the saturated vapor and liquid specific enthalpies</p></li>
+<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{w,l}^n\)</span>, <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{w,v}^n\)</span> are the wall heat flux to liquid and vapor for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+</ul>
+</section>
+<section id="closure-relations">
+<h2>Closure relations<a class="headerlink" href="#closure-relations" title="Link to this heading"></a></h2>
+<p>To complete the conservation equations, several closure relations are required:</p>
+<ul class="simple">
+<li><p>Drop deposition mass flux: <span class="math notranslate nohighlight">\(D\)</span></p></li>
+<li><p>Film entrainement mass flux: <span class="math notranslate nohighlight">\(E\)</span></p></li>
+<li><p>Vapor/film interfacial shear stress: <span class="math notranslate nohighlight">\(\tau_{v,f}^n\)</span></p></li>
+<li><p>Vapor/drop interfacial shear stress: <span class="math notranslate nohighlight">\(\tau_{v,d}^n\)</span></p></li>
+<li><p>Wall shear stress on the liquid film: <span class="math notranslate nohighlight">\(\tau_{w,f}^n\)</span></p></li>
+<li><p>Drop interfacial area and volume: <span class="math notranslate nohighlight">\(A_d\)</span>, <span class="math notranslate nohighlight">\(V_d\)</span></p></li>
+<li><p>Equations of state: Appropriate thermodynamic properties for each phase</p></li>
+</ul>
+<p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film" title="Solvers.ThreeField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a>, which the users can modify to suit specific simulation needs.</p>
+<p>The thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
@@ -162,29 +196,41 @@
 <li><p>Supports multi-wall geometries (e.g., annuli)</p></li>
 </ul>
 </section>
-<section id="implementation-notes">
-<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>Implemented in the class:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ThreeFieldSolver</span></code></p></li>
-</ul>
-</dd>
-<dt>Key methods:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ThreeFieldSolver.solve()</span></code></p></li>
-</ul>
-</dd>
-<dt>Key properties:</dt><dd><ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ThreeFieldSolver.film.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ThreeFieldSolver.film.U</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ThreeFieldSolver.drop.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">ThreeFieldSolver.drop.U</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
-<p>The three-field model is used for advanced boiling water reactor (BWR) simulations and subchannel analysis. It provides detailed modeling of liquid film and droplet dynamics in annular flow regimes.</p>
+<p>The three-field model is the preferred framework for simulating annular two-phase flow up to the point of liquid film dryout. It offers detailed modeling of liquid film and droplet dynamics, making it particularly well-suited for advanced thermal-hydraulic analyses in Boiling Water Reactor (BWR) applications.</p>
+</section>
+<hr class="docutils" />
+<section id="implementation-notes">
+<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<p>Package</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers.html#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a></p></li>
+</ul>
+<p>Module</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#module-Solvers.ThreeField" title="Solvers.ThreeField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.ThreeField</span></code></a></p></li>
+</ul>
+<p>Three-field solver class</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a></p></li>
+</ul>
+<p>Field classes</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film" title="Solvers.ThreeField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a></p></li>
+</ul>
+<p>Key solver methods</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.solve" title="Solvers.ThreeField.ThreeFieldSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.solve()</span></code></a></p></li>
+</ul>
+<p>Key field properties:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.W" title="Solvers.ThreeField.Film.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.U" title="Solvers.ThreeField.Film.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film.U</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.W" title="Solvers.ThreeField.Drop.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.U" title="Solvers.ThreeField.Drop.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.U</span></code></a></p></li>
+</ul>
 </section>
 </section>
 
@@ -192,7 +238,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="TwoFluid_Model_Theory.html" class="btn btn-neutral float-left" title="Two-Fluid Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TwoFluid_Model_Theory.html" class="btn btn-neutral float-left" title="Two-fluid model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="FourField_Model_Theory.html" class="btn btn-neutral float-right" title="Four-field model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

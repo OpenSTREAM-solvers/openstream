@@ -1,4 +1,4 @@
-Two-Fluid Model
+Two-fluid model
 ===============
 
 The two-Fluid simulation framework in **OpenSTREAM** provides a detailed representation of multiphase flow by solving six conservation equations—mass, momentum, and energy for both liquid and vapor phases. This formulation enables the simulation of key non-equilibrium effects and is foundational in nuclear reactor thermal-hydraulic code systems.
@@ -10,6 +10,8 @@ The two-fluid  model serves several key roles within OpenSTREAM:
 - Industry relevance: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.
 
 By explicitly modeling both liquid and vapor phases, the two-fluid approach preserves critical non-equilibrium dynamics while offering a flexible foundation for detailed model development and advanced thermal-hydraulic analysis.
+
+An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM and :cite:t:Walter2024.
 
 Governing equations
 -------------------
@@ -38,8 +40,8 @@ Vapor: :math:`\rho_v A_v (\frac{\partial u_v}{\partial t} + u_v \frac{\partial u
 where
 
 - :math:`A_l`, :math:`A_v` are the liquid and vapor cross-sectional areas
-- :math:`tau_{v,l}` is the interfacial shear stress
-- :math:`tau_{w,l}`, :math:`tau_{w,v}` are the liquid and vapor wall shear stresses
+- :math:`\tau_{v,l}` is the interfacial shear stress
+- :math:`\tau_{w,l}`, :math:`\tau_{w,v}` are the liquid and vapor wall shear stresses
 
 **3. Energy conservation**
 
@@ -67,9 +69,9 @@ To complete the conservation equations, several closure relations are required:
 
 These relations depend on the local flow regime, which is determined by an additional flow regime identification model. 
 
-The selected closure models are defined in the OpenSTREAM :mod:`Inputs.Model`, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Models`. All closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
+The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure relations are implemented in :class:`Solvers.TwoFluid.Liquid` and :class:`Solvers.TwoFluid.Vapor`, which the users can modify to suit specific simulation needs.
 
-The thermodynamic properties for each phase are computed using coolprop, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
+The thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
 Features and assumptions
 ------------------------
@@ -108,11 +110,11 @@ Phase classes
 
 Flow regime enumeration class
 
-- :class:`Solvers.TwoFluid.REGIME`
+- :class:`Solvers.TwoFluid.REGIMES`
 
 Key solver methods
 
-- :meth:`Solvers.TwoFluid.TwoFluidSolver.Mixture.solve()`
+- :meth:`Solvers.TwoFluid.TwoFluidSolver.solve()`
 
 Key field properties:
 

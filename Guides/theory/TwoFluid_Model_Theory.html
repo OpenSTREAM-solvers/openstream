@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Two-Fluid Model &mdash; OpenSTREAM  documentation</title>
+  <title>Two-fluid model &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -58,7 +58,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#implemented-models">Implemented models</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Two-Fluid Model</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Two-fluid model</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#closure-relations">Closure relations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#features-and-assumptions">Features and assumptions</a></li>
@@ -116,7 +116,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory overview</a></li>
-      <li class="breadcrumb-item active">Two-Fluid Model</li>
+      <li class="breadcrumb-item active">Two-fluid model</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/Guides/theory/TwoFluid_Model_Theory.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -127,7 +127,7 @@
            <div itemprop="articleBody">
              
   <section id="two-fluid-model">
-<h1>Two-Fluid Model<a class="headerlink" href="#two-fluid-model" title="Link to this heading"></a></h1>
+<h1>Two-fluid model<a class="headerlink" href="#two-fluid-model" title="Link to this heading"></a></h1>
 <p>The two-Fluid simulation framework in <strong>OpenSTREAM</strong> provides a detailed representation of multiphase flow by solving six conservation equations—mass, momentum, and energy for both liquid and vapor phases. This formulation enables the simulation of key non-equilibrium effects and is foundational in nuclear reactor thermal-hydraulic code systems.</p>
 <p>The two-fluid  model serves several key roles within OpenSTREAM:</p>
 <ul class="simple">
@@ -136,6 +136,7 @@
 <li><p>Industry relevance: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.</p></li>
 </ul>
 <p>By explicitly modeling both liquid and vapor phases, the two-fluid approach preserves critical non-equilibrium dynamics while offering a flexible foundation for detailed model development and advanced thermal-hydraulic analysis.</p>
+<p>An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM and :cite:t:Walter2024.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p><strong>1. Mass conservation</strong></p>
@@ -156,8 +157,8 @@
 <p>where</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(A_l\)</span>, <span class="math notranslate nohighlight">\(A_v\)</span> are the liquid and vapor cross-sectional areas</p></li>
-<li><p><span class="math notranslate nohighlight">\(tau_{v,l}\)</span> is the interfacial shear stress</p></li>
-<li><p><span class="math notranslate nohighlight">\(tau_{w,l}\)</span>, <span class="math notranslate nohighlight">\(tau_{w,v}\)</span> are the liquid and vapor wall shear stresses</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{v,l}\)</span> is the interfacial shear stress</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{w,l}\)</span>, <span class="math notranslate nohighlight">\(\tau_{w,v}\)</span> are the liquid and vapor wall shear stresses</p></li>
 </ul>
 <p><strong>3. Energy conservation</strong></p>
 <p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z}) = -A a_i \Lambda (h_l - h_v) + \sum \Pi_w^n ({q^{\prime\prime}}_{w,l}^n - (h_v - h_l) \Gamma_{wb}^n)\)</span></p>
@@ -181,8 +182,8 @@
 <li><p>Equations of state: Appropriate thermodynamic properties for each phase</p></li>
 </ul>
 <p>These relations depend on the local flow regime, which is determined by an additional flow regime identification model.</p>
-<p>The selected closure models are defined in the OpenSTREAM <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Models</span></code>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>, which the users can modify to suit specific simulation needs.</p>
-<p>The thermodynamic properties for each phase are computed using coolprop, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
+<p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a>, which the users can modify to suit specific simulation needs.</p>
+<p>The thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
@@ -219,11 +220,11 @@
 </ul>
 <p>Flow regime enumeration class</p>
 <ul class="simple">
-<li><p><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.REGIME</span></code></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.REGIMES" title="Solvers.TwoFluid.REGIMES"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.REGIMES</span></code></a></p></li>
 </ul>
 <p>Key solver methods</p>
 <ul class="simple">
-<li><p><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.Mixture.solve()</span></code></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.solve" title="Solvers.TwoFluid.TwoFluidSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.solve()</span></code></a></p></li>
 </ul>
 <p>Key field properties:</p>
 <ul class="simple">

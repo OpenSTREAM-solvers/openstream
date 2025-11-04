@@ -24,7 +24,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Two-Fluid Model" href="TwoFluid_Model_Theory.html" />
+    <link rel="next" title="Two-fluid model" href="TwoFluid_Model_Theory.html" />
     <link rel="prev" title="Theory overview" href="index.html" /> 
 </head>
 
@@ -66,7 +66,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-Fluid Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-fluid model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
 </ul>
@@ -137,6 +137,7 @@
 </ul>
 <p>In addition, a Homogeneous Relaxation Model (HRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.</p>
 <p>By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.</p>
+<p>An overview of the mixture model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p>The mixture model solves the following conservation equations:</p>
@@ -178,11 +179,11 @@
 <p>To complete the conservation equations, several closure relations are required:</p>
 <ul class="simple">
 <li><p>Wall shear stress: <span class="math notranslate nohighlight">\(\tau_w^n\)</span></p></li>
-<li><p>Form pressure losses: frac{partial p_K}{partial z}</p></li>
+<li><p>Form pressure losses: :math:frac{partial p_K}{partial z}</p></li>
 <li><p>Equations of state: Appropriate thermodynamic properties for each phase</p></li>
 </ul>
-<p>The selected closure models are defined in the OpenSTREAM <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Models</span></code>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>, which the users can modify to suit specific simulation needs.</p>
-<p>The thermodynamic properties for each phase are computed using coolprop, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
+<p>For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All relevant closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>, which the users can modify to suit specific simulation needs.</p>
+<p>The thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
@@ -224,9 +225,9 @@
 </ul>
 <p>Key field properties:</p>
 <ul class="simple">
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.Mixture.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.Mixture.P</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.Mixture.H</span></code></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.W" title="Solvers.Mixture.Mixture.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.P" title="Solvers.Mixture.Mixture.P"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.P</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.H" title="Solvers.Mixture.Mixture.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.H</span></code></a></p></li>
 </ul>
 </section>
 </section>
@@ -236,7 +237,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Theory overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="TwoFluid_Model_Theory.html" class="btn btn-neutral float-right" title="Two-Fluid Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="TwoFluid_Model_Theory.html" class="btn btn-neutral float-right" title="Two-fluid model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
