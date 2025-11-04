@@ -30,7 +30,10 @@ bibtex_reference_style = 'author_year'
 
 # -- MATLAB specific configurations ------------------------------------------
 
-matlab_src_dir = '../..'
+import os
+this_dir = os.path.dirname(os.path.abspath(__file__))
+matlab_src_dir = os.path.abspath(os.path.join(this_dir, '..', '..'))
+
 matlab_short_links = False
 matlab_auto_link = 'all'
 matlab_show_property_default_value = True
