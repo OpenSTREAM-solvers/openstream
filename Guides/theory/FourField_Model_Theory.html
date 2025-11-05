@@ -129,12 +129,12 @@
   <section id="four-field-model">
 <h1>Four-field model<a class="headerlink" href="#four-field-model" title="Link to this heading"></a></h1>
 <p>The four-field simulation framework in <strong>OpenSTREAM</strong> extends the traditional three-field model by explicitly representing disturbance waves, in addition to vapor, droplets, and the base liquid film. This modeling approach was originally developed in <span id="id1">Le Corre [<a class="reference internal" href="../../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span> and <span id="id2">Le Corre [<a class="reference internal" href="../references.html#id9" title="J.-M. Le Corre. Non-equilibrium modeling of disturbance waves with phase change in fuel bundle. In Proceedings of the 19th International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-19). Brussels, Belgium, March 6–11 2022.">2022</a>]</span>. It provides improved resolution of annular two-phase flow dynamics, enabling more accurate and detailed simulations.</p>
-<p>The four distinct flow fields: vapor, entrained droplets, base liquid film and disturbance waves, are illustrated in <a class="reference internal" href="#fig-four-field-framework"><span class="std std-numref">Figure 3</span></a>.</p>
+<p>The four distinct flow fields: vapor, entrained droplets, base liquid film and disturbance waves, are illustrated in <a class="reference internal" href="#fig-four-field-framework"><span class="std std-ref">Figure 1. Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).</span></a>.</p>
 <figure class="align-center" id="id5">
 <span id="fig-four-field-framework"></span><a class="reference internal image-reference" href="../../_images/FourFieldFramework.jpg"><img alt="Four-field geometrical characteristic" src="../../_images/FourFieldFramework.jpg" style="width: 500px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Figure 3 </span><span class="caption-text">Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+<p><span class="caption-text">Figure 1. Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The four-field model serves several key roles within OpenSTREAM:</p>
@@ -256,8 +256,8 @@
 <li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Wave.FREQUENCY" title="Solvers.FourField.Wave.FREQUENCY"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.FREQUENCY</span></code></a></p></li>
 <li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Base.W" title="Solvers.FourField.Base.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.W</span></code></a></p></li>
 <li><p><a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Base.U" title="Solvers.FourField.Base.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.U</span></code></a></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Drop.W</span></code></p></li>
-<li><p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Drop.U</span></code></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.W" title="Solvers.ThreeField.Drop.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.W</span></code></a>, inherited by <a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Drop" title="Solvers.FourField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Drop</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.U" title="Solvers.ThreeField.Drop.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.U</span></code></a>, inherited by <a class="reference internal" href="../../Packages/Solvers-FourField.html#Solvers.FourField.Drop" title="Solvers.FourField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Drop</span></code></a></p></li>
 </ul>
 </section>
 </section>

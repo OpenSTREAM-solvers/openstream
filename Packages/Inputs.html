@@ -20,6 +20,7 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -111,11 +112,13 @@
 <h1>Inputs<a class="headerlink" href="#inputs" title="Link to this heading"></a></h1>
 <p>The <a class="reference internal" href="#module-Inputs" title="Inputs"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs</span></code></a> package defines a set of classes used to configure and import all the necessary parameters for running <strong>OpenSTREAM</strong> simulations. This includes:</p>
 <ul class="simple">
-<li><p>Boundary conditions</p></li>
-<li><p>System geometry</p></li>
-<li><p>Physical models</p></li>
-<li><p>Numerical options</p></li>
-<li><p>Fluid thermophysical properties</p></li>
+<li><p>Boundary conditions <a class="reference internal" href="#Inputs.BoundaryConditions" title="Inputs.BoundaryConditions"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.BoundaryConditions</span></code></a></p></li>
+<li><p>System geometry: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Geimetry</span></code></p></li>
+<li><p>Physical models: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Models</span></code></p></li>
+<li><p>Numerical options: <a class="reference internal" href="#Inputs.Options" title="Inputs.Options"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Options</span></code></a></p></li>
+<li><p>Fluid thermophysical properties: <a class="reference internal" href="#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a></p></li>
+<li><p>Input handling: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p></li>
+<li><p>Complete input set management: <a class="reference internal" href="#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a></p></li>
 </ul>
 <p>These input definitions form the backbone of each simulation setup, ensuring consistency, flexibility, and clarity across different solver frameworks.</p>
 <hr class="docutils" />
@@ -134,11 +137,11 @@ Generic properties (e.g., temperature, density, viscosity) are computed dynamica
 <dd><p>FLUIDPROPERTIES Constructor for FluidProperties class</p>
 <p>Initializes fluid properties at given pressure(s) using CoolProp.
 Saturated properties are computed and assigned to each object instance.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>P        - Vector of system pressures [Pa]
-modelObj - Model object containing fluid name and property assumptions</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>P        — Vector of system pressures [Pa]</p></li>
+<li><p>modelObj — Model object containing fluid name and property assumptions</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -272,98 +275,98 @@ modelObj - Model object containing fluid name and property assumptions</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.T">
 <span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.T" title="Link to this definition"></a></dt>
-<dd><p>T [K] Fluid temperature at given enthalpy and system pressure
-Enthalpy is clamped between HMIN and HMAX to ensure valid CoolProp input</p>
+<dd><p>T Fluid temperature at given enthalpy and system pressure [K]</p>
+<p>Enthalpy is clamped between HMIN and HMAX to ensure valid CoolProp input</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.H">
 <span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">T</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.H" title="Link to this definition"></a></dt>
-<dd><p>H [J/kg] Fluid enthalpy at given temperature and system pressure</p>
+<dd><p>H Fluid enthalpy at given temperature and system pressure [J/kg]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.RHOL">
 <span class="sig-name descname"><span class="pre">RHOL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.RHOL" title="Link to this definition"></a></dt>
-<dd><p>RHOL [kg/m^3] Liquid mass density
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>RHOL Liquid mass density [kg/m^3]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.RHOV">
 <span class="sig-name descname"><span class="pre">RHOV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.RHOV" title="Link to this definition"></a></dt>
-<dd><p>RHOV [kg/m^3] Vapor mass density
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>RHOV Vapor mass density [kg/m^3]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.MUL">
 <span class="sig-name descname"><span class="pre">MUL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.MUL" title="Link to this definition"></a></dt>
-<dd><p>MUL [Pa.s] Liquid dynamic viscosity
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>MUL Liquid dynamic viscosity [Pa.s]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.MUV">
 <span class="sig-name descname"><span class="pre">MUV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.MUV" title="Link to this definition"></a></dt>
-<dd><p>MUV [Pa.s] Vapor dynamic viscosity
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>MUV Vapor dynamic viscosity [Pa.s]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.KL">
 <span class="sig-name descname"><span class="pre">KL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.KL" title="Link to this definition"></a></dt>
-<dd><p>KL [W/m/K] Liquid thermal conductivity
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>KL Liquid thermal conductivity [W/m/K]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.KV">
 <span class="sig-name descname"><span class="pre">KV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.KV" title="Link to this definition"></a></dt>
-<dd><p>KV [W/m/K] Vapor thermal conductivity
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>KV Vapor thermal conductivity [W/m/K]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.CPL">
 <span class="sig-name descname"><span class="pre">CPL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.CPL" title="Link to this definition"></a></dt>
-<dd><p>CPL [J/kg/K] Liquid constant pressure specific heat
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>CPL Liquid constant pressure specific heat [J/kg/K]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.CPV">
 <span class="sig-name descname"><span class="pre">CPV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.CPV" title="Link to this definition"></a></dt>
-<dd><p>CPV [J/kg/K] Vapor constant pressure specific heat
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>CPV Vapor constant pressure specific heat [J/kg/K]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.ALPHAL">
 <span class="sig-name descname"><span class="pre">ALPHAL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.ALPHAL" title="Link to this definition"></a></dt>
-<dd><p>ALPHAL [m^2/s] Liquid thermal diffusivity
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>ALPHAL Liquid thermal diffusivity [m^2/s]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.ALPHAV">
 <span class="sig-name descname"><span class="pre">ALPHAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.ALPHAV" title="Link to this definition"></a></dt>
-<dd><p>ALPHAV [m^2/s] Vapor thermal diffusivity
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>ALPHAV Vapor thermal diffusivity  [m^2/s]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.PRANDTLL">
 <span class="sig-name descname"><span class="pre">PRANDTLL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.PRANDTLL" title="Link to this definition"></a></dt>
-<dd><p>PRANDTLL [-] Liquid Prandtl number
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>PRANDTLL Liquid Prandtl number [-]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.FluidProperties.PRANDTLV">
 <span class="sig-name descname"><span class="pre">PRANDTLV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">H</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.FluidProperties.PRANDTLV" title="Link to this definition"></a></dt>
-<dd><p>PRANDTLV [-] Vapor Prandtl number
-Behavior depends on property assumption model (SATURATED or PSYSTEM)</p>
+<dd><p>PRANDTLV Vapor Prandtl number [-]</p>
+<p>Behavior depends on property assumption model (<a class="reference internal" href="#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>)</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -400,11 +403,11 @@ and handles default values as well as input validation.</p>
 <dd><p>MODEL Constructor for Model class</p>
 <p>Parses model input file and initializes properties.
 Applies default values and validates entries.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePath - Path to model input file
-modelID  - Identifier for model configuration</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePath — Path to model input file</p></li>
+<li><p>modelID  — Identifier for model configuration</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -977,12 +980,10 @@ modelID  - Identifier for model configuration</p>
 <dt class="sig sig-object mat" id="Inputs.Model.writeInputFile">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">ID</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Model.writeInputFile" title="Link to this definition"></a></dt>
 <dd><p>WRITEINPUTFILE Writes model configuration data to input file</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePathName - Path to output file
-ID           - Model identifier
-varargin     - Additional name-value pairs for model properties</p>
-</dd>
-</dl>
+<p>Inputs:
+- filePathName — Path to output file
+- ID           — Model identifier
+- varargin     — Additional name-value pairs for model properties</p>
 </dd></dl>
 
 </dd>
@@ -1006,11 +1007,11 @@ area-based diameter, and wall perimeter ratios.</p>
 <dd><p>GEOMETRY Constructor for Geometry class</p>
 <p>Parses geometry input file and initializes properties.
 Applies default values if no input is provided.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePath   - Path to geometry input file
-geometryID - Identifier for geometry configuration</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePath   — Path to geometry input file</p></li>
+<li><p>geometryID — Identifier for geometry configuration</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1048,15 +1049,15 @@ geometryID - Identifier for geometry configuration</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.Geometry.HDIAM">
 <span class="sig-name descname"><span class="pre">HDIAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.HDIAM" title="Link to this definition"></a></dt>
-<dd><p>HDIAM [m] Hydraulic diameter
-Formula: 4 * AREA / total perimeter</p>
+<dd><p>HDIAM Hydraulic diameter [m]</p>
+<p>Formula: <span class="math notranslate nohighlight">\(4 \frac{Area}{Total perimeter}\)</span></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.Geometry.ADIAM">
 <span class="sig-name descname"><span class="pre">ADIAM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.ADIAM" title="Link to this definition"></a></dt>
-<dd><p>ADIAM [m] Diameter based on coolant cross-section area
-Formula: 2 * sqrt(AREA / pi)</p>
+<dd><p>ADIAM Diameter based on coolant cross-section area [m]</p>
+<p>Formula: <span class="math notranslate nohighlight">\(2 \sqrt{\frac{\text{AREA}}{\pi}}\)</span></p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1068,19 +1069,19 @@ Formula: 2 * sqrt(AREA / pi)</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.Geometry.RWALL">
 <span class="sig-name descname"><span class="pre">RWALL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.RWALL" title="Link to this definition"></a></dt>
-<dd><p>RWALL [-] Relative contribution of each wall segment to total perimeter</p>
+<dd><p>RWALL Relative contribution of each wall segment to total perimeter [-]</p>
 </dd></dl>
 
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="Inputs.Geometry.writeInputFile">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">ID</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry.writeInputFile" title="Link to this definition"></a></dt>
 <dd><p>Writes geometry input data to file</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePathName - Path to output file
-ID           - Geometry identifier
-varargin     - Additional name-value pairs for geometry properties</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePathName — Path to output file</p></li>
+<li><p>ID           — Geometry identifier</p></li>
+<li><p>varargin     — Additional name-value pairs for geometry properties</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1103,12 +1104,12 @@ Supports dynamic property creation, default value handling, and solver-dependent
 <dd><p>INPUT Constructor for Input class</p>
 <p>Parses input file and optionally filters entries by key-value pair.
 Adds dynamic property ‘inputStruct’ to hold parsed data.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>inputFilePath - Path to input file (string)
-key           - Field name to filter by (optional)
-val           - Value to match for filtering (optional)</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>inputFilePath — Path to input file (string)</p></li>
+<li><p>key           — Field name to filter by (optional)</p></li>
+<li><p>val           — Value to match for filtering (optional)</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1143,8 +1144,8 @@ Returns flags and default value if applicable</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.Input.defaultValueUsedReport">
 <span class="sig-name descname"><span class="pre">defaultValueUsedReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">propNames</span></em>, <em class="sig-param"><span class="pre">propValues</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Input.defaultValueUsedReport" title="Link to this definition"></a></dt>
-<dd><p>DEFAULTVALUEUSEDREPORT Generates report of properties for which default values were used
-Can print or return formatted string array</p>
+<dd><p>DEFAULTVALUEUSEDREPORT Generates report of properties for which default values were used</p>
+<p>Can print or return formatted string array</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1196,11 +1197,11 @@ values as well as input validation.</p>
 <dd><p>MODEL Constructor for Options class</p>
 <p>Parses options input file and initializes properties.
 Applies default values and validates entries.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePath   - Path to options input file
-optionsID  - Identifier for options configuration</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePath  — Path to options input file</p></li>
+<li><p>optionsID — Identifier for options configuration</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1449,12 +1450,12 @@ optionsID  - Identifier for options configuration</p>
 <dt class="sig sig-object mat" id="Inputs.Options.writeInputFile">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">ID</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options.writeInputFile" title="Link to this definition"></a></dt>
 <dd><p>Writes numerical options configuration to input file</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePathName - Path to output file
-ID           - Options identifier
-varargin     - Additional name-value pairs for options properties</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePathName — Path to output file</p></li>
+<li><p>ID           — Options identifier</p></li>
+<li><p>varargin     — Additional name-value pairs for options properties</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1470,16 +1471,13 @@ varargin     - Additional name-value pairs for options properties</p>
 <p>This class provides access to boundary condition inputs and saturated
 fluid properties at system pressure. It is used by the solvers to initialize
 and manage inlet conditions, power distributions, and fluid state calculations.</p>
-<dl class="simple">
-<dt>Key Features:</dt><dd><ul class="simple">
+<p>Key Features:</p>
+<ul class="simple">
 <li><p>Parses input files and assigns values to boundary condition fields.</p></li>
-<li><p>Interfaces with fluid property libraries to compute saturation and
-inlet thermodynamic states.</p></li>
+<li><p>Interfaces with fluid property libraries to compute saturation and inlet thermodynamic states.</p></li>
 <li><p>Validates consistency between geometry and power mesh definitions.</p></li>
 <li><p>Supports plotting of boundary condition time series.</p></li>
 </ul>
-</dd>
-</dl>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
@@ -1488,11 +1486,11 @@ inlet thermodynamic states.</p></li>
 <dd><p>BOUNDARYCONDITIONS Constructor for BoundaryConditions class</p>
 <p>Parses input file and initializes boundary condition parameters.
 Validates consistency with geometry and applies default values if needed.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePath         - Path to input file (optional)
-geometryObjInput - Geometry object for validation</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePath         — Path to input file (optional)</p></li>
+<li><p>geometryObjInput — Geometry object for validation</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1542,74 +1540,72 @@ geometryObjInput - Geometry object for validation</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TSAT">
 <span class="sig-name descname"><span class="pre">TSAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TSAT" title="Link to this definition"></a></dt>
-<dd><p>TSAT [K] Saturation temperature at system pressure using fluid object</p>
+<dd><p>TSAT Saturation temperature at system pressure using fluid object [K]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HF">
 <span class="sig-name descname"><span class="pre">HF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HF" title="Link to this definition"></a></dt>
-<dd><p>HF [J/kg] Liquid saturated enthalpy at system pressure using fluid object</p>
+<dd><p>HF Liquid saturated enthalpy at system pressure using fluid object [J/kg]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.HG">
 <span class="sig-name descname"><span class="pre">HG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.HG" title="Link to this definition"></a></dt>
-<dd><p>HG [J/kg] Vapor saturated enthalpy at system pressure using fluid object</p>
+<dd><p>HG Vapor saturated enthalpy at system pressure using fluid object [J/kg]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.TIN">
 <span class="sig-name descname"><span class="pre">TIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.TIN" title="Link to this definition"></a></dt>
-<dd><p>TIN [K] Inlet temperature based on inlet enthalpy and pressure</p>
+<dd><p>TIN Inlet temperature based on inlet enthalpy and pressure [K]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DTIN">
 <span class="sig-name descname"><span class="pre">DTIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DTIN" title="Link to this definition"></a></dt>
-<dd><p>DTIN [K] Inlet subcooling temperature (TSAT - TIN)</p>
+<dd><p>DTIN Inlet subcooling temperature (TSAT - TIN) [K]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.DHIN">
 <span class="sig-name descname"><span class="pre">DHIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.DHIN" title="Link to this definition"></a></dt>
-<dd><p>DHIN [J/kg] Inlet subcooling enthalpy (HF - HIN)</p>
+<dd><p>DHIN Inlet subcooling enthalpy (HF - HIN) [J/kg]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.XIN">
 <span class="sig-name descname"><span class="pre">XIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.XIN" title="Link to this definition"></a></dt>
-<dd><p>XIN [-] Inlet equilibrium quality</p>
+<dd><p>XIN Inlet equilibrium quality [-]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.plot">
 <span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.plot" title="Link to this definition"></a></dt>
 <dd><p>PLOT Generates plots of boundary condition parameters over time</p>
-<dl>
-<dt>Inputs:</dt><dd><p>fluidObj - FluidProperties object
-opt      - Struct with fields:</p>
+<p>Inputs:
+- fluidObj — FluidProperties object
+- opt      — Struct with fields:</p>
 <blockquote>
-<div><p>display   - Cell array of parameters to plot
-tIdx      - Time indices to include
-unitTemp  - Temperature unit (‘K’ or ‘C’)</p>
+<div><ul class="simple">
+<li><p>display  — Cell array of parameters to plot</p></li>
+<li><p>tIdx     — Time indices to include</p></li>
+<li><p>unitTemp — Temperature unit (‘K’ or ‘C’)</p></li>
+</ul>
 </div></blockquote>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.writeInputFile">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">TIME</span></em>, <em class="sig-param"><span class="pre">PRESSURE</span></em>, <em class="sig-param"><span class="pre">HIN</span></em>, <em class="sig-param"><span class="pre">MFLOW</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.writeInputFile" title="Link to this definition"></a></dt>
 <dd><p>WRITEINPUTFILE Writes boundary condition data to input file</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>filePathName - Path to output file
-TIME         - Time value [s]
-PRESSURE     - Pressure value [Pa]
-HIN          - Enthalpy value [J/kg]
-MFLOW        - Mass flow rate [kg/s]
-varargin     - Additional name-value pairs</p>
-</dd>
-</dl>
+<p>Inputs:
+- filePathName — Path to output file
+- TIME         — Time value [s]
+- PRESSURE     — Pressure value [Pa]
+- HIN          — Enthalpy value [J/kg]
+- MFLOW        — Mass flow rate [kg/s]
+- varargin     — Additional name-value pairs</p>
 </dd></dl>
 
 </dd>
@@ -1632,18 +1628,18 @@ via a Session object. It also supports applying solver-dependent property modifi
 <dd><p>INPUTSET Constructor for InputSet class</p>
 <p>Initializes all input objects and sets up logging session.
 Parses input files and handles warnings.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><dl class="simple">
-<dt>opts - Struct with fields:</dt><dd><p>modelFilePath, modelID
-optionsFilePath, optionsID
-geometryFilePath, geometryID
-bcFilePath
-LOGMODE, sessionName, sessionDirName
-sessionParentDir, overwriteSessionFiles</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<p>Inputs:
+- opts — Struct with fields:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>modelFilePath, modelID</p></li>
+<li><p>optionsFilePath, optionsID</p></li>
+<li><p>geometryFilePath, geometryID</p></li>
+<li><p>bcFilePath</p></li>
+<li><p>LOGMODE, sessionName, sessionDirName</p></li>
+<li><p>sessionParentDir, overwriteSessionFiles</p></li>
+</ul>
+</div></blockquote>
 </dd></dl>
 
 </dd>
@@ -1683,11 +1679,9 @@ sessionParentDir, overwriteSessionFiles</p>
 <span class="sig-name descname"><span class="pre">applySolverDependentProps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">solverName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.applySolverDependentProps" title="Link to this definition"></a></dt>
 <dd><p>APPLYSOLVERDEPENDENTPROPS Applies solver-dependent property modifications to all input objects</p>
 <p>Useful for customizing inputs based on selected solver</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>inputSet   - InputSet object
-solverName - Name of the solver to apply dependencies for</p>
-</dd>
-</dl>
+<p>Inputs:
+- inputSet   — InputSet object
+- solverName — Name of the solver to apply dependencies for</p>
 </dd></dl>
 
 </dd>
