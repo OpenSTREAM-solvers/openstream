@@ -3,12 +3,16 @@ Four-field model
 
 The four-field simulation framework in **OpenSTREAM** extends the traditional three-field model by explicitly representing disturbance waves, in addition to vapor, droplets, and the base liquid film. This modeling approach was originally developed in :cite:t:`LECORREMODEL` and :cite:t:`LeCorre2022NURETH19`. It provides improved resolution of annular two-phase flow dynamics, enabling more accurate and detailed simulations.
 
+The four distinct flow fields: vapor, entrained droplets, base liquid film and disturbance waves, are illustrated in :numref:`fig-four-field-framework`.
+
+.. _fig-four-field-framework:
+
 .. figure:: figures/FourFieldFramework.jpg
    :alt: Four-field geometrical characteristic
    :width: 500px
    :align: center
 
-   Figure 1: Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).
+   Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).
 
 The four-field model serves several key roles within OpenSTREAM:
 
@@ -82,7 +86,7 @@ Closure relations
 To complete the conservation equations, several closure relations are required:
 
 - Same closure relations as for the :doc:`three-field model <ThreeField_Model_Theory>`
-- Base film/wavep mass flow rate split at onset of annular two-phase flow
+- Base film/wave mass flow rate split at onset of annular two-phase flow
 - Drop deposition split between base film and wave fields
 - Exchange mass fluxes between film and waves: :math:`\Psi_w^n`, :math:`\Psi_b^n`
 - Wall boiling split between base film and wave fields

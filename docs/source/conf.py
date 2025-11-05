@@ -25,6 +25,14 @@ extensions = [
     'sphinx.ext.autosectionlabel',
     'sphinx_new_tab_link'
 ]
+
+numfig = True
+numfig_format = {
+    'figure': 'Figure %s',
+    'table': 'Table %s',
+    'code-block': 'Listing %s'
+}
+
 primary_domain = 'mat'
 
 templates_path = ['_templates']
