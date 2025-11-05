@@ -5,7 +5,6 @@ classdef InputSet
     % It handles model, options, geometry, and boundary condition inputs, and sets up logging
     % via a Session object. It also supports applying solver-dependent property modifications.
 
-   
     properties (SetAccess = private)
 
         model                                                              % Model input object
@@ -13,11 +12,11 @@ classdef InputSet
         geometry                                                           % Geometry input object
         bc                                                                 % BoundaryConditions input object
         session                   (1,1) Session.Session                    % Session object for logging and file management
-    
+
     end
-    
+
     methods
-        
+
         function obj = InputSet(opts)
             %INPUTSET Constructor for InputSet class
             %
@@ -25,24 +24,24 @@ classdef InputSet
             % Parses input files and handles warnings.
             %
             % Inputs:
-            %   opts - Struct with fields:
-            %       modelFilePath, modelID
-            %       optionsFilePath, optionsID
-            %       geometryFilePath, geometryID
-            %       bcFilePath
-            %       LOGMODE, sessionName, sessionDirName
-            %       sessionParentDir, overwriteSessionFiles
+            % - opts — Struct with fields:
+            %          - modelFilePath, modelID
+            %          - optionsFilePath, optionsID
+            %          - geometryFilePath, geometryID
+            %          - bcFilePath
+            %          - LOGMODE, sessionName, sessionDirName
+            %          - sessionParentDir, overwriteSessionFiles
 
             arguments
                 opts.modelFilePath      {isfile}            = ''           % Model input file (inp/json)
                 opts.modelID            {mustBeTextScalar}  = ''           % Model identifier
-                
+
                 opts.optionsFilePath    {isfile}            = ''           % Options input file (inp/json)
                 opts.optionsID          {mustBeTextScalar}  = ''           % Options identifier
-                
+
                 opts.geometryFilePath   {isfile}            = ''           % Geometry input file (inp/json)
                 opts.geometryID         {mustBeTextScalar}  = ''           % Geometry identifier
-                
+
                 opts.bcFilePath         {isfile}            = ''           % Boundary condition input file (inp/json)
 
                 opts.LOGMODE (1,1)      Session.LogMode     = Session.LogMode.LOGTOCONSOLEONLY
@@ -55,7 +54,7 @@ classdef InputSet
 
             % Import packages
             import Inputs.*
-            
+
             % Setup Log mechanism
             % Build sessionName as needed
             if opts.sessionName == ""
@@ -67,9 +66,9 @@ classdef InputSet
             % Build sessionDirName as needed
             if opts.sessionDirName == ""
                 sessionDirName = strcat( ...
-                                    opts.geometryID,'-', ...
-                                    opts.modelID,'-', ...
-                                    opts.optionsID);
+                    opts.geometryID,'-', ...
+                    opts.modelID,'-', ...
+                    opts.optionsID);
             else
                 sessionDirName = opts.sessionDirName;
             end
@@ -77,12 +76,12 @@ classdef InputSet
             % Create Log
             sessionParentDir = opts.sessionParentDir;
             obj.session = Session.Session( ...
-                                "name",sessionName, ...
-                                "dirName",sessionDirName, ...
-                                "parentDir",sessionParentDir, ...
-                                "overwriteFiles", opts.overwriteSessionFiles);
+                "name",sessionName, ...
+                "dirName",sessionDirName, ...
+                "parentDir",sessionParentDir, ...
+                "overwriteFiles", opts.overwriteSessionFiles);
             obj.session.setupLog(opts.LOGMODE);
-            
+
             % Create input objects
             obj.session.log.diaryOn();
             try
@@ -95,12 +94,12 @@ classdef InputSet
                 obj.session.log.diaryOn();
                 rethrow(ME)
             end
-            
+
             % process warnings
             inputsWithWarnings = {obj.model, obj.options, obj.geometry, obj.bc};
             for inputTypeIdx=1:length(inputsWithWarnings)
                 inputObjs = inputsWithWarnings{inputTypeIdx};
-               
+
                 % inputObjs is an array for obj.bc in transient situations.
                 for inputObj = inputObjs
                     for warningIdx = 1:length(inputObj.warnings)
@@ -111,28 +110,27 @@ classdef InputSet
 
             obj.session.log.diaryOff();
         end
-        
+
         function inputSet = applySolverDependentProps(inputSet, solverName)
             %APPLYSOLVERDEPENDENTPROPS Applies solver-dependent property modifications to all input objects
             %
             % Useful for customizing inputs based on selected solver
             %
             % Inputs:
-            %   inputSet   - InputSet object
-            %   solverName - Name of the solver to apply dependencies for
+            % - inputSet   — InputSet object
+            % - solverName — Name of the solver to apply dependencies for
 
             arguments
                 inputSet        Inputs.InputSet
                 solverName      {mustBeTextScalar}
             end
-            
+
             inputSet.model = inputSet.model.applySolverDependentProperties(solverName);
             inputSet.options = inputSet.options.applySolverDependentProperties(solverName);
             inputSet.geometry = inputSet.geometry.applySolverDependentProperties(solverName);
             inputSet.bc = inputSet.bc.applySolverDependentProperties(solverName);
         end
-    
-    end
-    
-end
 
+    end
+
+end

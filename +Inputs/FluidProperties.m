@@ -4,9 +4,9 @@ classdef FluidProperties
     % This class encapsulates saturated and generic fluid properties used in thermal-hydraulic simulations.
     % Saturated properties are computed based on system pressure and stored as class properties.
     % Generic properties (e.g., temperature, density, viscosity) are computed dynamically using enthalpy and pressure.
-    
+
     properties (SetAccess=immutable)
-        
+
         FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid identifier
         PROPERTIES (1,1) InputEnums.FLUIDPROPERTIES                        = 'SATURATED'           % Fluid property assumptions
         PRESSURE   (1,1) double  {mustBeNumeric}                           = 1                     % System pressure [Pa]
@@ -28,7 +28,7 @@ classdef FluidProperties
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
-        
+
     end
 
     properties (SetAccess=private, Hidden)
@@ -39,9 +39,9 @@ classdef FluidProperties
         HMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum enthalpy [J/kg]
 
         coolpropH   CoolPropWrapper.CoolPropWrapper
-   
+
     end
-    
+
     methods
         function obj = FluidProperties(P, modelObj)
             %FLUIDPROPERTIES Constructor for FluidProperties class
@@ -50,20 +50,21 @@ classdef FluidProperties
             % Saturated properties are computed and assigned to each object instance.
             %
             % Inputs:
-            %   P        - Vector of system pressures [Pa]
-            %   modelObj - Model object containing fluid name and property assumptions
+            %
+            % - P        — Vector of system pressures [Pa]
+            % - modelObj — Model object containing fluid name and property assumptions
 
             arguments
-                P        
+                P
                 modelObj (1,1)        {isa(modelObj, 'Model')}
             end
-            
+
             % Import the CoolPropWrapper class
             import CoolPropWrapper.CoolPropWrapper
 
             % Create fluid property object array
             obj(1:length(P)) = obj;
-            
+
             % Setup CoolProp
             coolpropH = CoolPropWrapper(modelObj.FLUID);
 
@@ -72,7 +73,7 @@ classdef FluidProperties
 
             % set to vector mode
             coolpropH.setOutputMode('vec');
-            
+
             % Calculate properties at saturation
             coolpropH.setSpecifyPhase('twophase');
             TSAT     = coolpropH.temperature('P',P,'Q',1);                 % [K] Saturated fluid temperature
@@ -101,7 +102,7 @@ classdef FluidProperties
             HMIN     = coolpropH.enthalpy('P',P,'T',TMIN);                 % [J/kg] Minimum enthalpy
             TMAX     = coolpropH.CoolProp.Tmax-1;                          % [K] Maximum temperature
             HMAX     = coolpropH.enthalpy('P',P,'T',TMAX);                 % [J/kg] Maximum enthalpy
-            
+
             % Assign properties to each object
             for i = 1:length(obj)
 
@@ -138,32 +139,33 @@ classdef FluidProperties
                 obj(i).HMAX     = HMAX(i);                                 % [J/kg] Maximum enthalpy
 
             end
-            
         end
 
         function t = T(obj,H)
-        %T [K] Fluid temperature at given enthalpy and system pressure
-        % Enthalpy is clamped between HMIN and HMAX to ensure valid CoolProp input
+            %T Fluid temperature at given enthalpy and system pressure [K]
+            %
+            % Enthalpy is clamped between HMIN and HMAX to ensure valid CoolProp input
 
             H = min(max(H,obj.HMIN),obj.HMAX);                             % [J/kg]
-            t = obj.coolpropH.temperature('P',obj.PRESSURE,'H',H); 
+            t = obj.coolpropH.temperature('P',obj.PRESSURE,'H',H);
         end
-        
+
         function h = H(obj,T)
-        %H [J/kg] Fluid enthalpy at given temperature and system pressure
-        %
+            %H Fluid enthalpy at given temperature and system pressure [J/kg]
+
             h = obj.coolpropH.enthalpy('P',obj.PRESSURE,'T',T);
         end
-        
+
         function rhol = RHOL(obj,H)
-        %RHOL [kg/m^3] Liquid mass density
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %RHOL Liquid mass density [kg/m^3]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     rhol = repmat(obj.RHOF,numel(H),1);
@@ -172,16 +174,17 @@ classdef FluidProperties
                     rhol = obj.coolpropH.density('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function rhov = RHOV(obj,H)
-        %RHOV [kg/m^3] Vapor mass density
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %RHOV Vapor mass density [kg/m^3]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     rhov = repmat(obj.RHOG,numel(H),1);
@@ -190,10 +193,11 @@ classdef FluidProperties
                     rhov = obj.coolpropH.density('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function mul = MUL(obj,H)
-        %MUL [Pa.s] Liquid dynamic viscosity
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %MUL Liquid dynamic viscosity [Pa.s]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
@@ -207,10 +211,11 @@ classdef FluidProperties
                     mul = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function muv = MUV(obj,H)
-        %MUV [Pa.s] Vapor dynamic viscosity
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %MUV Vapor dynamic viscosity [Pa.s]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
@@ -224,34 +229,36 @@ classdef FluidProperties
                     muv = obj.coolpropH.viscosity('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function kl = KL(obj,H)
-        %KL [W/m/K] Liquid thermal conductivity
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %KL Liquid thermal conductivity [W/m/K]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     kl = repmat(obj.KF,numel(H),1);
                 case InputEnums.FLUIDPROPERTIES.PSYSTEM
-                    H = max(min(H,obj.HF),obj.HMIN);
+                    H = max(min(H,obj.HF),obj.HMIN);                       % [J/kg]
                     kl = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function kv = KV(obj,H)
-        %KV [W/m/K] Vapor thermal conductivity
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %KV Vapor thermal conductivity [W/m/K]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     kv = repmat(obj.KG,numel(H),1);
@@ -260,16 +267,17 @@ classdef FluidProperties
                     kv = obj.coolpropH.conductivity('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function cpl = CPL(obj,H)
-        %CPL [J/kg/K] Liquid constant pressure specific heat
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %CPL Liquid constant pressure specific heat [J/kg/K]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     cpl = repmat(obj.CPF,numel(H),1);
@@ -278,16 +286,17 @@ classdef FluidProperties
                     cpl = obj.coolpropH.cp('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function cpv = CPV(obj,H)
-        %CPV [J/kg/K] Vapor constant pressure specific heat
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %CPV Vapor constant pressure specific heat [J/kg/K]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     cpv = repmat(obj.CPG,numel(H),1);
@@ -298,14 +307,15 @@ classdef FluidProperties
         end
 
         function alphal = ALPHAL(obj,H)
-        %ALPHAL [m^2/s] Liquid thermal diffusivity
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %ALPHAL Liquid thermal diffusivity [m^2/s]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     alphal = repmat(obj.ALPHAF,numel(H),1);
@@ -313,16 +323,17 @@ classdef FluidProperties
                     alphal = obj.KL(H)./obj.RHOL(H)./obj.CPL(H);
             end
         end
-        
+
         function alphav = ALPHAV(obj,H)
-        %ALPHAV [m^2/s] Vapor thermal diffusivity
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %ALPHAV Vapor thermal diffusivity  [m^2/s]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     alphav = repmat(obj.ALPHAG,numel(H),1);
@@ -330,16 +341,17 @@ classdef FluidProperties
                     alphav = obj.KV(H)./obj.RHOV(H)./obj.CPV(H);
             end
         end
-        
+
         function prandtll = PRANDTLL(obj,H)
-        %PRANDTLL [-] Liquid Prandtl number
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
+            %PRANDTLL Liquid Prandtl number [-]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
 
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     prandtll = repmat(obj.PRANDTLF,numel(H),1);
@@ -348,16 +360,17 @@ classdef FluidProperties
                     prandtll = obj.coolpropH.prandtl('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function prandtlv = PRANDTLV(obj,H)
-        %PRANDTLV [-] Vapor Prandtl number
-        % Behavior depends on property assumption model (SATURATED or PSYSTEM)
-        
+            %PRANDTLV Vapor Prandtl number [-]
+            %
+            % Behavior depends on property assumption model (:attr:`Inputs.Model.PROPERTIES`)
+
             arguments
                 obj
                 H
             end
-            
+
             switch obj.PROPERTIES
                 case InputEnums.FLUIDPROPERTIES.SATURATED
                     prandtlv = repmat(obj.PRANDTLG,numel(H),1);
@@ -366,27 +379,27 @@ classdef FluidProperties
                     prandtlv = obj.coolpropH.prandtl('P',obj.PRESSURE,'H',H);
             end
         end
-        
+
         function paramData = transient(obj, param, opt)
-        %TRANSIENT Generate transient distribution array for parameter param
-        
+            %TRANSIENT Generate transient distribution array for parameter param
+
             arguments
                 obj
                 param         (1,1) string {mustBeTextScalar}
                 opt.tIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive} = 1:length(obj)
             end
-            
+
             paramData = [obj(opt.tIdx).(param)];
         end
-        
+
         function plot(obj, H)
-        %PLOT Plot properties for given enthalpy vector
-        
+            %PLOT Plot properties for given enthalpy vector
+
             arguments
                 obj
                 H
             end
-            
+
             figure( ...
                 'name',sprintf('%s property plots at %s [Pa]',obj.FLUID, num2str(obj.PRESSURE)) ...
                 );
@@ -410,11 +423,10 @@ classdef FluidProperties
                 xlabel('Enthalpy [J/kg]'); xlim([min(H) max(H)]);
                 ylabel(plotLabelY)
                 set(gca,'fontSize',14)
-            
+
             end
         end
 
     end
 
 end
-

@@ -26,7 +26,7 @@ extensions = [
     'sphinx_new_tab_link'
 ]
 
-numfig = True
+numfig = False
 numfig_format = {
     'figure': 'Figure %s',
     'table': 'Table %s',
@@ -52,6 +52,7 @@ matlab_short_links = False
 matlab_auto_link = 'all'
 matlab_show_property_default_value = True
 matlab_class_signature = True
+matlab_keep_private_members = True
 autoclass_content = 'class'
 autodoc_member_order = 'bysource'
 autodoc_default_options = {
