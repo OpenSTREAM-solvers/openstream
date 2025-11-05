@@ -6,7 +6,7 @@ classdef BUBBLEDRAG
     %
     % Models:
     %
-    % - CONSTANT   — Constant drag coefficient using user-defined BUBBLEDRAGCOEF
+    % - CONSTANT   — Constant drag coefficient using user-defined :attr:`Inputs.Model.BUBBLEDRAGCOEF`
     % - STOKES     — Stokes flow regime model (:math:`\frac{24}{Re_{p}}`)
     % - VISCOUS    — Viscous regime model (:cite:t:`Walter2024`)
     % - DISTORTED  — Model for distorted bubbles (non-spherical) (:cite:t:`Walter2024`)

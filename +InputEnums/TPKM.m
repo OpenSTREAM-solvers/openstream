@@ -7,7 +7,7 @@ classdef TPKM
     % Models:
     %
     % - HOMOGENEOUS — Assumes no slip between phases; both phases move at the same velocity.
-    % - SLIP        — Accounts for velocity differences (slip) between liquid and vapor phases.
+    % - SLIP        — Accounts for velocity differences (slip) between liquid and vapor phases using user-defined :attr:`Inputs.Model.SLIP`.
     % - ROMIE       — Romie model; behaves like the homogeneous model when a homogeneous void fraction model is applied.
 
     enumeration

@@ -6,8 +6,8 @@ classdef NEARWALLRELAX
     %
     % Models:
     %
-    % - QUALITY — Simple model relating relaxation time to equilibrium quality using user-defined NEARWALLRELAXX and NEARWALLRELAXT
-    % - VOID    — Physical model based on local phase volumetric fraction using user-defined NEARWALLRELAXCOEF
+    % - QUALITY — Simple model relating relaxation time to equilibrium quality using user-defined :attr:`Inputs.Model.NEARWALLRELAXX` and :attr:`Inputs.Model.NEARWALLRELAXT`
+    % - VOID    — Physical model based on local phase volumetric fraction using user-defined :attr:`Inputs.Model.NEARWALLRELAXCOEF`
 
     enumeration
         QUALITY              % Relaxation time function of equilibrium quality

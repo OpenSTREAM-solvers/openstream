@@ -7,7 +7,7 @@ classdef VOID
     % Models:
     %
     % - HOMOGENEOUS — Assumes vapor and liquid phases move at the same velocity.
-    % - SLIP        — Assumes a slip ratio between vapor and liquid phases using user-defined SLIP.
+    % - SLIP        — Assumes a slip ratio between vapor and liquid phases using user-defined :attr:`Inputs.Model.SLIP`.
     % - BESTION     — Drift-flux model developed by Bestion (:cite:t:`BESTION1990229`).
     % - EPRI        — Drift-flux model developed by the Electric Power Research Institute (EPRI) (:cite:t:`lellouche1982`).
 

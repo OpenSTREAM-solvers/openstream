@@ -6,8 +6,8 @@ classdef INTNU
     %
     % Models:
     %
-    % - CONSTANT      — Assumes a constant Nusselt number using user-defined INTNUVCST and INTNULCST for the dispersed gas and liquid phases, respectively
-    % - RANZMARSHALL  — Ranz-Marshall correlation-based model (:cite:t:`ranzmarshall1952`) using user-defined RANZMARSHALLVCST and RANZMARSHALLLCST for the dispersed gas and liquid phases, respectively
+    % - CONSTANT      — Assumes a constant Nusselt number using user-defined :attr:`Inputs.Model.INTNUVCST` and :attr:`Inputs.Model.INTNULCST` for the dispersed gas and liquid phases, respectively
+    % - RANZMARSHALL  — Ranz-Marshall correlation-based model (:cite:t:`ranzmarshall1952`) using user-defined :attr:`Inputs.Model.RANZMARSHALLVCST` and :attr:`Inputs.Model.RANZMARSHALLLCST` for the dispersed gas and liquid phases, respectively
     % - RELAXATION    — Time relaxation-based model (:cite:t:`Walter2024`)
 
     enumeration

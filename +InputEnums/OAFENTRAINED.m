@@ -7,7 +7,7 @@ classdef OAFENTRAINED
     %
     % Models:
     %
-    % - RATIO       — Ratio of droplet to liquid mass flow rates using user-defined OAFDROPRATIO
+    % - RATIO       — Ratio of droplet to liquid mass flow rates using user-defined :attr:`Inputs.Model.OAFDROPRATIO`
     % - EQUILIBRIUM — Equilibrium assumption model (:math:`M_{\mathrm{ent}} = M_{\mathrm{dep}}`) (:cite:t:`ADAMSSON20112843`, Equations 15 and 16)
 
     enumeration

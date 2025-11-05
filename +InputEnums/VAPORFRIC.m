@@ -6,7 +6,7 @@ classdef VAPORFRIC
     %
     % Models:
     %
-    % - CONSTANT          — Uses a fixed, friction coefficient using user-defined VAPORFRICCST
+    % - CONSTANT          — Uses a fixed, friction coefficient using user-defined :attr:`Inputs.Model.VAPORFRICCST`
     % - WALLIS            — Wallis model based on void fraction (:cite:t:`wallis1969`).
     % - WALLISTHICK       — Wallis model based on film thickness (:cite:t:`ADAMSSON20112843`, Equation 35).
     % - SOLVER_DEPENDENT  — Friction model determined by the solver configuration.

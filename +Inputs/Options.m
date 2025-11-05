@@ -17,6 +17,7 @@ classdef Options < Inputs.Input
         SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 30                    % Maximum number of steady-state iterations
 
         % Mixture solver options
+
         ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
         ERRORP           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Pressure error target in inner iterations [Pa]
         ERRORH           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Enthalpy error target in inner iterations [J/kg]
@@ -28,10 +29,12 @@ classdef Options < Inputs.Input
         RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1                     % Relaxation factor for the mixture energy conservation equation [-]
 
         % Mixture (HRM) solver models
+
         RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.8                   % Relaxation factor for the vapor  mass conservation equation [-]
         RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 0.8                   % Relaxation factor for the vapor  energy conservation equation [-]
 
         % Two-fluid solver options
+
         ERRORU           (1,1) double  {mustBeNumeric}                     = 1E-4                  % Velocity error target in inner iterations [m/s]
         SSCONVU          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Velocity steady-state convergence criterion [m/s]
         RELAXWL          (1,1) double  {mustBeInRange(RELAXWL,0,1)}        = 1                     % Relaxation factor for the liquid mass conservation equation [-]
@@ -40,6 +43,7 @@ classdef Options < Inputs.Input
         RELAXHL          (1,1) double  {mustBeInRange(RELAXHL,0,1)}        = 1                     % Relaxation factor for the liquid energy conservation equation [-]
 
         % Three-field solver options
+
         ERRORWF          (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
         ERRORUF          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Film velocity error target in inner iterations [m/s]
         ERRORUD          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Drop velocity error target in inner iterations [m/s]
@@ -51,6 +55,7 @@ classdef Options < Inputs.Input
         RELAXUD          (1,1) double  {mustBeInRange(RELAXUD,0,1)}        = 0.2                   % Relaxation factor for the drop momentum conservation equation [-]
 
         % Four-field solver options
+        
         ERRORFW          (1,1) double  {mustBeNumeric}                     = 1E-1                  % Wave frequency error target in inner iterations [Hz]
         SSCONVFW         (1,1) double  {mustBeNumeric}                     = 1E-1                  % Wave frequency steady-state convergence criterion [Hz]
         RELAXWB          (1,1) double  {mustBeInRange(RELAXWB,0,1)}        = 0.5                   % Relaxation factor for the base mass conservation equation [-]

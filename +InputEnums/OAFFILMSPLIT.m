@@ -7,7 +7,7 @@ classdef OAFFILMSPLIT
     %
     % Models:
     %
-    % - RATIO        — Ratio of base film to film mass flow rates using user-defined OAFBASERATIO
+    % - RATIO        — Ratio of base film to film mass flow rates using user-defined :attr:`Inputs.Model.OAFBASERATIO`
     % - EQUILIBRIUM  — Equilibrium model (film thickness = equilibrium film thickness) (:cite:t:`LECORREMODEL`)
 
     enumeration

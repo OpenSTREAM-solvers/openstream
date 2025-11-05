@@ -13,6 +13,6 @@ classdef CBT
     enumeration
         NONE                 % No Critical Boiling Transition
         BIASI                % Biasi model fro CBT prediction
-        ELEVATION            % CBT based on specified elevation (CBTELEVATION)
+        ELEVATION            % CBT based on user-defined elevation using :attr:`Inputs.Model.CBTELEVATION`
     end
 end

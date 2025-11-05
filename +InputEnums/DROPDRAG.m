@@ -6,7 +6,7 @@ classdef DROPDRAG
     %
     % Models:
     %
-    % - CONSTANT   — Constant drag coefficient using user-defined DROPDRAGCOEF
+    % - CONSTANT   — Constant drag coefficient using user-defined :attr:`Inputs.Model.DROPDRAGCOEF`
     % - STOKES     — Stokes flow regime model (:math:`\frac{24}{Re_{p}}`)
     % - VISCOUS    — Viscous regime model (:cite:t:`Walter2024`)
     % - DISTORTED  — Model for distorted (non-spherical) droplets (:cite:t:`Walter2024`)

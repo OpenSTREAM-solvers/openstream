@@ -7,7 +7,7 @@ classdef DEPENHANCEMENT
     % Models:
     %
     % - NONE       — No enhancement applied
-    % - WINDECKER  — Model adapted from :cite:t:`windecker1999`, as documented in :cite:t:`LECORRE2024113613`, using user defined KTUNING
+    % - WINDECKER  — Model adapted from :cite:t:`windecker1999`, as documented in :cite:t:`LECORRE2024113613`, using user defined :attr:`Inputs.Model.KTUNING`
 
     enumeration
         NONE                 % No deposition enhancement

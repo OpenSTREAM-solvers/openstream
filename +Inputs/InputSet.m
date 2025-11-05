@@ -24,7 +24,9 @@ classdef InputSet
             % Parses input files and handles warnings.
             %
             % Inputs:
+            %
             % - opts — Struct with fields:
+            %
             %          - modelFilePath, modelID
             %          - optionsFilePath, optionsID
             %          - geometryFilePath, geometryID
@@ -117,6 +119,7 @@ classdef InputSet
             % Useful for customizing inputs based on selected solver
             %
             % Inputs:
+            %
             % - inputSet   — InputSet object
             % - solverName — Name of the solver to apply dependencies for
 

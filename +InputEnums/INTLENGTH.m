@@ -6,7 +6,7 @@ classdef INTLENGTH
     %
     % Models:
     %
-    % - CONSTANT  — Assumes a constant interfacial length scale using user-defined INTLENGTHVCST and INTLENGTHLCST for the dispersed gas and liquid phases, respectively
+    % - CONSTANT  — Assumes a constant interfacial length scale using user-defined :attr:`Inputs.Model.INTLENGTHVCST` and :attr:`Inputs.Model.INTLENGTHLCST` for the dispersed gas and liquid phases, respectively
 
     enumeration
         CONSTANT           % Constant interfacial length scale

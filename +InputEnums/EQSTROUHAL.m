@@ -9,7 +9,7 @@ classdef EQSTROUHAL
     % - RISO     — Based on RISO dataset (:cite:t:`LECORREMODEL`)
     % - SAWAI    — Based on SAWAI dataset (:cite:t:`LECORREMODEL`)
     % - MFVAL    — MFVAL model (under development)
-    % - CUSTOM   — Custom model using user-defined EQSTROUHALCOEF
+    % - CUSTOM   — Custom model using user-defined :attr:`Inputs.Model.EQSTROUHALCOEF`
 
     enumeration
         RISO                 % RISO dataset model (Le Corre, 2022)
