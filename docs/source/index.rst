@@ -1,5 +1,5 @@
 ====================================
- OpenSTREAM - Two-Phase Flow Solvers
+ OpenSTREAM – Two-Phase Flow Solvers
 ====================================
 
 .. toctree::
@@ -62,6 +62,8 @@
    /Community/authors
 
 .. include:: index_content.rst
+
+----
 
 Indices and tables
 ==================

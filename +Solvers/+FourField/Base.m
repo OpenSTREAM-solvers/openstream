@@ -12,7 +12,6 @@ classdef Base < Solvers.AbstractFilm
         TIDX                                                               = 1                    % [-] Time step index
         Z                                                                  = 1.                   % [m] Elevation
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Film heat flux
-        %MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % [kg/s/m^2] Evaporation mass flux
 
         % Flow properties
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
@@ -30,12 +29,8 @@ classdef Base < Solvers.AbstractFilm
 
      end
 
-     properties (Dependent)
-         %MEVAP                                                                                    % [kg/s/m^2] Evaporation mass flux
-     end
-
-     
     methods
+        
         function base = Base(film)
             %BASE Creates a Base, base
             %   Detailed explanation goes here

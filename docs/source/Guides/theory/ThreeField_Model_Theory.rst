@@ -3,20 +3,27 @@ Three-field model
 
 The three-field simulation framework in **OpenSTREAM** provides a structured representation of annular two-phase flow by solving relevant conservation equations for the liquid film and droplet fields, with the vapor field derived from the mixture solver. This formulation is tailored for saturated flow conditions within a theoretical framework used in other codes, such as in subchannel analysis for Boiling Water Reactor (BWR) fuel simulations (:cite:t:`ADAMSSON20112843`)(:cite:t:`ADAMSSON2014316`).
 
+.. figure:: figures/ThreeFieldFramework.jpg
+   :alt: Three-field geometrical characteristic
+   :width: 500px
+   :align: center
+
+   Figure 1: Field geometrical characteristics in the three-field simulation framework (vapor, drops and film).
+
 The three-field model serves several key roles within OpenSTREAM:
 
-- Field separation: Distinguishes between vapor, entrained droplets, and liquid film, enabling detailed modeling of annular flow dynamics.
-- Film and droplet transport: Captures deposition and entrainment processes critical to predicting film dryout and droplet behavior.
-- Thermal equilibrium assumption: Simplifies energy conservation while retaining essential mass and momentum exchanges.
+- **Field separation**: Distinguishes between vapor, entrained droplets, and liquid film, enabling detailed modeling of annular flow dynamics.
+- **Film and droplet transport**: Captures deposition and entrainment processes critical to predicting film dryout and droplet behavior.
+- **Thermal equilibrium assumption**: Simplifies energy conservation while retaining essential mass and momentum exchanges.
 
 By explicitly modeling the liquid film and droplet fields, the three-field framework enables accurate simulation of saturated annular flow regimes in single channels and supports advanced thermal-hydraulic analysis for various industrial applications.
 
-An overview of the three-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM.
+An overview of the three-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LeCorre2025OpenSTREAM`.
 
 Governing equations
 -------------------
 
-The conservation equations are formulated at the wall level, indexed by :math:`n`, supporting multi-wall geometries.
+The conservation equations are formulated at the wall level, indexed by :math:n, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.
 
 **1. Mass conservation**
 
@@ -55,32 +62,36 @@ Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{w}^n
 where:
 
 - :math:`h_{vs}`, :math:`h_{ls}` are the saturated vapor and liquid specific enthalpies
-- :math:`{q^{\prime\prime}}_{w,l}^n`, :math:`{q^{\prime\prime}}_{w,v}^n` are the wall heat flux to liquid and vapor for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{w}^n is the wall heat flux for wall index :math:`n`
 
 Closure relations
 -----------------
 
 To complete the conservation equations, several closure relations are required:
 
+- Onset of annular two-phase flow
+- Film/drop mass flow rate split at onset of annular two-phase flow
 - Drop deposition mass flux: :math:`D`
 - Film entrainement mass flux: :math:`E`
 - Vapor/film interfacial shear stress: :math:`\tau_{v,f}^n`
 - Vapor/drop interfacial shear stress: :math:`\tau_{v,d}^n`
 - Wall shear stress on the liquid film: :math:`\tau_{w,f}^n`
 - Drop interfacial area and volume: :math:`A_d`, :math:`V_d`
-- Equations of state: Appropriate thermodynamic properties for each phase
 
 The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure relations are implemented in :class:`Solvers.ThreeField.Film` and :class:`Solvers.ThreeField.Drop`, which the users can modify to suit specific simulation needs.
 
-The thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
+In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
 Features and assumptions
 ------------------------
 
-- Assumes thermal equilibrium (no temperature difference between phases)
+- Supports both steady-state and transient simulations in straight channels
+- Supports uniform and non-uniform wall heat flux distribution
 - Applicable up to film dryout
 - Models drop deposition and film entrainment
+- Assumes thermal equilibrium (no temperature difference between phases)
 - Supports multi-wall geometries (e.g., annuli)
+- Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 
 Role in OpenSTREAM
 ------------------

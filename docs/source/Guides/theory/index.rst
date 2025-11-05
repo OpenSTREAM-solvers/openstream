@@ -1,23 +1,9 @@
 Theory overview
 ===============
 
-Welcome to the theory section! This page gives you a high-level overview of the theoretical foundations behind the simulation frameworks implemented in **OpenSTREAM**. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing levels of complexity and physical resolution.
+Welcome to the theory section! This page gives you a high-level overview of the theoretical foundations behind the simulation frameworks implemented in **OpenSTREAM**, along with relevant references. Each model is designed to simulate one-dimensional, two-phase flow in straight channels, with increasing levels of complexity and physical resolution.
 
 Whether you're just getting started or diving deep into advanced simulations, this guide will help you understand the purpose, assumptions, and structure behind each solver.
-
-Implemented models
-------------------
-
-Explore the theory behing each solver:
-
-.. toctree::
-   :maxdepth: 1
-
-   Mixture_Model_Theory
-   TwoFluid_Model_Theory
-   ThreeField_Model_Theory
-   FourField_Model_Theory
-
 
 Model summaries
 ---------------
@@ -46,6 +32,17 @@ Model summaries
 - Assumptions: Thermal equilibrium (for now).
 - Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 
-----
+Implemented models
+------------------
+
+Explore the theory behing each solver:
+
+.. toctree::
+   :maxdepth: 1
+
+   Mixture_Model_Theory
+   TwoFluid_Model_Theory
+   ThreeField_Model_Theory
+   FourField_Model_Theory
 
 For detailed equations, derivations, and implementation notes, check out the individual theory pages linked above. Ready to dive deeper? Pick a model and start exploring!
