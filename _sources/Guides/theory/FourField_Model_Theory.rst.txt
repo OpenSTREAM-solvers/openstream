@@ -3,7 +3,7 @@ Four-field model
 
 The four-field simulation framework in **OpenSTREAM** extends the traditional three-field model by explicitly representing disturbance waves, in addition to vapor, droplets, and the base liquid film. This modeling approach was originally developed in :cite:t:`LECORREMODEL` and :cite:t:`LeCorre2022NURETH19`. It provides improved resolution of annular two-phase flow dynamics, enabling more accurate and detailed simulations.
 
-The four distinct flow fields: vapor, entrained droplets, base liquid film and disturbance waves, are illustrated in :ref:`fig-four-field-framework`.
+The four distinct flow fields: vapor, entrained droplets, base liquid film and disturbance waves, are illustrated in :numref:`fig-four-field-framework`.
 
 .. _fig-four-field-framework:
 

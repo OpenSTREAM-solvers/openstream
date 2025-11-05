@@ -113,8 +113,8 @@
 <p>The <a class="reference internal" href="#module-Inputs" title="Inputs"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Inputs</span></code></a> package defines a set of classes used to configure and import all the necessary parameters for running <strong>OpenSTREAM</strong> simulations. This includes:</p>
 <ul class="simple">
 <li><p>Boundary conditions <a class="reference internal" href="#Inputs.BoundaryConditions" title="Inputs.BoundaryConditions"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.BoundaryConditions</span></code></a></p></li>
-<li><p>System geometry: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Geimetry</span></code></p></li>
-<li><p>Physical models: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Models</span></code></p></li>
+<li><p>System geometry: <a class="reference internal" href="#Inputs.Geometry" title="Inputs.Geometry"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Geometry</span></code></a></p></li>
+<li><p>Physical models: <a class="reference internal" href="#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a></p></li>
 <li><p>Numerical options: <a class="reference internal" href="#Inputs.Options" title="Inputs.Options"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Options</span></code></a></p></li>
 <li><p>Fluid thermophysical properties: <a class="reference internal" href="#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a></p></li>
 <li><p>Input handling: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p></li>
@@ -444,7 +444,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.WBOILINGXSUB">
 <span class="sig-name descname"><span class="pre">WBOILINGXSUB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-0.2</span></em><a class="headerlink" href="#Inputs.Model.WBOILINGXSUB" title="Link to this definition"></a></dt>
-<dd><p>Two-phase flow regime transitions</p>
+<dd><p>Equilibrium thermodynamic quality at onset of subcooled wall boiling [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -486,7 +486,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.CBTKEFFECT">
 <span class="sig-name descname"><span class="pre">CBTKEFFECT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.CBTKEFFECT" title="Link to this definition"></a></dt>
-<dd><p>Grid effect coefficients (1+C(1)*exp(C(2)*z)) [-]</p>
+<dd><p>Grid effect coefficients (<a href="#id1"><span class="problematic" id="id2">:mat:`1 + C(1) \exp(C(2) z)`</span></a>) [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -510,7 +510,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.SPHTM">
 <span class="sig-name descname"><span class="pre">SPHTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'DITTUSBOELTER'</span></em><a class="headerlink" href="#Inputs.Model.SPHTM" title="Link to this definition"></a></dt>
-<dd><p>Wall heat transfer</p>
+<dd><p>Single-phase wall heat transfer model</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -534,7 +534,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.FRICTION">
 <span class="sig-name descname"><span class="pre">FRICTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.2-0.20]</span></em><a class="headerlink" href="#Inputs.Model.FRICTION" title="Link to this definition"></a></dt>
-<dd><p>Mixture solver models</p>
+<dd><p>Wall friction coefficients [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -588,7 +588,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.THERMALRELAX">
 <span class="sig-name descname"><span class="pre">THERMALRELAX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'QUALITY'</span></em><a class="headerlink" href="#Inputs.Model.THERMALRELAX" title="Link to this definition"></a></dt>
-<dd><p>Mixture (HRM) solver models</p>
+<dd><p>Thermal non-equilibrium time relaxation model</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -630,7 +630,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.NEARWALLRATIO">
 <span class="sig-name descname"><span class="pre">NEARWALLRATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Model.NEARWALLRATIO" title="Link to this definition"></a></dt>
-<dd><p>Mixture near-wall models</p>
+<dd><p>Near-wall mass flow distribution ratio [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -660,7 +660,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.INTLENGTH">
 <span class="sig-name descname"><span class="pre">INTLENGTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'CONSTANT'</span></em><a class="headerlink" href="#Inputs.Model.INTLENGTH" title="Link to this definition"></a></dt>
-<dd><p>Two-fluid solver models</p>
+<dd><p>Interfacial length scale model model</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -768,7 +768,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.POSFILM">
 <span class="sig-name descname"><span class="pre">POSFILM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Inputs.Model.POSFILM" title="Link to this definition"></a></dt>
-<dd><p>Three-field solver models</p>
+<dd><p>Positive film flow rate/thickness model</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -864,7 +864,7 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.OAFFILMSPLIT">
 <span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'EQUILIBRIUM'</span></em><a class="headerlink" href="#Inputs.Model.OAFFILMSPLIT" title="Link to this definition"></a></dt>
-<dd><p>Four-field solver models</p>
+<dd><p>Film mass flow split model at onset of annular flow</p>
 </dd></dl>
 
 <dl class="mat attribute">
