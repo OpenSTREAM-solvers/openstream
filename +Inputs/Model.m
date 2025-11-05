@@ -16,6 +16,7 @@ classdef Model < Inputs.Input
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
 
         % Two-phase flow regime transitions
+
         WBOILINGXSUB     (1,1) double  {mustBeNonpositive}                 = -0.2                            % Equilibrium thermodynamic quality at onset of subcooled wall boiling [-]
         WBOILINGN        (1,1) double  {mustBePositive}                    = 2                               % Wall boiling function exponent [-]
         WBOILINGXSAT     (1,1) double  {mustBeNumeric}                     =  0                              % Equilibrium thermodynamic quality at onset of saturated wall boiling [-]
@@ -23,18 +24,20 @@ classdef Model < Inputs.Input
         OAFTRANSITION    (1,2) double  {mustBeNumeric}                     = [0.10 0.0]                      % Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]
         CBT              (1,1) InputEnums.CBT                              = 'NONE'                          % Critical Boiling Transition model
         CBTMULT          (1,1) function_handle                             = @(z) 1                          % Critical boiling Heat flux multiplier function
-        CBTKEFFECT       (1,2) double  {mustBeNumeric}                     = [0 0]                           % Grid effect coefficients (1+C(1)*exp(C(2)*z)) [-]
+        CBTKEFFECT       (1,2) double  {mustBeNumeric}                     = [0 0]                           % Grid effect coefficients (:mat:`1 + C(1) \exp(C(2) z)`) [-]
         CBTELEVATION     (1,1) double  {mustBePositive}                    = 1                               % Critical Boiling Transition Elevation [m]
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model
         DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
 
         % Wall heat transfer
+
         SPHTM            (1,1) InputEnums.SPHTM                            = 'DITTUSBOELTER'                 % Single-phase wall heat transfer model
         DITTUSBOELTERCOEF (1,3) double  {mustBeNumeric}                    = [0.023 0.8 0.4]                 % Dittus-Boelter coefficients [-]
         TPHTM            (1,1) InputEnums.TPHTM                            = 'THOM'                          % Two-phase wall heat transfer model
         BTHTM            (1,1) InputEnums.BTHTM                            = 'VAPOR'                         % Boiling transition wall heat transfer model
 
         % Mixture solver models
+
         FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
         TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'                   % Two-phase friction multiplier
         KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Elevation of local perturbations [m]
@@ -46,6 +49,7 @@ classdef Model < Inputs.Input
         THERMALNONEQ     (1,1) InputEnums.THERMALNONEQ                     = 'EQUILIBRIUM'                   % Thermal non-equilibrium model
 
         % Mixture (HRM) solver models
+
         THERMALRELAX     (1,1) InputEnums.THERMALRELAX                     = 'QUALITY'                       % Thermal non-equilibrium time relaxation model
         RELAXX           (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Interfacial phase change relaxation time thermodynamic quality [-]
         RELAXTCOND       (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Interfacial condensation relaxation time array [s]
@@ -55,6 +59,7 @@ classdef Model < Inputs.Input
         KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
 
         % Mixture near-wall models
+
         NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1)}  = 0.5                             % Near-wall mass flow distribution ratio [-]
         NEARWALLRELAX    (1,1) InputEnums.NEARWALLRELAX                    = 'QUALITY'                       % Near-wall energy transfer time relaxation model
         NEARWALLRELAXX   (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Near-wall exchange relaxation time thermodynamic quality [-]
@@ -62,6 +67,7 @@ classdef Model < Inputs.Input
         NEARWALLRELAXCOEF (1,3) double  {mustBeNumeric}                    = [0.1E-3 1/3 0.05]               % Near-wall energy transfer time relaxation coefficients for void option
 
         % Two-fluid solver models
+
         INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'                      % Interfacial length scale model model
         INTAREA          (1,1) InputEnums.INTAREA                          = 'DISPGAS2DISPLIQ'               % Interfacial area model
         INTLENGTHVCST    (1,1) double                                      = 2E-3                            % Dispersed gas    constant interfacial length scale [m]
@@ -84,6 +90,7 @@ classdef Model < Inputs.Input
         INTTRANSH        (1,1) InputEnums.INTTRANSH                        = 'BULK'                          % Interfacial enthalpy transfer model
 
         % Three-field solver models
+
         POSFILM          (1,1) logical                                     = true                            % Positive film flow rate/thickness model
 
         OAFENTRAINED     (1,1) InputEnums.OAFENTRAINED                     = 'EQUILIBRIUM'                   % Entrained drop model at onset of annular flow
@@ -106,6 +113,7 @@ classdef Model < Inputs.Input
         DROPDIAM         (1,1) double  {mustBePositive}                    = 1E-3                            % Drop diameter [mm]
 
         % Four-field solver models
+        
         OAFFILMSPLIT     (1,1) InputEnums.OAFFILMSPLIT                     = 'EQUILIBRIUM'                   % Film mass flow split model at onset of annular flow
         OAFBASERATIO     (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}   = 0.5                             % Base/Film mass ratio at onset of annular flow [-]
 
