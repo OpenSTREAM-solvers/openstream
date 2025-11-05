@@ -129,11 +129,12 @@
   <section id="four-field-model">
 <h1>Four-field model<a class="headerlink" href="#four-field-model" title="Link to this heading"></a></h1>
 <p>The four-field simulation framework in <strong>OpenSTREAM</strong> extends the traditional three-field model by explicitly representing disturbance waves, in addition to vapor, droplets, and the base liquid film. This modeling approach was originally developed in <span id="id1">Le Corre [<a class="reference internal" href="../../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span> and <span id="id2">Le Corre [<a class="reference internal" href="../references.html#id9" title="J.-M. Le Corre. Non-equilibrium modeling of disturbance waves with phase change in fuel bundle. In Proceedings of the 19th International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-19). Brussels, Belgium, March 6–11 2022.">2022</a>]</span>. It provides improved resolution of annular two-phase flow dynamics, enabling more accurate and detailed simulations.</p>
+<p>The four distinct flow fields: vapor, entrained droplets, base liquid film and disturbance waves, are illustrated in <a class="reference internal" href="#fig-four-field-framework"><span class="std std-numref">Figure 3</span></a>.</p>
 <figure class="align-center" id="id5">
-<a class="reference internal image-reference" href="../../_images/FourFieldFramework.jpg"><img alt="Four-field geometrical characteristic" src="../../_images/FourFieldFramework.jpg" style="width: 500px;" />
+<span id="fig-four-field-framework"></span><a class="reference internal image-reference" href="../../_images/FourFieldFramework.jpg"><img alt="Four-field geometrical characteristic" src="../../_images/FourFieldFramework.jpg" style="width: 500px;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Figure 1: Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+<p><span class="caption-number">Figure 3 </span><span class="caption-text">Field geometrical characteristics in the four-field simulation framework (vapor, drops, base film and waves).</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The four-field model serves several key roles within OpenSTREAM:</p>
@@ -193,7 +194,7 @@
 <p>To complete the conservation equations, several closure relations are required:</p>
 <ul class="simple">
 <li><p>Same closure relations as for the <a class="reference internal" href="ThreeField_Model_Theory.html"><span class="doc">three-field model</span></a></p></li>
-<li><p>Base film/wavep mass flow rate split at onset of annular two-phase flow</p></li>
+<li><p>Base film/wave mass flow rate split at onset of annular two-phase flow</p></li>
 <li><p>Drop deposition split between base film and wave fields</p></li>
 <li><p>Exchange mass fluxes between film and waves: <span class="math notranslate nohighlight">\(\Psi_w^n\)</span>, <span class="math notranslate nohighlight">\(\Psi_b^n\)</span></p></li>
 <li><p>Wall boiling split between base film and wave fields</p></li>
