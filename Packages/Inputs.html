@@ -1583,9 +1583,10 @@ Validates consistency with geometry and applies default values if needed.</p>
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.plot">
 <span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidObj</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.plot" title="Link to this definition"></a></dt>
 <dd><p>PLOT Generates plots of boundary condition parameters over time</p>
-<p>Inputs:
-- fluidObj — FluidProperties object
-- opt      — Struct with fields:</p>
+<p>Inputs:</p>
+<ul>
+<li><p>fluidObj — FluidProperties object</p></li>
+<li><p>opt      — Struct with fields:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>display  — Cell array of parameters to plot</p></li>
@@ -1593,19 +1594,23 @@ Validates consistency with geometry and applies default values if needed.</p>
 <li><p>unitTemp — Temperature unit (‘K’ or ‘C’)</p></li>
 </ul>
 </div></blockquote>
+</li>
+</ul>
 </dd></dl>
 
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.writeInputFile">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">TIME</span></em>, <em class="sig-param"><span class="pre">PRESSURE</span></em>, <em class="sig-param"><span class="pre">HIN</span></em>, <em class="sig-param"><span class="pre">MFLOW</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.BoundaryConditions.writeInputFile" title="Link to this definition"></a></dt>
 <dd><p>WRITEINPUTFILE Writes boundary condition data to input file</p>
-<p>Inputs:
-- filePathName — Path to output file
-- TIME         — Time value [s]
-- PRESSURE     — Pressure value [Pa]
-- HIN          — Enthalpy value [J/kg]
-- MFLOW        — Mass flow rate [kg/s]
-- varargin     — Additional name-value pairs</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePathName — Path to output file</p></li>
+<li><p>TIME         — Time value [s]</p></li>
+<li><p>PRESSURE     — Pressure value [Pa]</p></li>
+<li><p>HIN          — Enthalpy value [J/kg]</p></li>
+<li><p>MFLOW        — Mass flow rate [kg/s]</p></li>
+<li><p>varargin     — Additional name-value pairs</p></li>
+</ul>
 </dd></dl>
 
 </dd>
