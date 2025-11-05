@@ -56,6 +56,7 @@
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model summaries</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#implemented-models">Implemented models</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Two-fluid model</a><ul>
@@ -70,7 +71,6 @@
 <li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model summaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -131,12 +131,12 @@
 <p>The two-Fluid simulation framework in <strong>OpenSTREAM</strong> provides a detailed representation of multiphase flow by solving six conservation equations—mass, momentum, and energy for both liquid and vapor phases. This formulation enables the simulation of key non-equilibrium effects and is foundational in nuclear reactor thermal-hydraulic code systems.</p>
 <p>The two-fluid  model serves several key roles within OpenSTREAM:</p>
 <ul class="simple">
-<li><p>Full separate phase treatment: Liquid and vapor are modeled as distinct continua, each with its own set of governing equations.</p></li>
-<li><p>Non-equilibrium dynamics: Captures both thermal and hydrodynamic non-equilibrium, essential for accurate transient and boiling flow simulations.</p></li>
-<li><p>Industry relevance: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.</p></li>
+<li><p><strong>Full separate phase treatment</strong>: Liquid and vapor are modeled as distinct continua, each with its own set of governing equations.</p></li>
+<li><p><strong>Non-equilibrium dynamics</strong>: Captures both thermal and hydrodynamic non-equilibrium, essential for accurate transient and boiling flow simulations.</p></li>
+<li><p><strong>Industry relevance</strong>: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.</p></li>
 </ul>
 <p>By explicitly modeling both liquid and vapor phases, the two-fluid approach preserves critical non-equilibrium dynamics while offering a flexible foundation for detailed model development and advanced thermal-hydraulic analysis.</p>
-<p>An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM and :cite:t:Walter2024.</p>
+<p>An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in <span id="id1">Le Corre <em>et al.</em> [<a class="reference internal" href="../../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span> and <span id="id2">Walter [<a class="reference internal" href="../references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p><strong>1. Mass conservation</strong></p>
@@ -173,25 +173,28 @@
 <h2>Closure relations<a class="headerlink" href="#closure-relations" title="Link to this heading"></a></h2>
 <p>To complete the conservation equations, several closure relations are required:</p>
 <ul class="simple">
+<li><p>Onset of annular two-phase flow</p></li>
 <li><p>Volumetric interfacial area: <span class="math notranslate nohighlight">\(a_i\)</span></p></li>
 <li><p>Interfacial evaporation and condensation mass fluxes</p></li>
 <li><p>Wall boiling mass flux</p></li>
 <li><p>Interfacial shears stress</p></li>
 <li><p>Wall shear stress for each phase</p></li>
 <li><p>Wall heat flux for for each phase</p></li>
-<li><p>Equations of state: Appropriate thermodynamic properties for each phase</p></li>
+<li><p>Wall heat transfer models</p></li>
 </ul>
 <p>These relations depend on the local flow regime, which is determined by an additional flow regime identification model.</p>
 <p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a>, which the users can modify to suit specific simulation needs.</p>
-<p>The thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
+<p>In addition, the thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
 <ul class="simple">
+<li><p>Supports both steady-state and transient simulations in straight channels</p></li>
+<li><p>Supports uniform and non-uniform wall heat flux distribution</p></li>
 <li><p>Captures phase-specific velocities and temperatures</p></li>
 <li><p>Includes interfacial mass, momentum, and energy exchange</p></li>
 <li><p>Supports wall boiling and condensation</p></li>
-<li><p>Assumes straight channel geometry and single-component fluid</p></li>
+<li><p>Neglects minor contributions such as frictional heating and temporal pressure gradient contributions</p></li>
 </ul>
 </section>
 <section id="role-in-openstream">

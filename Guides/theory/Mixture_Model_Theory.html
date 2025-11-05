@@ -56,6 +56,7 @@
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model summaries</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#implemented-models">Implemented models</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Mixture model</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
@@ -71,7 +72,6 @@
 <li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#model-summaries">Model summaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -132,12 +132,13 @@
 <p>The mixture simulation framework in <strong>OpenSTREAM</strong> provides a simplified yet powerful approach to modeling two-phase flows. Based on a three-equation formulation, it treats the phases as a single continuum with averaged properties. This abstraction enables efficient simulation of systems where phase separation is minimal or where a fully resolved multi-field model is not required.</p>
 <p>The mixture model serves two key roles within OpenSTREAM:</p>
 <ul class="simple">
-<li><p>Robust initialization for more complex solvers, ensuring robust starting conditions.</p></li>
-<li><p>Efficient simulation of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.</p></li>
+<li><p><strong>Robust initialization</strong> for more complex solvers, ensuring robust starting conditions.</p></li>
+<li><p><strong>Efficient simulation</strong> of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.</p></li>
+<li><p><strong>Industry relevance</strong> due to its simplicity and robustness, offering a practical approach for simulating averaged flow behavior in complex thermal-hydraulic systems.</p></li>
 </ul>
 <p>In addition, a Homogeneous Relaxation Model (HRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.</p>
 <p>By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.</p>
-<p>An overview of the mixture model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM.</p>
+<p>An overview of the mixture model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in <span id="id1">Le Corre <em>et al.</em> [<a class="reference internal" href="../../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>.</p>
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p>The mixture model solves the following conservation equations:</p>
@@ -172,23 +173,24 @@
 </section>
 <section id="homogeneous-relaxation-model">
 <h2>Homogeneous relaxation model<a class="headerlink" href="#homogeneous-relaxation-model" title="Link to this heading"></a></h2>
-<p><em>Coming soon</em></p>
+<p><em>Under development</em></p>
 </section>
 <section id="closure-relations">
 <h2>Closure relations<a class="headerlink" href="#closure-relations" title="Link to this heading"></a></h2>
 <p>To complete the conservation equations, several closure relations are required:</p>
 <ul class="simple">
 <li><p>Wall shear stress: <span class="math notranslate nohighlight">\(\tau_w^n\)</span></p></li>
-<li><p>Form pressure losses: :math:frac{partial p_K}{partial z}</p></li>
-<li><p>Equations of state: Appropriate thermodynamic properties for each phase</p></li>
+<li><p>Form pressure losses: <span class="math notranslate nohighlight">\(\frac{\partial p_K}{\partial z}\)</span></p></li>
+<li><p>Wall heat transfer models</p></li>
 </ul>
 <p>For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All relevant closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>, which the users can modify to suit specific simulation needs.</p>
-<p>The thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
+<p>In addition, the thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
 <h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Supports both steady-state and transient simulations</p></li>
+<li><p>Supports both steady-state and transient simulations in straight channels</p></li>
+<li><p>Supports uniform and non-uniform wall heat flux distribution</p></li>
 <li><p>Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or HRM</p></li>
 <li><p>Allows phase velocity slip using drift flux models</p></li>
 <li><p>Neglects minor contributions such as frictional heating and temporal pressure gradient contributions</p></li>
@@ -196,7 +198,7 @@
 </section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
-<p>The mixture model provides a robust initialization framework for more complex solvers (i.e., two-fluid, three-field, four-field). For now, its pressure gradient solution is reused across all frameworks to enhance robusness and numerical stability.</p>
+<p>The mixture model provides a robust tool for simulating homogeneous two-phase flow, including cases with thermal non-equilibrium. It also provides an initialization framework for more complex solvers (i.e., two-fluid, three-field, four-field). Currently, its pressure gradient solution is reused across all solver frameworks to enhance robusness and numerical stability.</p>
 </section>
 <hr class="docutils" />
 <section id="implementation-notes">

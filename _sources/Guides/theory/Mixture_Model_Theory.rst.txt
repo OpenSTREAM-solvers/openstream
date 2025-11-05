@@ -5,14 +5,15 @@ The mixture simulation framework in **OpenSTREAM** provides a simplified yet pow
 
 The mixture model serves two key roles within OpenSTREAM:
 
-- Robust initialization for more complex solvers, ensuring robust starting conditions.
-- Efficient simulation of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.
+- **Robust initialization** for more complex solvers, ensuring robust starting conditions.
+- **Efficient simulation** of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.
+- **Industry relevance** due to its simplicity and robustness, offering a practical approach for simulating averaged flow behavior in complex thermal-hydraulic systems.
 
 In addition, a Homogeneous Relaxation Model (HRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.
 
 By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.
 
-An overview of the mixture model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM.
+An overview of the mixture model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LeCorre2025OpenSTREAM`.
 
 Governing equations
 -------------------
@@ -56,7 +57,7 @@ where:
 Homogeneous relaxation model
 ----------------------------
 
-*Coming soon*
+*Under development*
 
 Closure relations
 -----------------
@@ -64,17 +65,18 @@ Closure relations
 To complete the conservation equations, several closure relations are required:
 
 - Wall shear stress: :math:`\tau_w^n`
-- Form pressure losses: :math:\frac{\partial p_K}{\partial z}
-- Equations of state: Appropriate thermodynamic properties for each phase
+- Form pressure losses: :math:`\frac{\partial p_K}{\partial z}`
+- Wall heat transfer models
 
 For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
 
-The thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
+In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
 Features and assumptions
 ------------------------
 
-- Supports both steady-state and transient simulations
+- Supports both steady-state and transient simulations in straight channels
+- Supports uniform and non-uniform wall heat flux distribution
 - Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or HRM
 - Allows phase velocity slip using drift flux models
 - Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
@@ -82,7 +84,7 @@ Features and assumptions
 Role in OpenSTREAM
 ------------------
 
-The mixture model provides a robust initialization framework for more complex solvers (i.e., two-fluid, three-field, four-field). For now, its pressure gradient solution is reused across all frameworks to enhance robusness and numerical stability.
+The mixture model provides a robust tool for simulating homogeneous two-phase flow, including cases with thermal non-equilibrium. It also provides an initialization framework for more complex solvers (i.e., two-fluid, three-field, four-field). Currently, its pressure gradient solution is reused across all solver frameworks to enhance robusness and numerical stability.
 
 ----
 

@@ -5,13 +5,13 @@ The two-Fluid simulation framework in **OpenSTREAM** provides a detailed represe
 
 The two-fluid  model serves several key roles within OpenSTREAM:
 
-- Full separate phase treatment: Liquid and vapor are modeled as distinct continua, each with its own set of governing equations.
-- Non-equilibrium dynamics: Captures both thermal and hydrodynamic non-equilibrium, essential for accurate transient and boiling flow simulations.
-- Industry relevance: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.
+- **Full separate phase treatment**: Liquid and vapor are modeled as distinct continua, each with its own set of governing equations.
+- **Non-equilibrium dynamics**: Captures both thermal and hydrodynamic non-equilibrium, essential for accurate transient and boiling flow simulations.
+- **Industry relevance**: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.
 
 By explicitly modeling both liquid and vapor phases, the two-fluid approach preserves critical non-equilibrium dynamics while offering a flexible foundation for detailed model development and advanced thermal-hydraulic analysis.
 
-An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:LeCorre2025OpenSTREAM and :cite:t:Walter2024.
+An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LeCorre2025OpenSTREAM` and :cite:t:`Walter2024`.
 
 Governing equations
 -------------------
@@ -59,27 +59,30 @@ Closure relations
 
 To complete the conservation equations, several closure relations are required:
 
+- Onset of annular two-phase flow
 - Volumetric interfacial area: :math:`a_i`
 - Interfacial evaporation and condensation mass fluxes
 - Wall boiling mass flux
 - Interfacial shears stress
 - Wall shear stress for each phase
 - Wall heat flux for for each phase
-- Equations of state: Appropriate thermodynamic properties for each phase
+- Wall heat transfer models
 
 These relations depend on the local flow regime, which is determined by an additional flow regime identification model. 
 
 The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure relations are implemented in :class:`Solvers.TwoFluid.Liquid` and :class:`Solvers.TwoFluid.Vapor`, which the users can modify to suit specific simulation needs.
 
-The thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
+In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
 Features and assumptions
 ------------------------
 
+- Supports both steady-state and transient simulations in straight channels
+- Supports uniform and non-uniform wall heat flux distribution
 - Captures phase-specific velocities and temperatures
 - Includes interfacial mass, momentum, and energy exchange
 - Supports wall boiling and condensation
-- Assumes straight channel geometry and single-component fluid
+- Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 
 Role in OpenSTREAM
 ------------------
