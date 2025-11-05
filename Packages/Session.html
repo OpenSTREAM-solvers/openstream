@@ -109,7 +109,12 @@
              
   <section id="session">
 <h1>Session<a class="headerlink" href="#session" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Session" title="Session"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Session</span></code></a> package in <strong>openSTREAM</strong> provides tools for managing session environments, logging, and file structure during simulations. It helps ensure organized workflows and consistent runtime behavior.</p>
+<p>The <a class="reference internal" href="#module-Session" title="Session"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Session</span></code></a> package in <strong>openSTREAM</strong> provides tools for managing session environments, logging, and file structure during simulations. It helps ensure organized workflows and consistent runtime behavior. This includes:</p>
+<ul class="simple">
+<li><p>Session logging manager <a class="reference internal" href="#Session.Log" title="Session.Log"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.Log</span></code></a></p></li>
+<li><p>Logging mode: <a class="reference internal" href="#Session.LogMode" title="Session.LogMode"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.LogMode</span></code></a></p></li>
+<li><p>Session management: <a class="reference internal" href="#Session.Session" title="Session.Session"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.Session</span></code></a></p></li>
+</ul>
 <hr class="docutils" />
 <dl class="mat class" id="module-Session">
 <dt class="sig sig-object mat" id="Session.Log">
@@ -127,6 +132,13 @@ and provides diary functionality for persistent logs.</p>
 <dd><p>LOG Constructor for Log class</p>
 <p>Initializes logging mode, session context, and warning settings.
 Creates log file and session directory if needed.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>LOGMODE          — Determines where logs go (console, file, both, or none), using <a class="reference internal" href="#Session.LogMode" title="Session.LogMode"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.LogMode</span></code></a>.</p></li>
+<li><p>opt.session      — Session object for directory and naming context</p></li>
+<li><p>opt.LOGFID       — File ID for the open log file.</p></li>
+<li><p>opt.showWarnings — Whether to display warnings in the console.</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -145,7 +157,7 @@ Creates log file and session directory if needed.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Log.LOGFID">
 <span class="sig-name descname"><span class="pre">LOGFID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1</span></em><a class="headerlink" href="#Session.Log.LOGFID" title="Link to this definition"></a></dt>
-<dd><p>log file</p>
+<dd><p>File ID for log file</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -157,7 +169,7 @@ Creates log file and session directory if needed.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Log.showWarnings">
 <span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Log.showWarnings" title="Link to this definition"></a></dt>
-<dd><p>Warnings</p>
+<dd><p>Flag to control display of warnings</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -182,8 +194,8 @@ Creates log file and session directory if needed.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Log.warning">
 <span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.warning" title="Link to this definition"></a></dt>
-<dd><p>WARNING Logs warnings using MATLAB’s built-in warning mechanism
-Optionally writes to file if warnings are suppressed</p>
+<dd><p>WARNING Logs warnings using MATLAB’s built-in warning mechanism</p>
+<p>Optionally writes to file if warnings are suppressed</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -201,15 +213,15 @@ Optionally writes to file if warnings are suppressed</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Log.delete">
 <span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
-<dd><p>DELETE Destructor for log class
-Ensures log file and diary are properly closed</p>
+<dd><p>DELETE Destructor for log class</p>
+<p>Ensures log file and diary are properly closed</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Session.Log.openLog">
 <span class="sig-name descname"><span class="pre">openLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.openLog" title="Link to this definition"></a></dt>
-<dd><p>OPENLOG Opens log file for writing
-Optionally keeps it open between writes</p>
+<dd><p>OPENLOG Opens log file for writing</p>
+<p>Optionally keeps it open between writes</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -230,12 +242,10 @@ Optionally keeps it open between writes</p>
 <p>This function attempts to convert the input pathname to a Java Path object.
 If the conversion succeeds, the path is considered legal and the function returns true.
 If an exception is thrown during conversion, the path is considered illegal and the function returns false.</p>
-<dl class="simple">
-<dt>Input:</dt><dd><p>pathname - String representing the file or folder path to validate</p>
-</dd>
-<dt>Output:</dt><dd><p>bool     - Logical true if the path is valid, false otherwise</p>
-</dd>
-</dl>
+<p>Input:
+- pathname — String representing the file or folder path to validate</p>
+<p>Output:
+- bool     — Logical true if the path is valid, false otherwise</p>
 </dd></dl>
 
 <dl class="mat class">
@@ -264,13 +274,13 @@ It also integrates with the Log class to control output and warnings.</p>
 <span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.Session" title="Link to this definition"></a></dt>
 <dd><p>SESSION Constructor for Session class</p>
 <p>Initializes session metadata including name, directory, and overwrite behavior.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>opt.name            - Session name
-opt.dirName         - Directory name
-opt.parentDir       - Parent directory path
-opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>opt.name            — Session name</p></li>
+<li><p>opt.dirName         — Directory name</p></li>
+<li><p>opt.parentDir       — Parent directory path</p></li>
+<li><p>opt.overwriteFiles  — Flag to allow overwriting existing session files</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -293,6 +303,12 @@ opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.overwriteFiles">
+<span class="sig-name descname"><span class="pre">overwriteFiles</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Session.Session.overwriteFiles" title="Link to this definition"></a></dt>
+<dd><p>Flag to allow overwriting existing session files</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Session.log">
 <span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#Session.Session.log" title="Link to this definition"></a></dt>
 <dd><p>Log object for managing output and warnings</p>
@@ -301,7 +317,7 @@ opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Session.Session.showWarnings">
 <span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Session.showWarnings" title="Link to this definition"></a></dt>
-<dd><p>Warnings</p>
+<dd><p>Flag to control display of warnings</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -315,11 +331,11 @@ opt.overwriteFiles  - Flag to allow overwriting existing session files</p>
 <dt class="sig sig-object mat" id="Session.Session.setupLog">
 <span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
 <dd><p>SETUPLOG Initializes the Log object for the session</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>LOGMODE - Logging mode (console, file, both, none)
-opts.LOGFID - Optional file ID for logging</p>
-</dd>
-</dl>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>LOGMODE     — Logging mode (console, file, both, none)</p></li>
+<li><p>opts.LOGFID — Optional file ID for logging</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
