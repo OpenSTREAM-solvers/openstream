@@ -122,7 +122,7 @@ local loss multiplier used by the mixture model</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>HOMOGENEOUS — Assumes no slip between phases; both phases move at the same velocity.</p></li>
-<li><p>SLIP        — Accounts for velocity differences (slip) between liquid and vapor phases.</p></li>
+<li><p>SLIP        — Accounts for velocity differences (slip) between liquid and vapor phases using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.SLIP" title="Inputs.Model.SLIP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SLIP</span></code></a>.</p></li>
 <li><p>ROMIE       — Romie model; behaves like the homogeneous model when a homogeneous void fraction model is applied.</p></li>
 </ul>
 </dd></dl>
@@ -176,7 +176,7 @@ mixture solver.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>HOMOGENEOUS — Assumes vapor and liquid phases move at the same velocity.</p></li>
-<li><p>SLIP        — Assumes a slip ratio between vapor and liquid phases using user-defined SLIP.</p></li>
+<li><p>SLIP        — Assumes a slip ratio between vapor and liquid phases using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.SLIP" title="Inputs.Model.SLIP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SLIP</span></code></a>.</p></li>
 <li><p>BESTION     — Drift-flux model developed by Bestion (<span id="id1">Bestion [<a class="reference internal" href="../Guides/references.html#id19" title="D. Bestion. The physical closure laws in the cathare code. Nuclear Engineering and Design, 124(3):229-245, 1990. URL: https://www.sciencedirect.com/science/article/pii/0029549390902948, doi:https://doi.org/10.1016/0029-5493(90)90294-8.">1990</a>]</span>).</p></li>
 <li><p>EPRI        — Drift-flux model developed by the Electric Power Research Institute (EPRI) (<span id="id2">Lellouche and Zolotar [<a class="reference internal" href="../Guides/references.html#id22" title="G. S. Lellouche and B. A. Zolotar. A mechanistic model for predicting two-phase void fraction for water in vertical tubes, channels and rod bundles. Technical Report EPRI NP-2246-SR, Electric Power Research Institute, Palo Alto, California, February 1982. URL: https://www.nrc.gov/docs/ML2001/ML20010E663.pdf.">1982</a>]</span>).</p></li>
 </ul>
@@ -204,8 +204,8 @@ equilibrium base film thickness, used by the four-field solver.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>RISO   — Based on RISO dataset (<span id="id5">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
-<li><p>COEFS  — Generalized RISO model using user-defined BASEEQTHICKCOEF</p></li>
-<li><p>YPLUS  — Based on dimensionless wall distance (y+) using user-defined BASEYPLUS</p></li>
+<li><p>COEFS  — Generalized RISO model using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.BASEEQTHICKCOEF" title="Inputs.Model.BASEEQTHICKCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BASEEQTHICKCOEF</span></code></a></p></li>
+<li><p>YPLUS  — Based on dimensionless wall distance (y+) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.BASEYPLUS" title="Inputs.Model.BASEYPLUS"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BASEYPLUS</span></code></a></p></li>
 <li><p>MFVAL  — MFVAL model (under development)</p></li>
 </ul>
 </dd></dl>
@@ -239,7 +239,7 @@ non-equilibrium effects, used by the mixture solver.</p>
 <li><p>EQUILIBRIUM  — Assumes thermal equilibrium (<span class="math notranslate nohighlight">\(X = \max(0, X_{EQ})\)</span>)</p></li>
 <li><p>SAHAZUBER    — Saha-Zuber subcooled boiling model (<span id="id8">Saha and Zuber [<a class="reference internal" href="../Guides/references.html#id23" title="P. Saha and N. Zuber. Point of net vapor generation and vapor void fraction in subcooled boiling. In Proceedings of the International Heat Transfer Conference (IHTC-5). Tokyo, Japan, December 1973. Georgia Institute of Technology, Atlanta, Scripta Book Co. Conference paper; OSTI ID 4195144. URL: https://www.osti.gov/biblio/4195144.">1973</a>]</span>)</p></li>
 <li><p>EPRI         — EPRI subcooled boiling model (<span id="id9">Lellouche and Zolotar [<a class="reference internal" href="../Guides/references.html#id22" title="G. S. Lellouche and B. A. Zolotar. A mechanistic model for predicting two-phase void fraction for water in vertical tubes, channels and rod bundles. Technical Report EPRI NP-2246-SR, Electric Power Research Institute, Palo Alto, California, February 1982. URL: https://www.nrc.gov/docs/ML2001/ML20010E663.pdf.">1982</a>]</span>)</p></li>
-<li><p>RELAXATION   — Time relaxation model for subcooled boiling and post-CHF conditions</p></li>
+<li><p>RELAXATION   — Time relaxation model for subcooled boiling and post-CHF conditions (HRM)</p></li>
 </ul>
 </dd></dl>
 
@@ -313,7 +313,7 @@ Critical Boiling Transition, used by the mixture field.</p>
 interfacial length scale, used by the two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>CONSTANT  — Assumes a constant interfacial length scale using user-defined INTLENGTHVCST and INTLENGTHLCST for the dispersed gas and liquid phases, respectively</p></li>
+<li><p>CONSTANT  — Assumes a constant interfacial length scale using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.INTLENGTHVCST" title="Inputs.Model.INTLENGTHVCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTLENGTHVCST</span></code></a> and <a class="reference internal" href="Inputs.html#Inputs.Model.INTLENGTHLCST" title="Inputs.Model.INTLENGTHLCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTLENGTHLCST</span></code></a> for the dispersed gas and liquid phases, respectively</p></li>
 </ul>
 </dd></dl>
 
@@ -325,9 +325,9 @@ interfacial length scale, used by the two-fluid solver.</p>
 friction multiplier used by the mixture solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>HOMOGENEOUS  — Assumes no slip between phases; both phases move at the same velocity.</p></li>
-<li><p>SLIP         — Accounts for velocity differences (slip) between liquid and vapor phases.</p></li>
-<li><p>EPRI         — Empirical model developed by the Electric Power Research Institute (EPRI) (<span id="id17">Reddy and others [<a class="reference internal" href="../Guides/references.html#id21" title="D. G. Reddy and others. Two-phase friction multiplier for high pressure steam-water flow. Technical Report EPRI-NP-2522, Electric Power Research Institute, Palo Alto, California, July 1982.">1982</a>]</span>).</p></li>
+<li><p>HOMOGENEOUS  — Assumes no slip between phases; both phases move at the same velocity</p></li>
+<li><p>SLIP         — Accounts for velocity differences (slip) between liquid and vapor phases using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.SLIP" title="Inputs.Model.SLIP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SLIP</span></code></a></p></li>
+<li><p>EPRI         — Empirical model developed by the Electric Power Research Institute (EPRI) (<span id="id17">Reddy and others [<a class="reference internal" href="../Guides/references.html#id21" title="D. G. Reddy and others. Two-phase friction multiplier for high pressure steam-water flow. Technical Report EPRI-NP-2522, Electric Power Research Institute, Palo Alto, California, July 1982.">1982</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -336,11 +336,11 @@ friction multiplier used by the mixture solver.</p>
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THERMALRELAX</span></span><a class="headerlink" href="#InputEnums.THERMALRELAX" title="Link to this definition"></a></dt>
 <dd><p>THERMALRELAX Enumeration of thermal non-equilibrium time relaxation models</p>
 <p>This class defines the available models for calculating thermal
-non-equilibrium time relaxation, used when THERMALNONEQ is set to RELAXATION.</p>
+non-equilibrium time relaxation, used when <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALNONEQ" title="Inputs.Model.THERMALNONEQ"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALNONEQ</span></code></a> is set to <cite>RELAXATION</cite>.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>QUALITY  — Simple model relating relaxation time to equilibrium quality using user-defined RELAXX, RELAXTCOND and RELAXTEVAP</p></li>
-<li><p>VOID     — Physical model based on phase volumetric fraction using user-defined RELAXCONDCOEF and RELAXEVAPCOEF</p></li>
+<li><p>QUALITY  — Simple model relating relaxation time to equilibrium quality using user-defined <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXX</span></code>, <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXTCOND</span></code> and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXTEVAP</span></code></p></li>
+<li><p>VOID     — Physical model based on phase volumetric fraction using user-defined <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXCONDCOEF</span></code> and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXEVAPCOEF</span></code></p></li>
 </ul>
 </dd></dl>
 
@@ -370,7 +370,7 @@ wave equilibrium Strouhal number, used by the four-field solver.</p>
 <li><p>RISO     — Based on RISO dataset (<span id="id20">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
 <li><p>SAWAI    — Based on SAWAI dataset (<span id="id21">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
 <li><p>MFVAL    — MFVAL model (under development)</p></li>
-<li><p>CUSTOM   — Custom model using user-defined EQSTROUHALCOEF</p></li>
+<li><p>CUSTOM   — Custom model using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.EQSTROUHALCOEF" title="Inputs.Model.EQSTROUHALCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.EQSTROUHALCOEF</span></code></a></p></li>
 </ul>
 </dd></dl>
 
@@ -421,7 +421,7 @@ deposition enhancement, used by the three-field and four-field solvers.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>NONE       — No enhancement applied</p></li>
-<li><p>WINDECKER  — Model adapted from <span id="id23">Windecker [<a class="reference internal" href="../Guides/references.html#id17" title="U. Windecker. Spacer model for prediction of axial dryout locations in annular flow. Technical Report SECRC/B/TR-99/047E, ABB (ASEA Brown Boveri), Sweden, 1999.">1999</a>]</span>, as documented in <span id="id24">Le Corre [<a class="reference internal" href="../Guides/references.html#id7" title="Jean-Marie Le Corre. Mechanistic prediction of westinghouse triton11® bwr fuel critical power with mefisto-t subchannel analysis code. Nuclear Engineering and Design, 429:113613, 2024. URL: https://www.sciencedirect.com/science/article/pii/S0029549324007131, doi:https://doi.org/10.1016/j.nucengdes.2024.113613.">2024</a>]</span>, using user defined KTUNING</p></li>
+<li><p>WINDECKER  — Model adapted from <span id="id23">Windecker [<a class="reference internal" href="../Guides/references.html#id17" title="U. Windecker. Spacer model for prediction of axial dryout locations in annular flow. Technical Report SECRC/B/TR-99/047E, ABB (ASEA Brown Boveri), Sweden, 1999.">1999</a>]</span>, as documented in <span id="id24">Le Corre [<a class="reference internal" href="../Guides/references.html#id7" title="Jean-Marie Le Corre. Mechanistic prediction of westinghouse triton11® bwr fuel critical power with mefisto-t subchannel analysis code. Nuclear Engineering and Design, 429:113613, 2024. URL: https://www.sciencedirect.com/science/article/pii/S0029549324007131, doi:https://doi.org/10.1016/j.nucengdes.2024.113613.">2024</a>]</span>, using user defined <a class="reference internal" href="Inputs.html#Inputs.Model.KTUNING" title="Inputs.Model.KTUNING"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.KTUNING</span></code></a></p></li>
 </ul>
 </dd></dl>
 
@@ -435,8 +435,8 @@ velocity in the two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>MIXTURE  — Uses the same velocity as in the mixture model</p></li>
-<li><p>SLIP     — Slip ratio model (gas/liquid velocity) using user-defined SLIP</p></li>
-<li><p>FULL     — Full non-equilibrium momentum model (<span id="id25">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>)</p></li>
+<li><p>SLIP     — Slip ratio model (gas/liquid velocity) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.SLIP" title="Inputs.Model.SLIP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SLIP</span></code></a></p></li>
+<li><p>FULL     — Full non-equilibrium momentum model (<span id="id25">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>, <span id="id26">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -448,9 +448,9 @@ velocity in the two-fluid solver.</p>
 friction coefficient used by the three-field and four-field solvers.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>CONSTANT          — Uses a fixed, friction coefficient using user-defined VAPORFRICCST</p></li>
-<li><p>WALLIS            — Wallis model based on void fraction (<span id="id26">Wallis [<a class="reference internal" href="../Guides/references.html#id24" title="G. B. Wallis. One-Dimensional Two-Phase Flow. McGraw-Hill, New York, 1st edition, 1969. ISBN 9780070679429.">1969</a>]</span>).</p></li>
-<li><p>WALLISTHICK       — Wallis model based on film thickness (<span id="id27">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id14" title="Carl Adamsson and Jean-Marie Le Corre. Modeling and validation of a mechanistic tool (mefisto) for the prediction of critical power in bwr fuel assemblies. Nuclear Engineering and Design, 241(8):2843-2858, 2011. URL: https://www.sciencedirect.com/science/article/pii/S0029549311000847, doi:https://doi.org/10.1016/j.nucengdes.2011.01.033.">2011</a>]</span>, Equation 35).</p></li>
+<li><p>CONSTANT          — Uses a fixed, friction coefficient using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.VAPORFRICCST" title="Inputs.Model.VAPORFRICCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.VAPORFRICCST</span></code></a></p></li>
+<li><p>WALLIS            — Wallis model based on void fraction (<span id="id27">Wallis [<a class="reference internal" href="../Guides/references.html#id24" title="G. B. Wallis. One-Dimensional Two-Phase Flow. McGraw-Hill, New York, 1st edition, 1969. ISBN 9780070679429.">1969</a>]</span>).</p></li>
+<li><p>WALLISTHICK       — Wallis model based on film thickness (<span id="id28">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id14" title="Carl Adamsson and Jean-Marie Le Corre. Modeling and validation of a mechanistic tool (mefisto) for the prediction of critical power in bwr fuel assemblies. Nuclear Engineering and Design, 241(8):2843-2858, 2011. URL: https://www.sciencedirect.com/science/article/pii/S0029549311000847, doi:https://doi.org/10.1016/j.nucengdes.2011.01.033.">2011</a>]</span>, Equation 35).</p></li>
 <li><p>SOLVER_DEPENDENT  — Friction model determined by the solver configuration.</p></li>
 </ul>
 </dd></dl>
@@ -465,8 +465,8 @@ in the two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>MIXTURE  — Uses the same gas velocity as in the mixture model</p></li>
-<li><p>SLIP     — Slip ratio model (gas/liquid velocity) using user-defined SLIP</p></li>
-<li><p>FULL     — Full non-equilibrium momentum model (<span id="id28">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>)</p></li>
+<li><p>SLIP     — Slip ratio model (gas/liquid velocity) using% user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.SLIP" title="Inputs.Model.SLIP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SLIP</span></code></a></p></li>
+<li><p>FULL     — Full non-equilibrium momentum model (<span id="id29">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>, <span id="id30">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -478,8 +478,8 @@ in the two-fluid solver.</p>
 near-wall energy transfer time relaxation, used in mixture solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>QUALITY — Simple model relating relaxation time to equilibrium quality using user-defined NEARWALLRELAXX and NEARWALLRELAXT</p></li>
-<li><p>VOID    — Physical model based on local phase volumetric fraction using user-defined NEARWALLRELAXCOEF</p></li>
+<li><p>QUALITY — Simple model relating relaxation time to equilibrium quality using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.NEARWALLRELAXX" title="Inputs.Model.NEARWALLRELAXX"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NEARWALLRELAXX</span></code></a> and <a class="reference internal" href="Inputs.html#Inputs.Model.NEARWALLRELAXT" title="Inputs.Model.NEARWALLRELAXT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NEARWALLRELAXT</span></code></a></p></li>
+<li><p>VOID    — Physical model based on local phase volumetric fraction using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.NEARWALLRELAXCOEF" title="Inputs.Model.NEARWALLRELAXCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NEARWALLRELAXCOEF</span></code></a></p></li>
 </ul>
 </dd></dl>
 
@@ -492,8 +492,8 @@ and film mass flow rates at the onset of annular flow, used by the
 three-field and four-field solvers.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>RATIO       — Ratio of droplet to liquid mass flow rates using user-defined OAFDROPRATIO</p></li>
-<li><p>EQUILIBRIUM — Equilibrium assumption model (<span class="math notranslate nohighlight">\(M_{\mathrm{ent}} = M_{\mathrm{dep}}\)</span>) (<span id="id29">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id14" title="Carl Adamsson and Jean-Marie Le Corre. Modeling and validation of a mechanistic tool (mefisto) for the prediction of critical power in bwr fuel assemblies. Nuclear Engineering and Design, 241(8):2843-2858, 2011. URL: https://www.sciencedirect.com/science/article/pii/S0029549311000847, doi:https://doi.org/10.1016/j.nucengdes.2011.01.033.">2011</a>]</span>, Equations 15 and 16)</p></li>
+<li><p>RATIO       — Ratio of droplet to liquid mass flow rates using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.OAFDROPRATIO" title="Inputs.Model.OAFDROPRATIO"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.OAFDROPRATIO</span></code></a></p></li>
+<li><p>EQUILIBRIUM — Equilibrium assumption model (<span class="math notranslate nohighlight">\(M_{\mathrm{ent}} = M_{\mathrm{dep}}\)</span>) (<span id="id31">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id14" title="Carl Adamsson and Jean-Marie Le Corre. Modeling and validation of a mechanistic tool (mefisto) for the prediction of critical power in bwr fuel assemblies. Nuclear Engineering and Design, 241(8):2843-2858, 2011. URL: https://www.sciencedirect.com/science/article/pii/S0029549311000847, doi:https://doi.org/10.1016/j.nucengdes.2011.01.033.">2011</a>]</span>, Equations 15 and 16)</p></li>
 </ul>
 </dd></dl>
 
@@ -505,10 +505,10 @@ three-field and four-field solvers.</p>
 droplet drag coefficient, used by the two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>CONSTANT   — Constant drag coefficient using user-defined DROPDRAGCOEF</p></li>
+<li><p>CONSTANT   — Constant drag coefficient using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.DROPDRAGCOEF" title="Inputs.Model.DROPDRAGCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DROPDRAGCOEF</span></code></a></p></li>
 <li><p>STOKES     — Stokes flow regime model (<span class="math notranslate nohighlight">\(\frac{24}{Re_{p}}\)</span>)</p></li>
-<li><p>VISCOUS    — Viscous regime model (<span id="id30">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
-<li><p>DISTORTED  — Model for distorted (non-spherical) droplets (<span id="id31">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>VISCOUS    — Viscous regime model (<span id="id32">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>DISTORTED  — Model for distorted (non-spherical) droplets (<span id="id33">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -525,7 +525,7 @@ in the three-field and four-field solvers.</p>
 <li><p>SLIP          — Slip ratio model (droplet/gas velocity)</p></li>
 <li><p>EQUILIBRIUM   — Equilibrium model</p></li>
 <li><p>EQUILIBRIUMS  — Simplified equilibrium model based on force balance (<span class="math notranslate nohighlight">\(F_{\mathrm{drag}} + F_{\mathrm{gravity}} + F_{\mathrm{buoyancy}} = 0\)</span>)</p></li>
-<li><p>FULL          — Full non-equilibrium momentum model (<span id="id32">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>)</p></li>
+<li><p>FULL          — Full non-equilibrium momentum model (<span id="id34">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -537,9 +537,9 @@ in the three-field and four-field solvers.</p>
 interfacial Nusselt number, used by the two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>CONSTANT      — Assumes a constant Nusselt number using user-defined INTNUVCST and INTNULCST for the dispersed gas and liquid phases, respectively</p></li>
-<li><p>RANZMARSHALL  — Ranz-Marshall correlation-based model (<span id="id33">Ranz and Marshall [<a class="reference internal" href="../Guides/references.html#id28" title="W. E. Ranz and W. R. Marshall. Evaporation from drops. part i. Chemical Engineering Progress, 48(3):141–146, March 1952.">1952</a>]</span>) using user-defined RANZMARSHALLVCST and RANZMARSHALLLCST for the dispersed gas and liquid phases, respectively</p></li>
-<li><p>RELAXATION    — Time relaxation-based model (<span id="id34">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>CONSTANT      — Assumes a constant Nusselt number using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.INTNUVCST" title="Inputs.Model.INTNUVCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTNUVCST</span></code></a> and <a class="reference internal" href="Inputs.html#Inputs.Model.INTNULCST" title="Inputs.Model.INTNULCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTNULCST</span></code></a> for the dispersed gas and liquid phases, respectively</p></li>
+<li><p>RANZMARSHALL  — Ranz-Marshall correlation-based model (<span id="id35">Ranz and Marshall [<a class="reference internal" href="../Guides/references.html#id28" title="W. E. Ranz and W. R. Marshall. Evaporation from drops. part i. Chemical Engineering Progress, 48(3):141–146, March 1952.">1952</a>]</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.RANZMARSHALLVCST" title="Inputs.Model.RANZMARSHALLVCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.RANZMARSHALLVCST</span></code></a> and <a class="reference internal" href="Inputs.html#Inputs.Model.RANZMARSHALLLCST" title="Inputs.Model.RANZMARSHALLLCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.RANZMARSHALLLCST</span></code></a> for the dispersed gas and liquid phases, respectively</p></li>
+<li><p>RELAXATION    — Time relaxation-based model (<span id="id36">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -555,7 +555,7 @@ velocity in the three-field solver.</p>
 <li><p>ALGEBRAIC     — Simple algebraic model</p></li>
 <li><p>EQUILIBRIUM   — Equilibrium model</p></li>
 <li><p>EQUILIBRIUMS  — Simplified equilibrium model based on force balance (<span class="math notranslate nohighlight">\(F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0\)</span>)</p></li>
-<li><p>FULL          — Full non-equilibrium momentum model (<span id="id35">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>)</p></li>
+<li><p>FULL          — Full non-equilibrium momentum model (<span id="id37">Le Corre <em>et al.</em> [<a class="reference internal" href="../index_content.html#id5" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -567,10 +567,10 @@ velocity in the three-field solver.</p>
 bubble drag coefficient, used by the two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>CONSTANT   — Constant drag coefficient using user-defined BUBBLEDRAGCOEF</p></li>
+<li><p>CONSTANT   — Constant drag coefficient using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.BUBBLEDRAGCOEF" title="Inputs.Model.BUBBLEDRAGCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BUBBLEDRAGCOEF</span></code></a></p></li>
 <li><p>STOKES     — Stokes flow regime model (<span class="math notranslate nohighlight">\(\frac{24}{Re_{p}}\)</span>)</p></li>
-<li><p>VISCOUS    — Viscous regime model (<span id="id36">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
-<li><p>DISTORTED  — Model for distorted bubbles (non-spherical) (<span id="id37">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>VISCOUS    — Viscous regime model (<span id="id38">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>DISTORTED  — Model for distorted bubbles (non-spherical) (<span id="id39">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -583,8 +583,8 @@ and wave mass flow rates at the onset of annular flow, used by the
 four-field solver</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>RATIO        — Ratio of base film to film mass flow rates using user-defined OAFBASERATIO</p></li>
-<li><p>EQUILIBRIUM  — Equilibrium model (film thickness = equilibrium film thickness) (<span id="id38">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
+<li><p>RATIO        — Ratio of base film to film mass flow rates using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.OAFBASERATIO" title="Inputs.Model.OAFBASERATIO"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.OAFBASERATIO</span></code></a></p></li>
+<li><p>EQUILIBRIUM  — Equilibrium model (film thickness = equilibrium film thickness) (<span id="id40">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -596,7 +596,7 @@ four-field solver</p>
 wall heat transfer, used by the mixture solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>THOM    — Thom wall heat transfer model (<span id="id39">Rohsenow <em>et al.</em> [<a class="reference internal" href="../Guides/references.html#id18" title="Warren M. Rohsenow, James P. Hartnett, and Young I. Cho, editors. Handbook of Heat Transfer. McGraw-Hill, New York, 3 edition, 1998. ISBN 0-07-0535558. A comprehensive handbook edited by Rohsenow, Hartnett, and Cho.">1998</a>]</span>)</p></li>
+<li><p>THOM    — Thom wall heat transfer model (<span id="id41">Rohsenow <em>et al.</em> [<a class="reference internal" href="../Guides/references.html#id18" title="Warren M. Rohsenow, James P. Hartnett, and Young I. Cho, editors. Handbook of Heat Transfer. McGraw-Hill, New York, 3 edition, 1998. ISBN 0-07-0535558. A comprehensive handbook edited by Rohsenow, Hartnett, and Cho.">1998</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -609,10 +609,10 @@ relative velocity between liquid and vapor phases, used by the
 two-fluid solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>AREAMEAN  — Difference between area-averaged phase velocities (<span id="id40">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
-<li><p>SCALED    — Scaled difference using user-defined RELVELCST (<span id="id41">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
-<li><p>DRIFT     — Uses drift velocity as the local relative velocity (<span id="id42">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
-<li><p>SIMPLE    — Simplified assumptions for bubbly and annular flow regime (<span id="id43">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>AREAMEAN  — Difference between area-averaged phase velocities (<span id="id42">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>SCALED    — Scaled difference using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.RELVELCST" title="Inputs.Model.RELVELCST"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.RELVELCST</span></code></a> (<span id="id43">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>DRIFT     — Uses drift velocity as the local relative velocity (<span id="id44">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
+<li><p>SIMPLE    — Simplified assumptions for bubbly and annular flow regime (<span id="id45">Walter [<a class="reference internal" href="../Guides/references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>)</p></li>
 </ul>
 </dd></dl>
 
@@ -625,10 +625,10 @@ momentum conservation equation, used to compute the base film velocity
 in the four-field solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>ALGEBRAIC     — Simple algebraic model (<span id="id44">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id13" title="C. Adamsson and J.M. Le Corre. Transient dryout prediction using a computationally efficient method for sub-channel film-flow analysis. Nuclear Engineering and Design, 280:316-325, 2014. URL: https://www.sciencedirect.com/science/article/pii/S0029549314005081, doi:https://doi.org/10.1016/j.nucengdes.2014.09.012.">2014</a>]</span>, Equations 21 or 23)</p></li>
+<li><p>ALGEBRAIC     — Simple algebraic model (<span id="id46">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id13" title="C. Adamsson and J.M. Le Corre. Transient dryout prediction using a computationally efficient method for sub-channel film-flow analysis. Nuclear Engineering and Design, 280:316-325, 2014. URL: https://www.sciencedirect.com/science/article/pii/S0029549314005081, doi:https://doi.org/10.1016/j.nucengdes.2014.09.012.">2014</a>]</span>, Equations 21 or 23)</p></li>
 <li><p>EQUILIBRIUM   — Equilibrium model</p></li>
 <li><p>EQUILIBRIUMS  — Simplified equilibrium model based on force balance (<span class="math notranslate nohighlight">\(F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0\)</span>)</p></li>
-<li><p>FULL          — Full non-equilibrium model (<span id="id45">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
+<li><p>FULL          — Full non-equilibrium model (<span id="id47">Le Corre [<a class="reference internal" href="../index_content.html#id13" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>)</p></li>
 <li><p>FULLNOP       — Full non-equilibrium model excluding pressure terms (gravity and buoyancy)</p></li>
 </ul>
 </dd></dl>
@@ -641,7 +641,7 @@ in the four-field solver.</p>
 wall heat transfer (liquid or gas), used by the mixture solver.</p>
 <p>Models:</p>
 <ul class="simple">
-<li><p>DITTUSBOELTER    — Dittus-Boelter wall heat transfer model for heating (<span class="math notranslate nohighlight">\(\mathrm{Nu} = 0.023 \cdot \mathrm{Re}^{0.8} \cdot \mathrm{Pr}^{0.4}\)</span>) (<span id="id46">Dittus and Boelter [<a class="reference internal" href="../Guides/references.html#id30" title="F.W Dittus and L.M.K Boelter. Heat transfer in automobile radiators of the tubular type. Publications in Engineering, 2:443-461, 930.">930</a>]</span>, <span id="id47">McAdams [<a class="reference internal" href="../Guides/references.html#id29" title="William H. McAdams. Heat Transmission. McGraw-Hill, New York, NY, 1942. Includes correlation for turbulent single-phase convection.">1942</a>]</span>)</p></li>
+<li><p>DITTUSBOELTER    — Dittus-Boelter wall heat transfer model for heating (<span class="math notranslate nohighlight">\(\mathrm{Nu} = 0.023 \cdot \mathrm{Re}^{0.8} \cdot \mathrm{Pr}^{0.4}\)</span>) (<span id="id48">Dittus and Boelter [<a class="reference internal" href="../Guides/references.html#id30" title="F.W Dittus and L.M.K Boelter. Heat transfer in automobile radiators of the tubular type. Publications in Engineering, 2:443-461, 930.">930</a>]</span>, <span id="id49">McAdams [<a class="reference internal" href="../Guides/references.html#id29" title="William H. McAdams. Heat Transmission. McGraw-Hill, New York, NY, 1942. Includes correlation for turbulent single-phase convection.">1942</a>]</span>)</p></li>
 <li><p>DITTUSBOELTERGEN — Generalized Dittus-Boelter wall heat transfer model using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.DITTUSBOELTERCOEF" title="Inputs.Model.DITTUSBOELTERCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DITTUSBOELTERCOEF</span></code></a></p></li>
 </ul>
 </dd></dl>
