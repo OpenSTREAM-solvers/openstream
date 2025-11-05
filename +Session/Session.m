@@ -7,25 +7,24 @@ classdef Session < handle
 
     properties (SetAccess = protected)
 
-        name        (1,1) string        = ""                               % Name of the session (used for log file naming)
-        dirName     (1,1) string        = ""                               % Name of the session directory
-        parentDir         {isfolder}    = ""                               % Parent directory where session folder will be created
-        overwriteFiles ...                                                 % Flag to allow overwriting existing session files
-                    (1,1) logical       = false
+        name             (1,1) string        = ""                          % Name of the session (used for log file naming)
+        dirName          (1,1) string        = ""                          % Name of the session directory
+        parentDir        {isfolder}          = ""                          % Parent directory where session folder will be created
+        overwriteFiles   (1,1) logical       = false                       % Flag to allow overwriting existing session files
+        log              (1,1) Session.Log                                 % Log object for managing output and warnings
 
-        log         (1,1) Session.Log                                      % Log object for managing output and warnings
-        
         % Warnings
+
         showWarnings          (1,1) logical = true                         % Flag to control display of warnings
-    
+
     end
 
     properties (Dependent)
 
         directory   (1,1) string                                           % Full path to the session directory
-   
+
     end
-    
+
     methods
 
         function session = Session(opt)
@@ -34,23 +33,24 @@ classdef Session < handle
             % Initializes session metadata including name, directory, and overwrite behavior.
             %
             % Inputs:
-            %   opt.name            - Session name
-            %   opt.dirName         - Directory name
-            %   opt.parentDir       - Parent directory path
-            %   opt.overwriteFiles  - Flag to allow overwriting existing session files
+            %
+            % - opt.name            — Session name
+            % - opt.dirName         — Directory name
+            % - opt.parentDir       — Parent directory path
+            % - opt.overwriteFiles  — Flag to allow overwriting existing session files
 
             arguments
                 opt.name        (1,1) string        = ""
                 opt.dirName     (1,1) string        = ""
                 opt.parentDir         {isfolder}    = userpath
                 opt.overwriteFiles ...
-                                (1,1) logical       = false
+                    (1,1) logical       = false
             end
             session.name        = opt.name;
             session.dirName     = opt.dirName;
             session.parentDir   = opt.parentDir;
             session.overwriteFiles ...
-                                = opt.overwriteFiles;
+                = opt.overwriteFiles;
         end
 
         function directory = get.directory(session)
@@ -63,16 +63,17 @@ classdef Session < handle
             %SETUPLOG Initializes the Log object for the session
             %
             % Inputs:
-            %   LOGMODE - Logging mode (console, file, both, none)
-            %   opts.LOGFID - Optional file ID for logging
+            %
+            % - LOGMODE     — Logging mode (console, file, both, none)
+            % - opts.LOGFID — Optional file ID for logging
 
             arguments
                 session                 Session.Session
-                LOGMODE        (1,1)    Session.LogMode  = Session.LogMode.LOGTOCONSOLEONLY               
-                                                                           % LogMode
+                LOGMODE        (1,1)    Session.LogMode  = Session.LogMode.LOGTOCONSOLEONLY
+                % LogMode
                 opts.LOGFID    (1,1)    int32            = -1
             end
-            
+
             switch LOGMODE
                 case {Session.LogMode.NONE, Session.LogMode.LOGTOFILEONLY}
                     session.showWarnings = false;
@@ -81,9 +82,9 @@ classdef Session < handle
             end
 
             session.log = Session.Log(LOGMODE, ...
-                                      "session",session, ...
-                                      "LOGFID",opts.LOGFID,...
-                                      "showWarnings", session.showWarnings);
+                "session",session, ...
+                "LOGFID",opts.LOGFID,...
+                "showWarnings", session.showWarnings);
         end
 
         function makeSessionDirectory(obj)
@@ -96,18 +97,18 @@ classdef Session < handle
             if ~Session.isLegalPath(obj.directory)
                 throw( ...
                     MException( ...
-                        'LogError:IllegalSessionDirectoryError', ...
-                        'Session directory %s is not a legal path', obj.directory ...
+                    'LogError:IllegalSessionDirectoryError', ...
+                    'Session directory %s is not a legal path', obj.directory ...
                     ) ...
-                );
+                    );
             elseif isfolder(obj.directory)
                 if ~obj.overwriteFiles
                     throw( ...
                         MException( ...
-                            'LogError:ExistingSessionDirectoryError', ...
-                            'Session directory %s already exists.', obj.directory ...
+                        'LogError:ExistingSessionDirectoryError', ...
+                        'Session directory %s already exists.', obj.directory ...
                         ) ...
-                    );
+                        );
                 else
                     % Check if there are any open files through fopen
                     if isMATLABReleaseOlderThan("R2024a")
@@ -138,7 +139,7 @@ classdef Session < handle
                             warning('Opened diary closed: %s', diaryLoc);
                         end
                     end
-                    
+
                     [status, msg, msgID] = rmdir(obj.directory,'s');
                     if status ~= 1
                         % Sometimes, setting diary off fixes this
@@ -146,17 +147,17 @@ classdef Session < handle
                         [status, msg, msgID] = rmdir(obj.directory,'s');
                         if status ~= 1
                             msg = sprintf("%s\n%s", msg, ...
-                                    "Try deleting existing instances of the solver.\n" + ...
-                                    "This error is likely caused by abandoned fopen files " + ...
-                                    "that were not properly closed. Try running `fopen('all')` " + ...
-                                    "to list all open fids.");
+                                "Try deleting existing instances of the solver.\n" + ...
+                                "This error is likely caused by abandoned fopen files " + ...
+                                "that were not properly closed. Try running `fopen('all')` " + ...
+                                "to list all open fids.");
                             throw( ...
                                 MException(msgID,msg) ...
-                            );
+                                );
                         end
                     end
-                        warning('%s was removed.', obj.directory);
-                    
+                    warning('%s was removed.', obj.directory);
+
                 end
             end
 
@@ -165,10 +166,10 @@ classdef Session < handle
             if status ~= 1
                 throw( ...
                     MException(msgID,msg) ...
-                );
+                    );
             end
         end
-        
+
     end
-    
+
 end

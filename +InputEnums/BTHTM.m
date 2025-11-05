@@ -6,7 +6,7 @@ classdef BTHTM
     %
     % Models:
     %
-    % - VAPOR — Wall heat transfer to the vapor phase only, based on single-phase heat transfer model selected in :attr:`InputsEnums.SPHTM`
+    % - VAPOR — Wall heat transfer to the vapor phase only, based on single-phase heat transfer model selected in :attr:`Inputs.Model.SPHTM`
 
     enumeration
         VAPOR                  % Wall heat transfer to the vapor phase only

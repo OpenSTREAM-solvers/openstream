@@ -6,15 +6,16 @@ function bool = isLegalPath(pathname)
 % If an exception is thrown during conversion, the path is considered illegal and the function returns false.
 %
 % Input:
-%   pathname - String representing the file or folder path to validate
+% - pathname — String representing the file or folder path to validate
 %
 % Output:
-%   bool     - Logical true if the path is valid, false otherwise
+% - bool     — Logical true if the path is valid, false otherwise
 
-    bool = true;
-    try
-        java.io.File(pathname).toPath;
-    catch
-        bool = false;
-    end
+bool = true;
+try
+    java.io.File(pathname).toPath;
+catch
+    bool = false;
+end
+
 end
