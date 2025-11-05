@@ -15,7 +15,9 @@ classdef Model < Inputs.Input
         PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
 
+        % =================================
         % Two-phase flow regime transitions
+        % =================================
 
         WBOILINGXSUB     (1,1) double  {mustBeNonpositive}                 = -0.2                            % Equilibrium thermodynamic quality at onset of subcooled wall boiling [-]
         WBOILINGN        (1,1) double  {mustBePositive}                    = 2                               % Wall boiling function exponent [-]
@@ -113,7 +115,7 @@ classdef Model < Inputs.Input
         DROPDIAM         (1,1) double  {mustBePositive}                    = 1E-3                            % Drop diameter [mm]
 
         % Four-field solver models
-        
+
         OAFFILMSPLIT     (1,1) InputEnums.OAFFILMSPLIT                     = 'EQUILIBRIUM'                   % Film mass flow split model at onset of annular flow
         OAFBASERATIO     (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}   = 0.5                             % Base/Film mass ratio at onset of annular flow [-]
 

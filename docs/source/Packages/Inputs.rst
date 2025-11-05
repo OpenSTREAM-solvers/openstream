@@ -18,4 +18,5 @@ These input definitions form the backbone of each simulation setup, ensuring con
 .. automodule:: Inputs
    :show-inheritance:
    :members:
+   :undoc-members:
 .. :exclude-members: 

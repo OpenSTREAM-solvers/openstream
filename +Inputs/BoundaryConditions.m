@@ -212,8 +212,10 @@ classdef BoundaryConditions < Inputs.Input
             %PLOT Generates plots of boundary condition parameters over time
             %
             % Inputs:
+            %
             % - fluidObj — FluidProperties object
             % - opt      — Struct with fields:
+            %
             %              - display  — Cell array of parameters to plot
             %              - tIdx     — Time indices to include
             %              - unitTemp — Temperature unit ('K' or 'C')
@@ -292,6 +294,7 @@ classdef BoundaryConditions < Inputs.Input
             % WRITEINPUTFILE Writes boundary condition data to input file
             %
             % Inputs:
+            %
             % - filePathName — Path to output file
             % - TIME         — Time value [s]
             % - PRESSURE     — Pressure value [Pa]
