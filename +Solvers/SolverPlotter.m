@@ -302,6 +302,7 @@ classdef SolverPlotter < handle
                                     break;
                                 end
                             end
+
                             % Update line data
                             currentYData = lh.UserData.Data(currentIndex).yData;
                             if isfield(lh.UserData.Data(currentIndex), "xData")
@@ -541,6 +542,26 @@ classdef SolverPlotter < handle
                 % Keep track of axes xLim and yLim
                 new_ah(idx).UserData = struct('xlim', [], 'ylim', []);
 
+                % Create listener for ylim change on axes
+                addlistener(new_ah(idx), "YLim", "PostSet", @YLimChangedCallback);
+
+            end
+
+            function YLimChangedCallback(src, event)
+                
+                new_ylim = ylim(event.AffectedObject);
+                hidden_lhs = findall(event.AffectedObject,'type', 'line','HandleVisibility','off');
+                for i=1:length(hidden_lhs)
+                    if numel(hidden_lhs(i).YData) == 2
+                        hidden_lhs(i).YData = new_ylim;
+                        for j=1:length(hidden_lhs(i).UserData.Data)
+                            hidden_lhs(i).UserData.Data(j).yData = new_ylim;
+                        end
+                    elseif numel(hidden_lhs(i).YData) == 6
+                        hidden_lhs(i).YData(1:2) = new_ylim;
+                        hidden_lhs(i).YData(4:5) = new_ylim;
+                    end
+                end
             end
         end
         
@@ -717,11 +738,17 @@ classdef SolverPlotter < handle
             % Prepare X and Y data for vertical lines with NaN separators
             xdata = reshape([klocZ; klocZ; nan(size(klocZ))], 1, [])';
             ydata = repmat([yl, nan(length(plotters),1)], 1, numel(klocZ))';
+            ydata='ylim';
 
-            % Plot vertical lines
-            plotters.plotz(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
-                'XData', xdata, 'subset', 1:numel(xdata), ...
-                'plotOptions', {'handleVisibility', 'off'});
+            for i=1:length(klocZ)
+
+                xdata = [klocZ(i) klocZ(i)];
+               
+                % Plot vertical lines
+                plotters.plotz(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
+                    'XData', xdata, 'subset', 1:numel(xdata), ...
+                    'plotOptions', {'handleVisibility', 'off'});
+            end
         end
 
         function ahs = gca(plotters)
