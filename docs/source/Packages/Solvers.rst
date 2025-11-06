@@ -19,7 +19,7 @@ The following is a list of associated superclasses, each with its respective pro
 - Abstract solver: :class:`Solvers.AbstractSolver`
 - Abstract field: :class:`Solvers.AbstractField`
 - Abstract phase: :class:`Solvers.AbstractPhase`
-- Abstract film: :class:`Solvers.AbstracFilm`
+- Abstract film: :class:`Solvers.AbstractFilm`
 - Solver plotter: :class:`Solvers.SolverPlotter`
 - Solver state: :class:`Solvers.SolverState`
 

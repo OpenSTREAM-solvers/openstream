@@ -9,7 +9,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
         DZ           (1,1) double  {mustBeNumeric}                         =0      % Axial step size [m]
         inputSet                   {isa(inputSet,'Inputs.InputSet')}               % :class:`Inputs.InputSet` object containing geometry, model, and boundary conditions
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}           % :class:`Inputs.FluidProperties` object
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}           % :class:`Inputs.FluidProperties` object containing fluid thermophysical properties
         mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % :class:`Solvers.Mixture.Mixture` object of the mixture solver
     end
 
@@ -37,7 +37,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
 
             perim  = absfilm.inputSet.geometry.PERIM;                      % [m] Perimeter
-            
+
             wl = absfilm.W(zIdx,:)./perim;
         end
 
