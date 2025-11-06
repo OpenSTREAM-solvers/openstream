@@ -10,7 +10,7 @@ The Python version of
 used for calculating the fluid properties.
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
 MATLAB interface that interacts with CoolProp through Python. Both
-OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
+OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
 (cloning) of these programs will be our first step.
 
 Install using Git and Github
