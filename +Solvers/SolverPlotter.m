@@ -148,7 +148,7 @@ classdef SolverPlotter < handle
                 end
 
                 % Update 
-                drawnow();
+                drawnow limitrate;
 
                 % Set back to none
                 for i=1:length(lhs)
@@ -156,7 +156,7 @@ classdef SolverPlotter < handle
                 end
 
                 % Update
-                drawnow();
+                drawnow limitrate;
 
 
             end
@@ -330,7 +330,7 @@ classdef SolverPlotter < handle
                         counter.String = string(currentIndex);
                     end
 
-                    drawnow();
+                    drawnow limitrate;
 
                     % Frame rate control
                     fpsEdit = findobj(fh, 'Tag', 'fpsEdit');
@@ -674,7 +674,7 @@ classdef SolverPlotter < handle
                     
                     % Custom plot by YData
                     if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                        drawnow();
+                        drawnow limitrate;
                         YData= ylim(ah);
                         lh = plot(ah, XData, YData, 'DisplayName', opts.DisplayName, opts.plotOptions{:});
                     elseif isvector(YData)
