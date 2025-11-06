@@ -92,10 +92,12 @@ classdef (Abstract) AbstractSolver < handle
             %CreateITR Create a structure for inner iteration values
             %
             % Inputs:
+            %
             % - NZ        — Number of axial nodes (scalar)
             % - ITRFields — (string array) Names of fields to include in the struct
             %
             % Output:
+            %
             % - ITR       — Struct with fields initialized to zero vectors of length NZ
 
             arguments

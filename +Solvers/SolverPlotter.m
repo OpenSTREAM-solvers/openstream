@@ -800,7 +800,7 @@ classdef SolverPlotter < handle
                 % Update graphics
                 drawnow limitrate;
 
-                % Set legend locatuion to "none"
+                % Set legend location to "none"
                 lh.Location = "none";
 
             end
@@ -812,9 +812,9 @@ classdef SolverPlotter < handle
             %
             % Usage:
             %
-            % - plotters.resizeFigure();        % default scaleFactor = 1
-            % - plotters.resizeFigure(1.2);     % tiles 20% larger
-            % - plotters.resizeFigure(0.8);     % tiles 20% smaller
+            % - plotters.resizeFigure()    — Default scaleFactor = 1
+            % - plotters.resizeFigure(1.2) — Tiles 20% larger
+            % - plotters.resizeFigure(0.8) — Tiles 20% smaller
 
             if nargin < 2
                 scaleFactor = 1; % default
