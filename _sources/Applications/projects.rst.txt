@@ -1,4 +1,4 @@
 Projects
 ========
 
-Coming soon. 
+*Coming soon.*
