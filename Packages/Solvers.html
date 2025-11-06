@@ -130,7 +130,7 @@
 <li><p>Abstract solver: <a class="reference internal" href="#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p></li>
 <li><p>Abstract field: <a class="reference internal" href="#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p></li>
 <li><p>Abstract phase: <a class="reference internal" href="#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p></li>
-<li><p>Abstract film: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstracFilm</span></code></p></li>
+<li><p>Abstract film: <a class="reference internal" href="#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p></li>
 <li><p>Solver plotter: <a class="reference internal" href="#Solvers.SolverPlotter" title="Solvers.SolverPlotter"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.SolverPlotter</span></code></a></p></li>
 <li><p>Solver state: <a class="reference internal" href="#Solvers.SolverState" title="Solvers.SolverState"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.SolverState</span></code></a></p></li>
 </ul>
@@ -245,6 +245,14 @@ flag.</p>
 <p>This enumeration defines the possible states a solver can be in
 during or after execution. It is used to track solver execution and
 convergence status.</p>
+<p>States:</p>
+<ul class="simple">
+<li><p>UNSOLVED                — Solver has not yet run</p></li>
+<li><p>SOLVEDCONVERGED         — Solver completed and converged successfully</p></li>
+<li><p>SOLVEDNOTCONVERGED      — Solver completed but did not converge</p></li>
+<li><p>INITIALSTEPCONVERGED    — Initial steady-state step completed and converged</p></li>
+<li><p>INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat class">
@@ -360,7 +368,7 @@ Specific entrainment models (e.g., Okawa, Govan) and friction models are impleme
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.fluid">
 <span class="sig-name descname"><span class="pre">fluid</span></span><a class="headerlink" href="#Solvers.AbstractFilm.fluid" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object</p>
+<dd><p><a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object containing fluid thermophysical properties</p>
 </dd></dl>
 
 <dl class="mat attribute">
