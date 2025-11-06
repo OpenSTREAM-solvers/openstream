@@ -11,8 +11,8 @@ classdef Model < Inputs.Input
         ID               (1,1) string  {mustBeTextScalar}                                                    % Identifier for the model configuration
         NNODES                 double  {mustBeScalarOrEmpty,mustBeInteger,mustBePositive} ...
                                                                            = 100                             % Number of axial nodes used in the simulation
-        FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % Fluid identifier
-        PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties
+        FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % CoolProp fluid identifier
+        PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties selected from :class:`InputEnums.FLUIDPROPERTIES`
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
 
         % Two-phase flow regime and wall heat transfer transitions

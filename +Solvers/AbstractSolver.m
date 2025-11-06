@@ -1,18 +1,18 @@
 classdef (Abstract) AbstractSolver < handle
-    %ABSTRACTSOLVER
-    %   Defines the base interface and shared functionality for all solver classes.
-    %   Subclasses must implement the abstract methods and properties defined here.
+    %ABSTRACTSOLVER Defines the base interface and shared functionality for all solver classes.
+    %
+    % Subclasses must implement the abstract methods and properties defined here.
 
     properties (SetAccess=protected, Abstract)
 
-        % Input configuration object of type Inputs.InputSet
+        % Input configuration object of type :class:`Inputs.InputSet`
         inputSet    {isa(inputSet,'Inputs.InputSet')}
-    
+
     end
 
     properties (SetAccess=protected, Abstract)
 
-        % Solver state, defined by the SolverState enumeration
+        % Solver state, defined by :class:`Solvers.SolverState` enumeration
         STATE (1,1) Solvers.SolverState
 
     end
@@ -24,7 +24,7 @@ classdef (Abstract) AbstractSolver < handle
         plotz
         plott
         plotzt
-        
+
     end
 
     methods
@@ -32,13 +32,13 @@ classdef (Abstract) AbstractSolver < handle
         function solver = AbstractSolver(inputSet)
             %ABSTRACTSOLVER Constructor for AbstractSolver
             %
-            %   Initializes the solver with a given inputSet and applies
-            %   solver-specific properties.
+            % Initializes the solver with a given :class:`Inputs.InputSet`
+            % and applies solver-specific properties.
 
-            solverName = regexpi(metaclass(solver).Name, '(?<=\.)[^.]+(?=\.)', 'match','once'); % Extract Solver name            
+            solverName = regexpi(metaclass(solver).Name, '(?<=\.)[^.]+(?=\.)', 'match','once'); % Extract Solver name
             solver.inputSet = inputSet.applySolverDependentProps(solverName);
         end
-        
+
         function log(solver, varargin)
             %LOG Log messages to the session log
 
@@ -46,8 +46,8 @@ classdef (Abstract) AbstractSolver < handle
         end
 
         function name = solverName(solver)
-            %SOLVERNAME returns the name of the solver
-            
+            %SOLVERNAME Returns the name of the solver
+
             parts = split(class(solver),'.');
             name = parts{end};
         end
@@ -55,15 +55,16 @@ classdef (Abstract) AbstractSolver < handle
         function save(solver, opts)
             %SAVE Save the solver object to a .mat file with a customizable name.
             %
-            %   Inputs:
-	        %       solver        - The solver object to be saved.
-            %       opts.name     - (string) Name of the variable under which to save the solver. Default set to solver name
-            %       opts.showpath - (logical) Whether to display the save path. Default: true.
+            % Inputs:
+            %
+            % - solver        — The solver object to be saved.
+            % - opts.name     — (string) Name of the variable under which to save the solver. Default set to solver name
+            % - opts.showpath — (logical) Whether to display the save path. Default: true.
 
             arguments
                 solver
                 opts.name     (1,1) string  {mustBeTextScalar}             = solver.solverName()
-                opts.showpath (1,1) logical                                = true              
+                opts.showpath (1,1) logical                                = true
             end
 
             session = solver.inputSet.session;
@@ -86,28 +87,28 @@ classdef (Abstract) AbstractSolver < handle
     end
 
     methods (Static)
-        
+
         function ITR = CreateITR(NZ, ITRFields)
             %CreateITR Create a structure for inner iteration values
             %
-            %   Inputs:
-            %       NZ        - Number of axial nodes (scalar)
-            %       ITRFields - (string array) Names of fields to include in the struct
+            % Inputs:
+            % - NZ        — Number of axial nodes (scalar)
+            % - ITRFields — (string array) Names of fields to include in the struct
             %
-            %   Output:
-            %       ITR - Struct with fields initialized to zero vectors of length NZ
+            % Output:
+            % - ITR       — Struct with fields initialized to zero vectors of length NZ
 
             arguments
-                NZ        (1,1) double  
+                NZ        (1,1) double
                 ITRFields (1,:) string  = ["N","DW","DU"]                  % Cell structure to convert into struct
             end
 
-            ITRCell = cell(numel(ITRFields),1);                            
+            ITRCell = cell(numel(ITRFields),1);
             ITRCell(:) = {zeros(NZ,1)};                                    % Initialize with zeros
             ITR = cell2struct(ITRCell, ITRFields, 1);                      % Convert cell to struct with fieldnames
         end
-        
+
     end
-    
+
 end
 

@@ -4,42 +4,42 @@ classdef SolverPlotter < handle
     % This class provides a flexible plotting interface for visualizing solver results.
     % It supports tiled layouts, animated series, and customizable plot styles.
     % It also includes UI controls for animation playback and export.
-    
+
     properties
 
-        FontSize            {mustBePositive, isnumeric}               = 13            % Font size of text in plots
-        Title               {isstring}                                = ""            % Title of the figure
-        WallIdx             {mustBePositive, mustBeInteger}           = 1             % Wall index for multi-wall simulations
-        Zs          (:,1)   {isnumeric}                               = []            % Axial positions [m]
-        Ts          (:,1)   {isnumeric}                               = []            % Time series [s]
-        Grid                {mustBeMember(Grid,{'on','off','minor'})} = 'on'          % Grid display option
-        currentAhIdx (1,1)  {isnumeric}                               = NaN           % Index of current active axes
-   
+        FontSize                    {mustBePositive, isnumeric}               = 13            % Font size of text in plots
+        Title                       {isstring}                                = ""            % Title of the figure
+        WallIdx                     {mustBePositive, mustBeInteger}           = 1             % Wall index for multi-wall simulations
+        Zs                   (:,1)  {isnumeric}                               = []            % Axial positions [m]
+        Ts                   (:,1)  {isnumeric}                               = []            % Time series [s]
+        Grid                        {mustBeMember(Grid,{'on','off','minor'})} = 'on'          % Grid display option
+        currentAhIdx         (1,1)  {isnumeric}                               = NaN           % Index of current active axes
+
     end
 
     properties (Access=protected)
 
-        fh          (1,1) matlab.ui.Figure                                            % Figure handle 
-        th          (1,1) matlab.graphics.layout.TiledChartLayout                     % Tiled layout handle
-        ahs               matlab.graphics.axis.Axes                                   % Array of axes handles
-        isAnimation             (1,1) logical                         = false         % Flag indicating if animation is enabled
-        animationTitleFormat    (1,1) string                          = ""            % Format string for animation title
-        animationSeries         (:,1) {isnumeric}                     = 1             % Series of time steps or frames for animation
-   
+        fh                   (1,1)  matlab.ui.Figure                                          % Figure handle
+        th                   (1,1)  matlab.graphics.layout.TiledChartLayout                   % Tiled layout handle
+        ahs                         matlab.graphics.axis.Axes                                 % Array of axes handles
+        isAnimation          (1,1)  logical                                   = false         % Flag indicating if animation is enabled
+        animationTitleFormat (1,1)  string                                    = ""            % Format string for animation title
+        animationSeries      (:,1)  {isnumeric}                               = 1             % Series of time steps or frames for animation
+
     end
-    
+
     methods
 
         function plotters = SolverPlotter(titles, WallIdxs, opts)
             %SOLVERPLOTTER Constructor method to initialize plotter objects and layout
 
-        arguments
-            titles                  = ""
-            WallIdxs                = 1
-            opts.arrangement        = 'flow'
-            opts.isAnimation        = false;
-            opts.animationSeries    = 1;
-        end
+            arguments
+                titles                  = ""
+                WallIdxs                = 1
+                opts.arrangement        = 'flow'
+                opts.isAnimation        = false;
+                opts.animationSeries    = 1;
+            end
 
             if nargin == 0, return; end
             if ischar(titles)
@@ -54,7 +54,7 @@ classdef SolverPlotter < handle
             for idx = 1:length(plotters)
 
                 plotters(idx).WallIdx = WallIdxs(idx);
-                
+
                 % Check if is an animated series
                 if opts.isAnimation
                     plotters(idx).isAnimation = true;
@@ -73,72 +73,72 @@ classdef SolverPlotter < handle
                 % Store animation title data in fh
                 if opts.isAnimation
                     plotters(idx).fh.UserData = struct("NameFormat", plotters(idx).animationTitleFormat, ...
-                                                       "NameSeries", plotters(idx).animationSeries, ...
-                                                       "isPlaying", false);
+                        "NameSeries", plotters(idx).animationSeries, ...
+                        "isPlaying", false);
                 end
 
                 % Add UI if is an animated series
                 if opts.isAnimation
                     rewindButton = uicontrol(plotters(idx).fh, ...
-                                             Style="pushbutton", ...
-                                             String="<", ...
-                                             Units="pixels", ...
-                                             Position=[20,20,30,20], ...
-                                             Callback=@animationCallback);
-                    
+                        Style="pushbutton", ...
+                        String="<", ...
+                        Units="pixels", ...
+                        Position=[20,20,30,20], ...
+                        Callback=@animationCallback);
+
                     advanceButton = uicontrol(plotters(idx).fh, ...
-                                             Style="pushbutton", ...
-                                             String=">", ...
-                                             Units="pixels", ...
-                                             Position=[110,20,30,20], ...
-                                             Callback=@animationCallback);
+                        Style="pushbutton", ...
+                        String=">", ...
+                        Units="pixels", ...
+                        Position=[110,20,30,20], ...
+                        Callback=@animationCallback);
 
                     counter = uicontrol(plotters(idx).fh, ...
-                                                 Style="edit", ...
-                                                 Tag='animationCounter', ...
-                                                 Units="pixels", ...
-                                                 Position=[60,20,40,20], ...
-                                                 Callback= @animationCallback, ...
-                                                 String = 1);
+                        Style="edit", ...
+                        Tag='animationCounter', ...
+                        Units="pixels", ...
+                        Position=[60,20,40,20], ...
+                        Callback= @animationCallback, ...
+                        String = 1);
 
                     playButton = uicontrol(plotters(idx).fh, ...
-                                           Style="togglebutton", ...
-                                           String=char(9658), ...   % play; pause: char([124 32 124])
-                                           UserData=struct('originalSymbol', char(9658)), ...
-                                           Position=[150,20,30,20], ...
-                                           Callback={@playAnimationCallback, false});
+                        Style="togglebutton", ...
+                        String=char(9658), ...   % play; pause: char([124 32 124])
+                        UserData=struct('originalSymbol', char(9658)), ...
+                        Position=[150,20,30,20], ...
+                        Callback={@playAnimationCallback, false});
 
                     loopButton = uicontrol(plotters(idx).fh, ...
-                                           Style="togglebutton", ...
-                                           String=char(11156), ...
-                                           UserData=struct('originalSymbol', char(11156)), ...
-                                           Position=[190,20,30,20], ...
-                                           Callback={@playAnimationCallback, true});
+                        Style="togglebutton", ...
+                        String=char(11156), ...
+                        UserData=struct('originalSymbol', char(11156)), ...
+                        Position=[190,20,30,20], ...
+                        Callback={@playAnimationCallback, true});
 
                     fpsEdit = uicontrol(plotters(idx).fh, ...
-                                        Style="edit", ...
-                                        Tag='fpsEdit', ...
-                                        String=num2str(1/diff(opts.animationSeries(1:2))), ...
-                                        Position=[230, 20, 30, 20] ...
-                                        );
+                        Style="edit", ...
+                        Tag='fpsEdit', ...
+                        String=num2str(1/diff(opts.animationSeries(1:2))), ...
+                        Position=[230, 20, 30, 20] ...
+                        );
 
                     fpsText = uicontrol(plotters(idx).fh, ...
-                                        Style="text", ...
-                                        String="fps", ...
-                                        Position=[265, 20, 30, 20], ...
-                                        HorizontalAlignment="left", ...
-                                        FontSize = 10 ...
-                                        );
+                        Style="text", ...
+                        String="fps", ...
+                        Position=[265, 20, 30, 20], ...
+                        HorizontalAlignment="left", ...
+                        FontSize = 10 ...
+                        );
 
                     animationMenu = uimenu(plotters(idx).fh, 'Text', 'Animation');
                     animationMenu_save = uimenu(animationMenu, 'Text', 'Save', 'MenuSelectedFcn', @animationSaveCallback);
                     animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
 
-                end  
+                end
             end
 
             function figureSizeChangeCallback(src, ~)
-                
+
                 % Find legends
                 lhs = src.findobj("Type", "legend");
 
@@ -147,7 +147,7 @@ classdef SolverPlotter < handle
                     lhs(i).Location = "best";
                 end
 
-                % Update 
+                % Update
                 drawnow();
 
                 % Set back to none
@@ -171,7 +171,7 @@ classdef SolverPlotter < handle
 
                 % Loop through each ahs
                 for ah_idx=1:length(ahs)
-                    
+
                     % Retrieve ah
                     ah = ahs(ah_idx);
 
@@ -180,12 +180,12 @@ classdef SolverPlotter < handle
 
                     % Loop through each lhs
                     for lh_idx = 1:length(lhs)
-                    
+
                         % Retrieve lh
                         lh = lhs(lh_idx);
 
                         % TODO: check struct in lhuserdata
-                        
+
                         % Save index of what is last displayed
                         lastIndex = lh.UserData.currentIndex;
 
@@ -194,7 +194,7 @@ classdef SolverPlotter < handle
                             currentIndex = lastIndex-1;
                         elseif string(src.String) == ">"
                             currentIndex = lastIndex+1;
-                        elseif (src.Style == "edit") 
+                        elseif (src.Style == "edit")
                             currentIndex = str2double(src.String);
                         end
 
@@ -223,7 +223,7 @@ classdef SolverPlotter < handle
                         if isfield(lh.UserData.Data(currentIndex), "xData")
                             currentXData = lh.UserData.Data(currentIndex).xData;
                         end
-                        
+
                         % update lh.YData
                         if isempty(currentXData)
                             set(lh, "YData", currentYData);
@@ -233,7 +233,7 @@ classdef SolverPlotter < handle
 
                         % TODO: update yData range for lines called OAF as
                         % ylim of axes changes
-                        
+
                         % update userdata struct
                         lh.UserData.currentIndex = currentIndex;
 
@@ -251,7 +251,7 @@ classdef SolverPlotter < handle
                     end
                 end
             end
-            
+
             function playAnimationCallback(src, ~, loop)
                 %PLAYANIMATIONCALLBACK Method to handle play/pause animation loop with optional looping
 
@@ -353,13 +353,13 @@ classdef SolverPlotter < handle
                     end
                 end
             end
-        
+
             function animationSaveCallback(src, ~)
                 %ANIMATIONSAVECALLBACK Method to save animation as video file with UI toggle and frame rate control
 
                 fh = src.Parent.Parent;
                 idx = find(arrayfun(@(p) isequal(p.fh, fh), plotters));
-                
+
                 % Check if fps is positive
                 fpsEdit = findobj(plotters(idx).fh, 'Tag', 'fpsEdit');
                 assert(str2double(fpsEdit.String) > 0 , "Desired fps must be positive.");
@@ -411,7 +411,7 @@ classdef SolverPlotter < handle
                 % Hide uicontrols
                 uimenu_showUIControls = findobj(src.Parent, 'text', 'Show UI Controls');
                 if ~uimenu_showUIControls.Checked
-                    for uiControl_idx = 1:length(fh_uicontrols)                    
+                    for uiControl_idx = 1:length(fh_uicontrols)
                         fh_uicontrols(uiControl_idx).Visible = false;
                     end
                 end
@@ -423,16 +423,16 @@ classdef SolverPlotter < handle
                 try
                     % Loop through frames
                     for frameIdx = 1:numFrames
-    
+
                         % Set frame to frameIdx
                         % TODO: this can be a function
                         counter.String = string(frameIdx);
                         counter.Callback(counter, []);
                         drawnow();
-                        
+
                         % capture frame for video
                         writeVideo(vid, getframe(plotters(idx).fh));
-    
+
                     end
                 catch ME
                     close(vid);
@@ -443,7 +443,7 @@ classdef SolverPlotter < handle
                 close(vid);
 
                 % Show uicontrols
-                for uiControl_idx = 1:length(fh_uicontrols)                    
+                for uiControl_idx = 1:length(fh_uicontrols)
                     fh_uicontrols(uiControl_idx).Visible = true;
                 end
             end
@@ -473,7 +473,7 @@ classdef SolverPlotter < handle
 
                 % Check if tilelayout is empty
                 if isempty(plotter_ahs)
-                    
+
                     % Simply create new tile if empty
                     add_ah(plotterIdx) = plotter.newTile(opts_cell{:});
                 else
@@ -481,14 +481,14 @@ classdef SolverPlotter < handle
                     % Get title strings
                     titles = [plotter_ahs.Title];
                     titleStrings = string({titles.String});
-    
+
                     % Find index of opts.tileTitle in titleStrings
                     tileIdx = find(titleStrings == opts.tileTitle);
                     % If none found, make new tile
                     if isempty(tileIdx)
                         add_ah(plotterIdx) = plotter.newTile(opts_cell{:});
-                    
-                    % Otherwise, use existing
+
+                        % Otherwise, use existing
                     else
                         add_ah(plotterIdx) = plotter_ahs(tileIdx);
                         plotter.currentAhIdx = tileIdx;
@@ -543,9 +543,9 @@ classdef SolverPlotter < handle
 
             end
         end
-        
+
         function plotz(plotters, YData, fieldName, opts)
-        %PLOTZ Method to plot spatial or temporal data (YData) on the current axes
+            %PLOTZ Method to plot spatial or temporal data (YData) on the current axes
 
             arguments
                 plotters
@@ -558,7 +558,7 @@ classdef SolverPlotter < handle
                 opts.yyaxis
                 opts.axisHandle     = plotters.gca()
             end
-            
+
             % Check if Zs are set
             isZSet = all(not(cellfun(@isempty,{plotters.Zs})));
             if ~isZSet, error('Not all Z arrays are set'); end
@@ -571,7 +571,7 @@ classdef SolverPlotter < handle
 
             % Loop through plotters
             for idx = 1:length(plotters)
-                
+
                 % Current plotter
                 plotter = plotters(idx);
 
@@ -610,7 +610,7 @@ classdef SolverPlotter < handle
 
                     % Check if lh with DisplayName that match
                     % opts.DisplayName exists
-                    
+
                     % Existing Line handles (OAF can be hidden, so findall)
                     lhs = findall(ah, 'type', 'Line');
 
@@ -625,7 +625,7 @@ classdef SolverPlotter < handle
                         else
                             YData = YData(opts.subset, plotter.WallIdx);
                         end
-                        
+
                         % lh DisplayNames
                         dispNames = string({lhs.DisplayName});
 
@@ -635,7 +635,7 @@ classdef SolverPlotter < handle
                         % if not empty, set flag to true
                         if ~isempty(lh_idx)
                             matchingLineExists = true;
-                            
+
                             % Then store XData (as needed) and YData to lh.UserData
                             lh = lhs(lh_idx);
                             if isfield(lh.UserData.Data, "xData")
@@ -650,7 +650,7 @@ classdef SolverPlotter < handle
 
                 if ~matchingLineExists
                     YData = YData0;
-                    
+
                     % Custom plot by YData
                     if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
                         drawnow();
@@ -699,8 +699,8 @@ classdef SolverPlotter < handle
                 oafZ = repmat(oafZ, 1, 2);
             end
             plotters.plotz('ylim', 'OAF', ...
-                           'XData',oafZ, ...
-                           'plotOptions', {'handleVisibility','off'});
+                'XData',oafZ, ...
+                'plotOptions', {'handleVisibility','off'});
         end
 
         function plotK(plotters, klocZ, ah)
@@ -739,9 +739,9 @@ classdef SolverPlotter < handle
 
             fh = plotters.fh;
         end
-        
+
         function out = xlim(plotters, newLim)
-        %xlim Method to get or set x-axis limits for current axes
+            %xlim Method to get or set x-axis limits for current axes
 
             % Loop through plotters
             for idx = 1:length(plotters)
@@ -767,7 +767,7 @@ classdef SolverPlotter < handle
                 end
             end
         end
-        
+
         function ylabels(plotters, labels)
             %YLABEL Method to set y-axis tick labels
 
@@ -796,13 +796,13 @@ classdef SolverPlotter < handle
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
                 lh = legend(plotter.gca, varargin{:});
-                
+
                 % Update graphics
                 drawnow limitrate;
 
                 % Set legend locatuion to "none"
                 lh.Location = "none";
-                
+
             end
         end
 
@@ -811,9 +811,10 @@ classdef SolverPlotter < handle
             % Keeps top-left fixed and goes full-screen if size exceeds screen resolution.
             %
             % Usage:
-            %   plotters.resizeFigure();        % default scaleFactor = 1
-            %   plotters.resizeFigure(1.2);     % tiles 20% larger
-            %   plotters.resizeFigure(0.8);     % tiles 20% smaller
+            %
+            % - plotters.resizeFigure();        % default scaleFactor = 1
+            % - plotters.resizeFigure(1.2);     % tiles 20% larger
+            % - plotters.resizeFigure(0.8);     % tiles 20% smaller
 
             if nargin < 2
                 scaleFactor = 1; % default
@@ -861,23 +862,22 @@ classdef SolverPlotter < handle
                     newBottom = top - newHeight;
                     fig.Position = [pos(1), newBottom, newWidth, newHeight];
                 end
-                
+
             end
         end
-
 
     end
 
     methods (Static)
 
         function plotStyle = fieldName2plotStyle(fieldName)
-        %FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)
-            
+            %FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)
+
             % Default colors
             colors = ["#0072BD","#D95319","#EDB120","#7E2F8E","#77AC30","#4DBEEE","#A2142F","#808080"];
-            
+
             switch upper(fieldName)
-                
+
                 case {'Z'}
                     plotStyle = {colors(2), '-', '.'};
                 case {'TIME', 'T'}
@@ -890,8 +890,8 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(1), '--', 'none' };
                 case {'OBSTRUCTION'}
                     plotStyle = {colors(8), '--', '.'};
-                    
-                % Mixture solver
+
+                    % Mixture solver
                 case {'MIX', 'MIXTURE'}
                     plotStyle = {colors(7), '-', 's'};
                 case {'LIQUID+VAPOR', 'VAPOR+LIQUID'}
@@ -907,7 +907,7 @@ classdef SolverPlotter < handle
                 case {'NEARWALL'}
                     plotStyle = {colors(5), '--', '+'};
                 case {'BULK'}
-                    plotStyle = {colors(6), '--', '+'};    
+                    plotStyle = {colors(6), '--', '+'};
                 case {'NONEQ', 'NONEQUILIBRIUM', 'NON-EQ', 'NON-EQUILIBRIUM'}
                     plotStyle = {colors(6), '-', '.'};
                 case {'EQQUAL', 'EQUILIBRIUMQUAL', 'EQUILQ'}
@@ -930,16 +930,16 @@ classdef SolverPlotter < handle
                     plotStyle = {'black', '--', '.'};
                 case {'CHF', 'CBT'}
                     plotStyle = {colors(7), '--', '+'};
-                    
-                % Two-fluid solver
+
+                    % Two-fluid solver
                 case {'INTERFACIAL'}
                     plotStyle = {colors(1), '-', 'O'};
                 case {'INTERFACIALEVAP'}
                     plotStyle = {colors(1), '-', '.'};
                 case {'INTERFACIALCOND'}
                     plotStyle = {colors(2), '-', '.'};
-                
-                % Three-field solver
+
+                    % Three-field solver
                 case {'OAF'}
                     plotStyle = {'red', '--', '.'};
                 case {'FILM'}
@@ -952,8 +952,8 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(5), '--', 'o'};
                 case {'ENTRAINMENT'}
                     plotStyle = {colors(2), '--', 'o'};
-                    
-                % Four-field solver
+
+                    % Four-field solver
                 case {'EQFILM'}
                     plotStyle = {colors(2), '--', '^'};
                 case {'BASE'}
@@ -978,7 +978,7 @@ classdef SolverPlotter < handle
                     plotStyle = {colors(4), '--', '.'};
                 case {'WAVESPACING', 'WAVE SPACING', 'SPACING'}
                     plotStyle = {colors(4), '--', 'o'};
-                    
+
                 otherwise
                     plotStyle = {'black', '--', '.'};
             end
@@ -988,6 +988,6 @@ classdef SolverPlotter < handle
         end
 
     end
-     
+
 end
 

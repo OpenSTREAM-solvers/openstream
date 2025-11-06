@@ -12,5 +12,5 @@ classdef SolverState < uint16
         INITIALSTEPCONVERGED        (3)                % Initial steady-state step completed and converged
         INITIALSTEPNOTCONVERGED     (4)                % Initial steady-state step completed but did not converge
     end
-    
+
 end
