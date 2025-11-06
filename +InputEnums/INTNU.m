@@ -1,8 +1,9 @@
 classdef INTNU
     %INTNU Enumeration of interfacial Nusselt number models
     %
-    % This class defines the available models for calculating the
-    % interfacial Nusselt number, used by the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.INTNU` models
+    % for calculating the interfacial Nusselt number, used by the two-fluid
+    % solver.
     %
     % Models:
     %

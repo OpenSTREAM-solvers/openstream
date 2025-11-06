@@ -1,8 +1,9 @@
 classdef WAVEFREQUENCY
     %WAVEFREQUENCY Enumeration of wave number density transport models
     %
-    % This class defines the models used to solve the wave number density (or
-    % wave frequency) transport equation, used in the four-field solver.
+    % This class defines the available :attr:`Inputs.Model.WAVEFREQUENCY`
+    % models for solving the wave number density (or wave frequency) transport
+    % equation, used in the four-field solver.
     %
     % Models:
     %

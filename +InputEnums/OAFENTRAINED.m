@@ -1,9 +1,9 @@
 classdef OAFENTRAINED
     %OAFENTRAINED Enumeration of entrained drop models at onset of annular flow
     %
-    % This class defines the available models for splitting the droplet
-    % and film mass flow rates at the onset of annular flow, used by the
-    % three-field and four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.OAFENTRAINED`
+    % models for splitting the droplet and film mass flow rates at the onset
+    % of annular flow, used by the three-field and four-field solvers.
     %
     % Models:
     %

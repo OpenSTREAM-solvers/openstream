@@ -1,8 +1,9 @@
 classdef SPHTM
     %SPHTM Enumeration of single-phase wall heat transfer models
     %
-    % This class defines the available models for calculating the single-phase
-    % wall heat transfer (liquid or gas), used by the mixture solver.
+    % This class defines the available :attr:`Inputs.Model.SPHTM` models for
+    % calculating the single-phase wall heat transfer (liquid or gas), used
+    % by the mixture solver.
     %
     % Models:
     %

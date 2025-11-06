@@ -1,8 +1,9 @@
 classdef EQSTROUHAL
     %EQSTROUHAL Enumeration of wave equilibrium Strouhal number models
     %
-    % This class defines the available models for calculating the
-    % wave equilibrium Strouhal number, used by the four-field solver.
+    % This class defines the available :attr:`Inputs.Model.EQSTROUHAL`
+    % models for calculating the wave equilibrium Strouhal number, used by
+    % the four-field solver.
     %
     % Models:
     %

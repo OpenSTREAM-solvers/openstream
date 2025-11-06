@@ -1,8 +1,9 @@
 classdef THERMALNONEQ
     %THERMALNONEQ Enumeration of thermal non-equilibrium models
     %
-    % This class defines the available models for calculating phase thermal
-    % non-equilibrium effects, used by the mixture solver.
+    % This class defines the available :attr:`Inputs.Model.THERMALNONEQ`
+    % models for calculating phase thermal non-equilibrium effects, used by
+    % the mixture solver.
     %
     % Models:
     %

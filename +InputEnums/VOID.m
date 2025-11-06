@@ -1,7 +1,7 @@
 classdef VOID
     %VOID Enumeration of void fraction models
     %
-    % This class defines the :attr:`Inputs.Model.VOID` models available to
+    % This class defines the available :attr:`Inputs.Model.VOID` models to
     % calculate the void fraction in the mixture solver.
     %
     % Models:

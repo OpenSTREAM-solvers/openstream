@@ -1,8 +1,9 @@
 classdef THINFILMFRIC
     %THINFILMFRIC Enumeration of thin film friction models
     %
-    % This class defines the available models for calculating wall friction
-    % under thin film conditions, used by the three-field and four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.THINFILMFRIC`
+    % models for calculating wall friction under thin film conditions, used
+    % by the three-field and four-field solvers.
     %
     % Models:
     %

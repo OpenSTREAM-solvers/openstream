@@ -1,9 +1,9 @@
 classdef MOMENTWAVE
     %MOMENTWAVE Enumeration of film momentum conservation models
     %
-    % This class defines the available models for solving the momentum
-    % conservation equation for the wave field, used to compute wave velocity
-    % in the four-field solver.
+    % This class defines the available :attr:`Inputs.Model.MOMENTWAVE` models
+    % for solving the momentum conservation equation for the wave field, used
+    % to compute wave velocity in the four-field solver.
     %
     % Models:
     %

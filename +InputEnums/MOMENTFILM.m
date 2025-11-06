@@ -1,9 +1,9 @@
 classdef MOMENTFILM
     %MOMENTFILM Enumeration of film momentum conservation models
     %
-    % This class defines the available models for solving the momentum
-    % conservation equation for the liquid film, used to compute film
-    % velocity in the three-field solver.
+    % This class defines the available :attr:`Inputs.Model.MOMENTFILM` models
+    % for solving the momentum conservation equation for the liquid film,
+    % used to compute film velocity in the three-field solver.
     %
     % Models:
     %
@@ -18,5 +18,4 @@ classdef MOMENTFILM
         EQUILIBRIUMS         % Simplified force balance model (Fwall + Fvapor = 0)
         FULL                 % Full non-equilibrium momentum model
     end
-
 end

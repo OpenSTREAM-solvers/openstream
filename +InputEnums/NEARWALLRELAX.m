@@ -1,8 +1,9 @@
 classdef NEARWALLRELAX
     %NEARWALLRELAX Enumeration of near-wall energy transfer time relaxation models
     %
-    % This class defines the available models for calculating the
-    % near-wall energy transfer time relaxation, used in mixture solver.
+    % This class defines the available :attr:`Inputs.Model.NEARWALLRELAX`
+    % models for calculating the near-wall energy transfer time relaxation,
+    % used in mixture solver.
     %
     % Models:
     %

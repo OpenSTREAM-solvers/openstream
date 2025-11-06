@@ -35,7 +35,7 @@ Model summaries
 Implemented models
 ------------------
 
-Explore the theory behing each solver:
+For detailed equations, derivations, and implementation notes, check out the individual theory pages linked above. 
 
 .. toctree::
    :maxdepth: 1
@@ -45,4 +45,4 @@ Explore the theory behing each solver:
    ThreeField_Model_Theory
    FourField_Model_Theory
 
-For detailed equations, derivations, and implementation notes, check out the individual theory pages linked above. Ready to dive deeper? Pick a model and start exploring!
+Ready to dive deeper? Pick a model and start exploring!

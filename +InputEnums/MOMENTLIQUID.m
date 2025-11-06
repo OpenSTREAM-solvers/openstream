@@ -1,9 +1,9 @@
 classdef MOMENTLIQUID
     %MOMENTLIQUID Enumeration of liquid momentum conservation models
     %
-    % This class defines the available models for solving the momentum
-    % conservation equation for the liquid phase, used to compute liquid
-    % velocity in the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.MOMENTLIQUID`
+    % models for solving the momentum conservation equation for the liquid
+    % phase, used to compute liquid velocity in the two-fluid solver.
     %
     % Models:
     %

@@ -12,7 +12,7 @@ OpenSTREAM offers a suite of solver frameworks tailored to different modeling ne
 - A **mixture solver** – with thermal non-equilibrium capabilities
 - A generic **two-fluid solver** – for generic separate-phase modeling
 - A **three-field solver** – for annular two-phase flow
-- An advanced **four-field solver** – for annular two-phase flow explicitly capturing disturbance waves (:cite:t:`LECORREMODEL`)
+- An advanced **four-field solver** – for annular two-phase flow explicitly capturing disturbance waves
 
 These solvers are designed to simulate single-component, thermally expandable, steady-state and transient boiling two-phase flows in straight multi-wall channels, which may be uniformly or non-uniformly heated. The implementation relies on a set of reasonable simplifying assumptions to ensure computational efficiency and stability. Each solver includes a set of baseline closure models, which can be customized by modifying the corresponding class methods in the source code.
 

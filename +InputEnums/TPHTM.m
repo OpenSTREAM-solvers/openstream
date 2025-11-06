@@ -1,8 +1,8 @@
 classdef TPHTM
     %TPHTM Enumeration of two-phase wall heat transfer models
     %
-    % This class defines the available models for calculating the two-phase
-    % wall heat transfer, used by the mixture solver.
+    % This class defines the available :attr:`Inputs.Model.TPHTM` models for
+    % calculating the two-phase wall heat transfer, used by the mixture solver.
     %
     % Models:
     %

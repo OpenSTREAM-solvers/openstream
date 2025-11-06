@@ -1,8 +1,9 @@
 classdef DROPDRAG
     %DROPDRAG Enumeration of droplet drop drag coefficient models
     %
-    % This class defines the available models for calculating the
-    % droplet drag coefficient, used by the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.DROPDRAG` models
+    % for calculating the droplet drag coefficient, used by the two-fluid
+    % solver.
     %
     % Models:
     %

@@ -1,9 +1,9 @@
 classdef DEPOSITION
     %DEPOSITION Enumeration of droplet deposition models
     %
-    % This class defines the available models for calculating the
-    % droplet deposition mass flux, used by the three-field and
-    % four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.DEPOSITION` models
+    % for calculating the droplet deposition mass flux, used by the three-field
+    % and four-field solvers.
     %
     % NOTE: Entrainment and deposition correlations are coupled.
     % It is recommended to use the same model for both entrainment

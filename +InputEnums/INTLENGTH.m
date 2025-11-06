@@ -1,8 +1,9 @@
 classdef INTLENGTH
     %INTLENGTH Enumeration of interfacial length scale models
     %
-    % This class defines the available models for calculating the
-    % interfacial length scale, used by the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.INTLENGTH`
+    % models for calculating the interfacial length scale, used by the
+    % two-fluid solver.
     %
     % Models:
     %

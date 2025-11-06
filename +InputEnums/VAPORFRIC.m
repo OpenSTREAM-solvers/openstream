@@ -1,8 +1,9 @@
 classdef VAPORFRIC
     %VAPORFRIC Enumeration of vapor to film interfacial friction models
     %
-    % This class defines the models used to calculate the vapor-to-film interfacial
-    % friction coefficient used by the three-field and four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.VAPORFRIC` models
+    % for calculating the vapor-to-film interfacial friction coefficient used
+    % by the three-field and four-field solvers.
     %
     % Models:
     %

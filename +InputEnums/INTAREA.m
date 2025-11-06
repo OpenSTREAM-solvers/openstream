@@ -1,8 +1,9 @@
 classdef INTAREA
     %INTAREA Enumeration of volumetric interfacial area calculation models
     %
-    % This class defines the available models for calculating the
-    % volumetric interfacial area, used by the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.INTAREA` models
+    % for calculating the volumetric interfacial area, used by the two-fluid
+    % solver.
     %
     % Models:
     %

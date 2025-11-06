@@ -1,8 +1,9 @@
 classdef BTHTM
     %BTHTM Enumeration of post-boiling transition wall heat transfer models
     %
-    % This class defines the available models for calculating the
-    % post-boiling transition wall heat transfer, used by the mixture solver.
+    % This class defines the available :attr:`Inputs.Model.BTHTM` models for
+    % calculating the post-boiling transition wall heat transfer, used by the
+    % mixture solver.
     %
     % Models:
     %
