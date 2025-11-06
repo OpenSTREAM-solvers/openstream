@@ -323,11 +323,15 @@ and applies solver-specific properties.</p>
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.CreateITR">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">CreateITR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">NZ</span></em>, <em class="sig-param"><span class="pre">ITRFields</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.CreateITR" title="Link to this definition"></a></dt>
 <dd><p>CreateITR Create a structure for inner iteration values</p>
-<p>Inputs:
-- NZ        — Number of axial nodes (scalar)
-- ITRFields — (string array) Names of fields to include in the struct</p>
-<p>Output:
-- ITR       — Struct with fields initialized to zero vectors of length NZ</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>NZ        — Number of axial nodes (scalar)</p></li>
+<li><p>ITRFields — (string array) Names of fields to include in the struct</p></li>
+</ul>
+<p>Output:</p>
+<ul class="simple">
+<li><p>ITR       — Struct with fields initialized to zero vectors of length NZ</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -635,9 +639,9 @@ It also includes UI controls for animation playback and export.</p>
 Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
 <p>Usage:</p>
 <ul class="simple">
-<li><p>plotters.resizeFigure();        % default scaleFactor = 1</p></li>
-<li><p>plotters.resizeFigure(1.2);     % tiles 20% larger</p></li>
-<li><p>plotters.resizeFigure(0.8);     % tiles 20% smaller</p></li>
+<li><p>plotters.resizeFigure()    — Default scaleFactor = 1</p></li>
+<li><p>plotters.resizeFigure(1.2) — Tiles 20% larger</p></li>
+<li><p>plotters.resizeFigure(0.8) — Tiles 20% smaller</p></li>
 </ul>
 </dd></dl>
 
