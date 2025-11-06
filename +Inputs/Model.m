@@ -29,7 +29,11 @@ classdef Model < Inputs.Input
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model selected from :class:`InputEnums.MFBT`
         DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
 
+    end
+
+
         % Wall heat transfer
+    properties (SetAccess=?Inputs.Input)    
 
         SPHTM            (1,1) InputEnums.SPHTM                            = 'DITTUSBOELTER'                 % Single-phase wall heat transfer model selected from :class:`InputEnums.SPHTM`
         DITTUSBOELTERCOEF (1,3) double  {mustBeNumeric}                    = [0.023 0.8 0.4]                 % Dittus-Boelter coefficients [-]
