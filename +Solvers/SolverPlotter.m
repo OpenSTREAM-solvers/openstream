@@ -540,29 +540,52 @@ classdef SolverPlotter < handle
                 grid(new_ah(idx), plotter.Grid);
 
                 % Keep track of axes xLim and yLim
-                new_ah(idx).UserData = struct('xlim', [], 'ylim', []);
+                new_ah(idx).UserData = struct('xlim', [], 'ylim', [], 'vertLineHandles', []);
 
                 % Create listener for ylim change on axes
                 addlistener(new_ah(idx), "YLim", "PostSet", @YLimChangedCallback);
 
             end
 
+            % Event listener callback for when the ylim of an axes is set.
+            % When set, lines with HandleVisibility set to off (i.e. simple
+            % vertical lines) will have their YData updated to match the
+            % new ylim range.
             function YLimChangedCallback(src, event)
                 
+                %fprintf("ylim callback triggered\n");
+
+                % Retrieve new ylim of axes
                 new_ylim = ylim(event.AffectedObject);
-                hidden_lhs = findall(event.AffectedObject,'type', 'line','HandleVisibility','off');
+
+                % Find all simple vertical lines
+                %hidden_lhs = findall(event.AffectedObject,'type', 'line','HandleVisibility','off');
+                hidden_lhs = event.AffectedObject.UserData.vertLineHandles;
+
+                % Adjust each line
                 for i=1:length(hidden_lhs)
+                    
+                    % If the YData for the line is truly a simple value
+                    % pair, adjust the YData as well as the time series in
+                    % LineHandle.UserData.Data(j).yData, at time step j.
                     if numel(hidden_lhs(i).YData) == 2
                         hidden_lhs(i).YData = new_ylim;
                         for j=1:length(hidden_lhs(i).UserData.Data)
                             hidden_lhs(i).UserData.Data(j).yData = new_ylim;
                         end
+
+                    % If the simple lines are plotted with NaN delimiters,
+                    % the YData will be updated at the approp. indicies.
+                    % This is kept for now if we continue to use this
+                    % method of defining the lines.
+                    % TODO: decide if this is still needed
                     elseif numel(hidden_lhs(i).YData) == 6
                         hidden_lhs(i).YData(1:2) = new_ylim;
                         hidden_lhs(i).YData(4:5) = new_ylim;
                     end
                 end
             end
+
         end
         
         function plotz(plotters, YData, fieldName, opts)
@@ -599,10 +622,14 @@ classdef SolverPlotter < handle
                 % Current axes
                 ah = opts.axisHandle(idx);
 
-                %Restore Ydata
+                % Restore Ydata
                 YData = YData0;
 
                 % Custom and standard XData
+                % Provided non-empty XData, set xlim if non is already set
+                % in axes userdata.
+                % Otherwise, use plotter Zs as XData, and set xlim to the
+                % range of Zs.
                 if isfield(opts, 'XData') && ~isempty(opts.XData)
                     XData = opts.XData;
                     % Determine xlim
@@ -624,40 +651,53 @@ classdef SolverPlotter < handle
                     yyaxis(ah, opts.yyaxis)
                 end
 
+                % Initialize flag: matching line exists
                 matchingLineExists = false;
 
-                % Check if isAnimation
+                % Check if the plotter is an animation
                 if plotter.isAnimation
 
                     % Check if lh with DisplayName that match
                     % opts.DisplayName exists
                     
-                    % Existing Line handles (OAF can be hidden, so findall)
-                    lhs = findall(ah, 'type', 'Line');
+                    % Existing Line handles (OAF, plotK can be hidden, so findall)
+                    lhs = findall(ah, 'type', 'line');
 
                     % Check if there are any lines at all
                     if ~isempty(lhs)
-
-                        % Update YData
-                        if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                            YData = ylim(ah);
-                        elseif isvector(YData)
-                            YData = YData(opts.subset);
-                        else
-                            YData = YData(opts.subset, plotter.WallIdx);
-                        end
                         
                         % lh DisplayNames
                         dispNames = string({lhs.DisplayName});
 
-                        % Find matching lh index
+                        % Find lh indices with matching DisplayNames
                         lh_idx = find(dispNames == opts.DisplayName);
 
-                        % if not empty, set flag to true
+                        % If matching lines are found, set flag, then
+                        % process data
                         if ~isempty(lh_idx)
+
+                            % Set flag
                             matchingLineExists = true;
+
+                            % Update YData
+                            % 
+                            % If YData is a literal "ylim" string, the line is
+                            % vertical and assumes ylim for the y-coordinates
+                            % 
+                            % If YData is a vector, there is only one wall
+                            % Otherwise, the vector is for the current WallIdx.
+                            %
+                            if (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
+                                YData = ylim(ah);
+                                %YData = [NaN NaN];
+                            elseif isvector(YData)
+                                YData = YData(opts.subset);
+                            else
+                                YData = YData(opts.subset, plotter.WallIdx);
+                            end
                             
-                            % Then store XData (as needed) and YData to lh.UserData
+                            % Then concatenate XData (as needed) and 
+                            % YData to lh.UserData
                             lh = lhs(lh_idx);
                             if isfield(lh.UserData.Data, "xData")
                                 lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData, 'xData', XData)];
@@ -669,7 +709,12 @@ classdef SolverPlotter < handle
 
                 end
 
+
+                % If no matching lines exists, plot it and set up necessary
+                % userdata structs
                 if ~matchingLineExists
+
+                    % Restore YData as previously set
                     YData = YData0;
                     
                     % Custom plot by YData
@@ -677,8 +722,11 @@ classdef SolverPlotter < handle
                         drawnow limitrate;
                         YData= ylim(ah);
                         lh = plot(ah, XData, YData, 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+                        ah.UserData.vertLineHandles = [ah.UserData.vertLineHandles lh];
+
                     elseif isvector(YData)
                         lh = plot(ah, XData, YData(opts.subset), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+                    
                     else
                         lh = plot(ah, XData, YData(opts.subset, plotter.WallIdx), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
                     end
@@ -703,13 +751,23 @@ classdef SolverPlotter < handle
                 % Determine ylim
                 if isempty(ah.UserData.ylim)
                     ylim(ah, 'auto');
+                    drawnow limitrate;
+                    new_ylim = ylim(ah);
                 else
-                    if size(YData,2)>1, YData = YData(:,plotter.WallIdx); end
-                    ylim(ah, [min(ah.UserData.ylim(1), min(YData)) max(ah.UserData.ylim(2), max(YData))]);
+                    % Select YData for current plotter.WallIdx
+                    if size(YData,2) > 1
+                        YData = YData(:,plotter.WallIdx); 
+                    end
+                    new_ylim = [min(ah.UserData.ylim(1), min(YData)) max(ah.UserData.ylim(2), max(YData))];
+                    
+                    % TODO: this ylim call seems necessary, but takes a
+                    % long time. Consider finding alternative way of
+                    % setting ylim, perhaps only at end of plotting.
+                    ylim(ah, new_ylim);
                 end
 
                 % Save widest ylim
-                ah.UserData.ylim = ylim(ah);
+                ah.UserData.ylim = new_ylim;
             end
         end
 
@@ -816,19 +874,23 @@ classdef SolverPlotter < handle
             end
         end
 
-        function legend(plotters, varargin)
+        function lhs = legend(plotters, varargin)
             %legend Method to add legend to current axes
 
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
-                lh = legend(plotter.gca, varargin{:});
                 
                 % Update graphics
-                drawnow limitrate;
+                if isempty(plotter.gca().Legend)
+                    lhs(idx) = legend(plotter.gca(), varargin{:});
+                    drawnow limitrate;
+                end
 
-                % Set legend locatuion to "none"
-                lh.Location = "none";
+                % Set legend location to "none"
+                % TODO: eval. if forcing legend location to be none is good
+                % here.
+                lhs(idx).Location = "none";
                 
             end
         end
