@@ -475,16 +475,11 @@ for computing derived quantities and handling transitions such as boiling and an
 <dd><p>MIXTURE Constructor for Mixture class</p>
 <p>Initializes the mixture object with input configuration and fluid properties.
 Sets up flow property tracking for simulation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inputSet</span> <span class="pre">-</span> <span class="pre">Inputs.InputSet</span> <span class="pre">object</span> <span class="pre">containing</span></code></span>)</p></li>
-<li><p><strong>geometry</strong></p></li>
-<li><p><strong>conditions</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">and</span> <span class="pre">boundary</span></code></span>)</p></li>
-<li><p><strong>data</strong> (<span><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fluid</span>&#160;&#160;&#160; <span class="pre">-</span> <span class="pre">Inputs.FluidProperties</span> <span class="pre">object</span> <span class="pre">containing</span> <span class="pre">thermophysical</span> <span class="pre">fluid</span></code></span>)</p></li>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p>inputSet — <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model, geometry, and boundary conditions</p></li>
+<li><p>fluid    — <a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object containing thermophysical fluid data</p></li>
 </ul>
-</dd>
-</dl>
 </dd></dl>
 
 </dd>
@@ -509,7 +504,7 @@ Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s]</p>
+<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -557,7 +552,7 @@ Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DPSUM">
 <span class="sig-name descname"><span class="pre">DPSUM</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.DPSUM" title="Link to this definition"></a></dt>
-<dd><p>Saved detailed cumulative pressure drops</p>
+<dd><p>Saved detailed cumulative pressure drops [Pa]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -599,13 +594,13 @@ Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.inputSet">
 <span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.inputSet" title="Link to this definition"></a></dt>
-<dd><p>inputSet object</p>
+<dd><p><a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.fluid">
 <span class="sig-name descname"><span class="pre">fluid</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.fluid" title="Link to this definition"></a></dt>
-<dd><p>fluid object</p>
+<dd><p><a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -617,15 +612,15 @@ Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.mfbt">
 <span class="sig-name descname"><span class="pre">mfbt</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.mfbt" title="Link to this definition"></a></dt>
-<dd><p>Minimum Film  Boiling Transition flag [-]</p>
+<dd><p>Minimum Film Boiling Transition flag [-]</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MFLUX">
 <span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MFLUX" title="Link to this definition"></a></dt>
-<dd><p>MFLUX Mass flux [kg/m^2/s]
-This function only retrieves the mix.mflux values pre-calculated
+<dd><p>MFLUX Mass flux [kg/m^2/s]</p>
+<p>This method only retrieves the mix.mflux values pre-calculated
 when mix.W is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.MFLUX_CALC()</p>
@@ -634,8 +629,8 @@ are calculated via mix.MFLUX_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.XEQ">
 <span class="sig-name descname"><span class="pre">XEQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.XEQ" title="Link to this definition"></a></dt>
-<dd><p>XEQ Equilibrium quality [-]
-This function only retrieves the mix.xeq values pre-calculated
+<dd><p>XEQ Equilibrium quality [-]</p>
+<p>This method only retrieves the mix.xeq values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.XEQ_CALC()</p>
@@ -644,8 +639,8 @@ are calculated via mix.XEQ_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.X">
 <span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.X" title="Link to this definition"></a></dt>
-<dd><p>X Vapor quality [-]
-This function only retrieves the mix.x values pre-calculated
+<dd><p>X Vapor quality [-]</p>
+<p>This method only retrieves the mix.x values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.X_CALC()</p>
@@ -654,8 +649,8 @@ are calculated via mix.X_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.VF">
 <span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.VF" title="Link to this definition"></a></dt>
-<dd><p>VF Void fraction [-]
-This function only retrieves the mix.vf values pre-calculated
+<dd><p>VF Void fraction [-]</p>
+<p>This method only retrieves the mix.vf values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.VF_CALC()</p>
@@ -664,8 +659,8 @@ are calculated via mix.VF_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.CHF">
 <span class="sig-name descname"><span class="pre">CHF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.CHF" title="Link to this definition"></a></dt>
-<dd><p>CHF Critical Heat Flux [W/m^2], wall dependent
-This function only retrieves the mix.chf values pre-calculated
+<dd><p>CHF Critical Heat Flux [W/m^2], wall dependent</p>
+<p>This method only retrieves the mix.chf values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.CBT_CALC()</p>
@@ -674,8 +669,8 @@ are calculated via mix.CBT_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.CBT">
 <span class="sig-name descname"><span class="pre">CBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.CBT" title="Link to this definition"></a></dt>
-<dd><p>CBT Critical Boiling Transition flag [-], wall dependent
-This function only retrieves the mix.cbt values pre-calculated
+<dd><p>CBT Critical Boiling Transition flag [-], wall dependent</p>
+<p>This method only retrieves the mix.cbt values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.CBT_CALC()</p>
@@ -684,8 +679,8 @@ are calculated via mix.CBT_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MFBT">
 <span class="sig-name descname"><span class="pre">MFBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MFBT" title="Link to this definition"></a></dt>
-<dd><p>MFBT Minimum Film Boiling Transition flag [-], wall dependent
-This function only retrieves the mix.mfbt values pre-calculated
+<dd><p>MFBT Minimum Film Boiling Transition flag [-], wall dependent</p>
+<p>This method only retrieves the mix.mfbt values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.MFBT_CALC()</p>
@@ -694,8 +689,8 @@ are calculated via mix.MFBT_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RHO">
 <span class="sig-name descname"><span class="pre">RHO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RHO" title="Link to this definition"></a></dt>
-<dd><p>RHO Density [kg/m^3]
-This function only retrieves the mix.rho values pre-calculated
+<dd><p>RHO Density [kg/m^3]</p>
+<p>This method only retrieves the mix.rho values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.RHO_CALC()</p>
@@ -704,8 +699,8 @@ are calculated via mix.RHO_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RELAXTEVAP">
 <span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTEVAP" title="Link to this definition"></a></dt>
-<dd><p>RELAXTEVAP Time relaxation for interfacial evaporation [s]
-This function only retrieves the mix.relaxtevap values pre-calculated
+<dd><p>RELAXTEVAP Time relaxation for interfacial evaporation [s]</p>
+<p>This method only retrieves the mix.relaxtevap values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.RELAXTEVAP_CALC()</p>
@@ -714,8 +709,8 @@ are calculated via mix.RELAXTEVAP_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RELAXTCOND">
 <span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
-<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]
-This function only retrieves the mix.relaxtevap values pre-calculated
+<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]</p>
+<p>This function only retrieves the mix.relaxtevap values pre-calculated
 when mix.H is set. This is to eliminate the redundant
 calculation as a result of frequent function calls. The values
 are calculated via mix.RELAXTCOND_CALC()</p>
@@ -862,8 +857,7 @@ are calculated via mix.RELAXTCOND_CALC()</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.NU">
 <span class="sig-name descname"><span class="pre">NU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.NU" title="Link to this definition"></a></dt>
-<dd><p>NU Wall Nusselt number [-]
-TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications</p>
+<dd><p>NU Wall Nusselt number [-]</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -875,8 +869,8 @@ TODO: It is not clear how the liquid and vapor Reynolds number should be defined
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALLTHOM">
 <span class="sig-name descname"><span class="pre">HWALLTHOM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALLTHOM" title="Link to this definition"></a></dt>
-<dd><p>HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]
-Thom’s formulation was modified in term of heat transfer coefficient</p>
+<dd><p>HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]</p>
+<p>Thom’s formulation was modified in term of heat transfer coefficient</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -888,8 +882,7 @@ Thom’s formulation was modified in term of heat transfer coefficient</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALL">
 <span class="sig-name descname"><span class="pre">HWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALL" title="Link to this definition"></a></dt>
-<dd><p>HWALL Wall heat transfer coefficient [W/m^2/K]
-TODO: Create wall heat transfer model options</p>
+<dd><p>HWALL Wall heat transfer coefficient [W/m^2/K]</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -931,19 +924,17 @@ TODO: Create wall heat transfer model options</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MTRANSV">
 <span class="sig-name descname"><span class="pre">MTRANSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MTRANSV" title="Link to this definition"></a></dt>
-<dd><p>MTRANSV Linear transversal mass exchange
-NOT USED FOR NOW
-Model transverse exchange between wall regions with time relaxation model
-TODO: Implement also enthalpy exchange and include in total mass/energy echange terms</p>
+<dd><p>MTRANSV Linear transversal mass exchange</p>
+<p>NOT USED FOR NOW
+Model transverse exchange between wall regions with time relaxation model</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.WALEVAPRATIO">
 <span class="sig-name descname"><span class="pre">WALEVAPRATIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.WALEVAPRATIO" title="Link to this definition"></a></dt>
-<dd><p>WALEVAPRATIO Wall mass evaporation ratio [-]
-Liquid mass boiling ratio driven by wall heat flux
-Set to 0 upstream subcooled boiling, 1 downstream saturated boiling and 0 at CBT
-TODO: Implement models for the onsets of subcooled and saturated wall boiling, as needed.</p>
+<dd><p>WALEVAPRATIO Wall mass evaporation ratio [-]</p>
+<p>Liquid mass boiling ratio driven by wall heat flux
+Set to 0 upstream subcooled boiling, 1 downstream saturated boiling and 0 at CBT</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -985,8 +976,8 @@ TODO: Implement models for the onsets of subcooled and saturated wall boiling, a
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HWALHEAT">
 <span class="sig-name descname"><span class="pre">HWALHEAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HWALHEAT" title="Link to this definition"></a></dt>
-<dd><p>HWALHEAT Linear wall heat to vapor rate [W/m]
-Set to LHGR beyond CBT</p>
+<dd><p>HWALHEAT Linear wall heat to vapor rate [W/m]</p>
+<p>Set to LHGR beyond CBT</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -998,11 +989,10 @@ Set to LHGR beyond CBT</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HVTOT">
 <span class="sig-name descname"><span class="pre">HVTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HVTOT" title="Link to this definition"></a></dt>
-<dd><p>HVTOT Total linear vapor specific enthalpy transfer [J/kg/m]
-This term represents the additional energy input to the vapor per unit vapor mass
+<dd><p>HVTOT Total linear vapor specific enthalpy transfer [J/kg/m]</p>
+<p>This term represents the additional energy input to the vapor per unit vapor mass
 Only the wall lump approach (i.e. same vapor heat input to all walls) is working correctly for now
-Otherwise, the liquid can become subcooled in post CHF calculations
-TODO: Fix issue and allow wall specific approach. This can be useful for DNB -&gt; inverted film boiling</p>
+Otherwise, the liquid can become subcooled in post CHF calculations</p>
 </dd></dl>
 
 <dl class="mat method">
