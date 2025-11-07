@@ -5,10 +5,11 @@ The :mod:`Mixture Solver <Solvers.Mixture>` module in openSTREAM provides tools 
 
 This module includes:
 
-- Solver (:class:`Solvers.Mixture.MixtureSolver`) class for mixture-based flow simulations.
-- Field (:class:`Solvers.Mixture.Mixture`) and phase (:class:`Solvers.Mixture.Liquid`, :class:`Solvers.Mixture.Vapor`) class definitions.
-- Parameter definitions for mixture properties like :attr:`mass flow rate <Solvers.Mixture.Mixture.W>`, :attr:`pressure <Solvers.Mixture.Mixture.P>`, and :attr:`enthalpy <Solvers.Mixture.Mixture.H>`.
-- Solver class methods to :meth:`initialize <Solvers.Mixture.MixtureSolver.initializeSolver>`, :meth:`solve <Solvers.Mixture.MixtureSolver.solve>` mixture equations and to :meth:`plot <Solvers.Mixture.MixtureSolver.MixtureSolver.plotz>` results.
+- Solver class for mixture-based flow simulations: :class:`Solvers.Mixture.MixtureSolver`
+- Mixture field class: :class:`Solvers.Mixture.Mixture`
+- Phase classes: :class:`Solvers.Mixture.Liquid`, :class:`Solvers.Mixture.Vapor`
+- Mixture primary properties: :attr:`Solvers.Mixture.Mixture.W`, :attr:`Solvers.Mixture.Mixture.P`, :attr:`Solvers.Mixture.Mixture.H`
+- Solver class methods: :meth:`Solvers.Mixture.MixtureSolver.initializeSolver <Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver>`, :meth:`Solvers.Mixture.MixtureSolver.solve`, :meth:`Solvers.Mixture.MixtureSolver.plotz <Solvers.Mixture.MixtureSolver.MixtureSolver.plotz>`
 - Field class methods for calculating secondary mixture and phase parameters.
 
 ----

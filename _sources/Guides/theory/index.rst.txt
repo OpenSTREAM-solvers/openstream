@@ -14,9 +14,9 @@ For detailed equations, derivations, and implementation notes, check out the ind
 
 .. line-block::
 
-     - Purpose: Initialization and robust predictions under relevant simplifications.
-     - Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
-     - Equations: Conservation of mass, momentum, and energy for the mixture.
+   ◦ Purpose: Initialization and robust predictions under relevant simplifications.
+   ◦ Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
+   ◦ Equations: Conservation of mass, momentum, and energy for the mixture.
 
 .. toctree::
    :maxdepth: 1

@@ -113,10 +113,11 @@
 <p>The <a class="reference internal" href="#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Mixture</span> <span class="pre">Solver</span></code></a> module in openSTREAM provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved.</p>
 <p>This module includes:</p>
 <ul class="simple">
-<li><p>Solver (<a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a>) class for mixture-based flow simulations.</p></li>
-<li><p>Field (<a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>) and phase (<a class="reference internal" href="#Solvers.Mixture.Liquid" title="Solvers.Mixture.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Liquid</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Vapor" title="Solvers.Mixture.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Vapor</span></code></a>) class definitions.</p></li>
-<li><p>Parameter definitions for mixture properties like <a class="reference internal" href="#Solvers.Mixture.Mixture.W" title="Solvers.Mixture.Mixture.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">mass</span> <span class="pre">flow</span> <span class="pre">rate</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Mixture.P" title="Solvers.Mixture.Mixture.P"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">pressure</span></code></a>, and <a class="reference internal" href="#Solvers.Mixture.Mixture.H" title="Solvers.Mixture.Mixture.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">enthalpy</span></code></a>.</p></li>
-<li><p>Solver class methods to <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">initialize</span></code>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.solve" title="Solvers.Mixture.MixtureSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">solve</span></code></a> mixture equations and to <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotz" title="Solvers.Mixture.MixtureSolver.MixtureSolver.plotz"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">plot</span></code></a> results.</p></li>
+<li><p>Solver class for mixture-based flow simulations: <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a></p></li>
+<li><p>Mixture field class: <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a></p></li>
+<li><p>Phase classes: <a class="reference internal" href="#Solvers.Mixture.Liquid" title="Solvers.Mixture.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Liquid</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Vapor" title="Solvers.Mixture.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Vapor</span></code></a></p></li>
+<li><p>Mixture primary properties: <a class="reference internal" href="#Solvers.Mixture.Mixture.W" title="Solvers.Mixture.Mixture.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.W</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Mixture.P" title="Solvers.Mixture.Mixture.P"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.P</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Mixture.H" title="Solvers.Mixture.Mixture.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.H</span></code></a></p></li>
+<li><p>Solver class methods: <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver" title="Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.initializeSolver</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.solve" title="Solvers.Mixture.MixtureSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.solve()</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotz" title="Solvers.Mixture.MixtureSolver.MixtureSolver.plotz"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.plotz</span></code></a></p></li>
 <li><p>Field class methods for calculating secondary mixture and phase parameters.</p></li>
 </ul>
 <hr class="docutils" />
@@ -124,25 +125,56 @@
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.MixtureSolver.</span></span><span class="sig-name descname"><span class="pre">MixtureSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p>
-<p>MIXTURESOLVER Solver for initializing, solving, and visualizing the
-mixture solver</p>
-<blockquote>
-<div><p>Handles setup, boundary condition interpolation, mixture construction,
-and plotting of results.</p>
-</div></blockquote>
+<p>MIXTURESOLVER Solver for initializing, solving, and visualizing mixture flow.</p>
+<p>The MixtureSolver class handles the setup, execution, and visualization
+of thermal-hydraulic simulations using a two-phase mixture approach or
+a Homogeneous Relaxation Model (HRM).</p>
+<p>Responsibilities:</p>
+<ul class="simple">
+<li><p>Initializes solver parameters from an <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object</p></li>
+<li><p>Interpolates boundary conditions in time and space</p></li>
+<li><p>Constructs <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.Mixture</span></code> objects for transient and steady-state analysis</p></li>
+<li><p>Provides plotting utilities for spatial and temporal distributions</p></li>
+</ul>
+<p>Inherits from:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p></li>
+</ul>
+<p>Key Components:</p>
+<ul class="simple">
+<li><p>Mixture construction and phase separation (liquid/vapor)</p></li>
+<li><p>Pressure drop and mass/energy transport modeling</p></li>
+<li><p>Support for relaxation models and near-wall phenomena</p></li>
+<li><p>Visualization of results across time and axial domains</p></li>
+</ul>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.MixtureSolver">
 <span class="sig-name descname"><span class="pre">MixtureSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.MixtureSolver" title="Link to this definition"></a></dt>
-<dd><p>MIXTURESOLVER Constructor</p>
+<dd><p>MIXTURESOLVER Constructor for the MixtureSolver class.</p>
+<p>Creates a new instance of the MixtureSolver class using the
+provided <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a>. This constructor initializes
+the solver by calling the abstract <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a>
+superclass constructor and then sets up all necessary solver
+parameters and internal data structures via
+<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture-MixtureSolver.initializeSolver()</span></code>.</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>inputSet — An <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model configuration, geometry, boundary conditions, and solver options.</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>This constructor assumes inputSet is fully validated.</p></li>
+<li><p>Solver initialization includes time/space discretization, boundary condition interpolation, and mixture object setup.</p></li>
+</ul>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.NZ" title="Link to this definition"></a></dt>
-<dd><p>Number of axial steps [-]</p>
+<dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -160,7 +192,7 @@ and plotting of results.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s]</p>
+<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -178,13 +210,13 @@ and plotting of results.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.fluid">
 <span class="sig-name descname"><span class="pre">fluid</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.fluid" title="Link to this definition"></a></dt>
-<dd><p>fluid object</p>
+<dd><p>Fluid object <a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.boundaryConditions">
 <span class="sig-name descname"><span class="pre">boundaryConditions</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.boundaryConditions" title="Link to this definition"></a></dt>
-<dd><p>Boundary conditions object</p>
+<dd><p>Boundary conditions object <a class="reference internal" href="Inputs.html#Inputs.BoundaryConditions" title="Inputs.BoundaryConditions"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.BoundaryConditions</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -202,63 +234,198 @@ and plotting of results.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.inputSet">
 <span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.inputSet" title="Link to this definition"></a></dt>
-<dd><p>Input set object</p>
+<dd><p>Input set object <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a></p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver">
 <span class="sig-name descname"><span class="pre">initializeSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver" title="Link to this definition"></a></dt>
-<dd><p>INITIALIZESOLVER Initializes solver parameters using the stored
-inputSet and constructs mixture objects.</p>
-<p>Sets up time and axial discretization, boundary conditions,
-and initializes mixture arrays for transient and steady-state simulations.
-Detailed setup of DP, MDER, TRELAX, NEARWALL, and ITR structures.</p>
+<dd><p>INITIALIZESOLVER Initializes solver parameters and constructs mixture objects.</p>
+<p>Sets up the solver’s internal state using the provided
+<a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a>. This includes discretization of time
+and space, interpolation of boundary conditions, and
+initialization of data structures for transient and steady-state
+simulations.</p>
+<p>Operations performed:</p>
+<ul class="simple">
+<li><p>Computes time steps and axial node positions</p></li>
+<li><p>Interpolates boundary conditions in time and space</p></li>
+<li><p>Initializes mixture array for each time step</p></li>
+<li><dl class="simple">
+<dt>Constructs data structures for:</dt><dd><ul>
+<li><p>Pressure drops (DP, DPSUM)</p></li>
+<li><p>Momentum and energy derivatives (MDER)</p></li>
+<li><p>Interfacial relaxation (TRELAX)</p></li>
+<li><p>Near-wall transport (NEARWALL)</p></li>
+<li><p>Iteration tracking (ITR)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Initializes fluid property objects</p></li>
+<li><p>Sets up phase-specific objects (Liquid, Vapor)</p></li>
+<li><p>Assigns initial conditions for mass flow rate, pressure, enthalpy</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>The function assumes uniform axial discretization.</p></li>
+<li><p>Wall heat flux is computed from interpolated boundary conditions.</p></li>
+<li><p>TRELAX fields are initialized after enthalpy to ensure correct vapor quality (XEQ) computation.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.interpBoundaryConditions">
 <span class="sig-name descname"><span class="pre">interpBoundaryConditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.interpBoundaryConditions" title="Link to this definition"></a></dt>
-<dd><p>INTERPBOUNDARYCONDITIONS Interpolates boundary conditions in time and space</p>
-<p>Expands user-defined BCs to match solver grid and time steps</p>
+<dd><p>INTERPBOUNDARYCONDITIONS Interpolates boundary conditions in time and space.</p>
+<p>Expands user-defined <a class="reference internal" href="Inputs.html#Inputs.BoundaryConditions" title="Inputs.BoundaryConditions"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.BoundaryConditions</span></code></a> to
+match the solver’s spatial grid and time steps. It performs
+interpolation of relevant boundary condition parameters both
+temporally and axially, and computes derived quantities such
+as wall heat flux.</p>
+<p>Operations performed:</p>
+<ul class="simple">
+<li><p>Interpolates time-dependent boundary condition parameters:
+‘TIME’, ‘PRESSURE’, ‘HIN’, ‘MFLOW’, ‘POWER’</p></li>
+<li><p>Interpolates wall power distribution in space (axially)</p></li>
+<li><p>Interpolates wall power in time across all walls</p></li>
+<li><p>Computes wall heat flux at each axial node and time step</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.timeInterpolate()</span></code> and
+<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.axialInterpolate()</span></code> for interpolation.</p></li>
+<li><p>Throws an error if any expected boundary condition parameter
+is missing.</p></li>
+<li><p>The calculation of HFLUX is based on normalized wall power
+and geometric properties.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.plotz">
 <span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em>, <em class="sig-param"><span class="pre">tIdx</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotz" title="Link to this definition"></a></dt>
-<dd><p>PLOTZ Plots spatial distributions of mixture parameters</p>
-<p>Supports multiple display modes and wall selections</p>
+<dd><p>PLOTZ Plots spatial (axial) distributions of mixture parameters.</p>
+<p>Generates axial plots of selected mixture parameters at specified
+time indices. The function supports multiple display modes, wall
+selections, near-wall data, and optional  animation over time.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>mixSolver         — MixtureSolver object containing simulation data</p></li>
+<li><p>tIdx              — Time index or indices (vector of positive integers)</p></li>
+<li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
+<li><p>opts.solveMode    — Solve mode: ‘REAL’ or ‘NULL’</p></li>
+<li><p>opts.wall         — Wall index(es) to plot</p></li>
+<li><p>opts.zIdx         — Axial indices to include in the plot</p></li>
+<li><p>opts.obstructions — Logical flag to display obstruction locations</p></li>
+<li><p>opts.unitTemp     — Temperature unit: ‘K’ or ‘C’</p></li>
+<li><p>opts.arrangement  — Plot arrangement: ‘flow’, ‘vertical’, or ‘horizontal’</p></li>
+<li><p>opts.resize       — Resize factor for plot scaling</p></li>
+<li><p>opts.nearWall     — Logical flag to include near-wall parameters</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>If multiple time indices are provided, the function creates an animated plot.</p></li>
+<li><p>At least two axial indices must be specified to enable spatial plotting.</p></li>
+<li><p>Temperature unit conversion is applied if ‘C’ is selected.</p></li>
+<li><p>Obstruction locations are plotted if opts.obstructions is true.</p></li>
+<li><p>Each wall is plotted in a separate tile with appropriate legends and axis scaling.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.plott">
 <span class="sig-name descname"><span class="pre">plott</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plott" title="Link to this definition"></a></dt>
-<dd><p>PLOTT Plots temporal distributions of mixture parameters at a given axial location</p>
-<p>Supports multiple display modes and wall selections</p>
+<dd><p>PLOTT Plots temporal distributions of mixture parameters at a given axial location.</p>
+<p>Generates time-series plots of selected mixture parameters at
+a specified axial index. The method supports multiple display
+modes, wall selections, and plot arrangements.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>mixSolver         — MixtureSolver object containing simulation data</p></li>
+<li><p>zIdx              — Axial index (scalar, positive integer)</p></li>
+<li><p>opt.display       — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
+<li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
+<li><p>opt.wall          — Wall index(es) to plot</p></li>
+<li><p>opt.tIdx          — Time indices to include in the plot</p></li>
+<li><p>opt.reverseTime   — Logical flag to reverse time axis</p></li>
+<li><p>opt.unitTemp      — Temperature unit: ‘K’ or ‘C’</p></li>
+<li><p>opt.arrangement   — Plot arrangement: ‘flow’, ‘vertical’, or ‘horizontal’</p></li>
+<li><p>opt.resize        — Resize factor for plot scaling</p></li>
+<li><p>opt.nearWall      — Logical flag to include near-wall parameters</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>If opt.display is set to ‘ALL’, all supported parameters are plotted.</p></li>
+<li><p>The function validates that at least two time indices are provided.</p></li>
+<li><p>Temperature unit conversion is applied if ‘C’ is selected.</p></li>
+<li><p>Near-wall data is included if opt.nearWall is true.</p></li>
+<li><p>Each wall is plotted in a separate tile with appropriate legends and axis scaling.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.plotzt">
 <span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotzt" title="Link to this definition"></a></dt>
-<dd><p>PLOTZT: Plots 2D time/elevation distributions of mixture parameters</p>
-<p>Supports mixture, liquid, and vapor fields</p>
+<dd><p>PLOTZT Plots 2D time/elevation distributions of mixture parameters.</p>
+<p>Generates surface plots of selected mixture-related parameters
+over time and axial (elevation) positions. It supports plotting
+for mixture, liquid, and vapor fields, and can handle both real
+and null (initial) transient data.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>mixSolver         — MixtureSolver object containing simulation data</p></li>
+<li><p>opt.display       — Parameter(s) to display (e.g., ‘HFLUX’, ‘U’, etc.)</p></li>
+<li><p>opt.label         — Corresponding labels for display parameters</p></li>
+<li><p>opt.unit          — Units for each parameter</p></li>
+<li><p>opt.field         — Field to plot: ‘mixture’, ‘liquid’, or ‘vapor’</p></li>
+<li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
+<li><p>opt.wall          — Wall index(es) to plot</p></li>
+<li><p>opt.zIdx          — Axial indices (must include at least 2)</p></li>
+<li><p>opt.tIdx          — Time indices (must include at least 2)</p></li>
+<li><p>opt.reverseTime   — Logical flag to reverse time axis</p></li>
+<li><p>opt.shading       — Surface shading style: ‘faceted’, ‘flat’, or ‘interp’</p></li>
+<li><p>opt.view          — View angle for 3D plot [azimuth elevation]</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>If ‘ALL’ is passed to opt.display, all supported parameters are plotted.</p></li>
+<li><p>The function validates that at least two axial and time indices are provided to enable meaningful 2D plotting.</p></li>
+<li><p>Each wall is plotted in a separate figure window with appropriate titles and subplot grouping.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate">
 <span class="sig-name descname"><span class="pre">timeInterpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate" title="Link to this definition"></a></dt>
-<dd><p>TIMEINTERPOLATE Interpolates data in time using specified interpolation method</p>
+<dd><p>TIMEINTERPOLATE Performs temporal interpolation of data using
+a specified method.</p>
+<p>Interpolates the values in y at the time points defined by
+mix.TIME using the interpolation method specified in
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.inputSet.options.TIMEINTERP</span></code>.</p>
+<p>If the boundary condition time vector (mix.inputSet.bc.TIME)
+is scalar, interpolation is skipped and the original data y is
+returned unchanged.</p>
+<p>This function supports flexible interpolation strategies and
+handles cases where interpolation is unnecessary.</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate">
 <span class="sig-name descname"><span class="pre">axialInterpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate" title="Link to this definition"></a></dt>
-<dd><p>AXIALINTERPOLATE Interpolates data in space using specified interpolation
-method</p>
-<p>Handles extrapolation for out-of-bound values
-Linear extrapolation is used for cases where interpolation returns
-NaN (for instance, point slightly outside allowed tolerance when
-‘next’ interpolation method is selected)</p>
+<dd><p>AXIALINTERPOLATE Performs axial interpolation of data using a
+specified method.</p>
+<p>Interpolates the values in y at positions defined by mix.Z
+using the interpolation method specified in
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.inputSet.options.AXIALINTERP</span></code>.
+The interpolation is performed over the domain defined by x.</p>
+<p>If the interpolation returns NaN (e.g., due to points slightly
+outside the interpolation range when using methods like ‘next’),
+linear extrapolation is applied to those specific points to
+ensure continuity.</p>
+<p>This function ensures robust handling of out-of-bound values
+by using extrapolation and fallback strategies.</p>
 </dd></dl>
 
 </dd>
@@ -269,9 +436,25 @@ NaN (for instance, point slightly outside allowed tolerance when
 <dl class="mat function">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.solve">
 <span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.MixtureSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.solve" title="Link to this definition"></a></dt>
-<dd><p>SOLVE Executes the mixture solver for steady-state and transient simulations</p>
-<p>This method manages the full solution process, including initialization,
-time stepping, inner iterations, convergence checks, and logging.</p>
+<dd><p>SOLVE Executes the mixture solver for steady-state and transient simulations.</p>
+<p>Runs the full solution process for the <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code>
+object. It manages initialization, time stepping, axial sweeps, inner
+iterations, convergence checks, and logging.</p>
+<p>Workflow:</p>
+<ul class="simple">
+<li><p>Enables logging and opens persistent log file</p></li>
+<li><p>Validates solver state before execution</p></li>
+<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
+<li><p>If initial step converges, proceeds with transient simulation</p></li>
+<li><p>Handles exceptions and ensures proper log closure</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
+<li><p>Applies relaxation factors for flow, pressure, enthalpy, and vapor  properties</p></li>
+<li><p>Supports thermal non-equilibrium modeling via vapor relaxation</p></li>
+<li><p>Logs progress and outputs to session directory</p></li>
+</ul>
 </dd></dl>
 
 <hr class="docutils" />
@@ -867,16 +1050,47 @@ TODO: Fix issue and allow wall specific approach. This can be useful for DNB -&g
 <dt class="sig sig-object mat" id="Solvers.Mixture.Liquid">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Liquid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
-<p>LIQUID Class representing the liquid phase in a mixture solver simulation</p>
-<p>Provides access to liquid-specific properties and calculations derived
-from the mixture solution.</p>
+<p>LIQUID Represents the liquid phase in a mixture solver simulation.</p>
+<p>The Liquid class provides access to liquid-specific properties and
+calculations derived from the mixture solution. It encapsulates
+methods for computing flow, thermodynamic, and transport properties
+of the liquid phase at each axial node.</p>
+<p>Responsibilities:</p>
+<ul class="simple">
+<li><p>Compute liquid mass fraction and volumetric fraction</p></li>
+<li><p>Calculate liquid velocity, enthalpy, and temperature</p></li>
+<li><p>Evaluate wall heat flux contributions to the liquid phase</p></li>
+<li><p>Support derived quantities such as Reynolds number and mass flux</p></li>
+</ul>
+<p>Inherits from:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>All methods assume access to a valid <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>Axial indexing is optional; defaults to full axial domain</p></li>
+<li><p>Velocity and enthalpy calculations include fallback logic to handle single-phase vapor regions and numerical stability</p></li>
+</ul>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.Liquid">
 <span class="sig-name descname"><span class="pre">Liquid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.Liquid" title="Link to this definition"></a></dt>
-<dd><p>LIQUID Constructor
-Initializes the liquid object from a Mixture instance.</p>
+<dd><p>LIQUID Constructor</p>
+<p>Initializes the Liquid object from one or more instances of the
+<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> class. Each Liquid instance
+stores a reference to its corresponding Mixture object and the
+number of axial nodes (NZ).</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>mix — Array of <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> objects representing the simulation state</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Supports vectorized initialization for transient simulations</p></li>
+<li><p>Assumes each <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object is fully initialized</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -919,9 +1133,9 @@ Initializes the liquid object from a Mixture instance.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.H">
 <span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.H" title="Link to this definition"></a></dt>
-<dd><p>H Liquid enthalpy [J/kg]
-Calculated based on mixture &amp; vapor enthalpies and vapor quality
-TODO: Find a better way to prevent division by small 1-X and negative h</p>
+<dd><p>H Liquid enthalpy [J/kg]</p>
+<p>Calculated based on mixture and vapor enthalpies, and vapor
+quality.</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -933,8 +1147,7 @@ TODO: Find a better way to prevent division by small 1-X and negative h</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.RE">
 <span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.RE" title="Link to this definition"></a></dt>
-<dd><p>RE Liquid Reynolds number [-]
-TODO: Check definition</p>
+<dd><p>RE Liquid Reynolds number [-]</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -958,16 +1171,48 @@ TODO: Check definition</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Vapor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
-<p>VAPOR Class representing the vapor phase in a mixture solver simulation</p>
-<p>Provides access to vapor-specific properties and calculations derived
-from the mixture solution.</p>
+<p>VAPOR Represents the vapor phase in a mixture solver simulation.</p>
+<p>The Vapor class provides access to vapor-specific properties and
+calculations derived from the mixture solution. It encapsulates
+methods for computing flow, thermodynamic, and transport properties
+of the vapor phase at each axial node.</p>
+<p>Responsibilities:</p>
+<ul class="simple">
+<li><p>Compute vapor mass fraction and void fraction</p></li>
+<li><p>Calculate vapor velocity, enthalpy, and temperature</p></li>
+<li><p>Evaluate wall heat flux and wall evaporation contributions</p></li>
+<li><p>Support derived quantities such as Reynolds number and mass flux</p></li>
+</ul>
+<p>Inherits from:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>All methods assume access to a valid <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>Axial indexing is optional; defaults to full axial domain</p></li>
+<li><p>Enthalpy calculations adapt to thermal non-equilibrium models</p></li>
+<li><p>Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability</p></li>
+</ul>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Vapor">
 <span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Vapor" title="Link to this definition"></a></dt>
-<dd><p>VAPOR Constructor
-Initializes the vapor object from a Mixture instance.</p>
+<dd><p>VAPOR Constructor of the Vapor class</p>
+<p>Initializes the Vapor object from one or more instances of the
+<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> class. Each Vapor instance
+stores a reference to its corresponding Mixture object and the
+number of axial nodes (NZ).</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>mix — Array of <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> objects representing the simulation state</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Supports vectorized initialization for transient simulations</p></li>
+<li><p>Assumes each <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object is fully initialized</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1011,8 +1256,7 @@ Initializes the vapor object from a Mixture instance.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.H">
 <span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.H" title="Link to this definition"></a></dt>
 <dd><p>H Vapor enthalpy [J/kg]</p>
-<p>Calculation depends on non equilibrium model
-TODO: Find a better way to prevent division by small X</p>
+<p>Calculation depends on non equilibrium model</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1024,8 +1268,7 @@ TODO: Find a better way to prevent division by small X</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.RE">
 <span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.RE" title="Link to this definition"></a></dt>
-<dd><p>RE Vapor Reynolds number [-]
-TODO: Check definition</p>
+<dd><p>RE Vapor Reynolds number [-]</p>
 </dd></dl>
 
 <dl class="mat method">
