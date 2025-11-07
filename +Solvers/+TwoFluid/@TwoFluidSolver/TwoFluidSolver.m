@@ -180,7 +180,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             arguments
                 twfSolver
                 tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                     = []
-                opts.display   {mustBeMember(opts.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
+                opts.display   {matlab.system.mustBeMember(opts.display,{'HFLUX','W','U','H','VR','T','INTAREA','REGIME','PWE','PME','PEE','ALL'})} = {'HFLUX','W','U','H','VR'}
                 opts.solveMode {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                  = 'REAL'
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
@@ -237,7 +237,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             plotter.setZs(z);           
 
             function tf = displayVariable(memberList)
-                tf = any(ismember(memberList,opts.display));
+                tf = any(ismember(memberList, upper(opts.display)));
             end
 
             % Loop through each tIdx

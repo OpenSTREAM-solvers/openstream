@@ -132,7 +132,7 @@ classdef SolverPlotter < handle
 
                     animationMenu = uimenu(plotters(idx).fh, 'Text', 'Animation');
                     animationMenu_save = uimenu(animationMenu, 'Text', 'Save', 'MenuSelectedFcn', @animationSaveCallback);
-                    animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
+                    animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls in Video', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
 
                 end  
             end
@@ -429,7 +429,7 @@ classdef SolverPlotter < handle
                         % TODO: this can be a function
                         counter.String = string(frameIdx);
                         counter.Callback(counter, []);
-                        drawnow();
+                        drawnow;
                         
                         % capture frame for video
                         writeVideo(vid, getframe(plotters(idx).fh));
@@ -661,50 +661,43 @@ classdef SolverPlotter < handle
                     % opts.DisplayName exists
                     
                     % Existing Line handles (OAF, plotK can be hidden, so findall)
-                    lhs = findall(ah, 'type', 'line');
+                    if opts.DisplayName == "OBSTRUCTION"
+                        lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName, 'XData', XData);
+                    else
+                        lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
+                    end
 
                     % Check if there are any lines at all
-                    if ~isempty(lhs)
-                        
-                        % lh DisplayNames
-                        dispNames = string({lhs.DisplayName});
+                    if ~isempty(lh)
 
-                        % Find lh indices with matching DisplayNames
-                        lh_idx = find(dispNames == opts.DisplayName);
+                        % Set flag
+                        matchingLineExists = true;
 
-                        % If matching lines are found, set flag, then
-                        % process data
-                        if ~isempty(lh_idx)
-
-                            % Set flag
-                            matchingLineExists = true;
-
-                            % Update YData
-                            % 
-                            % If YData is a literal "ylim" string, the line is
-                            % vertical and assumes ylim for the y-coordinates
-                            % 
-                            % If YData is a vector, there is only one wall
-                            % Otherwise, the vector is for the current WallIdx.
-                            %
-                            if (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                                YData = ylim(ah);
-                                %YData = [NaN NaN];
-                            elseif isvector(YData)
-                                YData = YData(opts.subset);
-                            else
-                                YData = YData(opts.subset, plotter.WallIdx);
-                            end
-                            
-                            % Then concatenate XData (as needed) and 
-                            % YData to lh.UserData
-                            lh = lhs(lh_idx);
-                            if isfield(lh.UserData.Data, "xData")
-                                lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData, 'xData', XData)];
-                            else
-                                lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData)];
-                            end
+                        % Update YData
+                        % 
+                        % If YData is a literal "ylim" string, the line is
+                        % vertical and assumes ylim for the y-coordinates
+                        % 
+                        % If YData is a vector, there is only one wall
+                        % Otherwise, the vector is for the current WallIdx.
+                        %
+                        if (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
+                            YData = ylim(ah);
+                            %YData = [NaN NaN];
+                        elseif isvector(YData)
+                            YData = YData(opts.subset);
+                        else
+                            YData = YData(opts.subset, plotter.WallIdx);
                         end
+                        
+                        % Then concatenate XData (as needed) and 
+                        % YData to lh.UserData
+                        if isfield(lh.UserData.Data, "xData")
+                            lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData, 'xData', XData)];
+                        else
+                            lh.UserData.Data = [lh.UserData.Data, struct('index', length(lh.UserData.Data), 'yData', YData)];
+                        end
+
                     end
 
                 end
