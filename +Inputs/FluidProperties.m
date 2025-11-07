@@ -7,8 +7,8 @@ classdef FluidProperties
 
     properties (SetAccess=immutable)
 
-        FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Fluid identifier
-        PROPERTIES (1,1) InputEnums.FLUIDPROPERTIES                        = 'SATURATED'           % Fluid property assumptions
+        FLUID      (1,1) string  {mustBeTextScalar}                        = 'WATER'               % Coolprop fluid identifier
+        PROPERTIES (1,1) InputEnums.FLUIDPROPERTIES                        = 'SATURATED'           % Fluid property assumptions from :attr:`Inputs.Model.PROPERTIES`
         PRESSURE   (1,1) double  {mustBeNumeric}                           = 1                     % System pressure [Pa]
         TSAT       (1,1) double  {mustBeNumeric}                           = 1                     % Saturated fluid temperature [K]
         RHOF       (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid mass density [kg/m^3]
