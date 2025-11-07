@@ -9,10 +9,10 @@ classdef Mixture < Solvers.AbstractField
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 
         % Solver state
-        NZ                                                                 = 0                    % Number of axial steps [-]
+        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s]
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.Options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
 
@@ -25,8 +25,8 @@ classdef Mixture < Solvers.AbstractField
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
         % Detailed flow data (pressure drop, derivative terms, time relaxations)
-        DP           (1,1) struct                                                                 % Saved detailed pressure drops
-        DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops
+        DP           (1,1) struct                                                                 % Saved detailed pressure drops [Pa]
+        DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops [Pa]
         MDER         (1,1) struct                                                                 % Saved detailed material derivative terms
         TRELAX       (1,1) struct                                                                 % Time relaxation terms
         NEARWALL     (1,1) struct                                                                 % Near-wall terms
@@ -43,8 +43,8 @@ classdef Mixture < Solvers.AbstractField
     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
 
         DZ             (1,1) double  {mustBeNumeric}                       = 0                    % Axial step size [m]
-        inputSet                     {isa(inputSet,'Inputs.InputSet')}                            % inputSet object
-        fluid                        {isa(fluid,'Inputs.FluidProperties')}                        % fluid object
+        inputSet                     {isa(inputSet,'Inputs.InputSet')}                            % :class:`Inputs.InputSet` object
+        fluid                        {isa(fluid,'Inputs.FluidProperties')}                        % :class:`Inputs.FluidProperties` object
 
     end
 
@@ -52,7 +52,7 @@ classdef Mixture < Solvers.AbstractField
 
         % Wall heat transfer transition flags
         cbt            (:,:) logical                                       = false                % Critical Boiling Transition flag [-]
-        mfbt           (:,:) logical                                       = false                % Minimum Film  Boiling Transition flag [-]
+        mfbt           (:,:) logical                                       = false                % Minimum Film Boiling Transition flag [-]
     end
 
     properties (Access=private)
@@ -70,9 +70,9 @@ classdef Mixture < Solvers.AbstractField
         sigm_const     (:,1) double  {mustBeNumeric}                       = []                   % Solved sigmoid function value [-]
 
         % Time relaxation arrays
-        relaxtevap     (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial evaporation
-        relaxtcond     (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for interfacial condensation
-        nearwalltrelax (:,:) double  {mustBeNumeric}                                              % [-] Time relaxation for near-wall energy transfer
+        relaxtevap     (:,:) double  {mustBeNumeric}                                              % Time relaxation for interfacial evaporation [-]
+        relaxtcond     (:,:) double  {mustBeNumeric}                                              % Time relaxation for interfacial condensation [-]
+        nearwalltrelax (:,:) double  {mustBeNumeric}                                              % Time relaxation for near-wall energy transfer [-]
     end
 
     %% --- Constructor method ---
@@ -86,8 +86,9 @@ classdef Mixture < Solvers.AbstractField
             % Sets up flow property tracking for simulation.
             %
             % Parameters:
-            %   inputSet - Inputs.InputSet object containing model, geometry, and boundary conditions
-            %   fluid    - Inputs.FluidProperties object containing thermophysical fluid data
+            %
+            % - inputSet — :class:`Inputs.InputSet` object containing model, geometry, and boundary conditions
+            % - fluid    — :class:`Inputs.FluidProperties` object containing thermophysical fluid data
 
             if nargin > 0
                 % Store inputSet as object property
@@ -109,7 +110,8 @@ classdef Mixture < Solvers.AbstractField
 
         function set.W(mix, val)
             %SET.W Setter for W, mass flow rate [kg/s]
-            %  mix.mflux is calculated upon setting mix.W
+            %
+            % mix.mflux is calculated upon setting mix.W
 
             % Identify indexes to be updated
             zIdx = find(mix.W~=val);
@@ -124,7 +126,8 @@ classdef Mixture < Solvers.AbstractField
 
         function set.H(mix, val)
             %SET.H Setter for H, enthalpy [J/kg]
-            %  mix.rho, mix.x and mix.xeq are calculated upon setting mix.H
+            %
+            % mix.rho, mix.x and mix.xeq are calculated upon setting mix.H
 
             % Identify indexes to be updated
             zIdx = find(mix.H~=val);
@@ -139,10 +142,11 @@ classdef Mixture < Solvers.AbstractField
 
         function mflux = MFLUX(mix, zIdx)
             %MFLUX Mass flux [kg/m^2/s]
-            %   This function only retrieves the mix.mflux values pre-calculated
-            %   when mix.W is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.MFLUX_CALC()
+            %
+            % This method only retrieves the mix.mflux values pre-calculated
+            % when mix.W is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.MFLUX_CALC()
 
             if nargin < 2
                 mflux = mix.mflux;
@@ -153,10 +157,11 @@ classdef Mixture < Solvers.AbstractField
 
         function xeq = XEQ(mix, zIdx)
             %XEQ Equilibrium quality [-]
-            %   This function only retrieves the mix.xeq values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.XEQ_CALC()
+            %
+            % This method only retrieves the mix.xeq values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.XEQ_CALC()
 
             if nargin < 2
                 xeq = mix.xeq;
@@ -167,10 +172,11 @@ classdef Mixture < Solvers.AbstractField
 
         function x = X(mix, zIdx)
             %X Vapor quality [-]
-            %   This function only retrieves the mix.x values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.X_CALC()
+            %
+            % This method only retrieves the mix.x values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.X_CALC()
 
             if nargin < 2
                 x = mix.x;
@@ -181,10 +187,11 @@ classdef Mixture < Solvers.AbstractField
 
         function vf = VF(mix, zIdx)
             %VF Void fraction [-]
-            %   This function only retrieves the mix.vf values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.VF_CALC()
+            %
+            % This method only retrieves the mix.vf values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.VF_CALC()
 
             if nargin < 2
                 vf = mix.vf;
@@ -195,10 +202,11 @@ classdef Mixture < Solvers.AbstractField
 
         function chf =CHF(mix, zIdx)
             %CHF Critical Heat Flux [W/m^2], wall dependent
-            %   This function only retrieves the mix.chf values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.CBT_CALC()
+            %
+            % This method only retrieves the mix.chf values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.CBT_CALC()
 
             if nargin < 2
                 chf = mix.chf;
@@ -209,10 +217,11 @@ classdef Mixture < Solvers.AbstractField
 
         function cbt =CBT(mix, zIdx)
             %CBT Critical Boiling Transition flag [-], wall dependent
-            %   This function only retrieves the mix.cbt values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.CBT_CALC()
+            %
+            % This method only retrieves the mix.cbt values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.CBT_CALC()
 
             if nargin < 2
                 cbt = mix.cbt;
@@ -223,10 +232,11 @@ classdef Mixture < Solvers.AbstractField
 
         function mfbt =MFBT(mix, zIdx)
             %MFBT Minimum Film Boiling Transition flag [-], wall dependent
-            %   This function only retrieves the mix.mfbt values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.MFBT_CALC()
+            %
+            % This method only retrieves the mix.mfbt values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.MFBT_CALC()
 
             if nargin < 2
                 mfbt = mix.mfbt;
@@ -237,10 +247,11 @@ classdef Mixture < Solvers.AbstractField
 
         function rho = RHO(mix, zIdx)
             %RHO Density [kg/m^3]
-            %   This function only retrieves the mix.rho values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.RHO_CALC()
+            %
+            % This method only retrieves the mix.rho values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.RHO_CALC()
 
             if nargin < 2
                 rho = mix.rho;
@@ -251,10 +262,11 @@ classdef Mixture < Solvers.AbstractField
 
         function t = RELAXTEVAP(mix, zIdx)
             %RELAXTEVAP Time relaxation for interfacial evaporation [s]
-            %   This function only retrieves the mix.relaxtevap values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.RELAXTEVAP_CALC()
+            %
+            % This method only retrieves the mix.relaxtevap values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.RELAXTEVAP_CALC()
 
             if nargin < 2
                 t = mix.relaxtevap;
@@ -265,11 +277,12 @@ classdef Mixture < Solvers.AbstractField
 
         function t = RELAXTCOND(mix, zIdx)
             %RELAXTCOND Time relaxation for interfacial evaporation [s]
-            %   This function only retrieves the mix.relaxtevap values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.RELAXTCOND_CALC()
             %
+            % This function only retrieves the mix.relaxtevap values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.RELAXTCOND_CALC()
+
             if nargin < 2
                 t = mix.relaxtcond;
             else
@@ -332,7 +345,7 @@ classdef Mixture < Solvers.AbstractField
 
         function t = T(mix, zIdx)
             %T Temperature [K]
-            %
+
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             t = mix.fluid.T(mix.H(zIdx));
@@ -553,6 +566,7 @@ classdef Mixture < Solvers.AbstractField
 
         function nu = NU(mix, zIdx)
             %NU Wall Nusselt number [-]
+
             %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -595,6 +609,7 @@ classdef Mixture < Solvers.AbstractField
 
         function hwallthom = HWALLTHOM(mix, zIdx)
             %HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]
+            %
             % Thom's formulation was modified in term of heat transfer coefficient
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -617,7 +632,6 @@ classdef Mixture < Solvers.AbstractField
 
         function hwall = HWALL(mix, zIdx)
             %HWALL Wall heat transfer coefficient [W/m^2/K]
-            %TODO: Create wall heat transfer model options
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -737,9 +751,11 @@ classdef Mixture < Solvers.AbstractField
 
         function Mtrans = MTRANSV(mix, zIdx)
             %MTRANSV Linear transversal mass exchange
+            %
             % NOT USED FOR NOW
             % Model transverse exchange between wall regions with time relaxation model
-            % TODO: Implement also enthalpy exchange and include in total mass/energy echange terms
+
+            % TODO: Implement also enthalpy exchange and include in total mass/energy exchange terms
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -753,8 +769,10 @@ classdef Mixture < Solvers.AbstractField
 
         function walevapratio = WALEVAPRATIO(mix, zIdx)
             %WALEVAPRATIO Wall mass evaporation ratio [-]
+            %
             %Liquid mass boiling ratio driven by wall heat flux
             %Set to 0 upstream subcooled boiling, 1 downstream saturated boiling and 0 at CBT
+
             %TODO: Implement models for the onsets of subcooled and saturated wall boiling, as needed.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -861,6 +879,7 @@ classdef Mixture < Solvers.AbstractField
 
         function Hwalheat = HWALHEAT(mix, zIdx)
             %HWALHEAT Linear wall heat to vapor rate [W/m]
+            %
             %Set to LHGR beyond CBT
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -880,9 +899,11 @@ classdef Mixture < Solvers.AbstractField
 
         function Hvtot = HVTOT(mix, zIdx)
             %HVTOT Total linear vapor specific enthalpy transfer [J/kg/m]
+            %
             % This term represents the additional energy input to the vapor per unit vapor mass
             % Only the wall lump approach (i.e. same vapor heat input to all walls) is working correctly for now
             % Otherwise, the liquid can become subcooled in post CHF calculations
+
             % TODO: Fix issue and allow wall specific approach. This can be useful for DNB -> inverted film boiling
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -902,10 +923,11 @@ classdef Mixture < Solvers.AbstractField
 
         function t = NEARWALLTRELAX(mix, zIdx)
             %NEARWALLTRELAX Time relaxation for near-wall energy transfer [s]
-            %   This function only retrieves the mix.nearwalltrelax values pre-calculated
-            %   when mix.H is set. This is to eliminate the redundant
-            %   calculation as a result of frequent function calls. The values
-            %   are calculated via mix.NEARWALLTRELAX_CALC()
+            %
+            % This function only retrieves the mix.nearwalltrelax values pre-calculated
+            % when mix.H is set. This is to eliminate the redundant
+            % calculation as a result of frequent function calls. The values
+            % are calculated via mix.NEARWALLTRELAX_CALC()
 
             if nargin < 2
                 t = mix.nearwalltrelax;
@@ -916,6 +938,7 @@ classdef Mixture < Solvers.AbstractField
 
         function lambda = NEARWALLRATIO(mix)
             %NEARWALLRATIO Near-wall mass flow distribution ratio [-]
+            %
             % Should be less than 1 (otherwise NEARWALL.XEQ and XEQ would be equal for azymuthal equal heat flux)
 
             model = mix.inputSet.model;
@@ -1078,14 +1101,16 @@ classdef Mixture < Solvers.AbstractField
 
             switch model.THERMALNONEQ
                 case 'EQUILIBRIUM'
-                    % [-] Thermal equilibrium model
+                    % Thermal equilibrium model
                     mix.x(zIdx) = max(mix.xeq(zIdx),0);
 
                 case 'SAHAZUBER'
-                    % [-] Saha-Zuber model
-                    % Saha P. and Zuber N. "Point of net vapor generation and vapor void fraction in subcooled boiling", Heat transfer, 4, 1974
+                    % Saha-Zuber model
+                    %
+                    % :cite:t:`sahazuber1973`
                     % Saturated properties, averaged heat flux and hydraulic diameter are used
                     % Point of net vapor generation is bounded by [xin 0]
+
                     % TODO: Validate and potentially modify model for applications to channels with walls of different heat fluxes (e.g. unheated wall)
                     mix.x(zIdx) = max(mix.xeq(zIdx),0);
 
@@ -1107,10 +1132,9 @@ classdef Mixture < Solvers.AbstractField
                     mix.x(zIdx) = mix.x(zIdx)./(1-xb(idx).*exp(mix.xeq(zIdx)./xb(idx)-1));
 
                 case 'EPRI'
-                    % [-] EPRI model
-                    % G. S. Lellouche and B. A. Zolotar, A Mechanistic Model for Predicting Two-Phase Void Fraction for Water in Vertical tubes, Channels and Rod Bundles,
-                    % Palo A1to, California: Electric Power Research Institute, February, 1982. EPRI NP-2246-SR.
-                    % https://www.nrc.gov/docs/ML2001/ML20010E663.pdf
+                    % EPRI model
+                    %
+                    % :cite:t:`lellouche1982`
 
                     HDIAM    = mix.inputSet.geometry.HDIAM;                % [m] Hydraulic diameter
 
@@ -1120,9 +1144,9 @@ classdef Mixture < Solvers.AbstractField
                     CPL      = mix.fluid.CPL(mix.liquid.H);                % [J/kg/K]
                     KL       = mix.fluid.KL(mix.liquid.H);                 % [W/m/K] Liquid thermal conductivity
                     PRANDTLL = mix.fluid.PRANDTLL(mix.liquid.H);           % [-] Liquid Prandtl number
-                    %                     CPL      = mix.fluid.CPF;                % [J/kg/K]
-                    %                     KL       = mix.fluid.KF;                 % [W/m/K] Liquid thermal conductivity
-                    %                     PRANDTLL = mix.fluid.PRANDTLF;           % [-] Liquid Prandtl number
+                    % CPL      = mix.fluid.CPF;                             % [J/kg/K]
+                    % KL       = mix.fluid.KF;                              % [W/m/K] Liquid thermal conductivity
+                    % PRANDTLL = mix.fluid.PRANDTLF;                        % [-] Liquid Prandtl number
 
                     REL      = mix.liquid.RE;                              % [-] Reynolds number based on liquid phase
 
@@ -1161,9 +1185,9 @@ classdef Mixture < Solvers.AbstractField
 
                 case 'RELAXATION'
                     % [-] Time relaxation model
+                    %
                     % New proposed model based on interfacial phase change time relaxation approach (main calculations in solve.m)
                     % Physical approach to geometrical and thermal inhomogeneities
-                    % TODO: Document and validate model
 
                     mix.x(zIdx) = sum(mix.TRELAX.WV(zIdx,:),2)./mix.W(zIdx);
             end
@@ -1190,6 +1214,8 @@ classdef Mixture < Solvers.AbstractField
 
                 case InputEnums.VOID.BESTION
                     % [-] Bestion drift flux model
+                    %
+                    % :cite:t:`BESTION1990229`
                     C0 = 1.;                                               % [-] Distribution parameter
                     RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
                     RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
@@ -1198,9 +1224,8 @@ classdef Mixture < Solvers.AbstractField
 
                 case InputEnums.VOID.EPRI
                     % [-] EPRI drift flux model
-                    % G. S. Lellouche and B. A. Zolotar, A Mechanistic Model for Predicting Two-Phase Void Fraction for Water in Vertical tubes, Channels and Rod Bundles,
-                    % Palo A1to, California: Electric Power Research Institute, February, 1982. EPRI NP-2246-SR.
-                    % https://www.nrc.gov/docs/ML2001/ML20010E663.pdf
+                    %
+                    % :cite:t:`lellouche1982`
 
                     RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
                     RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
@@ -1232,6 +1257,7 @@ classdef Mixture < Solvers.AbstractField
 
             function vf = vfslip(x,S)
                 %VFSLIP Void fraction based on slip model
+
                 RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
                 RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));
                 vf = x.*RHOL./(x.*RHOL+S.*(1-x).*RHOV);
@@ -1239,14 +1265,17 @@ classdef Mixture < Solvers.AbstractField
 
             function vf = vfdrift(C0,ugj)
                 %VFDRIFT Void fraction based on drift flux model
+                %
                 % C0    [-]     Distribution parameter
                 % ugj   [m/s]   Drift velocity
+
                 vf  = mix.JG(zIdx)./(C0.*(mix.JG(zIdx)+mix.JL(zIdx))+ugj);
             end
         end
 
         function CBT_CALC(mix, zIdx)
             %CBT_CALC Helper function to calculate Critical Heat Flux [W/m^2] and CBT flag
+
             %TODO: Implement additional CHF correlations
 
             %fld   = mix.fluid;
@@ -1265,8 +1294,8 @@ classdef Mixture < Solvers.AbstractField
 
                 case InputEnums.CBT.BIASI
                     % Biasi correlation
-                    % BIASI, L . et al.: A new correlation for round ducts and uniform
-                    % heating and its comparison with world data, EURAEC report 1874, 1967.
+                    %
+                    % :cite:t:`biasi1966burnout`
 
                     Pr = Pr/1.01235E5;                                     % [ata] System pressure
                     G  = G./10;                                            % [g/cm^2/s] Mass flux
@@ -1310,6 +1339,7 @@ classdef Mixture < Solvers.AbstractField
         function MFBT_CALC(mix, zIdx)
             %MFBT_CALC Helper function to calculate the Minimum Film Boiling
             % Transition and CBT flag
+
             % TODO: Implement additional MFBT correlations
 
             fld   = mix.fluid;
@@ -1345,6 +1375,7 @@ classdef Mixture < Solvers.AbstractField
 
         function RELAXTCOND_CALC(mix, zIdx)
             %RELAXTCOND Relaxation time model for wall dependent interfacial condensation
+
             %TODO: Investigate of this parameter should be wall dependent or not
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1353,19 +1384,19 @@ classdef Mixture < Solvers.AbstractField
 
             switch model.THERMALRELAX
                 case InputEnums.THERMALRELAX.QUALITY
-                    X = model.RELAXX;                                          % [-] Equilibrium quality array
-                    T = model.RELAXTCOND(1:length(model.RELAXX));              % [-] Corresponding time relaxation
+                    X = model.RELAXX;                                      % [-] Equilibrium quality array
+                    T = model.RELAXTCOND(1:length(model.RELAXX));          % [-] Corresponding time relaxation
 
-                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
-                    t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
-                    t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
+                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');      % [s] Interpolated time relaxation
+                    t(mix.XEQ(zIdx)<X(1))   = T(1);                        % [s] Lower bound limit
+                    t(mix.XEQ(zIdx)>X(end)) = T(end);                      % [s] Upper bound limit
 
                 case InputEnums.THERMALRELAX.VOID
-                    d0     = model.RELAXCONDCOEF(1);                           % [m] Reference fluid particle Sauter mean diameter
-                    n      = model.RELAXCONDCOEF(2);                           % [-] Exponent of phase volumetric ratio
-                    dvf    = model.RELAXCONDCOEF(3);                           % [-] Small phase volumetric ratio bias to avoid singularity
+                    d0     = model.RELAXCONDCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
+                    n      = model.RELAXCONDCOEF(2);                       % [-] Exponent of phase volumetric ratio
+                    dvf    = model.RELAXCONDCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
                     ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
-                    t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;            % [s] Time relaxation
+                    t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;        % [s] Time relaxation
             end
 
             %geom  = mix.inputSet.geometry;
@@ -1378,8 +1409,28 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function t = RELAXTEVAP_CALC(mix, zIdx)
-            %RELAXTEVAP Relaxation time model for wall dependent interfacial evaporation
-            %TODO: Investigate of this parameter should be wall dependent or not
+            %RELAXTEVAP_CALC Calculates relaxation time for wall-dependent
+            % interfacial evaporation.
+            %
+            % Computes the time relaxation associated with interfacial
+            % evaporation at the specified axial indices, based on the
+            % thermal relaxation model defined in :attr:`Inputs.InputSet.model.THERMALRELAX`.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and model data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - QUALITY: Interpolates relaxation time from predefined quality-time pairs
+            % - VOID: Computes relaxation time based on void fraction and fluid properties
+            %
+            % Notes:
+            %
+            % - Local perturbation overrides are applied using mix.KTRELAX
+            % - Relaxation time is bounded below by 1e-6 to ensure numerical stability
+            % - TODO: Investigate whether this parameter should be wall-dependent
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1387,19 +1438,19 @@ classdef Mixture < Solvers.AbstractField
 
             switch model.THERMALRELAX
                 case InputEnums.THERMALRELAX.QUALITY
-                    X = model.RELAXX;                                          % [-] Equilibrium quality array
-                    T = model.RELAXTEVAP(1:length(model.RELAXX));              % [-] Corresponding time relaxation
+                    X = model.RELAXX;                                      % [-] Equilibrium quality array
+                    T = model.RELAXTEVAP(1:length(model.RELAXX));          % [-] Corresponding time relaxation
 
-                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
-                    t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
-                    t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
+                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');      % [s] Interpolated time relaxation
+                    t(mix.XEQ(zIdx)<X(1))   = T(1);                        % [s] Lower bound limit
+                    t(mix.XEQ(zIdx)>X(end)) = T(end);                      % [s] Upper bound limit
 
                 case InputEnums.THERMALRELAX.VOID
-                    d0     = model.RELAXEVAPCOEF(1);                           % [m] Reference fluid particle Sauter mean diameter
-                    n      = model.RELAXEVAPCOEF(2);                           % [-] Exponent of phase volumetric ratio
-                    dvf    = model.RELAXEVAPCOEF(3);                           % [-] Small phase volumetric ratio bias to avoid singularity
+                    d0     = model.RELAXEVAPCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
+                    n      = model.RELAXEVAPCOEF(2);                       % [-] Exponent of phase volumetric ratio
+                    dvf    = model.RELAXEVAPCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
                     ALPHAV = mix.fluid.ALPHAV(mix.vapor.H(zIdx));
-                    t = d0.^2./ALPHAV./(mix.liquid.VF(zIdx)+dvf).^n;           % [s] Time relaxation
+                    t = d0.^2./ALPHAV./(mix.liquid.VF(zIdx)+dvf).^n;       % [s] Time relaxation
             end
 
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
@@ -1409,7 +1460,25 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function NEARWALLTRELAX_CALC(mix, zIdx)
-            %NEARWALLTRELAX Relaxation time model for wall dependent near-wall equilibrium quality
+            %NEARWALLTRELAX_CALC Calculates near-wall relaxation time based
+            % on equilibrium quality or void fraction models.
+            %
+            % Computes the relaxation time for near-wall energy transfer
+            % based on the selected model in :attr:`Inputs.InputSet.model.NEARWALLRELAX`.
+            % The result is stored in mix.nearwalltrelax at the specified
+            % axial indices.
+            %
+            % Inputs:
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and model data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            % - QUALITY: Interpolates relaxation time from predefined quality-time pairs
+            % - VOID: Computes relaxation time based on void fraction and fluid properties
+            %
+            % Notes:
+            % - Local perturbation overrides are applied using mix.KTRELAX
+            % - Relaxation time is bounded below by 1e-6 to ensure numerical stability
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1417,19 +1486,19 @@ classdef Mixture < Solvers.AbstractField
 
             switch model.NEARWALLRELAX
                 case InputEnums.NEARWALLRELAX.QUALITY
-                    X = model.NEARWALLRELAXX;                                  % [-] Equilibrium quality array
-                    T = model.NEARWALLRELAXT(1:length(model.NEARWALLRELAXX));  % [-] Corresponding time relaxation
+                    X = model.NEARWALLRELAXX;                              % [-] Equilibrium quality array
+                    T = model.NEARWALLRELAXT(1:length(model.NEARWALLRELAXX)); % [-] Corresponding time relaxation
 
-                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');          % [s] Interpolated time relaxation
-                    t(mix.XEQ(zIdx)<X(1))   = T(1);                            % [s] Lower bound limit
-                    t(mix.XEQ(zIdx)>X(end)) = T(end);                          % [s] Upper bound limit
+                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');      % [s] Interpolated time relaxation
+                    t(mix.XEQ(zIdx)<X(1))   = T(1);                        % [s] Lower bound limit
+                    t(mix.XEQ(zIdx)>X(end)) = T(end);                      % [s] Upper bound limit
 
                 case InputEnums.NEARWALLRELAX.VOID
-                    d0     = model.NEARWALLRELAXCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
-                    n      = model.NEARWALLRELAXCOEF(2);                       % [-] Exponent of phase volumetric ratio
-                    dvf    = model.NEARWALLRELAXCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
+                    d0     = model.NEARWALLRELAXCOEF(1);                   % [m] Reference fluid particle Sauter mean diameter
+                    n      = model.NEARWALLRELAXCOEF(2);                   % [-] Exponent of phase volumetric ratio
+                    dvf    = model.NEARWALLRELAXCOEF(3);                   % [-] Small phase volumetric ratio bias to avoid singularity
                     ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
-                    t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;            % [s] Time relaxation
+                    t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;        % [s] Time relaxation
             end
 
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
@@ -1444,8 +1513,16 @@ classdef Mixture < Solvers.AbstractField
     methods(Access = protected, Hidden = true)
 
         function cpObj = copyElement(obj)
-            %COPYELEMENT Override copyElement method to create correct references
-            % with properties liquid and vapor
+            %COPYELEMENT Creates a deep copy of the Mixture object with updated phase references.
+            %
+            % Overrides the default copy behavior to ensure that the copied
+            % Mixture object correctly reinitializes its associated Liquid
+            % and Vapor phase objects. This is necessary because these phase
+            % objects hold internal references to the Mixture instance.
+            %
+            % Notes:
+            % - Uses matlab.mixin.Copyable base method for shallow copy
+            % - Reconstructs Liquid and Vapor objects to point to the copied mixture
 
             import Solvers.Mixture.*
 
@@ -1459,7 +1536,21 @@ classdef Mixture < Solvers.AbstractField
 
 
         function interpOut = timeInterpolate(mix, y)
-            %TIMEINTERPOLATE Interpolate vector y in TIME
+            %TIMEINTERPOLATE Interpolates vector y over the solver time grid.
+            %
+            % Interpolates the values in y, defined at boundary condition
+            % time points (:attr:`Inputs.InputSet.BoundaryConditions.TIME`),
+            % to the solver's internal time grid (:attr:Solvers.MixtureSolver.TIME)
+            % using the method specified in :attr:`Inputs.InputSet.options.TIMEINTERP`.
+            %
+            % Inputs:
+            %
+            % - mix — Mixture object containing time grid (TIME)
+            % - y   — Vector of values defined at boundary condition times
+            %
+            % Output:
+            %
+            % - interpOut — Interpolated values at mix.TIME positions
 
             interpOut = interp1([mix.inputSet.bc.TIME], ...
                 y, ...
@@ -1468,7 +1559,22 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function interpOut = axialInterpolate(mix, x, y)
-            %AXIALINTERPOLATE Interpolate vector y in x
+            %AXIALINTERPOLATE Interpolates vector y over domain x at solver axial positions.
+            %
+            % Interpolates the values in y defined over x to the axial
+            % positions specified in mix.Z using the interpolation method
+            % defined in :attr:`Inputs.InputSet.options.AXIALINTERP`.
+            % Extrapolation is enabled to handle out-of-bound values.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing axial grid (Z)
+            % - x   — Independent variable (e.g., axial mesh)
+            % - y   — Dependent variable to interpolate
+            %
+            % Output:
+            %
+            % - interpOut — Interpolated values at mix.Z positions
 
             interpOut = interp1(x, ...
                 y, ...
