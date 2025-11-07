@@ -3,7 +3,9 @@ Run sample script
 
 After installation, you're all set to launch your first simulation!
 
-As a first exercise, open MATLAB and run the commands listed below from within the ``openstream`` folder, which will simulate an example of boiling two-phase flow in a uniformly heated tube followed by an adiabatic region, using the default Homogeneous Equilibrium Model (HEM). It's the quickest and easiest way to start exploring what **OpenSTREAM** can do, and to confirm everything is working smoothly under the hood.
+As a first exercise, open MATLAB and run the commands listed below from within the ``openstream`` folder, which will simulate an example of boiling two-phase flow in a uniformly heated tube followed by an adiabatic region, using the default Homogeneous Equilibrium Model (HEM).
+
+This is the quickest and easiest way to start exploring what **OpenSTREAM** can do, and to confirm everything is working smoothly under the hood.
 
 .. code-block:: matlab
 
