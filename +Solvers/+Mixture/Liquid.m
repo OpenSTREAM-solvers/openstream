@@ -1,18 +1,50 @@
 classdef Liquid < Solvers.AbstractPhase
-    %LIQUID Class representing the liquid phase in a mixture solver simulation
+    %LIQUID Represents the liquid phase in a mixture solver simulation.
     %
-    % Provides access to liquid-specific properties and calculations derived
-    % from the mixture solution.
+    % The Liquid class provides access to liquid-specific properties and
+    % calculations derived from the mixture solution. It encapsulates
+    % methods for computing flow, thermodynamic, and transport properties
+    % of the liquid phase at each axial node.
+    %
+    % Responsibilities:
+    %
+    % - Compute liquid mass fraction and volumetric fraction
+    % - Calculate liquid velocity, enthalpy, and temperature
+    % - Evaluate wall heat flux contributions to the liquid phase
+    % - Support derived quantities such as Reynolds number and mass flux
+    %
+    % Inherits from:
+    %
+    % - :class:`Solvers.AbstractPhase`
+    %
+    % Notes:
+    %
+    % - All methods assume access to a valid :class:`Solvers.MixtureSolver.Mixture` object
+    % - Axial indexing is optional; defaults to full axial domain
+    % - Velocity and enthalpy calculations include fallback logic to handle single-phase vapor regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
-        mix                                                                % Mixture object
-        NZ                                                                 % Number of axial steps [-]
+        mix                                                                % :class:`Solvers.MixtureSolver.Mixture` object
+        NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
     end
 
     methods
         function liquid = Liquid(mix)
             %LIQUID Constructor
-            % Initializes the liquid object from a Mixture instance.
+            %
+            % Initializes the Liquid object from one or more instances of the
+            % :class:`Solvers.MixtureSolver.Mixture` class. Each Liquid instance
+            % stores a reference to its corresponding Mixture object and the
+            % number of axial nodes (NZ).
+            %
+            % Input:
+            %
+            % - mix — Array of :class:`Solvers.MixtureSolver.Mixture` objects representing the simulation state
+            %
+            % Notes:
+            %
+            % - Supports vectorized initialization for transient simulations
+            % - Assumes each :class:`Solvers.MixtureSolver.Mixture` object is fully initialized
 
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
@@ -73,7 +105,10 @@ classdef Liquid < Solvers.AbstractPhase
 
         function h = H(liquid, zIdx)
             %H Liquid enthalpy [J/kg]
-            % Calculated based on mixture & vapor enthalpies and vapor quality
+            %
+            % Calculated based on mixture and vapor enthalpies, and vapor
+            % quality.
+
             % TODO: Find a better way to prevent division by small 1-X and negative h
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
@@ -98,6 +133,7 @@ classdef Liquid < Solvers.AbstractPhase
 
         function re = RE(liquid, zIdx)
             %RE Liquid Reynolds number [-]
+            
             %TODO: Check definition
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end

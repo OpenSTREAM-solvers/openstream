@@ -1,18 +1,51 @@
 classdef Vapor < Solvers.AbstractPhase
-    %VAPOR Class representing the vapor phase in a mixture solver simulation
+    %VAPOR Represents the vapor phase in a mixture solver simulation.
     %
-    % Provides access to vapor-specific properties and calculations derived
-    % from the mixture solution.
+    % The Vapor class provides access to vapor-specific properties and
+    % calculations derived from the mixture solution. It encapsulates
+    % methods for computing flow, thermodynamic, and transport properties
+    % of the vapor phase at each axial node.
+    %
+    % Responsibilities:
+    %
+    % - Compute vapor mass fraction and void fraction
+    % - Calculate vapor velocity, enthalpy, and temperature
+    % - Evaluate wall heat flux and wall evaporation contributions
+    % - Support derived quantities such as Reynolds number and mass flux
+    %
+    % Inherits from:
+    %
+    % - :class:`Solvers.AbstractPhase`
+    %
+    % Notes:
+    %
+    % - All methods assume access to a valid :class:`Solvers.MixtureSolver.Mixture` object
+    % - Axial indexing is optional; defaults to full axial domain
+    % - Enthalpy calculations adapt to thermal non-equilibrium models
+    % - Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
-        mix                                                                % Mixture object
-        NZ                                                                 % Number of axial steps [-]
+        mix                                                                % :class:`Solvers.MixtureSolver.Mixture` object
+        NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
     end
 
     methods
         function vapor = Vapor(mix)
-            %VAPOR Constructor
-            % Initializes the vapor object from a Mixture instance.
+            %VAPOR Constructor of the Vapor class
+            %
+            % Initializes the Vapor object from one or more instances of the
+            % :class:`Solvers.MixtureSolver.Mixture` class. Each Vapor instance
+            % stores a reference to its corresponding Mixture object and the
+            % number of axial nodes (NZ).
+            %
+            % Input:
+            %
+            % - mix — Array of :class:`Solvers.MixtureSolver.Mixture` objects representing the simulation state
+            %
+            % Notes:
+            %
+            % - Supports vectorized initialization for transient simulations
+            % - Assumes each :class:`Solvers.MixtureSolver.Mixture` object is fully initialized
 
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
@@ -75,6 +108,7 @@ classdef Vapor < Solvers.AbstractPhase
             %H Vapor enthalpy [J/kg]
             %
             %Calculation depends on non equilibrium model
+
             %TODO: Find a better way to prevent division by small X
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
@@ -105,6 +139,7 @@ classdef Vapor < Solvers.AbstractPhase
 
         function re = RE(vapor, zIdx)
             %RE Vapor Reynolds number [-]
+
             %TODO: Check definition
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end

@@ -1,8 +1,24 @@
 function solve(mixSolver)
-%SOLVE Executes the mixture solver for steady-state and transient simulations
+%SOLVE Executes the mixture solver for steady-state and transient simulations.
 %
-% This method manages the full solution process, including initialization,
-% time stepping, inner iterations, convergence checks, and logging.
+% Runs the full solution process for the :class:`Mixture.MixtureSolver`
+% object. It manages initialization, time stepping, axial sweeps, inner
+% iterations, convergence checks, and logging.
+%
+% Workflow:
+%
+% - Enables logging and opens persistent log file
+% - Validates solver state before execution
+% - Runs steady-state initialization (solveINIT = true)
+% - If initial step converges, proceeds with transient simulation
+% - Handles exceptions and ensures proper log closure
+%
+% Notes:
+%
+% - Uses internal `solver` function to handle both steady-state and transient modes
+% - Applies relaxation factors for flow, pressure, enthalpy, and vapor  properties
+% - Supports thermal non-equilibrium modeling via vapor relaxation
+% - Logs progress and outputs to session directory
 
 arguments
     mixSolver

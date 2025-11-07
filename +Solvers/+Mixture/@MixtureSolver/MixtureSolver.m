@@ -1,21 +1,39 @@
 classdef MixtureSolver < Solvers.AbstractSolver
-    %MIXTURESOLVER Solver for initializing, solving, and visualizing the
-    %mixture solver
+    %MIXTURESOLVER Solver for initializing, solving, and visualizing mixture flow.
     %
-    % Handles setup, boundary condition interpolation, mixture construction,
-    % and plotting of results.
+    % The MixtureSolver class handles the setup, execution, and visualization
+    % of thermal-hydraulic simulations using a two-phase mixture approach or
+    % a Homogeneous Relaxation Model (HRM).
+    %
+    % Responsibilities:
+    %
+    % - Initializes solver parameters from an :class:`Inputs.InputSet` object
+    % - Interpolates boundary conditions in time and space
+    % - Constructs :class:`Mixture.MixtureSolver.Mixture` objects for transient and steady-state analysis
+    % - Provides plotting utilities for spatial and temporal distributions
+    %
+    % Inherits from:
+    %
+    % - :class:`Solvers.AbstractSolver`
+    %
+    % Key Components:
+    %
+    % - Mixture construction and phase separation (liquid/vapor)
+    % - Pressure drop and mass/energy transport modeling
+    % - Support for relaxation models and near-wall phenomena
+    % - Visualization of results across time and axial domains
 
     properties (SetAccess=private)
 
-        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
         TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
-        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s] from :attr:`Inputs.Options.TSTEP`
         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
-        fluid        {isa(fluid,'Inputs.FluidProperties')}                             % fluid object
-        boundaryConditions                                                             % Boundary conditions object
+        fluid        {isa(fluid,'Inputs.FluidProperties')}                             % Fluid object :class:`Inputs.FluidProperties`
+        boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
 
         mixtureInit                                                                    % Steady-state mixture object
         mixture                                                                        % Mixture object
@@ -24,21 +42,37 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
     properties (SetAccess = protected)
 
-        inputSet                                                                       % Input set object
+        inputSet                                                                       % Input set object :class:`Inputs.InputSet`
         STATE                                                              = Solvers.SolverState.UNSOLVED
 
     end
 
     methods
 
-        solve(mixSolver)
-    
+        solve(mixSolver)                                                               % Solving algorithm
+
     end
 
     methods
 
         function mixSolver = MixtureSolver(inputSet)
-            %MIXTURESOLVER Constructor
+            %MIXTURESOLVER Constructor for the MixtureSolver class.
+            %
+            % Creates a new instance of the MixtureSolver class using the
+            % provided :class:`Inputs.InputSet`. This constructor initializes
+            % the solver by calling the abstract :class:`Solvers.AbstractSolver`
+            % superclass constructor and then sets up all necessary solver
+            % parameters and internal data structures via
+            % :meth:`Mixture-MixtureSolver.initializeSolver`.
+            %
+            % Input:
+            %
+            % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            %
+            % Notes:
+            %
+            % - This constructor assumes inputSet is fully validated.
+            % - Solver initialization includes time/space discretization, boundary condition interpolation, and mixture object setup.
 
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
@@ -52,12 +86,34 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function initializeSolver(mixSolver)
-            %INITIALIZESOLVER Initializes solver parameters using the stored
-            % inputSet and constructs mixture objects.
+            %INITIALIZESOLVER Initializes solver parameters and constructs mixture objects.
             %
-            % Sets up time and axial discretization, boundary conditions,
-            % and initializes mixture arrays for transient and steady-state simulations.
-            % Detailed setup of DP, MDER, TRELAX, NEARWALL, and ITR structures.
+            % Sets up the solver's internal state using the provided
+            % :class:`Inputs.InputSet`. This includes discretization of time
+            % and space, interpolation of boundary conditions, and
+            % initialization of data structures for transient and steady-state
+            % simulations.
+            %
+            % Operations performed:
+            %
+            % - Computes time steps and axial node positions
+            % - Interpolates boundary conditions in time and space
+            % - Initializes mixture array for each time step
+            % - Constructs data structures for:
+            %     - Pressure drops (DP, DPSUM)
+            %     - Momentum and energy derivatives (MDER)
+            %     - Interfacial relaxation (TRELAX)
+            %     - Near-wall transport (NEARWALL)
+            %     - Iteration tracking (ITR)
+            % - Initializes fluid property objects
+            % - Sets up phase-specific objects (Liquid, Vapor)
+            % - Assigns initial conditions for mass flow rate, pressure, enthalpy
+            %
+            % Notes:
+            %
+            % - The function assumes uniform axial discretization.
+            % - Wall heat flux is computed from interpolated boundary conditions.
+            % - TRELAX fields are initialized after enthalpy to ensure correct vapor quality (XEQ) computation.
 
             import Inputs.*
             import Solvers.Mixture.*
@@ -231,9 +287,30 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function mixSolver = interpBoundaryConditions(mixSolver)
-            %INTERPBOUNDARYCONDITIONS Interpolates boundary conditions in time and space
+            %INTERPBOUNDARYCONDITIONS Interpolates boundary conditions in time and space.
             %
-            % Expands user-defined BCs to match solver grid and time steps
+            % Expands user-defined :class:`Inputs.BoundaryConditions` to
+            % match the solver's spatial grid and time steps. It performs
+            % interpolation of relevant boundary condition parameters both
+            % temporally and axially, and computes derived quantities such
+            % as wall heat flux.
+            %
+            % Operations performed:
+            %
+            % - Interpolates time-dependent boundary condition parameters:
+            %   'TIME', 'PRESSURE', 'HIN', 'MFLOW', 'POWER'
+            % - Interpolates wall power distribution in space (axially)
+            % - Interpolates wall power in time across all walls
+            % - Computes wall heat flux at each axial node and time step
+            %
+            % Notes:
+            %
+            % - Uses :meth:`Mixture.MixtureSolver.timeInterpolate` and
+            %   :meth:`Mixture.MixtureSolver.axialInterpolate` for interpolation.
+            % - Throws an error if any expected boundary condition parameter
+            %   is missing.
+            % - The calculation of HFLUX is based on normalized wall power
+            %   and geometric properties.
 
             % Retrieve list of boundary condition properties
             bcFields = mixSolver.inputSet.bc.listInputProperties();
@@ -316,9 +393,33 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function plotter = plotz(mixSolver, tIdx, opts)
-            %PLOTZ Plots spatial distributions of mixture parameters
+            %PLOTZ Plots spatial (axial) distributions of mixture parameters.
             %
-            % Supports multiple display modes and wall selections
+            % Generates axial plots of selected mixture parameters at specified
+            % time indices. The function supports multiple display modes, wall
+            % selections, near-wall data, and optional  animation over time.
+            %
+            % Inputs:
+            %
+            % - mixSolver         — MixtureSolver object containing simulation data
+            % - tIdx              — Time index or indices (vector of positive integers)
+            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
+            % - opts.wall         — Wall index(es) to plot
+            % - opts.zIdx         — Axial indices to include in the plot
+            % - opts.obstructions — Logical flag to display obstruction locations
+            % - opts.unitTemp     — Temperature unit: 'K' or 'C'
+            % - opts.arrangement  — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opts.resize       — Resize factor for plot scaling
+            % - opts.nearWall     — Logical flag to include near-wall parameters
+            %
+            % Notes:
+            %
+            % - If multiple time indices are provided, the function creates an animated plot.
+            % - At least two axial indices must be specified to enable spatial plotting.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Obstruction locations are plotted if opts.obstructions is true.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
 
             arguments
                 mixSolver
@@ -669,9 +770,33 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function plotter = plott(mixSolver, zIdx, opt)
-            %PLOTT Plots temporal distributions of mixture parameters at a given axial location
+            %PLOTT Plots temporal distributions of mixture parameters at a given axial location.
             %
-            % Supports multiple display modes and wall selections
+            % Generates time-series plots of selected mixture parameters at
+            % a specified axial index. The method supports multiple display
+            % modes, wall selections, and plot arrangements.
+            %
+            % Inputs:
+            %
+            % - mixSolver         — MixtureSolver object containing simulation data
+            % - zIdx              — Axial index (scalar, positive integer)
+            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.tIdx          — Time indices to include in the plot
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.unitTemp      — Temperature unit: 'K' or 'C'
+            % - opt.arrangement   — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opt.resize        — Resize factor for plot scaling
+            % - opt.nearWall      — Logical flag to include near-wall parameters
+            %
+            % Notes:
+            %
+            % - If opt.display is set to 'ALL', all supported parameters are plotted.
+            % - The function validates that at least two time indices are provided.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Near-wall data is included if opt.nearWall is true.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
 
             arguments
                 mixSolver
@@ -938,9 +1063,33 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function fh = plotzt(mixSolver, opt)
-            %PLOTZT: Plots 2D time/elevation distributions of mixture parameters
+            %PLOTZT Plots 2D time/elevation distributions of mixture parameters.
             %
-            % Supports mixture, liquid, and vapor fields
+            % Generates surface plots of selected mixture-related parameters
+            % over time and axial (elevation) positions. It supports plotting
+            % for mixture, liquid, and vapor fields, and can handle both real
+            % and null (initial) transient data.
+            %
+            % Inputs:
+            %
+            % - mixSolver         — MixtureSolver object containing simulation data
+            % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
+            % - opt.label         — Corresponding labels for display parameters
+            % - opt.unit          — Units for each parameter
+            % - opt.field         — Field to plot: 'mixture', 'liquid', or 'vapor'
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.zIdx          — Axial indices (must include at least 2)
+            % - opt.tIdx          — Time indices (must include at least 2)
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.shading       — Surface shading style: 'faceted', 'flat', or 'interp'
+            % - opt.view          — View angle for 3D plot [azimuth elevation]
+            %
+            % Notes:
+            %
+            % - If 'ALL' is passed to opt.display, all supported parameters are plotted.
+            % - The function validates that at least two axial and time indices are provided to enable meaningful 2D plotting.
+            % - Each wall is plotted in a separate figure window with appropriate titles and subplot grouping.
 
             arguments
                 mixSolver
@@ -1031,8 +1180,20 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function interpOut = timeInterpolate(mix, y)
-            %TIMEINTERPOLATE Interpolates data in time using specified interpolation method
+            %TIMEINTERPOLATE Performs temporal interpolation of data using
+            % a specified method.
             %
+            % Interpolates the values in y at the time points defined by
+            % mix.TIME using the interpolation method specified in
+            % :attr:`Inputs.inputSet.options.TIMEINTERP`.
+            %
+            % If the boundary condition time vector (mix.inputSet.bc.TIME)
+            % is scalar, interpolation is skipped and the original data y is
+            % returned unchanged.
+            %
+            % This function supports flexible interpolation strategies and
+            % handles cases where interpolation is unnecessary.
+
             if isscalar([mix.inputSet.bc.TIME])
                 interpOut = y;
             else
@@ -1044,13 +1205,21 @@ classdef MixtureSolver < Solvers.AbstractSolver
         end
 
         function interpOut = axialInterpolate(mix, x, y)
-            %AXIALINTERPOLATE Interpolates data in space using specified interpolation
-            % method
+            %AXIALINTERPOLATE Performs axial interpolation of data using a
+            % specified method.
             %
-            % Handles extrapolation for out-of-bound values
-            % Linear extrapolation is used for cases where interpolation returns
-            % NaN (for instance, point slightly outside allowed tolerance when
-            % 'next' interpolation method is selected)
+            % Interpolates the values in y at positions defined by mix.Z
+            % using the interpolation method specified in
+            % :attr:`Inputs.inputSet.options.AXIALINTERP`.
+            % The interpolation is performed over the domain defined by x.
+            %
+            % If the interpolation returns NaN (e.g., due to points slightly
+            % outside the interpolation range when using methods like 'next'),
+            % linear extrapolation is applied to those specific points to
+            % ensure continuity.
+            %
+            % This function ensures robust handling of out-of-bound values
+            % by using extrapolation and fallback strategies.
 
             interpOut = interp1(x, ...
                 y, ...
