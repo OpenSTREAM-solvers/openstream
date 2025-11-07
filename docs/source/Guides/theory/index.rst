@@ -12,35 +12,35 @@ For detailed equations, derivations, and implementation notes, check out the ind
 
    Mixture_Model_Theory
 
- ○ Purpose: Initialization and robust predictions under relevant simplifications.
- ○ Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
- ○ Equations: Conservation of mass, momentum, and energy for the mixture.
+○ Purpose: Initialization and robust predictions under relevant simplifications.
+○ Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
+○ Equations: Conservation of mass, momentum, and energy for the mixture.
 
 .. toctree::
    :maxdepth: 1
 
    TwoFluid_Model_Theory
 
- ○ Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.
- ○ Assumptions: Separate conservation equations for liquid and vapor.
- ○ Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).
+○ Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.
+○ Assumptions: Separate conservation equations for liquid and vapor.
+○ Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).
 
 .. toctree::
    :maxdepth: 1
 
    ThreeField_Model_Theory
 
- ○ Purpose: Design for annular flow with vapor, droplets, and liquid film.
- ○ Assumptions: Thermal equilibrium (for now), valid up to film dryout.
- ○ Equations: Conservation of mass and momentum for the three fields.
+○ Purpose: Design for annular flow with vapor, droplets, and liquid film.
+○ Assumptions: Thermal equilibrium (for now), valid up to film dryout.
+○ Equations: Conservation of mass and momentum for the three fields.
 
 .. toctree::
    :maxdepth: 1
 
    FourField_Model_Theory
 
- ○ Purpose: Advanced modeling of disturbance waves in annular flow, including non-equilibrium dynamics.
- ○ Assumptions: Thermal equilibrium (for now).
- ○ Equations: Conservation of mass and momentum for the four fields + wave number density transport.
+○ Purpose: Advanced modeling of disturbance waves in annular flow, including non-equilibrium dynamics.
+○ Assumptions: Thermal equilibrium (for now).
+○ Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 
 Ready to dive deeper? Pick a model and start exploring!
