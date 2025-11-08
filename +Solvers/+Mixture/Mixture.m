@@ -111,7 +111,13 @@ classdef Mixture < Solvers.AbstractField
         function set.W(mix, val)
             %SET.W Setter for W, mass flow rate [kg/s]
             %
-            % mix.mflux is calculated upon setting mix.W
+            % Updates the internal mass flow rate and triggers recalculation of
+            % mass flux via :attr:`Solvers.MixtureSolver.Mixture.MFLUX_CALC`.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object
+            % - val — New mass flow rate [kg/s]
 
             % Identify indexes to be updated
             zIdx = find(mix.W~=val);
@@ -127,7 +133,14 @@ classdef Mixture < Solvers.AbstractField
         function set.H(mix, val)
             %SET.H Setter for H, enthalpy [J/kg]
             %
-            % mix.rho, mix.x and mix.xeq are calculated upon setting mix.H
+            % Updates the internal enthalpy and triggers recalculation of dependent
+            % properties: density, vapor quality, equilibrium quality, and
+            % void fraction via :attr:`Solvers.MixtureSolver.Mixture.RHO_CALC`.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object
+            % - val — New enthalpy [J/kg]
 
             % Identify indexes to be updated
             zIdx = find(mix.H~=val);
@@ -143,10 +156,14 @@ classdef Mixture < Solvers.AbstractField
         function mflux = MFLUX(mix, zIdx)
             %MFLUX Mass flux [kg/m^2/s]
             %
-            % This method only retrieves the mix.mflux values pre-calculated
-            % when mix.W is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.MFLUX_CALC()
+            % Retrieves precomputed mass flux values by
+            % :attr:`Solvers.MixtureSolver.Mixture.MFLUX_CALC`,
+            % updated when mix.W is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 mflux = mix.mflux;
@@ -158,10 +175,14 @@ classdef Mixture < Solvers.AbstractField
         function xeq = XEQ(mix, zIdx)
             %XEQ Equilibrium quality [-]
             %
-            % This method only retrieves the mix.xeq values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.XEQ_CALC()
+            % Retrieves precomputed equilibrium quality values by
+            % :attr:`Solvers.MixtureSolver.Mixture.XEQ_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 xeq = mix.xeq;
@@ -173,10 +194,14 @@ classdef Mixture < Solvers.AbstractField
         function x = X(mix, zIdx)
             %X Vapor quality [-]
             %
-            % This method only retrieves the mix.x values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.X_CALC()
+            % Retrieves precomputed vapor quality values by
+            % :attr:`Solvers.MixtureSolver.Mixture.X_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 x = mix.x;
@@ -188,10 +213,14 @@ classdef Mixture < Solvers.AbstractField
         function vf = VF(mix, zIdx)
             %VF Void fraction [-]
             %
-            % This method only retrieves the mix.vf values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.VF_CALC()
+            % Retrieves precomputed void fraction values by
+            % :attr:`Solvers.MixtureSolver.Mixture.VF_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 vf = mix.vf;
@@ -203,10 +232,14 @@ classdef Mixture < Solvers.AbstractField
         function chf =CHF(mix, zIdx)
             %CHF Critical Heat Flux [W/m^2], wall dependent
             %
-            % This method only retrieves the mix.chf values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.CBT_CALC()
+            % Retrieves precomputed CHF values by
+            % :attr:`Solvers.MixtureSolver.Mixture.CBT_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 chf = mix.chf;
@@ -218,10 +251,14 @@ classdef Mixture < Solvers.AbstractField
         function cbt =CBT(mix, zIdx)
             %CBT Critical Boiling Transition flag [-], wall dependent
             %
-            % This method only retrieves the mix.cbt values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.CBT_CALC()
+            % Retrieves precomputed CBT flags by
+            % :attr:`Solvers.MixtureSolver.Mixture.CBT_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 cbt = mix.cbt;
@@ -233,10 +270,14 @@ classdef Mixture < Solvers.AbstractField
         function mfbt =MFBT(mix, zIdx)
             %MFBT Minimum Film Boiling Transition flag [-], wall dependent
             %
-            % This method only retrieves the mix.mfbt values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.MFBT_CALC()
+            % Retrieves precomputed MFBT flags by
+            % :attr:`Solvers.MixtureSolver.Mixture.MFBT_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 mfbt = mix.mfbt;
@@ -248,10 +289,14 @@ classdef Mixture < Solvers.AbstractField
         function rho = RHO(mix, zIdx)
             %RHO Density [kg/m^3]
             %
-            % This method only retrieves the mix.rho values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.RHO_CALC()
+            % Retrieves precomputed mixture density values by
+            % :attr:`Solvers.MixtureSolver.Mixture.RHO_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 rho = mix.rho;
@@ -263,10 +308,14 @@ classdef Mixture < Solvers.AbstractField
         function t = RELAXTEVAP(mix, zIdx)
             %RELAXTEVAP Time relaxation for interfacial evaporation [s]
             %
-            % This method only retrieves the mix.relaxtevap values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.RELAXTEVAP_CALC()
+            % Retrieves precomputed time relaxation values for evaporation by
+            % :attr:`Solvers.MixtureSolver.Mixture.RELAXTEVAP_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 t = mix.relaxtevap;
@@ -278,10 +327,14 @@ classdef Mixture < Solvers.AbstractField
         function t = RELAXTCOND(mix, zIdx)
             %RELAXTCOND Time relaxation for interfacial evaporation [s]
             %
-            % This function only retrieves the mix.relaxtevap values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.RELAXTCOND_CALC()
+            % Retrieves precomputed time relaxation values for condensation by
+            % :attr:`Solvers.MixtureSolver.Mixture.RELAXTCOND_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
                 t = mix.relaxtcond;
@@ -303,6 +356,14 @@ classdef Mixture < Solvers.AbstractField
 
         function lhgr = LHGR(mix, zIdx)
             %LHGR Linear heat generation rate [W/m]
+            %
+            % Computes the linear heat generation rate by multiplying wall perimeter
+            % with local heat flux.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with geometry and heat flux data
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -311,7 +372,15 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function mu = MU(mix, zIdx)
-            %MU Dynamic viscosity [Pa.s]
+            %MU Dynamic viscosity [Pa·s]
+            %
+            % Computes the mixture dynamic viscosity using vapor and liquid phase
+            % contributions weighted by vapor quality.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with fluid properties
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -321,6 +390,13 @@ classdef Mixture < Solvers.AbstractField
 
         function u = U(mix, zIdx)
             %U Velocity [m/s]
+            %
+            % Computes the mixture velocity from mass flow rate and density.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -329,7 +405,14 @@ classdef Mixture < Solvers.AbstractField
 
         function jl = JL(mix, zIdx)
             %JL Superficial liquid velocity [m/s]
-
+            %
+            % Computes the superficial velocity of the liquid phase.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+  
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             jl = (1-mix.X(zIdx)).*mix.MFLUX(zIdx)./mix.fluid.RHOL(mix.liquid.H(zIdx));
@@ -337,6 +420,13 @@ classdef Mixture < Solvers.AbstractField
 
         function jg = JG(mix, zIdx)
             %JG Superficial vapor velocity [m/s]
+            %
+            % Computes the superficial velocity of the vapor phase.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -345,6 +435,13 @@ classdef Mixture < Solvers.AbstractField
 
         function t = T(mix, zIdx)
             %T Temperature [K]
+            %
+            % Returns the fluid temperature corresponding to the local enthalpy.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with enthalpy data
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -352,7 +449,15 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function kdist = KDIST(mix,zIdx)
-            %KDIST Distance from upstream obstruction (or from inlet)
+            %KDIST Distance from upstream obstruction [m]
+            %
+            % Computes the axial distance from the nearest upstream obstruction
+            % or inlet, based on :attr:`Inputs.InputSet.model.KLOC`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with axial grid and obstruction location
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -364,6 +469,14 @@ classdef Mixture < Solvers.AbstractField
 
         function klocz = KLOCZ(mix,zIdx)
             %KLOCZ Obstruction positions [m]
+            %
+            % Returns the axial position of the obstruction closest to
+            % :attr:`Inputs.InputSet.model.KLOC`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with axial grid
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -387,7 +500,15 @@ classdef Mixture < Solvers.AbstractField
 
         function re = RE(mix, zIdx)
             %RE Reynolds number [-]
-
+            %
+            % Computes the Reynolds number based on total mass flow rate and mixture
+            % viscosity.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+ 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             re = 4.*mix.W(zIdx)./mix.MU(zIdx)./sum(mix.inputSet.geometry.PERIM);
@@ -395,6 +516,13 @@ classdef Mixture < Solvers.AbstractField
 
         function rel = REL(mix, zIdx)
             %REL Liquid-equivalent Reynolds number [-]
+            %
+            % Computes the Reynolds number using liquid viscosity and total mass flow.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -403,6 +531,16 @@ classdef Mixture < Solvers.AbstractField
 
         function fw = FW(mix, zIdx)
             %FW Fanning wall friction factor [-]
+            %
+            % Computes the Fanning wall friction factor based on
+            % :attr:`Inputs.InputSet.model.FRICTION`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+
+            % TODO: Implement additional wall friction factor as needed.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -412,6 +550,13 @@ classdef Mixture < Solvers.AbstractField
 
         function fwl = FWL(mix, zIdx)
             %FWL Liquid-equivalent Fanning wall friction factor [-]
+            %
+            % Computes the friction factor using liquid-equivalent Reynolds number.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -421,6 +566,20 @@ classdef Mixture < Solvers.AbstractField
 
         function phi2f = PHI2F(mix, zIdx)
             %PHI2F Two-phase wall friction multiplier [-]
+            %
+            % Computes the two-phase wall friction multiplier using
+            % selected :attr:`Inputs.InputSet.model.TPFM` model.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Supported models
+            %
+            % - HOMOGENEOUS: Homogeneous model
+            % - SLIP: Constant velocity slip ratio
+            % - EPRI: EPRI multiplier
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -448,7 +607,14 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function tauw = TAUW(mix, zIdx)
-            %TAUW wall shear stress [N/m^2]
+            %TAUW Wall shear stress [N/m^2]
+            %
+            % Computes the wall shear stress using friction factor and mass flux.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -458,6 +624,14 @@ classdef Mixture < Solvers.AbstractField
 
         function kloss = KLOSS(mix, zIdx)
             %KLOSS Local pressure loss coefficient [-]
+            %
+            % Returns the pressure loss coefficient at the elevation closest to
+            % :attr:`Inputs.InputSet.model.KLOC`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -470,7 +644,21 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function phi2k = PHI2K(mix, zIdx)
-            %PHI2F Two-phase local pressure drop multiplier [-]
+            %PHI2K Two-phase local pressure drop multiplier [-]
+            %
+            % Computes the multiplier for local pressure drop in two-phase flow using
+            % selected :attr:`Inputs.InputSet.model.TPKM` model.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Supported models
+            %
+            % - HOMOGENEOUS: Homogeneous model
+            % - SLIP: Constant velocity slip ratio
+            % - ROMIE: Romie multiplier
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -490,7 +678,14 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function dpGrav = DPGRAV(mix, zIdx)
-            %DPK Gravitational pressure loss [Pa]
+            %DPGRAV Gravitational pressure loss [Pa]
+            %
+            % Computes the pressure loss due to gravity along the axial direction.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -499,6 +694,13 @@ classdef Mixture < Solvers.AbstractField
 
         function dpWall = DPWALL(mix, zIdx)
             %DPWALL Wall friction pressure drop [Pa]
+            %
+            % Computes the pressure drop due to wall friction.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -507,6 +709,13 @@ classdef Mixture < Solvers.AbstractField
 
         function dpAcc_z = DPACCZ(mix, zIdx)
             %DPACCZ Spatial acceleration pressure drop [Pa]
+            %
+            % Computes the pressure drop due to spatial acceleration of the flow.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -516,6 +725,14 @@ classdef Mixture < Solvers.AbstractField
 
         function dpAcc_t = DPACCT(mix, Uold, zIdx)
             %DPACCT Temporal acceleration pressure drop [Pa]
+            %
+            % Computes the pressure drop due to temporal acceleration between time steps.
+            %
+            % Inputs:
+            %
+            % - mix   — :class:`Solvers.MixtureSolver.Mixture` object
+            % - Uold  — Previous axial velocity [m/s]
+            % - zIdx  — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
@@ -525,6 +742,13 @@ classdef Mixture < Solvers.AbstractField
 
         function dpk = DPK(mix, zIdx)
             %DPK Local pressure loss [Pa]
+            %
+            % Computes the pressure loss due to localized effects (e.g., flow mixers).
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -534,6 +758,14 @@ classdef Mixture < Solvers.AbstractField
 
         function dptot = DPTOT(mix, Uold, zIdx)
             %DPTOT Total pressure loss [Pa]
+            %
+            % Computes the total pressure loss by summing all contributing components.
+            %
+            % Inputs:
+            %
+            % - mix   — :class:`Solvers.MixtureSolver.Mixture` object
+            % - Uold  — Previous axial velocity [m/s]
+            % - zIdx  — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
@@ -541,7 +773,25 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function dpparts = DPPARTS(mix, Uold, zIdx)
-            %DPPARTS All pressure loss components[Pa]
+            %DPPARTS All pressure loss components [Pa]
+            %
+            % Returns a structure containing all individual pressure loss components.
+            %
+            % Inputs:
+            %
+            % - mix   — :class:`Solvers.MixtureSolver.Mixture` object
+            % - Uold  — Previous axial velocity [m/s]
+            % - zIdx  — Axial indices to evaluate (optional)
+            %
+            % Returns:
+            %
+            % - dpparts — Struct with fields:
+            %   - GRAV : Gravitational loss [Pa]
+            %   - WALL : Wall friction loss [Pa]
+            %   - ACCZ : Spatial acceleration loss [Pa]
+            %   - ACCT : Temporal acceleration loss [Pa]
+            %   - K    : Local loss [Pa]
+            %   - TOT  : Total pressure loss [Pa]
 
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
@@ -566,6 +816,19 @@ classdef Mixture < Solvers.AbstractField
 
         function nu = NU(mix, zIdx)
             %NU Wall Nusselt number [-]
+            %
+            % Computes the Nusselt number for wall heat transfer using either liquid
+            % or vapor properties depending on boiling transition status.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with flow and fluid data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Notes:
+            %
+            % - Uses Dittus-Boelter correlation or generalized form
+            % - Liquid properties are used pre-CBT, vapor properties post-CBT
 
             %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
@@ -599,6 +862,14 @@ classdef Mixture < Solvers.AbstractField
 
         function hwallliq = HWALLLIQ(mix, zIdx)
             %HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the wall heat transfer coefficient using liquid thermal
+            % conductivity and Nusselt number.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -610,7 +881,13 @@ classdef Mixture < Solvers.AbstractField
         function hwallthom = HWALLTHOM(mix, zIdx)
             %HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]
             %
-            % Thom's formulation was modified in term of heat transfer coefficient
+            % Computes the wall heat transfer coefficient using Thom's correlation,
+            % modified in term of heat transfer coefficient.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -622,6 +899,14 @@ classdef Mixture < Solvers.AbstractField
 
         function hwallvap = HWALLVAP(mix, zIdx)
             %HWALLVAP Single-phase vapor wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the wall heat transfer coefficient using vapor thermal
+            % conductivity and Nusselt number.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -632,6 +917,19 @@ classdef Mixture < Solvers.AbstractField
 
         function hwall = HWALL(mix, zIdx)
             %HWALL Wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the effective wall heat transfer coefficient by combining
+            % single-phase and two-phase models, and switching to vapor model post-CBT.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Uses HWALLLIQ and HWALLTHOM pre-CBT
+            % - Uses HWALLVAP post-CBT
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -659,6 +957,15 @@ classdef Mixture < Solvers.AbstractField
 
         function twall = TWALL(mix, zIdx)
             %TWALL Wall temperature [K]
+            %
+            % Computes the wall temperature based on heat flux and wall heat transfer
+            % coefficient. Uses liquid bulk temperature pre-CBT and vapor bulk
+            % temperature post-CBT.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -687,7 +994,15 @@ classdef Mixture < Solvers.AbstractField
     methods
 
         function w = WWALL(mix, zIdx)
-            %WWALL Mixture mass flow distribution per wall, based on wall perimeter ratio [kg/s]
+            %WWALL Mixture mass flow distribution per wall [kg/s]
+            %
+            % Computes the wall-distributed mass flow rate by scaling the total flow
+            % with the wall perimeter ratio.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with geometry and flow data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)            
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -697,6 +1012,14 @@ classdef Mixture < Solvers.AbstractField
 
         function ktrelax = KTRELAX(mix, zIdx)
             %KTRELAX Local relaxation time [s]
+            %
+            % Returns the relaxation time at the elevation closest to :attr:`Inputs.InputSet.model.KLOC.
+            % All other axial positions are set to NaN.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with axial grid and model parameters
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -709,7 +1032,20 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function [Mcond, Mevap] = MINT(mix, zIdx)
-            %MINT Linear interfacial mass transfer rates based on time relaxation [kg/s/m]
+            %MINT Linear interfacial mass transfer rates [kg/s/m]
+            %
+            % Computes condensation and evaporation mass transfer rates based on
+            % deviation from equilibrium vapor flow and time relaxation.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with flow and relaxation data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Notes:
+            %
+            % - Uses mix.TRELAX.WV for equilibrium deviation
+            % - UVeq is the approximated vapor velocity
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -734,26 +1070,49 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function Mintevap = MINTEVAP(mix, zIdx)
-            %MINTEVAP Linear interfacial evaporation rates based on time relaxation [kg/s/m]
-
+            %MINTEVAP Linear interfacial evaporation rate [kg/s/m]
+            %
+            % Extracts the evaporation component from :attr:`Solvers.MixtureSolver.Mixture.MINT`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             [~, Mintevap] = mix.MINT(zIdx);                                % [kg/s/m]
         end
 
         function Mintcond = MINTCOND(mix, zIdx)
-            %MINTCOND Linear interfacial condensation rates based on time relaxation [kg/s/m]
-
+            %MINTCOND Linear interfacial condensation rate [kg/s/m]
+            %
+            % Extracts the condensation component from :attr:`Solvers.MixtureSolver.Mixture.MINT`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+           
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             Mintcond = mix.MINT(zIdx);                                     % [kg/s/m]
         end
 
         function Mtrans = MTRANSV(mix, zIdx)
-            %MTRANSV Linear transversal mass exchange
+            %MTRANSV Linear transversal mass exchange [kg/s/m]
             %
-            % NOT USED FOR NOW
-            % Model transverse exchange between wall regions with time relaxation model
+            % Models transverse vapor mass exchange between wall regions using a
+            % time relaxation approach. Currently not used.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Uses a fixed relaxation time for now (RELAXT = 0.01 s)
 
             % TODO: Implement also enthalpy exchange and include in total mass/energy exchange terms
 
@@ -770,10 +1129,22 @@ classdef Mixture < Solvers.AbstractField
         function walevapratio = WALEVAPRATIO(mix, zIdx)
             %WALEVAPRATIO Wall mass evaporation ratio [-]
             %
-            %Liquid mass boiling ratio driven by wall heat flux
-            %Set to 0 upstream subcooled boiling, 1 downstream saturated boiling and 0 at CBT
+            % Computes the fraction of liquid mass undergoing wall boiling based on
+            % equilibrium quality and boiling onset thresholds
+            % :attr:`Inputs.InputSet.model.WBOILINGXSUB' and
+            % `Inputs.InputSet.model.WBOILINGXSAT'.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with boiling model parameters
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Ratio is clamped between 0 and 1
+            % - CBT and MFBT flags suppress boiling at transition nodes
 
-            %TODO: Implement models for the onsets of subcooled and saturated wall boiling, as needed.
+            % TODO: Implement models for the onsets of subcooled and saturated wall boiling, as needed.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -796,7 +1167,19 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function Mwalevap = MWALEVAP(mix, zIdx)
-            %MWALEVAP Linear wall mass evaporation (i.e., boiling) rate [kg/s/m]
+            %MWALEVAP Linear wall mass evaporation rate [kg/s/m]
+            %
+            % Computes the wall boiling mass transfer rate using latent heat and
+            % wall heat generation rate.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with heat transfer and boiling data
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Latent heat is computed based on :attr:`Inputs.InputSet.model.INTTRANSH` setting
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -816,6 +1199,14 @@ classdef Mixture < Solvers.AbstractField
 
         function Mtot = MTOT(mix, zIdx)
             %MTOT Total linear vapor mass transfer rate [kg/s/m]
+            %
+            % Computes the total vapor mass transfer rate by summing interfacial
+            % condensation, evaporation, and wall boiling contributions.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -825,6 +1216,21 @@ classdef Mixture < Solvers.AbstractField
 
         function [Hcond, Hevap] = HINT(mix, zIdx)
             %HINT Linear interfacial heat transfer rate [W/m]
+            %
+            % Computes the interfacial heat transfer rates due to condensation and
+            % evaporation, based on interfacial mass transfer and enthalpy differences.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with flow and enthalpy data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Notes:
+            %
+            % - Uses :attr:`Solvers.MixtureSolver.Mixture.MINT` for mass transfer and :attr:`Solvers.MixtureSolver.Mixture.TRELAX.HV` for vapor enthalpy
+            % - Behavior depends on :attr:`Inputs.InputSet.model.INTTRANSH`:
+            %   - `'BULK'`: Consideration of bulk enthalpy
+            %   - `'SATURATED'`: Consideration of saturated enthalpy
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -846,6 +1252,13 @@ classdef Mixture < Solvers.AbstractField
 
         function Hintevap = HINTEVAP(mix, zIdx)
             %HINTEVAP Linear interfacial heat evaporation rate [W/m]
+            %
+            % Extracts the evaporation component from :attr:`Solvers.MixtureSolver.Mixture.HINT`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -854,6 +1267,13 @@ classdef Mixture < Solvers.AbstractField
 
         function Hintcond = HINTCOND(mix, zIdx)
             %HINTCOND Linear interfacial heat condensation rate [W/m]
+            %
+            % Extracts the condensation component from :attr:`Solvers.MixtureSolver.Mixture.HINT`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -861,7 +1281,20 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function Hwalevap = HWALEVAP(mix, zIdx)
-            %HWALEVAP Linear wall heat evaporation (i.e., boiling)) rate [W/m]
+            %HWALEVAP Linear wall heat evaporation (boiling) rate [W/m]
+            %
+            % Computes the heat transfer rate associated with wall boiling.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with boiling and enthalpy data
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Behavior depends on :attr:`Inputs.InputSet.model.INTTRANSH`:
+            %   - `'BULK'`: Consideration of bulk enthalpy
+            %   - `'SATURATED'`: Consideration of saturated enthalpy
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -880,7 +1313,18 @@ classdef Mixture < Solvers.AbstractField
         function Hwalheat = HWALHEAT(mix, zIdx)
             %HWALHEAT Linear wall heat to vapor rate [W/m]
             %
-            %Set to LHGR beyond CBT
+            % Returns the wall heat generation rate (LHGR) at boiling transition nodes.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Applies only at nodes flagged by
+            % :attr:`Solvers.MixtureSolver.Mixture.CBT` or
+            % :attr:`Solvers.MixtureSolver.Mixture.MFBT`.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -890,6 +1334,14 @@ classdef Mixture < Solvers.AbstractField
 
         function Htot = HTOT(mix, zIdx)
             %HTOT Total linear vapor heat rate [W/m]
+            %
+            % Computes the total vapor heat transfer rate by summing interfacial and
+            % wall contributions.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -900,10 +1352,21 @@ classdef Mixture < Solvers.AbstractField
         function Hvtot = HVTOT(mix, zIdx)
             %HVTOT Total linear vapor specific enthalpy transfer [J/kg/m]
             %
-            % This term represents the additional energy input to the vapor per unit vapor mass
+            % Computes the specific enthalpy input to the vapor per unit mass flow.
+            % Uses a lumped wall approach for now.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Uses lumped wall approach: sums WV and Htot across walls
+            % - Set to zero when WV is negligible
+
             % Only the wall lump approach (i.e. same vapor heat input to all walls) is working correctly for now
             % Otherwise, the liquid can become subcooled in post CHF calculations
-
             % TODO: Fix issue and allow wall specific approach. This can be useful for DNB -> inverted film boiling
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -924,10 +1387,17 @@ classdef Mixture < Solvers.AbstractField
         function t = NEARWALLTRELAX(mix, zIdx)
             %NEARWALLTRELAX Time relaxation for near-wall energy transfer [s]
             %
-            % This function only retrieves the mix.nearwalltrelax values pre-calculated
-            % when mix.H is set. This is to eliminate the redundant
-            % calculation as a result of frequent function calls. The values
-            % are calculated via mix.NEARWALLTRELAX_CALC()
+            % Retrieves precomputed time relaxation values for near-wall energy
+            % transfer. These values are calculated by
+            % :attr:`Solvers.MixtureSolver.Mixture.NEARWALLTRELAX_CALC()`
+            % and cached in mix.nearwalltrelax when
+            % :attr:`Solvers.MixtureSolver.Mixture.H` is set, and are not
+            % recalculated during repeated calls.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with cached near-wall data
+            % - zIdx — Axial indices to retrieve (optional; returns full vector if omitted)
 
             if nargin < 2
                 t = mix.nearwalltrelax;
@@ -939,6 +1409,16 @@ classdef Mixture < Solvers.AbstractField
         function lambda = NEARWALLRATIO(mix)
             %NEARWALLRATIO Near-wall mass flow distribution ratio [-]
             %
+            % Returns the near-wall mass flow distribution ratio, which should be less
+            % than 1. A ratio of 1 implies that :attr:`Solvers.MixtureSolver.Mixture.NEARWALL.XEQ`
+            % and :attr:`Solvers.MixtureSolver.Mixture.XEQ` are equal under
+            % azimuthally uniform heat flux.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing model parameters
+
+            %
             % Should be less than 1 (otherwise NEARWALL.XEQ and XEQ would be equal for azymuthal equal heat flux)
 
             model = mix.inputSet.model;
@@ -948,6 +1428,15 @@ classdef Mixture < Solvers.AbstractField
 
         function w = WNEARWALL(mix, zIdx)
             %WNEARWALL Near-wall mass flow rate per wall [kg/s]
+            %
+            % Computes the near-wall mass flow rate by scaling the wall flow rate
+            % (:attr:`Solvers.MixtureSolver.Mixture.WWALL`) with the near-wall
+            % ratio :attr:`Solvers.MixtureSolver.Mixture.NEARWALLRATIO`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with wall flow data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -956,6 +1445,14 @@ classdef Mixture < Solvers.AbstractField
 
         function area = ANEARWALL(mix)
             %ANEARWALL Near-wall flow area [m^2]
+            %
+            % Computes the near-wall flow area based on the geometry.
+            % :attr:`Inputs.Geometry.RWALL` and
+            % :attr:`Solvers.MixtureSolver.Mixture.WNEARWALL
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing geometry data
 
             geom = mix.inputSet.geometry;
 
@@ -971,8 +1468,22 @@ classdef Mixture < Solvers.AbstractField
     methods
 
         function oafx = OAFX(mix, zIdx)
-            %OAFX Onset of annular flow equilibrium quality
-
+            %OAFX Onset of annular flow equilibrium quality.
+            %
+            % Computes the equilibrium quality at the onset of annular flow using
+            % a model selected in :attr:`Inputs.InputSet.Model.OAF`. The quality is
+            % evaluated over the specified axial indices.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object containing model, geometry, and fluid data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Supported Models:
+            %
+            % - WALLIS: Full Wallis model
+            % - WALLIS_SIMP: Simplified Wallis model
+            
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             model = mix.inputSet.model;
@@ -995,7 +1506,20 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function oafIdx = OAFIDX(mix)
-            %OAFIDX Onset of annular flow node
+            %OAFIDX Onset of annular flow node.
+            %
+            % Returns the axial node index corresponding to the onset of annular
+            % flow, determined by comparing the equilibrium quality to the onset
+            % threshold. The result is cached in mix.oafidx_const to avoid
+            % recomputation.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing flow quality and onset threshold
+            %
+            % Notes:
+            %
+            % - If no node satisfies the condition, the most upstream node (1) is returned
 
             % Use saved value if it has been calculated already
             if ~isempty(mix.oafidx_const)
@@ -1011,19 +1535,48 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function oafz = OAFZ(mix)
-            %OAFZ Onset of annular flow elevation
-
+            %OAFZ Onset of annular flow elevation.
+            %
+            % Returns the axial elevation (in meters) corresponding to the onset
+            % of annular flow, as defined by :attr:`Solvers.MixtureSolver.Mixture.OAFIDX`.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing axial grid data
+           
             oafz = mix.Z(mix.OAFIDX);                                      % [m]
         end
 
         function oafwl = OAFWL(mix)
-            %OAFWL Liquid mass flow rate at onset of annular flow
+            %OAFWL Liquid mass flow rate at onset of annular flow.
+            %
+            % Returns the liquid mass flow rate at the axial index corresponding
+            % to the onset of annular flow, as defined by :attr:`Solvers.MixtureSolver.Mixture.OAFIDX`.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing liquid flow data
 
             oafwl = mix.liquid.W(mix.OAFIDX);                              % [kg/s]
         end
 
         function afFnc = AFFNC(mix, zIdx)
-            %AFFNC Annular flow function
+            %AFFNC Computes annular flow fraction over axial positions.
+            %
+            % Evaluates the annular flow fraction using a sigmoid function
+            % parameterized by the transition model and geometry. The sigmoid is
+            % evaluated via the cached `sigm` method.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object containing model and geometry data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Notes:
+            %
+            % - Sigmoid parameters are scaled by node density (NNODES / LENGTH)
+            % - The center of the transition is offset by mix.OAFIDX()
+            % - Uses mix.sigm(...) to evaluate the sigmoid function
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1036,7 +1589,23 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function afDistr = AFDISTR(mix,param1,param2,zIdx)
-            %AFDISTR Annular flow distribution function
+            %AFDISTR Computes annular flow distribution over axial positions.
+            %
+            % Evaluates a weighted distribution between param1 and param2 using
+            % the annular flow fraction defined in :class:`Solvers.MixtureSolver.Mixture.AFFNC`.
+            %
+            % Inputs:
+            %
+            % - mix    — :class:`Solvers.MixtureSolver.Mixture` object containing axial grid and flow fractions
+            % - param1 — First flow property
+            % - param2 — Second flow property
+            % - zIdx   — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Notes:
+            %
+            % - The annular flow fraction is extracted from :class:`Solvers.MixtureSolver.Mixture.AFFNC` at zIdx
+            % - The output is a linear interpolation: (1 - affnc) * param1 + affnc * param2
+            % - mix(1).NZ is used for default indexing, assuming mix may be an array
 
             if nargin < 4, zIdx = (1:mix(1).NZ).'; end
 
@@ -1049,9 +1618,22 @@ classdef Mixture < Solvers.AbstractField
     methods (Access = private)
 
         function s = sigm(mix, zIdx, pCoefs)
-            % SIGM Calculate sigmoid function once
-            % NOTE: changing pCoefs after first call will not result in
-            % update of this function values.
+            %SIGM Calculates a sigmoid function over axial positions.
+            %
+            % Evaluates a sigmoid function at the specified axial indices
+            % using the parameters in pCoefs. The result is cached in
+            % mix.sigm_const to avoid recomputation.
+            %
+            % Inputs:
+            %
+            % - mix    — :attr:Solvers.MixtureSolver.Mixture` object containing axial grid
+            % - zIdx   — Axial indices to evaluate
+            % - pCoefs — Sigmoid parameters [slope, center]
+            %
+            % Notes:
+            %
+            % - The sigmoid is computed once and stored in mix.sigm_const
+            % - Changing pCoefs after the first call will not update the cached values
 
             if isempty(mix.sigm_const)
                 zIdxs = (1:mix(1).NZ).';
@@ -1072,19 +1654,64 @@ classdef Mixture < Solvers.AbstractField
     methods(Access = protected, Hidden = true)
 
         function MFLUX_CALC(mix, zIdx)
-            %MFLUX_CALC Helper function to calculate mass flux [kg/m^2-s]
+            %MFLUX_CALC Calculates mixture mass flux [kg/m²·s] at specified axial positions.
+            %
+            % Computes the mass flux at the given axial indices by dividing
+            % the mixture mass flow rate by the flow area. The result is
+            % stored in mix.mflux.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing flow and geometry data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
 
             mix.mflux(zIdx) = mix.W(zIdx)./mix.inputSet.geometry.AREA;
         end
 
         function XEQ_CALC(mix, zIdx)
-            %XEQ_CALC Helper function to calculate equilibrium quality [-]
+            %XEQ_CALC Calculates equilibrium vapor quality [-] at specified axial positions.
+            %
+            % Computes the equilibrium vapor quality at the given axial
+            % indices using the mixture enthalpy and fluid saturation
+            % properties. The result is stored in mix.xeq.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing enthalpy and fluid data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Notes:
+            % - Assumes H_f and H_fg are constant across the axial domain
 
             mix.xeq(zIdx) = (mix.H(zIdx)-mix.fluid.HF)./ mix.fluid.HFG;
         end
 
         function X_CALC(mix, zIdx)
-            %X_CALC Helper function to calculate vapor quality [-]
+            %X_CALC Calculates vapor quality [-] at specified axial positions.
+            %
+            % Computes the vapor quality at the given axial indices using
+            % the thermal non-equilibrium model defined in
+            % :attr:`Inputs.InputSet.Model.THERMALNONEQ`.
+            % The result is stored in mix.x.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - EQUILIBRIUM: Uses equilibrium quality directly
+            % - SAHAZUBER: Applies Saha-Zuber correlation for subcooled boiling
+            % - EPRI: Uses EPRI correlation with bubble departure modeling
+            % - RELAXATION: Computes quality from time-relaxed vapor mass flow
+            %
+            % Notes:
+            %
+            % - Automatically invokes XEQ_CALC to ensure equilibrium quality is up to date
+            % - Quality is bounded between 0 and 1 for physical consistency
+            % - SAHAZUBER and EPRI models include empirical correlations and unit conversions
+            % - TODO: Validate applicability of models for asymmetric wall heating
 
             % Call XEQ first
             mix.XEQ_CALC(zIdx);                                            % Use mix.xeq to calculate x
@@ -1195,7 +1822,32 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function VF_CALC(mix, zIdx)
-            %VF_CALC Helper function to calculate void fraction [-]
+            %VF_CALC Calculates void fraction [-] at specified axial positions.
+            %
+            % Computes the void fraction at the given axial indices using
+            % the selected void model defined in :attr:`Inputs.InputSet.Model.VOID`.
+            % The result is stored in mix.vf.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - HOMOGENEOUS: Assumes unity slip ratio
+            % - SLIP: Uses a constant slip ratio
+            % - BESTION: Applies Bestion drift flux correlation
+            % - EPRI: Applies EPRI drift flux correlation with iterative convergence
+            %
+            % Notes:
+            %
+            % - Automatically invokes X_CALC to ensure vapor quality is up to date
+            % - BESTION and EPRI models require fluid property evaluation
+            % - EPRI model includes iterative convergence with error tolerance
+            % - Internal helper functions:
+            %     - vfslip(x, S): Slip-based void fraction
+            %     - vfdrift(C0, ugj): Drift flux-based void fraction
 
             % Call X first
             mix.X_CALC(zIdx);
@@ -1274,9 +1926,29 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function CBT_CALC(mix, zIdx)
-            %CBT_CALC Helper function to calculate Critical Heat Flux [W/m^2] and CBT flag
-
-            %TODO: Implement additional CHF correlations
+            %CBT_CALC Calculates Critical Heat Flux (CHF) and Critical Boiling Transition (CBT) flag.
+            %
+            % Evaluates the critical heat flux at specified axial positions
+            % using the CHF correlation defined in
+            % :attr:`Inputs.InputSet.Model.CBT` and sets the CBT flag based
+            % on either elevation or heat flux criteria.
+            %
+            % Inputs:
+            %
+            % mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - NONE: Disables CHF and CBT detection
+            % - ELEVATION: CBT triggered at or above a elevation specified by :attr:`Inputs.InputSet.Model.CBTELEVATION`
+            % - BIASI: Uses Biasi correlation for CHF estimation
+            %
+            % Notes:
+            %
+            % - CHF can adjusted using user-defined multipliers :attr:`Inputs.InputSet.Model.CBTMULT` and obstruction effects defined by :attr:`Inputs.InputSet.Model.CBTKEFFECT`
+            % - CBT flag is set where wall heat flux exceeds CHF or based on elevation
+            % - TODO: Extend with additional CHF correlations as necessary
 
             %fld   = mix.fluid;
             model = mix.inputSet.model;
@@ -1337,6 +2009,28 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function MFBT_CALC(mix, zIdx)
+            %MFBT_CALC Calculates the Minimum Film Boiling Transition (MFBT) flag.
+            %
+            % Evaluates whether the wall temperature exceeds the minimum
+            % film boiling threshold at the specified axial indices, based
+            % on the MFBT model defined in :attr:`Inputs.InputSet.Model.MFBT.
+            % The result is stored in mix.mfbt as a logical array.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - NONE: Disables MFBT detection
+            % - CONSTANT: Applies a fixed temperature margin (DTMFB) above saturation
+            %
+            % Notes:
+            %
+            % - TODO: Extend with additional MFBT models as necessary 
+
+
             %MFBT_CALC Helper function to calculate the Minimum Film Boiling
             % Transition and CBT flag
 
@@ -1357,7 +2051,27 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function RHO_CALC(mix, zIdx)
-            %RHO_CALC Helper function to calculate density [kg/m^3]
+            %RHO_CALC Calculates mixture density [kg/m^3] at specified axial positions.
+            %
+            % Computes the mixture density at the given axial indices by
+            % combining vapor and liquid phase densities weighted by void
+            % fraction. The result is stored in mix.rho.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and phase data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Notes:
+            %
+            % - Automatically invokes VF_CALC to ensure void fraction is up to date
+            % - Also triggers calculation of related thermal relaxation and transition flags:
+            %
+            %     - CBT_CALC
+            %     - MFBT_CALC
+            %     - RELAXTEVAP_CALC
+            %     - RELAXTCOND_CALC
+            %     - NEARWALLTRELAX_CALC
 
             % Call VF and CHF first
             mix.VF_CALC(zIdx);
@@ -1374,9 +2088,28 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function RELAXTCOND_CALC(mix, zIdx)
-            %RELAXTCOND Relaxation time model for wall dependent interfacial condensation
-
-            %TODO: Investigate of this parameter should be wall dependent or not
+            %RELAXTCOND_CALC Calculates relaxation time for wall-dependent
+            % interfacial condensation.
+            %
+            % Computes the time relaxation associated with interfacial
+            % condensation at the specified axial indices, based on the
+            % thermal relaxation model defined in :attr:`Inputs.InputSet.Model.THERMALRELAXTHERMALRELAX.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and model data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - QUALITY: Interpolates relaxation time from predefined quality-time pairs
+            % - VOID: Computes relaxation time based on void fraction and fluid properties
+            %
+            % Notes:
+            %
+            % - Local perturbation overrides are applied using mix.KTRELAX
+            % - Relaxation time is bounded below by 1e-6 to ensure numerical stability
+            % - TODO: Investigate whether this parameter should be wall-dependent
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1414,7 +2147,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the time relaxation associated with interfacial
             % evaporation at the specified axial indices, based on the
-            % thermal relaxation model defined in :attr:`Inputs.InputSet.model.THERMALRELAX`.
+            % thermal relaxation model defined in :attr:`Inputs.InputSet.Model.THERMALRELAX`.
             %
             % Inputs:
             %
