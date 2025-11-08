@@ -452,7 +452,7 @@ classdef Mixture < Solvers.AbstractField
             %KDIST Distance from upstream obstruction [m]
             %
             % Computes the axial distance from the nearest upstream obstruction
-            % or inlet, based on :attr:`Inputs.InputSet.model.KLOC`.
+            % or inlet, based on :attr:`Inputs.Model.KLOC`.
             %
             % Inputs:
             %
@@ -471,7 +471,7 @@ classdef Mixture < Solvers.AbstractField
             %KLOCZ Obstruction positions [m]
             %
             % Returns the axial position of the obstruction closest to
-            % :attr:`Inputs.InputSet.model.KLOC`.
+            % :attr:`Inputs.Model.KLOC`.
             %
             % Inputs:
             %
@@ -533,7 +533,7 @@ classdef Mixture < Solvers.AbstractField
             %FW Fanning wall friction factor [-]
             %
             % Computes the Fanning wall friction factor based on
-            % :attr:`Inputs.InputSet.model.FRICTION`.
+            % :attr:`Inputs.Model.FRICTION`.
             %
             % Inputs:
             %
@@ -568,7 +568,7 @@ classdef Mixture < Solvers.AbstractField
             %PHI2F Two-phase wall friction multiplier [-]
             %
             % Computes the two-phase wall friction multiplier using
-            % selected :attr:`Inputs.InputSet.model.TPFM` model.
+            % selected :attr:`Inputs.Model.TPFM` model.
             %
             % Inputs:
             %
@@ -626,7 +626,7 @@ classdef Mixture < Solvers.AbstractField
             %KLOSS Local pressure loss coefficient [-]
             %
             % Returns the pressure loss coefficient at the elevation closest to
-            % :attr:`Inputs.InputSet.model.KLOC`.
+            % :attr:`Inputs.Model.KLOC`.
             %
             % Inputs:
             %
@@ -647,7 +647,7 @@ classdef Mixture < Solvers.AbstractField
             %PHI2K Two-phase local pressure drop multiplier [-]
             %
             % Computes the multiplier for local pressure drop in two-phase flow using
-            % selected :attr:`Inputs.InputSet.model.TPKM` model.
+            % selected :attr:`Inputs.Model.TPKM` model.
             %
             % Inputs:
             %
@@ -1013,7 +1013,7 @@ classdef Mixture < Solvers.AbstractField
         function ktrelax = KTRELAX(mix, zIdx)
             %KTRELAX Local relaxation time [s]
             %
-            % Returns the relaxation time at the elevation closest to :attr:`Inputs.InputSet.model.KLOC.
+            % Returns the relaxation time at the elevation closest to :attr:`Inputs.Model.KLOC.
             % All other axial positions are set to NaN.
             %
             % Inputs:
@@ -1131,8 +1131,8 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the fraction of liquid mass undergoing wall boiling based on
             % equilibrium quality and boiling onset thresholds
-            % :attr:`Inputs.InputSet.model.WBOILINGXSUB' and
-            % `Inputs.InputSet.model.WBOILINGXSAT'.
+            % :attr:`Inputs.Model.WBOILINGXSUB' and
+            % `Inputs.Model.WBOILINGXSAT'.
             %
             % Inputs:
             %
@@ -1179,7 +1179,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Notes:
             %
-            % - Latent heat is computed based on :attr:`Inputs.InputSet.model.INTTRANSH` setting
+            % - Latent heat is computed based on :attr:`Inputs.Model.INTTRANSH` setting
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1228,7 +1228,7 @@ classdef Mixture < Solvers.AbstractField
             % Notes:
             %
             % - Uses :attr:`Solvers.Mixture.Mixture.MINT` for mass transfer and :attr:`Solvers.Mixture.Mixture.TRELAX.HV` for vapor enthalpy
-            % - Behavior depends on :attr:`Inputs.InputSet.model.INTTRANSH`:
+            % - Behavior depends on :attr:`Inputs.Model.INTTRANSH`:
             %   - `'BULK'`: Consideration of bulk enthalpy
             %   - `'SATURATED'`: Consideration of saturated enthalpy
 
@@ -1292,7 +1292,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Notes:
             %
-            % - Behavior depends on :attr:`Inputs.InputSet.model.INTTRANSH`:
+            % - Behavior depends on :attr:`Inputs.Model.INTTRANSH`:
             %   - `'BULK'`: Consideration of bulk enthalpy
             %   - `'SATURATED'`: Consideration of saturated enthalpy
 
@@ -1471,7 +1471,7 @@ classdef Mixture < Solvers.AbstractField
             %OAFX Onset of annular flow equilibrium quality.
             %
             % Computes the equilibrium quality at the onset of annular flow using
-            % a model selected in :attr:`Inputs.InputSet.Model.OAF`. The quality is
+            % a model selected in :attr:`Inputs.Model.OAF`. The quality is
             % evaluated over the specified axial indices.
             %
             % Inputs:
@@ -1626,7 +1626,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix    — :attr:Solvers.MixtureSolver.Mixture` object containing axial grid
+            % - mix    — :attr:`Solvers.Mixture.Mixture` object containing axial grid
             % - zIdx   — Axial indices to evaluate
             % - pCoefs — Sigmoid parameters [slope, center]
             %
@@ -1662,7 +1662,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing flow and geometry data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing flow and geometry data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
 
             mix.mflux(zIdx) = mix.W(zIdx)./mix.inputSet.geometry.AREA;
@@ -1677,7 +1677,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing enthalpy and fluid data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing enthalpy and fluid data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Notes:
@@ -1691,12 +1691,12 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the vapor quality at the given axial indices using
             % the thermal non-equilibrium model defined in
-            % :attr:`Inputs.InputSet.Model.THERMALNONEQ`.
+            % :attr:`Inputs.Model.THERMALNONEQ`.
             % The result is stored in mix.x.
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid, model, and geometry data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
@@ -1825,12 +1825,12 @@ classdef Mixture < Solvers.AbstractField
             %VF_CALC Calculates void fraction [-] at specified axial positions.
             %
             % Computes the void fraction at the given axial indices using
-            % the selected void model defined in :attr:`Inputs.InputSet.Model.VOID`.
+            % the selected void model defined in :attr:`Inputs.Model.VOID`.
             % The result is stored in mix.vf.
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid, model, and geometry data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
@@ -1930,23 +1930,23 @@ classdef Mixture < Solvers.AbstractField
             %
             % Evaluates the critical heat flux at specified axial positions
             % using the CHF correlation defined in
-            % :attr:`Inputs.InputSet.Model.CBT` and sets the CBT flag based
+            % :attr:`Inputs.Model.CBT` and sets the CBT flag based
             % on either elevation or heat flux criteria.
             %
             % Inputs:
             %
-            % mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid, model, and geometry data
             % zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
             %
             % - NONE: Disables CHF and CBT detection
-            % - ELEVATION: CBT triggered at or above a elevation specified by :attr:`Inputs.InputSet.Model.CBTELEVATION`
+            % - ELEVATION: CBT triggered at or above a elevation specified by :attr:`Inputs.Model.CBTELEVATION`
             % - BIASI: Uses Biasi correlation for CHF estimation
             %
             % Notes:
             %
-            % - CHF can adjusted using user-defined multipliers :attr:`Inputs.InputSet.Model.CBTMULT` and obstruction effects defined by :attr:`Inputs.InputSet.Model.CBTKEFFECT`
+            % - CHF can adjusted using user-defined multipliers :attr:`Inputs.Model.CBTMULT` and obstruction effects defined by :attr:`Inputs.Model.CBTKEFFECT`
             % - CBT flag is set where wall heat flux exceeds CHF or based on elevation
             % - TODO: Extend with additional CHF correlations as necessary
 
@@ -2013,12 +2013,12 @@ classdef Mixture < Solvers.AbstractField
             %
             % Evaluates whether the wall temperature exceeds the minimum
             % film boiling threshold at the specified axial indices, based
-            % on the MFBT model defined in :attr:`Inputs.InputSet.Model.MFBT.
+            % on the MFBT model defined in :attr:`Inputs.Model.MFBT.
             % The result is stored in mix.mfbt as a logical array.
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid, model, and geometry data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid, model, and geometry data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
@@ -2059,7 +2059,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and phase data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and phase data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Notes:
@@ -2093,11 +2093,11 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the time relaxation associated with interfacial
             % condensation at the specified axial indices, based on the
-            % thermal relaxation model defined in :attr:`Inputs.InputSet.Model.THERMALRELAXTHERMALRELAX.
+            % thermal relaxation model defined in :attr:`Inputs.Model.THERMALRELAXTHERMALRELAX.
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and model data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
@@ -2147,11 +2147,11 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the time relaxation associated with interfacial
             % evaporation at the specified axial indices, based on the
-            % thermal relaxation model defined in :attr:`Inputs.InputSet.Model.THERMALRELAX`.
+            % thermal relaxation model defined in :attr:`Inputs.Model.THERMALRELAX`.
             %
             % Inputs:
             %
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and model data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
@@ -2197,12 +2197,12 @@ classdef Mixture < Solvers.AbstractField
             % on equilibrium quality or void fraction models.
             %
             % Computes the relaxation time for near-wall energy transfer
-            % based on the selected model in :attr:`Inputs.InputSet.model.NEARWALLRELAX`.
+            % based on the selected model in :attr:`Inputs.Model.NEARWALLRELAX`.
             % The result is stored in mix.nearwalltrelax at the specified
             % axial indices.
             %
             % Inputs:
-            % - mix  — :attr:Solvers.MixtureSolver.Mixture` object containing fluid and model data
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
             % Supported Models:
@@ -2273,7 +2273,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Interpolates the values in y, defined at boundary condition
             % time points (:attr:`Inputs.InputSet.BoundaryConditions.TIME`),
-            % to the solver's internal time grid (:attr:Solvers.MixtureSolver.TIME)
+            % to the solver's internal time grid (:attr:`Solvers.Mixture.TIME)
             % using the method specified in :attr:`Inputs.InputSet.options.TIMEINTERP`.
             %
             % Inputs:
