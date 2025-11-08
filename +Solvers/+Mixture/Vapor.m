@@ -103,7 +103,8 @@ classdef Vapor < Solvers.AbstractPhase
         function h = H(vapor, zIdx)
             %H Vapor enthalpy [J/kg]
             %
-            %Calculation depends on non equilibrium model
+            %Calculation depends on :attr:`Inputs.Model.THERMALNONEQ`
+            %model.
 
             %TODO: Find a better way to prevent division by small X
 
