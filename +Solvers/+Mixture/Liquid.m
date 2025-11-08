@@ -13,18 +13,14 @@ classdef Liquid < Solvers.AbstractPhase
     % - Evaluate wall heat flux contributions to the liquid phase
     % - Support derived quantities such as Reynolds number and mass flux
     %
-    % Inherits from:
-    %
-    % - :class:`Solvers.AbstractPhase`
-    %
     % Notes:
     %
-    % - All methods assume access to a valid :class:`Solvers.MixtureSolver.Mixture` object
+    % - All methods assume access to a valid :class:`Solvers.Mixture.Mixture` object
     % - Axial indexing is optional; defaults to full axial domain
     % - Velocity and enthalpy calculations include fallback logic to handle single-phase vapor regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
-        mix                                                                % :class:`Solvers.MixtureSolver.Mixture` object
+        mix                                                                % :class:`Solvers.Mixture.Mixture` object
         NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
     end
 
@@ -33,18 +29,18 @@ classdef Liquid < Solvers.AbstractPhase
             %LIQUID Constructor
             %
             % Initializes the Liquid object from one or more instances of the
-            % :class:`Solvers.MixtureSolver.Mixture` class. Each Liquid instance
+            % :class:`Solvers.Mixture.Mixture` class. Each Liquid instance
             % stores a reference to its corresponding Mixture object and the
             % number of axial nodes (NZ).
             %
             % Input:
             %
-            % - mix — Array of :class:`Solvers.MixtureSolver.Mixture` objects representing the simulation state
+            % - mix — Array of :class:`Solvers.Mixture.Mixture` objects representing the simulation state
             %
             % Notes:
             %
             % - Supports vectorized initialization for transient simulations
-            % - Assumes each :class:`Solvers.MixtureSolver.Mixture` object is fully initialized
+            % - Assumes each :class:`Solvers.Mixture.Mixture` object is fully initialized
 
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}

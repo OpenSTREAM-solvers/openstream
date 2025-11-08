@@ -12,7 +12,7 @@ classdef Mixture < Solvers.AbstractField
         NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.Options.TSTEP`
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.InputSet.options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
 
@@ -112,11 +112,11 @@ classdef Mixture < Solvers.AbstractField
             %SET.W Setter for W, mass flow rate [kg/s]
             %
             % Updates the internal mass flow rate and triggers recalculation of
-            % mass flux via :attr:`Solvers.MixtureSolver.Mixture.MFLUX_CALC`.
+            % mass flux via :attr:`Solvers.Mixture.Mixture.MFLUX_CALC`.
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix — :class:`Solvers.Mixture.Mixture` object
             % - val — New mass flow rate [kg/s]
 
             % Identify indexes to be updated
@@ -135,11 +135,11 @@ classdef Mixture < Solvers.AbstractField
             %
             % Updates the internal enthalpy and triggers recalculation of dependent
             % properties: density, vapor quality, equilibrium quality, and
-            % void fraction via :attr:`Solvers.MixtureSolver.Mixture.RHO_CALC`.
+            % void fraction via :attr:`Solvers.Mixture.Mixture.RHO_CALC`.
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix — :class:`Solvers.Mixture.Mixture` object
             % - val — New enthalpy [J/kg]
 
             % Identify indexes to be updated
@@ -157,12 +157,12 @@ classdef Mixture < Solvers.AbstractField
             %MFLUX Mass flux [kg/m^2/s]
             %
             % Retrieves precomputed mass flux values by
-            % :attr:`Solvers.MixtureSolver.Mixture.MFLUX_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.MFLUX_CALC`,
             % updated when mix.W is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -176,12 +176,12 @@ classdef Mixture < Solvers.AbstractField
             %XEQ Equilibrium quality [-]
             %
             % Retrieves precomputed equilibrium quality values by
-            % :attr:`Solvers.MixtureSolver.Mixture.XEQ_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.XEQ_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -195,12 +195,12 @@ classdef Mixture < Solvers.AbstractField
             %X Vapor quality [-]
             %
             % Retrieves precomputed vapor quality values by
-            % :attr:`Solvers.MixtureSolver.Mixture.X_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.X_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -214,12 +214,12 @@ classdef Mixture < Solvers.AbstractField
             %VF Void fraction [-]
             %
             % Retrieves precomputed void fraction values by
-            % :attr:`Solvers.MixtureSolver.Mixture.VF_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.VF_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -233,12 +233,12 @@ classdef Mixture < Solvers.AbstractField
             %CHF Critical Heat Flux [W/m^2], wall dependent
             %
             % Retrieves precomputed CHF values by
-            % :attr:`Solvers.MixtureSolver.Mixture.CBT_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.CBT_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -252,12 +252,12 @@ classdef Mixture < Solvers.AbstractField
             %CBT Critical Boiling Transition flag [-], wall dependent
             %
             % Retrieves precomputed CBT flags by
-            % :attr:`Solvers.MixtureSolver.Mixture.CBT_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.CBT_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -271,12 +271,12 @@ classdef Mixture < Solvers.AbstractField
             %MFBT Minimum Film Boiling Transition flag [-], wall dependent
             %
             % Retrieves precomputed MFBT flags by
-            % :attr:`Solvers.MixtureSolver.Mixture.MFBT_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.MFBT_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -290,12 +290,12 @@ classdef Mixture < Solvers.AbstractField
             %RHO Density [kg/m^3]
             %
             % Retrieves precomputed mixture density values by
-            % :attr:`Solvers.MixtureSolver.Mixture.RHO_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.RHO_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -309,12 +309,12 @@ classdef Mixture < Solvers.AbstractField
             %RELAXTEVAP Time relaxation for interfacial evaporation [s]
             %
             % Retrieves precomputed time relaxation values for evaporation by
-            % :attr:`Solvers.MixtureSolver.Mixture.RELAXTEVAP_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.RELAXTEVAP_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -328,12 +328,12 @@ classdef Mixture < Solvers.AbstractField
             %RELAXTCOND Time relaxation for interfacial evaporation [s]
             %
             % Retrieves precomputed time relaxation values for condensation by
-            % :attr:`Solvers.MixtureSolver.Mixture.RELAXTCOND_CALC`,
+            % :attr:`Solvers.Mixture.Mixture.RELAXTCOND_CALC`,
             % updated when mix.H is set.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to retrieve (optional)
 
             if nargin < 2
@@ -362,7 +362,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with geometry and heat flux data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with geometry and heat flux data
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -379,7 +379,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with fluid properties
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with fluid properties
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -395,7 +395,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -410,7 +410,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
   
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -425,7 +425,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -440,7 +440,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with enthalpy data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with enthalpy data
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -456,7 +456,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with axial grid and obstruction location
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with axial grid and obstruction location
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -475,7 +475,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with axial grid
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with axial grid
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -506,7 +506,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
  
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -521,7 +521,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -537,7 +537,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             % TODO: Implement additional wall friction factor as needed.
@@ -555,7 +555,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -572,7 +572,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Supported models
@@ -613,7 +613,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -630,7 +630,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -651,7 +651,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Supported models
@@ -684,7 +684,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -699,7 +699,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -714,7 +714,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -730,7 +730,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix   — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix   — :class:`Solvers.Mixture.Mixture` object
             % - Uold  — Previous axial velocity [m/s]
             % - zIdx  — Axial indices to evaluate (optional)
 
@@ -747,7 +747,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -763,7 +763,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix   — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix   — :class:`Solvers.Mixture.Mixture` object
             % - Uold  — Previous axial velocity [m/s]
             % - zIdx  — Axial indices to evaluate (optional)
 
@@ -779,7 +779,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix   — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix   — :class:`Solvers.Mixture.Mixture` object
             % - Uold  — Previous axial velocity [m/s]
             % - zIdx  — Axial indices to evaluate (optional)
             %
@@ -822,7 +822,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with flow and fluid data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with flow and fluid data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
             %
             % Notes:
@@ -868,7 +868,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -886,7 +886,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -905,7 +905,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -923,7 +923,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
@@ -964,7 +964,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1001,7 +1001,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with geometry and flow data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with geometry and flow data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)            
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1018,7 +1018,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with axial grid and model parameters
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with axial grid and model parameters
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1039,7 +1039,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with flow and relaxation data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with flow and relaxation data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
             %
             % Notes:
@@ -1072,11 +1072,11 @@ classdef Mixture < Solvers.AbstractField
         function Mintevap = MINTEVAP(mix, zIdx)
             %MINTEVAP Linear interfacial evaporation rate [kg/s/m]
             %
-            % Extracts the evaporation component from :attr:`Solvers.MixtureSolver.Mixture.MINT`.
+            % Extracts the evaporation component from :attr:`Solvers.Mixture.Mixture.MINT`.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1087,11 +1087,11 @@ classdef Mixture < Solvers.AbstractField
         function Mintcond = MINTCOND(mix, zIdx)
             %MINTCOND Linear interfacial condensation rate [kg/s/m]
             %
-            % Extracts the condensation component from :attr:`Solvers.MixtureSolver.Mixture.MINT`.
+            % Extracts the condensation component from :attr:`Solvers.Mixture.Mixture.MINT`.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
            
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1107,7 +1107,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
@@ -1136,7 +1136,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with boiling model parameters
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with boiling model parameters
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
@@ -1174,7 +1174,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with heat transfer and boiling data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with heat transfer and boiling data
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
@@ -1205,7 +1205,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1222,12 +1222,12 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with flow and enthalpy data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with flow and enthalpy data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
             %
             % Notes:
             %
-            % - Uses :attr:`Solvers.MixtureSolver.Mixture.MINT` for mass transfer and :attr:`Solvers.MixtureSolver.Mixture.TRELAX.HV` for vapor enthalpy
+            % - Uses :attr:`Solvers.Mixture.Mixture.MINT` for mass transfer and :attr:`Solvers.Mixture.Mixture.TRELAX.HV` for vapor enthalpy
             % - Behavior depends on :attr:`Inputs.InputSet.model.INTTRANSH`:
             %   - `'BULK'`: Consideration of bulk enthalpy
             %   - `'SATURATED'`: Consideration of saturated enthalpy
@@ -1253,11 +1253,11 @@ classdef Mixture < Solvers.AbstractField
         function Hintevap = HINTEVAP(mix, zIdx)
             %HINTEVAP Linear interfacial heat evaporation rate [W/m]
             %
-            % Extracts the evaporation component from :attr:`Solvers.MixtureSolver.Mixture.HINT`.
+            % Extracts the evaporation component from :attr:`Solvers.Mixture.Mixture.HINT`.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1268,11 +1268,11 @@ classdef Mixture < Solvers.AbstractField
         function Hintcond = HINTCOND(mix, zIdx)
             %HINTCOND Linear interfacial heat condensation rate [W/m]
             %
-            % Extracts the condensation component from :attr:`Solvers.MixtureSolver.Mixture.HINT`.
+            % Extracts the condensation component from :attr:`Solvers.Mixture.Mixture.HINT`.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1287,7 +1287,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with boiling and enthalpy data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with boiling and enthalpy data
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
@@ -1317,14 +1317,14 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
             %
             % - Applies only at nodes flagged by
-            % :attr:`Solvers.MixtureSolver.Mixture.CBT` or
-            % :attr:`Solvers.MixtureSolver.Mixture.MFBT`.
+            % :attr:`Solvers.Mixture.Mixture.CBT` or
+            % :attr:`Solvers.Mixture.Mixture.MFBT`.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1340,7 +1340,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1357,7 +1357,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
             %
             % Notes:
@@ -1389,14 +1389,14 @@ classdef Mixture < Solvers.AbstractField
             %
             % Retrieves precomputed time relaxation values for near-wall energy
             % transfer. These values are calculated by
-            % :attr:`Solvers.MixtureSolver.Mixture.NEARWALLTRELAX_CALC()`
+            % :attr:`Solvers.Mixture.Mixture.NEARWALLTRELAX_CALC()`
             % and cached in mix.nearwalltrelax when
-            % :attr:`Solvers.MixtureSolver.Mixture.H` is set, and are not
+            % :attr:`Solvers.Mixture.Mixture.H` is set, and are not
             % recalculated during repeated calls.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with cached near-wall data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with cached near-wall data
             % - zIdx — Axial indices to retrieve (optional; returns full vector if omitted)
 
             if nargin < 2
@@ -1410,13 +1410,13 @@ classdef Mixture < Solvers.AbstractField
             %NEARWALLRATIO Near-wall mass flow distribution ratio [-]
             %
             % Returns the near-wall mass flow distribution ratio, which should be less
-            % than 1. A ratio of 1 implies that :attr:`Solvers.MixtureSolver.Mixture.NEARWALL.XEQ`
-            % and :attr:`Solvers.MixtureSolver.Mixture.XEQ` are equal under
+            % than 1. A ratio of 1 implies that :attr:`Solvers.Mixture.Mixture.NEARWALL.XEQ`
+            % and :attr:`Solvers.Mixture.Mixture.XEQ` are equal under
             % azimuthally uniform heat flux.
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing model parameters
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing model parameters
 
             %
             % Should be less than 1 (otherwise NEARWALL.XEQ and XEQ would be equal for azymuthal equal heat flux)
@@ -1430,12 +1430,12 @@ classdef Mixture < Solvers.AbstractField
             %WNEARWALL Near-wall mass flow rate per wall [kg/s]
             %
             % Computes the near-wall mass flow rate by scaling the wall flow rate
-            % (:attr:`Solvers.MixtureSolver.Mixture.WWALL`) with the near-wall
-            % ratio :attr:`Solvers.MixtureSolver.Mixture.NEARWALLRATIO`.
+            % (:attr:`Solvers.Mixture.Mixture.WWALL`) with the near-wall
+            % ratio :attr:`Solvers.Mixture.Mixture.NEARWALLRATIO`.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object with wall flow data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with wall flow data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
@@ -1448,11 +1448,11 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the near-wall flow area based on the geometry.
             % :attr:`Inputs.Geometry.RWALL` and
-            % :attr:`Solvers.MixtureSolver.Mixture.WNEARWALL
+            % :attr:`Solvers.Mixture.Mixture.WNEARWALL
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing geometry data
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing geometry data
 
             geom = mix.inputSet.geometry;
 
@@ -1476,7 +1476,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object containing model, geometry, and fluid data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object containing model, geometry, and fluid data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
             %
             % Supported Models:
@@ -1515,7 +1515,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing flow quality and onset threshold
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing flow quality and onset threshold
             %
             % Notes:
             %
@@ -1538,11 +1538,11 @@ classdef Mixture < Solvers.AbstractField
             %OAFZ Onset of annular flow elevation.
             %
             % Returns the axial elevation (in meters) corresponding to the onset
-            % of annular flow, as defined by :attr:`Solvers.MixtureSolver.Mixture.OAFIDX`.
+            % of annular flow, as defined by :attr:`Solvers.Mixture.Mixture.OAFIDX`.
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing axial grid data
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing axial grid data
            
             oafz = mix.Z(mix.OAFIDX);                                      % [m]
         end
@@ -1551,11 +1551,11 @@ classdef Mixture < Solvers.AbstractField
             %OAFWL Liquid mass flow rate at onset of annular flow.
             %
             % Returns the liquid mass flow rate at the axial index corresponding
-            % to the onset of annular flow, as defined by :attr:`Solvers.MixtureSolver.Mixture.OAFIDX`.
+            % to the onset of annular flow, as defined by :attr:`Solvers.Mixture.Mixture.OAFIDX`.
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing liquid flow data
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing liquid flow data
 
             oafwl = mix.liquid.W(mix.OAFIDX);                              % [kg/s]
         end
@@ -1569,7 +1569,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.MixtureSolver.Mixture` object containing model and geometry data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object containing model and geometry data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
             %
             % Notes:
@@ -1592,18 +1592,18 @@ classdef Mixture < Solvers.AbstractField
             %AFDISTR Computes annular flow distribution over axial positions.
             %
             % Evaluates a weighted distribution between param1 and param2 using
-            % the annular flow fraction defined in :class:`Solvers.MixtureSolver.Mixture.AFFNC`.
+            % the annular flow fraction defined in :class:`Solvers.Mixture.Mixture.AFFNC`.
             %
             % Inputs:
             %
-            % - mix    — :class:`Solvers.MixtureSolver.Mixture` object containing axial grid and flow fractions
+            % - mix    — :class:`Solvers.Mixture.Mixture` object containing axial grid and flow fractions
             % - param1 — First flow property
             % - param2 — Second flow property
             % - zIdx   — Axial indices to evaluate (optional; defaults to full axial range)
             %
             % Notes:
             %
-            % - The annular flow fraction is extracted from :class:`Solvers.MixtureSolver.Mixture.AFFNC` at zIdx
+            % - The annular flow fraction is extracted from :class:`Solvers.Mixture.Mixture.AFFNC` at zIdx
             % - The output is a linear interpolation: (1 - affnc) * param1 + affnc * param2
             % - mix(1).NZ is used for default indexing, assuming mix may be an array
 
@@ -2301,7 +2301,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.MixtureSolver.Mixture` object containing axial grid (Z)
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing axial grid (Z)
             % - x   — Independent variable (e.g., axial mesh)
             % - y   — Dependent variable to interpolate
             %

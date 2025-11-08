@@ -9,7 +9,7 @@ This module includes:
 - Mixture field class: :class:`Solvers.Mixture.Mixture`
 - Phase classes: :class:`Solvers.Mixture.Liquid`, :class:`Solvers.Mixture.Vapor`
 - Mixture primary properties: :attr:`Solvers.Mixture.Mixture.W`, :attr:`Solvers.Mixture.Mixture.P`, :attr:`Solvers.Mixture.Mixture.H`
-- Solver class methods: :meth:`Solvers.Mixture.MixtureSolver.initializeSolver <Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver>`, :meth:`Solvers.Mixture.MixtureSolver.solve`, :meth:`Solvers.Mixture.MixtureSolver.plotz <Solvers.Mixture.MixtureSolver.MixtureSolver.plotz>`
+- Key solver class methods: :meth:`Solvers.Mixture.MixtureSolver.initializeSolver <Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver>`, :meth:`Solvers.Mixture.MixtureSolver.solve`, :meth:`Solvers.Mixture.MixtureSolver.plotz <Solvers.Mixture.MixtureSolver.MixtureSolver.plotz>`
 - Field class methods for calculating secondary mixture and phase parameters.
 
 ----

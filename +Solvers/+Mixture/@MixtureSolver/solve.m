@@ -1,7 +1,7 @@
 function solve(mixSolver)
 %SOLVE Executes the mixture solver for steady-state and transient simulations.
 %
-% Runs the full solution process for the :class:`Mixture.MixtureSolver`
+% Runs the full solution process for the :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>`
 % object. It manages initialization, time stepping, axial sweeps, inner
 % iterations, convergence checks, and logging.
 %

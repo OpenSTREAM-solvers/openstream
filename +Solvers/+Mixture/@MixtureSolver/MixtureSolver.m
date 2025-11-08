@@ -9,12 +9,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
     %
     % - Initializes solver parameters from an :class:`Inputs.InputSet` object
     % - Interpolates boundary conditions in time and space
-    % - Constructs :class:`Mixture.MixtureSolver.Mixture` objects for transient and steady-state analysis
+    % - Constructs :class:`Solvers.Mixture.Mixture` objects for transient and steady-state analysis
     % - Provides plotting utilities for spatial and temporal distributions
-    %
-    % Inherits from:
-    %
-    % - :class:`Solvers.AbstractSolver`
     %
     % Key Components:
     %
@@ -63,7 +59,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % the solver by calling the abstract :class:`Solvers.AbstractSolver`
             % superclass constructor and then sets up all necessary solver
             % parameters and internal data structures via
-            % :meth:`Mixture-MixtureSolver.initializeSolver`.
+            % :meth:`Solvers.Mixture.MixtureSolver.initializeSolver <Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver>`
             %
             % Input:
             %
@@ -71,7 +67,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Notes:
             %
-            % - This constructor assumes inputSet is fully validated.
+            % - This constructor assumes :class:`Inputs.InputSet` is fully validated.
             % - Solver initialization includes time/space discretization, boundary condition interpolation, and mixture object setup.
 
             arguments
@@ -100,6 +96,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % - Interpolates boundary conditions in time and space
             % - Initializes mixture array for each time step
             % - Constructs data structures for:
+            %
             %     - Pressure drops (DP, DPSUM)
             %     - Momentum and energy derivatives (MDER)
             %     - Interfacial relaxation (TRELAX)
@@ -305,8 +302,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Notes:
             %
-            % - Uses :meth:`Mixture.MixtureSolver.timeInterpolate` and
-            %   :meth:`Mixture.MixtureSolver.axialInterpolate` for interpolation.
+            % - Uses :meth:`Mixture.MixtureSolver.timeInterpolate <Mixture.MixtureSolver.MixtureSolver.timeInterpolate>` and
+            %   :meth:`Mixture.MixtureSolver.axialInterpolate <Mixture.MixtureSolver.MixtureSolver.axialInterpolate>` for interpolation.
             % - Throws an error if any expected boundary condition parameter
             %   is missing.
             % - The calculation of HFLUX is based on normalized wall power
@@ -401,7 +398,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Inputs:
             %
-            % - mixSolver         — MixtureSolver object containing simulation data
+            % - mixSolver         — :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>` object containing simulation data
             % - tIdx              — Time index or indices (vector of positive integers)
             % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
             % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
@@ -778,7 +775,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Inputs:
             %
-            % - mixSolver         — MixtureSolver object containing simulation data
+            % - mixSolver         — :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>` object containing simulation data
             % - zIdx              — Axial index (scalar, positive integer)
             % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
             % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
@@ -1072,7 +1069,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Inputs:
             %
-            % - mixSolver         — MixtureSolver object containing simulation data
+            % - mixSolver         — :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>` object containing simulation data
             % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
             % - opt.label         — Corresponding labels for display parameters
             % - opt.unit          — Units for each parameter
@@ -1185,7 +1182,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Interpolates the values in y at the time points defined by
             % mix.TIME using the interpolation method specified in
-            % :attr:`Inputs.inputSet.options.TIMEINTERP`.
+            % :attr:`Inputs.InputSet.options.TIMEINTERP`.
             %
             % If the boundary condition time vector (mix.inputSet.bc.TIME)
             % is scalar, interpolation is skipped and the original data y is
@@ -1210,7 +1207,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Interpolates the values in y at positions defined by mix.Z
             % using the interpolation method specified in
-            % :attr:`Inputs.inputSet.options.AXIALINTERP`.
+            % :attr:`Inputs.InputSet.options.AXIALINTERP`.
             % The interpolation is performed over the domain defined by x.
             %
             % If the interpolation returns NaN (e.g., due to points slightly
