@@ -533,35 +533,52 @@ classdef Mixture < Solvers.AbstractField
             %FW Fanning wall friction factor [-]
             %
             % Computes the Fanning wall friction factor based on
-            % :attr:`Inputs.Model.FRICTION`.
+            % :attr:`Inputs.Model.SPMTM` model.
             %
             % Inputs:
             %
             % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Supported models
+            %
+            % - BLASIUS: Blasius model (:math:`f = C(1) Re^{C(2)} + C(3)`) using user-defined :attr:`Inputs.Model.FRICTION` coefficients
 
             % TODO: Implement additional wall friction factor as needed.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             model = mix.inputSet.model;
-            fw = model.FRICTION(1).*mix.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3);
+
+            switch model.SPMTM
+                case 'BLASIUS'
+                    fw = model.FRICTION(1).*mix.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3);
+            end
         end
 
         function fwl = FWL(mix, zIdx)
             %FWL Liquid-equivalent Fanning wall friction factor [-]
             %
-            % Computes the friction factor using liquid-equivalent Reynolds number.
+            % Computes the Fanning friction factor, using liquid-equivalent
+            % Reynolds number, based on :attr:`Inputs.Model.SPMTM` model.
             %
             % Inputs:
             %
             % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Supported models
+            %
+            % - BLASIUS: Blasius model (:math:`f = C(1) Re^{C(2)}`) using user-defined :attr:`Inputs.Model.FRICTION` coefficients
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             model = mix.inputSet.model;
-            fwl = model.FRICTION(1).*mix.REL(zIdx).^model.FRICTION(2)+model.FRICTION(3);
+
+            switch model.SPMTM
+                case 'BLASIUS'
+                    fwl = model.FRICTION(1).*mix.REL(zIdx).^model.FRICTION(2)+model.FRICTION(3);
+            end
         end
 
         function phi2f = PHI2F(mix, zIdx)
@@ -607,19 +624,43 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function tauw = TAUW(mix, zIdx)
-            %TAUW Wall shear stress [N/m^2]
+            %TAUW Wall shear stress [N/m^2], wall dependent
             %
-            % Computes the wall shear stress using friction factor and mass flux.
+            % Computes the wall shear stress for each wall segment using the 
+            % friction factor, mass flux and two-phase multiplier. Supports 
+            % multiple walls and adjusts for boiling transition conditions
+            % using :attr:`Inputs.Model.BTMTM model`.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - mix  — :class:`Solvers.Mixture.Mixture` object containing flow and geometry data
             % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));
+            geom = mix.inputSet.geometry;
+
+            RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));                     % [kg/m^3]
             tauw = 0.5.*(mix.FWL(zIdx)./4)./RHOL.*mix.MFLUX(zIdx).^2.*mix.PHI2F(zIdx); % [N/m^2]
+            tauw = repmat(tauw,1,geom.NWALL);                              % [N/m^2] Expand to all walls (assumes same value for each wall)
+
+            % Post-BT
+            idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
+
+            if any(idxbt)
+                model = mix.inputSet.model;
+
+                switch model.BTMTM
+                    case 'TPFM'
+                        taubt = tauw(idxbt);                               % [N/m^2]
+                    case 'VAPOR'
+                        tauv  = mix.vapor.TAUW(zIdx);                      % [N/m^2]
+                        taubt = tauv(idxbt);                               % [N/m^2]
+                end
+
+                % Replace tauw values at BT locations with corrected values
+                tauw(idxbt) = taubt;
+            end
         end
 
         function kloss = KLOSS(mix, zIdx)
@@ -704,7 +745,9 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            dpWall  = -sum(mix.inputSet.geometry.PERIM)*mix.TAUW(zIdx)./mix.inputSet.geometry.AREA.*mix.DZ;
+            geom = mix.inputSet.geometry;
+
+            dpWall  = -sum(geom.PERIM.*mix.TAUW(zIdx),2)./mix.inputSet.geometry.AREA.*mix.DZ;
         end
 
         function dpAcc_z = DPACCZ(mix, zIdx)

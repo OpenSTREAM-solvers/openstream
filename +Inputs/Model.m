@@ -14,6 +14,7 @@ classdef Model < Inputs.Input
         FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % CoolProp fluid identifier
         PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties selected from :class:`InputEnums.FLUIDPROPERTIES`
         ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
+        KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Elevation of local perturbations [m]
 
         % Two-phase flow regime and wall heat transfer transitions
 
@@ -29,6 +30,15 @@ classdef Model < Inputs.Input
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model selected from :class:`InputEnums.MFBT`
         DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
 
+        % Wall momentum transfer
+
+        SPMTM            (1,1) InputEnums.SPMTM                            = 'BLASIUS'                       % Single-phase wall momentum transfer model selected from :class:`InputEnums.SPMTM`
+        FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
+        TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'                   % Two-phase friction multiplier model selected from :class:`InputEnums.TPFM`
+        KLOSS            (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Pressure loss coefficients of local perturbations [-]
+        TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'                   % Two-phase local loss multiplier model selected from :class:`InputEnums.TPKM`
+        BTMTM            (1,1) InputEnums.BTMTM                            = 'TPFM'                         % Boiling transition wall momentum transfer model selected from :class:`InputEnums.BTMTM`
+
         % Wall heat transfer
 
         SPHTM            (1,1) InputEnums.SPHTM                            = 'DITTUSBOELTER'                 % Single-phase wall heat transfer model selected from :class:`InputEnums.SPHTM`
@@ -38,12 +48,6 @@ classdef Model < Inputs.Input
 
         % Mixture solver models
 
-        FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
-        TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'                   % Two-phase friction multiplier model selected from :class:`InputEnums.TPFM`
-        KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Elevation of local perturbations [m]
-        KLOSS            (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % corresponding pressure loss coefficients [-]
-        KBLOCKRATIO      (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % corresponding blockage ratios [-]
-        TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'                   % Two-phase local loss multiplier model selected from :class:`InputEnums.TPKM`
         VOID             (1,1) InputEnums.VOID                             = 'HOMOGENEOUS'                   % Void fraction model selected from :class:`InputEnums.VOID`
         SLIP             (1,1) double  {mustBePositive}                    = 1                               % Phase velocity ratio [-]
         THERMALNONEQ     (1,1) InputEnums.THERMALNONEQ                     = 'EQUILIBRIUM'                   % Thermal non-equilibrium model selected from :class:`InputEnums.THERMALNONEQ`
@@ -98,6 +102,7 @@ classdef Model < Inputs.Input
 
         DEPOSITION       (1,1) InputEnums.DEPOSITION                       = 'OKAWA'                         % Drop deposition model selected from :class:`InputEnums.DEPOSITION`
         DEPENHANCEMENT   (1,1) InputEnums.DEPENHANCEMENT                   = 'NONE'                          % Drop deposition enhancement model due to local perturbations selected from :class:`InputEnums.DEPENHANCEMENT`
+        KBLOCKRATIO      (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Blockage ratios of local perturbations [-]
         KTUNING          (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Drop deposition enhancement tuning coefficients [-]
         ENTRAINMENT      (1,1) InputEnums.ENTRAINMENT                      = 'OKAWA2003'                     % Film entrainment model selected from :class:`InputEnums.ENTRAINMENT`
         OKAWACOEFS       (1,:) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1]           % Coefficients of Okawa entrainment model [-]

@@ -137,15 +137,49 @@ classdef Vapor < Solvers.AbstractPhase
         function re = RE(vapor, zIdx)
             %RE Vapor Reynolds number [-]
 
-            %TODO: Check definition
-
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            %re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.H(zIdx))...
-            %        ./sum(vapor.mix.inputSet.geometry.PERIM);
 
             geom  = vapor.mix.inputSet.geometry;
             fluid = vapor.mix.fluid;
+
+            %re = 4.*vapor.W(zIdx)./fluid.MUV(vapor.H(zIdx))./sum(geom.PERIM);
             re = fluid.RHOV(vapor.H(zIdx)).*vapor.U(zIdx).*geom.HDIAM./fluid.MUV(vapor.H(zIdx));
+        end
+
+        function fw = FW(vapor, zIdx)
+            %FW Vapor wall friction factor [-]
+            %
+            % Computes the Fanning wall friction factor based on
+            % :attr:`Inputs.Model.SPMTM` model.
+            %
+            % Supported models
+            %
+            % - BLASIUS: Blasius model (:math:`f = C(1) Re^{C(2)} + C(3)`) using user-defined :attr:`Inputs.Model.FRICTION` coefficients
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            model = vapor.mix.inputSet.model;
+
+            switch model.SPMTM
+                case 'BLASIUS'
+                    fw = model.FRICTION(1).*vapor.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3);
+            end
+        end
+
+        function tauw = TAUW(vapor, zIdx)
+            %TAUW Vapor wall shear stress [N/m^2]
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            geom = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+
+            f = vapor.FW(zIdx);                                            % [-]
+            RHO = fluid.RHOV(vapor.H(zIdx));                               % [kg/m^3]
+            U = vapor.U(zIdx);                                             % [m/s]
+            
+            tauw = 0.5.*(f./4).*RHO.*U.^2;
+            tauw = repmat(tauw,1,geom.NWALL);                              % Expand to all walls
         end
 
         function hfluxwalevap = HFLUXWALEVAP(vapor, zIdx)
