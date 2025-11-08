@@ -169,6 +169,19 @@ used in mixture solver.</p>
 </dd></dl>
 
 <dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.SPMTM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SPMTM</span></span><a class="headerlink" href="#InputEnums.SPMTM" title="Link to this definition"></a></dt>
+<dd><p>SPMTM Enumeration of single-phase wall momentum transfer models</p>
+<p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> models for
+calculating the single-phase wall momentum transfer (liquid or gas), used
+by the mixture solver.</p>
+<p>Models:</p>
+<ul class="simple">
+<li><p>BLASIUS — Blasius wall momentum transfer model (<span class="math notranslate nohighlight">\(f = C(1) Re^{C(2)} + C(3)\)</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a> coefficients</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTLIQUID">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTLIQUID</span></span><a class="headerlink" href="#InputEnums.MOMENTLIQUID" title="Link to this definition"></a></dt>
 <dd><p>MOMENTLIQUID Enumeration of liquid momentum conservation models</p>
@@ -289,6 +302,20 @@ calculating the two-phase wall heat transfer, used by the mixture solver.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>THOM    — Thom wall heat transfer model (<span id="id17">Rohsenow <em>et al.</em> [<a class="reference internal" href="../Guides/references.html#id18" title="Warren M. Rohsenow, James P. Hartnett, and Young I. Cho, editors. Handbook of Heat Transfer. McGraw-Hill, New York, 3 edition, 1998. ISBN 0-07-0535558. A comprehensive handbook edited by Rohsenow, Hartnett, and Cho.">1998</a>]</span>)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="InputEnums.BTMTM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BTMTM</span></span><a class="headerlink" href="#InputEnums.BTMTM" title="Link to this definition"></a></dt>
+<dd><p>BTMTM Enumeration of post-boiling transition wall momentum transfer models</p>
+<p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.BTMTM" title="Inputs.Model.BTMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTMTM</span></code></a> models for
+calculating the post-boiling transition wall momentum transfer, used by the
+mixture solver.</p>
+<p>Models:</p>
+<ul class="simple">
+<li><p>TPFM  — Wall momentum transfer based on  two-phase friction multiplier, using multiplier selected in <a class="reference internal" href="Inputs.html#Inputs.Model.TPFM" title="Inputs.Model.TPFM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TPFM</span></code></a></p></li>
+<li><p>VAPOR — Wall momentum transfer based on vapor phase only, using single-phase momentum transfer model selected in <a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a></p></li>
 </ul>
 </dd></dl>
 

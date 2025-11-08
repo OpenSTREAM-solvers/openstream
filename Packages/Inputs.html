@@ -1150,6 +1150,12 @@ Applies default values and validates entries.</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.KLOC">
+<span class="sig-name descname"><span class="pre">KLOC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOC" title="Link to this definition"></a></dt>
+<dd><p>Elevation of local perturbations [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.WBOILINGXSUB">
 <span class="sig-name descname"><span class="pre">WBOILINGXSUB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-0.2</span></em><a class="headerlink" href="#Inputs.Model.WBOILINGXSUB" title="Link to this definition"></a></dt>
 <dd><p>Equilibrium thermodynamic quality at onset of subcooled wall boiling [-]</p>
@@ -1216,6 +1222,42 @@ Applies default values and validates entries.</p>
 </dd></dl>
 
 <dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.SPMTM">
+<span class="sig-name descname"><span class="pre">SPMTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'BLASIUS'</span></em><a class="headerlink" href="#Inputs.Model.SPMTM" title="Link to this definition"></a></dt>
+<dd><p>Single-phase wall momentum transfer model selected from <a class="reference internal" href="InputEnums.html#InputEnums.SPMTM" title="InputEnums.SPMTM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.SPMTM</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.FRICTION">
+<span class="sig-name descname"><span class="pre">FRICTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.2-0.20]</span></em><a class="headerlink" href="#Inputs.Model.FRICTION" title="Link to this definition"></a></dt>
+<dd><p>Wall friction coefficients [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.TPFM">
+<span class="sig-name descname"><span class="pre">TPFM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPFM" title="Link to this definition"></a></dt>
+<dd><p>Two-phase friction multiplier model selected from <a class="reference internal" href="InputEnums.html#InputEnums.TPFM" title="InputEnums.TPFM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.TPFM</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.KLOSS">
+<span class="sig-name descname"><span class="pre">KLOSS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOSS" title="Link to this definition"></a></dt>
+<dd><p>Pressure loss coefficients of local perturbations [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.TPKM">
+<span class="sig-name descname"><span class="pre">TPKM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPKM" title="Link to this definition"></a></dt>
+<dd><p>Two-phase local loss multiplier model selected from <a class="reference internal" href="InputEnums.html#InputEnums.TPKM" title="InputEnums.TPKM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.TPKM</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.BTMTM">
+<span class="sig-name descname"><span class="pre">BTMTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'TPFM'</span></em><a class="headerlink" href="#Inputs.Model.BTMTM" title="Link to this definition"></a></dt>
+<dd><p>Boiling transition wall momentum transfer model selected from <a class="reference internal" href="InputEnums.html#InputEnums.BTMTM" title="InputEnums.BTMTM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.BTMTM</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.SPHTM">
 <span class="sig-name descname"><span class="pre">SPHTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'DITTUSBOELTER'</span></em><a class="headerlink" href="#Inputs.Model.SPHTM" title="Link to this definition"></a></dt>
 <dd><p>Single-phase wall heat transfer model selected from <a class="reference internal" href="InputEnums.html#InputEnums.SPHTM" title="InputEnums.SPHTM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.SPHTM</span></code></a></p>
@@ -1237,42 +1279,6 @@ Applies default values and validates entries.</p>
 <dt class="sig sig-object mat" id="Inputs.Model.BTHTM">
 <span class="sig-name descname"><span class="pre">BTHTM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'VAPOR'</span></em><a class="headerlink" href="#Inputs.Model.BTHTM" title="Link to this definition"></a></dt>
 <dd><p>Boiling transition wall heat transfer model selected from <a class="reference internal" href="InputEnums.html#InputEnums.BTHTM" title="InputEnums.BTHTM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.BTHTM</span></code></a></p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.FRICTION">
-<span class="sig-name descname"><span class="pre">FRICTION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.2-0.20]</span></em><a class="headerlink" href="#Inputs.Model.FRICTION" title="Link to this definition"></a></dt>
-<dd><p>Wall friction coefficients [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.TPFM">
-<span class="sig-name descname"><span class="pre">TPFM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPFM" title="Link to this definition"></a></dt>
-<dd><p>Two-phase friction multiplier model selected from <a class="reference internal" href="InputEnums.html#InputEnums.TPFM" title="InputEnums.TPFM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.TPFM</span></code></a></p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.KLOC">
-<span class="sig-name descname"><span class="pre">KLOC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOC" title="Link to this definition"></a></dt>
-<dd><p>Elevation of local perturbations [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.KLOSS">
-<span class="sig-name descname"><span class="pre">KLOSS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KLOSS" title="Link to this definition"></a></dt>
-<dd><p>corresponding pressure loss coefficients [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.KBLOCKRATIO">
-<span class="sig-name descname"><span class="pre">KBLOCKRATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KBLOCKRATIO" title="Link to this definition"></a></dt>
-<dd><p>corresponding blockage ratios [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.TPKM">
-<span class="sig-name descname"><span class="pre">TPKM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'HOMOGENEOUS'</span></em><a class="headerlink" href="#Inputs.Model.TPKM" title="Link to this definition"></a></dt>
-<dd><p>Two-phase local loss multiplier model selected from <a class="reference internal" href="InputEnums.html#InputEnums.TPKM" title="InputEnums.TPKM"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.TPKM</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -1501,6 +1507,12 @@ Applies default values and validates entries.</p>
 <dt class="sig sig-object mat" id="Inputs.Model.DEPENHANCEMENT">
 <span class="sig-name descname"><span class="pre">DEPENHANCEMENT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'NONE'</span></em><a class="headerlink" href="#Inputs.Model.DEPENHANCEMENT" title="Link to this definition"></a></dt>
 <dd><p>Drop deposition enhancement model due to local perturbations selected from <a class="reference internal" href="InputEnums.html#InputEnums.DEPENHANCEMENT" title="InputEnums.DEPENHANCEMENT"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.DEPENHANCEMENT</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.KBLOCKRATIO">
+<span class="sig-name descname"><span class="pre">KBLOCKRATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[00]</span></em><a class="headerlink" href="#Inputs.Model.KBLOCKRATIO" title="Link to this definition"></a></dt>
+<dd><p>Blockage ratios of local perturbations [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">

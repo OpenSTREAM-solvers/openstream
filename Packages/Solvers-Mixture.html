@@ -20,6 +20,7 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -882,11 +883,15 @@ viscosity.</p>
 <span class="sig-name descname"><span class="pre">FW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.FW" title="Link to this definition"></a></dt>
 <dd><p>FW Fanning wall friction factor [-]</p>
 <p>Computes the Fanning wall friction factor based on
-<a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a>.</p>
+<a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> model.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Supported models</p>
+<ul class="simple">
+<li><p>BLASIUS: Blasius model (<span class="math notranslate nohighlight">\(f = C(1) Re^{C(2)} + C(3)\)</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a> coefficients</p></li>
 </ul>
 </dd></dl>
 
@@ -894,11 +899,16 @@ viscosity.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.FWL">
 <span class="sig-name descname"><span class="pre">FWL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.FWL" title="Link to this definition"></a></dt>
 <dd><p>FWL Liquid-equivalent Fanning wall friction factor [-]</p>
-<p>Computes the friction factor using liquid-equivalent Reynolds number.</p>
+<p>Computes the Fanning friction factor, using liquid-equivalent
+Reynolds number, based on <a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> model.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Supported models</p>
+<ul class="simple">
+<li><p>BLASIUS: Blasius model (<span class="math notranslate nohighlight">\(f = C(1) Re^{C(2)}\)</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a> coefficients</p></li>
 </ul>
 </dd></dl>
 
@@ -924,11 +934,14 @@ selected <a class="reference internal" href="Inputs.html#Inputs.Model.TPFM" titl
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TAUW">
 <span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.TAUW" title="Link to this definition"></a></dt>
-<dd><p>TAUW Wall shear stress [N/m^2]</p>
-<p>Computes the wall shear stress using friction factor and mass flux.</p>
+<dd><p>TAUW Wall shear stress [N/m^2], wall dependent</p>
+<p>Computes the wall shear stress for each wall segment using the
+friction factor, mass flux and two-phase multiplier. Supports
+multiple walls and adjusts for boiling transition conditions
+using <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTMTM</span> <span class="pre">model</span></code>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing flow and geometry data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1720,6 +1733,24 @@ model.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.RE">
 <span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.RE" title="Link to this definition"></a></dt>
 <dd><p>RE Vapor Reynolds number [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.FW">
+<span class="sig-name descname"><span class="pre">FW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.FW" title="Link to this definition"></a></dt>
+<dd><p>FW Vapor wall friction factor [-]</p>
+<p>Computes the Fanning wall friction factor based on
+<a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> model.</p>
+<p>Supported models</p>
+<ul class="simple">
+<li><p>BLASIUS: Blasius model (<span class="math notranslate nohighlight">\(f = C(1) Re^{C(2)} + C(3)\)</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a> coefficients</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.TAUW">
+<span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.TAUW" title="Link to this definition"></a></dt>
+<dd><p>TAUW Vapor wall shear stress [N/m^2]</p>
 </dd></dl>
 
 <dl class="mat method">
