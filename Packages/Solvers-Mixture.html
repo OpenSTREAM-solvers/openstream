@@ -117,7 +117,7 @@
 <li><p>Mixture field class: <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a></p></li>
 <li><p>Phase classes: <a class="reference internal" href="#Solvers.Mixture.Liquid" title="Solvers.Mixture.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Liquid</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Vapor" title="Solvers.Mixture.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Vapor</span></code></a></p></li>
 <li><p>Mixture primary properties: <a class="reference internal" href="#Solvers.Mixture.Mixture.W" title="Solvers.Mixture.Mixture.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.W</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Mixture.P" title="Solvers.Mixture.Mixture.P"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.P</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.Mixture.H" title="Solvers.Mixture.Mixture.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.H</span></code></a></p></li>
-<li><p>Solver class methods: <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver" title="Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.initializeSolver</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.solve" title="Solvers.Mixture.MixtureSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.solve()</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotz" title="Solvers.Mixture.MixtureSolver.MixtureSolver.plotz"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.plotz</span></code></a></p></li>
+<li><p>Key solver class methods: <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver" title="Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.initializeSolver</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.solve" title="Solvers.Mixture.MixtureSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.solve()</span></code></a>, <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.plotz" title="Solvers.Mixture.MixtureSolver.MixtureSolver.plotz"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.plotz</span></code></a></p></li>
 <li><p>Field class methods for calculating secondary mixture and phase parameters.</p></li>
 </ul>
 <hr class="docutils" />
@@ -133,12 +133,8 @@ a Homogeneous Relaxation Model (HRM).</p>
 <ul class="simple">
 <li><p>Initializes solver parameters from an <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object</p></li>
 <li><p>Interpolates boundary conditions in time and space</p></li>
-<li><p>Constructs <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.Mixture</span></code> objects for transient and steady-state analysis</p></li>
+<li><p>Constructs <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> objects for transient and steady-state analysis</p></li>
 <li><p>Provides plotting utilities for spatial and temporal distributions</p></li>
-</ul>
-<p>Inherits from:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p></li>
 </ul>
 <p>Key Components:</p>
 <ul class="simple">
@@ -158,14 +154,14 @@ provided <a class="reference internal" href="Inputs.html#Inputs.InputSet" title=
 the solver by calling the abstract <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a>
 superclass constructor and then sets up all necessary solver
 parameters and internal data structures via
-<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture-MixtureSolver.initializeSolver()</span></code>.</p>
+<a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver" title="Solvers.Mixture.MixtureSolver.MixtureSolver.initializeSolver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.initializeSolver</span></code></a></p>
 <p>Input:</p>
 <ul class="simple">
 <li><p>inputSet — An <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model configuration, geometry, boundary conditions, and solver options.</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>This constructor assumes inputSet is fully validated.</p></li>
+<li><p>This constructor assumes <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> is fully validated.</p></li>
 <li><p>Solver initialization includes time/space discretization, boundary condition interpolation, and mixture object setup.</p></li>
 </ul>
 </dd></dl>
@@ -248,20 +244,20 @@ and space, interpolation of boundary conditions, and
 initialization of data structures for transient and steady-state
 simulations.</p>
 <p>Operations performed:</p>
-<ul class="simple">
+<ul>
 <li><p>Computes time steps and axial node positions</p></li>
 <li><p>Interpolates boundary conditions in time and space</p></li>
 <li><p>Initializes mixture array for each time step</p></li>
-<li><dl class="simple">
-<dt>Constructs data structures for:</dt><dd><ul>
+<li><p>Constructs data structures for:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Pressure drops (DP, DPSUM)</p></li>
 <li><p>Momentum and energy derivatives (MDER)</p></li>
 <li><p>Interfacial relaxation (TRELAX)</p></li>
 <li><p>Near-wall transport (NEARWALL)</p></li>
 <li><p>Iteration tracking (ITR)</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 <li><p>Initializes fluid property objects</p></li>
 <li><p>Sets up phase-specific objects (Liquid, Vapor)</p></li>
@@ -294,8 +290,8 @@ as wall heat flux.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Uses <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.timeInterpolate()</span></code> and
-<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.axialInterpolate()</span></code> for interpolation.</p></li>
+<li><p>Uses <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.timeInterpolate</span></code> and
+<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.axialInterpolate</span></code> for interpolation.</p></li>
 <li><p>Throws an error if any expected boundary condition parameter
 is missing.</p></li>
 <li><p>The calculation of HFLUX is based on normalized wall power
@@ -312,7 +308,7 @@ time indices. The function supports multiple display modes, wall
 selections, near-wall data, and optional  animation over time.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mixSolver         — MixtureSolver object containing simulation data</p></li>
+<li><p>mixSolver         — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code> object containing simulation data</p></li>
 <li><p>tIdx              — Time index or indices (vector of positive integers)</p></li>
 <li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
 <li><p>opts.solveMode    — Solve mode: ‘REAL’ or ‘NULL’</p></li>
@@ -343,7 +339,7 @@ a specified axial index. The method supports multiple display
 modes, wall selections, and plot arrangements.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mixSolver         — MixtureSolver object containing simulation data</p></li>
+<li><p>mixSolver         — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code> object containing simulation data</p></li>
 <li><p>zIdx              — Axial index (scalar, positive integer)</p></li>
 <li><p>opt.display       — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
 <li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
@@ -375,7 +371,7 @@ for mixture, liquid, and vapor fields, and can handle both real
 and null (initial) transient data.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mixSolver         — MixtureSolver object containing simulation data</p></li>
+<li><p>mixSolver         — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code> object containing simulation data</p></li>
 <li><p>opt.display       — Parameter(s) to display (e.g., ‘HFLUX’, ‘U’, etc.)</p></li>
 <li><p>opt.label         — Corresponding labels for display parameters</p></li>
 <li><p>opt.unit          — Units for each parameter</p></li>
@@ -403,7 +399,7 @@ and null (initial) transient data.</p>
 a specified method.</p>
 <p>Interpolates the values in y at the time points defined by
 mix.TIME using the interpolation method specified in
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.inputSet.options.TIMEINTERP</span></code>.</p>
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.TIMEINTERP</span></code>.</p>
 <p>If the boundary condition time vector (mix.inputSet.bc.TIME)
 is scalar, interpolation is skipped and the original data y is
 returned unchanged.</p>
@@ -418,7 +414,7 @@ handles cases where interpolation is unnecessary.</p>
 specified method.</p>
 <p>Interpolates the values in y at positions defined by mix.Z
 using the interpolation method specified in
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.inputSet.options.AXIALINTERP</span></code>.
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.AXIALINTERP</span></code>.
 The interpolation is performed over the domain defined by x.</p>
 <p>If the interpolation returns NaN (e.g., due to points slightly
 outside the interpolation range when using methods like ‘next’),
@@ -504,7 +500,7 @@ Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
+<dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.TSTEP</span></code></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -621,11 +617,11 @@ Sets up flow property tracking for simulation.</p>
 <span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MFLUX" title="Link to this definition"></a></dt>
 <dd><p>MFLUX Mass flux [kg/m^2/s]</p>
 <p>Retrieves precomputed mass flux values by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.MFLUX_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MFLUX_CALC</span></code>,
 updated when mix.W is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -635,11 +631,11 @@ updated when mix.W is set.</p>
 <span class="sig-name descname"><span class="pre">XEQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.XEQ" title="Link to this definition"></a></dt>
 <dd><p>XEQ Equilibrium quality [-]</p>
 <p>Retrieves precomputed equilibrium quality values by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.XEQ_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.XEQ_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -649,11 +645,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.X" title="Link to this definition"></a></dt>
 <dd><p>X Vapor quality [-]</p>
 <p>Retrieves precomputed vapor quality values by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.X_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.X_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -663,11 +659,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.VF" title="Link to this definition"></a></dt>
 <dd><p>VF Void fraction [-]</p>
 <p>Retrieves precomputed void fraction values by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.VF_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.VF_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -677,11 +673,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">CHF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.CHF" title="Link to this definition"></a></dt>
 <dd><p>CHF Critical Heat Flux [W/m^2], wall dependent</p>
 <p>Retrieves precomputed CHF values by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.CBT_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.CBT_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -691,11 +687,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">CBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.CBT" title="Link to this definition"></a></dt>
 <dd><p>CBT Critical Boiling Transition flag [-], wall dependent</p>
 <p>Retrieves precomputed CBT flags by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.CBT_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.CBT_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -705,11 +701,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">MFBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MFBT" title="Link to this definition"></a></dt>
 <dd><p>MFBT Minimum Film Boiling Transition flag [-], wall dependent</p>
 <p>Retrieves precomputed MFBT flags by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.MFBT_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MFBT_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -719,11 +715,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">RHO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RHO" title="Link to this definition"></a></dt>
 <dd><p>RHO Density [kg/m^3]</p>
 <p>Retrieves precomputed mixture density values by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.RHO_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.RHO_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -733,11 +729,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTEVAP" title="Link to this definition"></a></dt>
 <dd><p>RELAXTEVAP Time relaxation for interfacial evaporation [s]</p>
 <p>Retrieves precomputed time relaxation values for evaporation by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.RELAXTEVAP_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.RELAXTEVAP_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -747,11 +743,11 @@ updated when mix.H is set.</p>
 <span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
 <dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]</p>
 <p>Retrieves precomputed time relaxation values for condensation by
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.RELAXTCOND_CALC</span></code>,
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.RELAXTCOND_CALC</span></code>,
 updated when mix.H is set.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to retrieve (optional)</p></li>
 </ul>
 </dd></dl>
@@ -764,7 +760,7 @@ updated when mix.H is set.</p>
 with local heat flux.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with geometry and heat flux data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with geometry and heat flux data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -777,7 +773,7 @@ with local heat flux.</p>
 contributions weighted by vapor quality.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with fluid properties</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with fluid properties</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -789,7 +785,7 @@ contributions weighted by vapor quality.</p>
 <p>Computes the mixture velocity from mass flow rate and density.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -801,7 +797,7 @@ contributions weighted by vapor quality.</p>
 <p>Computes the superficial velocity of the liquid phase.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -813,7 +809,7 @@ contributions weighted by vapor quality.</p>
 <p>Computes the superficial velocity of the vapor phase.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -825,7 +821,7 @@ contributions weighted by vapor quality.</p>
 <p>Returns the fluid temperature corresponding to the local enthalpy.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with enthalpy data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with enthalpy data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -838,7 +834,7 @@ contributions weighted by vapor quality.</p>
 or inlet, based on <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.KLOC</span></code>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with axial grid and obstruction location</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with axial grid and obstruction location</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -851,7 +847,7 @@ or inlet, based on <code class="xref mat mat-attr docutils literal notranslate">
 <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.KLOC</span></code>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with axial grid</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with axial grid</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -864,7 +860,7 @@ or inlet, based on <code class="xref mat mat-attr docutils literal notranslate">
 viscosity.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -876,7 +872,7 @@ viscosity.</p>
 <p>Computes the Reynolds number using liquid viscosity and total mass flow.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -889,7 +885,7 @@ viscosity.</p>
 <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.FRICTION</span></code>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -901,7 +897,7 @@ viscosity.</p>
 <p>Computes the friction factor using liquid-equivalent Reynolds number.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -914,7 +910,7 @@ viscosity.</p>
 selected <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.TPFM</span></code> model.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Supported models</p>
@@ -932,7 +928,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the wall shear stress using friction factor and mass flux.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -945,7 +941,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.KLOC</span></code>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -958,7 +954,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 selected <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.TPKM</span></code> model.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Supported models</p>
@@ -976,7 +972,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the pressure loss due to gravity along the axial direction.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -988,7 +984,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the pressure drop due to wall friction.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1000,7 +996,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the pressure drop due to spatial acceleration of the flow.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1012,7 +1008,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the pressure drop due to temporal acceleration between time steps.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix   — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix   — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>Uold  — Previous axial velocity [m/s]</p></li>
 <li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
 </ul>
@@ -1025,7 +1021,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the pressure loss due to localized effects (e.g., flow mixers).</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1037,7 +1033,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Computes the total pressure loss by summing all contributing components.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix   — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix   — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>Uold  — Previous axial velocity [m/s]</p></li>
 <li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
 </ul>
@@ -1050,7 +1046,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 <p>Returns a structure containing all individual pressure loss components.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix   — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix   — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>Uold  — Previous axial velocity [m/s]</p></li>
 <li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
 </ul>
@@ -1074,7 +1070,7 @@ selected <code class="xref mat mat-attr docutils literal notranslate"><span clas
 or vapor properties depending on boiling transition status.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with flow and fluid data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with flow and fluid data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1092,7 +1088,7 @@ or vapor properties depending on boiling transition status.</p>
 conductivity and Nusselt number.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1105,7 +1101,7 @@ conductivity and Nusselt number.</p>
 modified in term of heat transfer coefficient.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1118,7 +1114,7 @@ modified in term of heat transfer coefficient.</p>
 conductivity and Nusselt number.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1131,7 +1127,7 @@ conductivity and Nusselt number.</p>
 single-phase and two-phase models, and switching to vapor model post-CBT.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1150,7 +1146,7 @@ coefficient. Uses liquid bulk temperature pre-CBT and vapor bulk
 temperature post-CBT.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1163,7 +1159,7 @@ temperature post-CBT.</p>
 with the wall perimeter ratio.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with geometry and flow data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with geometry and flow data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 </dd></dl>
@@ -1176,7 +1172,7 @@ with the wall perimeter ratio.</p>
 All other axial positions are set to NaN.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with axial grid and model parameters</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with axial grid and model parameters</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 </dd></dl>
@@ -1189,7 +1185,7 @@ All other axial positions are set to NaN.</p>
 deviation from equilibrium vapor flow and time relaxation.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with flow and relaxation data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with flow and relaxation data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1203,10 +1199,10 @@ deviation from equilibrium vapor flow and time relaxation.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MINTEVAP">
 <span class="sig-name descname"><span class="pre">MINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>MINTEVAP Linear interfacial evaporation rate [kg/s/m]</p>
-<p>Extracts the evaporation component from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.MINT</span></code>.</p>
+<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.Mixture.Mixture.MINT" title="Solvers.Mixture.Mixture.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MINT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1215,10 +1211,10 @@ deviation from equilibrium vapor flow and time relaxation.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.MINTCOND">
 <span class="sig-name descname"><span class="pre">MINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.MINTCOND" title="Link to this definition"></a></dt>
 <dd><p>MINTCOND Linear interfacial condensation rate [kg/s/m]</p>
-<p>Extracts the condensation component from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.MINT</span></code>.</p>
+<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.Mixture.Mixture.MINT" title="Solvers.Mixture.Mixture.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MINT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1231,7 +1227,7 @@ deviation from equilibrium vapor flow and time relaxation.</p>
 time relaxation approach. Currently not used.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1250,7 +1246,7 @@ equilibrium quality and boiling onset thresholds
 <a href="#id5"><span class="problematic" id="id6">`</span></a>Inputs.InputSet.model.WBOILINGXSAT’.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with boiling model parameters</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with boiling model parameters</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1268,7 +1264,7 @@ equilibrium quality and boiling onset thresholds
 wall heat generation rate.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with heat transfer and boiling data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with heat transfer and boiling data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1285,7 +1281,7 @@ wall heat generation rate.</p>
 condensation, evaporation, and wall boiling contributions.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1298,12 +1294,12 @@ condensation, evaporation, and wall boiling contributions.</p>
 evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with flow and enthalpy data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with flow and enthalpy data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Uses <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.MINT</span></code> for mass transfer and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.TRELAX.HV</span></code> for vapor enthalpy</p></li>
+<li><p>Uses <a class="reference internal" href="#Solvers.Mixture.Mixture.MINT" title="Solvers.Mixture.Mixture.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MINT</span></code></a> for mass transfer and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.TRELAX.HV</span></code> for vapor enthalpy</p></li>
 <li><p>Behavior depends on <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.model.INTTRANSH</span></code>:
 - <cite>‘BULK’</cite>: Consideration of bulk enthalpy
 - <cite>‘SATURATED’</cite>: Consideration of saturated enthalpy</p></li>
@@ -1314,10 +1310,10 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HINTEVAP">
 <span class="sig-name descname"><span class="pre">HINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>HINTEVAP Linear interfacial heat evaporation rate [W/m]</p>
-<p>Extracts the evaporation component from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.HINT</span></code>.</p>
+<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.Mixture.Mixture.HINT" title="Solvers.Mixture.Mixture.HINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.HINT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1326,10 +1322,10 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HINTCOND">
 <span class="sig-name descname"><span class="pre">HINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.HINTCOND" title="Link to this definition"></a></dt>
 <dd><p>HINTCOND Linear interfacial heat condensation rate [W/m]</p>
-<p>Extracts the condensation component from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.HINT</span></code>.</p>
+<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.Mixture.Mixture.HINT" title="Solvers.Mixture.Mixture.HINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.HINT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1341,7 +1337,7 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 <p>Computes the heat transfer rate associated with wall boiling.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object with boiling and enthalpy data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with boiling and enthalpy data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1359,15 +1355,15 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 <p>Returns the wall heat generation rate (LHGR) at boiling transition nodes.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>Applies only at nodes flagged by</p></li>
 </ul>
-<p><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.CBT</span></code> or
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.MFBT</span></code>.</p>
+<p><a class="reference internal" href="#Solvers.Mixture.Mixture.CBT" title="Solvers.Mixture.Mixture.CBT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.CBT</span></code></a> or
+<a class="reference internal" href="#Solvers.Mixture.Mixture.MFBT" title="Solvers.Mixture.Mixture.MFBT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MFBT</span></code></a>.</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -1378,7 +1374,7 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 wall contributions.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
@@ -1391,7 +1387,7 @@ wall contributions.</p>
 Uses a lumped wall approach for now.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1410,7 +1406,7 @@ a model selected in <code class="xref mat mat-attr docutils literal notranslate"
 evaluated over the specified axial indices.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object containing model, geometry, and fluid data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing model, geometry, and fluid data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 <p>Supported Models:</p>
@@ -1430,7 +1426,7 @@ threshold. The result is cached in mix.oafidx_const to avoid
 recomputation.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object containing flow quality and onset threshold</p></li>
+<li><p>mix — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing flow quality and onset threshold</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
@@ -1443,10 +1439,10 @@ recomputation.</p>
 <span class="sig-name descname"><span class="pre">OAFZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.OAFZ" title="Link to this definition"></a></dt>
 <dd><p>OAFZ Onset of annular flow elevation.</p>
 <p>Returns the axial elevation (in meters) corresponding to the onset
-of annular flow, as defined by <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.OAFIDX</span></code>.</p>
+of annular flow, as defined by <a class="reference internal" href="#Solvers.Mixture.Mixture.OAFIDX" title="Solvers.Mixture.Mixture.OAFIDX"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.OAFIDX</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object containing axial grid data</p></li>
+<li><p>mix — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing axial grid data</p></li>
 </ul>
 </dd></dl>
 
@@ -1455,10 +1451,10 @@ of annular flow, as defined by <code class="xref mat mat-attr docutils literal n
 <span class="sig-name descname"><span class="pre">OAFWL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.OAFWL" title="Link to this definition"></a></dt>
 <dd><p>OAFWL Liquid mass flow rate at onset of annular flow.</p>
 <p>Returns the liquid mass flow rate at the axial index corresponding
-to the onset of annular flow, as defined by <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.OAFIDX</span></code>.</p>
+to the onset of annular flow, as defined by <a class="reference internal" href="#Solvers.Mixture.Mixture.OAFIDX" title="Solvers.Mixture.Mixture.OAFIDX"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.OAFIDX</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object containing liquid flow data</p></li>
+<li><p>mix — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing liquid flow data</p></li>
 </ul>
 </dd></dl>
 
@@ -1471,7 +1467,7 @@ parameterized by the transition model and geometry. The sigmoid is
 evaluated via the cached <cite>sigm</cite> method.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix  — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object containing model and geometry data</p></li>
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing model and geometry data</p></li>
 <li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 <p>Notes:</p>
@@ -1487,17 +1483,17 @@ evaluated via the cached <cite>sigm</cite> method.</p>
 <span class="sig-name descname"><span class="pre">AFDISTR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">param1</span></em>, <em class="sig-param"><span class="pre">param2</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.AFDISTR" title="Link to this definition"></a></dt>
 <dd><p>AFDISTR Computes annular flow distribution over axial positions.</p>
 <p>Evaluates a weighted distribution between param1 and param2 using
-the annular flow fraction defined in <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.AFFNC</span></code>.</p>
+the annular flow fraction defined in <a class="reference internal" href="#Solvers.Mixture.Mixture.AFFNC" title="Solvers.Mixture.Mixture.AFFNC"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.AFFNC</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mix    — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object containing axial grid and flow fractions</p></li>
+<li><p>mix    — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing axial grid and flow fractions</p></li>
 <li><p>param1 — First flow property</p></li>
 <li><p>param2 — Second flow property</p></li>
 <li><p>zIdx   — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>The annular flow fraction is extracted from <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture.AFFNC</span></code> at zIdx</p></li>
+<li><p>The annular flow fraction is extracted from <a class="reference internal" href="#Solvers.Mixture.Mixture.AFFNC" title="Solvers.Mixture.Mixture.AFFNC"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.AFFNC</span></code></a> at zIdx</p></li>
 <li><p>The output is a linear interpolation: (1 - affnc) * param1 + affnc * param2</p></li>
 <li><p>mix(1).NZ is used for default indexing, assuming mix may be an array</p></li>
 </ul>
@@ -1524,13 +1520,9 @@ of the liquid phase at each axial node.</p>
 <li><p>Evaluate wall heat flux contributions to the liquid phase</p></li>
 <li><p>Support derived quantities such as Reynolds number and mass flux</p></li>
 </ul>
-<p>Inherits from:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p></li>
-</ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>All methods assume access to a valid <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>All methods assume access to a valid <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>Axial indexing is optional; defaults to full axial domain</p></li>
 <li><p>Velocity and enthalpy calculations include fallback logic to handle single-phase vapor regions and numerical stability</p></li>
 </ul>
@@ -1541,17 +1533,17 @@ of the liquid phase at each axial node.</p>
 <span class="sig-name descname"><span class="pre">Liquid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.Liquid" title="Link to this definition"></a></dt>
 <dd><p>LIQUID Constructor</p>
 <p>Initializes the Liquid object from one or more instances of the
-<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> class. Each Liquid instance
+<a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> class. Each Liquid instance
 stores a reference to its corresponding Mixture object and the
 number of axial nodes (NZ).</p>
 <p>Input:</p>
 <ul class="simple">
-<li><p>mix — Array of <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> objects representing the simulation state</p></li>
+<li><p>mix — Array of <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> objects representing the simulation state</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>Supports vectorized initialization for transient simulations</p></li>
-<li><p>Assumes each <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object is fully initialized</p></li>
+<li><p>Assumes each <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object is fully initialized</p></li>
 </ul>
 </dd></dl>
 
@@ -1645,13 +1637,9 @@ of the vapor phase at each axial node.</p>
 <li><p>Evaluate wall heat flux and wall evaporation contributions</p></li>
 <li><p>Support derived quantities such as Reynolds number and mass flux</p></li>
 </ul>
-<p>Inherits from:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p></li>
-</ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>All methods assume access to a valid <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object</p></li>
+<li><p>All methods assume access to a valid <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
 <li><p>Axial indexing is optional; defaults to full axial domain</p></li>
 <li><p>Enthalpy calculations adapt to thermal non-equilibrium models</p></li>
 <li><p>Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability</p></li>
@@ -1663,17 +1651,17 @@ of the vapor phase at each axial node.</p>
 <span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Vapor" title="Link to this definition"></a></dt>
 <dd><p>VAPOR Constructor of the Vapor class</p>
 <p>Initializes the Vapor object from one or more instances of the
-<code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> class. Each Vapor instance
+<a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> class. Each Vapor instance
 stores a reference to its corresponding Mixture object and the
 number of axial nodes (NZ).</p>
 <p>Input:</p>
 <ul class="simple">
-<li><p>mix — Array of <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> objects representing the simulation state</p></li>
+<li><p>mix — Array of <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> objects representing the simulation state</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>Supports vectorized initialization for transient simulations</p></li>
-<li><p>Assumes each <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.MixtureSolver.Mixture</span></code> object is fully initialized</p></li>
+<li><p>Assumes each <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object is fully initialized</p></li>
 </ul>
 </dd></dl>
 
