@@ -635,18 +635,23 @@ classdef Mixture < Solvers.AbstractField
             %
             % - mix  — :class:`Solvers.Mixture.Mixture` object containing flow and geometry data
             % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Supported boiling transition models
+            %
+            % - TPFM: Two-phase friction multiplier
+            % - VAPOR: Shear stress to vapor phase
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             geom = mix.inputSet.geometry;
 
+            % Pre-CBT
             RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));                     % [kg/m^3]
             tauw = 0.5.*(mix.FWL(zIdx)./4)./RHOL.*mix.MFLUX(zIdx).^2.*mix.PHI2F(zIdx); % [N/m^2]
             tauw = repmat(tauw,1,geom.NWALL);                              % [N/m^2] Expand to all walls (assumes same value for each wall)
 
             % Post-BT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-
             if any(idxbt)
                 model = mix.inputSet.model;
 
@@ -654,12 +659,11 @@ classdef Mixture < Solvers.AbstractField
                     case 'TPFM'
                         taubt = tauw(idxbt);                               % [N/m^2]
                     case 'VAPOR'
-                        tauv  = mix.vapor.TAUW(zIdx);                      % [N/m^2]
-                        taubt = tauv(idxbt);                               % [N/m^2]
+                        taubt  = mix.vapor.TAUW(zIdx);                     % [N/m^2]
                 end
 
                 % Replace tauw values at BT locations with corrected values
-                tauw(idxbt) = taubt;
+                tauw(idxbt) = taubt(idxbt);
             end
         end
 
@@ -849,153 +853,80 @@ classdef Mixture < Solvers.AbstractField
     end
 
     %% --- Wall heat transfer and boiling transition models ---
-    % NU: Computes Nusselt number
-    % HWALLLIQ, HWALLTHOM, HWALLVAP, HWALL: Computes heat transfer coefficients
+    % HWALLTHOM, HWALL: Computes heat transfer coefficients
     % TWALL: Computes wall temperature
     % CBT, MFBT: Returns boiling transition flags
     % CHF: Computes critical heat flux
 
     methods
 
-        function nu = NU(mix, zIdx)
-            %NU Wall Nusselt number [-]
+         function hwallboil = HWALLBOIL(mix, zIdx)
+            %HWALLBOIL Boiling wall heat transfer coefficient [W/m^2/K]
             %
-            % Computes the Nusselt number for wall heat transfer using either liquid
-            % or vapor properties depending on boiling transition status.
+            % Computes the boiling wall heat transfer coefficient using
+            % selected :attr:`Inputs.Model.TPHTM` model.
             %
             % Inputs:
             %
-            % - mix  — :class:`Solvers.Mixture.Mixture` object with flow and fluid data
-            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
             %
-            % Notes:
+            % Supported models
             %
-            % - Uses Dittus-Boelter correlation or generalized form
-            % - Liquid properties are used pre-CBT, vapor properties post-CBT
-
-            %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
+            % - THOM: Thom's correlation
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             model = mix.inputSet.model;
-            NWALL = mix.inputSet.geometry.NWALL;
-
-            % Pre-CHF
-            Re = mix.liquid.RE(zIdx);                                      % [-] Liquid-equivalent Reynolds number
-            Pr = mix.fluid.PRANDTLL(mix.liquid.H(zIdx));                   % [-] Liquid Prandtl number
-            Re = repmat(Re,1,NWALL); Pr = repmat(Pr,1,NWALL);              % Extent to all walls
-
-            % Post-CHF
-            Recbt = mix.vapor.RE(zIdx);                                    % [-] Vapor Reynolds number
-            Prcbt = mix.fluid.PRANDTLV(mix.vapor.H(zIdx));                 % [-] Vapor Prandtl number
-            Recbt = repmat(Recbt,1,NWALL); Prcbt = repmat(Prcbt,1,NWALL);  % Extent to all walls
-            idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-            Re(idxbt) = Recbt(idxbt);                                      % [-]
-            Pr(idxbt) = Prcbt(idxbt);                                      % [-]
-
-            % Calculate Nusselt number
-            switch model.SPHTM
-                case 'DITTUSBOELTER'
-                    nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
-                case 'DITTUSBOELTERGEN' 
-                    c = model.DITTUSBOELTERCOEF;
-                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
-            end
-        end
-
-        function hwallliq = HWALLLIQ(mix, zIdx)
-            %HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]
-            %
-            % Computes the wall heat transfer coefficient using liquid thermal
-            % conductivity and Nusselt number.
-            %
-            % Inputs:
-            %
-            % - mix  — :class:`Solvers.Mixture.Mixture` object
-            % - zIdx — Axial indices to evaluate (optional)
-
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-
-            k = mix.fluid.KL(mix.liquid.H(zIdx));                          % [W/m/K] Fluid thermal conductivity based on liquid phase
-            HDIAM = mix.inputSet.geometry.HDIAM;                           % [m] Hydraulic diameter
-            hwallliq = mix.NU(zIdx).*k./HDIAM;                             % [W/m^2/K] Single phase
-        end
-
-        function hwallthom = HWALLTHOM(mix, zIdx)
-            %HWALLTHOM Two-phase wall heat transfer coefficient [W/m^2/K]
-            %
-            % Computes the wall heat transfer coefficient using Thom's correlation,
-            % modified in term of heat transfer coefficient.
-            %
-            % Inputs:
-            %
-            % - mix  — :class:`Solvers.Mixture.Mixture` object
-            % - zIdx — Axial indices to evaluate (optional)
-
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-
-            q  = mix.HFLUX(zIdx,:)+1E-6;                                   % [W/m^2]
-            Tb = mix.liquid.T(zIdx);                                       % [K]
-            hwallthom = q./(mix.fluid.TSAT-Tb+22.5.*(q./1E6).^0.5.*exp(-mix.P(zIdx)./1E6/8.7)); % [W/m^2/K]
-            hwallthom = max(0,hwallthom);
-        end
-
-        function hwallvap = HWALLVAP(mix, zIdx)
-            %HWALLVAP Single-phase vapor wall heat transfer coefficient [W/m^2/K]
-            %
-            % Computes the wall heat transfer coefficient using vapor thermal
-            % conductivity and Nusselt number.
-            %
-            % Inputs:
-            %
-            % - mix  — :class:`Solvers.Mixture.Mixture` object
-            % - zIdx — Axial indices to evaluate (optional)
-
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-
-            k = mix.fluid.KV(mix.vapor.H(zIdx));                           % [W/m/K] Fluid thermal conductivity based on vapor phase
-            HDIAM = mix.inputSet.geometry.HDIAM;                           % [m] Hydraulic diameter
-            hwallvap = mix.NU(zIdx).*k./HDIAM;                             % [W/m^2/K]
-        end
-
-        function hwall = HWALL(mix, zIdx)
-            %HWALL Wall heat transfer coefficient [W/m^2/K]
-            %
-            % Computes the effective wall heat transfer coefficient by combining
-            % single-phase and two-phase models, and switching to vapor model post-CBT.
-            %
-            % Inputs:
-            %
-            % - mix  — :class:`Solvers.Mixture.Mixture` object
-            % - zIdx — Axial indices to evaluate (optional)
-            %
-            % Notes:
-            %
-            % - Uses HWALLLIQ and HWALLTHOM pre-CBT
-            % - Uses HWALLVAP post-CBT
-
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
-
-            model = mix.inputSet.model;
-
-            % Pre-CBT
-            hsp = mix.HWALLLIQ(zIdx);                                      % [W/m^2/K] Single-phase liquid
 
             switch model.TPHTM
                 case 'THOM'
-                    htp = mix.HWALLTHOM(zIdx);                             % [W/m^2/K] Two-phase
+                    % Thom's correlation, modified in term of heat transfer coefficient.
+                    q  = mix.HFLUX(zIdx,:)+1E-6;                           % [W/m^2]
+                    Tb = mix.liquid.T(zIdx);                               % [K]
+                    hwallboil = q./(mix.fluid.TSAT-Tb+22.5.*(q./1E6).^0.5.*exp(-mix.P(zIdx)./1E6/8.7)); % [W/m^2/K]
             end
 
-            hwall = max(hsp,htp);                                          % [W/m^2/K]
+            hwallboil = max(0,hwallboil);
+         end
 
-            % Post CBT
-            switch model.BTHTM
-                case 'VAPOR'
-                    hwallbt = mix.HWALLVAP(zIdx);                          % [W/m^2/K] Single-phase vapor
-            end
+         function hwall = HWALL(mix, zIdx)
+            %HWALL Wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the effective wall heat transfer coefficient by
+            % combining single-phase and boiling models. Supports  multiple
+            % walls and adjusts for boiling transition conditions using
+            % :attr:`Inputs.Model.BTHTM model`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+            %
+            % Supported boiling transition models
+            %
+            % - VAPOR: Heat transfer to vapor phase
 
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            % Pre-CBT
+            hsp = mix.liquid.HWALL(zIdx);                                  % [W/m^2/K] Single-phase liquid
+            hboil = mix.HWALLBOIL(zIdx);                                   % [W/m^2/K] Boiling
+            hwall = max(hsp,hboil);                                        % [W/m^2/K]
+
+            % Post-CBT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-            hwall(idxbt) = hwallbt(idxbt);                                 % [W/m^2/K] Post-CBT
+            if any(idxbt)
+                model = mix.inputSet.model;
+
+                switch model.BTHTM
+                    case 'VAPOR'
+                        hwallbt = mix.vapor.HWALL(zIdx);                   % [W/m^2/K] Single-phase vapor
+                end
+
+                % Replace hwall values at BT locations with corrected values
+                hwall(idxbt) = hwallbt(idxbt);
+            end
         end
 
         function twall = TWALL(mix, zIdx)

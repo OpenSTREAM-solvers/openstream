@@ -136,6 +136,8 @@ classdef Vapor < Solvers.AbstractPhase
 
         function re = RE(vapor, zIdx)
             %RE Vapor Reynolds number [-]
+            
+            %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
 
@@ -204,6 +206,48 @@ classdef Vapor < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             t = vapor.mix.fluid.T(vapor.H(zIdx));
+        end
+
+        function nu = NU(vapor, zIdx)
+            %NU Vapor wall Nusselt number [-]
+            %
+            % Computes the Nusselt number for wall heat transfer to vapor
+            % based on :attr:`Inputs.Model.SPHTM` model.
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            model = vapor.mix.inputSet.model;
+            geom  = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+
+            Re = vapor.RE(zIdx);                                           % [-] Reynolds number
+            Pr = fluid.PRANDTLV(vapor.H(zIdx));                            % [-] Prandtl number
+
+            % Calculate Nusselt number
+            switch model.SPHTM
+                case 'DITTUSBOELTER'
+                    nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                case 'DITTUSBOELTERGEN' 
+                    c = model.DITTUSBOELTERCOEF;
+                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+            end
+            nu = repmat(nu,1,geom.NWALL);                                  % Expand to all walls
+        end
+
+        function hwall = HWALL(vapor, zIdx)
+            %HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the wall heat transfer coefficient using vapor thermal
+            % conductivity and Nusselt number.
+  
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            geom  = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+
+            k = fluid.KV(vapor.H(zIdx));                                   % [W/m/K] Fluid thermal conductivity based on liquid phase
+            HDIAM = geom.HDIAM;                                            % [m] Hydraulic diameter
+            hwall = vapor.NU(zIdx).*k./HDIAM;                              % [W/m^2/K] Single phase
         end
 
     end

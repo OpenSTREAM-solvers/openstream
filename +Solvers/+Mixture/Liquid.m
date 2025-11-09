@@ -130,7 +130,7 @@ classdef Liquid < Solvers.AbstractPhase
         function re = RE(liquid, zIdx)
             %RE Liquid Reynolds number [-]
             
-            %TODO: Check definition
+            %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             re = 4.*liquid.W(zIdx)./liquid.mix.fluid.MUL(liquid.H(zIdx))...
@@ -150,6 +150,48 @@ classdef Liquid < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             t = liquid.mix.fluid.T(liquid.H(zIdx));
+        end
+
+        function nu = NU(liquid, zIdx)
+            %NU Liquid wall Nusselt number [-]
+            %
+            % Computes the Nusselt number for wall heat transfer to liquid
+            % based on :attr:`Inputs.Model.SPHTM` model.
+
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+
+            model = liquid.mix.inputSet.model;
+            geom  = liquid.mix.inputSet.geometry;
+            fluid = liquid.mix.fluid;
+
+            Re = liquid.RE(zIdx);                                          % [-] Reynolds number
+            Pr = fluid.PRANDTLL(liquid.H(zIdx));                           % [-] Prandtl number
+
+            % Calculate Nusselt number
+            switch model.SPHTM
+                case 'DITTUSBOELTER'
+                    nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                case 'DITTUSBOELTERGEN' 
+                    c = model.DITTUSBOELTERCOEF;
+                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+            end
+            nu = repmat(nu,1,geom.NWALL);                                  % Expand to all walls
+        end
+
+        function hwall = HWALL(liquid, zIdx)
+            %HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the wall heat transfer coefficient using liquid thermal
+            % conductivity and Nusselt number.
+  
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+
+            geom  = liquid.mix.inputSet.geometry;
+            fluid = liquid.mix.fluid;
+
+            k = fluid.KL(liquid.H(zIdx));                                  % [W/m/K] Fluid thermal conductivity based on liquid phase
+            HDIAM = geom.HDIAM;                                            % [m] Hydraulic diameter
+            hwall = liquid.NU(zIdx).*k./HDIAM;                             % [W/m^2/K] Single phase
         end
 
     end
