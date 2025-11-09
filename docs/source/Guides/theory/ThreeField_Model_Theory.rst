@@ -27,7 +27,7 @@ An overview of the three-field model implemented in OpenSTREAM is provided below
 Governing equations
 -------------------
 
-The conservation equations are formulated at the wall level, indexed by :math:n, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.
+The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.
 
 **1. Mass conservation**
 
