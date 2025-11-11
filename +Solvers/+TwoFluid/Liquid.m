@@ -40,9 +40,16 @@ classdef Liquid < Solvers.AbstractField
     %% Constructor method
     methods
         function liquid = Liquid(inputSet, fluid)
-            %liquid Construct an instance of this class
-            %   Detailed explanation goes here
-            
+            %LIQUID Constructor for Liquid class
+            %
+            % Initializes the liquid field object with input configuration
+            % and fluid properties.
+            %
+            % Inputs:
+            %
+            % - inputSet — :class:`Inputs.InputSet` object containing model, geometry, and boundary conditions
+            % - fluid    — :class:`Inputs.FluidProperties` object containing thermophysical fluid data
+          
             if nargin > 0
                 % Store inputSet as object property
                 liquid.inputSet = inputSet;
@@ -56,15 +63,30 @@ classdef Liquid < Solvers.AbstractField
     methods
         
         function x = X(liquid,zIdx)
-        %X Mass fraction [-]
+            %X Liquid mass fraction [-]
+            %
+            % Computes the liquid mass fraction relative to the mixture flow.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
-            x = liquid.W(zIdx)./liquid.mix.W(zIdx);                       % [-]
+            x = liquid.W(zIdx)./liquid.mix.W(zIdx);                        % [-]
         end
         
         function vf = VF(liquid,vapor,zIdx)
-        %VF Volumetric fraction [-]
+            %VF Liquid volumetric fraction [-]
+            %
+            % Computes the liquid volumetric fraction as the complement of vapor VF.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
@@ -72,7 +94,14 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function j = J(liquid,zIdx)
-        %J Superficial velocity [-]
+            %J Liquid superficial velocity [m/s]
+            %
+            % Computes the superficial velocity of the liquid phase.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -83,7 +112,15 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function s = S(liquid,vapor,zIdx)
-        %S Phase vapor/liquid slip ratio [-]
+            %S Phase vapor/liquid slip ratio [-]
+            %
+            % Computes the slip ratio between vapor and liquid velocities.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
@@ -91,7 +128,15 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function area = AREA(liquid,vapor,zIdx)
-        %AREA field cross-section area [m^2]
+            %AREA Liquid cross-section area [m^2]
+            %
+            % Computes the effective cross-sectional area occupied by the liquid phase.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
@@ -101,15 +146,22 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function u = USLIP(liquid,vapor,zIdx)
-        %VELOCITY velocity based on input phase slip
+            %USLIP Liquid velocity based on input phase slip [m/s]
+            %
+            % Computes the liquid velocity using a slip-based void fraction model.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
            
             AREA = liquid.inputSet.geometry.AREA;                          % [m^2] Area
-            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
-            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
-            %VF   = 1-liquid.VF(vapor,zIdx);
-            S    = liquid.inputSet.model.SLIP;
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));                      % [kg/m^3]
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));                       % [kg/m^3]
+            S    = liquid.inputSet.model.SLIP;                             % [-]
             VF   = max(0,vapor.W(zIdx)./(S.*liquid.W(zIdx).*RHOV./RHOL+vapor.W(zIdx))); % [-] Void fraction based on phase slip model
             
             %u = liquid.W(zIdx)./RHOL./liquid.AREA(vapor,zIdx);
@@ -118,7 +170,17 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function vr = VR(liquid,vapor,zIdx)
-        %VR Local relative velocity
+            %VR Local relative velocity [m/s]
+            %
+            % Computes the relative velocity between vapor and liquid phases using
+            % various models (AREAMEAN, SCALED, DRIFT, FLOWREGIME) based on
+            % :attr:`Inputs.Model.LOCRELVEL` model.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             import Solvers.TwoFluid.REGIMES
@@ -154,7 +216,14 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function re = RE(liquid,zIdx)
-        %RE Reynolds number [-]
+            %RE Liquid Reynolds number [-]
+            %
+            % Computes the liquid-phase Reynolds number based on flow rate and viscosity.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -165,19 +234,35 @@ classdef Liquid < Solvers.AbstractField
         end
 
         function rev = REV(liquid,vapor,zIdx)
-        %REV Dispersed liquid Reynolds number with respect to vapor properties and relative phase velocity
+            %REV Dispersed liquid Reynolds number [-]
+            %
+            % Computes the Reynolds number for dispersed liquid using vapor properties
+            % and relative velocity.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
-            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));
-            MUV  = liquid.fluid.MUV(liquid.H(zIdx));  
-            VR = liquid.VR(vapor,zIdx);
+            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));                      % [kg/m^3]
+            MUV  = liquid.fluid.MUV(liquid.H(zIdx));                       % [Pa.s]
+            VR = liquid.VR(vapor,zIdx);                                    % [m/s]
             
-            rev = RHOV.*abs(VR).*liquid.L(zIdx)./MUV; % [-]
+            rev = RHOV.*abs(VR).*liquid.L(zIdx)./MUV;                      % [-]
         end
         
         function t = T(liquid,zIdx)
-        %T Liquid temperature
+            %T Liquid temperature [K]
+            %
+            % Computes the temperature of the liquid phase from enthalpy.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -185,18 +270,27 @@ classdef Liquid < Solvers.AbstractField
         end
 
         function visc = VISC(liquid,vapor,zIdx)
-        %VISC viscosity number dispersed liquid
+            %VISC Viscosity number for dispersed liquid [-]
+            %
+            % Computes the dimensionless viscosity number using vapor properties and
+            % interfacial tension.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
-            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
-            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
-            MUV  = liquid.fluid.MUV(vapor.H(zIdx));
-            SIGMA = liquid.fluid.SIGMA;  
-            G = liquid.inputSet.model.G;
-            Diff_RHO = abs(RHOL-RHOV);
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));                       % [kg/m^3]
+            RHOL = liquid.fluid.RHOL(liquid.H(zIdx));                      % [kg/m^3]
+            MUV  = liquid.fluid.MUV(vapor.H(zIdx));                        % [Pa.s]
+            SIGMA = liquid.fluid.SIGMA;                                    % [N/m]
+            G = liquid.inputSet.model.G;                                   % [m/s^2]
+            Diff_RHO = abs(RHOL-RHOV);                                     % [kg/m^3]
             
-            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(G.*SIGMA./(Diff_RHO))); % [-]
+            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(G.*SIGMA./(Diff_RHO)));     % [-]
         end
         
     end
@@ -205,17 +299,31 @@ classdef Liquid < Solvers.AbstractField
     methods
         
         function xtr_sub = XTR_SUB(liquid)
-            %XTR_SUB Quality at subcooled boiling transition
-            % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later
-            
+            %XTR_SUB Quality at subcooled boiling transition [-]
+            %
+            % Returns the equilibrium quality threshold for the onset of subcooled boiling.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+
+            % TODO: Very simplistic transition criteria for now, add more realistic transition criteria
+           
             model = liquid.inputSet.model;
             
             xtr_sub = model.WBOILINGXSUB;
         end
         
         function xtr_sat = XTR_SAT(liquid)
-            %XTR_SAT Quality at saturated boiling transition 
-            % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later
+            %XTR_SAT Quality at saturated boiling transition [-]
+            %
+            % Returns the equilibrium quality threshold for the onset of saturated boiling.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+
+            % TODO: Very simplistic transition criteria for now, add more realistic transition criteria
             
             model = liquid.inputSet.model;
             
@@ -223,22 +331,52 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function xtr_itm = XTR_ITM(liquid)
-            %XTR_ITM Quality at onset of intermediate region 
-            % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later
+            %XTR_ITM Quality at onset of intermediate region [-]
+            %
+            % Returns the equilibrium quality threshold for the onset of the intermediate flow regime.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+
+            % TODO: Very simplistic transition criteria for now, add more realistic transition criteria
             
             xtr_itm = 0.1;
         end
         
         function xtr_ann = XTR_ANN(liquid)
-            %XTR_ANN Quality at onset of annular flow region 
-            % TODO: Very simplistic transition criteria for now, more realistic models to be implemented later (e.g. Wallis model)
-            
+            %XTR_ANN Quality at onset of annular flow region [-]
+            %
+            % Returns the equilibrium quality threshold for the onset of annular flow.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            %
+            % Notes:
+            %
+            % - Uses minimum value from mix.OAFX
+
+            % TODO: Very simplistic transition criteria for now, add more realistic transition criteria
+
             xtr_ann = min(liquid.mix.OAFX);
         end
         
         function [flowregime, id] = FLOWREGIME(liquid,zIdx)
-        %FLOWREGIME Categorical two-phase flow regimes
-            
+            %FLOWREGIME Categorical two-phase flow regimes
+            %
+            % Classifies flow regime based on equilibrium quality and boiling transition flags.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
+            %
+            % Returns:
+            %
+            % - flowregime — Categorical flow regime (from :class:`Solvers.TwoFluid.REGIMES`)
+            % - id         — Integer regime ID
+
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
 
             geom = liquid.inputSet.geometry;
@@ -260,18 +398,37 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function id = FLOWID(liquid,zIdx)
-        %FLOWID two-phase flow regimes ID
+            %FLOWID Two-phase flow regime ID
+            %
+            % Returns the integer ID corresponding to the flow regime classification.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end  
             
             [~, id] = FLOWREGIME(liquid,zIdx);
-            
         end
         
         function l = L(liquid,zIdx)
-        %L Dispersed liquid interfacial length scale (e.g., drop Sauter mean diameter) [m]
-        % TODO: Simplistic model for now
-        
+            %L Dispersed liquid interfacial length scale [m]
+            %
+            % Returns the characteristic length scale for dispersed liquid
+            % (e.g., drop Sauter mean diameter).
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Currently uses a constant model
+
+            % TODO: Simplistic model for now. Implement more realistic models
+       
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
             model = liquid.inputSet.model;
@@ -283,9 +440,22 @@ classdef Liquid < Solvers.AbstractField
         end
 
         function intarea = INTAREA(liquid,vapor,zIdx)
-        %INTAREA Volumetric interfacial area [m^-1]
-        % TODO: Simplistic model for now, more realistic models to be implemented later, including a transport equation (i.e., INTAREA will become a primary parameter since resolved by the solver)
-        
+            %INTAREA Volumetric interfacial area [m^-1]
+            %
+            % Computes the interfacial area concentration based on flow regime and phase topology.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Uses a smooth transition between dispersed gas and dispersed liquid models
+
+            % TODO: Simplistic model for now, more realistic models to be implemented as needed, e.g. a transport equation for INTAREA as a primary variable
+
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
             import Solvers.TwoFluid.REGIMES
@@ -299,7 +469,7 @@ classdef Liquid < Solvers.AbstractField
                     aiv = 6*vapor.VF(liquid,zIdx)./vapor.L(zIdx);          % [m^-1] Dispersed gas
                     ail = 6*liquid.VF(vapor,zIdx)./liquid.L(zIdx);         % [m^-1] Dispersed liquid
                     
-                    %ai  = aiv;                                             % [m^-1] Initialize with dispwersed gas
+                    %ai  = aiv;                                             % [m^-1] Initialize with dispersed gas
                     %Idl = ismember(flowregime,[REGIMES.ANNULAR,REGIMES.DFFB]);
                     %ai(Idl) = ail(Idl);                                   % [m^-1] Change to dispersed liquid for selected regimes
                     intarea = liquid.mix.AFDISTR(aiv,ail,zIdx);            % [m^-1] Smooth transition at onset of annular flow
@@ -313,7 +483,15 @@ classdef Liquid < Solvers.AbstractField
     methods
         
         function hfluxwalevap = HFLUXWALEVAP(liquid,zIdx)
-        %HFLUXWALEVAP Wall evaporation (e.g., boiling) heat flux
+            %HFLUXWALEVAP Wall evaporation (boiling) heat flux [W/m^2]
+            %
+            % Computes the portion of wall heat flux attributed to evaporation (e.g., boiling),
+            % based on the wall evaporation mass ratio.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -322,7 +500,20 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function hflux = HFLUX(liquid,zIdx)
-        %HFLUX Wall heat flux to liquid phase
+            %HFLUX Wall heat flux to liquid phase [W/m^2]
+            %
+            % Computes the net wall heat flux transferred to the liquid phase, combining
+            % direct wall heating and boiling contributions.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
+            %
+            % Notes:
+            %
+            % - Combines :attr:`Solvers.TwoFluid.Liquid.HWALHEAT` and :attr:`Solvers.TwoFluid.Liquid.HFLUXWALEVAP`
+            % - Uses wall perimeter from geometry
         
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
@@ -336,9 +527,27 @@ classdef Liquid < Solvers.AbstractField
     methods
         
         function [Mcond, Mevap] = MINT(liquid,vapor,zIdx)
-        %MINT Linear interfacial mass transfer rates [kg/s/m]
-        %
-            
+            %MINT Linear interfacial mass transfer rates [kg/s/m]
+            %
+            % Computes condensation and evaporation mass transfer rates using either
+            % heat flux-based or relaxation-based models.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
+            %
+            % Returns:
+            %
+            % - Mcond — Condensation mass transfer rate [kg/s/m]
+            % - Mevap — Evaporation mass transfer rate [kg/s/m]
+            %
+            % Notes:
+            %
+            % - Supports 'CONSTANT', 'RANZMARSHALL', and 'RELAXATION' models based on :attr:`Inputs.Model.INTNU` model
+            % - Applies wall-wise distribution
+
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
             model = liquid.inputSet.model;
@@ -360,8 +569,8 @@ classdef Liquid < Solvers.AbstractField
                     end
                     
                     AREA = liquid.inputSet.geometry.AREA;                  % [m^2] Cross-section area
-                    Mcond =  AREA.*liquid.INTAREA(vapor,zIdx).*Mcond_flux;      % [kg/s/m] Condensation mass transfer
-                    Mevap = -AREA.*liquid.INTAREA(vapor,zIdx).*Mevap_flux;      % [kg/s/m] Evaporation mass transfer
+                    Mcond =  AREA.*liquid.INTAREA(vapor,zIdx).*Mcond_flux; % [kg/s/m] Condensation mass transfer
+                    Mevap = -AREA.*liquid.INTAREA(vapor,zIdx).*Mevap_flux; % [kg/s/m] Evaporation mass transfer
                     
                 case 'RELAXATION'
                     
@@ -388,7 +597,15 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function Mintevap = MINTEVAP(liquid,vapor,zIdx)
-        %MINTEVAP Linear interfacial evaporation mass transfer [kg/s/m]
+            %MINTEVAP Linear interfacial evaporation mass transfer [kg/s/m]
+            %
+            % Extracts the evaporation component from :attr:`Solvers.TwoFluid.Liquid.MINT`.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
@@ -396,7 +613,15 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function Mintcond = MINTCOND(liquid,vapor,zIdx)
-        %MINTCOND Linear interfacial condensation mass transfer [kg/s/m]
+            %MINTEVAP Linear interfacial condensation mass transfer [kg/s/m]
+            %
+            % Extracts the evaporation component from :attr:`Solvers.TwoFluid.Liquid.MINT`.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
@@ -404,17 +629,33 @@ classdef Liquid < Solvers.AbstractField
         end
 
         function walevapratio = WALEVAPRATIO(liquid,zIdx)
-        %WALEVAPRATIO Wall evaporation mass ratio [-]
-        %Ratio of liquid mass boiling due to wall heat flux
-        %
+            %WALEVAPRATIO Wall evaporation mass ratio [-]
+            %
+            % Returns the fraction of liquid mass undergoing wall boiling.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - zIdx   — Axial indices to evaluate (optional)
+ 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             
             walevapratio = liquid.mix.WALEVAPRATIO(zIdx);                  % [-]
         end
         
         function Mwalevap = MWALEVAP(liquid, vapor, zIdx)
-        %MWALEVAP Linear wall mass evaporation (i.e., boiling) rate [kg/s/m]
-        %
+            %MWALEVAP Linear wall mass evaporation rate [kg/s/m]
+            %
+            % Computes the wall boiling mass transfer rate using latent heat
+            % (based on :attr:`Inputs.Model.INTTRANSH` model) and wall heat
+            % flux.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
+
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
             model = liquid.inputSet.model;
@@ -431,7 +672,16 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function Mtot = MTOT(liquid,vapor,zIdx)
-        %MTOT Total linear mass transfer [kg/s/m]
+            %MTOT Total linear mass transfer [kg/s/m]
+            %
+            % Computes the total vapor mass transfer rate by summing interfacial
+            % condensation, evaporation, and wall boiling contributions.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
@@ -445,7 +695,16 @@ classdef Liquid < Solvers.AbstractField
     methods
         
         function intnu = INTNU(liquid,vapor,zIdx)
-        %INTNUL Interfacial Nusselt number for dispersed liquid
+            %INTNU Interfacial Nusselt number for dispersed liquid [-]
+            %
+            % Computes the interfacial Nusselt number based on
+            % :attr:`Inputs.Model.INTNU` model.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
             
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             
@@ -466,8 +725,29 @@ classdef Liquid < Solvers.AbstractField
         end
         
         function [inthflux_evap, inthflux_cond] = INTHFLUX(liquid,vapor,zIdx)
-        %INTHFLUX Interfacial heat flux (> 0 to liquid phase)
-        %TODO: simple models for now, should be improved
+            %INTHFLUX Interfacial heat flux [W/m^2]
+            %
+            % Computes the interfacial heat flux due to evaporation and
+            % condensation based on :attr:`Inputs.Model.INTAREA` interfacial
+            % area model.
+            %
+            % Inputs:
+            %
+            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
+            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
+            % - zIdx   — Axial indices to evaluate (optional)
+            %
+            % Returns:
+            %
+            % - inthflux_evap — Evaporation heat flux [W/m^2]
+            % - inthflux_cond — Condensation heat flux [W/m^2]
+            %
+            % Notes:
+            %
+            % - Uses interfacial Nusselt number and length scale
+            % - Driven by deviation from saturated temperature
+
+            % TODO: Simple models for now, should be improved
         
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
             

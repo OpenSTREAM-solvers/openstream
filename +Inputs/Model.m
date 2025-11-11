@@ -30,14 +30,14 @@ classdef Model < Inputs.Input
         MFBT             (1,1) InputEnums.MFBT                             = 'NONE'                          % Minimum Film Boiling Transition model selected from :class:`InputEnums.MFBT`
         DTMFB            (1,1) double  {mustBePositive}                    = 100;                            % Minimum film boiling temperature from saturation [K]
 
-        % Wall momentum transfer
+        % Wall (and local perturbations) momentum transfer
 
         SPMTM            (1,1) InputEnums.SPMTM                            = 'BLASIUS'                       % Single-phase wall momentum transfer model selected from :class:`InputEnums.SPMTM`
         FRICTION         (1,3) double  {mustBeNumeric}                     = [0.2 -0.2 0]                    % Wall friction coefficients [-]
         TPFM             (1,1) InputEnums.TPFM                             = 'HOMOGENEOUS'                   % Two-phase friction multiplier model selected from :class:`InputEnums.TPFM`
         KLOSS            (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Pressure loss coefficients of local perturbations [-]
         TPKM             (1,1) InputEnums.TPKM                             = 'HOMOGENEOUS'                   % Two-phase local loss multiplier model selected from :class:`InputEnums.TPKM`
-        BTMTM            (1,1) InputEnums.BTMTM                            = 'TPFM'                         % Boiling transition wall momentum transfer model selected from :class:`InputEnums.BTMTM`
+        BTMTM            (1,1) InputEnums.BTMTM                            = 'TPFM'                          % Boiling transition wall momentum transfer model selected from :class:`InputEnums.BTMTM`
 
         % Wall heat transfer
 

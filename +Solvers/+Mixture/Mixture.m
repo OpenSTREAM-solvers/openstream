@@ -82,10 +82,10 @@ classdef Mixture < Solvers.AbstractField
         function mix = Mixture(inputSet, fluid)
             %MIXTURE Constructor for Mixture class
             %
-            % Initializes the mixture object with input configuration and fluid properties.
-            % Sets up flow property tracking for simulation.
+            % Initializes the mixture object with input configuration and
+            % fluid properties. Sets up flow property tracking for simulation.
             %
-            % Parameters:
+            % Inputs:
             %
             % - inputSet — :class:`Inputs.InputSet` object containing model, geometry, and boundary conditions
             % - fluid    — :class:`Inputs.FluidProperties` object containing thermophysical fluid data
