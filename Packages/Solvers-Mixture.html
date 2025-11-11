@@ -111,7 +111,7 @@
              
   <section id="mixture-solver">
 <h1>Mixture solver<a class="headerlink" href="#mixture-solver" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Mixture</span> <span class="pre">Solver</span></code></a> module in openSTREAM provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved.</p>
+<p>The <code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code> module in <strong>openSTREAM</strong> provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which enables thermal non-equilibrium between phases by resolving the mass end energy conservation equations for the vapor phase.</p>
 <p>This module includes:</p>
 <ul class="simple">
 <li><p>Solver class for mixture-based flow simulations: <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a></p></li>
@@ -140,7 +140,7 @@ a Homogeneous Relaxation Model (HRM).</p>
 <p>Key Components:</p>
 <ul class="simple">
 <li><p>Mixture construction and phase separation (liquid/vapor)</p></li>
-<li><p>Pressure drop and mass/energy transport modeling</p></li>
+<li><p>Mixture mass/momentum/energy transport modeling</p></li>
 <li><p>Support for relaxation models and near-wall phenomena</p></li>
 <li><p>Visualization of results across time and axial domains</p></li>
 </ul>
@@ -219,7 +219,7 @@ parameters and internal data structures via
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.MixtureSolver.mixtureInit">
 <span class="sig-name descname"><span class="pre">mixtureInit</span></span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.mixtureInit" title="Link to this definition"></a></dt>
-<dd><p>Steady-state mixture object</p>
+<dd><p>Null transient mixture object</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -309,7 +309,7 @@ time indices. The function supports multiple display modes, wall
 selections, near-wall data, and optional  animation over time.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mixSolver         — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code> object containing simulation data</p></li>
+<li><p>mixSolver         — <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> object containing simulation data</p></li>
 <li><p>tIdx              — Time index or indices (vector of positive integers)</p></li>
 <li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
 <li><p>opts.solveMode    — Solve mode: ‘REAL’ or ‘NULL’</p></li>
@@ -340,7 +340,7 @@ a specified axial index. The method supports multiple display
 modes, wall selections, and plot arrangements.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mixSolver         — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code> object containing simulation data</p></li>
+<li><p>mixSolver         — <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> object containing simulation data</p></li>
 <li><p>zIdx              — Axial index (scalar, positive integer)</p></li>
 <li><p>opt.display       — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
 <li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
@@ -372,7 +372,7 @@ for mixture, liquid, and vapor fields, and can handle both real
 and null (initial) transient data.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>mixSolver         — <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code> object containing simulation data</p></li>
+<li><p>mixSolver         — <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> object containing simulation data</p></li>
 <li><p>opt.display       — Parameter(s) to display (e.g., ‘HFLUX’, ‘U’, etc.)</p></li>
 <li><p>opt.label         — Corresponding labels for display parameters</p></li>
 <li><p>opt.unit          — Units for each parameter</p></li>
@@ -434,7 +434,7 @@ by using extrapolation and fallback strategies.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.MixtureSolver.solve">
 <span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.MixtureSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.MixtureSolver.solve" title="Link to this definition"></a></dt>
 <dd><p>SOLVE Executes the mixture solver for steady-state and transient simulations.</p>
-<p>Runs the full solution process for the <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Mixture.MixtureSolver</span></code>
+<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a>
 object. It manages initialization, time stepping, axial sweeps, inner
 iterations, convergence checks, and logging.</p>
 <p>Workflow:</p>
@@ -459,7 +459,7 @@ iterations, convergence checks, and logging.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
-<p>MIXTURE Class for modeling two-phase mixture flow in mixture solver</p>
+<p>MIXTURE Class for modeling two-phase mixture field in mixture solver</p>
 <p>This class encapsulates the physical and numerical properties of a fluid mixture,
 including flow variables, phase interactions, pressure losses, heat transfer,
 and relaxation models. It supports multiple solver models and provides methods
