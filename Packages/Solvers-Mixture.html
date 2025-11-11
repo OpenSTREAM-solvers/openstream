@@ -111,7 +111,7 @@
              
   <section id="mixture-solver">
 <h1>Mixture solver<a class="headerlink" href="#mixture-solver" title="Link to this heading"></a></h1>
-<p>The <code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code> module in <strong>openSTREAM</strong> provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which enables thermal non-equilibrium between phases by resolving the mass end energy conservation equations for the vapor phase.</p>
+<p>The <code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code> module in <strong>openSTREAM</strong> provides tools and classes for simulating multiphase flows using a mixture approach. This method treats the phases as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which enables thermal non-equilibrium between phases by resolving the mass and energy conservation equations for the vapor phase.</p>
 <p>This module includes:</p>
 <ul class="simple">
 <li><p>Solver class for mixture-based flow simulations: <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a></p></li>
@@ -470,9 +470,9 @@ for computing derived quantities and handling transitions such as boiling and an
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.Mixture">
 <span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.Mixture" title="Link to this definition"></a></dt>
 <dd><p>MIXTURE Constructor for Mixture class</p>
-<p>Initializes the mixture object with input configuration and fluid properties.
-Sets up flow property tracking for simulation.</p>
-<p>Parameters:</p>
+<p>Initializes the mixture object with input configuration and
+fluid properties. Sets up flow property tracking for simulation.</p>
+<p>Inputs:</p>
 <ul class="simple">
 <li><p>inputSet — <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model, geometry, and boundary conditions</p></li>
 <li><p>fluid    — <a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object containing thermophysical fluid data</p></li>
