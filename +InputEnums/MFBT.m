@@ -1,8 +1,9 @@
 classdef MFBT
     %MFBT Enumeration of Minimum Film Boiling Transition (MFBT) models
     %
-    % This class defines the available models for evaluating the
-    % Minimum Film Boiling Transition, used by the mixture field.
+    % This class defines the available :attr:`Inputs.Model.MFBT` models for
+    % evaluating the Minimum Film Boiling Transition, used by the mixture
+    % field.
     %
     % Models:
     %

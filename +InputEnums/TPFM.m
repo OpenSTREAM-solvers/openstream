@@ -1,8 +1,9 @@
 classdef TPFM
     %TPFM Enumeration of two-phase wall friction multiplier models
     %
-    % This class defines the available models for calculating the two-phase wall
-    % friction multiplier used by the mixture solver.
+    % This class defines the available :attr:`Inputs.Model.TPFM` models for
+    % calculating the two-phase wall friction multiplier used by the mixture
+    % solver.
     %
     % Models:
     %

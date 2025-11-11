@@ -1,8 +1,9 @@
 classdef THERMALRELAX
     %THERMALRELAX Enumeration of thermal non-equilibrium time relaxation models
     %
-    % This class defines the available models for calculating thermal
-    % non-equilibrium time relaxation, used when :attr:`Inputs.Model.THERMALNONEQ` is set to `RELAXATION`.
+    % This class defines the available :attr:`Inputs.Model.THERMALRELAX`
+    % models for calculating thermal non-equilibrium time relaxation, used
+    % when :attr:`Inputs.Model.THERMALNONEQ` is set to `RELAXATION`.
     %
     % Models:
     %

@@ -1,18 +1,47 @@
 classdef Vapor < Solvers.AbstractPhase
-    %VAPOR Class representing the vapor phase in a mixture solver simulation
+    %VAPOR Represents the vapor phase in a mixture solver simulation.
     %
-    % Provides access to vapor-specific properties and calculations derived
-    % from the mixture solution.
+    % The Vapor class provides access to vapor-specific properties and
+    % calculations derived from the mixture solution. It encapsulates
+    % methods for computing flow, thermodynamic, and transport properties
+    % of the vapor phase at each axial node.
+    %
+    % Responsibilities:
+    %
+    % - Compute vapor mass fraction and void fraction
+    % - Calculate vapor velocity, enthalpy, and temperature
+    % - Evaluate wall heat flux and wall evaporation contributions
+    % - Support derived quantities such as Reynolds number and mass flux
+    %
+    % Notes:
+    %
+    % - All methods assume access to a valid :class:`Solvers.Mixture.Mixture` object
+    % - Axial indexing is optional; defaults to full axial domain
+    % - Enthalpy calculations adapt to thermal non-equilibrium models
+    % - Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
-        mix                                                                % Mixture object
-        NZ                                                                 % Number of axial steps [-]
+        mix                                                                % :class:`Solvers.Mixture.Mixture` object
+        NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
     end
 
     methods
         function vapor = Vapor(mix)
-            %VAPOR Constructor
-            % Initializes the vapor object from a Mixture instance.
+            %VAPOR Constructor of the Vapor class
+            %
+            % Initializes the Vapor object from one or more instances of the
+            % :class:`Solvers.Mixture.Mixture` class. Each Vapor instance
+            % stores a reference to its corresponding Mixture object and the
+            % number of axial nodes (NZ).
+            %
+            % Input:
+            %
+            % - mix — Array of :class:`Solvers.Mixture.Mixture` objects representing the simulation state
+            %
+            % Notes:
+            %
+            % - Supports vectorized initialization for transient simulations
+            % - Assumes each :class:`Solvers.Mixture.Mixture` object is fully initialized
 
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
@@ -74,7 +103,9 @@ classdef Vapor < Solvers.AbstractPhase
         function h = H(vapor, zIdx)
             %H Vapor enthalpy [J/kg]
             %
-            %Calculation depends on non equilibrium model
+            %Calculation depends on :attr:`Inputs.Model.THERMALNONEQ`
+            %model.
+
             %TODO: Find a better way to prevent division by small X
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
@@ -105,15 +136,52 @@ classdef Vapor < Solvers.AbstractPhase
 
         function re = RE(vapor, zIdx)
             %RE Vapor Reynolds number [-]
-            %TODO: Check definition
+            
+            %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
-            %re = 4.*vapor.W(zIdx)./vapor.mix.fluid.MUV(vapor.H(zIdx))...
-            %        ./sum(vapor.mix.inputSet.geometry.PERIM);
 
             geom  = vapor.mix.inputSet.geometry;
             fluid = vapor.mix.fluid;
+
+            %re = 4.*vapor.W(zIdx)./fluid.MUV(vapor.H(zIdx))./sum(geom.PERIM);
             re = fluid.RHOV(vapor.H(zIdx)).*vapor.U(zIdx).*geom.HDIAM./fluid.MUV(vapor.H(zIdx));
+        end
+
+        function fw = FW(vapor, zIdx)
+            %FW Vapor wall friction factor [-]
+            %
+            % Computes the Fanning wall friction factor based on
+            % :attr:`Inputs.Model.SPMTM` model.
+            %
+            % Supported models
+            %
+            % - BLASIUS: Blasius model (:math:`f = C(1) Re^{C(2)} + C(3)`) using user-defined :attr:`Inputs.Model.FRICTION` coefficients
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            model = vapor.mix.inputSet.model;
+
+            switch model.SPMTM
+                case 'BLASIUS'
+                    fw = model.FRICTION(1).*vapor.RE(zIdx).^model.FRICTION(2)+model.FRICTION(3);
+            end
+        end
+
+        function tauw = TAUW(vapor, zIdx)
+            %TAUW Vapor wall shear stress [N/m^2]
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            geom = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+
+            f = vapor.FW(zIdx);                                            % [-]
+            RHO = fluid.RHOV(vapor.H(zIdx));                               % [kg/m^3]
+            U = vapor.U(zIdx);                                             % [m/s]
+            
+            tauw = 0.5.*(f./4).*RHO.*U.^2;
+            tauw = repmat(tauw,1,geom.NWALL);                              % Expand to all walls
         end
 
         function hfluxwalevap = HFLUXWALEVAP(vapor, zIdx)
@@ -138,6 +206,48 @@ classdef Vapor < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             t = vapor.mix.fluid.T(vapor.H(zIdx));
+        end
+
+        function nu = NU(vapor, zIdx)
+            %NU Vapor wall Nusselt number [-]
+            %
+            % Computes the Nusselt number for wall heat transfer to vapor
+            % based on :attr:`Inputs.Model.SPHTM` model.
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            model = vapor.mix.inputSet.model;
+            geom  = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+
+            Re = vapor.RE(zIdx);                                           % [-] Reynolds number
+            Pr = fluid.PRANDTLV(vapor.H(zIdx));                            % [-] Prandtl number
+
+            % Calculate Nusselt number
+            switch model.SPHTM
+                case 'DITTUSBOELTER'
+                    nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                case 'DITTUSBOELTERGEN' 
+                    c = model.DITTUSBOELTERCOEF;
+                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+            end
+            nu = repmat(nu,1,geom.NWALL);                                  % Expand to all walls
+        end
+
+        function hwall = HWALL(vapor, zIdx)
+            %HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the wall heat transfer coefficient using vapor thermal
+            % conductivity and Nusselt number.
+  
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+
+            geom  = vapor.mix.inputSet.geometry;
+            fluid = vapor.mix.fluid;
+
+            k = fluid.KV(vapor.H(zIdx));                                   % [W/m/K] Fluid thermal conductivity based on liquid phase
+            HDIAM = geom.HDIAM;                                            % [m] Hydraulic diameter
+            hwall = vapor.NU(zIdx).*k./HDIAM;                              % [W/m^2/K] Single phase
         end
 
     end

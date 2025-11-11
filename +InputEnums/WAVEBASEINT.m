@@ -1,8 +1,9 @@
 classdef WAVEBASEINT
     %WAVEBASEINT Enumeration of wave to base film interfacial momentum transfer models
     %
-    % This class defines the models used to calculate the interfacial momentum
-    % transfer between wave and base film regions, used by the four-field solver.
+    % This class defines the available :attr:`Inputs.Model.WAVEBASEINT` models
+    % for calculating the interfacial momentum transfer between wave and base
+    % film regions, used by the four-field solver.
     %
     % Models:
     %

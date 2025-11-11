@@ -1,9 +1,9 @@
 classdef MOMENTDROP
     %MOMENTDROP Enumeration of droplet momentum conservation models
     %
-    % This class defines the available models for solving the droplet
-    % momentum conservation equation, used to compute droplet velocity
-    % in the three-field and four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.MOMENTDROP`
+    % models for solving the droplet momentum conservation equation, used to
+    % compute droplet velocity in the three-field and four-field solvers.
     %
     % Models:
     %

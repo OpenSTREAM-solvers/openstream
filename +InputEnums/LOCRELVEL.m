@@ -1,9 +1,9 @@
 classdef LOCRELVEL
     %LOCRELVEL Enumeration of local relative velocity models
     %
-    % This class defines the available models for calculating the local
-    % relative velocity between liquid and vapor phases, used by the
-    % two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.LOCRELVEL` models
+    % for calculating the local relative velocity between liquid and vapor
+    % phases, used by the two-fluid solver.
     %
     % Models:
     %

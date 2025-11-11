@@ -1,9 +1,9 @@
 classdef MOMENTGAS
     %MOMENTGAS Enumeration of gas momentum conservation models
     %
-    % This class defines the available models for solving the momentum
-    % conservation equation for the gas phase, used to compute gas velocity
-    % in the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.MOMENTGAS` models
+    % for solving the momentum conservation equation for the gas phase, used
+    % to compute gas velocity in the two-fluid solver.
     %
     % Models:
     %

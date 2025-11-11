@@ -1,8 +1,8 @@
 classdef TPKM
     %TPKM Enumeration of two-phase local loss multiplier models
     %
-    % This class defines the available models for calculating the two-phase
-    % local loss multiplier used by the mixture model
+    % This class defines the available :attr:`Inputs.Model.TPKM`  models for
+    % calculating the two-phase local loss multiplier used by the mixture model
     %
     % Models:
     %

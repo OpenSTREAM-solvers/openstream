@@ -1,8 +1,9 @@
 classdef BUBBLEDRAG
     %BUBBLEDRAG Enumeration of bubble drag coefficient models
     %
-    % This class defines the available models for calculating the
-    % bubble drag coefficient, used by the two-fluid solver.
+    % This class defines the available :attr:`Inputs.Model.BUBBLEDRAG` models
+    % for calculating the bubble drag coefficient, used by the two-fluid
+    % solver.
     %
     % Models:
     %

@@ -1,8 +1,9 @@
 classdef BASEEQTHICK
     %BASEEQTHICK Enumeration of base film equilibrium thickness models
     %
-    % This class defines the available models for calculating the
-    % equilibrium base film thickness, used by the four-field solver.
+    % This class defines the available :attr:`Inputs.Model.BASEEQTHICK`
+    % models for calculating the equilibrium base film thickness, used by
+    % the four-field solver.
     %
     % Models:
     %

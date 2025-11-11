@@ -4,6 +4,14 @@ classdef SolverState < uint16
     % This enumeration defines the possible states a solver can be in
     % during or after execution. It is used to track solver execution and
     % convergence status.
+    %
+    % States:
+    %
+    % - UNSOLVED                — Solver has not yet run
+    % - SOLVEDCONVERGED         — Solver completed and converged successfully
+    % - SOLVEDNOTCONVERGED      — Solver completed but did not converge
+    % - INITIALSTEPCONVERGED    — Initial steady-state step completed and converged
+    % - INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge
 
     enumeration
         UNSOLVED                    (0)                % Solver has not yet run
@@ -12,5 +20,5 @@ classdef SolverState < uint16
         INITIALSTEPCONVERGED        (3)                % Initial steady-state step completed and converged
         INITIALSTEPNOTCONVERGED     (4)                % Initial steady-state step completed but did not converge
     end
-    
+
 end

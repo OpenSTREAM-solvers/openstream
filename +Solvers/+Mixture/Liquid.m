@@ -1,18 +1,46 @@
 classdef Liquid < Solvers.AbstractPhase
-    %LIQUID Class representing the liquid phase in a mixture solver simulation
+    %LIQUID Represents the liquid phase in a mixture solver simulation.
     %
-    % Provides access to liquid-specific properties and calculations derived
-    % from the mixture solution.
+    % The Liquid class provides access to liquid-specific properties and
+    % calculations derived from the mixture solution. It encapsulates
+    % methods for computing flow, thermodynamic, and transport properties
+    % of the liquid phase at each axial node.
+    %
+    % Responsibilities:
+    %
+    % - Compute liquid mass fraction and volumetric fraction
+    % - Calculate liquid velocity, enthalpy, and temperature
+    % - Evaluate wall heat flux contributions to the liquid phase
+    % - Support derived quantities such as Reynolds number and mass flux
+    %
+    % Notes:
+    %
+    % - All methods assume access to a valid :class:`Solvers.Mixture.Mixture` object
+    % - Axial indexing is optional; defaults to full axial domain
+    % - Velocity and enthalpy calculations include fallback logic to handle single-phase vapor regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
-        mix                                                                % Mixture object
-        NZ                                                                 % Number of axial steps [-]
+        mix                                                                % :class:`Solvers.Mixture.Mixture` object
+        NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
     end
 
     methods
         function liquid = Liquid(mix)
             %LIQUID Constructor
-            % Initializes the liquid object from a Mixture instance.
+            %
+            % Initializes the Liquid object from one or more instances of the
+            % :class:`Solvers.Mixture.Mixture` class. Each Liquid instance
+            % stores a reference to its corresponding Mixture object and the
+            % number of axial nodes (NZ).
+            %
+            % Input:
+            %
+            % - mix — Array of :class:`Solvers.Mixture.Mixture` objects representing the simulation state
+            %
+            % Notes:
+            %
+            % - Supports vectorized initialization for transient simulations
+            % - Assumes each :class:`Solvers.Mixture.Mixture` object is fully initialized
 
             arguments
                 mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
@@ -73,7 +101,10 @@ classdef Liquid < Solvers.AbstractPhase
 
         function h = H(liquid, zIdx)
             %H Liquid enthalpy [J/kg]
-            % Calculated based on mixture & vapor enthalpies and vapor quality
+            %
+            % Calculated based on mixture and vapor enthalpies, and vapor
+            % quality.
+
             % TODO: Find a better way to prevent division by small 1-X and negative h
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
@@ -98,7 +129,8 @@ classdef Liquid < Solvers.AbstractPhase
 
         function re = RE(liquid, zIdx)
             %RE Liquid Reynolds number [-]
-            %TODO: Check definition
+            
+            %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             re = 4.*liquid.W(zIdx)./liquid.mix.fluid.MUL(liquid.H(zIdx))...
@@ -118,6 +150,48 @@ classdef Liquid < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             t = liquid.mix.fluid.T(liquid.H(zIdx));
+        end
+
+        function nu = NU(liquid, zIdx)
+            %NU Liquid wall Nusselt number [-]
+            %
+            % Computes the Nusselt number for wall heat transfer to liquid
+            % based on :attr:`Inputs.Model.SPHTM` model.
+
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+
+            model = liquid.mix.inputSet.model;
+            geom  = liquid.mix.inputSet.geometry;
+            fluid = liquid.mix.fluid;
+
+            Re = liquid.RE(zIdx);                                          % [-] Reynolds number
+            Pr = fluid.PRANDTLL(liquid.H(zIdx));                           % [-] Prandtl number
+
+            % Calculate Nusselt number
+            switch model.SPHTM
+                case 'DITTUSBOELTER'
+                    nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                case 'DITTUSBOELTERGEN' 
+                    c = model.DITTUSBOELTERCOEF;
+                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+            end
+            nu = repmat(nu,1,geom.NWALL);                                  % Expand to all walls
+        end
+
+        function hwall = HWALL(liquid, zIdx)
+            %HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]
+            %
+            % Computes the wall heat transfer coefficient using liquid thermal
+            % conductivity and Nusselt number.
+  
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+
+            geom  = liquid.mix.inputSet.geometry;
+            fluid = liquid.mix.fluid;
+
+            k = fluid.KL(liquid.H(zIdx));                                  % [W/m/K] Fluid thermal conductivity based on liquid phase
+            HDIAM = geom.HDIAM;                                            % [m] Hydraulic diameter
+            hwall = liquid.NU(zIdx).*k./HDIAM;                             % [W/m^2/K] Single phase
         end
 
     end

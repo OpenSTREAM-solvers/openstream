@@ -1,8 +1,9 @@
 classdef OAF
     %OAF Enumeration of onset of annular flow models
     %
-    % This class defines the available models for predicting the onset
-    % of annular flow, used by the three-field and four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.OAF` models for
+    % predicting the onset of annular flow, used by the three-field and
+    % four-field solvers.
     %
     % Models:
     %

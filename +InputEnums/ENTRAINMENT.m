@@ -1,9 +1,9 @@
 classdef ENTRAINMENT
     %ENTRAINMENT Enumeration of droplet entrainment models
     %
-    % This class defines the available models for calculating the
-    % droplet entrainment mass flux, used by the three-field and
-    % four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.ENTRAINMENT` models
+    % for calculating the droplet entrainment mass flux, used by the three-field
+    % and four-field solvers.
     %
     % NOTE: Entrainment and deposition correlations are coupled.
     % It is recommended to use the same model for both entrainment

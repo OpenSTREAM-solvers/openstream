@@ -3,7 +3,7 @@ Inputs
 
 The :mod:`Inputs` package defines a set of classes used to configure and import all the necessary parameters for running **OpenSTREAM** simulations. This includes:
 
-- Boundary conditions :class:`Inputs.BoundaryConditions`
+- Boundary conditions: :class:`Inputs.BoundaryConditions`
 - System geometry: :class:`Inputs.Geometry`
 - Physical models: :class:`Inputs.Model`
 - Numerical options: :class:`Inputs.Options`

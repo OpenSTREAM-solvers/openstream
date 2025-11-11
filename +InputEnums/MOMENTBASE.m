@@ -1,9 +1,9 @@
 classdef MOMENTBASE
     %MOMENTBASE Enumeration of base film momentum conservation models
     %
-    % This class defines the available models for solving the base film
-    % momentum conservation equation, used to compute the base film velocity
-    % in the four-field solver.
+    % This class defines the available :attr:`Inputs.Model.MOMENTBASE` models
+    % for solving the base film momentum conservation equation, used to
+    % compute the base film velocity in the four-field solver.
     %
     % Models:
     %

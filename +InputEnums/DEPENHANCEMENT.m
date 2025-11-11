@@ -1,8 +1,9 @@
 classdef DEPENHANCEMENT
     %DEPENHANCEMENT Enumeration of droplet deposition enhancement models
     %
-    % This class defines the available models for calculating local droplet
-    % deposition enhancement, used by the three-field and four-field solvers.
+    % This class defines the available :attr:`Inputs.Model.DEPENHANCEMENT`
+    % models for calculating local droplet deposition enhancement, used by
+    % the three-field and four-field solvers.
     %
     % Models:
     %

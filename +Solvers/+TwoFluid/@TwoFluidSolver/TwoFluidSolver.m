@@ -1,43 +1,75 @@
 classdef TwoFluidSolver < Solvers.AbstractSolver
-    %TWOFLUIDSOLVER defines any task related to initalizing, solving and plotting the results based on the two-fluid approach.
+    %TWOFLUIDSOLVER Solver for initializing, solving, and visualizing two-fluid flow.
     %
-    %   TODO: Detailed explanations
-    
-     properties (SetAccess=protected)
-        
-        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+    % The TwoFluidSolver class handles the setup, execution, and visualization
+    % of thermal-hydraulic simulations using a two-phase two-fluid approach.
+    %
+    % Responsibilities:
+    %
+    % - Initializes solver parameters from an :class:`Inputs.InputSet` object
+    % - Constructs :class:`Solvers.TwoFluid.Liquid` and :class:`Solvers.TwoFluid.Vapor` objects for transient and steady-state analysis
+    % - Provides plotting utilities for spatial and temporal distributions
+    %
+    % Key Components:
+    %
+    % - Phase construction and separation (liquid/vapor)
+    % - Phase mass/momentum/energy transport modeling
+    % - Pressure drop gradient obtained from mixture solver
+    % - Support for relaxation models
+    % - Visualization of results across time and axial domains
+
+    properties (SetAccess=protected)
+
+        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
         TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
-        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s] from :attr:`Inputs.Options.TSTEP`
         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
-        boundaryConditions
-        
-        liquidInit
-        vaporInit
-        liquid
-        vapor
+        fluid       {isa(fluid,'Inputs.FluidProperties')}                              % Fluid object :class:`Inputs.FluidProperties`
+        boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
 
-     end
+        liquidInit                                                                     % Null transient liquid object
+        vaporInit                                                                      % Null transient vapor object
+        liquid                                                                         % Liquid object
+        vapor                                                                          % Vapor object
 
-     properties (SetAccess = protected)
-        mixSolver
-        inputSet
-        STATE                                                               = Solvers.SolverState.UNSOLVED
-     end
+    end
+
+    properties (SetAccess = protected)
+        mixSolver                                                                      % Mixture object :class:`Solvers.Mixture.Mixture`
+        inputSet                                                                       % Input set object :class:`Inputs.InputSet`
+        STATE                                                              = Solvers.SolverState.UNSOLVED
+    end
 
 
     methods
-        solve(twfSolver)
+        solve(twfSolver)                                                               % Solving algorithm
     end
 
     methods
-        
+
         function twfSolver = TwoFluidSolver(inputSet,mixSolver)
-            %TWOFLUIDSOLVER Creates a TwoFluid solver
+            %TWOFLUIDSOLVER Constructor for the TwoFluidSolver class.
             %
+            % Creates a new instance of the TwoFluidSolver class using the
+            % provided :class:`Inputs.InputSet`. This constructor initializes
+            % the solver by calling the abstract :class:`Solvers.AbstractSolver`
+            % superclass constructor and then sets up all necessary solver
+            % parameters and internal data structures via
+            % :meth:`Solvers.TwoFluid.TwoFluidSolver.initializeSolver <Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver.initializeSolver>`
+            %
+            % Input:
+            %
+            % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            %
+            % Notes:
+            %
+            % - This constructor assumes :class:`Inputs.InputSet` is fully validated.
+            % - Solver initialization includes liquid and vapor objects setup.
+            % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
+
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
@@ -45,7 +77,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             % Call abstract class constructor
             twfSolver = twfSolver@Solvers.AbstractSolver(inputSet);
-            
+
             % Store mixSolver handle
             twfSolver.mixSolver = mixSolver;
 
@@ -53,15 +85,32 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             if twfSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
                 twfSolver.mixSolver.solve();
             end
-            
+
             % Initialize solver parameters
             twfSolver.initializeSolver();
 
         end
-        
+
         function initializeSolver(twfSolver)
-        %INITIALIZESOLVER Initialize solver using the stored inputSet
-        %
+            %INITIALIZESOLVER Initializes solver parameters and constructs liquid/vapor objects.
+            %
+            % Sets up the solver's internal state using the provided
+            % :class:`Inputs.InputSet` and :class:`Solvers.Mixture.MixtureSolver`,
+            % This includes initialization of data structures for transient and steady-state
+            % simulations based on the mixture solver solutions.
+            %
+            % Operations performed:
+            %
+            % - Initializes liquid and vapor arrays for each time step
+            % - Initializes fluid property objects
+            % - Sets up mixture object
+            % - Assigns initial conditions for phase mass flow rates, velocities, enthalpies
+            %
+            % Notes:
+            %
+            % - The function assumes uniform axial discretization.
+            % - Wall heat flux is computed from interpolated boundary conditions.
+
             import Inputs.*
             import Solvers.TwoFluid.*
             import Solvers.*
@@ -73,9 +122,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             end
 
             % Local parameters
-            mixArr = twfSolver.mixSolver.mixture;                           % Mixture solution
-            %model  = twfSolver.inputSet.model;                              % Models
-            %geom   = twfSolver.inputSet.geometry;                           % Geometry
+            mixArr = twfSolver.mixSolver.mixture;                          % Mixture solution
 
             % Setup inner iteration value struct
             ITRFields = ["N","DW","DU","DH"];
@@ -87,7 +134,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             liqArr(twfSolver.NTIME) = Liquid();
             vapArr(twfSolver.NTIME) = Vapor();
             props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid'};  % liquid and vapor properties
-            
+
             for tIdx = 1:twfSolver.NTIME
 
                 % Convenience variables (handles)
@@ -95,46 +142,46 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 vap         = vapArr(tIdx);
                 mix         = mixArr(tIdx);
                 fluid       = twfSolver.fluid(tIdx);
-                
-                % Inputset, fluid                
+
+                % Inputset, fluid
                 liq.inputSet = twfSolver.inputSet;
                 liq.fluid    = fluid;
-                
+
                 % Axial Steps
                 vap.DZ = twfSolver.DZ;
-                
+
                 liq.NZ = twfSolver.NZ;
                 liq.DZ = twfSolver.DZ;
                 liq.Z  = twfSolver.Z;
-                
+
                 % Time step
                 liq.NTIME = twfSolver.NTIME;
                 liq.DT    = twfSolver.DT;
                 liq.TIME  = twfSolver.TIME(tIdx);
                 liq.TIDX  = tIdx;
-                
+
                 % Copy properties to vapor
                 for p = props
                     vap.(p{:}) = liq.(p{:});
                 end
-                
+
                 % Initialize mixture
                 liq.mix = Mixture(mix,liq,vap);
                 vap.mix = liq.mix;
-                
+
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 liq.W = mix.liquid.W;                                      % [kg/s] Mixture model liquid mass flow rate
                 vap.W = mix.vapor.W;                                       % [kg/s] Mixture model vapor mass flow rate
-                
+
                 % Initialize velocity [m/s]
                 liq.U = mix.liquid.U;                                      % [m/s] Mixture model liquid velocity
                 vap.U = mix.vapor.U;                                       % [m/s] Mixture model vapor velocity
-               
+
                 % Initialize enthalpy [J/kg]
                 liq.H = min(mix.H,fluid.HF);                               % [J/kg] Mixture model enthalpy, up to liquid saturation
                 vap.H = max(mix.H,fluid.HG);                               % [J/kg] Mixture model enthalpy, down to vapor saturation
-                
+
                 % ITR
                 liq.ITR = ITRl;
                 vap.ITR = ITRv;
@@ -175,8 +222,33 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
         end
 
         function plotter = plotz(twfSolver, tIdx, opts)
-        %PLOTZ Plot spatial distributions of two-fluid parameters
-        %
+            %PLOTZ Plots spatial (axial) distributions of two-fluid parameters.
+            %
+            % Generates axial plots of selected two-fluid parameters at specified
+            % time indices. The function supports multiple display modes, wall
+            % selections, near-wall data, and optional  animation over time.
+            %
+            % Inputs:
+            %
+            % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
+            % - tIdx              — Time index or indices (vector of positive integers)
+            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
+            % - opts.wall         — Wall index(es) to plot
+            % - opts.zIdx         — Axial indices to include in the plot
+            % - opts.obstructions — Logical flag to display obstruction locations
+            % - opts.unitTemp     — Temperature unit: 'K' or 'C'
+            % - opts.arrangement  — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opts.resize       — Resize factor for plot scaling
+            %
+            % Notes:
+            %
+            % - If multiple time indices are provided, the function creates an animated plot.
+            % - At least two axial indices must be specified to enable spatial plotting.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Obstruction locations are plotted if opts.obstructions is true.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+
             arguments
                 twfSolver
                 tIdx           (:,1) double {mustBeInteger,mustBePositive}                                                     = []
@@ -185,20 +257,20 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opts.wall      (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.inputSet.geometry.NWALL
                 opts.zIdx      (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                        = 1:twfSolver.NZ
                 opts.obstructions (1,1) logical                                                                                = false
-                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'                
+                opts.unitTemp  {mustBeMember(opts.unitTemp,{'K','C'})}                                                         = 'K'
                 opts.arrangement {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                             = 'flow'
                 opts.resize    (1,1) double {mustBeNonnegative}                                                                = 0
             end
-            
+
             if length(opts.zIdx) < 2
                 twfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
                 return
             end
-            
+
             z     = twfSolver.Z(opts.zIdx);
             bc    = twfSolver.boundaryConditions;
             model = twfSolver.inputSet.model;
-            
+
             switch opts.solveMode
                 case 'REAL'
                     if isempty(tIdx), tIdx = 1:twfSolver.NTIME; end
@@ -217,11 +289,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     bcHFLUX = arrayfun(@(n) bc.HFLUX(opts.zIdx,:,1),1:length(tIdx),'uni',0);
                     solveMode = '- Null transient';
             end
-            
+
             % Temperature unit offset between C and K
             dTemp = 0; if strcmp(opts.unitTemp,'C'), dTemp = -273.15; end
-            
-             % Set up plotter
+
+            % Set up plotter
             if isscalar(tIdx)
                 plotter = Solvers.SolverPlotter( ...
                     sprintf('Axial distributions of two-fluid parameters at %0.3f [s] %s', liqs(1).TIME, solveMode), ...
@@ -234,7 +306,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     "isAnimation", true, ...
                     "animationSeries", [liqs.TIME]);
             end
-            plotter.setZs(z);           
+            plotter.setZs(z);
 
             function tf = displayVariable(memberList)
                 tf = any(ismember(memberList, upper(opts.display)));
@@ -410,7 +482,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
-                    
+
                     ah_liq = plotter.addTile( ...
                         'tileTitle', 'Liquid momentum exchanges', ...
                         'xlabel',           'Axial position [m]', ...
@@ -425,7 +497,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                     plotter.ylim([-ymax ymax]);
-                   
+
                     % Link exchange axes
                     % TODO: this can be a plotter method
                     for wallIdx = 1:length(ah_liq)
@@ -511,12 +583,35 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.resizeFigure(opts.resize);
             end
         end
-        
+
         function plotter = plott(twfSolver, zIdx, opt)
-        %PLOTT Plot temporal distributions of two-fluid parameters
-        %
-        %   NOTE: currently supports only single elevation
-        %
+            %PLOTT Plots temporal distributions of two-fluid parameters at a given axial location.
+            %
+            % Generates time-series plots of selected two-fluid parameters at
+            % a specified axial index. The method supports multiple display
+            % modes, wall selections, and plot arrangements.
+            %
+            % Inputs:
+            %
+            % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
+            % - zIdx              — Axial index (scalar, positive integer)
+            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.tIdx          — Time indices to include in the plot
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.unitTemp      — Temperature unit: 'K' or 'C'
+            % - opt.arrangement   — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opt.resize        — Resize factor for plot scaling
+            %
+            % Notes:
+            %
+            % - If opt.display is set to 'ALL', all supported parameters are plotted.
+            % - The function validates that at least two time indices are provided.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Near-wall data is included if opt.nearWall is true.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+
             arguments
                 twfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                  = twfSolver.NZ
@@ -529,11 +624,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                 = 'flow'
                 opt.resize      (1,1) double {mustBeNonnegative}                                                                 = 0
             end
-            
+
             if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
-            
+
             model = twfSolver.inputSet.model;
-            
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:twfSolver.NTIME; end
@@ -552,7 +647,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     bcHFLUX = repmat(twfSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
                     solveMode = '- Null transient';
             end
-            
+
             time = [liq.TIME];
             if length(time) < 2
                 twfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
@@ -561,15 +656,15 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             if opt.reverseTime
                 time = time -time(end);
             end
-            
+
             dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
 
             z = twfSolver.Z;
             plotter = Solvers.SolverPlotter( ...
-                                sprintf('Time distributions of two-fluid parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
-                                opt.wall,'arrangement',opt.arrangement);
+                sprintf('Time distributions of two-fluid parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
+                opt.wall,'arrangement',opt.arrangement);
             plotter.setZs(time);
-            
+
             % Wall heat flux
             if any(ismember({'HFLUX','ALL'},opt.display))
                 plotter.newTile( ...
@@ -586,41 +681,37 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 end
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Mass flow rates
             if any(ismember({'W','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle', 'Phase mass flow rates', ...
                     'xlabel',                 'Time [s]', ...
                     'ylabel',    'Mass flow rate [kg/s]');
-                %plotter.plotz(mix.transient('W'    ,'zIdx',zIdx)','Mixture');
                 plotter.plotz(liq.transient('mix.W','zIdx',zIdx)','Mixture');
                 plotter.plotz(liq.transient('W'    ,'zIdx',zIdx)','Liquid' );
                 plotter.plotz(vap.transient('W'    ,'zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Phase velocities
             if any(ismember({'U','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle',   'Phase velocities', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,     'Velocity [m/s]');
-                %plotter.plotz(mix.transient('U'    ,'zIdx',zIdx)','Mixture');
                 plotter.plotz(liq.transient('mix.U','zIdx',zIdx)','Mixture');
                 plotter.plotz(liq.transient('U'    ,'zIdx',zIdx)','Liquid' );
                 plotter.plotz(vap.transient('U'    ,'zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Phase enthalpies
             if any(ismember({'H','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle',   'Phase enthalpies', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,    'Enthalpy [J/kg]');
-                
-                %plotter.plotz(mix.transient('H'    ,'zIdx',zIdx)','Mixture'                           );
                 plotter.plotz(liq.transient('mix.H','zIdx',zIdx)','Mixture'                           );
                 plotter.plotz(liq.transient('H'    ,'zIdx',zIdx)','Liquid'                            );
                 plotter.plotz(vap.transient('H'    ,'zIdx',zIdx)','Vapor'                             );
@@ -628,20 +719,19 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(fld.transient('HG')'               ,'SatVap' ,'DisplayName','Sat vapor' );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Vapor ratios (void fraction and qualities)
             if any(ismember({'VR','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle', 'Void fractions and qualities', ...
                     'xlabel'   ,                     'Time [s]', ...
                     'ylabel'   ,  'Quality / Void fraction [-]');
-                %plotter.plotz(mix.transient('XEQ'    ,    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
                 plotter.plotz(liq.transient('mix.XEQ',    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
                 plotter.plotz(vap.transient('X'      ,    'zIdx',zIdx)','Vapor'       ,'DisplayName','Vapor mass quality' );
                 plotter.plotz(vap.transient('VF'     ,liq,'zIdx',zIdx)','VoidFraction','DisplayName','Void fraction'      );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Phase temperatures
             if any(ismember({'T','ALL'},opt.display))
                 plotter.newTile( ...
@@ -653,7 +743,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.plotz(fld.transient('TSAT')'         +dTemp,'Saturation');
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Vapor and liquid mass exchanges
             if any(ismember({'PWE','ALL'},opt.display))
                 ah_vap = plotter.newTile( ...
@@ -667,7 +757,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
-                
+
                 ah_liq = plotter.newTile( ...
                     'tileTitle', 'Liquid mass exchanges', ...
                     'xlabel',                 'Time [s]', ...
@@ -679,14 +769,14 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
-                
+
                 % Link exchange axes
                 % TODO: this can be a plotter method
                 for wallIdx = 1:length(ah_liq)
                     linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
                 end
             end
-            
+
             % Vapor and liquid momentum Exchanges
             if any(ismember({'PME','ALL'},opt.display))
                 ah_vap = plotter.newTile( ...
@@ -703,7 +793,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
-                
+
                 ah_liq = plotter.newTile( ...
                     'tileTitle', 'Liquid momentum exchanges', ...
                     'xlabel',                     'Time [s]', ...
@@ -717,14 +807,14 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
-                
+
                 % Link exchange axes
                 % TODO: this can be a plotter method
                 for wallIdx = 1:length(ah_liq)
                     linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
                 end
             end
-            
+
             % Vapor and liquid energy Exchanges
             if any(ismember({'PEE','ALL'},opt.display))
                 ah_vap = plotter.newTile( ...
@@ -739,7 +829,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
-                
+
                 ah_liq = plotter.newTile( ...
                     'tileTitle', 'Liquid energy exchanges', ...
                     'xlabel',                   'Time [s]', ...
@@ -752,14 +842,14 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
-                
+
                 % Link exchange axes
                 % TODO: this can be a plotter method
                 for wallIdx = 1:length(ah_liq)
                     linkaxes([ah_vap(wallIdx), ah_liq(wallIdx)]);
                 end
             end
-            
+
             % Volumetric interfacial area
             if any(ismember({'INTAREA','ALL'},opt.display))
                 plotter.newTile( ...
@@ -768,7 +858,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'ylabel'   ,    'Interfacial area [m^-^1]');
                 plotter.plotz(liq.transient('INTAREA',vap,'zIdx',zIdx)','Interfacial');
             end
-            
+
             % Two-phase flow regimes
             if any(ismember({'REGIME','ALL'},opt.display))
                 plotter.newTile( ...
@@ -785,10 +875,36 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.resizeFigure(opt.resize);
             end
         end
-        
+
         function plotzt(twfSolver, opt)
-        %PLOTZT: Plot 2D time/elevation distributions of two-fluid parameters
-        %
+            %PLOTZT Plots 2D time/elevation distributions of two-fluid parameters.
+            %
+            % Generates surface plots of selected two-fluid related parameters
+            % over time and axial (elevation) positions. It supports plotting
+            % for liquid, and vapor fields, and can handle both real
+            % and null (initial) transient data.
+            %
+            % Inputs:
+            %
+            % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
+            % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
+            % - opt.label         — Corresponding labels for display parameters
+            % - opt.unit          — Units for each parameter
+            % - opt.field         — Field to plot: 'mixture', 'liquid', or 'vapor'
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.zIdx          — Axial indices (must include at least 2)
+            % - opt.tIdx          — Time indices (must include at least 2)
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.shading       — Surface shading style: 'faceted', 'flat', or 'interp'
+            % - opt.view          — View angle for 3D plot [azimuth elevation]
+            %
+            % Notes:
+            %
+            % - If 'ALL' is passed to opt.display, all supported parameters are plotted.
+            % - The function validates that at least two axial and time indices are provided to enable meaningful 2D plotting.
+            % - Each wall is plotted in a separate figure window with appropriate titles and subplot grouping.
+
             arguments
                 twfSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',                     'W',               'U',               'H',           'X',                 'VF'}
@@ -803,7 +919,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
                 opt.view         (1,2) double                                             = [0 90]
             end
-            
+
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
@@ -845,7 +961,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 twfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
                 return
             end
-            
+
             for k = opt.wall
                 if ismember('liquid',opt.field)
                     name = ['Time/axial distributions of two-fluid (liquid) parameters ' solveMode ' - Wall ' num2str(k)];
@@ -865,8 +981,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 end
             end
         end
-        
-    end
-    
-end
 
+    end
+
+end

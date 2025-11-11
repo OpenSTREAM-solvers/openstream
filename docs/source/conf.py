@@ -17,6 +17,8 @@ copyright = f'2024–{datetime.datetime.now().year}, The OpenSTREAM Team'
 extensions = [
     'sphinxcontrib.matlab',
     'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon', 
     'sphinx_rtd_theme',
     'sphinx_copybutton',

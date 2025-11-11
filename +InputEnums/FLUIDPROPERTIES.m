@@ -1,8 +1,8 @@
 classdef FLUIDPROPERTIES
     %FLUIDPROPERTIES Enumeration of fluid property calculation assumptions
     %
-    % This class defines the assumptions used to calculate fluid
-    % properties, applicable to all solvers.
+    % This class defines the available :attr:`Inputs.Model.PROPERTIES`
+    % assumptions to calculate fluid properties, applicable to all solvers.
     %
     % Models:
     %
