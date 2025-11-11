@@ -1,5 +1,5 @@
 classdef Mixture < Solvers.AbstractField
-    %MIXTURE Class for modeling two-phase mixture flow in mixture solver
+    %MIXTURE Class for modeling two-phase mixture field in mixture solver
     %
     % This class encapsulates the physical and numerical properties of a fluid mixture,
     % including flow variables, phase interactions, pressure losses, heat transfer,
@@ -657,7 +657,7 @@ classdef Mixture < Solvers.AbstractField
 
                 switch model.BTMTM
                     case 'TPFM'
-                        taubt = tauw(idxbt);                               % [N/m^2]
+                        taubt = tauw;                                      % [N/m^2]
                     case 'VAPOR'
                         taubt  = mix.vapor.TAUW(zIdx);                     % [N/m^2]
                 end
