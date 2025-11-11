@@ -15,7 +15,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
     % Key Components:
     %
     % - Mixture construction and phase separation (liquid/vapor)
-    % - Pressure drop and mass/energy transport modeling
+    % - Mixture mass/momentum/energy transport modeling
     % - Support for relaxation models and near-wall phenomena
     % - Visualization of results across time and axial domains
 
@@ -31,7 +31,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         fluid        {isa(fluid,'Inputs.FluidProperties')}                             % Fluid object :class:`Inputs.FluidProperties`
         boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
 
-        mixtureInit                                                                    % Steady-state mixture object
+        mixtureInit                                                                    % Null transient mixture object
         mixture                                                                        % Mixture object
 
     end
@@ -398,7 +398,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Inputs:
             %
-            % - mixSolver         — :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>` object containing simulation data
+            % - mixSolver         — :class:`Solvers.Mixture.MixtureSolver` object containing simulation data
             % - tIdx              — Time index or indices (vector of positive integers)
             % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
             % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
@@ -775,7 +775,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Inputs:
             %
-            % - mixSolver         — :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>` object containing simulation data
+            % - mixSolver         — :class:`Solvers.Mixture.MixtureSolver` object containing simulation data
             % - zIdx              — Axial index (scalar, positive integer)
             % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
             % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
@@ -1069,7 +1069,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Inputs:
             %
-            % - mixSolver         — :class:`Mixture.MixtureSolver <Mixture.MixtureSolver.MixtureSolver>` object containing simulation data
+            % - mixSolver         — :class:`Solvers.Mixture.MixtureSolver` object containing simulation data
             % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
             % - opt.label         — Corresponding labels for display parameters
             % - opt.unit          — Units for each parameter
