@@ -421,7 +421,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             arguments
                 mixSolver
                 tIdx              (:,1) double {mustBeInteger,mustBePositive}                                = []
-                opts.display      {mustBeMember(opts.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
+                opts.display      {matlab.system.mustBeMember(opts.display,{'HFLUX','W','DP','U','DUDT','H','DHDT','VR','T','PWE','PEE','TRELAX','ALL'})} = {'HFLUX','W','DP','U','H','VR'}
                 opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                             = 'REAL'
                 opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.inputSet.geometry.NWALL
                 opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                   = 1:mixSolver.NZ
@@ -479,7 +479,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter.setZs(z);
 
             function tf = displayVariable(memberList)
-                tf = any(ismember(memberList,opts.display));
+                tf = any(ismember(memberList,upper(opts.display)));
             end
 
             % Loop through each tIdx

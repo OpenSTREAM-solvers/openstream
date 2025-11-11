@@ -266,7 +266,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             arguments
                 tfSolver
                 tIdx              (:,1) double {mustBeInteger,mustBePositive}                                         = []
-                opts.display      {mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opts.display      {matlab.system.mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
                 opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                      = 'REAL'
                 opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
                 opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
@@ -322,7 +322,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             plotter.setZs(z);
 
             function tf = displayVariable(memberList)
-                tf = any(ismember(memberList,opts.display));
+                tf = any(ismember(memberList, upper(opts.display)));
             end
 
             % Loop through each tIdx
