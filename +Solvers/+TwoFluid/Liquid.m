@@ -1,35 +1,39 @@
 classdef Liquid < Solvers.AbstractField
-    %LIQUID Summary of this class goes here
-    %   Detailed explanation goes here
+    %LIQUIS Class for modeling liquid field in two-fluid solver
+    %
+    % This class encapsulates the physical and numerical properties of the liquid phase,
+    % including flow variables, phase interactions, heat transfer,and relaxation models.
+    % It supports multiple solver models and provides methods for computing derived
+    % quantities and handling flow regime transitions.
     
      properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
         
-        % Solver properties
-        NZ                                                                 = 0                    % [-] Number of axial steps
-        NTIME                                                              = 0                    % [-] Number of time steps
-        TIME                                                               = 0                    % [s] Time series
-        DT                                                                 = 0                    % [s] Time step size
-        TIDX                                                               = 1                    % [-] Time step index
-        Z                                                                  = 1.                   % [m] Elevation
+        % Solver state
+        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        NTIME                                                              = 0                    % Number of time steps [-]
+        TIME                                                               = 0                    % Time series [s]
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.InputSet.options.TSTEP`
+        TIDX                                                               = 1                    % Time step index [-]
+        Z                                                                  = 1.                   % Elevation [m]
         
-        % Flow properties
-        W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
-        U            (:,1) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
-        H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
+        % Flow variables
+        W            (:,1) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
+        U            (:,1) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
+        H            (:,1) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
-        % Iteration properties
+        % Iteration tracking
         ITR
 
-        % Mixture
+        % Mixture object
         mix         (1,1)        {isa(mix, 'Solvers.TwoFluid.Mixture')}  = NaN
 
      end
 
      properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
         
-        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}
+        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % Axial step size [m]
+        inputSet                   {isa(inputSet,'Inputs.InputSet')}                              % :class:`Inputs.InputSet` object
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}                          % :class:`Inputs.FluidProperties` object
      
      end
     

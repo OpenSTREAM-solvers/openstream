@@ -1,12 +1,22 @@
 classdef REGIMES < double
-    %REGIMES Enum class of the 6 two-phase flow regimes considered
+    %REGIMES Enumeration of two-phase flow regimes
     %
-    %   The 6 regimes are defined as a enum class to increase computational
-    %   efficiency while increasing readability of code, particularly when
-    %   different calculations are carried out for different flow regimes.
-    %   
-    %   ...
-    
+    % This class defines the available two-phase flow regimes for constitutive
+    % model selection, used by the two-fluid solver.
+    %
+    % The flow regimes are defined as an enum class to increase computational
+    % efficiency while increasing readability of code, particularly when
+    % different calculations are carried out for different flow regimes.
+    %
+    % Flow regimes:
+    %
+    % - LIQUID            — Single-phase liquid
+    % - BUBBLY_SUBCOOLED  — Bubbly flow in subcooled region
+    % - BUBBLY_SATURATED  — Bubble flow in saturated region
+    % - INTERMEDIATE      — Intermediate flow region
+    % - ANNULAR           — Annular flow
+    % - DFFB              — Dispersed Flow Film Boiling
+
     enumeration
         LIQUID              (0)
         BUBBLY_SUBCOOLED    (1)

@@ -1,6 +1,25 @@
 function solve(twfSolver)
-%SOLVE  
-% 
+%SOLVE Executes the two-fluid solver for steady-state and transient simulations.
+%
+% Runs the full solution process for the :class:`Solvers.TwoFluid.TwoFluidSolver`
+% object. It manages initialization, time stepping, axial sweeps, inner
+% iterations, convergence checks, and logging.
+%
+% Workflow:
+%
+% - Enables logging and opens persistent log file
+% - Validates solver state before execution
+% - Runs steady-state initialization (solveINIT = true)
+% - If initial step converges, proceeds with transient simulation
+% - Handles exceptions and ensures proper log closure
+%
+% Notes:
+%
+% - Uses internal `solver` function to handle both steady-state and transient modes
+% - Applies relaxation factors for phase flows, velocities, and enthalpies
+% - Supports thermal non-equilibrium modeling
+% - Logs progress and outputs to session directory
+
 arguments
     twfSolver
 end
@@ -10,7 +29,7 @@ import Solvers.SolverState
 % Enable diary
 twfSolver.inputSet.session.log.diaryOn();
 
-% Open log in presistent mode
+% Open log in persistent mode
 twfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if twfSolver.STATE ~= SolverState.UNSOLVED
@@ -21,7 +40,7 @@ else
     try
         % Solve init
         solver(true);
-    
+
         % Continue solving if init converged
         if twfSolver.STATE == SolverState.INITIALSTEPCONVERGED
             solver(false);
@@ -30,13 +49,13 @@ else
                 twfSolver.log('\t\tSkipping transient solver ...\n');
             end
         end
-        
+
     catch ME
         twfSolver.inputSet.session.log.closeLog();
         twfSolver.inputSet.session.log.diaryOff();
         rethrow(ME)
     end
-    
+
     twfSolver.log('\n-------------------------------------------- Two-fluid solver run completed --------------------------------------------\n\n')
 end
 
