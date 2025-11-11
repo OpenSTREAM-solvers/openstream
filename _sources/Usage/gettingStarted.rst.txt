@@ -6,7 +6,7 @@ Prerequisites and installation
 
 **OpenSTREAM** is a MATLAB program for simulating one-dimensionnal two-phase flows.
 The Python version of
-`CoolProp <http://www.coolprop.org/index.html#what-is-coolprop>`__ is
+`CoolProp <http://www.coolprop.org>`__ is
 used for calculating the fluid properties.
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
 MATLAB interface that interacts with CoolProp through Python. Both
@@ -27,7 +27,7 @@ Install using Git and Github
 
    -  **Command line interface**
 
-      -  Clone (make a copy of) the **repo**\ sitory using:
+      -  Clone (make a copy of) the repository using:
          ``git clone --recursive git@github.com:OpenSTREAM-solvers/openstream.git``
          (`SSH
          authentication <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>`__)
