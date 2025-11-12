@@ -573,7 +573,7 @@ different calculations are carried out for different flow regimes.</p>
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">Liquid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
-<p>LIQUIS Class for modeling liquid field in two-fluid solver</p>
+<p>LIQUID Class for modeling liquid field in two-fluid solver</p>
 <p>This class encapsulates the physical and numerical properties of the liquid phase,
 including flow variables, phase interactions, heat transfer,and relaxation models.
 It supports multiple solver models and provides methods for computing derived
@@ -1080,87 +1080,210 @@ area model.</p>
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.HINT">
 <span class="sig-name descname"><span class="pre">HINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.HINT" title="Link to this definition"></a></dt>
 <dd><p>HINT Linear interfacial heat transfer rate [W/m]</p>
+<p>Computes the interfacial heat transfer rate using mass transfer
+and enthalpy difference (based on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>
+model).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>Hcond — Condensation heat transfer rate [W/m]</p></li>
+<li><p>Hevap — Evaporation heat transfer rate [W/m]</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.HINTEVAP">
 <span class="sig-name descname"><span class="pre">HINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.HINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>HINTEVAP Linear interfacial heat evaporation rate [W/m]</p>
+<p>Extracts the evaporation component from
+<a class="reference internal" href="#Solvers.TwoFluid.Liquid.HINT" title="Solvers.TwoFluid.Liquid.HINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.HINT</span></code></a>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.HINTCOND">
 <span class="sig-name descname"><span class="pre">HINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.HINTCOND" title="Link to this definition"></a></dt>
 <dd><p>HINTCOND Linear interfacial heat condensation rate [W/m]</p>
+<p>Extracts the condensation component from
+<a class="reference internal" href="#Solvers.TwoFluid.Liquid.HINT" title="Solvers.TwoFluid.Liquid.HINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.HINT</span></code></a>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.HWALEVAP">
 <span class="sig-name descname"><span class="pre">HWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.HWALEVAP" title="Link to this definition"></a></dt>
-<dd><p>HWALEVAP Linear wall heat evaporation (i.e., boiling)) rate [W/m]</p>
+<dd><p>HWALEVAP Linear wall heat evaporation (boiling) rate [W/m]</p>
+<p>Computes the wall boiling heat transfer rate using latent heat
+(based on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a> model) and wall mass
+evaporation.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.HWALHEAT">
 <span class="sig-name descname"><span class="pre">HWALHEAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.HWALHEAT" title="Link to this definition"></a></dt>
-<dd><p>HWALHEAT Linear wall heat to liquid rate [W/m]
-Set to 0 beyond CBT</p>
+<dd><p>HWALHEAT Linear wall heat to liquid rate [W/m]</p>
+<p>Returns the wall heat generation rate transferred to the liquid phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Set to zero beyond CBT</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.HTOT">
 <span class="sig-name descname"><span class="pre">HTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.HTOT" title="Link to this definition"></a></dt>
 <dd><p>HTOT Total linear vapor heat rate [W/m]</p>
+<p>Computes the total heat transfer to the vapor phase, including
+interfacial and wall contributions.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.FGRAV">
 <span class="sig-name descname"><span class="pre">FGRAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.FGRAV" title="Link to this definition"></a></dt>
-<dd><p>FGRAV Gravity [N/m]</p>
+<dd><p>FGRAV Liquid gravity force [N/m]</p>
+<p>Computes the gravitational force acting on the liquid phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.FBUOY">
 <span class="sig-name descname"><span class="pre">FBUOY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.FBUOY" title="Link to this definition"></a></dt>
-<dd><p>FBUOY Buoyancy [N/m]</p>
+<dd><p>FBUOY Liquid buoyancy force [N/m]</p>
+<p>Computes the buoyancy force acting on the liquid phase due to pressure gradient.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>The pressure gradient from the mixture solver is used</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.TAUW">
 <span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.TAUW" title="Link to this definition"></a></dt>
-<dd><p>TAUW Wall shear stress [N/m^2]
-TODO: Model consistent with mixture approach for now</p>
+<dd><p>TAUW Liquid wall shear stress [N/m^2]</p>
+<p>Returns the wall shear stress acting on the liquid phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.FWALL">
 <span class="sig-name descname"><span class="pre">FWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.FWALL" title="Link to this definition"></a></dt>
-<dd><p>FWALL Wall shear [N/m]
-weighted by void fraction</p>
+<dd><p>FWALL Liquid wall shear force [N/m]</p>
+<p>Computes the wall shear force acting on the liquid phase, weighted by void fraction.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.CD">
 <span class="sig-name descname"><span class="pre">CD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.CD" title="Link to this definition"></a></dt>
 <dd><p>CD Drag coefficient for dispersed liquid [-]</p>
+<p>Computes the drag coefficient for dispersed liquid based on
+<a class="reference internal" href="Inputs.html#Inputs.Model.DROPDRAG" title="Inputs.Model.DROPDRAG"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DROPDRAG</span></code></a> model.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Values are clamped to a maximum of 1</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.FDRAG">
 <span class="sig-name descname"><span class="pre">FDRAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.FDRAG" title="Link to this definition"></a></dt>
-<dd><p>FDRAG liquid drag [N/m]</p>
+<dd><p>FDRAG Interfacial drag force [N/m]</p>
+<p>Computes the interfacial drag force acting on the liquid phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses smooth transition between dispersed gas and liquid drag based on <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DISPGAS2DISPLIQ</span></code> model.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.FINTCOND">
 <span class="sig-name descname"><span class="pre">FINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.FINTCOND" title="Link to this definition"></a></dt>
-<dd><p>FINTCOND momentum exchange through interfacial condensation [N/m]</p>
+<dd><p>FINTCOND Momentum exchange through interfacial condensation [N/m]</p>
+<p>Computes the momentum exchange due to interfacial condensation.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.FTOT">
 <span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.FTOT" title="Link to this definition"></a></dt>
 <dd><p>FTOT Total force [N/m]</p>
+<p>Computes the total force acting on the liquid phase, including gravity,
+buoyancy, wall shear, drag, and interfacial condensation.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1172,15 +1295,24 @@ weighted by void fraction</p>
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
-<p>VAPOR Summary of this class goes here
-Detailed explanation goes here</p>
+<p>VAPOR Class for modeling vapor field in two-fluid solver</p>
+<p>This class encapsulates the physical and numerical properties of the vapor phase,
+including flow variables, phase interactions, heat transfer,and relaxation models.
+It supports multiple solver models and provides methods for computing derived
+quantities and handling flow regime transitions.</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.Vapor">
 <span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.Vapor" title="Link to this definition"></a></dt>
-<dd><p>VAPOR Construct an instance of this class
-Detailed explanation goes here</p>
+<dd><p>VAPOR Constructor for Vapor class</p>
+<p>Initializes the vapor field object with input configuration
+and fluid properties.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>inputSet — <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model, geometry, and boundary conditions</p></li>
+<li><p>fluid    — <a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object containing thermophysical fluid data</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -1247,86 +1379,172 @@ Detailed explanation goes here</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.mix">
 <span class="sig-name descname"><span class="pre">mix</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.TwoFluid.Vapor.mix" title="Link to this definition"></a></dt>
-<dd><p>Mixture</p>
+<dd><p>Mixture object</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.X">
 <span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.X" title="Link to this definition"></a></dt>
-<dd><p>X Mass fraction</p>
+<dd><p>X Vapor mass fraction [-]</p>
+<p>Computes the vapor mass fraction relative to the mixture flow.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.VF">
 <span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.VF" title="Link to this definition"></a></dt>
-<dd><p>VF Volumetric fraction</p>
+<dd><p>VF Vapor volumetric fraction [-]</p>
+<p>Computes the vapor volumetric (i.e., void) fraction using slip
+ratio and densities.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.J">
 <span class="sig-name descname"><span class="pre">J</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.J" title="Link to this definition"></a></dt>
-<dd><p>J Superficial velocity</p>
+<dd><p>J Vapor superficial velocity [m/s]</p>
+<p>Computes the superficial velocity of the vapor phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.S">
 <span class="sig-name descname"><span class="pre">S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.S" title="Link to this definition"></a></dt>
-<dd><p>S Phase slip ratio</p>
+<dd><p>S Phase slip ratio [-]</p>
+<p>Returns the slip ratio between vapor and liquid phases.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.AREA">
 <span class="sig-name descname"><span class="pre">AREA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.AREA" title="Link to this definition"></a></dt>
-<dd><p>AREA gas cross-section area</p>
+<dd><p>AREA Vapor cross-section area [m^2]</p>
+<p>Computes the effective cross-sectional area occupied by the vapor phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.USLIP">
 <span class="sig-name descname"><span class="pre">USLIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.USLIP" title="Link to this definition"></a></dt>
-<dd><p>VELOCITY Gas velocity based on input phase slip</p>
+<dd><p>USLIP Vapor velocity based on input phase slip [m/s]</p>
+<p>Computes the vapor velocity using slip ratio and liquid velocity.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.RE">
 <span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.RE" title="Link to this definition"></a></dt>
-<dd><p>RE Reynolds number [-]</p>
+<dd><p>RE Vapor Reynolds number [-]</p>
+<p>Computes the vapor-phase Reynolds number based on flow rate and viscosity.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.REL">
 <span class="sig-name descname"><span class="pre">REL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.REL" title="Link to this definition"></a></dt>
-<dd><p>REL Dispersed vapor Reynolds number with respect to liquid properties and relative phase velocity</p>
+<dd><p>REL Dispersed vapor Reynolds number [-]</p>
+<p>Computes the Reynolds number for dispersed vapor using liquid properties
+and relative velocity.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.T">
 <span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.T" title="Link to this definition"></a></dt>
-<dd><p>T Vapor temperature</p>
+<dd><p>T Vapor temperature [K]</p>
+<p>Computes the vapor temperature from enthalpy.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.VISC">
 <span class="sig-name descname"><span class="pre">VISC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.VISC" title="Link to this definition"></a></dt>
-<dd><p>VISC viscosity number dispersed gas</p>
+<dd><p>VISC Viscosity number for dispersed gas [-]</p>
+<p>Computes the dimensionless viscosity number using liquid and vapor properties.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.XTR_SUB">
 <span class="sig-name descname"><span class="pre">XTR_SUB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.XTR_SUB" title="Link to this definition"></a></dt>
-<dd><p>XTR_SUB Quality at onset of subcooled boiling transition</p>
+<dd><p>XTR_SUB Quality at onset of subcooled boiling transition [-]</p>
+<p>Returns the equilibrium quality threshold for the onset of subcooled boiling.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.XTR_SAT">
 <span class="sig-name descname"><span class="pre">XTR_SAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.XTR_SAT" title="Link to this definition"></a></dt>
-<dd><p>XTR_SAT Quality at end of subcooled boiling transition</p>
+<dd><p>XTR_SAT Quality at end of subcooled boiling transition [-]</p>
+<p>Returns the equilibrium quality threshold for the onset of saturated boiling.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.XTR_ITM">
 <span class="sig-name descname"><span class="pre">XTR_ITM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.XTR_ITM" title="Link to this definition"></a></dt>
-<dd><p>XTR_ITM Quality at onset of intermediate region</p>
+<dd><p>XTR_ITM Quality at onset of intermediate region [-]</p>
+<p>Returns the equilibrium quality threshold for the onset of the intermediate flow regime.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
@@ -1338,185 +1556,442 @@ Detailed explanation goes here</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.XTR_CBT">
 <span class="sig-name descname"><span class="pre">XTR_CBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.XTR_CBT" title="Link to this definition"></a></dt>
-<dd><p>XTR_CBT Quality at CBT</p>
+<dd><p>XTR_CBT Quality at Critical Boiling Transition [-]</p>
+<p>Returns the equilibrium quality threshold for the onset of critical boiling transition.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FLOWREGIME">
 <span class="sig-name descname"><span class="pre">FLOWREGIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FLOWREGIME" title="Link to this definition"></a></dt>
 <dd><p>FLOWREGIME Categorical two-phase flow regimes</p>
+<p>Returns the flow regime classification based on liquid-phase criteria
+(<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Liquid.FLOWREGIME)</span></code>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>flowregime — Flow regime category (from <a class="reference internal" href="#Solvers.TwoFluid.REGIMES" title="Solvers.TwoFluid.REGIMES"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.REGIMES</span></code></a>)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.L">
 <span class="sig-name descname"><span class="pre">L</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.L" title="Link to this definition"></a></dt>
-<dd><p>L Dispersed vapor interfacial length scale (e.g., bubble Sauter mean diameter) [m]
-TODO: Simplistic model for now</p>
+<dd><p>L Dispersed vapor interfacial length scale [m]</p>
+<p>Returns the characteristic length scale for dispersed vapor
+(e.g., bubble diameter).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Currently uses a constant model</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.INTAREA">
 <span class="sig-name descname"><span class="pre">INTAREA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.INTAREA" title="Link to this definition"></a></dt>
 <dd><p>INTAREA Volumetric interfacial area [m^-1]</p>
+<p>Computes the interfacial area concentration using liquid-phase logic
+(from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Liquid.INTAREA)</span></code>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HFLUXWALEVAP">
 <span class="sig-name descname"><span class="pre">HFLUXWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HFLUXWALEVAP" title="Link to this definition"></a></dt>
-<dd><p>HFLUXWALWVAP Wall boiling heat flux</p>
+<dd><p>HFLUXWALEVAP Wall boiling heat flux [W/m^2]</p>
+<p>Computes the portion of wall heat flux attributed to boiling (evaporation)
+for the vapor phase, based on liquid-phase calculations
+(<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Liquid.HFLUXWALEVAP</span></code>).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HFLUX">
 <span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HFLUX" title="Link to this definition"></a></dt>
-<dd><p>HFLUX Wall heat flux to vapor phase</p>
+<dd><p>HFLUX Wall heat flux to vapor phase [W/m^2]</p>
+<p>Computes the net wall heat flux transferred to the vapor phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HWALHEAT" title="Solvers.TwoFluid.Vapor.HWALHEAT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HWALHEAT</span></code></a> divided by wall perimeter</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MINT">
 <span class="sig-name descname"><span class="pre">MINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MINT" title="Link to this definition"></a></dt>
 <dd><p>MINT Linear interfacial mass transfer rates [kg/s/m]</p>
+<p>Computes condensation and evaporation mass transfer rates for the vapor
+phase by reversing the sign of liquid-phase values (attr:<cite>Solvers.TwoFluid.Liquid.MINT</cite>).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>Mcond — Condensation mass transfer rate [kg/s/m]</p></li>
+<li><p>Mevap — Evaporation mass transfer rate [kg/s/m]</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MINTEVAP">
 <span class="sig-name descname"><span class="pre">MINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>MINTEVAP Linear interfacial evaporation mass transfer [kg/s/m]</p>
+<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.MINT" title="Solvers.TwoFluid.Vapor.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.MINT</span></code></a>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MINTCOND">
 <span class="sig-name descname"><span class="pre">MINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MINTCOND" title="Link to this definition"></a></dt>
 <dd><p>MINTCOND Linear interfacial condensation mass transfer [kg/s/m]</p>
+<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.MINT" title="Solvers.TwoFluid.Vapor.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.MINT</span></code></a>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.WALEVAPRATIO">
 <span class="sig-name descname"><span class="pre">WALEVAPRATIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.WALEVAPRATIO" title="Link to this definition"></a></dt>
-<dd><p>WALEVAPRATIO Wall evaporation mass ratio [-]
-Ratio of liquid mass boiling due to wall heat flux</p>
+<dd><p>WALEVAPRATIO Wall evaporation mass ratio [-]</p>
+<p>Returns the fraction of liquid mass undergoing wall boiling.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>walevapratio — Wall boiling mass ratio [-]</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MWALEVAP">
 <span class="sig-name descname"><span class="pre">MWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MWALEVAP" title="Link to this definition"></a></dt>
-<dd><p>MWALEVAP Linear wall mass evaporation (i.e., boiling) rate [kg/s/m]</p>
+<dd><p>MWALEVAP Linear wall mass evaporation rate [kg/s/m]</p>
+<p>Computes the wall boiling mass transfer rate for vapor by reversing the sign
+of the liquid-phase value (attr:<cite>Solvers.TwoFluid.Liquid.MWALEVAP</cite>).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MTOT">
 <span class="sig-name descname"><span class="pre">MTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MTOT" title="Link to this definition"></a></dt>
 <dd><p>MTOT Total linear mass transfer [kg/s/m]</p>
+<p>Computes the total vapor mass transfer rate by reversing the sign of
+the liquid-phase total (attr:<cite>Solvers.TwoFluid.Liquid.MTOT</cite>).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.INTNU">
 <span class="sig-name descname"><span class="pre">INTNU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.INTNU" title="Link to this definition"></a></dt>
-<dd><p>INTNU Interfacial Nusselt number for dispersed gas</p>
+<dd><p>INTNU Interfacial Nusselt number for dispersed vapor [-]</p>
+<p>Computes the interfacial Nusselt number based on
+<a class="reference internal" href="Inputs.html#Inputs.Model.INTNU" title="Inputs.Model.INTNU"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTNU</span></code></a> model.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.INTHFLUX">
 <span class="sig-name descname"><span class="pre">INTHFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.INTHFLUX" title="Link to this definition"></a></dt>
-<dd><p>INTHFLUX Interfacial heat flux (&gt; 0 to liquid phase)</p>
+<dd><p>INTHFLUX Interfacial heat flux [W/m^2]</p>
+<p>Computes the interfacial heat flux due to evaporation and condensation
+(delegated to liquid-phase calculation in attr:<cite>Solvers.TwoFluid.Liquid.INTHFLUX</cite>).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>inthflux_evap — Evaporation heat flux [W/m^2]</p></li>
+<li><p>inthflux_cond — Condensation heat flux [W/m^2]</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Positive toward liquid phase</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HINT">
 <span class="sig-name descname"><span class="pre">HINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HINT" title="Link to this definition"></a></dt>
 <dd><p>HINT Linear interfacial heat transfer rate [W/m]</p>
+<p>Computes the interfacial heat transfer rate for the vapor phase based on
+mass transfer and enthalpy difference (based on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>
+model).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><p>Hcond — Condensation heat transfer rate [W/m]</p></li>
+<li><p>Hevap — Evaporation heat transfer rate [W/m]</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HINTEVAP">
 <span class="sig-name descname"><span class="pre">HINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>HINTEVAP Linear interfacial heat evaporation rate [W/m]</p>
+<p>Extracts the evaporation component from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Vapor.HINT</span></code>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HINTCOND">
 <span class="sig-name descname"><span class="pre">HINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HINTCOND" title="Link to this definition"></a></dt>
 <dd><p>HINTCOND Linear interfacial heat condensation rate [W/m]</p>
+<p>Extracts the condensation component from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Vapor.HINT</span></code>.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HWALEVAP">
 <span class="sig-name descname"><span class="pre">HWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HWALEVAP" title="Link to this definition"></a></dt>
-<dd><p>HWALEVAP Linear wall heat evaporation (i.e., boiling)) rate [W/m]</p>
+<dd><p>HWALEVAP Linear wall heat evaporation (boiling) rate [W/m]</p>
+<p>Computes the wall boiling heat transfer rate using latent heat
+(based on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a> model) and wall mass
+evaporation.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HWALHEAT">
 <span class="sig-name descname"><span class="pre">HWALHEAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HWALHEAT" title="Link to this definition"></a></dt>
-<dd><p>HWALHEAT Linear wall heat to vapor rate [W/m]
-Set to 0 before CBT</p>
+<dd><p>HWALHEAT Linear wall heat to vapor rate [W/m]</p>
+<p>Returns the wall heat generation rate transferred to the vapor phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Set to zero before CBT</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HTOT">
 <span class="sig-name descname"><span class="pre">HTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HTOT" title="Link to this definition"></a></dt>
 <dd><p>HTOT Total linear vapor heat rate [W/m]</p>
+<p>Computes the total heat transfer to the vapor phase, including
+interfacial and wall contributions.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FGRAV">
 <span class="sig-name descname"><span class="pre">FGRAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FGRAV" title="Link to this definition"></a></dt>
-<dd><p>FGRAV Gravity [N/m]</p>
+<dd><p>FGRAV Vapor gravity force [N/m]</p>
+<p>Computes the gravitational force acting on the vapor phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FBUOY">
 <span class="sig-name descname"><span class="pre">FBUOY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FBUOY" title="Link to this definition"></a></dt>
-<dd><p>FBUOY Vuoyancy</p>
+<dd><p>FBUOY Vapor buoyancy force [N/m]</p>
+<p>Computes the buoyancy force acting on the vapor phase due to pressure gradient.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>The pressure gradient from the mixture solver is used</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.TAUW">
 <span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.TAUW" title="Link to this definition"></a></dt>
-<dd><p>TAUW Wall shear stress [N/m^2]
-TODO: Model consistent with mixture approach for now</p>
+<dd><p>TAUW Wall shear stress [N/m^2]</p>
+<p>Returns the wall shear stress acting on the vapor phase.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses mixture-level shear stress for consistency</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FWALL">
 <span class="sig-name descname"><span class="pre">FWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FWALL" title="Link to this definition"></a></dt>
-<dd><p>FWALL Wall shear [N/m]
-weighted by void fraction</p>
+<dd><p>FWALL Wall shear force [N/m]</p>
+<p>Computes the wall shear force acting on the vapor phase, weighted by void fraction.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.CD">
 <span class="sig-name descname"><span class="pre">CD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.CD" title="Link to this definition"></a></dt>
-<dd><p>CD Drag coefficient for dispersed gas [-]
-TODO: STOKES model used for now due to solver convergence issue
-Results in too low interfacial drag
-Viscous and distorted models are more reasonable,
-but predicts too high drag forces, possibly due to the AREAMEAN
-assumption in the relative velocity calculation</p>
+<dd><p>CD Drag coefficient for dispersed gas [-]</p>
+<p>Computes the drag coefficient for dispersed vapor based on
+<a class="reference internal" href="Inputs.html#Inputs.Model.DROPDRAG" title="Inputs.Model.DROPDRAG"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DROPDRAG</span></code></a> model.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Values are clamped to a maximum of 1</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FDRAG">
 <span class="sig-name descname"><span class="pre">FDRAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FDRAG" title="Link to this definition"></a></dt>
-<dd><p>FDRAG interfacial shear force [N/m]</p>
+<dd><p>FDRAG Interfacial drag force [N/m]</p>
+<p>Computes the interfacial drag force acting on the vapor phase by reversing
+the sign of the liquid-phase drag (<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Liquid.FDRAG</span></code>).</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FINTEVAP">
 <span class="sig-name descname"><span class="pre">FINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FINTEVAP" title="Link to this definition"></a></dt>
-<dd><p>FINTEVAP momentum exchange through interfacial evaporation [N/m]</p>
+<dd><p>FINTEVAP Momentum exchange through interfacial evaporation [N/m]</p>
+<p>Computes the momentum exchange due to interfacial evaporation.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FWALEVAP">
 <span class="sig-name descname"><span class="pre">FWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FWALEVAP" title="Link to this definition"></a></dt>
-<dd><p>FWALWVAP momentum exchange through wall evaporation [N/m]</p>
+<dd><p>FWALEVAP Momentum exchange through wall evaporation [N/m]</p>
+<p>Computes the momentum exchange due to wall boiling evaporation.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.FTOT">
 <span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.FTOT" title="Link to this definition"></a></dt>
 <dd><p>FTOT Total force [N/m]</p>
+<p>Computes the total force acting on the vapor phase, including gravity,
+buoyancy, wall shear, drag, and interfacial momentum exchanges.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
+<li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
+<li><p>zIdx   — Axial indices to evaluate (optional)</p></li>
+</ul>
 </dd></dl>
 
 </dd>
