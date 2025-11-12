@@ -157,8 +157,6 @@ classdef SolverPlotter < handle
 
                 % Update
                 drawnow limitrate;
-
-
             end
 
             function animationCallback(src, ~)
@@ -247,7 +245,6 @@ classdef SolverPlotter < handle
                         fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
                         tlh.Title.String = fh.Name;
                         tlh.Title.FontSize = 15;
-
                     end
                 end
             end
