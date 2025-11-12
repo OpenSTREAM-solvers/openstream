@@ -2088,22 +2088,30 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             model = mix.inputSet.model;
+            fld = mix.fluid;
+
+            Xeq = mix.XEQ(zIdx);
 
             switch model.THERMALRELAX
                 case InputEnums.THERMALRELAX.QUALITY
                     X = model.RELAXX;                                      % [-] Equilibrium quality array
                     T = model.RELAXTCOND(1:length(model.RELAXX));          % [-] Corresponding time relaxation
 
-                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');      % [s] Interpolated time relaxation
-                    t(mix.XEQ(zIdx)<X(1))   = T(1);                        % [s] Lower bound limit
-                    t(mix.XEQ(zIdx)>X(end)) = T(end);                      % [s] Upper bound limit
+                    t = interp1(X,T,Xeq,'linear','extrap');                % [s] Interpolated time relaxation
+                    t(Xeq<X(1))   = T(1);                                  % [s] Lower bound limit
+                    t(Xeq>X(end)) = T(end);                                % [s] Upper bound limit
 
                 case InputEnums.THERMALRELAX.VOID
                     d0     = model.RELAXCONDCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
                     n      = model.RELAXCONDCOEF(2);                       % [-] Exponent of phase volumetric ratio
                     dvf    = model.RELAXCONDCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
-                    ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
-                    t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;        % [s] Time relaxation
+                    b      = model.RELAXCONDCOEF(4);                       % [-] Exponent of quality difference
+                    ALPHAL = fld.ALPHAL(mix.liquid.H(zIdx));               % [m/s^2] Liquid thermal diffusivity
+                    VF     = mix.vapor.VF(zIdx);                           % [-] Void fraction difference
+                    deltaX = Xeq-mix.TRELAX.X(zIdx,:);                     % [-] Quality difference
+                    Fo     = 1./(VF+dvf).^n./abs(deltaX).^b;               % [-] Fourier number
+
+                    t = d0.^2./ALPHAL.*Fo;                                 % [s] Time relaxation
             end
 
             %geom  = mix.inputSet.geometry;
@@ -2142,22 +2150,30 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             model = mix.inputSet.model;
+            fld = mix.fluid;
+
+            Xeq = mix.XEQ(zIdx);
 
             switch model.THERMALRELAX
                 case InputEnums.THERMALRELAX.QUALITY
                     X = model.RELAXX;                                      % [-] Equilibrium quality array
                     T = model.RELAXTEVAP(1:length(model.RELAXX));          % [-] Corresponding time relaxation
 
-                    t = interp1(X,T,mix.XEQ(zIdx),'linear','extrap');      % [s] Interpolated time relaxation
-                    t(mix.XEQ(zIdx)<X(1))   = T(1);                        % [s] Lower bound limit
-                    t(mix.XEQ(zIdx)>X(end)) = T(end);                      % [s] Upper bound limit
+                    t = interp1(X,T,Xeq,'linear','extrap');                % [s] Interpolated time relaxation
+                    t(Xeq<X(1))   = T(1);                                  % [s] Lower bound limit
+                    t(Xeq>X(end)) = T(end);                                % [s] Upper bound limit
 
                 case InputEnums.THERMALRELAX.VOID
                     d0     = model.RELAXEVAPCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
                     n      = model.RELAXEVAPCOEF(2);                       % [-] Exponent of phase volumetric ratio
                     dvf    = model.RELAXEVAPCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
-                    ALPHAV = mix.fluid.ALPHAV(mix.vapor.H(zIdx));
-                    t = d0.^2./ALPHAV./(mix.liquid.VF(zIdx)+dvf).^n;       % [s] Time relaxation
+                    b      = model.RELAXCONDCOEF(4);                       % [-] Exponent of quality difference
+                    ALPHAV = fld.ALPHAV(mix.vapor.H(zIdx));                % [m/s^2] Liquid thermal diffusivity
+                    VF     = mix.vapor.VF(zIdx);                           % [-] Void fraction difference
+                    deltaX = Xeq-mix.TRELAX.X(zIdx,:);                     % [-] Quality difference
+                    Fo     = 1./(VF+dvf).^n./abs(deltaX).^b;               % [-] Fourier number
+
+                    t = d0.^2./ALPHAV.*Fo;                                 % [s] Time relaxation
             end
 
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations

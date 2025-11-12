@@ -58,8 +58,8 @@ classdef Model < Inputs.Input
         RELAXX           (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Interfacial phase change relaxation time thermodynamic quality [-]
         RELAXTCOND       (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Interfacial condensation relaxation time array [s]
         RELAXTEVAP       (1,:) double                                      = [ 0.3  0.3   0.3 0.3 0.3]       % Interfacial evaporation  relaxation time array [s]
-        RELAXCONDCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05]               % Interfacial condensation time relaxation coefficients for void option
-        RELAXEVAPCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5]               % Interfacial evaporation  time relaxation coefficients for void option
+        RELAXCONDCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05 0.0]           % Interfacial condensation time relaxation coefficients for void option
+        RELAXEVAPCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5 0.0]           % Interfacial evaporation  time relaxation coefficients for void option
         KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
 
         % Mixture near-wall models
