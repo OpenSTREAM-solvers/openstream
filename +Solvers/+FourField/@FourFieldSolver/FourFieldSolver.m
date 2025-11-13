@@ -270,7 +270,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             arguments
                 ffSolver
                 tIdx              (:,1) double {mustBeInteger,mustBePositive}                                                                          = []
-                opts.display      {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
+                opts.display      {matlab.system.mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
                 opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                                       = 'REAL'
                 opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
                 opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
@@ -325,7 +325,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotter.setZs(z);
 
             function tf = displayVariable(memberList)
-                tf = any(ismember(memberList,opts.display));
+                tf = any(ismember(memberList,upper(opts.display)));
             end
 
             % Loop through each tIdx
