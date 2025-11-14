@@ -907,9 +907,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             arguments
                 twfSolver
-                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',                     'W',               'U',               'H',           'X',                 'VF'}
-                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mixture mass flow rate','mixture velocity','mixture enthalpy','mass quality','volumetric fraction'}
-                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',                  'kg/s',             'm/s',            'J/kg',           '-',                  '-'}
+                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {'HFLUX','W','U','H','X','VF'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'liquid','vapor'})}             = {'liquid','vapor'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:twfSolver.inputSet.geometry.NWALL
@@ -929,12 +929,18 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             unit    = {         'W/m^2',          'kg/s',     'm/s',    'J/kg',           '-',                  '-',          'K',                      'm^-^1'};
             if strcmp('ALL',opt.display)
                 opt.display = display;
-                opt.label   = label;
-                opt.unit    = unit;
-            else
+            end
+            if isempty(opt.label)
                 opt.label   = label(ismember(display,opt.display));
+            end
+            if isempty(opt.unit)
                 opt.unit    = unit(ismember(display,opt.display));
             end
+            if isempty(opt.label) || isempty(opt.unit)
+                twfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                return
+            end
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:twfSolver.NTIME; end

@@ -654,8 +654,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             arguments
                 tfSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U'}
-                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','velocity'}
-                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',     'm/s'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'drop','film'})}                = {'drop','film'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:tfSolver.inputSet.geometry.NWALL
@@ -676,12 +676,18 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm'};
             if strcmp('ALL',opt.display)
                 opt.display = display;
-                opt.label   = label;
-                opt.unit    = unit;
-            else
+            end
+            if isempty(opt.label)
                 opt.label   = label(ismember(display,opt.display));
+            end
+            if isempty(opt.unit)
                 opt.unit    = unit(ismember(display,opt.display));
             end
+            if isempty(opt.label) || isempty(opt.unit)
+                tfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                return
+            end
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:tfSolver.NTIME; end

@@ -1090,9 +1090,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             arguments
                 mixSolver
-                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF'}
-                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction'}
-                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',           'Pa',     'm/s',    'J/kg',                 '-',            '-'}
+                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {'HFLUX','W','DPSUM.Tot','U','H','X','VF'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'mixture','liquid','vapor'})}   = {'mixture'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:mixSolver.inputSet.geometry.NWALL
@@ -1107,17 +1107,23 @@ classdef MixtureSolver < Solvers.AbstractSolver
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
 
-            display = {        'HFLUX',            'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
+            display = {         'HFLUX',             'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
             label   = {'Wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction','temperature','wall temperature'};
-            unit    = {        'W/m^2',          'kg/s',          'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
+            unit    = {         'W/m^2',          'kg/s',           'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
             if strcmp('ALL',opt.display)
                 opt.display = display;
-                opt.label   = label;
-                opt.unit    = unit;
-            else
+            end
+            if isempty(opt.label)
                 opt.label   = label(ismember(display,opt.display));
+            end
+            if isempty(opt.unit)
                 opt.unit    = unit(ismember(display,opt.display));
             end
+            if isempty(opt.label) || isempty(opt.unit)
+                mixSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                return
+            end
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:mixSolver.NTIME; end

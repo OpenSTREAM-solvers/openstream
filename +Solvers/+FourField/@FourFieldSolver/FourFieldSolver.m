@@ -923,8 +923,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             arguments
                 ffSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U','FREQUENCY'}
-                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','velocity','frequency'}
-                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',     'm/s',       'Hz'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'drop','film','wave','base'})}  = {'wave','base'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:ffSolver.inputSet.geometry.NWALL
@@ -945,12 +945,18 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm',        'm',       'Hz',      'm',    'm',            '-',                   '-',                   '-',                  '-',                '-',           '-'};
             if strcmp('ALL',opt.display)
                 opt.display = display;
-                opt.label   = label;
-                opt.unit    = unit;
-            else
+            end
+            if isempty(opt.label)
                 opt.label   = label(ismember(display,opt.display));
+            end
+            if isempty(opt.unit)
                 opt.unit    = unit(ismember(display,opt.display));
             end
+            if isempty(opt.label) || isempty(opt.unit)
+                tfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                return
+            end
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:ffSolver.NTIME; end
