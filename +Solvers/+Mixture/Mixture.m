@@ -652,7 +652,7 @@ classdef Mixture < Solvers.AbstractField
 
             % Post-BT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-            if any(idxbt)
+            if any(idxbt(:))
                 model = mix.inputSet.model;
 
                 switch model.BTMTM
@@ -916,7 +916,8 @@ classdef Mixture < Solvers.AbstractField
 
             % Post-CBT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-            if any(idxbt)
+
+            if any(idxbt(:))
                 model = mix.inputSet.model;
 
                 switch model.BTHTM
@@ -2107,7 +2108,7 @@ classdef Mixture < Solvers.AbstractField
                     dvf    = model.RELAXCONDCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
                     b      = model.RELAXCONDCOEF(4);                       % [-] Exponent of quality difference
                     ALPHAL = fld.ALPHAL(mix.liquid.H(zIdx));               % [m/s^2] Liquid thermal diffusivity
-                    VF     = mix.vapor.VF(zIdx);                           % [-] Void fraction difference
+                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
                     deltaX = Xeq-mix.TRELAX.X(zIdx,:);                     % [-] Quality difference
                     Fo     = 1./(VF+dvf).^n./abs(deltaX).^b;               % [-] Fourier number
 
@@ -2169,7 +2170,7 @@ classdef Mixture < Solvers.AbstractField
                     dvf    = model.RELAXEVAPCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
                     b      = model.RELAXCONDCOEF(4);                       % [-] Exponent of quality difference
                     ALPHAV = fld.ALPHAV(mix.vapor.H(zIdx));                % [m/s^2] Liquid thermal diffusivity
-                    VF     = mix.vapor.VF(zIdx);                           % [-] Void fraction difference
+                    VF     = mix.liquid.VF(zIdx);                          % [-] Liquid volume fraction
                     deltaX = Xeq-mix.TRELAX.X(zIdx,:);                     % [-] Quality difference
                     Fo     = 1./(VF+dvf).^n./abs(deltaX).^b;               % [-] Fourier number
 
