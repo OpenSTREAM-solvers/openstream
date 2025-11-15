@@ -254,7 +254,7 @@ simulations.</p>
 <div><ul class="simple">
 <li><p>Pressure drops (DP, DPSUM)</p></li>
 <li><p>Momentum and energy derivatives (MDER)</p></li>
-<li><p>Interfacial relaxation (TRELAX)</p></li>
+<li><p>Homogeneous Relaxation Model (HRM)</p></li>
 <li><p>Near-wall transport (NEARWALL)</p></li>
 <li><p>Iteration tracking (ITR)</p></li>
 </ul>
@@ -268,7 +268,7 @@ simulations.</p>
 <ul class="simple">
 <li><p>The function assumes uniform axial discretization.</p></li>
 <li><p>Wall heat flux is computed from interpolated boundary conditions.</p></li>
-<li><p>TRELAX fields are initialized after enthalpy to ensure correct vapor quality (XEQ) computation.</p></li>
+<li><p>HRM fields are initialized after enthalpy to ensure correct vapor quality (XEQ) computation.</p></li>
 </ul>
 </dd></dl>
 
@@ -368,7 +368,7 @@ modes, wall selections, and plot arrangements.</p>
 <dd><p>PLOTZT Plots 2D time/elevation distributions of mixture parameters.</p>
 <p>Generates surface plots of selected mixture-related parameters
 over time and axial (elevation) positions. It supports plotting
-for mixture, liquid, and vapor fields, and can handle both real
+for mixture, liquid and vapor fields, and can handle both real
 and null (initial) transient data.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -559,8 +559,8 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.TRELAX">
-<span class="sig-name descname"><span class="pre">TRELAX</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.TRELAX" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HRM">
+<span class="sig-name descname"><span class="pre">HRM</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.HRM" title="Link to this definition"></a></dt>
 <dd><p>Time relaxation terms</p>
 </dd></dl>
 
@@ -1169,7 +1169,7 @@ deviation from equilibrium vapor flow and time relaxation.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Uses mix.TRELAX.WV for equilibrium deviation</p></li>
+<li><p>Uses mix.HRM.WV for equilibrium deviation</p></li>
 <li><p>UVeq is the approximated vapor velocity</p></li>
 </ul>
 </dd></dl>
@@ -1278,7 +1278,7 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Uses <a class="reference internal" href="#Solvers.Mixture.Mixture.MINT" title="Solvers.Mixture.Mixture.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MINT</span></code></a> for mass transfer and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.TRELAX.HV</span></code> for vapor enthalpy</p></li>
+<li><p>Uses <a class="reference internal" href="#Solvers.Mixture.Mixture.MINT" title="Solvers.Mixture.Mixture.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MINT</span></code></a> for mass transfer and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.HRM.HV</span></code> for vapor enthalpy</p></li>
 <li><p>Behavior depends on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>:
 - <cite>‘BULK’</cite>: Consideration of bulk enthalpy
 - <cite>‘SATURATED’</cite>: Consideration of saturated enthalpy</p></li>

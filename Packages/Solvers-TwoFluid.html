@@ -136,7 +136,7 @@ of thermal-hydraulic simulations using a two-phase two-fluid approach.</p>
 </ul>
 <p>Key Components:</p>
 <ul class="simple">
-<li><p>Phase construction and separation (liquid/vapor)</p></li>
+<li><p>Phase construction (liquid/vapor)</p></li>
 <li><p>Phase mass/momentum/energy transport modeling</p></li>
 <li><p>Pressure drop gradient obtained from mixture solver</p></li>
 <li><p>Support for relaxation models</p></li>
@@ -257,7 +257,7 @@ parameters and internal data structures via
 <span class="sig-name descname"><span class="pre">initializeSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">twfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver.initializeSolver" title="Link to this definition"></a></dt>
 <dd><p>INITIALIZESOLVER Initializes solver parameters and constructs liquid/vapor objects.</p>
 <p>Sets up the solver’s internal state using the provided
-<a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> and <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a>,
+<a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> and <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a>,
 This includes initialization of data structures for transient and steady-state
 simulations based on the mixture solver solutions.</p>
 <p>Operations performed:</p>
@@ -285,7 +285,7 @@ selections, near-wall data, and optional  animation over time.</p>
 <ul class="simple">
 <li><p>twfSolver         — <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a> object containing simulation data</p></li>
 <li><p>tIdx              — Time index or indices (vector of positive integers)</p></li>
-<li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
+<li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘U’, etc.)</p></li>
 <li><p>opts.solveMode    — Solve mode: ‘REAL’ or ‘NULL’</p></li>
 <li><p>opts.wall         — Wall index(es) to plot</p></li>
 <li><p>opts.zIdx         — Axial indices to include in the plot</p></li>
@@ -315,7 +315,7 @@ modes, wall selections, and plot arrangements.</p>
 <ul class="simple">
 <li><p>twfSolver         — <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a> object containing simulation data</p></li>
 <li><p>zIdx              — Axial index (scalar, positive integer)</p></li>
-<li><p>opt.display       — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘DP’, etc.)</p></li>
+<li><p>opt.display       — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘U’, etc.)</p></li>
 <li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
 <li><p>opt.wall          — Wall index(es) to plot</p></li>
 <li><p>opt.tIdx          — Time indices to include in the plot</p></li>
@@ -329,7 +329,6 @@ modes, wall selections, and plot arrangements.</p>
 <li><p>If opt.display is set to ‘ALL’, all supported parameters are plotted.</p></li>
 <li><p>The function validates that at least two time indices are provided.</p></li>
 <li><p>Temperature unit conversion is applied if ‘C’ is selected.</p></li>
-<li><p>Near-wall data is included if opt.nearWall is true.</p></li>
 <li><p>Each wall is plotted in a separate tile with appropriate legends and axis scaling.</p></li>
 </ul>
 </dd></dl>
@@ -340,7 +339,7 @@ modes, wall selections, and plot arrangements.</p>
 <dd><p>PLOTZT Plots 2D time/elevation distributions of two-fluid parameters.</p>
 <p>Generates surface plots of selected two-fluid related parameters
 over time and axial (elevation) positions. It supports plotting
-for liquid, and vapor fields, and can handle both real
+for liquid and vapor fields, and can handle both real
 and null (initial) transient data.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -348,7 +347,7 @@ and null (initial) transient data.</p>
 <li><p>opt.display       — Parameter(s) to display (e.g., ‘HFLUX’, ‘U’, etc.)</p></li>
 <li><p>opt.label         — Corresponding labels for display parameters</p></li>
 <li><p>opt.unit          — Units for each parameter</p></li>
-<li><p>opt.field         — Field to plot: ‘mixture’, ‘liquid’, or ‘vapor’</p></li>
+<li><p>opt.field         — Field to plot: ‘liquid’ or ‘vapor’</p></li>
 <li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
 <li><p>opt.wall          — Wall index(es) to plot</p></li>
 <li><p>opt.zIdx          — Axial indices (must include at least 2)</p></li>

@@ -273,7 +273,7 @@ the mixture solver.</p>
 <li><p>EQUILIBRIUM  — Assumes thermal equilibrium (<span class="math notranslate nohighlight">\(X = \max(0, X_{EQ})\)</span>)</p></li>
 <li><p>SAHAZUBER    — Saha-Zuber subcooled boiling model (<span id="id14">Saha and Zuber [<a class="reference internal" href="../Guides/references.html#id23" title="P. Saha and N. Zuber. Point of net vapor generation and vapor void fraction in subcooled boiling. In Proceedings of the International Heat Transfer Conference (IHTC-5). Tokyo, Japan, December 1973. Georgia Institute of Technology, Atlanta, Scripta Book Co. Conference paper; OSTI ID 4195144. URL: https://www.osti.gov/biblio/4195144.">1973</a>]</span>)</p></li>
 <li><p>EPRI         — EPRI subcooled boiling model (<span id="id15">Lellouche and Zolotar [<a class="reference internal" href="../Guides/references.html#id22" title="G. S. Lellouche and B. A. Zolotar. A mechanistic model for predicting two-phase void fraction for water in vertical tubes, channels and rod bundles. Technical Report EPRI NP-2246-SR, Electric Power Research Institute, Palo Alto, California, February 1982. URL: https://www.nrc.gov/docs/ML2001/ML20010E663.pdf.">1982</a>]</span>)</p></li>
-<li><p>RELAXATION   — Time relaxation model for subcooled boiling and post-CHF conditions (HRM)</p></li>
+<li><p>HRM          — Homogeneous Relaxation Model for subcooled boiling and post-CHF conditions (HRM)</p></li>
 </ul>
 </dd></dl>
 
@@ -636,10 +636,10 @@ two-fluid solver.</p>
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.THERMALRELAX">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THERMALRELAX</span></span><a class="headerlink" href="#InputEnums.THERMALRELAX" title="Link to this definition"></a></dt>
-<dd><p>THERMALRELAX Enumeration of thermal non-equilibrium time relaxation models</p>
+<dd><p>THERMALRELAX Enumeration of HRM time relaxation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALRELAX" title="Inputs.Model.THERMALRELAX"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALRELAX</span></code></a>
-models for calculating thermal non-equilibrium time relaxation, used
-when <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALNONEQ" title="Inputs.Model.THERMALNONEQ"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALNONEQ</span></code></a> is set to <cite>RELAXATION</cite>.</p>
+models for calculating relaxation times in the HRM model, used when
+<a class="reference internal" href="Inputs.html#Inputs.Model.THERMALNONEQ" title="Inputs.Model.THERMALNONEQ"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALNONEQ</span></code></a> is set to <cite>HRM</cite>.</p>
 <p>Models:</p>
 <ul class="simple">
 <li><p>QUALITY  — Simple model relating relaxation time to equilibrium quality using user-defined <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXX</span></code>, <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXTCOND</span></code> and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TRELAXTEVAP</span></code></p></li>
