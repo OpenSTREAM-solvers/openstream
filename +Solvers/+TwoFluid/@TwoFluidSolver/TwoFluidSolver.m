@@ -38,14 +38,17 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
     end
 
     properties (SetAccess = protected)
+
         mixSolver                                                                      % Mixture object :class:`Solvers.Mixture.Mixture`
         inputSet                                                                       % Input set object :class:`Inputs.InputSet`
         STATE                                                              = Solvers.SolverState.UNSOLVED
+    
     end
 
-
     methods
+
         solve(twfSolver)                                                               % Solving algorithm
+    
     end
 
     methods
@@ -226,7 +229,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % Generates axial plots of selected two-fluid parameters at specified
             % time indices. The function supports multiple display modes, wall
-            % selections, near-wall data, and optional  animation over time.
+            % selections, and optional animation over time.
             %
             % Inputs:
             %

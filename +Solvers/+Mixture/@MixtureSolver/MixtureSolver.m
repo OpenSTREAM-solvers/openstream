@@ -394,7 +394,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Generates axial plots of selected mixture parameters at specified
             % time indices. The function supports multiple display modes, wall
-            % selections, near-wall data, and optional  animation over time.
+            % selections, near-wall data, and optional animation over time.
             %
             % Inputs:
             %
