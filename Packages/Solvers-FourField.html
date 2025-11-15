@@ -124,7 +124,25 @@
 <dl class="mat function" id="module-Solvers.FourField.FourFieldSolver">
 <dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.solve">
 <span class="sig-prename descclassname"><span class="pre">Solvers.FourField.FourFieldSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.solve" title="Link to this definition"></a></dt>
-<dd><p>SOLVE</p>
+<dd><p>SOLVE Executes the four-field solver for steady-state and transient simulations.</p>
+<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a>
+object. It manages initialization, time stepping, axial sweeps, inner
+iterations, convergence checks, and logging.</p>
+<p>Workflow:</p>
+<ul class="simple">
+<li><p>Enables logging and opens persistent log file</p></li>
+<li><p>Validates solver state before execution</p></li>
+<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
+<li><p>If initial step converges, proceeds with transient simulation</p></li>
+<li><p>Handles exceptions and ensures proper log closure</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
+<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
+<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Logs progress and outputs to session directory</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat class">
@@ -230,7 +248,7 @@ time indices. The function supports multiple display modes, wall
 selections, and optional animation over time.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>:param ffSolver          — <a class="reference internal" href="#module-Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a> object containing simulation data</p></li>
+<li><p>ffSolver          — <a class="reference internal" href="#module-Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a> object containing simulation data</p></li>
 <li><p>tIdx              — Time index or indices (vector of positive integers)</p></li>
 <li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘U’, etc.)</p></li>
 <li><p>opts.solveMode    — Solve mode: ‘REAL’ or ‘NULL’</p></li>
@@ -729,8 +747,12 @@ Function of WL, rho, Shape factor, frequency</p>
 <dt class="sig sig-object mat" id="Solvers.FourField.Drop">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><a class="headerlink" href="#Solvers.FourField.Drop" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a></p>
-<p>DROP Summary of this class goes here
-Detailed explanation goes here</p>
+<p>DROP Class for modeling drop field in four-field solver</p>
+<p>This class encapsulates the physical and numerical properties of the drop field,
+including flow variables and phase interactions.
+It supports multiple solver models and provides methods for computing derived
+quantities.</p>
+<p>All methods are inherited from <a class="reference internal" href="Solvers-ThreeField.html#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a></p>
 </dd></dl>
 
 <dl class="mat class">
