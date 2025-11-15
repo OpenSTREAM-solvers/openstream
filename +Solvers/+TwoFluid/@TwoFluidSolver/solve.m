@@ -111,7 +111,7 @@ function solver(solveINIT)
 
         
         % Axial sweep
-        for zIdx = 2:twfSolver.NZ                                                        % Loop over axial nodes
+        for zIdx = 2:twfSolver.NZ                                          % Loop over axial nodes
             
             Wlold = liquid(tIdx-1).W(zIdx);                                % [kg/s] Liquid mass flow rate at previous time step
             Ulold = liquid(tIdx-1).U(zIdx);                                % [m/s]  Liquid velocity at previous time step
@@ -257,7 +257,7 @@ function solver(solveINIT)
         timeDHv = max(abs(vapor(tIdx).H - vapor(tIdx-1).H));
         
         if solveINIT
-            % Finish steady state solver when SS convergence criterions are met
+            % Finish steady state solver when SS convergence criteria are met
             if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
                 
                 % Indicate init converged

@@ -12,7 +12,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
     %
     % Key Components:
     %
-    % - Phase construction and separation (liquid/vapor)
+    % - Phase construction (liquid/vapor)
     % - Phase mass/momentum/energy transport modeling
     % - Pressure drop gradient obtained from mixture solver
     % - Support for relaxation models
@@ -95,7 +95,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %INITIALIZESOLVER Initializes solver parameters and constructs liquid/vapor objects.
             %
             % Sets up the solver's internal state using the provided
-            % :class:`Inputs.InputSet` and :class:`Solvers.Mixture.MixtureSolver`,
+            % :class:`Inputs.InputSet` and :class:`Solvers.TwoFluid.TwoFluidSolver`,
             % This includes initialization of data structures for transient and steady-state
             % simulations based on the mixture solver solutions.
             %
@@ -232,7 +232,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
             % - tIdx              — Time index or indices (vector of positive integers)
-            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
             % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
             % - opts.wall         — Wall index(es) to plot
             % - opts.zIdx         — Axial indices to include in the plot
@@ -595,7 +595,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
             % - zIdx              — Axial index (scalar, positive integer)
-            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
             % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
             % - opt.wall          — Wall index(es) to plot
             % - opt.tIdx          — Time indices to include in the plot
@@ -609,7 +609,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % - If opt.display is set to 'ALL', all supported parameters are plotted.
             % - The function validates that at least two time indices are provided.
             % - Temperature unit conversion is applied if 'C' is selected.
-            % - Near-wall data is included if opt.nearWall is true.
             % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
 
             arguments
@@ -881,7 +880,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % Generates surface plots of selected two-fluid related parameters
             % over time and axial (elevation) positions. It supports plotting
-            % for liquid, and vapor fields, and can handle both real
+            % for liquid and vapor fields, and can handle both real
             % and null (initial) transient data.
             %
             % Inputs:
@@ -890,7 +889,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
             % - opt.label         — Corresponding labels for display parameters
             % - opt.unit          — Units for each parameter
-            % - opt.field         — Field to plot: 'mixture', 'liquid', or 'vapor'
+            % - opt.field         — Field to plot: 'liquid' or 'vapor'
             % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
             % - opt.wall          — Wall index(es) to plot
             % - opt.zIdx          — Axial indices (must include at least 2)

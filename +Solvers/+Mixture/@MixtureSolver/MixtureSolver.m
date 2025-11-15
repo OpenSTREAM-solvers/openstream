@@ -1064,7 +1064,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Generates surface plots of selected mixture-related parameters
             % over time and axial (elevation) positions. It supports plotting
-            % for mixture, liquid, and vapor fields, and can handle both real
+            % for mixture, liquid and vapor fields, and can handle both real
             % and null (initial) transient data.
             %
             % Inputs:

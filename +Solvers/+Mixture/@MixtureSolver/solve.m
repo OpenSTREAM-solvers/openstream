@@ -127,36 +127,36 @@ function solver(solveINIT)
             for itr = 1:options.MAXITER
     
                 % Save parameters from previous point iteration
-                Witer = mix(tIdx).W(zIdx);                                              % [kg/s] Mixture mass flow rate
-                Piter = mix(tIdx).P(zIdx);                                              % [Pa] Pressure
-                Hiter = mix(tIdx).H(zIdx);                                              % [J/kg] Mixture enthalpy
+                Witer = mix(tIdx).W(zIdx);                                          % [kg/s] Mixture mass flow rate
+                Piter = mix(tIdx).P(zIdx);                                          % [Pa] Pressure
+                Hiter = mix(tIdx).H(zIdx);                                          % [J/kg] Mixture enthalpy
                 
                 % Update secondary parameters
-                U     = mix(tIdx).U(zIdx);                                              % [m/s] Mixture velocity
+                U     = mix(tIdx).U(zIdx);                                          % [m/s] Mixture velocity
                 
                 % Mixture mass conservation
-                Wnew = (mix(tIdx).W(zIdx-1)+Wold/Uold*DZ/DT)/(1+DZ/U/DT);               % [kg/s] Update mixture mass flow rate
-                mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew;     % [kg/s] Apply relaxation
+                Wnew = (mix(tIdx).W(zIdx-1)+Wold/Uold*DZ/DT)/(1+DZ/U/DT);           % [kg/s] Update mixture mass flow rate
+                mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew; % [kg/s] Apply relaxation
                 
                 % Mixture momentum conservation
-                Pnew = mix(tIdx).P(zIdx-1) + mix(tIdx).DPTOT(Uold, zIdx);               % [Pa] New pressure
-                mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew;     % [Pa] Apply relaxation
+                Pnew = mix(tIdx).P(zIdx-1) + mix(tIdx).DPTOT(Uold, zIdx);           % [Pa] New pressure
+                mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
     
                 % Mixture energy conservation
                 Hnew = (mix(tIdx).H(zIdx-1)+DZ./mix(tIdx).W(zIdx)*sum(LHGR) + ...
-                       Hold/U*DZ/DT)/(1+DZ/U/DT);                                       % [J/kg] Update mixture enthalpy
-                mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew;     % [J/kg] Apply relaxation
+                       Hold/U*DZ/DT)/(1+DZ/U/DT);                                   % [J/kg] Update mixture enthalpy
+                mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew; % [J/kg] Apply relaxation
                 
                 switch model.THERMALNONEQ
                     case 'HRM'
-                        % Five-equation thermal non-equilibrium model based on time-relaxed vapor mass and energy conservations
+                        % Five-equation thermal non-equilibrium model based on time-relaxed vapor mass and energy conservation
                         
                         % Save parameters from previous point iteration
-                        Wviter = mix(tIdx).HRM.WV(zIdx,:);                              % [J/kg] Vapor mass flow rate
-                        Hviter = mix(tIdx).HRM.HV(zIdx,:);                              % [J/kg] Vapor enthalpy
+                        Wviter = mix(tIdx).HRM.WV(zIdx,:);                          % [J/kg] Vapor mass flow rate
+                        Hviter = mix(tIdx).HRM.HV(zIdx,:);                          % [J/kg] Vapor enthalpy
                         
                         % Update secondary parameters
-                        Uv     = mix(tIdx).vapor.U(zIdx);                               % [m/s] Vapor velocity
+                        Uv     = mix(tIdx).vapor.U(zIdx);                           % [m/s] Vapor velocity
                         
                         % Vapor mass conservation
                         Mvtot = mix(tIdx).MTOT(zIdx);                                                      % [kg/s/m] Linear vapor mass transfer rate
@@ -178,13 +178,13 @@ function solver(solveINIT)
                         
                         % Check convergence
                         dWv = abs((mix(tIdx).HRM.WV(zIdx,:)-Wviter));                                      % [kg/s] Vapor mass flow rate error between inner iterations
-                        dHv = abs((mix(tIdx).HRM.HV(zIdx,:)-Hviter));                                   % [J/kg] Vapor enthalpy error between inner iterations
+                        dHv = abs((mix(tIdx).HRM.HV(zIdx,:)-Hviter));                                      % [J/kg] Vapor enthalpy error between inner iterations
                 end
                 
                 % Check convergence
-                dW = abs((mix(tIdx).W(zIdx)-Witer));                                    % [kg/s] Mass flow rate error between inner iterations
-                dP = abs((mix(tIdx).P(zIdx)-Piter));                                    % [Pa]   Pressure error between inner iterations
-                dH = abs((mix(tIdx).H(zIdx)-Hiter));                                    % [J/kg] Enthalpy error between inner iterations
+                dW = abs((mix(tIdx).W(zIdx)-Witer));                       % [kg/s] Mass flow rate error between inner iterations
+                dP = abs((mix(tIdx).P(zIdx)-Piter));                       % [Pa]   Pressure error between inner iterations
+                dH = abs((mix(tIdx).H(zIdx)-Hiter));                       % [J/kg] Enthalpy error between inner iterations
                 if all([dW < options.ERRORW, dP < options.ERRORP, dH < options.ERRORH, dWv < options.ERRORW, dHv < options.ERRORH])
                     break;
                 elseif itr == options.MAXITER
@@ -195,10 +195,10 @@ function solver(solveINIT)
     
             end
             
-            % Save time relaxation terms (including near-wall terms)
-            mix(tIdx).HRM.TCOND(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);                  % [s] Condensation time relaxation
-            mix(tIdx).HRM.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);                  % [s] Condensation time relaxation
-            mix(tIdx).HRM.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).HRM.HV(zIdx,:))';    % [J/kg] Relaxed vapor temperature
+            % Save Homogeneous Relaxation Model terms
+            mix(tIdx).HRM.TCOND(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);               % [s] Condensation time relaxation
+            mix(tIdx).HRM.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);               % [s] Condensation time relaxation
+            mix(tIdx).HRM.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).HRM.HV(zIdx,:))'; % [J/kg] Relaxed vapor temperature
             
             % Save near-wall terms
             trelax = mix(tIdx).NEARWALLTRELAX(zIdx);                                                    % [s]    Near-wall energy transfer relaxation time
@@ -269,7 +269,7 @@ function solver(solveINIT)
         timeDHv = max(abs((mix(tIdx).HRM.HV - mix(tIdx-1).HRM.HV)),[],'all');
         
         if solveINIT
-            % Finish steady state solver when SS convergence criterions are met
+            % Finish steady state solver when SS convergence criteria are met
             if all([timeDW < options.SSCONVW, timeDP < options.SSCONVP ,timeDH < options.SSCONVH, timeDWv < options.SSCONVW, timeDHv < options.SSCONVH])
                 
                 % Indicate init converged

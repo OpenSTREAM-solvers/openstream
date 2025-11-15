@@ -1,43 +1,75 @@
 classdef ThreeFieldSolver < Solvers.AbstractSolver
-    %THREEFIELDSOLVER defines any task related to initalizing, solving and plotting the results based on the three-field approach.
+    %THREEFIELDSOLVER Solver for initializing, solving, and visualizing three-field flow.
     %
-    %   TODO: Detailed explanations
-    
+    % The ThreeFieldSolver class handles the setup, execution, and visualization
+    % of thermal-hydraulic simulations using a two-phase three-field approach.
+    %
+    % Responsibilities:
+    %
+    % - Initializes solver parameters from an :class:`Inputs.InputSet` object
+    % - Constructs :class:`Solvers.ThreeField.Film` and :class:`Solvers.ThreeField.Drop` objects for transient and steady-state analysis
+    % - Provides plotting utilities for spatial and temporal distributions
+    %
+    % Key Components:
+    %
+    % - Liquid field construction (film/drop)
+    % - Field mass/momentum/energy transport modeling
+    % - Pressure drop gradient obtained from mixture solver
+    % - Vapor solution obtained from mixture solver
+    % - Visualization of results across time and axial domains
+   
      properties (SetAccess=protected)
         
-        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+        NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
         TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
-        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s] from :attr:`Inputs.Options.TSTEP`
         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
-        fluid       {isa(fluid,'Inputs.FluidProperties')}
-        boundaryConditions
+        fluid       {isa(fluid,'Inputs.FluidProperties')}                              % Fluid object :class:`Inputs.FluidProperties`
+        boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
         
-        filmInit
-        dropInit
-        film
-        drop
+        filmInit                                                                       % Null transient film object
+        dropInit                                                                       % Null transient drop object
+        film                                                                           % Film object
+        drop                                                                           % Drop object
 
      end
 
      properties (SetAccess = protected)
-        mixSolver
-        inputSet
-        STATE                                                               = Solvers.SolverState.UNSOLVED
+        mixSolver                                                                      % Mixture object :class:`Solvers.Mixture.Mixture`
+        inputSet                                                                       % Input set object :class:`Inputs.InputSet`
+        STATE                                                              = Solvers.SolverState.UNSOLVED
      end
 
 
     methods
-        solve(tfSolver)
+        solve(tfSolver)                                                                % Solving algorithm
     end
 
     methods
         
         function tfSolver = ThreeFieldSolver(inputSet,mixSolver)
-            %THREEFIELDSOLVER Creates a ThreeField solver
-            %   Detailed explanation goes here
+            %THREEFIELDSOLVER Constructor for the ThreeFieldSolver class.
+            %
+            % Creates a new instance of the ThreeFieldSolver class using the
+            % provided :class:`Inputs.InputSet`. This constructor initializes
+            % the solver by calling the abstract :class:`Solvers.AbstractSolver`
+            % superclass constructor and then sets up all necessary solver
+            % parameters and internal data structures via
+            % :meth:`Solvers.ThreeField.ThreeFieldSolver.initializeSolver <Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.initializeSolver>`
+            %
+            % Input:
+            %
+            % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            %
+            % Notes:
+            %
+            % - This constructor assumes :class:`Inputs.InputSet` is fully validated.
+            % - Solver initialization includes liquid and vapor objects setup.
+            % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
+
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
@@ -59,8 +91,25 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
         
         function initializeSolver(tfSolver)
-        %INITIALIZESOLVER Initialize solver using the stored inputSet
-        %
+            %INITIALIZESOLVER Initializes solver parameters and constructs film/drop objects.
+            %
+            % Sets up the solver's internal state using the provided
+            % :class:`Inputs.InputSet` and :class:`Solvers.ThreeField.ThreeFieldSolver`,
+            % This includes initialization of data structures for transient and steady-state
+            % simulations based on the mixture solver solutions.
+            %
+            % Operations performed:
+            %
+            % - Initializes film and drop arrays for each time step
+            % - Initializes fluid property objects
+            % - Sets up mixture object
+            % - Assigns initial conditions for phase mass flow rates, velocities, enthalpies
+            %
+            % Notes:
+            %
+            % - The function assumes uniform axial discretization.
+            % - Wall heat flux is computed from interpolated boundary conditions.
+
             import Inputs.*
             import Solvers.ThreeField.*
             import Solvers.*
@@ -87,7 +136,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Create film and drop arrays (by timestep)
             flmArr(tfSolver.NTIME) = Film();
             drpArr(tfSolver.NTIME) = Drop();
-            props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
+            props = {'NZ','Z','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'}; % film and drop properties
             
             for tIdx = 1:tfSolver.NTIME
 
@@ -142,7 +191,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 % Initialize Mass flow rates [kg/s] based on phase mass exchange only
                 % Note 1: only 1st time step is important since other time steps are initialized by the previous time step in the solver
                 % Note 2: other, maybe better, initialization states could be investigated
-                drp.W = repmat(e0.*mix.OAFWL,tfSolver.NZ,1);      % [kg/s] Set drop mass flow to onset of annular flow conditions everywhere
+                drp.W = repmat(e0.*mix.OAFWL,tfSolver.NZ,1);               % [kg/s] Set drop mass flow to onset of annular flow conditions everywhere
                 
                 % Transient mass gradient in film field
                 %flmArr(tIdx).W = (mix(tIdx).W-drpArr(tIdx).W).*geom.PERIM./sum(geom.PERIM);           % [kg/s] Distribute film at inlet uniformly on all walls
@@ -217,8 +266,31 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
         
         function e0 = EQUIL(tfSolver,flm,drp,mix,zIdx)
-        %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
-        %
+            %EQUIL Find entrained ratio at film/drop equilibrium state [-]
+            %
+            % Iteratively computes the entrained liquid ratio at the onset of annular
+            % flow by balancing droplet deposition and film entrainment rates.
+            %
+            % Inputs:
+            %
+            % - tfSolver — :class:`Solvers.ThreeField.ThreeFieldSolver` object
+            % - flm      — Film field object (:class:`Solvers.ThreeField.Film`)
+            % - drp      — Droplet field object (:class:`Solvers.ThreeField.Drop`)
+            % - mix      — Mixture object (:class:`Solvers.Mixture.Mixture`)
+            % - zIdx     — Axial index for evaluation
+            %
+            % Algorithm:
+            %
+            % - Starts with an initial guess for droplet mass flow (50% of liquid mass)
+            % - Updates droplet and film flow rates iteratively
+            % - Computes difference between deposition and entrainment rates
+            % - Stops when error < 1e-4 kg/s/m or after 100 iterations
+            %
+            % Notes:
+            %
+            % - Uses interpolation for improved convergence
+            % - Falls back to ad-hoc update if interpolation fails
+
             errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
             nwall = tfSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = tfSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
@@ -261,8 +333,34 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
 
         function plotter = plotz(tfSolver, tIdx, opts)
-        %PLOTZ Plot spatial distributions of three-field parameters
-        %
+            %PLOTZ Plots spatial (axial) distributions of three-field parameters.
+            %
+            % Generates axial plots of selected three-field parameters at specified
+            % time indices. The function supports multiple display modes, wall
+            % selections, near-wall data, and optional  animation over time.
+            %
+            % Inputs:
+            %
+            % - tfSolver          — :class:`Solvers.ThreeField.ThreeFieldSolver` object containing simulation data
+            % - tIdx              — Time index or indices (vector of positive integers)
+            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
+            % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
+            % - opts.wall         — Wall index(es) to plot
+            % - opts.zIdx         — Axial indices to include in the plot
+            % - opts.obstructions — Logical flag to display obstruction locations
+            % - opts.annular      — Logical flag to plot annular two-phase flow parameters only from the onset of annular flow
+            % - opts.unitTemp     — Temperature unit: 'K' or 'C'
+            % - opts.arrangement  — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opts.resize       — Resize factor for plot scaling
+            %
+            % Notes:
+            %
+            % - If multiple time indices are provided, the function creates an animated plot.
+            % - At least two axial indices must be specified to enable spatial plotting.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Obstruction locations are plotted if opts.obstructions is true.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+
             arguments
                 tfSolver
                 tIdx              (:,1) double {mustBeInteger,mustBePositive}                                         = []
@@ -385,7 +483,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         'xlabel'   ,                     'Axial position [m]', ...
                         'ylabel'   ,           'Film mass flow rate [kg/s/m]');
                     plotter.plotz(flm.WL(opts.zIdx),'Film','XData',zaf,'subset',zafIdx)
-                    %plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
                     if opts.obstructions
@@ -417,7 +514,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         'xlabel',   'Axial position [m]', ...
                         'ylabel',   'Film thickness [m]');
                     plotter.plotz(flm.THICK(opts.zIdx),'Film','XData',zaf,'subset',zafIdx);
-                    %plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
                     if opts.obstructions
@@ -489,10 +585,32 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
         
         function plotter = plott(tfSolver, zIdx, opt)
-        %PLOTT Plot temporal distributions of three-field parameters
-        %
-        %   NOTE: currently supports only single elevation
-        %
+            %PLOTT Plots temporal distributions of three-field parameters at a given axial location.
+            %
+            % Generates time-series plots of selected three-field parameters at
+            % a specified axial index. The method supports multiple display
+            % modes, wall selections, and plot arrangements.
+            %
+            % Inputs:
+            %
+            % - tfSolver          — :class:`Solvers.ThreeField.ThreeFieldSolver` object containing simulation data
+            % - zIdx              — Axial index (scalar, positive integer)
+            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.tIdx          — Time indices to include in the plot
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.unitTemp      — Temperature unit: 'K' or 'C'
+            % - opt.arrangement   — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opt.resize        — Resize factor for plot scaling
+            %
+            % Notes:
+            %
+            % - If opt.display is set to 'ALL', all supported parameters are plotted.
+            % - The function validates that at least two time indices are provided.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+
             arguments
                 tfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = tfSolver.NZ
@@ -576,7 +694,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     'xlabel'   ,                               'Time [s]', ...
                     'ylabel'   ,           'Film mass flow rate [kg/s/m]');
                 plotter.plotz(flm.transient('WL','zIdx',zIdx)','Film');
-                %plotter.legend('show', 'Location', 'best');
             end
             
             % Field velocities
@@ -598,7 +715,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     'xlabel',           'Time [s]', ...
                     'ylabel', 'Film thickness [m]');
                 plotter.plotz(flm.transient('THICK','zIdx',zIdx)','Film');
-                %plotter.legend('show', 'Location', 'best');
             end
             
             % Film mass Exchange
@@ -649,8 +765,34 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         end
         
         function plotzt(tfSolver, opt)
-        %PLOTZT: Plot 2D time/elevation distributions of three-field parameters
-        %
+            %PLOTZT Plots 2D time/elevation distributions of three-field parameters.
+            %
+            % Generates surface plots of selected three-field related parameters
+            % over time and axial (elevation) positions. It supports plotting
+            % for film and drop fields, and can handle both real
+            % and null (initial) transient data.
+            %
+            % Inputs:
+            %
+            % - tfSolver          — :class:`Solvers.ThreeField.ThreeFieldSolver` object containing simulation data
+            % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
+            % - opt.label         — Corresponding labels for display parameters
+            % - opt.unit          — Units for each parameter
+            % - opt.field         — Field to plot: 'film' or 'drop'
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.zIdx          — Axial indices (must include at least 2)
+            % - opt.tIdx          — Time indices (must include at least 2)
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.shading       — Surface shading style: 'faceted', 'flat', or 'interp'
+            % - opt.view          — View angle for 3D plot [azimuth elevation]
+            %
+            % Notes:
+            %
+            % - If 'ALL' is passed to opt.display, all supported parameters are plotted.
+            % - The function validates that at least two axial and time indices are provided to enable meaningful 2D plotting.
+            % - Each wall is plotted in a separate figure window with appropriate titles and subplot grouping.
+
             arguments
                 tfSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U'}
