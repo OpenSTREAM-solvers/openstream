@@ -335,7 +335,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             %
             % Inputs:
             %
-            % - :param ffSolver          — :class:`Solvers.FourField.FourFieldSolver` object containing simulation data
+            % - ffSolver          — :class:`Solvers.FourField.FourFieldSolver` object containing simulation data
             % - tIdx              — Time index or indices (vector of positive integers)
             % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
             % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'

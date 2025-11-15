@@ -1,7 +1,7 @@
 function solve(tfSolver)
 %SOLVE Executes the three-field solver for steady-state and transient simulations.
 %
-% Runs the full solution process for the :class:`Solvers.ThreeField.ThtreeFieldSolver`
+% Runs the full solution process for the :class:`Solvers.ThreeField.ThreeFieldSolver`
 % object. It manages initialization, time stepping, axial sweeps, inner
 % iterations, convergence checks, and logging.
 %
@@ -29,7 +29,7 @@ import Solvers.SolverState
 % Enable diary
 tfSolver.inputSet.session.log.diaryOn();
 
-% Open log in presistent mode
+% Open log in persistent mode
 tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if tfSolver.STATE ~= SolverState.UNSOLVED
@@ -64,8 +64,7 @@ tfSolver.inputSet.session.log.diaryOff();
 tfSolver.log('Output directory: %s\n',tfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
-    
-    
+   
     nwall = tfSolver.inputSet.geometry.NWALL;
 
     % check if solving filmInit and dropInit
