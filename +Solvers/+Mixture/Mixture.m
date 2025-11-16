@@ -53,6 +53,7 @@ classdef Mixture < Solvers.AbstractField
         % Wall heat transfer transition flags
         cbt            (:,:) logical                                       = false                % Critical Boiling Transition flag [-]
         mfbt           (:,:) logical                                       = false                % Minimum Film Boiling Transition flag [-]
+    
     end
 
     properties (Access=private)
@@ -73,6 +74,7 @@ classdef Mixture < Solvers.AbstractField
         relaxtevap     (:,:) double  {mustBeNumeric}                                              % Time relaxation for interfacial evaporation [-]
         relaxtcond     (:,:) double  {mustBeNumeric}                                              % Time relaxation for interfacial condensation [-]
         nearwalltrelax (:,:) double  {mustBeNumeric}                                              % Time relaxation for near-wall energy transfer [-]
+    
     end
 
     %% --- Constructor method ---
