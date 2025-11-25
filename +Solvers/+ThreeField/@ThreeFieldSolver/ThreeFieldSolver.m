@@ -176,7 +176,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
-                evapFn = [0;diff(mix.X)./diff(mix.XEQ)];                   % [-] Evaporation function
+                evapFn = [0;max(0,diff(mix.X)./diff(mix.XEQ))];            % [-] Evaporation function
                 evapFn(~isfinite(evapFn)) = 1;                             % [-] Fix potential division by 0
                 flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX);           % [W/m^2] Film evaporation heat flux
 
