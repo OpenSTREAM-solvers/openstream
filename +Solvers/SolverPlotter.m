@@ -736,6 +736,9 @@ classdef SolverPlotter < handle
                         else
                             lh.UserData = struct('currentIndex', 1, 'Data', struct('index', 1, 'yData', lh.YData, 'xData', lh.XData));
                         end
+                    else
+                        % Initialize for single-step mode
+                        lh.UserData = struct('Data', []);
                     end
 
                 end
