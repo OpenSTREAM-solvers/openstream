@@ -286,21 +286,31 @@ classdef Wave < Solvers.AbstractFilm
         %STROUHAL Correlation of equilibrium Strouhal number
         %
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
+
+            model = wave.inputSet.model;
             
-            switch wave.inputSet.model.EQSTROUHAL
+            switch model.EQSTROUHAL
                 case 'RISO'
-                    coefs = [1.1236E-4 0.5 0.0];                            % Eq. 59
+                    coefs = [1.1236E-4 0.5 0.0];                           % Eq. 59
                 case 'SAWAI'
-                    coefs = [77.67    -1.3 0.46];                           % Eq. 70
+                    coefs = [77.67    -1.3 0.46];                          % Eq. 70
                 case 'MFVAL'
                     coefs = [4.1E-8    0.5 0.5];
                 case 'CUSTOM'
-                    coefs = wave.inputSet.model.EQSTROUHALCOEF;
+                    coefs = model.EQSTROUHALCOEF;
             end
 
-            re_v = wave.film.mix.vapor.RE(zIdx);
-            re_f = wave.film.RE(zIdx);
-            eqst = coefs(1) .* re_v.^coefs(2) .* re_f.^coefs(3);
+            switch model.EQSTROUHAL
+                case {'RISO','SAWAI','MFVAL','CUSTOM'}
+                    re_v = wave.film.mix.vapor.RE(zIdx);
+                    re_f = wave.film.RE(zIdx);
+                    eqst = coefs(1) .* re_v.^coefs(2) .* re_f.^coefs(3);
+                case {'CSTFREQ'}
+                    geom = wave.inputSet.geometry;
+                    d_h  = geom.HDIAM;                                     % [m]
+                    eqst = model.CSTWAVEFREQ.*d_h./wave.film.mix.vapor.U(zIdx);
+                    eqst = repmat(eqst,1,geom.NWALL);
+            end
 
         end
 
@@ -311,7 +321,7 @@ classdef Wave < Solvers.AbstractFilm
 
             % Hydraulic diameter
             d_h = wave.inputSet.geometry.HDIAM;
-            nwall = wave.inputSet.geometry.NWALL;
+            %nwall = wave.inputSet.geometry.NWALL;
 
             % Solve eqfreq using definition of St
             eqfreq = wave.EQSTROUHAL(zIdx).*wave.film.mix.vapor.U(zIdx)./d_h;

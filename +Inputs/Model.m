@@ -132,6 +132,7 @@ classdef Model < Inputs.Input
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'                          % Equilibrium wave Strouhal number model selected from :class:`InputEnums.EQSTROUHAL`
         EQSTROUHALCOEF   (:,1) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]             % Equilibrium wave Strouhal number coefficients [-]
         RELAXTW          (:,1) double  {mustBeNonnegative}                 = 0.2                             % Wave number density relaxation time [s]
+        CSTWAVEFREQ      (:,1) double  {mustBePositive}                    = 100                             % Imposed constant wave frequency [Hz]
 
         MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'FULLNOP'                       % Base film momentum conservation model selected from :class:`InputEnums.MOMENTBASE`
         MOMENTWAVE       (1,1) InputEnums.MOMENTWAVE                       = 'FULL'                          % Wave momentum conservation model selected from :class:`InputEnums.MOMENTWAVE`
