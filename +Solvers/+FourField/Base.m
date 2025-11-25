@@ -12,7 +12,7 @@ classdef Base < Solvers.AbstractFilm
 
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 
-        % Solver properties
+        % Solver state
         NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
@@ -102,7 +102,6 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            % TODO: add as model option later
             beta = 1-base.film.wave.BETA(zIdx);
         end
 
