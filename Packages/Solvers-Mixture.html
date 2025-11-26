@@ -292,8 +292,8 @@ as wall heat flux.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Uses <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.timeInterpolate</span></code> and
-<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Mixture.MixtureSolver.axialInterpolate</span></code> for interpolation.</p></li>
+<li><p>Uses <a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate" title="Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.timeInterpolate</span></code></a> and
+<a class="reference internal" href="#Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate" title="Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver.axialInterpolate</span></code></a> for interpolation.</p></li>
 <li><p>Throws an error if any expected boundary condition parameter
 is missing.</p></li>
 <li><p>The calculation of HFLUX is based on normalized wall power
@@ -401,7 +401,7 @@ and null (initial) transient data.</p>
 a specified method.</p>
 <p>Interpolates the values in y at the time points defined by
 mix.TIME using the interpolation method specified in
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.TIMEINTERP</span></code>.</p>
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.options.TIMEINTERP</span></code>.</p>
 <p>If the boundary condition time vector (mix.inputSet.bc.TIME)
 is scalar, interpolation is skipped and the original data y is
 returned unchanged.</p>
@@ -416,7 +416,7 @@ handles cases where interpolation is unnecessary.</p>
 specified method.</p>
 <p>Interpolates the values in y at positions defined by mix.Z
 using the interpolation method specified in
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.AXIALINTERP</span></code>.
+<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.options.AXIALINTERP</span></code>.
 The interpolation is performed over the domain defined by x.</p>
 <p>If the interpolation returns NaN (e.g., due to points slightly
 outside the interpolation range when using methods like ‘next’),
@@ -484,7 +484,7 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.NZ" title="Link to this definition"></a></dt>
-<dd><p>Solver state</p>
+<dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -502,7 +502,7 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.TSTEP</span></code></p>
+<dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.options.TSTEP</span></code></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -520,13 +520,13 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.HFLUX">
 <span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.HFLUX" title="Link to this definition"></a></dt>
-<dd><p>Wall heat flux</p>
+<dd><p>Wall heat flux [W/m^2]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.W">
 <span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.W" title="Link to this definition"></a></dt>
-<dd><p>Flow variables</p>
+<dd><p>Mass flow rate [kg/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -544,7 +544,7 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.DP">
 <span class="sig-name descname"><span class="pre">DP</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.DP" title="Link to this definition"></a></dt>
-<dd><p>Detailed flow data (pressure drop, derivative terms, time relaxations)</p>
+<dd><p>Saved detailed pressure drops [Pa]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -580,7 +580,13 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.liquid">
 <span class="sig-name descname"><span class="pre">liquid</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.liquid" title="Link to this definition"></a></dt>
-<dd><p>Phase objects</p>
+<dd><p>Liquid phase object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.vapor">
+<span class="sig-name descname"><span class="pre">vapor</span></span><a class="headerlink" href="#Solvers.Mixture.Mixture.vapor" title="Link to this definition"></a></dt>
+<dd><p>Vapor phase object</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -604,7 +610,7 @@ fluid properties. Sets up flow property tracking for simulation.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.cbt">
 <span class="sig-name descname"><span class="pre">cbt</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Solvers.Mixture.Mixture.cbt" title="Link to this definition"></a></dt>
-<dd><p>Wall heat transfer transition flags</p>
+<dd><p>Critical Boiling Transition flag [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -939,7 +945,7 @@ selected <a class="reference internal" href="Inputs.html#Inputs.Model.TPFM" titl
 <p>Computes the wall shear stress for each wall segment using the
 friction factor, mass flux and two-phase multiplier. Supports
 multiple walls and adjusts for boiling transition conditions
-using <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTMTM</span> <span class="pre">model</span></code>.</p>
+using <a class="reference internal" href="Inputs.html#Inputs.Model.BTMTM" title="Inputs.Model.BTMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTMTM</span></code></a> model.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object containing flow and geometry data</p></li>
@@ -1071,13 +1077,16 @@ selected <a class="reference internal" href="Inputs.html#Inputs.Model.TPKM" titl
 </ul>
 <p>Returns:</p>
 <ul class="simple">
-<li><p>dpparts — Struct with fields:
-- GRAV : Gravitational loss [Pa]
-- WALL : Wall friction loss [Pa]
-- ACCZ : Spatial acceleration loss [Pa]
-- ACCT : Temporal acceleration loss [Pa]
-- K    : Local loss [Pa]
-- TOT  : Total pressure loss [Pa]</p></li>
+<li><p>dpparts — Struct with fields:</p>
+<ul>
+<li><p>GRAV : Gravitational loss [Pa]</p></li>
+<li><p>WALL : Wall friction loss [Pa]</p></li>
+<li><p>ACCZ : Spatial acceleration loss [Pa]</p></li>
+<li><p>ACCT : Temporal acceleration loss [Pa]</p></li>
+<li><p>K    : Local loss [Pa]</p></li>
+<li><p>TOT  : Total pressure loss [Pa]</p></li>
+</ul>
+</li>
 </ul>
 </dd></dl>
 
@@ -1105,7 +1114,7 @@ selected <a class="reference internal" href="Inputs.html#Inputs.Model.TPHTM" tit
 <p>Computes the effective wall heat transfer coefficient by
 combining single-phase and boiling models. Supports  multiple
 walls and adjusts for boiling transition conditions using
-<code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTHTM</span> <span class="pre">model</span></code>.</p>
+<a class="reference internal" href="Inputs.html#Inputs.Model.BTHTM" title="Inputs.Model.BTHTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTHTM</span></code></a> model.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
@@ -1148,7 +1157,7 @@ with the wall perimeter ratio.</p>
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.KTRELAX">
 <span class="sig-name descname"><span class="pre">KTRELAX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.KTRELAX" title="Link to this definition"></a></dt>
 <dd><p>KTRELAX Local relaxation time [s]</p>
-<p>Returns the relaxation time at the elevation closest to :attr:<a href="#id1"><span class="problematic" id="id2">`</span></a>Inputs.Model.KLOC.
+<p>Returns the relaxation time at the elevation closest to <a class="reference internal" href="Inputs.html#Inputs.Model.KLOC" title="Inputs.Model.KLOC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.KLOC</span></code></a>.
 All other axial positions are set to NaN.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -1222,8 +1231,8 @@ time relaxation approach. Currently not used.</p>
 <dd><p>WALEVAPRATIO Wall mass evaporation ratio [-]</p>
 <p>Computes the fraction of liquid mass undergoing wall boiling based on
 equilibrium quality and boiling onset thresholds
-:attr:<a href="#id3"><span class="problematic" id="id4">`</span></a>Inputs.Model.WBOILINGXSUB’ and
-<a href="#id5"><span class="problematic" id="id6">`</span></a>Inputs.Model.WBOILINGXSAT’.</p>
+<a class="reference internal" href="Inputs.html#Inputs.Model.WBOILINGXSUB" title="Inputs.Model.WBOILINGXSUB"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WBOILINGXSUB</span></code></a> and
+<a class="reference internal" href="Inputs.html#Inputs.Model.WBOILINGXSAT" title="Inputs.Model.WBOILINGXSAT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WBOILINGXSAT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with boiling model parameters</p></li>
@@ -1280,9 +1289,12 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>Uses <a class="reference internal" href="#Solvers.Mixture.Mixture.MINT" title="Solvers.Mixture.Mixture.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.MINT</span></code></a> for mass transfer and <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.HRM.HV</span></code> for vapor enthalpy</p></li>
-<li><p>Behavior depends on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>:
-- <cite>‘BULK’</cite>: Consideration of bulk enthalpy
-- <cite>‘SATURATED’</cite>: Consideration of saturated enthalpy</p></li>
+<li><p>Behavior depends on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>:</p>
+<ul>
+<li><p><cite>‘BULK’</cite>: Consideration of bulk enthalpy</p></li>
+<li><p><cite>‘SATURATED’</cite>: Consideration of saturated enthalpy</p></li>
+</ul>
+</li>
 </ul>
 </dd></dl>
 
@@ -1322,9 +1334,12 @@ evaporation, based on interfacial mass transfer and enthalpy differences.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Behavior depends on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>:
-- <cite>‘BULK’</cite>: Consideration of bulk enthalpy
-- <cite>‘SATURATED’</cite>: Consideration of saturated enthalpy</p></li>
+<li><p>Behavior depends on <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a>:</p>
+<ul>
+<li><p>BULK: Consideration of bulk enthalpy</p></li>
+<li><p>SATURATED: Consideration of saturated enthalpy</p></li>
+</ul>
+</li>
 </ul>
 </dd></dl>
 
