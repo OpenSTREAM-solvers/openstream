@@ -9,22 +9,26 @@ classdef Liquid < Solvers.AbstractField
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
 
         % Solver state
+
         NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.InputSet.options.TSTEP`
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.Options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
 
         % Flow variables
+
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
         U            (:,1) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
         % Iteration tracking
-        ITR
+
+        ITR                                                                                       % Iteration tracking
 
         % Mixture object
+
         mix         (1,1)          {isa(mix, 'Solvers.TwoFluid.Mixture')}  = NaN                  % :class:`Solvers.TwoFluid.Mixture` object
 
     end

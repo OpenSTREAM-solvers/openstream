@@ -21,11 +21,14 @@ classdef Vapor < Solvers.AbstractPhase
     % - Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
+
         mix                                                                % :class:`Solvers.Mixture.Mixture` object
         NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        
     end
 
     methods
+
         function vapor = Vapor(mix)
             %VAPOR Constructor of the Vapor class
             %

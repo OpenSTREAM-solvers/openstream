@@ -9,22 +9,26 @@ classdef Mixture < Solvers.AbstractField
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 
         % Solver state
+
         NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.InputSet.options.TSTEP`
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
 
         % Wall heat flux
+
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Wall heat flux [W/m^2]
 
         % Flow variables
+
         W            (:,1) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
         P            (:,1) double  {mustBeNumeric}                         = 7E6                  % Pressure [Pa]
         H            (:,1) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
         % Detailed flow data (pressure drop, derivative terms, time relaxations)
+
         DP           (1,1) struct                                                                 % Saved detailed pressure drops [Pa]
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops [Pa]
         MDER         (1,1) struct                                                                 % Saved detailed material derivative terms
@@ -32,11 +36,13 @@ classdef Mixture < Solvers.AbstractField
         NEARWALL     (1,1) struct                                                                 % Near-wall terms
 
         % Iteration tracking
-        ITR
+
+        ITR                                                                                       % Iteration tracking
 
         % Phase objects
-        liquid
-        vapor
+
+        liquid                                                                                    % Liquid phase object
+        vapor                                                                                     % Vapor phase object
 
     end
 
@@ -51,6 +57,7 @@ classdef Mixture < Solvers.AbstractField
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField}, GetAccess=?Solvers.AbstractField)
 
         % Wall heat transfer transition flags
+
         cbt            (:,:) logical                                       = false                % Critical Boiling Transition flag [-]
         mfbt           (:,:) logical                                       = false                % Minimum Film Boiling Transition flag [-]
     
@@ -59,6 +66,7 @@ classdef Mixture < Solvers.AbstractField
     properties (Access=private)
 
         % Derived flow properties
+
         mflux          (:,1) double  {mustBeNumeric}                       = 1.                   % Mass flux [kg/m^2-s]
         xeq            (:,1) double  {mustBeNumeric}                       = 1.                   % Equilibrium quality [-]
         x              (:,1) double  {mustBeNumeric}                       = 1.                   % Vapor quality [-]
@@ -67,10 +75,12 @@ classdef Mixture < Solvers.AbstractField
         rho            (:,1) double  {mustBeNumeric}                       = 1.                   % Mixture density [kg/m^3]
 
         % Onset of annular flow properties
+
         oafidx_const         double  {mustBeNumeric}                       = []                   % Solved index for onset of annular flow [-]
         sigm_const     (:,1) double  {mustBeNumeric}                       = []                   % Solved sigmoid function value [-]
 
         % Time relaxation arrays
+
         relaxtevap     (:,:) double  {mustBeNumeric}                                              % Time relaxation for interfacial evaporation [-]
         relaxtcond     (:,:) double  {mustBeNumeric}                                              % Time relaxation for interfacial condensation [-]
         nearwalltrelax (:,:) double  {mustBeNumeric}                                              % Time relaxation for near-wall energy transfer [-]
@@ -631,7 +641,7 @@ classdef Mixture < Solvers.AbstractField
             % Computes the wall shear stress for each wall segment using the 
             % friction factor, mass flux and two-phase multiplier. Supports 
             % multiple walls and adjusts for boiling transition conditions
-            % using :attr:`Inputs.Model.BTMTM model`.
+            % using :attr:`Inputs.Model.BTMTM` model.
             %
             % Inputs:
             %
@@ -835,6 +845,7 @@ classdef Mixture < Solvers.AbstractField
             % Returns:
             %
             % - dpparts — Struct with fields:
+            %
             %   - GRAV : Gravitational loss [Pa]
             %   - WALL : Wall friction loss [Pa]
             %   - ACCZ : Spatial acceleration loss [Pa]
@@ -898,7 +909,7 @@ classdef Mixture < Solvers.AbstractField
             % Computes the effective wall heat transfer coefficient by
             % combining single-phase and boiling models. Supports  multiple
             % walls and adjusts for boiling transition conditions using
-            % :attr:`Inputs.Model.BTHTM model`.
+            % :attr:`Inputs.Model.BTHTM` model.
             %
             % Inputs:
             %
@@ -990,7 +1001,7 @@ classdef Mixture < Solvers.AbstractField
         function ktrelax = KTRELAX(mix, zIdx)
             %KTRELAX Local relaxation time [s]
             %
-            % Returns the relaxation time at the elevation closest to :attr:`Inputs.Model.KLOC.
+            % Returns the relaxation time at the elevation closest to :attr:`Inputs.Model.KLOC`.
             % All other axial positions are set to NaN.
             %
             % Inputs:
@@ -1108,8 +1119,8 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the fraction of liquid mass undergoing wall boiling based on
             % equilibrium quality and boiling onset thresholds
-            % :attr:`Inputs.Model.WBOILINGXSUB' and
-            % `Inputs.Model.WBOILINGXSAT'.
+            % :attr:`Inputs.Model.WBOILINGXSUB` and
+            % :attr:`Inputs.Model.WBOILINGXSAT`.
             %
             % Inputs:
             %
@@ -1206,6 +1217,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % - Uses :attr:`Solvers.Mixture.Mixture.MINT` for mass transfer and :attr:`Solvers.Mixture.Mixture.HRM.HV` for vapor enthalpy
             % - Behavior depends on :attr:`Inputs.Model.INTTRANSH`:
+            %
             %   - `'BULK'`: Consideration of bulk enthalpy
             %   - `'SATURATED'`: Consideration of saturated enthalpy
 
@@ -1270,8 +1282,9 @@ classdef Mixture < Solvers.AbstractField
             % Notes:
             %
             % - Behavior depends on :attr:`Inputs.Model.INTTRANSH`:
-            %   - `'BULK'`: Consideration of bulk enthalpy
-            %   - `'SATURATED'`: Consideration of saturated enthalpy
+            %
+            %   - BULK: Consideration of bulk enthalpy
+            %   - SATURATED: Consideration of saturated enthalpy
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 

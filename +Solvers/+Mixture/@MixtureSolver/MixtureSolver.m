@@ -302,8 +302,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Notes:
             %
-            % - Uses :meth:`Mixture.MixtureSolver.timeInterpolate <Mixture.MixtureSolver.MixtureSolver.timeInterpolate>` and
-            %   :meth:`Mixture.MixtureSolver.axialInterpolate <Mixture.MixtureSolver.MixtureSolver.axialInterpolate>` for interpolation.
+            % - Uses :meth:`Solvers.Mixture.MixtureSolver.timeInterpolate <Solvers.Mixture.MixtureSolver.MixtureSolver.timeInterpolate>` and
+            %   :meth:`Solvers.Mixture.MixtureSolver.axialInterpolate <Solvers.Mixture.MixtureSolver.MixtureSolver.axialInterpolate>` for interpolation.
             % - Throws an error if any expected boundary condition parameter
             %   is missing.
             % - The calculation of HFLUX is based on normalized wall power
@@ -1188,7 +1188,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Interpolates the values in y at the time points defined by
             % mix.TIME using the interpolation method specified in
-            % :attr:`Inputs.InputSet.options.TIMEINTERP`.
+            % :attr:`Inputs.options.TIMEINTERP`.
             %
             % If the boundary condition time vector (mix.inputSet.bc.TIME)
             % is scalar, interpolation is skipped and the original data y is
@@ -1213,7 +1213,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % Interpolates the values in y at positions defined by mix.Z
             % using the interpolation method specified in
-            % :attr:`Inputs.InputSet.options.AXIALINTERP`.
+            % :attr:`Inputs.options.AXIALINTERP`.
             % The interpolation is performed over the domain defined by x.
             %
             % If the interpolation returns NaN (e.g., due to points slightly

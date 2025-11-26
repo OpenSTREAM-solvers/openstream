@@ -1,7 +1,7 @@
 Contribute to the code
 ======================
 
-We welcome contributions from the community to improve the *'OpenSTREAM** solvers, documentation, and examples. Please follow these guidelines to ensure a smooth process.
+We welcome contributions from the community to improve the **OpenSTREAM** solvers, documentation, and examples. Please follow these guidelines to ensure a smooth process.
 
 How to Contribute
 -----------------
@@ -51,7 +51,7 @@ Coding Standards
 Testing
 -------
 
-- Run existing tests before submitting changes (*coming soon*).
+- Run existing tests (*coming soon*) before submitting changes.
 - Add new tests for any new functionality.
 - Use ``pytest`` for Python and built-in MATLAB testing frameworks where applicable.
 
@@ -60,6 +60,7 @@ Reporting Issues
 
 - Use the **Issues** tab on GitHub.
 - Provide:
+
   - Steps to reproduce
   - Expected vs actual behavior
   - Screenshots or logs if relevant
@@ -72,5 +73,5 @@ Please be respectful and constructive in all interactions.
 Communication
 -------------
 
-- Join discussions in **GitHub Discussions** or our community Slack (link TBD). `GitHub Discussions <https://github.com/OpenSTREAM-solvers/discussions>`_
+- Join discussions in `GitHub Discussions <https://github.com/OpenSTREAM-solvers/discussions>`_. 
 - For major changes, open an issue first to discuss your proposal.

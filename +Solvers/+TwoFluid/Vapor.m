@@ -8,32 +8,36 @@ classdef Vapor < Solvers.AbstractField
 
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
 
-        % Solver properties
-        NZ                                                                 = 0                    % [-] Number of axial steps
-        NTIME                                                              = 0                    % [-] Number of time steps
-        TIME                                                               = 0                    % [s] Time series
-        DT                                                                 = 0                    % [s] Time step size
-        TIDX                                                               = 1                    % [-] Time step index
-        Z                                                                  = 1.                   % [m] Elevation
+        % Solver state
+
+        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        NTIME                                                              = 0                    % Number of time steps [-]
+        TIME                                                               = 0                    % Time series [s]
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.Options.TSTEP`
+        TIDX                                                               = 1                    % Time step index [-]
+        Z                                                                  = 1.                   % Elevation [m]
 
         % Flow properties
-        W            (:,1) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
-        U            (:,1) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
-        H            (:,1) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
+
+        W            (:,1) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
+        U            (:,1) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
+        H            (:,1) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
         % Iteration properties
-        ITR
+
+        ITR                                                                                       % Iteration properties
 
         % Mixture object
+
         mix          (1,1)         {isa(mix, 'Solvers.TwoFluid.Mixture')}  = NaN                  % :class:`Solvers.TwoFluid.Mixture` object
 
     end
 
     properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
 
-        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}
+        DZ           (1,1) double  {mustBeNumeric}                         = 0                    % Axial step size [m]
+        inputSet                   {isa(inputSet,'Inputs.InputSet')}                              % :class:`Inputs.InputSet` object
+        fluid                      {isa(fluid,'Inputs.FluidProperties')}                          % :class:`Inputs.FluidProperties` object
 
     end
 
@@ -312,7 +316,7 @@ classdef Vapor < Solvers.AbstractField
             %FLOWREGIME Categorical two-phase flow regimes
             %
             % Returns the flow regime classification based on liquid-phase criteria
-            % (:attr:`Solvers.Liquid.FLOWREGIME)`.
+            % (:meth:`Solvers.TwoFluid.Liquid.FLOWREGIME)`.
             %
             % Inputs:
             %
@@ -360,7 +364,7 @@ classdef Vapor < Solvers.AbstractField
             %INTAREA Volumetric interfacial area [m^-1]
             %
             % Computes the interfacial area concentration using liquid-phase logic
-            % (from :attr:`Solvers.Liquid.INTAREA)`.
+            % (from :meth:`Solvers.TwoFluid.Liquid.INTAREA)`.
             %
             % Inputs:
             %
@@ -383,7 +387,7 @@ classdef Vapor < Solvers.AbstractField
             %
             % Computes the portion of wall heat flux attributed to boiling (evaporation)
             % for the vapor phase, based on liquid-phase calculations
-            % (:attr:`Solvers.Liquid.HFLUXWALEVAP`).
+            % (:meth:`Solvers.TwoFluid.Liquid.HFLUXWALEVAP`).
             %
             % Inputs:
             %
@@ -500,7 +504,7 @@ classdef Vapor < Solvers.AbstractField
             %MWALEVAP Linear wall mass evaporation rate [kg/s/m]
             %
             % Computes the wall boiling mass transfer rate for vapor by reversing the sign
-            % of the liquid-phase value (attr:`Solvers.TwoFluid.Liquid.MWALEVAP`).
+            % of the liquid-phase value (meth:`Solvers.TwoFluid.Liquid.MWALEVAP`).
             %
             % Inputs:
             %
@@ -517,7 +521,7 @@ classdef Vapor < Solvers.AbstractField
             %MTOT Total linear mass transfer [kg/s/m]
             %
             % Computes the total vapor mass transfer rate by reversing the sign of
-            % the liquid-phase total (attr:`Solvers.TwoFluid.Liquid.MTOT`).
+            % the liquid-phase total (:meth:`Solvers.TwoFluid.Liquid.MTOT`).
             %
             % Inputs:
             %
@@ -570,7 +574,7 @@ classdef Vapor < Solvers.AbstractField
             %INTHFLUX Interfacial heat flux [W/m^2]
             %
             % Computes the interfacial heat flux due to evaporation and condensation
-            % (delegated to liquid-phase calculation in attr:`Solvers.TwoFluid.Liquid.INTHFLUX`).
+            % (delegated to liquid-phase calculation in :meth:`Solvers.TwoFluid.Liquid.INTHFLUX`).
             %
             % Inputs:
             %
@@ -630,7 +634,7 @@ classdef Vapor < Solvers.AbstractField
         function Hintevap = HINTEVAP(vapor,liquid,zIdx)
             %HINTEVAP Linear interfacial heat evaporation rate [W/m]
             %
-            % Extracts the evaporation component from :attr:`Solvers.Vapor.HINT`.
+            % Extracts the evaporation component from :attr:`Solvers.TwoFluid.Vapor.HINT`.
             %
             % Inputs:
             %
@@ -646,7 +650,7 @@ classdef Vapor < Solvers.AbstractField
         function Hintcond = HINTCOND(vapor,liquid,zIdx)
             %HINTCOND Linear interfacial heat condensation rate [W/m]
             %
-            % Extracts the condensation component from :attr:`Solvers.Vapor.HINT`.
+            % Extracts the condensation component from :attr:`Solvers.TwoFluid.Vapor.HINT`.
             %
             % Inputs:
             %
@@ -885,7 +889,7 @@ classdef Vapor < Solvers.AbstractField
             %FDRAG Interfacial drag force [N/m]
             %
             % Computes the interfacial drag force acting on the vapor phase by reversing
-            % the sign of the liquid-phase drag (:attr:`Solvers.Liquid.FDRAG`).
+            % the sign of the liquid-phase drag (:meth:`Solvers.TwoFluid.Liquid.FDRAG`).
             %
             % Inputs:
             %
