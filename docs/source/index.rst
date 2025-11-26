@@ -58,7 +58,8 @@
 
    /Community/faq
    /Community/support
-   /Community/contribute
+   /Community/contribute_code
+   /Community/contribute_documentation
    /Community/authors
 
 .. include:: index_content.rst
