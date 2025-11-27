@@ -111,12 +111,11 @@
              
   <section id="three-field-solver">
 <h1>Three-field solver<a class="headerlink" href="#three-field-solver" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Solvers.ThreeField" title="Solvers.ThreeField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.ThreeField</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating annular two-phase flows using a three-field approach. In this method, the two liquid fields (film and droplets) are treated separately, each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the <code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code> module. This framework enables explicit modeling of liquid–liquid interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it well-suited for applications involving annular boiling two-phase flow regimes where field separation and interfacial dynamics are significant.</p>
+<p>The <a class="reference internal" href="#module-Solvers.ThreeField" title="Solvers.ThreeField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.ThreeField</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating annular two-phase flows using a three-field approach. In this method, the two liquid fields (film and droplets) are treated separately, each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module. This framework enables explicit modeling of liquid–liquid interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it well-suited for applications involving annular boiling two-phase flow regimes where field separation and interfacial dynamics are significant.</p>
 <p>This module includes:</p>
 <ul class="simple">
-<li><p>Solver class for three-field-based flow simulations: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreFieldSolver</span></code></p></li>
+<li><p>Solver class for three-field-based flow simulations: <a class="reference internal" href="#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a></p></li>
 <li><p>Film and drop field classes: <a class="reference internal" href="#Solvers.ThreeField.Film" title="Solvers.ThreeField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a></p></li>
-<li><p>Mixture class: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Mixture</span></code></p></li>
 <li><p>Three-field primary properties: <a class="reference internal" href="#Solvers.ThreeField.Film.W" title="Solvers.ThreeField.Film.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film.W</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.Film.U" title="Solvers.ThreeField.Film.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film.U</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.Film.H" title="Solvers.ThreeField.Film.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film.H</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.Drop.W" title="Solvers.ThreeField.Drop.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.W</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.Drop.U" title="Solvers.ThreeField.Drop.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.U</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.Drop.H" title="Solvers.ThreeField.Drop.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop.H</span></code></a></p></li>
 <li><p>Key solver class methods: <a class="reference internal" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.initializeSolver" title="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.initializeSolver"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.initializeSolver</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.ThreeFieldSolver.solve" title="Solvers.ThreeField.ThreeFieldSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.solve()</span></code></a>, <a class="reference internal" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plotz" title="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver.plotz"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.plotz</span></code></a></p></li>
 <li><p>Field class methods for calculating secondary three-field parameters.</p></li>
@@ -436,7 +435,7 @@ including flow variables and phase interactions.</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NZ" title="Link to this definition"></a></dt>
-<dd><p>Solver state</p>
+<dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -454,7 +453,7 @@ including flow variables and phase interactions.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Film.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.TSTEP</span></code></p>
+<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -484,7 +483,7 @@ including flow variables and phase interactions.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Film.W">
 <span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.W" title="Link to this definition"></a></dt>
-<dd><p>Flow properties</p>
+<dd><p>Mass flow rate [kg/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -502,7 +501,7 @@ including flow variables and phase interactions.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Film.ITR">
 <span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.ThreeField.Film.ITR" title="Link to this definition"></a></dt>
-<dd><p>Iteration properties</p>
+<dd><p>Iteration tracking</p>
 </dd></dl>
 
 </dd>
@@ -538,7 +537,7 @@ and fluid properties.</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.NZ" title="Link to this definition"></a></dt>
-<dd><p>Solver properties</p>
+<dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -556,7 +555,7 @@ and fluid properties.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.InputSet.options.TSTEP</span></code></p>
+<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -574,7 +573,7 @@ and fluid properties.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.W">
 <span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.W" title="Link to this definition"></a></dt>
-<dd><p>Flow properties</p>
+<dd><p>Mass flow rate [kg/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -592,13 +591,13 @@ and fluid properties.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.ITR">
 <span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.ThreeField.Drop.ITR" title="Link to this definition"></a></dt>
-<dd><p>Iteration properties</p>
+<dd><p>Iteration tracking</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.mix">
 <span class="sig-name descname"><span class="pre">mix</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.ThreeField.Drop.mix" title="Link to this definition"></a></dt>
-<dd><p>Mixture</p>
+<dd><p><a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p>
 </dd></dl>
 
 </dd>

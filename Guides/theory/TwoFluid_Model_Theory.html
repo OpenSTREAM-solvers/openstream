@@ -137,8 +137,8 @@
 <section id="governing-equations">
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p><strong>1. Mass conservation</strong></p>
-<p>Liquid: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_l}{u_l}) + \frac{\partial W_l}{\partial z} = -A a_i (\Gamma - \Lambda) - \sum \Pi_w^n \Gamma_{wb}^n\)</span></p>
-<p>Vapor: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_v}{u_v}) + \frac{\partial W_v}{\partial z} = A a_i (\Gamma - \Lambda) + \sum \Pi_w^n \Gamma_{wb}^n\)</span></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_l}{u_l}) + \frac{\partial W_l}{\partial z} = -A a_i (\Gamma - \Lambda) - \sum \Pi_{wall}^n \Gamma_{wb}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_v}{u_v}) + \frac{\partial W_v}{\partial z} = A a_i (\Gamma - \Lambda) + \sum \Pi_{wall}^n \Gamma_{wb}^n\)</span></p>
 <p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(W_l\)</span>, <span class="math notranslate nohighlight">\(W_v\)</span> are the liquid and vapor mass flow rates</p></li>
@@ -149,34 +149,33 @@
 <li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is the wall boiling mass flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 <p><strong>2. Momentum conservation</strong></p>
-<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z}) = -A a_i \Lambda (u_l - u_v) - A_l (\frac{\partial p}{\partial z} + \cos\theta g \rho_l) + A a_i \tau_{v,l} - \sum \Pi_w^n \tau_{w,l}^n\)</span></p>
-<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v (\frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z}) = (A a_i \Gamma + \sum \Pi_w^n \Gamma_{wb}^n) (u_l - u_v) - A_v (\frac{\partial p}{\partial z} + \cos\theta g \rho_v) - A a_i \tau_{v,l} - \sum \Pi_w^n \tau_{w,v}^n\)</span></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z}) = -A a_i \Lambda (u_l - u_v) - A_l (\frac{\partial p}{\partial z} + \cos\theta g \rho_l) + A a_i \tau_{v,l} - \sum \Pi_{wall}^n \tau_{wall,l}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v (\frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z}) = (A a_i \Gamma + \sum \Pi_w^n \Gamma_{wb}^n) (u_l - u_v) - A_v (\frac{\partial p}{\partial z} + \cos\theta g \rho_v) - A a_i \tau_{v,l} - \sum \Pi_{wall}^n \tau_{wall,v}^n\)</span></p>
 <p>where</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(A_l\)</span>, <span class="math notranslate nohighlight">\(A_v\)</span> are the liquid and vapor cross-sectional areas</p></li>
 <li><p><span class="math notranslate nohighlight">\(\tau_{v,l}\)</span> is the interfacial shear stress</p></li>
-<li><p><span class="math notranslate nohighlight">\(\tau_{w,l}\)</span>, <span class="math notranslate nohighlight">\(\tau_{w,v}\)</span> are the liquid and vapor wall shear stresses</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{wall,l}\)</span>, <span class="math notranslate nohighlight">\(\tau_{wall,v}\)</span> are the liquid and vapor wall shear stresses</p></li>
 </ul>
 <p><strong>3. Energy conservation</strong></p>
-<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z}) = -A a_i \Lambda (h_l - h_v) + \sum \Pi_w^n ({q^{\prime\prime}}_{w,l}^n - (h_v - h_l) \Gamma_{wb}^n)\)</span></p>
-<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v (\frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z}) = A a_i \Gamma (h_l - h_v) + \sum \Pi_w^n {q^{\prime\prime}}_{w,v}^n\)</span></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z}) = -A a_i \Lambda (h_l - h_v) + \sum \Pi_{wall}^n ({q^{\prime\prime}}_{wall,l}^n - (h_v - h_l) \Gamma_{wb}^n)\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v (\frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z}) = A a_i \Gamma (h_l - h_v) + \sum \Pi_{wall}^n {q^{\prime\prime}}_{wall,v}^n\)</span></p>
 <p>where</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(h_l\)</span>, <span class="math notranslate nohighlight">\(h_v\)</span> are the liquid and vapor specific enthalpies</p></li>
-<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{w,l}^n\)</span>, <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{w,v}^n\)</span> are the wall heat flux to liquid and vapor for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,l}^n\)</span>, <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,v}^n\)</span> are the wall heat flux to liquid and vapor for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 </section>
 <section id="closure-relations">
 <h2>Closure relations<a class="headerlink" href="#closure-relations" title="Link to this heading"></a></h2>
 <p>To complete the conservation equations, several closure relations are required:</p>
 <ul class="simple">
-<li><p>Onset of annular two-phase flow</p></li>
 <li><p>Volumetric interfacial area: <span class="math notranslate nohighlight">\(a_i\)</span></p></li>
-<li><p>Interfacial evaporation and condensation mass fluxes</p></li>
-<li><p>Wall boiling mass flux</p></li>
-<li><p>Interfacial shears stress</p></li>
-<li><p>Wall shear stress for each phase</p></li>
-<li><p>Wall heat flux for for each phase</p></li>
+<li><p>Interfacial evaporation and condensation mass fluxes: <span class="math notranslate nohighlight">\(\Gamma\)</span>, <span class="math notranslate nohighlight">\(\Lambda\)</span></p></li>
+<li><p>Wall boiling mass flux: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span></p></li>
+<li><p>Interfacial shears stress: <span class="math notranslate nohighlight">\(\tau_{v,l}\)</span></p></li>
+<li><p>Wall shear stress for each phase: <span class="math notranslate nohighlight">\(\tau_{wall,l}\)</span>, <span class="math notranslate nohighlight">\(\tau_{wall,v}\)</span></p></li>
+<li><p>Wall heat flux for each phase: <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,l}^n\)</span>, <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,v}^n\)</span></p></li>
 <li><p>Wall heat transfer models</p></li>
 </ul>
 <p>These relations depend on the local flow regime, which is determined by an additional flow regime identification model.</p>

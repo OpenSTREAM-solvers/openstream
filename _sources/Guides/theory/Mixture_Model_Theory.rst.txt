@@ -31,7 +31,7 @@ where:
 
 **2. Momentum conservation**
 
-:math:`\rho A (\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z}) = -A (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho) - \sum \Pi_w^n {\tau}_w^n`
+:math:`\rho A (\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z}) = -A (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho) - \sum \Pi_{wall}^n {\tau}_{wall}^n`
 
 where:
 
@@ -42,17 +42,17 @@ where:
 - :math:`\theta` is the inclination angle
 - :math:`g` is the gravitational acceleration
 - :math:`n` is the wall index
-- :math:`\Pi_w^n` is the wall perimeter for wall index :math:`n`
-- :math:`\tau_w^n` is the wall shear stress for wall index :math:`n`
+- :math:`\Pi_{wall}^n` is the wall perimeter for wall index :math:`n`
+- :math:`\tau_{wall}^n` is the wall shear stress for wall index :math:`n`
 
 **3. Energy conservation**
 
-:math:`\rho A (\frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z}) = \sum \Pi_p^n {q^{\prime\prime}}_w^n`
+:math:`\rho A (\frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z}) = \sum \Pi_{wall}^n {q^{\prime\prime}}_{wall}^n`
 
 where:
 
 - :math:`h` is the mixture specific enthalpy
-- :math:`{q^{\prime\prime}}_w^n` is the wall heat flux for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{wall}^n` is the wall heat flux for wall index :math:`n`
 
 Homogeneous relaxation model
 ----------------------------

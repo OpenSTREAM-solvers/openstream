@@ -147,7 +147,7 @@
 <li><p><span class="math notranslate nohighlight">\(u\)</span> is the mixture velocity</p></li>
 </ul>
 <p><strong>2. Momentum conservation</strong></p>
-<p><span class="math notranslate nohighlight">\(\rho A (\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z}) = -A (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho) - \sum \Pi_w^n {\tau}_w^n\)</span></p>
+<p><span class="math notranslate nohighlight">\(\rho A (\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z}) = -A (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho) - \sum \Pi_{wall}^n {\tau}_{wall}^n\)</span></p>
 <p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\rho\)</span> is the mixture density</p></li>
@@ -157,15 +157,15 @@
 <li><p><span class="math notranslate nohighlight">\(\theta\)</span> is the inclination angle</p></li>
 <li><p><span class="math notranslate nohighlight">\(g\)</span> is the gravitational acceleration</p></li>
 <li><p><span class="math notranslate nohighlight">\(n\)</span> is the wall index</p></li>
-<li><p><span class="math notranslate nohighlight">\(\Pi_w^n\)</span> is the wall perimeter for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\tau_w^n\)</span> is the wall shear stress for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\Pi_{wall}^n\)</span> is the wall perimeter for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{wall}^n\)</span> is the wall shear stress for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 <p><strong>3. Energy conservation</strong></p>
-<p><span class="math notranslate nohighlight">\(\rho A (\frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z}) = \sum \Pi_p^n {q^{\prime\prime}}_w^n\)</span></p>
+<p><span class="math notranslate nohighlight">\(\rho A (\frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z}) = \sum \Pi_{wall}^n {q^{\prime\prime}}_{wall}^n\)</span></p>
 <p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(h\)</span> is the mixture specific enthalpy</p></li>
-<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_w^n\)</span> is the wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall}^n\)</span> is the wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 </section>
 <section id="homogeneous-relaxation-model">
