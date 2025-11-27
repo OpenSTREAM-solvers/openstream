@@ -32,7 +32,7 @@ classdef Mixture < Solvers.AbstractField
         DP           (1,1) struct                                                                 % Saved detailed pressure drops [Pa]
         DPSUM        (1,1) struct                                                                 % Saved detailed cumulative pressure drops [Pa]
         MDER         (1,1) struct                                                                 % Saved detailed material derivative terms
-        HRM       (1,1) struct                                                                    % Time relaxation terms
+        HRM          (1,1) struct                                                                 % Homogeneous relaxation terms
         NEARWALL     (1,1) struct                                                                 % Near-wall terms
 
         % Iteration tracking

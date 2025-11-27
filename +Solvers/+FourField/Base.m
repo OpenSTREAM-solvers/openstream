@@ -13,21 +13,24 @@ classdef Base < Solvers.AbstractFilm
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 
         % Solver state
+
         NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.InputSet.options.TSTEP`
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
 
         % Flow properties
+
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
         U            (:,:) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
         % Iteration properties
-        ITR
+
+        ITR                                                                                       % Iteration tracking
 
     end
 
@@ -550,6 +553,7 @@ classdef Base < Solvers.AbstractFilm
             % and channel perimeter (eq. 28 of :cite:t:`LECORREMODEL`).
             %
             % Inputs:
+            %
             % - base  — :class:`Solvers.FourField.Base` object
             % - drop  — :class:`Solvers.FourField.Drop` object
             % - zIdx  — Axial indices to evaluate (optional)
@@ -571,6 +575,7 @@ classdef Base < Solvers.AbstractFilm
             % (excluding first axial node) based on options.
             %
             % Inputs:
+            %
             % - srcObj     — Source object containing flow properties
             % - targetObj  — Array of :class:`Solvers.FourField.Base` objects to update
             % - opts.all   — Logical flag; if true, copies all axial nodes, otherwise skips the first node (default: false)

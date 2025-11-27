@@ -13,28 +13,31 @@ classdef Wave < Solvers.AbstractFilm
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 
         % Solver state
-        NZ                                                                 = 0                    % Number of axial steps [-]
+
+        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s]
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
 
         % Flow properties
+
         W            (:,:) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
         U            (:,:) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
         H            (:,:) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
         FREQUENCY    (:,:) double  {mustBeNumeric}                         = 1                    % Wave frequency [Hz]
 
         % Iteration properties
-        ITR
+
+        ITR                                                                                       % Iteration tracking
 
     end
 
     properties (SetAccess=?Solvers.AbstractField, GetAccess=?Solvers.AbstractPhase)
 
-        film
+        film                                                                                      % Parent :class:`Solvers.AbstractFilm` object
 
     end
 
@@ -62,10 +65,10 @@ classdef Wave < Solvers.AbstractFilm
                 end
 
                 % Initialize W,U,H to proper size
-                wave.W = repmat(wave.W,film.NZ,wave.inputSet.geometry.NWALL);
-                wave.U = repmat(wave.U,film.NZ,wave.inputSet.geometry.NWALL);
-                wave.H = repmat(wave.H,film.NZ,wave.inputSet.geometry.NWALL);
-                wave.FREQUENCY = repmat(wave.FREQUENCY,film.NZ,film.inputSet.geometry.NWALL);
+                wave.W = repmat(wave.W,film.NZ,wave.inputSet.geometry.NWALL); % [kg/s]
+                wave.U = repmat(wave.U,film.NZ,wave.inputSet.geometry.NWALL); % [m/s]
+                wave.H = repmat(wave.H,film.NZ,wave.inputSet.geometry.NWALL); % [J/kg]
+                wave.FREQUENCY = repmat(wave.FREQUENCY,film.NZ,film.inputSet.geometry.NWALL); % [Hz]
             end
 
             % Overload copyable properties
@@ -85,7 +88,7 @@ classdef Wave < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            perim  = wave.inputSet.geometry.PERIM;
+            perim  = wave.inputSet.geometry.PERIM;                         % [m]
 
             wl = wave.W(zIdx,:)./perim;
         end
@@ -99,8 +102,9 @@ classdef Wave < Solvers.AbstractFilm
             % the base film.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -113,8 +117,9 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the fraction of the interface occupied by waves.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             % TODO: add as model option later
 
@@ -134,8 +139,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the fraction of total film mass flow carried by waves.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -149,8 +155,9 @@ classdef Wave < Solvers.AbstractFilm
             % Determines the fraction of heat flux directed to the waves.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -163,8 +170,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the fraction of deposition attributed to waves.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -177,8 +185,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the mass flux associated with entrainment from the wave field.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -191,8 +200,9 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the evaporation mass flux from the wave field based on heat flux fraction.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -205,9 +215,10 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the deposition mass flux from waves to droplets.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
@@ -220,8 +231,9 @@ classdef Wave < Solvers.AbstractFilm
             % Returns the turbulent mixing mass flux between wave and base film.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -234,9 +246,10 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the net mass exchange between wave and base film, including turbulent mixing.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
@@ -257,9 +270,10 @@ classdef Wave < Solvers.AbstractFilm
             % entrainment, deposition, and interactions with base film.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
@@ -272,8 +286,9 @@ classdef Wave < Solvers.AbstractFilm
             % Placeholder method. Wave does not implement wall shear stress.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -286,9 +301,10 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the interfacial force between wave and base film.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
@@ -302,9 +318,10 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the force due to mass exchange between wave and base film.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin <3, zIdx = (1:wave(1).NZ).'; end
 
@@ -320,8 +337,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the total shear stress exerted by vapor on the wave field.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -334,16 +352,17 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the shear stress due to vapor drag acting on the wave field.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             % Saturated vapor density
-            rho_vs = wave.fluid.RHOG;
+            rho_vs = wave.fluid.RHOG;                                      % [kg/m^3]
 
             % Difference in wave and vapor velocities
-            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);                    % [m/s]
 
             % Eq. 45
             Fdrag = 0.5 .* wave.SHAPEFACTOR(zIdx) .* wave.DRAGCOEF(zIdx) .* rho_vs .* dU.^2;
@@ -358,8 +377,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the shear stress exerted by vapor on the wave field using friction factor.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -383,9 +403,10 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the force due to deposition of droplets onto the wave field.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
@@ -402,9 +423,10 @@ classdef Wave < Solvers.AbstractFilm
             % vapor shear, buoyancy, gravity, droplet interaction, and base film forces.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   drop — :class:`Solvers.FourField.Drop` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - drop — :class:`Solvers.FourField.Drop` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:wave(1).NZ).'; end
 
@@ -418,8 +440,9 @@ classdef Wave < Solvers.AbstractFilm
             % and :attr:`Inputs.Model.SHAPEFACTORCOEF` model.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -434,8 +457,9 @@ classdef Wave < Solvers.AbstractFilm
             % :attr:`Inputs.Model.EQSTROUHAL` model.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -454,8 +478,8 @@ classdef Wave < Solvers.AbstractFilm
 
             switch model.EQSTROUHAL
                 case {'RISO','SAWAI','MFVAL','CUSTOM'}
-                    re_v = wave.film.mix.vapor.RE(zIdx);
-                    re_f = wave.film.RE(zIdx);
+                    re_v = wave.film.mix.vapor.RE(zIdx);                   % [-]
+                    re_f = wave.film.RE(zIdx);                             % [-]
                     eqst = coefs(1) .* re_v.^coefs(2) .* re_f.^coefs(3);
                 case {'CSTFREQ'}
                     geom = wave.inputSet.geometry;
@@ -472,13 +496,14 @@ classdef Wave < Solvers.AbstractFilm
             % vapor velocity.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             % Hydraulic diameter
-            d_h = wave.inputSet.geometry.HDIAM;
+            d_h = wave.inputSet.geometry.HDIAM;                            % [m]
 
             % Solve eqfreq using definition of St
             eqfreq = wave.EQSTROUHAL(zIdx).*wave.film.mix.vapor.U(zIdx)./d_h;
@@ -490,8 +515,9 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the inverse of equilibrium wave frequency.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -504,8 +530,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the axial spacing between waves based on velocity and frequency.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -518,8 +545,9 @@ classdef Wave < Solvers.AbstractFilm
             % Calculates the inverse of wave frequency.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -532,8 +560,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the number of waves per unit length (inverse of wave spacing).
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -547,8 +576,9 @@ classdef Wave < Solvers.AbstractFilm
             % limited by wave spacing.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -569,8 +599,9 @@ classdef Wave < Solvers.AbstractFilm
             % and frequency. Limited by half the hydraulic diameter.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -590,8 +621,9 @@ classdef Wave < Solvers.AbstractFilm
             % equilibrium frequency.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -607,8 +639,9 @@ classdef Wave < Solvers.AbstractFilm
             % Computes the Reynolds number for vapor flow interacting with waves.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -629,8 +662,9 @@ classdef Wave < Solvers.AbstractFilm
             % Reynolds number and :attr:`Inputs.Model.WAVEDRAGCOEF` model coefficients.
             %
             % Inputs:
-            %   wave — :class:`Solvers.FourField.Wave` object
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - wave — :class:`Solvers.FourField.Wave` object
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
@@ -640,7 +674,7 @@ classdef Wave < Solvers.AbstractFilm
             % Vapor Reynolds number (Eq. 64)
             Re_vw = wave.REV(zIdx);                                        % [-]
 
-            % Draf Coef (Eq. 63)
+            % Drag Coef (Eq. 63)
             dragcoef = (coefs(2)./Re_vw).^2 + coefs(3);
         end
 

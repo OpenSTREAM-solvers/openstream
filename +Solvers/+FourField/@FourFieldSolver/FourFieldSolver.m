@@ -7,7 +7,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
     % Responsibilities:
     %
     % - Initializes solver parameters from an :class:`Inputs.InputSet` object
-    % - Constructs :class:`Solvers.FourField.film`, :class:`Solvers.FourField.wave`, :class:`Solvers.FourField.base`, and :class:`Solvers.FourField.drop` objects for transient and steady-state analysis
+    % - Constructs :class:`Solvers.FourField.Film`, :class:`Solvers.FourField.Wave`, :class:`Solvers.FourField.Base`, and :class:`Solvers.FourField.Drop` objects for transient and steady-state analysis
     % - Provides plotting utilities for spatial and temporal distributions
     %
     % Key Components:

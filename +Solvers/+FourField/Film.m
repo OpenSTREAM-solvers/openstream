@@ -19,30 +19,33 @@ classdef Film < Solvers.AbstractFilm
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 
         % Solver state
-        NZ                                                                 = 0                    % Number of axial steps [-]
+
+        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
         NTIME                                                              = 0                    % Number of time steps [-]
         TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s]
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.options.TSTEP`
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
         MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % Evaporation mass flux [kg/s/m^2]
 
         % Iteration properties
-        ITR
+
+        ITR                                                                                       % Iteration tracking
 
     end
 
     properties (SetAccess=?Solvers.AbstractSolver)
 
-        wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN                  % :class:`Solvers.FourField.Wave` object
-        base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN                  % :class:`Solvers.FourField.Base` object
+        wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN                 % :class:`Solvers.FourField.Wave` object
+        base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN                 % :class:`Solvers.FourField.Base` object
 
     end
 
     properties (Dependent)
 
         % Flow properties
+
         W            %(:,:) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
         U            %(:,:) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
         H            %(:,:) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
@@ -59,8 +62,9 @@ classdef Film < Solvers.AbstractFilm
             % by the four-field solver.
             %
             % Inputs:
-            %   inputSet — :class:`Inputs.InputSet` object containing geometry and model options
-            %   fluid    — :class:`Inputs.Fluid` object containing thermophysical properties
+            %
+            % - inputSet — :class:`Inputs.InputSet` object containing geometry and model options
+            % - fluid    — :class:`Inputs.FluidProperties` object containing thermophysical properties
 
             if nargin > 0
                 % Store inputSet as object property
@@ -76,7 +80,8 @@ classdef Film < Solvers.AbstractFilm
             % rates across all walls.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
+            %
+            % - film — :class:`Solvers.FourField.Film` object
 
             w = film.base.W + film.wave.W;
         end
@@ -88,7 +93,8 @@ classdef Film < Solvers.AbstractFilm
             % equals the base-film enthalpy.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
+            %
+            % - film — :class:`Solvers.FourField.Film` object
 
             h = film.base.H;
         end
@@ -100,7 +106,8 @@ classdef Film < Solvers.AbstractFilm
             % Falls back to base velocity where total film mass flow is zero.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
+            %
+            % - film — :class:`Solvers.FourField.Film` object
 
             %TODO: a more appropriate value may be needed for film velocity.
 
@@ -117,9 +124,10 @@ classdef Film < Solvers.AbstractFilm
             % :attr:`Inputs.Model.OAFFILMSPLIT` model option.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
-            %   Wf   — Film mass flow rate to distribute [kg/s] (per wall or per z-index)
-            %   zIdx — Axial indices to apply distribution (optional)
+            %
+            % - film — :class:`Solvers.FourField.Film` object
+            % - Wf   — Film mass flow rate to distribute [kg/s] (per wall or per z-index)
+            % - zIdx — Axial indices to apply distribution (optional)
 
             if nargin < 3, zIdx = (1:film(1).NZ).'; end
 
@@ -155,9 +163,10 @@ classdef Film < Solvers.AbstractFilm
             % and liquid density.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
-            %   Wf   — Film mass flow rate [kg/s]
-            %   zIdx — Axial indices to evaluate (optional)
+            %
+            % - film — :class:`Solvers.FourField.Film` object
+            % - Wf   — Film mass flow rate [kg/s]
+            % - zIdx — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:film(1).NZ); end
             zIdx = zIdx(:);
@@ -179,9 +188,10 @@ classdef Film < Solvers.AbstractFilm
             % enthalpies, and sets initial wave frequency using equilibrium correlations.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
-            %   WIN  — Inlet film mass flow rate [kg/s]
-            %   ITR  — Iteration control struct
+            %
+            % - film — :class:`Solvers.FourField.Film` object
+            % - WIN  — Inlet film mass flow rate [kg/s]
+            % - ITR  — Iteration control struct
 
             %% Constant properties
 
@@ -245,9 +255,10 @@ classdef Film < Solvers.AbstractFilm
             % match before copying.
             %
             % Inputs:
-            %   srcObj    — Source :class:`Solvers.FourField.Film` object
-            %   targetObj — Target :class:`Solvers.FourField.Film` object(s)
-            %   opts.all  — Logical flag to copy all properties (optional, default = false)
+            %
+            % - srcObj    — Source :class:`Solvers.FourField.Film` object
+            % - targetObj — Target :class:`Solvers.FourField.Film` object(s)
+            % - opts.all  — Logical flag to copy all properties (optional, default = false)
 
             arguments
                 srcObj
@@ -287,7 +298,8 @@ classdef Film < Solvers.AbstractFilm
             % new Film instance.
             %
             % Inputs:
-            %   film — :class:`Solvers.FourField.Film` object
+            %
+            % - film — :class:`Solvers.FourField.Film` object
 
             % Shallow copy film
             cp = copyElement@matlab.mixin.Copyable(film);
