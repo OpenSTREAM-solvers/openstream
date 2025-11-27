@@ -31,17 +31,17 @@ The conservation equations are formulated at the wall level, indexed by :math:`n
 
 **1. Mass conservation**
 
-Base Film: :math:`\frac{\partial}{\partial t}(\frac{W_b^n}{u_b^n}) + \frac{\partial W_b^n}{\partial z} = \Pi_p^n (D_b - \Gamma_{wb,b}^n + \Psi_w^n - \Psi_b^n)`
+Base Film: :math:`\frac{\partial}{\partial t}(\frac{W_b^n}{u_b^n}) + \frac{\partial W_b^n}{\partial z} = \Pi_{wall}^n (D_b - \Gamma_{wb,b}^n + \Psi_w^n - \Psi_b^n)`
 
-Disturbance Waves: :math:`\frac{\partial}{\partial t}(\frac{W_w^n}{u_w^n}) + \frac{\partial W_w^n}{\partial z} = \Pi_p^n (D_w - E^n - \Gamma_{wb,w}^n - \Psi_w^n + \Psi_b^n)`
+Disturbance Waves: :math:`\frac{\partial}{\partial t}(\frac{W_w^n}{u_w^n}) + \frac{\partial W_w^n}{\partial z} = \Pi_{wall}^n (D_w - E^n - \Gamma_{wb,w}^n - \Psi_w^n + \Psi_b^n)`
 
 where:
 
 - :math:`W_b^n`, :math:`W_w^n` are the base film and wave mass flow rates for wall index :math:`n`
 - :math:`u_b^n`, :math:`u_w^n` are the base film and wave velocities for wall index :math:`n`
-- :math:`D_b`, :math:`D_w` are the drop deposition fluxes on the base film and wave
-- :math:`\Gamma_{wb,b}^n`, :math:`\Gamma_{wb,w}^n` are the wall boiling mass fluxes for wall index :math:`n`
-- :math:`\Psi_w^n`, :math:`\Psi_b^n` are exchange mass fluxes between film and waves for wall index :math:`n`
+- :math:`D_b`, :math:`D_w` are the drop deposition fluxes on the base film and wave fields
+- :math:`\Gamma_{wb,b}^n`, :math:`\Gamma_{wb,w}^n` are the base film and wave wall boiling mass fluxes for wall index :math:`n`
+- :math:`\Psi_w^n`, :math:`\Psi_b^n` are exchange mass fluxes between film and wave fields for wall index :math:`n`
 
 **2. Momentum conservation**
 

@@ -18,9 +18,9 @@ Governing equations
 
 **1. Mass conservation**
 
-Liquid: :math:`\frac{\partial}{\partial t}(\frac{W_l}{u_l}) + \frac{\partial W_l}{\partial z} = -A a_i (\Gamma - \Lambda) - \sum \Pi_w^n \Gamma_{wb}^n`
+Liquid: :math:`\frac{\partial}{\partial t}(\frac{W_l}{u_l}) + \frac{\partial W_l}{\partial z} = -A a_i (\Gamma - \Lambda) - \sum \Pi_{wall}^n \Gamma_{wb}^n`
 
-Vapor: :math:`\frac{\partial}{\partial t}(\frac{W_v}{u_v}) + \frac{\partial W_v}{\partial z} = A a_i (\Gamma - \Lambda) + \sum \Pi_w^n \Gamma_{wb}^n`
+Vapor: :math:`\frac{\partial}{\partial t}(\frac{W_v}{u_v}) + \frac{\partial W_v}{\partial z} = A a_i (\Gamma - \Lambda) + \sum \Pi_{wall}^n \Gamma_{wb}^n`
 
 where:
 
@@ -33,39 +33,38 @@ where:
 
 **2. Momentum conservation**
 
-Liquid: :math:`\rho_l A_l (\frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z}) = -A a_i \Lambda (u_l - u_v) - A_l (\frac{\partial p}{\partial z} + \cos\theta g \rho_l) + A a_i \tau_{v,l} - \sum \Pi_w^n \tau_{w,l}^n`
+Liquid: :math:`\rho_l A_l (\frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z}) = -A a_i \Lambda (u_l - u_v) - A_l (\frac{\partial p}{\partial z} + \cos\theta g \rho_l) + A a_i \tau_{v,l} - \sum \Pi_{wall}^n \tau_{wall,l}^n`
 
-Vapor: :math:`\rho_v A_v (\frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z}) = (A a_i \Gamma + \sum \Pi_w^n \Gamma_{wb}^n) (u_l - u_v) - A_v (\frac{\partial p}{\partial z} + \cos\theta g \rho_v) - A a_i \tau_{v,l} - \sum \Pi_w^n \tau_{w,v}^n`
+Vapor: :math:`\rho_v A_v (\frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z}) = (A a_i \Gamma + \sum \Pi_w^n \Gamma_{wb}^n) (u_l - u_v) - A_v (\frac{\partial p}{\partial z} + \cos\theta g \rho_v) - A a_i \tau_{v,l} - \sum \Pi_{wall}^n \tau_{wall,v}^n`
 
 where
 
 - :math:`A_l`, :math:`A_v` are the liquid and vapor cross-sectional areas
 - :math:`\tau_{v,l}` is the interfacial shear stress
-- :math:`\tau_{w,l}`, :math:`\tau_{w,v}` are the liquid and vapor wall shear stresses
+- :math:`\tau_{wall,l}`, :math:`\tau_{wall,v}` are the liquid and vapor wall shear stresses
 
 **3. Energy conservation**
 
-Liquid: :math:`\rho_l A_l (\frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z}) = -A a_i \Lambda (h_l - h_v) + \sum \Pi_w^n ({q^{\prime\prime}}_{w,l}^n - (h_v - h_l) \Gamma_{wb}^n)`
+Liquid: :math:`\rho_l A_l (\frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z}) = -A a_i \Lambda (h_l - h_v) + \sum \Pi_{wall}^n ({q^{\prime\prime}}_{wall,l}^n - (h_v - h_l) \Gamma_{wb}^n)`
 
-Vapor: :math:`\rho_v A_v (\frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z}) = A a_i \Gamma (h_l - h_v) + \sum \Pi_w^n {q^{\prime\prime}}_{w,v}^n`
+Vapor: :math:`\rho_v A_v (\frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z}) = A a_i \Gamma (h_l - h_v) + \sum \Pi_{wall}^n {q^{\prime\prime}}_{wall,v}^n`
 
 where
 
 - :math:`h_l`, :math:`h_v` are the liquid and vapor specific enthalpies
-- :math:`{q^{\prime\prime}}_{w,l}^n`, :math:`{q^{\prime\prime}}_{w,v}^n` are the wall heat flux to liquid and vapor for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{wall,l}^n`, :math:`{q^{\prime\prime}}_{wall,v}^n` are the wall heat flux to liquid and vapor for wall index :math:`n`
 
 Closure relations
 -----------------
 
 To complete the conservation equations, several closure relations are required:
 
-- Onset of annular two-phase flow
 - Volumetric interfacial area: :math:`a_i`
-- Interfacial evaporation and condensation mass fluxes
-- Wall boiling mass flux
-- Interfacial shears stress
-- Wall shear stress for each phase
-- Wall heat flux for for each phase
+- Interfacial evaporation and condensation mass fluxes: :math:`\Gamma`, :math:`\Lambda`
+- Wall boiling mass flux: :math:`\Gamma_{wb}^n`
+- Interfacial shears stress: :math:`\tau_{v,l}`
+- Wall shear stress for each phase: :math:`\tau_{wall,l}`, :math:`\tau_{wall,v}`
+- Wall heat flux for each phase: :math:`{q^{\prime\prime}}_{wall,l}^n`, :math:`{q^{\prime\prime}}_{wall,v}^n`
 - Wall heat transfer models
 
 These relations depend on the local flow regime, which is determined by an additional flow regime identification model. 

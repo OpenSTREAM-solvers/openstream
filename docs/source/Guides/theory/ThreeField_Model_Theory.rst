@@ -31,7 +31,7 @@ The conservation equations are formulated at the wall level, indexed by :math:`n
 
 **1. Mass conservation**
 
-Film: :math:`\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_p^n (D - E^n - \Gamma_{wb}^n)`
+Film: :math:`\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_{all}^n (D - E^n - \Gamma_{wb}^n)`
 
 where:
 
@@ -45,9 +45,9 @@ The drop mass flow rate, :math:`W_d`, is simply computed by subtracting :math:`W
 
 **2. Momentum conservation**
 
-Liquid Film: :math:`\rho_{ls} \delta_f^n (\frac{\partial u_f^n}{\partial t} + u_f^n \frac{\partial u_f^n}{\partial z}) = (u_d - u_f^n) D - \delta_f^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \tau_{v,f}^n - \tau_{w,f}^n`
+Liquid Film: :math:`\rho_{ls} \delta_f^n (\frac{\partial u_f^n}{\partial t} + u_f^n \frac{\partial u_f^n}{\partial z}) = (u_d - u_f^n) D - \delta_f^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \tau_{v,f}^n - \tau_{wall,f}^n`
 
-Droplets: :math:`\rho_{ls} (\frac{\partial u_d}{\partial t} + u_d \frac{\partial u_d}{\partial z}) = (\sum \Pi_p^n (u_f^n - u_d) E^n) \frac{\rho_{ls} u_d}{W_d} - (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \frac{A_d}{V_d} \tau_{v,d}`
+Droplets: :math:`\rho_{ls} (\frac{\partial u_d}{\partial t} + u_d \frac{\partial u_d}{\partial z}) = (\sum \Pi_{wall}^n (u_f^n - u_d) E^n) \frac{\rho_{ls} u_d}{W_d} - (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \frac{A_d}{V_d} \tau_{v,d}`
 
 where:
 
@@ -56,7 +56,7 @@ where:
 - :math:`u_d` is the drop velocity
 - :math:`\tau_{v,f}^n` is the vapor/film interfacial shear stress for wall index :math:`n`
 - :math:`\tau_{v,d}^n` is the vapor/drop interfacial shear stress
-- :math:`\tau_{w,f}^n` is the wall shear stress on the liquid film for wall index :math:`n`
+- :math:`\tau_{wall,f}^n` is the wall shear stress on the liquid film for wall index :math:`n`
 - :math:`A_d`, :math:`V_d` are the drop interfacial area and volume (based on surface averaging)
 
 **3. Energy conservation**
@@ -66,7 +66,7 @@ Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{w}^n
 where:
 
 - :math:`h_{vs}`, :math:`h_{ls}` are the saturated vapor and liquid specific enthalpies
-- :math:`{q^{\prime\prime}}_{w}^n is the wall heat flux for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{w}^n` is the wall heat flux for wall index :math:`n`
 
 Closure relations
 -----------------
