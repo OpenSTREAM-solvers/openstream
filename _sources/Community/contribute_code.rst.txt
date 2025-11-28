@@ -8,21 +8,15 @@ How to Contribute
 
 1. **Fork the Repository**
 
-.. raw:: html
-
-   <br>
+.. 
 
    - Click the **Fork** button on GitHub to create your copy.
 
-.. raw:: html
-
-   <br>
+.. 
 
 2. **Clone Your Fork**
 
-.. raw:: html
-
-   <br>
+.. 
 
 .. code-block:: bash
 
@@ -37,16 +31,12 @@ How to Contribute
 
 4. **Make Your Changes**
 
-.. raw:: html
-
-   <br>
+.. 
 
    - Follow the coding standards outlined below.
    - Add tests for new functionality.
 
-.. raw:: html
-
-   <br>
+.. 
 
 5. **Commit and Push**
 
@@ -57,9 +47,7 @@ How to Contribute
 
 6. **Open a Pull Request**
 
-.. raw:: html
-
-   <br>
+.. 
 
    - Go to the original repository and submit a PR.
    - Include a clear description of your changes.
