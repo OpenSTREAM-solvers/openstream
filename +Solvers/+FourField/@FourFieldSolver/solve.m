@@ -65,7 +65,11 @@ ffSolver.log('Output directory: %s\n',ffSolver.inputSet.session.directory);
 
 
 function solver(solveINIT)
-    
+    % Internal solver routine for steady-state and transient modes
+    % Handles time stepping, axial sweeps, and inner iterations
+    % Applies relaxation and convergence checks
+    % Updates mixture properties and logs progress
+
     nwall = ffSolver.inputSet.geometry.NWALL;
 
     % check if solving filmInit and dropInit

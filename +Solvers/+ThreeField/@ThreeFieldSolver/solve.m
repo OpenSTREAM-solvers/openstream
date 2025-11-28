@@ -64,7 +64,11 @@ tfSolver.inputSet.session.log.diaryOff();
 tfSolver.log('Output directory: %s\n',tfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
-   
+    % Internal solver routine for steady-state and transient modes
+    % Handles time stepping, axial sweeps, and inner iterations
+    % Applies relaxation and convergence checks
+    % Updates mixture properties and logs progress
+    
     nwall = tfSolver.inputSet.geometry.NWALL;
 
     % check if solving filmInit and dropInit
