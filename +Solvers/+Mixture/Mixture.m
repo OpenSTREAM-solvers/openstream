@@ -1933,6 +1933,7 @@ classdef Mixture < Solvers.AbstractField
             % - NONE: Disables CHF and CBT detection
             % - ELEVATION: CBT triggered at or above a elevation specified by :attr:`Inputs.Model.CBTELEVATION`
             % - BIASI: Uses Biasi correlation for CHF estimation
+            % - BEZRUKOV: Uses Bezrukov correlation for CHF estimation
             %
             % Notes:
             %
@@ -1972,6 +1973,21 @@ classdef Mixture < Solvers.AbstractField
                     q2 = (1.883E3/D^n)./G.^(1/6).*(YP./G.^(1/6)-XEQ);      % [W/cm^2] Low quality
 
                     chf = repmat(max(q1,q2),1,geom.NWALL).*1E4;            % [W/m^2]
+
+                case InputEnums.CBT.BEZRUKOV
+                    % Bezrukov correlation
+                    %
+                    % :cite:t:`Bezrukov1976`
+
+                    Pr = Pr/1E6;                                           % [MPa] System pressure
+
+                    a1 =  0.795; a4 = -0.127;
+                    a2 = -0.5;   a5 =  0.311;
+                    a3 =  0.105; a6 = -0.0185;
+
+                    q = a1.*(1-XEQ).^(a2+a3.*Pr).*G.^(a4+a5.*(1-XEQ)).*(1+a6.*Pr); % [MW/m^2]
+
+                    chf = repmat(q,1,geom.NWALL).*1E6;                     % [W/m^2]
             end
 
             % Adjustment factors

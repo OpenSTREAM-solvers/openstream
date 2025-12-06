@@ -8,11 +8,13 @@ classdef CBT
     %
     % - NONE       — No CBT transition applied
     % - BIASI      — Biasi correlation model (:cite:t:`biasi1966burnout`)
+    % - BEZRUKOV   — Bezrukov correlation model (:cite:t:`Bezrukov1976`)
     % - ELEVATION  — CBT determined from specified elevation using user-defined CBTELEVATION
 
     enumeration
         NONE                 % No Critical Boiling Transition
-        BIASI                % Biasi model fro CBT prediction
+        BIASI                % Biasi model for CBT prediction
+        BEZRUKOV             % Bezrukov model for CBT prediction
         ELEVATION            % CBT based on user-defined elevation using :attr:`Inputs.Model.CBTELEVATION`
     end
 end
