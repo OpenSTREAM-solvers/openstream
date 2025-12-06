@@ -212,6 +212,7 @@ function solver(solveINIT)
             mix(tIdx).NEARWALL.XEQ(zIdx,:)    = (mix(tIdx).NEARWALL.H(zIdx,:)-HF)./(HG - HF);           % [-] Near-wall thermodynamic equilibrium quality 
             mix(tIdx).NEARWALL.WBULK(zIdx)    =  mix(tIdx).W(zIdx)-sum(mix(tIdx).NEARWALL.W(zIdx,:),2); % [kg/s] Bulk mass flow rate
             mix(tIdx).NEARWALL.HBULK(zIdx)    = (mix(tIdx).W(zIdx)*mix(tIdx).H(zIdx)-sum(mix(tIdx).NEARWALL.W(zIdx,:).*mix(tIdx).NEARWALL.H(zIdx,:),2))/mix(tIdx).NEARWALL.WBULK(zIdx); % [J/kg] Bulk mixture enthalpy
+            mix(tIdx).NEARWALL.XBULK(zIdx)    = (mix(tIdx).NEARWALL.HBULK(zIdx)-HF)./(HG - HF);         % [-] Bulk thermodynamic equilibrium quality
 
             % Save pressure drop components
             DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                       % [Pa] Pressure drop components
