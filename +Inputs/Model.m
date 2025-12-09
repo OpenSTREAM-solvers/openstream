@@ -52,7 +52,7 @@ classdef Model < Inputs.Input
         SLIP             (1,1) double  {mustBePositive}                    = 1                               % Phase velocity ratio [-]
         THERMALNONEQ     (1,1) InputEnums.THERMALNONEQ                     = 'EQUILIBRIUM'                   % Thermal non-equilibrium model selected from :class:`InputEnums.THERMALNONEQ`
 
-        % Mixture (HRM) solver models
+        % Mixture HRM solver models
 
         THERMALRELAX     (1,1) InputEnums.THERMALRELAX                     = 'QUALITY'                       % Thermal non-equilibrium time relaxation model selected from :class:`InputEnums.THERMALRELAX`
         RELAXX           (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Interfacial phase change relaxation time thermodynamic quality [-]

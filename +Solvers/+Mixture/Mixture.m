@@ -1408,9 +1408,6 @@ classdef Mixture < Solvers.AbstractField
             %
             % - mix — :class:`Solvers.Mixture.Mixture` object containing model parameters
 
-            %
-            % Should be less than 1 (otherwise NEARWALL.XEQ and XEQ would be equal for azymuthal equal heat flux)
-
             model = mix.inputSet.model;
 
             lambda = model.NEARWALLRATIO;

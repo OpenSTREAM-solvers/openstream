@@ -643,9 +643,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 % Vapor ratios (void fraction and qualities)
                 if displayVariable({'VR','ALL'})
                     plotter.addTile( ...
-                        'tileTitle', 'Void fractions and qualities', ...
-                        'xlabel'   ,           'Axial position [m]', ...
-                        'ylabel'   ,  'Quality / Void fraction [-]');
+                        'tileTitle', 'Void fraction and qualities', ...
+                        'xlabel'   ,          'Axial position [m]', ...
+                        'ylabel'   , 'Quality / Void fraction [-]');
                     plotter.plotz(mix.XEQ(opts.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
                     plotter.plotz(mix.X(opts.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.HRM && geom.NWALL > 1
@@ -653,8 +653,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     end
                     plotter.plotz(mix.VF(opts.zIdx) ,'VoidFraction','DisplayName','Void fraction'      );
                     if opts.nearWall
-                        plotter.plotz(mix.NEARWALL.XEQ(opts.zIdx,:)  ,'NearWall' ,'DisplayName','Near-wall'                      );
-                        plotter.plotz(mix.NEARWALL.XBULK(opts.zIdx,:),'Bulk'     ,'DisplayName','Bulk '                          );
+                        plotter.plotz(mix.NEARWALL.XEQ(opts.zIdx,:)  ,'NearWall' ,'DisplayName','Near-wall equilibrium quality'  );
+                        plotter.plotz(mix.NEARWALL.XBULK(opts.zIdx,:),'Bulk'     ,'DisplayName','Bulk equilibrium quality'       );
                     end
                     plotter.legend('show', "Location", 'best');
                     plotter.xlim([min(z) max(z)]);
