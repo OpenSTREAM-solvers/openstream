@@ -291,8 +291,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             %
             % Notes:
             %
+            % - Enhanced drop deposition is disabled
             % - Uses interpolation for improved convergence
             % - Falls back to ad-hoc update if interpolation fails
+            % - Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
 
             errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
             nwall = tfSolver.inputSet.geometry.NWALL;                      % Number of walls
@@ -324,7 +326,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
                 flm.W(zIdx,1:nwall) = (W-drp.W(zIdx)).*perim./sum(perim);  % [kg/s] Corresponding film flow distribution (considered uniform)
-                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
+                delta(k) = drp.MDEP(zIdx,false).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entrainment mass flow rate
                 err = abs(delta(k));
                 if err < errMax, break; end
             end

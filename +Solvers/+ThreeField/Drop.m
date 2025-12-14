@@ -134,20 +134,23 @@ classdef Drop < Solvers.AbstractField
             end
         end
 
-        function mdep = MDEP(drop,zIdx)
+        function mdep = MDEP(drop,zIdx,enhanced)
             %MDEP Drop deposition mass flux [kg/m^2/s]
             %
             % Implements various deposition models selected based on :attr:`Inputs.Model.DEPOSITION`.
             % Applies enhancement factors, and restricts deposition to annular flow region.
+            % The enhancement flag allow to enable/disable deposition enhancement 
             %
             % Inputs:
             %
-            % - drop  — :class:`Solvers.ThreeField.Drop` object
-            % - zIdx  — Axial indices to evaluate (optional)
+            % - drop     — :class:`Solvers.ThreeField.Drop` object
+            % - zIdx     — Axial indices to evaluate (optional)
+            % - enhanced — Flag indicating enhanced deposition downstream obstructions (optional, default = true)
 
             %TODO: Fluid properties to be modified to handle superheated vapor when implementing thermal non-equilibrium model
  
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+            if nargin < 3, enhanced = true;         end
 
             model = drop.inputSet.model;
             rhog  = drop.fluid.RHOG;                                       % [kg/m^3] Saturated vapor density
@@ -179,7 +182,9 @@ classdef Drop < Solvers.AbstractField
             end
 
             mdep(negdrop)=-mdep(negdrop);
-            mdep = drop.KENH(zIdx).*mdep;                                  % [kg/m^2/s] Enhanced drop deposition
+            if enhanced
+                mdep = drop.KENH(zIdx).*mdep;                              % [kg/m^2/s] Enhanced drop deposition
+            end
             mdep = drop.mix.AFDISTR(0,mdep,zIdx);                          % [kg/m^2/s] Deposition mass flux, in annular flow region only
         end
 
