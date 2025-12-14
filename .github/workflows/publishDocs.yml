@@ -2,10 +2,11 @@ name: Publish Sphinx docs to GitHub Pages
 
 on:
   push:
-    branches: 
+    branches:
       - main
-      - docs      
-    
+      - docs
+      - lecorre
+
   workflow_dispatch:
     inputs:
         logLevel:
