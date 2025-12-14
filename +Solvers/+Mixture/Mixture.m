@@ -479,6 +479,25 @@ classdef Mixture < Solvers.AbstractField
             kdist = cellfun(@(dz) min(dz(dz>=0)),dz);                      % [m]
         end
 
+        function kidx = KIDX(mix,zIdx)
+            %KIDX Obstruction index
+            %
+            % Returns the axial node index of the obstruction closest to
+            % :attr:`Inputs.Model.KLOC`.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with axial grid
+            % - zIdx — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            model = mix.inputSet.model;
+
+            [~,ind] = min(abs(mix.Z-model.KLOC));                          % Find local loss elevation indexes (closest node)
+            kidx = ind(ismember(ind,zIdx)).';
+        end
+
         function klocz = KLOCZ(mix,zIdx)
             %KLOCZ Obstruction positions [m]
             %
@@ -492,10 +511,7 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            model = mix.inputSet.model;
-
-            [~,ind] = min(abs(mix.Z-model.KLOC));                          % Find local loss elevation indexes (closest node)
-            ind = ind(ismember(ind,zIdx));
+            ind = mix.KIDX(zIdx);
             klocz = mix.Z(ind);
         end
 
@@ -1444,6 +1460,31 @@ classdef Mixture < Solvers.AbstractField
             geom = mix.inputSet.geometry;
 
             area = mix.NEARWALLRATIO.*geom.RWALL.*geom.AREA;
+        end
+
+        function heq = HNEARWALLEQ(mix, zIdx)
+            %HNEARWALLEQ Near-wall equilibrium entalpy [J/kg]
+            %
+            % Compute the near-wall equilibrium enthalpy.
+            %
+            % Inputs:
+            %
+            % - mix — :class:`Solvers.Mixture.Mixture` object containing geometry data
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            model = mix.inputSet.model;
+
+            h   = mix.H(zIdx);
+
+            % Multiplier to 1D-enthalpy
+            heq = model.NEARWALLHMULT.*h;
+
+            % Separate treatment for spacers
+            idx = ismember(zIdx,mix.KIDX);
+            heq(idx) = h(idx);
+
+            heq = mix.AFDISTR(h,heq,zIdx);        
         end
 
     end

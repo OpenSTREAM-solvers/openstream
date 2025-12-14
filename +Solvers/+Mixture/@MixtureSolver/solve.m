@@ -202,13 +202,14 @@ function solver(solveINIT)
             
             % Save near-wall terms
             trelax = mix(tIdx).NEARWALLTRELAX(zIdx);                                                    % [s]    Near-wall energy transfer relaxation time
+            HEQ    = mix(tIdx).HNEARWALLEQ(zIdx);                                                       % [J/kg] Near-wall equilibrium mixture enthalpy
             HPSold = mix(tIdx-1).NEARWALL.H(zIdx,:);                                                    % [J/kg] Near-wall mixture enthalpy at previous time step
             Hrate  = mix(tIdx).LHGR(zIdx)./(mix(tIdx).RHO(zIdx)*mix(tIdx).ANEARWALL);                   % [W/kg] Near-wall energy transfer rate per unit mass (from the wall heat flux)
             HF = fluid(tIdx).HF; HG = fluid(tIdx).HG;                                                   % [J/kg] Phase saturated enthalpies
             mix(tIdx).NEARWALL.TRELAX(zIdx,:) = trelax;                                                 % [s]    Near-wall energy transfer relaxation time
             mix(tIdx).NEARWALL.W(zIdx,:)      = mix(tIdx).WNEARWALL(zIdx);                              % [kg/s] Near-wall mass flow rate
-            mix(tIdx).NEARWALL.H(zIdx,:)      = (mix(tIdx).NEARWALL.H(zIdx-1,:).*U+HPSold.*(DZ/DT)+Hrate.*DZ+mix(tIdx).H(zIdx).*DZ./trelax)./(U+DZ/DT+DZ./trelax); % [J/kg] Near-wall mixture enthalpy
-            mix(tIdx).NEARWALL.HFLUX(zIdx,:)  = -(mix(tIdx).H(zIdx)-mix(tIdx).NEARWALL.H(zIdx,:)).*mix(tIdx).WNEARWALL(zIdx)./U./trelax./geom.PERIM;               % [W/m2] Heat flux from the near-wall region
+            mix(tIdx).NEARWALL.H(zIdx,:)      = (mix(tIdx).NEARWALL.H(zIdx-1,:).*U+HPSold.*(DZ/DT)+Hrate.*DZ+HEQ.*DZ./trelax)./(U+DZ/DT+DZ./trelax); % [J/kg] Near-wall mixture enthalpy
+            mix(tIdx).NEARWALL.HFLUX(zIdx,:)  = -(HEQ-mix(tIdx).NEARWALL.H(zIdx,:)).*mix(tIdx).WNEARWALL(zIdx)./U./trelax./geom.PERIM;               % [W/m2] Heat flux from the near-wall region
             mix(tIdx).NEARWALL.XEQ(zIdx,:)    = (mix(tIdx).NEARWALL.H(zIdx,:)-HF)./(HG - HF);           % [-] Near-wall thermodynamic equilibrium quality 
             mix(tIdx).NEARWALL.WBULK(zIdx)    =  mix(tIdx).W(zIdx)-sum(mix(tIdx).NEARWALL.W(zIdx,:),2); % [kg/s] Bulk mass flow rate
             mix(tIdx).NEARWALL.HBULK(zIdx)    = (mix(tIdx).W(zIdx)*mix(tIdx).H(zIdx)-sum(mix(tIdx).NEARWALL.W(zIdx,:).*mix(tIdx).NEARWALL.H(zIdx,:),2))/mix(tIdx).NEARWALL.WBULK(zIdx); % [J/kg] Bulk mixture enthalpy
