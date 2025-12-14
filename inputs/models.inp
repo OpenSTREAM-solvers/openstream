@@ -43,5 +43,5 @@ ID            ! Model ID                                                   > TUT
 NNODES        ! Number of axial nodes                                      > 100
 FLUID         ! Fluid ID                                                   > WATER
 VOID          ! Void fraction model                                        > BESTION
-THERMALNONEQ  ! Thermal non-equilibrium model                              > RELAXATION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > HRM
 END

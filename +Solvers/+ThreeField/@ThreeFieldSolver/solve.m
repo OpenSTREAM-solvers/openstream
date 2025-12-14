@@ -1,6 +1,25 @@
 function solve(tfSolver)
-%SOLVE  
-% 
+%SOLVE Executes the three-field solver for steady-state and transient simulations.
+%
+% Runs the full solution process for the :class:`Solvers.ThreeField.ThreeFieldSolver`
+% object. It manages initialization, time stepping, axial sweeps, inner
+% iterations, convergence checks, and logging.
+%
+% Workflow:
+%
+% - Enables logging and opens persistent log file
+% - Validates solver state before execution
+% - Runs steady-state initialization (solveINIT = true)
+% - If initial step converges, proceeds with transient simulation
+% - Handles exceptions and ensures proper log closure
+%
+% Notes:
+%
+% - Uses internal `solver` function to handle both steady-state and transient modes
+% - Applies relaxation factors for phase flows, velocities, and enthalpies
+% - Supports thermal non-equilibrium modeling
+% - Logs progress and outputs to session directory
+
 arguments
     tfSolver
 end
@@ -10,7 +29,7 @@ import Solvers.SolverState
 % Enable diary
 tfSolver.inputSet.session.log.diaryOn();
 
-% Open log in presistent mode
+% Open log in persistent mode
 tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if tfSolver.STATE ~= SolverState.UNSOLVED
@@ -21,7 +40,7 @@ else
     try
         % Solve init
         solver(true);
-        
+
         % Continue solving if init converged
         if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
             solver(false);
@@ -30,13 +49,13 @@ else
                 tfSolver.log('\t\tSkipping transient solver ...\n');
             end
         end
-        
+
     catch ME
         tfSolver.inputSet.session.log.closeLog();
         tfSolver.inputSet.session.log.diaryOff();
         rethrow(ME)
     end
-    
+
     tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
 end
 
@@ -45,8 +64,7 @@ tfSolver.inputSet.session.log.diaryOff();
 tfSolver.log('Output directory: %s\n',tfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
-    
-    
+   
     nwall = tfSolver.inputSet.geometry.NWALL;
 
     % check if solving filmInit and dropInit
@@ -88,9 +106,9 @@ function solver(solveINIT)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
         if solveINIT
-            RHOF = fluid.RHOF;                                              % [kg/m^3] Saturated liquid density
+            RHOF = fluid.RHOF;                                             % [kg/m^3] Saturated liquid density
         else
-            RHOF = fluid(tIdx).RHOF;                                        % [kg/m^3] Saturated liquid density
+            RHOF = fluid(tIdx).RHOF;                                       % [kg/m^3] Saturated liquid density
         end
 
         % Update three-field property guesses from previous time step
@@ -100,11 +118,11 @@ function solver(solveINIT)
         %e0 = tfSolver.EQUIL(film(tIdx),drop(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
         
         % Axial sweep
-        for zIdx = 2:tfSolver.NZ
+        for zIdx = 2:tfSolver.NZ                                           % Loop over axial nodes
             
-            Wfold = film(tIdx-1).W(zIdx,:);                                % [kg/s] Film mass flow rate at previosu time step
+            Wfold = film(tIdx-1).W(zIdx,:);                                % [kg/s] Film mass flow rate at previous time step
             Ufold = film(tIdx-1).U(zIdx,:);                                % [m/s] Film velocity at previous time step
-            Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at previosu time step
+            Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at previous time step
             Ufups = film(tIdx).U(zIdx-1,:);                                % [m/s] Film velocity at previous time step
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous time step
@@ -116,49 +134,43 @@ function solver(solveINIT)
                 Wfiter = film(tIdx).W(zIdx,:);                             % [kg/s] Film mass flow rate
                 WLiter = film(tIdx).WL(zIdx);                              % [kg/s/m] Film mass flow rate per unit perimeter
                 Ufiter = film(tIdx).U(zIdx,:);                             % [m/s] Film velocity
-                Uditer = drop(tIdx).U(zIdx);                              % [m/s] Drop velocity
+                Uditer = drop(tIdx).U(zIdx);                               % [m/s] Drop velocity
                 
                 % Film mass conservation
-                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                            % [kg/s/m^2] Mass exchange terms with film
+                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                                            % [kg/s/m^2] Mass exchange terms with film
                 Wfnew = Ufiter.*(Wfups+Wfold./Ufold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT); % [kg/s] Update film mass flow rate
-                film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;    % [kg/s] Apply relaxation
+                film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;          % [kg/s] Apply relaxation
 
                 if model.POSFILM
-                    film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);                       % [kg/s] 
+                    film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);    % [kg/s] 
                 end
                 
                 % Film momentum conservation
                 switch model.MOMENTFILM
                     case InputEnums.MOMENTFILM.ALGEBRAIC
                     % Simple algebraic model
-                        film(tIdx).U(zIdx,:) = film(tIdx).UALGEBR(zIdx);                    % [m/s]
+                        film(tIdx).U(zIdx,:) = film(tIdx).UALGEBR(zIdx);   % [m/s]
                         
                     case InputEnums.MOMENTFILM.EQUILIBRIUMS
                     % Simple equilibrium model (Fwall+ Fvapor = 0)
-                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUILS(zIdx);                    % [m/s]
+                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUILS(zIdx);   % [m/s]
                         
                     case InputEnums.MOMENTFILM.EQUILIBRIUM
                     % Complete equilibrium model (Ftot = 0)
-                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);          % [m/s]
+                        film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx); % [m/s]
                         
                     case InputEnums.MOMENTFILM.FULL
                     % Full film momentum conservation
-                        %for i = 1:round(1/options.RELAXUF)
-                        
-                        thick = max(abs(film(tIdx).THICK(zIdx)),model.THINFILMTHICK);                 % [m] Film thickness
-                        
+                        thick = max(abs(film(tIdx).THICK(zIdx)),model.THINFILMTHICK);                      % [m] Film thickness
                         if thick>model.THINFILMTHICK
-                            Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                        % [N/m^2] Momentum exchange terms with film
+                            Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with film
                             Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
-                            Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                         % [m/s] Keep within realistic bounds to help convergence
-                            film(tIdx).U(zIdx,:) = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;  % [m/s] Apply relaxation
+                            Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                              % [m/s] Keep within realistic bounds to help convergence
+                            film(tIdx).U(zIdx,:) = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;      % [m/s] Apply relaxation
                             film(tIdx).U(zIdx,:) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),film(tIdx).U(zIdx,:),zIdx);
                         else
-                            film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
+                            film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);                     % [m/s] Complete equilibrium model for thin film
                         end
-                        
-                        %Uiter = film(tIdx).U(zIdx,:);
-                        %end
                 end
                 
                 % Drop mass conservation
@@ -168,23 +180,23 @@ function solver(solveINIT)
                 switch model.MOMENTDROP
                     case InputEnums.MOMENTDROP.SLIP
                     % Velocity slip model
-                        drop(tIdx).U(zIdx) = drop(tIdx).USLIP(zIdx);                    % [m/s] Drop velocity
+                        drop(tIdx).U(zIdx) = drop(tIdx).USLIP(zIdx);                     % [m/s] Drop velocity
                     
                     case InputEnums.MOMENTDROP.ALGEBRAIC
                     % Model consistent with mixture model
-                        drop(tIdx).U(zIdx) = drop(tIdx).UALGEBR(film(tIdx),zIdx);       % [m/s] Drop velocity
+                        drop(tIdx).U(zIdx) = drop(tIdx).UALGEBR(film(tIdx),zIdx);        % [m/s] Drop velocity
                         
                     case InputEnums.MOMENTDROP.EQUILIBRIUMS
                     % Simple equilibrium model (Fdrag + Fgrav + Fbuoy = 0)
-                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(film(tIdx),zIdx,1);      % [m/s] Drop velocity 
+                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(film(tIdx),zIdx,1);       % [m/s] Drop velocity 
                         
                     case InputEnums.MOMENTDROP.EQUILIBRIUM
                     % Complete equilibrium model (Ftot = 0)
-                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(film(tIdx),zIdx);        % [m/s] Drop velocity      
+                        drop(tIdx).U(zIdx) = drop(tIdx).UEQUIL(film(tIdx),zIdx);         % [m/s] Drop velocity      
                         
                     case InputEnums.MOMENTDROP.FULL
                     % Full drop momentum conservation
-                        Fdtot = drop(tIdx).FTOT(film(tIdx),zIdx);                       % [N/m^3] Momentum exchange terms with drop
+                        Fdtot = drop(tIdx).FTOT(film(tIdx),zIdx);                                 % [N/m^3] Momentum exchange terms with drop
                         Udnew = (Udups.*Uditer+Udold.*DZ./DT+Fdtot.*DZ./RHOF)./(Uditer+DZ/DT);    % [m/s] Update velocity
                         drop(tIdx).U(zIdx) = (1-options.RELAXUD).*Uditer+options.RELAXUD.*Udnew;  % [m/s] Apply relaxation
                         drop(tIdx).U(zIdx) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),drop(tIdx).U(zIdx),zIdx);
@@ -226,7 +238,7 @@ function solver(solveINIT)
         timeDUd = max(abs((drop(tIdx).U - drop(tIdx-1).U)),[],'all');
         
         if solveINIT
-            % Finish steady state solver when SS convergence criterions are met
+            % Finish steady state solver when SS convergence criteria are met
             if all([timeDWL < options.SSCONVWF, timeDUf < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged

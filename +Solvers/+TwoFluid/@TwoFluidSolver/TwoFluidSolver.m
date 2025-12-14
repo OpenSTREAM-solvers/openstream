@@ -12,7 +12,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
     %
     % Key Components:
     %
-    % - Phase construction and separation (liquid/vapor)
+    % - Phase construction (liquid/vapor)
     % - Phase mass/momentum/energy transport modeling
     % - Pressure drop gradient obtained from mixture solver
     % - Support for relaxation models
@@ -38,14 +38,17 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
     end
 
     properties (SetAccess = protected)
+
         mixSolver                                                                      % Mixture object :class:`Solvers.Mixture.Mixture`
         inputSet                                                                       % Input set object :class:`Inputs.InputSet`
         STATE                                                              = Solvers.SolverState.UNSOLVED
+    
     end
 
-
     methods
+
         solve(twfSolver)                                                               % Solving algorithm
+    
     end
 
     methods
@@ -95,7 +98,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %INITIALIZESOLVER Initializes solver parameters and constructs liquid/vapor objects.
             %
             % Sets up the solver's internal state using the provided
-            % :class:`Inputs.InputSet` and :class:`Solvers.Mixture.MixtureSolver`,
+            % :class:`Inputs.InputSet` and :class:`Solvers.TwoFluid.TwoFluidSolver`,
             % This includes initialization of data structures for transient and steady-state
             % simulations based on the mixture solver solutions.
             %
@@ -226,13 +229,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % Generates axial plots of selected two-fluid parameters at specified
             % time indices. The function supports multiple display modes, wall
-            % selections, near-wall data, and optional  animation over time.
+            % selections, and optional animation over time.
             %
             % Inputs:
             %
             % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
             % - tIdx              — Time index or indices (vector of positive integers)
-            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
             % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
             % - opts.wall         — Wall index(es) to plot
             % - opts.zIdx         — Axial indices to include in the plot
@@ -595,7 +598,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % - twfSolver         — :class:`Solvers.TwoFluid.TwoFluidSolver` object containing simulation data
             % - zIdx              — Axial index (scalar, positive integer)
-            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'DP', etc.)
+            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
             % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
             % - opt.wall          — Wall index(es) to plot
             % - opt.tIdx          — Time indices to include in the plot
@@ -609,7 +612,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % - If opt.display is set to 'ALL', all supported parameters are plotted.
             % - The function validates that at least two time indices are provided.
             % - Temperature unit conversion is applied if 'C' is selected.
-            % - Near-wall data is included if opt.nearWall is true.
             % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
 
             arguments
@@ -881,7 +883,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             %
             % Generates surface plots of selected two-fluid related parameters
             % over time and axial (elevation) positions. It supports plotting
-            % for liquid, and vapor fields, and can handle both real
+            % for liquid and vapor fields, and can handle both real
             % and null (initial) transient data.
             %
             % Inputs:
@@ -890,7 +892,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
             % - opt.label         — Corresponding labels for display parameters
             % - opt.unit          — Units for each parameter
-            % - opt.field         — Field to plot: 'mixture', 'liquid', or 'vapor'
+            % - opt.field         — Field to plot: 'liquid' or 'vapor'
             % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
             % - opt.wall          — Wall index(es) to plot
             % - opt.zIdx          — Axial indices (must include at least 2)
@@ -907,9 +909,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             arguments
                 twfSolver
-                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',                     'W',               'U',               'H',           'X',                 'VF'}
-                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mixture mass flow rate','mixture velocity','mixture enthalpy','mass quality','volumetric fraction'}
-                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',                  'kg/s',             'm/s',            'J/kg',           '-',                  '-'}
+                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {'HFLUX','W','U','H','X','VF'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'liquid','vapor'})}             = {'liquid','vapor'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:twfSolver.inputSet.geometry.NWALL
@@ -929,12 +931,18 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             unit    = {         'W/m^2',          'kg/s',     'm/s',    'J/kg',           '-',                  '-',          'K',                      'm^-^1'};
             if strcmp('ALL',opt.display)
                 opt.display = display;
-                opt.label   = label;
-                opt.unit    = unit;
-            else
+            end
+            if isempty(opt.label)
                 opt.label   = label(ismember(display,opt.display));
+            end
+            if isempty(opt.unit)
                 opt.unit    = unit(ismember(display,opt.display));
             end
+            if isempty(opt.label) || isempty(opt.unit)
+                twfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                return
+            end
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:twfSolver.NTIME; end

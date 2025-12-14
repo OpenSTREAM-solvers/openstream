@@ -21,11 +21,14 @@ classdef Vapor < Solvers.AbstractPhase
     % - Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability
 
     properties (SetAccess=private, GetAccess=private)
+
         mix                                                                % :class:`Solvers.Mixture.Mixture` object
         NZ                                                                 % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        
     end
 
     methods
+
         function vapor = Vapor(mix)
             %VAPOR Constructor of the Vapor class
             %
@@ -113,9 +116,9 @@ classdef Vapor < Solvers.AbstractPhase
 
             switch model.THERMALNONEQ
 
-                case 'RELAXATION'
-                    WV = vapor.mix.TRELAX.WV(zIdx,:);
-                    h = sum(vapor.mix.TRELAX.HV(zIdx,:).*WV,2)./sum(WV,2);
+                case 'HRM'
+                    WV = vapor.mix.HRM.WV(zIdx,:);
+                    h = sum(vapor.mix.HRM.HV(zIdx,:).*WV,2)./sum(WV,2);
                     h(isnan(h)) = vapor.mix.fluid.HG;
 
                 otherwise

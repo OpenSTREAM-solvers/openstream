@@ -58,8 +58,8 @@ classdef Model < Inputs.Input
         RELAXX           (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Interfacial phase change relaxation time thermodynamic quality [-]
         RELAXTCOND       (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Interfacial condensation relaxation time array [s]
         RELAXTEVAP       (1,:) double                                      = [ 0.3  0.3   0.3 0.3 0.3]       % Interfacial evaporation  relaxation time array [s]
-        RELAXCONDCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05]               % Interfacial condensation time relaxation coefficients for void option
-        RELAXEVAPCOEF    (1,3) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5]               % Interfacial evaporation  time relaxation coefficients for void option
+        RELAXCONDCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05 0.0]           % Interfacial condensation time relaxation coefficients for void option
+        RELAXEVAPCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5 0.0]           % Interfacial evaporation  time relaxation coefficients for void option
         KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
 
         % Mixture near-wall models
@@ -132,6 +132,7 @@ classdef Model < Inputs.Input
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'                          % Equilibrium wave Strouhal number model selected from :class:`InputEnums.EQSTROUHAL`
         EQSTROUHALCOEF   (:,1) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]             % Equilibrium wave Strouhal number coefficients [-]
         RELAXTW          (:,1) double  {mustBeNonnegative}                 = 0.2                             % Wave number density relaxation time [s]
+        CSTWAVEFREQ      (:,1) double  {mustBePositive}                    = 100                             % Imposed constant wave frequency [Hz]
 
         MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'FULLNOP'                       % Base film momentum conservation model selected from :class:`InputEnums.MOMENTBASE`
         MOMENTWAVE       (1,1) InputEnums.MOMENTWAVE                       = 'FULL'                          % Wave momentum conservation model selected from :class:`InputEnums.MOMENTWAVE`

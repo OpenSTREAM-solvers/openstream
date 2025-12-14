@@ -157,8 +157,6 @@ classdef SolverPlotter < handle
 
                 % Update
                 drawnow limitrate;
-
-
             end
 
             function animationCallback(src, ~)
@@ -247,7 +245,6 @@ classdef SolverPlotter < handle
                         fh.Name = sprintf(fh.UserData.NameFormat, fh.UserData.NameSeries(currentIndex));
                         tlh.Title.String = fh.Name;
                         tlh.Title.FontSize = 15;
-
                     end
                 end
             end
@@ -410,7 +407,7 @@ classdef SolverPlotter < handle
                 % Collection of uicontrols
                 fh_uicontrols = findall(plotters(idx).fh, 'type', 'uicontrol');
                 % Hide uicontrols
-                uimenu_showUIControls = findobj(src.Parent, 'text', 'Show UI Controls');
+                uimenu_showUIControls = findobj(src.Parent, 'text', 'Show UI Controls in Video');
                 if ~uimenu_showUIControls.Checked
                     for uiControl_idx = 1:length(fh_uicontrols)
                         fh_uicontrols(uiControl_idx).Visible = false;
@@ -576,7 +573,7 @@ classdef SolverPlotter < handle
                         end
 
                     % If the simple lines are plotted with NaN delimiters,
-                    % the YData will be updated at the approp. indicies.
+                    % the YData will be updated at the approp. indices.
                     % This is kept for now if we continue to use this
                     % method of defining the lines.
                     % TODO: decide if this is still needed
@@ -739,6 +736,9 @@ classdef SolverPlotter < handle
                         else
                             lh.UserData = struct('currentIndex', 1, 'Data', struct('index', 1, 'yData', lh.YData, 'xData', lh.XData));
                         end
+                    else
+                        % Initialize for single-step mode
+                        lh.UserData = struct('Data', []);
                     end
 
                 end

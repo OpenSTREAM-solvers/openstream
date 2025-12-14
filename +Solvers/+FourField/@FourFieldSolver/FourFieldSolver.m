@@ -1,43 +1,77 @@
 classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
-    %FOURFIELDSOLVER defines any task related to initalizing, solving and plotting the results based on the four-field approach.
+    %FOURFIELDSOLVER Solver for initializing, solving, and visualizing four-field flow.
     %
-    %   TODO: Detailed explanations
-    
-     properties (SetAccess=protected)
-        
-%         NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
-%         NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
-%         TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
-%         DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
-%         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
-%         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
-%         
-%         fluid       {isa(fluid,'Inputs.FluidProperties')}
-%         boundaryConditions
-%         
-%         filmInit
-%         dropInit
-%         film
-%         drop
+    % The FourFieldSolver class extends :class:`Solvers.ThreeField.ThreeFieldSolver`
+    % to handle thermal-hydraulic simulations using a four-field approach.
+    %
+    % Responsibilities:
+    %
+    % - Initializes solver parameters from an :class:`Inputs.InputSet` object
+    % - Constructs :class:`Solvers.FourField.Film`, :class:`Solvers.FourField.Wave`, :class:`Solvers.FourField.Base`, and :class:`Solvers.FourField.Drop` objects for transient and steady-state analysis
+    % - Provides plotting utilities for spatial and temporal distributions
+    %
+    % Key Components:
+    %
+    % - Liquid film (base and wave) and drop field construction
+    % - Field mass/momentum/energy transport modeling
+    % - Pressure drop gradient obtained from mixture solver
+    % - Vapor solution obtained from mixture solver
+    % - Visualization of results across time and axial domains
 
-     end
+    properties (SetAccess=protected)
 
-     properties (SetAccess = protected)
+        % NZ           (1,1) double  {mustBeNumeric}                         = 0         % Number of axial steps [-]
+        % NTIME        (1,1) double  {mustBeNumeric}                         = 0         % Number of time steps [-]
+        % TIME         (:,1) double  {mustBeNumeric}                         = 0         % Time series [s]
+        % DT           (1,1) double  {mustBeNumeric}                         = 0         % Time step size [s]
+        % Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
+        % DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
+        %
+        % fluid       {isa(fluid,'Inputs.FluidProperties')}
+        % boundaryConditions
+        %
+        % filmInit
+        % dropInit
+        % film
+        % drop
+
+    end
+
+    properties (SetAccess = protected)
+
         % mixSolver
         % inputSet
-        % STATE                                                               = Solvers.SolverState.UNSOLVED
-     end
+        % STATE                                                              = Solvers.SolverState.UNSOLVED
 
-
-    methods
-        solve(tfSolver)
     end
 
     methods
-        
+
+        solve(tfSolver)
+
+    end
+
+    methods
+
         function ffSolver = FourFieldSolver(inputSet,mixSolver)
-            %FOURFIELDSOLVER Creates a FourField solver
+            %FOURFIELDSOLVER Constructor for the FourFieldSolver class.
             %
+            % Creates a new instance of the FourFieldSolver class using the
+            % provided :class:`Inputs.InputSet`. This constructor initializes
+            % the solver by calling the :class:`Solvers.ThreeField.ThreeFieldSolver`
+            % constructor and then sets up all necessary solver parameters and
+            % internal data structures via
+            % :meth:`Solvers.FourField.FourFieldSolver.initializeSolver <Solvers.FourField.FourFieldSolver.FourFieldSolver.initializeSolver>`
+            %
+            % Input:
+            %
+            % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            %
+            % Notes:
+            %
+            % - If mixSolver is unsolved, it will be solved automatically.
+            % - Initialization includes film, wave, base, and droplet objects.
+
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
                 mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
@@ -45,37 +79,42 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             % Call abstract class constructor
             ffSolver = ffSolver@Solvers.ThreeField.ThreeFieldSolver(inputSet,mixSolver);
-            
-            % % Store mixSolver handle
-            % ffSolver.mixSolver = mixSolver;
-            % 
-            % % Attempt to solve mixSolver if it is unsolved
-            % if ffSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
-            %     ffSolver.mixSolver.solve();
-            % end
-            % 
-            % % Initialize solver parameters
-            % ffSolver.initializeSolver();
         end
-        
+
         function initializeSolver(ffSolver)
-        %INITIALIZESOLVER Initialize solver using the stored inputSet
-        %
+            %INITIALIZESOLVER Initializes solver parameters and constructs film, wave, base, and drop objects.
+            %
+            % Sets up the solver's internal state using the provided :class:`Inputs.InputSet`
+            % and mixture solver solutions. Includes initialization of data structures for
+            % transient and steady-state simulations.
+            %
+            % Operations performed:
+            %
+            % - Initializes film, wave, and base arrays for each time step
+            % - Initializes fluid property objects
+            % - Sets up mixture object
+            % - Assigns initial conditions for field mass flow rates, velocities, enthalpies
+            %
+            % Notes:
+            %
+            % - Assumes uniform axial discretization.
+            % - Wall heat flux computed from interpolated boundary conditions.
+
             import Inputs.*
             import Solvers.FourField.*
             import Solvers.SolverState
-            
+
             % Copy relevant properties from mixSolver
             props = {'NZ','NTIME','TIME','DT','Z','DZ','fluid','boundaryConditions'}; % mixSolver properties
             for p = props
                 ffSolver.(p{:}) = ffSolver.mixSolver.(p{:});
             end
-            
+
             % Local parameters
-            mixArr = ffSolver.mixSolver.mixture;                            % Mixture solution
-            model  = ffSolver.inputSet.model;                               % Models
-            geom   = ffSolver.inputSet.geometry;                            % Geometry
-            
+            mixArr = ffSolver.mixSolver.mixture;                           % Mixture solution
+            model  = ffSolver.inputSet.model;                              % Models
+            geom   = ffSolver.inputSet.geometry;                           % Geometry
+
             % Setup inner iteration value struct
             ITRf = ffSolver.CreateITR(ffSolver.NZ, ["N","DWL","DU","DFW"]);
             ITRf.DWL = repmat(ITRf.DWL,1,geom.NWALL);
@@ -86,8 +125,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % Create film and drop arrays (by timestep)
             flmArr(ffSolver.NTIME) = Film();
             drpArr(ffSolver.NTIME) = Drop();
-            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'};                 % film and drop properties
-            
+            props = {'NZ','Z','DZ','NTIME','DT','TIME','TIDX','inputSet','fluid', 'mix'}; % film and drop properties
+
             for tIdx = 1:ffSolver.NTIME
 
                 % Convenience variables (handles)
@@ -95,25 +134,25 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 drp         = drpArr(tIdx);
                 mix         = mixArr(tIdx);
                 fluid       = ffSolver.fluid(tIdx);
-                
+
                 % Inputset and fluid
                 flm.inputSet = ffSolver.inputSet;
                 flm.fluid    = fluid;
 
                 % Corresponding Mixture
                 flm.mix = mix;
-                
-                % Axial step sizes             
+
+                % Axial step sizes
                 flm.NZ = ffSolver.NZ;
                 flm.DZ = ffSolver.DZ;
                 flm.Z  = ffSolver.Z;
-                
+
                 % Time step
                 flm.NTIME = ffSolver.NTIME;
                 flm.DT    = ffSolver.DT;
                 flm.TIME  = ffSolver.TIME(tIdx);
                 flm.TIDX  = tIdx;
-                
+
                 % Copy properties to drop
                 for p = props
                     drp.(p{:}) = flm.(p{:});
@@ -121,21 +160,21 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
                 % ITR
                 drp.ITR = ITRd;
-                   
+
                 % Wall/film evaporation heat flux
                 HFLUX = mix.HFLUX;                                         % [W/m^2] Wall heat flux
                 avgHFLUX = sum(HFLUX.*geom.PERIM,2)./sum(geom.PERIM);      % [W/m^2] Average heat flux
                 avgHFLUX = repmat(avgHFLUX,1,geom.NWALL);                  % [W/m^2] ... distributed to all walls
-                evapFn = [0;diff(mix.X)./diff(mix.XEQ)];                   % [-] Evaporation function
+                evapFn = [0;max(0,diff(mix.X)./diff(mix.XEQ))];            % [-] Evaporation function
                 evapFn(~isfinite(evapFn)) = 1;                             % [-] Fix potential division by 0
                 flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX);           % [W/m^2] Film evaporation heat flux
-                    
+
                 % Film evaporation (thermal equilibrium assumption)
                 flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
 
                 % Initialize base and wave
                 flm.initializeBaseAndWave();
-                
+
                 % Entrained ratio at onset of annular flow
                 switch model.OAFENTRAINED
                     case InputEnums.OAFENTRAINED.RATIO
@@ -150,28 +189,28 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 drp.W = repmat(e0.*mix.OAFWL,ffSolver.NZ,1);               % [kg/s] Set drop mass flow to onset of annular flow conditions everywhere
 
                 % Transient mass gradient in drop field
-                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);                     % [kg/s] 
-                
+                drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);                     % [kg/s]
+
                 % Transient mass gradient in film.base and film.wave,
                 % set constant base mass flow in pre-annular flow region and recalculate drop mass flow rate
                 flm.initializeBaseAndWave( ...
-                                mix.liquid.W(1)-drp.W(1), ...              % Inlet flow rate (all walls)
-                                ITRf ...                                   % Iteration struct
-                             );
+                    mix.liquid.W(1)-drp.W(1), ...                          % Inlet flow rate (all walls)
+                    ITRf ...                                               % Iteration struct
+                    );
                 flmW = flm.W(1:mix.OAFIDX,:);                              % [kg/s] Save total film flow rate
-                flm.base.W(1:mix.OAFIDX,:) = repmat(flm.base.W(mix.OAFIDX,:),mix.OAFIDX,1); % [kg/s] Set constant base film flow rate 
-                flm.wave.W(1:mix.OAFIDX,:) = max(0,flmW-flm.base.W(1:mix.OAFIDX,:)); % [kg/s] Adjust wave flow rate   
-                
+                flm.base.W(1:mix.OAFIDX,:) = repmat(flm.base.W(mix.OAFIDX,:),mix.OAFIDX,1); % [kg/s] Set constant base film flow rate
+                flm.wave.W(1:mix.OAFIDX,:) = max(0,flmW-flm.base.W(1:mix.OAFIDX,:)); % [kg/s] Adjust wave flow rate
+
                 drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
-                
+
                 % Initialize velocity [m/s]
                 %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
-                drp.U = drp.USLIP();                                        % [m/s] Drop velocity
-                
+                drp.U = drp.USLIP();                                       % [m/s] Drop velocity
+
                 %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
-                                                
+
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
-                drp.H = repmat(fluid.HF,ffSolver.NZ,1);                
+                drp.H = repmat(fluid.HF,ffSolver.NZ,1);
 
             end
 
@@ -184,7 +223,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 repmat(flmArr(1),1,ffSolver.inputSet.options.SSMAXITER));
             ffSolver.dropInit = copy( ...
                 repmat(drpArr(1),1,ffSolver.inputSet.options.SSMAXITER));
-            
+
             % Update filmInit and dropInit times and timesteps
             initTIMEDT = ffSolver.inputSet.options.SSTSTEP;
             initNTIME = length(ffSolver.filmInit);
@@ -213,21 +252,44 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver.dropInit(i).DT     = initTIMEDT;
                 ffSolver.dropInit(i).NTIME  = initNTIME;
                 ffSolver.dropInit(i).TIDX   = initTIDX(i);
-                
+
             end
 
             % set STATE to UNSOLVED
             ffSolver.STATE = SolverState.UNSOLVED;
         end
-        
+
         function e0 = EQUIL(ffSolver,flm,drp,mix,zIdx)
-        %EQUIL find entrained ratio at film/drop equilibrium state (ent = dep)
-        %
+            %EQUIL Find entrained ratio at film/drop equilibrium state [-]
+            %
+            % Iteratively computes the entrained liquid ratio at the onset of annular
+            % flow by balancing droplet deposition and film entrainment rates.
+            %
+            % Inputs:
+            %
+            % - ffSolver — :class:`Solvers.FourField.FourFieldSolver` object
+            % - flm      — Film field object (:class:`Solvers.FourField.Film`)
+            % - drp      — Droplet field object (:class:`Solvers.FourField.Drop`)
+            % - mix      — Mixture object (:class:`Solvers.Mixture.Mixture`)
+            % - zIdx     — Axial index for evaluation
+            %
+            % Algorithm:
+            %
+            % - Starts with an initial guess for droplet mass flow (50% of liquid mass)
+            % - Updates droplet and film flow rates iteratively
+            % - Computes difference between deposition and entrainment rates
+            % - Stops when error < 1e-4 kg/s/m or after 100 iterations
+            %
+            % Notes:
+            %
+            % - Uses interpolation for improved convergence
+            % - Falls back to ad-hoc update if interpolation fails
+
             errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
             nwall = ffSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = ffSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
             W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
-            
+
             for k = 1:100
                 if k == 1
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
@@ -260,17 +322,43 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             if err > errMax
                 disp('Equilibrium entrainment ratio at onset of annular flow: not converged')
             end
-            
+
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
         end
 
         function plotter = plotz(ffSolver, tIdx, opts)
-        %PLOTZ Plot spatial distributions of four-field parameters
-        %
+            %PLOTZ Plots spatial (axial) distributions of four-field parameters.
+            %
+            % Generates axial plots of selected four-field parameters at specified
+            % time indices. The function supports multiple display modes, wall
+            % selections, and optional animation over time.
+            %
+            % Inputs:
+            %
+            % - ffSolver          — :class:`Solvers.FourField.FourFieldSolver` object containing simulation data
+            % - tIdx              — Time index or indices (vector of positive integers)
+            % - opts.display      — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
+            % - opts.solveMode    — Solve mode: 'REAL' or 'NULL'
+            % - opts.wall         — Wall index(es) to plot
+            % - opts.zIdx         — Axial indices to include in the plot
+            % - opts.obstructions — Logical flag to display obstruction locations
+            % - opts.annular      — Logical flag to plot annular two-phase flow parameters only from the onset of annular flow
+            % - opts.unitTemp     — Temperature unit: 'K' or 'C'
+            % - opts.arrangement  — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opts.resize       — Resize factor for plot scaling
+            %
+            % Notes:
+            %
+            % - If multiple time indices are provided, the function creates an animated plot.
+            % - At least two axial indices must be specified to enable spatial plotting.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Obstruction locations are plotted if opts.obstructions is true.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+
             arguments
                 ffSolver
                 tIdx              (:,1) double {mustBeInteger,mustBePositive}                                                                          = []
-                opts.display      {mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
+                opts.display      {matlab.system.mustBeMember(opts.display,{'HFLUX','W','WL','RE','U','THICK','FREQUENCY','WAL','BR','WR','FWE','FME','DME','ALL'})} = {'HFLUX','W','U','FREQUENCY'}
                 opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                                                       = 'REAL'
                 opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.inputSet.geometry.NWALL
                 opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                                                             = 1:ffSolver.NZ
@@ -325,7 +413,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotter.setZs(z);
 
             function tf = displayVariable(memberList)
-                tf = any(ismember(memberList,opts.display));
+                tf = any(ismember(memberList,upper(opts.display)));
             end
 
             % Loop through each tIdx
@@ -639,12 +727,34 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             end
 
         end
-        
+
         function plotter = plott(ffSolver, zIdx, opt)
-        %PLOTT Plot temporal distributions of four-field parameters
-        %
-        %   NOTE: currently supports only single elevation
-        %
+            %PLOTT Plots temporal distributions of four-field parameters at a given axial location.
+            %
+            % Generates time-series plots of selected four-field parameters at
+            % a specified axial index. The method supports multiple display
+            % modes, wall selections, and plot arrangements.
+            %
+            % Inputs:
+            %
+            % - ffSolver          — :class:`Solvers.FourField.FourFieldSolver` object containing simulation data
+            % - zIdx              — Axial index (scalar, positive integer)
+            % - opt.display       — Parameters to display (e.g., 'HFLUX', 'W', 'U', etc.)
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.tIdx          — Time indices to include in the plot
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.unitTemp      — Temperature unit: 'K' or 'C'
+            % - opt.arrangement   — Plot arrangement: 'flow', 'vertical', or 'horizontal'
+            % - opt.resize        — Resize factor for plot scaling
+            %
+            % Notes:
+            %
+            % - If opt.display is set to 'ALL', all supported parameters are plotted.
+            % - The function validates that at least two time indices are provided.
+            % - Temperature unit conversion is applied if 'C' is selected.
+            % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+
             arguments
                 ffSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                                                     = ffSolver.NZ
@@ -657,9 +767,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                                                    = 'flow'
                 opt.resize      (1,1) double {mustBeNonnegative}                                                                                    = 0
             end
-            
+
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
-            
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:ffSolver.NTIME; end
@@ -678,7 +788,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     bcHFLUX = repmat(ffSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
                     solveMode = '- Null transient';
             end
-            
+
             time = [flm.TIME];
             if length(time) < 2
                 ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
@@ -687,15 +797,15 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             if opt.reverseTime
                 time = time -time(end);
             end
-            
+
             dTemp = 0; if strcmp(opt.unitTemp,'C'), dTemp = -273.15; end
 
             z = ffSolver.Z;
             plotter = Solvers.SolverPlotter( ...
-                                sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), solveMode), ...
-                                opt.wall, 'arrangement', opt.arrangement);
+                sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), solveMode), ...
+                opt.wall, 'arrangement', opt.arrangement);
             plotter.setZs(time);
-            
+
             % Wall heat flux
             if any(ismember({'HFLUX','ALL'},opt.display))
                 plotter.newTile( ...
@@ -706,7 +816,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('HFLUX','zIdx',zIdx)','Film'                                   );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Mass flow rates
             if any(ismember({'W','ALL'},opt.display))
                 plotter.newTile( ...
@@ -723,7 +833,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(mix.transient('vapor.W'       ,'zIdx',zIdx)','Vapor'   );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Film WL
             if any(ismember({'WL','ALL'},opt.display))
                 plotter.newTile( ...
@@ -736,7 +846,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('base.WMINL',drp,'zIdx',zIdx)','Base min');
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Reynolds numbers
             if any(ismember({'RE','ALL'},opt.display))
                 plotter.newTile( ...
@@ -748,7 +858,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient( 'base.RE','zIdx',zIdx)','Base' ,'yyaxis','right');
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Field velocities
             if any(ismember({'U','ALL'},opt.display))
                 plotter.newTile( ...
@@ -762,7 +872,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(mix.transient('vapor.U','zIdx',zIdx)','Vapor');
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Film thicknesses
             if any(ismember({'THICK','ALL'},opt.display))
                 plotter.newTile( ...
@@ -776,9 +886,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('base.EQTHICK'     ,'zIdx',zIdx)','Base Eq' );
                 plotter.plotz(flm.transient('base.THICKMIN',drp,'zIdx',zIdx)','Base Min');
                 plotter.legend('show', 'Location', 'best');
-                %plotters.ylim([0 1E-3]);
             end
-            
+
             % Wave frequencies
             if any(ismember({'FREQUENCY','ALL'},opt.display))
                 plotter.newTile( ...
@@ -789,7 +898,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('wave.EQFREQUENCY','zIdx',zIdx)','Wave Eq','DisplayName',    'Equilibrium');
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Wave axial lengths
             if any(ismember({'WAL','ALL'},opt.display))
                 plotter.newTile( ...
@@ -800,7 +909,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('wave.WIDTH'  ,'zIdx',zIdx)','Width'  );
                 plotter.legend('show', 'Location', 'best');
             end
-            
+
             % Base film/Film ratios
             if any(ismember({'BR','ALL'},opt.display))
                 plotter.newTile( ...
@@ -815,7 +924,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.legend('show', 'Location', 'best');
                 plotter.ylim([0 1]);
             end
-            
+
             % Wave/Film ratios
             if any(ismember({'WR','ALL'},opt.display))
                 plotter.newTile( ...
@@ -830,7 +939,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.legend('show', 'Location', 'best');
                 plotter.ylim([0 1]);
             end
-            
+
             % Base film and wave mass exchanges
             if any(ismember({'FWE','ALL'},opt.display))
                 ah_base = plotter.newTile( ...
@@ -843,7 +952,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('base.MWAVE',drp,'zIdx',zIdx)','Wave'       ,'DisplayName','Exchange from wave'   );
                 plotter.plotz(flm.transient('base.MTOT' ,drp,'zIdx',zIdx)','Total'                                            );
                 plotter.legend('show', 'Location', 'best');
-                
+
                 ah_wave = plotter.newTile( ...
                     'tileTitle',  'Wave mass exchanges', ...
                     'xlabel'   ,             'Time [s]', ...
@@ -854,14 +963,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('wave.MBASE',drp,'zIdx',zIdx)','Wave'       ,'DisplayName','Exchange from base');
                 plotter.plotz(flm.transient('wave.MTOT' ,drp,'zIdx',zIdx)','Total'                                         );
                 plotter.legend('show', 'Location', 'best');
-                
+
                 % Link exchange axes
                 % TODO: this can be a plotter method
                 for wallIdx = 1:length(ah_base)
                     linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
                 end
             end
-            
+
             % Base film and wave momentum exchanges
             if any(ismember({'FME','ALL'},opt.display))
                 ah_base = plotter.newTile( ...
@@ -877,7 +986,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('base.FGRAV'        ,'zIdx',zIdx)','Gravity'                                   );
                 plotter.plotz(flm.transient('base.FTOT'     ,drp,'zIdx',zIdx)','Total'                                     );
                 plotter.legend('show', 'Location', 'best')
-                
+
                 ah_wave = plotter.newTile( ...
                     'tileTitle', 'Wave momentum exchanges', ...
                     'xlabel'   ,                'Time [s]', ...
@@ -891,13 +1000,13 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.plotz(flm.transient('wave.FGRAV'        ,'zIdx',zIdx)','Gravity'                                   );
                 plotter.plotz(flm.transient('wave.FTOT'     ,drp,'zIdx',zIdx)','Total'                                     );
                 plotter.legend('show', 'Location', 'best');
-                
+
                 % Link exchange axes
                 for wallIdx = 1:length(ah_base)
                     linkaxes([ah_base(wallIdx), ah_wave(wallIdx)]);
                 end
             end
-            
+
             % Drop momentum exchanges
             if any(ismember({'DME','ALL'},opt.display))
                 plotter.newTile( ...
@@ -916,15 +1025,41 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.resizeFigure(opt.resize);
             end
         end
-        
+
         function plotzt(ffSolver, opt)
-        %PLOTZT: Plot 2D time/elevation distributions of four-field parameters
-        %
+            %PLOTZT Plots 2D time/elevation distributions of four-field parameters.
+            %
+            % Generates surface plots of selected four-field related parameters
+            % over time and axial (elevation) positions. It supports plotting
+            % for base and wave fields, and can handle both real
+            % and null (initial) transient data.
+            %
+            % Inputs:
+            %
+            % - ffSolver          — :class:`Solvers.FourField.FourFieldSolver` object containing simulation data
+            % - opt.display       — Parameter(s) to display (e.g., 'HFLUX', 'U', etc.)
+            % - opt.label         — Corresponding labels for display parameters
+            % - opt.unit          — Units for each parameter
+            % - opt.field         — Field to plot: 'film' or 'drop'
+            % - opt.solveMode     — Solve mode: 'REAL' or 'NULL'
+            % - opt.wall          — Wall index(es) to plot
+            % - opt.zIdx          — Axial indices (must include at least 2)
+            % - opt.tIdx          — Time indices (must include at least 2)
+            % - opt.reverseTime   — Logical flag to reverse time axis
+            % - opt.shading       — Surface shading style: 'faceted', 'flat', or 'interp'
+            % - opt.view          — View angle for 3D plot [azimuth elevation]
+            %
+            % Notes:
+            %
+            % - If 'ALL' is passed to opt.display, all supported parameters are plotted.
+            % - The function validates that at least two axial and time indices are provided to enable meaningful 2D plotting.
+            % - Each wall is plotted in a separate figure window with appropriate titles and subplot grouping.
+
             arguments
                 ffSolver
                 opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U','FREQUENCY'}
-                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {'wall heat flux','mass flow rate','velocity','frequency'}
-                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {         'W/m^2',          'kg/s',     'm/s',       'Hz'}
+                opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
+                opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'drop','film','wave','base'})}  = {'wave','base'}
                 opt.solveMode    {mustBeMember(opt.solveMode,{'REAL','NULL'})}            = 'REAL'
                 opt.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive} = 1:ffSolver.inputSet.geometry.NWALL
@@ -935,7 +1070,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.shading      {mustBeMember(opt.shading,{'faceted','flat','interp'})}  = 'interp'
                 opt.view         (1,2) double                                             = [0 90]
             end
-            
+
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
@@ -945,12 +1080,18 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm',        'm',       'Hz',      'm',    'm',            '-',                   '-',                   '-',                  '-',                '-',           '-'};
             if strcmp('ALL',opt.display)
                 opt.display = display;
-                opt.label   = label;
-                opt.unit    = unit;
-            else
+            end
+            if isempty(opt.label)
                 opt.label   = label(ismember(display,opt.display));
+            end
+            if isempty(opt.unit)
                 opt.unit    = unit(ismember(display,opt.display));
             end
+            if isempty(opt.label) || isempty(opt.unit)
+                tfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                return
+            end
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:ffSolver.NTIME; end
@@ -977,7 +1118,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
                 return
             end
-            
+
             for k = opt.wall
                 if ismember('drop',opt.field)
                     name = ['Time/axial distributions of four-field (drop) parameters ' solveMode ' - Wall ' num2str(k)];
@@ -1014,7 +1155,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         if contains(opt.display{i},{'HFLUX','DP'})
                             ax_wav(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
                         elseif contains(opt.display{i},{'FDRY'})
-                            continue    
+                            continue
                         else
                             ax_wav(i) = flm.plotzt(['wave.' opt.display{i}],['Wave '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
@@ -1037,8 +1178,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 end
             end
         end
-        
-    end
-    
-end
 
+    end
+
+end

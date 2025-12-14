@@ -1,28 +1,32 @@
 classdef Film < Solvers.AbstractFilm
-    %FILM Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILM Class for modeling liquid film in three-field solver
+    %
+    % This class encapsulates the physical and numerical properties of the film field,
+    % including flow variables and phase interactions.
     
      properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
         
-        % Solver properties
-        NZ                                                                 = 0                    % [-] Number of axial steps
-        NTIME                                                              = 0                    % [-] Number of time steps
-        TIME                                                               = 0                    % [s] Time series
-        DT                                                                 = 0                    % [s] Time step size
-        TIDX                                                               = 1                    % [-] Time step index
-        Z                                                                  = 1.                   % [m] Elevation
-        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % [W/m^2] Film heat flux
-        MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % [kg/s/m^2] Evaporation mass flux      
+        % Solver state
+
+        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        NTIME                                                              = 0                    % Number of time steps [-]
+        TIME                                                               = 0                    % Time series [s]
+        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.Options.TSTEP`
+        TIDX                                                               = 1                    % Time step index [-]
+        Z                                                                  = 1.                   % Elevation [m]
+        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
+        MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % Evaporation mass flux   [kg/s/m^2]    
         
         % Flow properties
-        W            (:,:) double  {mustBeNumeric}                         = 1.                   % [kg/s] Mass flow rate
-        U            (:,:) double  {mustBeNumeric}                         = 1.                   % [m/s] Velocity
-        H            (:,:) double  {mustBeNumeric}                         = 1E6                  % [J/kg] Enthalpy
+
+        W            (:,:) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
+        U            (:,:) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
+        H            (:,:) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
 
         % Iteration properties
-        ITR
+        
+        ITR                                                                                       % Iteration tracking
 
      end
 
 end
-
