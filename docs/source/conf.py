@@ -17,6 +17,7 @@ copyright = f'2024–{datetime.datetime.now().year}, The OpenSTREAM Team'
 extensions = [
     'sphinxcontrib.matlab',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon', 
@@ -56,9 +57,9 @@ matlab_show_property_default_value = True
 matlab_class_signature = True
 matlab_keep_private_members = True
 autoclass_content = 'class'
-autodoc_member_order = 'bysource'
+autodoc_member_order = 'alphabetical'
 autodoc_default_options = {
-	'member-order': 'bysource'
+	'member-order': 'alphabetical'
 }
 toc_object_entries = True
 toc_object_entries_show_parents = 'all'
@@ -75,6 +76,10 @@ html_static_path = ['_static']
 html_logo = '_static/logo-transparent.png'
 html_favicon = '_static/favicon.ico'
 includehidden = True
+html_theme_options = {
+    "collapse_navigation": False,
+    "includehidden": True,
+}
 
 # -- Options fpr LaTex output ------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output

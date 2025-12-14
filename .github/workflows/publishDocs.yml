@@ -2,11 +2,11 @@ name: Publish Sphinx docs to GitHub Pages
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - docs
       - lecorre
-    
+
   workflow_dispatch:
     inputs:
         logLevel:
@@ -27,9 +27,10 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v5
-        with: 
-           ref: ${{github.ref}}
+      - name: Checkout with submodules
+        uses: actions/checkout@v6
+        with:
+          submodules: true
 
       - name: Setup Python
         uses: actions/setup-python@v3
