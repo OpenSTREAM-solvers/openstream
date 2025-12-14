@@ -12,7 +12,6 @@
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -20,11 +19,10 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Mixture solver" href="Solvers-Mixture.html" />
+    <link rel="next" title="FourField Solver" href="Solvers-FourField.html" />
     <link rel="prev" title="Session" href="Session.html" /> 
 </head>
 
@@ -38,7 +36,6 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
-              <img src="../_static/logo-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,32 +50,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/theory/index.html">Theory overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global reference list</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Code packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="InputEnums.html">InputEnums</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Session.html">Session</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Solvers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-Mixture.html">Mixture solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-TwoFluid.html">Two-fluid solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-ThreeField.html">Three-field solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Solvers-FourField.html">Four-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-FourField.html">FourField Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-Mixture.html">Mixture Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-ThreeField.html">ThreeField Solver</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">External packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">External Packages</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
 </ul>
@@ -86,8 +70,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
 </ul>
 
@@ -117,180 +100,143 @@
              
   <section id="solvers">
 <h1>Solvers<a class="headerlink" href="#solvers" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a> package defines the <strong>OpenSTREAM</strong> core solver modules and their associated superclasses. Each solver is tailored to simulate specific regimes of one-dimensional, two-phase flow, with increasing levels of physical detail and complexity.</p>
-<p>Explore the available solver frameworks:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-Mixture.html">Mixture solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-TwoFluid.html">Two-fluid solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-ThreeField.html">Three-field solver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers-FourField.html">Four-field solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-FourField.html">FourField Solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-Mixture.html">Mixture Solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers-ThreeField.html">ThreeField Solver</a></li>
 </ul>
 </div>
-<p>The following is a list of associated superclasses, each with its respective properties and methods. These foundational components provide shared functionality and structure across solver implementations.</p>
-<ul class="simple">
-<li><p>Abstract solver: <a class="reference internal" href="#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p></li>
-<li><p>Abstract field: <a class="reference internal" href="#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p></li>
-<li><p>Abstract phase: <a class="reference internal" href="#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p></li>
-<li><p>Abstract film: <a class="reference internal" href="#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p></li>
-<li><p>Solver plotter: <a class="reference internal" href="#Solvers.SolverPlotter" title="Solvers.SolverPlotter"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.SolverPlotter</span></code></a></p></li>
-<li><p>Solver state: <a class="reference internal" href="#Solvers.SolverState" title="Solvers.SolverState"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.SolverState</span></code></a></p></li>
-</ul>
-<hr class="docutils" />
+<p><a class="reference internal" href="#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a> is pretty cool.</p>
 <dl class="mat class" id="module-Solvers">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractFilm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
-<p>ABSTRACTFILM Base class for liquid film models in three- and four-field solvers</p>
-<p>This abstract class defines shared methods and properties for liquid film modeling.
-It includes calculations for film thickness, entrainment, shear forces, and velocity models.
-Specific entrainment models (e.g., Okawa, Govan) and friction models are implemented.</p>
+<p>ABSTRACTFILM Summary of this class goes here</p>
+<p>Detailed explanation goes here</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.AbstractFilm">
 <span class="sig-name descname"><span class="pre">AbstractFilm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.AbstractFilm" title="Link to this definition"></a></dt>
-<dd><p>AbstractFilm Constructor for AbstractFilm class</p>
-<p>Initializes <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> and <a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a></p>
+<dd><p>ABSFILM Creates an abstract film, absfilm</p>
+<p>Detailed explanation goes here</p>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.DZ">
 <span class="sig-name descname"><span class="pre">DZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.AbstractFilm.DZ" title="Link to this definition"></a></dt>
-<dd><p>Axial step size [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractFilm.inputSet">
-<span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.AbstractFilm.inputSet" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing geometry, model, and boundary conditions</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractFilm.fluid">
-<span class="sig-name descname"><span class="pre">fluid</span></span><a class="headerlink" href="#Solvers.AbstractFilm.fluid" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="Inputs.html#Inputs.FluidProperties" title="Inputs.FluidProperties"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.FluidProperties</span></code></a> object containing fluid thermophysical properties</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractFilm.mix">
-<span class="sig-name descname"><span class="pre">mix</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.AbstractFilm.mix" title="Link to this definition"></a></dt>
-<dd><p><a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object of the mixture solver</p>
+<dd><p>[m] Axial step size</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.WL">
 <span class="sig-name descname"><span class="pre">WL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.WL" title="Link to this definition"></a></dt>
-<dd><p>WL Film mass flow rate per unit perimeter [kg/s/m]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.WL" title="Solvers.AbstractFilm.WL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">WL()</span></code></a> Film mass flow rate per unit perimeter</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.THICK">
 <span class="sig-name descname"><span class="pre">THICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.THICK" title="Link to this definition"></a></dt>
-<dd><p>THICK Film thickness [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.THICK" title="Solvers.AbstractFilm.THICK"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">THICK()</span></code></a> Film thickness</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.RE">
 <span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.RE" title="Link to this definition"></a></dt>
-<dd><p>RE Film Reynolds number [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.RE" title="Solvers.AbstractFilm.RE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">RE()</span></code></a> Film Reynolds number [-]</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.MENT">
 <span class="sig-name descname"><span class="pre">MENT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.MENT" title="Link to this definition"></a></dt>
-<dd><p>MENT Film entrainment mass flux [kg/m^2/s]</p>
-<p>Based on selected <a class="reference internal" href="Inputs.html#Inputs.Model.ENTRAINMENT" title="Inputs.Model.ENTRAINMENT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.ENTRAINMENT</span></code></a> model.</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.MENT" title="Solvers.AbstractFilm.MENT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MENT()</span></code></a> Film entrainment mass flux</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.MTOT">
 <span class="sig-name descname"><span class="pre">MTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.MTOT" title="Link to this definition"></a></dt>
-<dd><p>MTOT Total film mass transfer [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.MTOT" title="Solvers.AbstractFilm.MTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MTOT()</span></code></a> Total</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.CW">
 <span class="sig-name descname"><span class="pre">CW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.CW" title="Link to this definition"></a></dt>
-<dd><p>CW Film wall friction factor [-]</p>
-<p>Based on selected <a class="reference internal" href="Inputs.html#Inputs.Model.THINFILMFRIC" title="Inputs.Model.THINFILMFRIC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THINFILMFRIC</span></code></a> model.</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.CW" title="Solvers.AbstractFilm.CW"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CW()</span></code></a> Wall friction factor</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FWALL">
 <span class="sig-name descname"><span class="pre">FWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FWALL" title="Link to this definition"></a></dt>
-<dd><p>FWALL Film wall shear stress [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FWALL" title="Solvers.AbstractFilm.FWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FWALL()</span></code></a> Film wall shear stress</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UWALL">
 <span class="sig-name descname"><span class="pre">UWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UWALL" title="Link to this definition"></a></dt>
-<dd><p>UWALL Film wall friction velocity [m/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UWALL" title="Solvers.AbstractFilm.UWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UWALL()</span></code></a> [m/s] Film wall velocity</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.YPLUS2THICK">
 <span class="sig-name descname"><span class="pre">YPLUS2THICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">yplus</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.YPLUS2THICK" title="Link to this definition"></a></dt>
-<dd><p>YPLUS2THICK Thickness based on wall unit value [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.YPLUS2THICK" title="Solvers.AbstractFilm.YPLUS2THICK"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">YPLUS2THICK()</span></code></a> Calculate thickness from wall unit value</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.CV">
 <span class="sig-name descname"><span class="pre">CV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.CV" title="Link to this definition"></a></dt>
-<dd><p>CV Film/vapor interfacial friction factor [-]</p>
-<p>Based on selected <a class="reference internal" href="Inputs.html#Inputs.Model.VAPORFRIC" title="Inputs.Model.VAPORFRIC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.VAPORFRIC</span></code></a> model.</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.CV" title="Solvers.AbstractFilm.CV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CV()</span></code></a> Film/vapor interfacial friction factor</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FVAPOR">
 <span class="sig-name descname"><span class="pre">FVAPOR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FVAPOR" title="Link to this definition"></a></dt>
-<dd><p>FVAPOR Vapor shear stress on film [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FVAPOR" title="Solvers.AbstractFilm.FVAPOR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FVAPOR()</span></code></a> Film vapor shear stress</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FBUOY">
 <span class="sig-name descname"><span class="pre">FBUOY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FBUOY" title="Link to this definition"></a></dt>
-<dd><p>FBUOY Film buoyancy force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FBUOY" title="Solvers.AbstractFilm.FBUOY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FBUOY()</span></code></a> Film buoyancy</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FGRAV">
 <span class="sig-name descname"><span class="pre">FGRAV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FGRAV" title="Link to this definition"></a></dt>
-<dd><p>FGRAV Gravitational force on film [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FGRAV" title="Solvers.AbstractFilm.FGRAV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FGRAV()</span></code></a> Film gravity</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FDEP">
 <span class="sig-name descname"><span class="pre">FDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FDEP" title="Link to this definition"></a></dt>
-<dd><p>FDEP Drop deposition shear force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FDEP" title="Solvers.AbstractFilm.FDEP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FDEP()</span></code></a> Drop deposition shear</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.FTOT">
 <span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.FTOT" title="Link to this definition"></a></dt>
-<dd><p>FTOT Total film forces per unit wall area [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.FTOT" title="Solvers.AbstractFilm.FTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FTOT()</span></code></a> Total</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UALGEBR">
 <span class="sig-name descname"><span class="pre">UALGEBR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UALGEBR" title="Link to this definition"></a></dt>
-<dd><p>UALGEBR Film velocity using simple algebraic model [m/s]</p>
-<p>From <span id="id1">Adamsson and Le Corre [<a class="reference internal" href="../Guides/references.html#id13" title="C. Adamsson and J.M. Le Corre. Transient dryout prediction using a computationally efficient method for sub-channel film-flow analysis. Nuclear Engineering and Design, 280:316-325, 2014. URL: https://www.sciencedirect.com/science/article/pii/S0029549314005081, doi:https://doi.org/10.1016/j.nucengdes.2014.09.012.">2014</a>]</span> (eq. 21 or 23).</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UALGEBR" title="Solvers.AbstractFilm.UALGEBR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UALGEBR()</span></code></a> Film velocity based on simple algebraic model</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UEQUILS">
 <span class="sig-name descname"><span class="pre">UEQUILS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UEQUILS" title="Link to this definition"></a></dt>
-<dd><p>UEQUILS Film velocity assuming equilibrium between wall and vapor
-shear  [m/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UEQUILS" title="Solvers.AbstractFilm.UEQUILS"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UEQUILS()</span></code></a> Film velocity based on simple equilibrium model (Fwall + Fvapor = 0)</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.UEQUIL">
 <span class="sig-name descname"><span class="pre">UEQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.UEQUIL" title="Link to this definition"></a></dt>
-<dd><p>UEQUIL Film velocity using full force equilibrium model [m/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.AbstractFilm.UEQUIL" title="Solvers.AbstractFilm.UEQUIL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">UEQUIL()</span></code></a> Film velocity based on complete equilibrium model (Ftot = 0)</p>
 </dd></dl>
 
 </dd>
@@ -302,53 +248,44 @@ shear  [m/s]</p>
 <dt class="sig sig-object mat" id="Solvers.AbstractField">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractField</span></span><a class="headerlink" href="#Solvers.AbstractField" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">matlab.mixin.Copyable</span></code></p>
-<p>ABSTRACTFIELD Base class for field definitions across solvers</p>
-<p>This abstract class defines shared properties and methods for all field-type
-classes used in solver implementations. It provides mechanisms for transient
-data extraction, plotting, memoization, struct conversion, and property copying.</p>
+<p>ABSTRACTFIELD Summary of this class goes here</p>
+<p>Detailed explanation goes here</p>
 <div class="members docutils container">
 <dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.AbstractField">
-<span class="sig-name descname"><span class="pre">AbstractField</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.AbstractField" title="Link to this definition"></a></dt>
-<dd><p>ABSTRACTFIELD Constructor for AbstractField class</p>
-</dd></dl>
-
-</dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.NZ">
 <span class="sig-name descname"><span class="pre">NZ</span></span><a class="headerlink" href="#Solvers.AbstractField.NZ" title="Link to this definition"></a></dt>
-<dd><p>Number of axial steps [-]</p>
+<dd><p>[-] Number of axial steps</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.NTIME">
 <span class="sig-name descname"><span class="pre">NTIME</span></span><a class="headerlink" href="#Solvers.AbstractField.NTIME" title="Link to this definition"></a></dt>
-<dd><p>Number of time steps [-]</p>
+<dd><p>[-] Number of time steps</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.TIME">
 <span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Solvers.AbstractField.TIME" title="Link to this definition"></a></dt>
-<dd><p>Time series [s]</p>
+<dd><p>[s] Time series</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.DT">
 <span class="sig-name descname"><span class="pre">DT</span></span><a class="headerlink" href="#Solvers.AbstractField.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s]</p>
+<dd><p>[s] Time step size</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.TIDX">
 <span class="sig-name descname"><span class="pre">TIDX</span></span><a class="headerlink" href="#Solvers.AbstractField.TIDX" title="Link to this definition"></a></dt>
-<dd><p>Time step index [-]</p>
+<dd><p>[-] Time step index</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.Z">
 <span class="sig-name descname"><span class="pre">Z</span></span><a class="headerlink" href="#Solvers.AbstractField.Z" title="Link to this definition"></a></dt>
-<dd><p>Elevation [m]</p>
+<dd><p>[m] Elevation</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -357,42 +294,35 @@ data extraction, plotting, memoization, struct conversion, and property copying.
 <dd><p>Iteration properties</p>
 </dd></dl>
 
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.flowProperties">
+<span class="sig-name descname"><span class="pre">flowProperties</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'W','U','H'}</span></em><a class="headerlink" href="#Solvers.AbstractField.flowProperties" title="Link to this definition"></a></dt>
+<dd><p>Flow properties used for copying</p>
+</dd></dl>
+
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.transient">
-<span class="sig-name descname"><span class="pre">transient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.transient" title="Link to this definition"></a></dt>
-<dd><p>TRANSIENT Extracts transient distribution array for a given parameter</p>
-<p>Supports wall-wise and axial/time slicing with optional
-subobject access.</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.plotzt">
-<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">ylabelText</span></em>, <em class="sig-param"><span class="pre">ylabelUnit</span></em>, <em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">opt</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">annular</span></em>, <em class="sig-param"><span class="pre">time</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.plotzt" title="Link to this definition"></a></dt>
-<dd><p>PLOTZT 2D Generates a 2D space-time distribution plot for a given parameter</p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.memoizeFunction">
 <span class="sig-name descname"><span class="pre">memoizeFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">methodStr</span></em>, <em class="sig-param"><span class="pre">methodHandle</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.memoizeFunction" title="Link to this definition"></a></dt>
-<dd><p>MEMOIZEDMETHOD Registers and retrieves memoized function handles</p>
-<p>Avoids redundant computation by caching results.</p>
-<p>Adapted from <a class="reference external" href="https://stackoverflow.com/a/75037451" rel="noreferrer" target="_blank">https://stackoverflow.com/a/75037451</a></p>
+<dd><p>MEMOIZEDMETHOD Implement a mechanism for registering memoizeable
+functions</p>
+<blockquote>
+<div><p>Adapted from <a class="reference external" href="https://stackoverflow.com/a/75037451" rel="noreferrer" target="_blank">https://stackoverflow.com/a/75037451</a></p>
+</div></blockquote>
+<p>For the first call with a particular method, create and
+memoize a function handle view of the method</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.struct">
 <span class="sig-name descname"><span class="pre">struct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.struct" title="Link to this definition"></a></dt>
-<dd><p>STRUCT Converts field object to a structured array</p>
-<p>Includes TIME, ITR, and flow properties.</p>
+<dd><p>STRUCT Converter to <a class="reference internal" href="#Solvers.AbstractField.struct" title="Solvers.AbstractField.struct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">struct()</span></code></a></p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractField.copyFlowProperties">
 <span class="sig-name descname"><span class="pre">copyFlowProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">srcObj</span></em>, <em class="sig-param"><span class="pre">targetObj</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.copyFlowProperties" title="Link to this definition"></a></dt>
-<dd><p>COPYFLOWPROPERTIES Copies flow properties from source to target field object</p>
-<p>Supports full or partial copying depending on ‘opts.all’
-flag.</p>
+<dd><p>COPYFLOWPROPERTIES</p>
 </dd></dl>
 
 </dd>
@@ -404,79 +334,42 @@ flag.</p>
 <dt class="sig sig-object mat" id="Solvers.AbstractPhase">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractPhase</span></span><a class="headerlink" href="#Solvers.AbstractPhase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>ABSTRACTPHASE Base class for phase definitions across solvers</p>
-<p>This abstract class serves as a common interface for all phase-type
-classes used in solver implementations. It is intended to provide a
-foundation for shared behavior and structure.</p>
+<p>ABSTRACTPHASE Summary of this class goes here
+Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>ABSTRACTSOLVER Defines the base interface and shared functionality for all solver classes.</p>
-<p>Subclasses must implement the abstract methods and properties defined here.</p>
+<p>ABSTRACTSOLVER Summary of this class goes here
+Detailed explanation goes here</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.AbstractSolver">
 <span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.AbstractSolver" title="Link to this definition"></a></dt>
-<dd><p>ABSTRACTSOLVER Constructor for AbstractSolver</p>
-<p>Initializes the solver with a given <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a>
-and applies solver-specific properties.</p>
+<dd><p>ABSTRACTSOLVER Constructor</p>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.inputSet">
-<span class="sig-name descname"><span class="pre">inputSet</span></span><a class="headerlink" href="#Solvers.AbstractSolver.inputSet" title="Link to this definition"></a></dt>
-<dd><p>Input configuration object of type <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a></p>
-</dd></dl>
-
-<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.STATE">
 <span class="sig-name descname"><span class="pre">STATE</span></span><a class="headerlink" href="#Solvers.AbstractSolver.STATE" title="Link to this definition"></a></dt>
-<dd><p>Solver state, defined by <a class="reference internal" href="#Solvers.SolverState" title="Solvers.SolverState"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.SolverState</span></code></a> enumeration</p>
+<dd><p>Solver state defined by SolverState enum</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.log">
 <span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">solver</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.log" title="Link to this definition"></a></dt>
-<dd><p>LOG Log messages to the session log</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.solverName">
-<span class="sig-name descname"><span class="pre">solverName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">solver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.solverName" title="Link to this definition"></a></dt>
-<dd><p>SOLVERNAME Returns the name of the solver</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractSolver.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">solver</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.save" title="Link to this definition"></a></dt>
-<dd><p>SAVE Save the solver object to a .mat file with a customizable name.</p>
-<p>Inputs:</p>
-<ul class="simple">
-<li><p>solver        — The solver object to be saved.</p></li>
-<li><p>opts.name     — (string) Name of the variable under which to save the solver. Default set to solver name</p></li>
-<li><p>opts.showpath — (logical) Whether to display the save path. Default: true.</p></li>
-</ul>
+<dd><p>LOG Log events</p>
 </dd></dl>
 
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver.CreateITR">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">CreateITR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">NZ</span></em>, <em class="sig-param"><span class="pre">ITRFields</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver.CreateITR" title="Link to this definition"></a></dt>
-<dd><p>CreateITR Create a structure for inner iteration values</p>
-<p>Inputs:</p>
-<ul class="simple">
-<li><p>NZ        — Number of axial nodes (scalar)</p></li>
-<li><p>ITRFields — (string array) Names of fields to include in the struct</p></li>
-</ul>
-<p>Output:</p>
-<ul class="simple">
-<li><p>ITR       — Struct with fields initialized to zero vectors of length NZ</p></li>
-</ul>
+<dd><p>Create inner iteration value struct</p>
 </dd></dl>
 
 </dd>
@@ -486,153 +379,80 @@ and applies solver-specific properties.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>SOLVERPLOTTER Framework for generating solver plots</p>
-<p>This class provides a flexible plotting interface for visualizing solver results.
-It supports tiled layouts, animated series, and customizable plot styles.
-It also includes UI controls for animation playback and export.</p>
+<p>SOLVERPLOTTER Framework for generating solver plots
+Detailed explanation goes here</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.SolverPlotter">
-<span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.SolverPlotter" title="Link to this definition"></a></dt>
-<dd><p>SOLVERPLOTTER Constructor method to initialize plotter objects and layout</p>
+<span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.SolverPlotter" title="Link to this definition"></a></dt>
+<dd><p>SOLVERPLOTTER Construct an instance of this class
+Detailed explanation goes here</p>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.FontSize">
-<span class="sig-name descname"><span class="pre">FontSize</span></span><em class="property"> <span class="pre">=</span> <span class="pre">13</span></em><a class="headerlink" href="#Solvers.SolverPlotter.FontSize" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">FontSize</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#Solvers.SolverPlotter.FontSize" title="Link to this definition"></a></dt>
 <dd><p>Font size of text in plots</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.Title">
 <span class="sig-name descname"><span class="pre">Title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Title" title="Link to this definition"></a></dt>
-<dd><p>Title of the figure</p>
+<dd><p>Figure title</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.WallIdx">
 <span class="sig-name descname"><span class="pre">WallIdx</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.SolverPlotter.WallIdx" title="Link to this definition"></a></dt>
-<dd><p>Wall index for multi-wall simulations</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Zs">
-<span class="sig-name descname"><span class="pre">Zs</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Zs" title="Link to this definition"></a></dt>
-<dd><p>Axial positions [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Ts">
-<span class="sig-name descname"><span class="pre">Ts</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Ts" title="Link to this definition"></a></dt>
-<dd><p>Time series [s]</p>
+<dd><p>Wall index</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.Grid">
 <span class="sig-name descname"><span class="pre">Grid</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'on'</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Grid" title="Link to this definition"></a></dt>
-<dd><p>Grid display option</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.currentAhIdx">
-<span class="sig-name descname"><span class="pre">currentAhIdx</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.SolverPlotter.currentAhIdx" title="Link to this definition"></a></dt>
-<dd><p>Index of current active axes</p>
+<dd><p><a class="reference internal" href="#Solvers.SolverPlotter.Grid" title="Solvers.SolverPlotter.Grid"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Grid</span></code></a> option</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.addTile">
-<span class="sig-name descname"><span class="pre">addTile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.addTile" title="Link to this definition"></a></dt>
-<dd><p>ADDTILE Method to add a new tile to the layout or retrieve existing one by title</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.newTile">
-<span class="sig-name descname"><span class="pre">newTile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.newTile" title="Link to this definition"></a></dt>
-<dd><p>NEWTILE Method to create a new tile with labels and formatting</p>
-</dd></dl>
-
-<dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotz">
 <span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">YData</span></em>, <em class="sig-param"><span class="pre">fieldName</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotz" title="Link to this definition"></a></dt>
-<dd><p>PLOTZ Method to plot spatial or temporal data (YData) on the current axes</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotOAF">
-<span class="sig-name descname"><span class="pre">plotOAF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">oafZ</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotOAF" title="Link to this definition"></a></dt>
-<dd><p>PLOTOAF Method to plot onset of annular flow boundary indicator</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotK">
-<span class="sig-name descname"><span class="pre">plotK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">klocZ</span></em>, <em class="sig-param"><span class="pre">ah</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotK" title="Link to this definition"></a></dt>
-<dd><p>PLOTK Method to plot obstruction elevation indicators</p>
+<dd><p>PLOTZ Summary of this method goes here
+Detailed explanation goes here</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.gca">
 <span class="sig-name descname"><span class="pre">gca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.gca" title="Link to this definition"></a></dt>
-<dd><p>GCA Get Method to retrieve current axes handle</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.gcf">
-<span class="sig-name descname"><span class="pre">gcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.gcf" title="Link to this definition"></a></dt>
-<dd><p>GCF Method to retrieve current plotter handle</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.xlim">
-<span class="sig-name descname"><span class="pre">xlim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.xlim" title="Link to this definition"></a></dt>
-<dd><p>xlim Method to get or set x-axis limits for current axes</p>
+<dd><p>Loop through plotters</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.ylim">
 <span class="sig-name descname"><span class="pre">ylim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.ylim" title="Link to this definition"></a></dt>
-<dd><p>YLIM Method to get or set y-axis limits for current axes</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.ylabels">
-<span class="sig-name descname"><span class="pre">ylabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">labels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.ylabels" title="Link to this definition"></a></dt>
-<dd><p>YLABEL Method to set y-axis tick labels</p>
+<dd><p>Loop through plotters</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.setZs">
 <span class="sig-name descname"><span class="pre">setZs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">Zs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.setZs" title="Link to this definition"></a></dt>
-<dd><p>SETZS Method to assign the parameter(space or time) on the plotter x-axis</p>
+<dd><p>Loop through plotters</p>
 </dd></dl>
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.legend">
 <span class="sig-name descname"><span class="pre">legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.legend" title="Link to this definition"></a></dt>
-<dd><p>legend Method to add legend to current axes</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.resizeFigure">
-<span class="sig-name descname"><span class="pre">resizeFigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">scaleFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.resizeFigure" title="Link to this definition"></a></dt>
-<dd><p>resizeFigure Resizes the figure based on tiledlayout rows/columns
-Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
-<p>Usage:</p>
-<ul class="simple">
-<li><p>plotters.resizeFigure()    — Default scaleFactor = 1</p></li>
-<li><p>plotters.resizeFigure(1.2) — Tiles 20% larger</p></li>
-<li><p>plotters.resizeFigure(0.8) — Tiles 20% smaller</p></li>
-</ul>
+<dd><p>Loop through plotters</p>
 </dd></dl>
 
 <dl class="mat staticmethod">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.fieldName2plotStyle">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fieldName2plotStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fieldName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.fieldName2plotStyle" title="Link to this definition"></a></dt>
-<dd><p>FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)</p>
+<dd><p>Default colors</p>
 </dd></dl>
 
 </dd>
@@ -644,18 +464,7 @@ Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
 <dt class="sig sig-object mat" id="Solvers.SolverState">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverState</span></span><a class="headerlink" href="#Solvers.SolverState" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
-<p>SOLVERSTATE Enumeration of solver execution states</p>
-<p>This enumeration defines the possible states a solver can be in
-during or after execution. It is used to track solver execution and
-convergence status.</p>
-<p>States:</p>
-<ul class="simple">
-<li><p>UNSOLVED                — Solver has not yet run</p></li>
-<li><p>SOLVEDCONVERGED         — Solver completed and converged successfully</p></li>
-<li><p>SOLVEDNOTCONVERGED      — Solver completed but did not converge</p></li>
-<li><p>INITIALSTEPCONVERGED    — Initial steady-state step completed and converged</p></li>
-<li><p>INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge</p></li>
-</ul>
+<p>SOLVERSTATE Enumeration class of possible solver states</p>
 </dd></dl>
 
 </section>
@@ -665,13 +474,13 @@ convergence status.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Session.html" class="btn btn-neutral float-left" title="Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Solvers-Mixture.html" class="btn btn-neutral float-right" title="Mixture solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Solvers-FourField.html" class="btn btn-neutral float-right" title="FourField Solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

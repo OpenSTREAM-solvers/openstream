@@ -4,13 +4,13 @@ Getting started
 Prerequisites and installation
 ------------------------------
 
-**OpenSTREAM** is a MATLAB program for simulating one-dimensionnal two-phase flows.
-The Python version of
-`CoolProp <http://www.coolprop.org>`__ is
+OpenSTREAM is a MATLAB program for simulating two-phase flow
+behaviors. The Python version of
+`CoolProp <http://www.coolprop.org/index.html#what-is-coolprop>`__ is
 used for calculating the fluid properties.
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
 MATLAB interface that interacts with CoolProp through Python. Both
-OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
+OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
 (cloning) of these programs will be our first step.
 
 Install using Git and Github
@@ -27,7 +27,7 @@ Install using Git and Github
 
    -  **Command line interface**
 
-      -  Clone (make a copy of) the repository using:
+      -  Clone (make a copy of) the **repo**\ sitory using:
          ``git clone --recursive git@github.com:OpenSTREAM-solvers/openstream.git``
          (`SSH
          authentication <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>`__)
@@ -56,9 +56,9 @@ Install using Git and Github
 MATLAB-Python compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before using OpenSTREAM, we need to make sure Python with the appropriate
-version is installed, and MATLAB knows the location of the Python
-executable. The following instructions are from the
+Before using the OpenSTREAM, we need to make sure Python with the
+appropriate version is installed, and MATLAB knows the location of the
+Python executable. The following instructions are from the
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_ repo.
 
 1. Determine which versions of Python are compatible with your version
@@ -119,4 +119,4 @@ Next steps
 
 Congrats! Hopefully, at this point, you have successfully made a copy of
 this repo and installed the required programs. Next, let’s run the
-sample script to make sure everything is working properly.
+Tutorial script to make sure everything is working properly.

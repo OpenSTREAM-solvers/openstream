@@ -12,7 +12,6 @@
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -24,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Run sample script" href="runSampleScript.html" />
-    <link rel="prev" title="OpenSTREAM – Two-Phase Flow Solvers" href="../index.html" /> 
+    <link rel="prev" title="OpenSTREAM" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +36,6 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
-              <img src="../_static/logo-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -60,26 +58,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="runSampleScript.html">Run sample script</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/theory/index.html">Theory overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global reference list</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Code packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/Inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/InputEnums.html">InputEnums</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/Session.html">Session</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/Solvers.html">Solvers</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">External packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">External Packages</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
 </ul>
@@ -87,8 +73,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
 </ul>
 
@@ -120,13 +105,13 @@
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
 <section id="prerequisites-and-installation">
 <h2>Prerequisites and installation<a class="headerlink" href="#prerequisites-and-installation" title="Link to this heading"></a></h2>
-<p><strong>OpenSTREAM</strong> is a MATLAB program for simulating one-dimensionnal two-phase flows.
-The Python version of
-<a class="reference external" href="http://www.coolprop.org" rel="noreferrer" target="_blank">CoolProp</a> is
+<p>OpenSTREAM is a MATLAB program for simulating two-phase flow
+behaviors. The Python version of
+<a class="reference external" href="http://www.coolprop.org/index.html#what-is-coolprop" rel="noreferrer" target="_blank">CoolProp</a> is
 used for calculating the fluid properties.
 <a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a> is a
 MATLAB interface that interacts with CoolProp through Python. Both
-OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
+OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
 (cloning) of these programs will be our first step.</p>
 <section id="install-using-git-and-github">
 <h3>Install using Git and Github<a class="headerlink" href="#install-using-git-and-github" title="Link to this heading"></a></h3>
@@ -141,7 +126,7 @@ chose to use the:</p>
 <ul>
 <li><p><strong>Command line interface</strong></p>
 <ul>
-<li><p>Clone (make a copy of) the repository using:
+<li><p>Clone (make a copy of) the <strong>repo</strong>sitory using:
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">git&#64;github.com:OpenSTREAM-solvers/openstream.git</span></code>
 (<a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" rel="noreferrer" target="_blank">SSH
 authentication</a>)</p>
@@ -173,9 +158,9 @@ linked above.</p></li>
 </section>
 <section id="matlab-python-compatibility">
 <h3>MATLAB-Python compatibility<a class="headerlink" href="#matlab-python-compatibility" title="Link to this heading"></a></h3>
-<p>Before using OpenSTREAM, we need to make sure Python with the appropriate
-version is installed, and MATLAB knows the location of the Python
-executable. The following instructions are from the
+<p>Before using the OpenSTREAM, we need to make sure Python with the
+appropriate version is installed, and MATLAB knows the location of the
+Python executable. The following instructions are from the
 <a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a> repo.</p>
 <ol class="arabic simple">
 <li><p>Determine which versions of Python are compatible with your version
@@ -245,7 +230,7 @@ replacing <code class="docutils literal notranslate"><span class="pre">python3</
 <h3>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h3>
 <p>Congrats! Hopefully, at this point, you have successfully made a copy of
 this repo and installed the required programs. Next, let’s run the
-sample script to make sure everything is working properly.</p>
+Tutorial script to make sure everything is working properly.</p>
 </section>
 </section>
 </section>
@@ -254,14 +239,14 @@ sample script to make sure everything is working properly.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="OpenSTREAM – Two-Phase Flow Solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="OpenSTREAM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="runSampleScript.html" class="btn btn-neutral float-right" title="Run sample script" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

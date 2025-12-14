@@ -1,6 +1,6 @@
-====================================
- OpenSTREAM – Two-Phase Flow Solvers
-====================================
+===============
+ OpenSTREAM
+===============
 
 .. toctree::
    :maxdepth: 3
@@ -15,38 +15,19 @@
    :maxdepth: 3
    :glob:
    :hidden:
-   :caption: Guides
-
-   /Guides/theory/index
-   /Guides/tutorials
-   /Guides/references
-
-.. toctree::
-   :maxdepth: 3
-   :glob:
-   :hidden:
-   :caption: Applications
-
-   /Applications/database
-   /Applications/projects
-   /Applications/publications
-
-.. toctree::
-   :maxdepth: 3
-   :glob:
-   :hidden:
-   :caption: Code packages
+   :caption: Packages
 
    /Packages/Inputs
    /Packages/InputEnums
    /Packages/Session
    /Packages/Solvers
 
+
 .. toctree::
    :maxdepth: 3
    :glob:
    :hidden:
-   :caption: External packages
+   :caption: External Packages
 
    /ExternalPackages/CoolPropWrapper
 
@@ -58,17 +39,15 @@
 
    /Community/faq
    /Community/support
-   /Community/contribute_code
-   /Community/contribute_documentation
+   /Community/contribute
    /Community/authors
 
 .. include:: index_content.rst
-
-----
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* `Module Index <mat-modindex.html>`_
+* :ref:`modindex`
 * :ref:`search`
+* `MATLAB Module Index <mat-modindex.html>`_

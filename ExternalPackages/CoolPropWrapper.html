@@ -12,7 +12,6 @@
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -24,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="OpenSTREAM FAQ" href="../Community/faq.html" />
-    <link rel="prev" title="Four-field solver" href="../Packages/Solvers-FourField.html" /> 
+    <link rel="prev" title="ThreeField Solver" href="../Packages/Solvers-ThreeField.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +36,6 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
-              <img src="../_static/logo-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,26 +50,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/theory/index.html">Theory overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global reference list</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Code packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">Packages</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/Inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/InputEnums.html">InputEnums</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/Session.html">Session</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Packages/Solvers.html">Solvers</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">External packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">External Packages</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CoolPropWrapper</a></li>
 </ul>
@@ -79,8 +65,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
 </ul>
 
@@ -108,23 +93,192 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-CoolPropWrapper">
-<span id="coolpropwrapper"></span><h1>CoolPropWrapper<a class="headerlink" href="#module-CoolPropWrapper" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-CoolPropWrapper" title="CoolPropWrapper"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">CoolPropWrapper</span></code></a> package is designed to serve as a MATLAB interface to the CoolProp thermophysical property library, which is a Python-based library for calculating fluid properties.</p>
+  <section id="coolpropwrapper">
+<h1>CoolPropWrapper<a class="headerlink" href="#coolpropwrapper" title="Link to this heading"></a></h1>
+<dl class="mat class" id="module-CoolPropWrapper">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">CoolPropWrapper.</span></span><span class="sig-name descname"><span class="pre">CoolPropWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>CoolPropWrapper Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.CoolPropWrapper">
+<span class="sig-name descname"><span class="pre">CoolPropWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.CoolPropWrapper" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.CoolPropWrapper" title="CoolPropWrapper.CoolPropWrapper.CoolPropWrapper"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CoolPropWrapper()</span></code></a> Construct an instance of this class
+fluidName defaults to R245fa if not specified</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.CoolPropHandle">
+<span class="sig-name descname"><span class="pre">CoolPropHandle</span></span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.CoolPropHandle" title="Link to this definition"></a></dt>
+<dd><p>ie. py.CoolProp</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.CoolProp">
+<span class="sig-name descname"><span class="pre">CoolProp</span></span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.CoolProp" title="Link to this definition"></a></dt>
+<dd><p>ie. py.CoolProp.AbstactState(…)</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.setFluid">
+<span class="sig-name descname"><span class="pre">setFluid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fluidName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.setFluid" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.setFluid" title="CoolPropWrapper.CoolPropWrapper.setFluid"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">setFluid()</span></code></a> Change fluid</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.setSpecifyPhase">
+<span class="sig-name descname"><span class="pre">setSpecifyPhase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">phase</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.setSpecifyPhase" title="Link to this definition"></a></dt>
+<dd><p>setSpecfiyPhase impose phase</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.temperature">
+<span class="sig-name descname"><span class="pre">temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.temperature" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.temperature" title="CoolPropWrapper.CoolPropWrapper.temperature"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">temperature()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.temperature" title="CoolPropWrapper.CoolPropWrapper.temperature"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">temperature()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.pressure">
+<span class="sig-name descname"><span class="pre">pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.pressure" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.pressure" title="CoolPropWrapper.CoolPropWrapper.pressure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">pressure()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.pressure" title="CoolPropWrapper.CoolPropWrapper.pressure"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">pressure()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.enthalpy">
+<span class="sig-name descname"><span class="pre">enthalpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.enthalpy" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.enthalpy" title="CoolPropWrapper.CoolPropWrapper.enthalpy"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">enthalpy()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.enthalpy" title="CoolPropWrapper.CoolPropWrapper.enthalpy"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">enthalpy()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.entropy">
+<span class="sig-name descname"><span class="pre">entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.entropy" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.entropy" title="CoolPropWrapper.CoolPropWrapper.entropy"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">entropy()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.entropy" title="CoolPropWrapper.CoolPropWrapper.entropy"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">entropy()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.density">
+<span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.density" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.density" title="CoolPropWrapper.CoolPropWrapper.density"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">density()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.density" title="CoolPropWrapper.CoolPropWrapper.density"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">density()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.conductivity">
+<span class="sig-name descname"><span class="pre">conductivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.conductivity" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.conductivity" title="CoolPropWrapper.CoolPropWrapper.conductivity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">conductivity()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.conductivity" title="CoolPropWrapper.CoolPropWrapper.conductivity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">conductivity()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.viscosity">
+<span class="sig-name descname"><span class="pre">viscosity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.viscosity" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.viscosity" title="CoolPropWrapper.CoolPropWrapper.viscosity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">viscosity()</span></code></a> calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.viscosity" title="CoolPropWrapper.CoolPropWrapper.viscosity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">viscosity()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.cp">
+<span class="sig-name descname"><span class="pre">cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.cp" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.cp" title="CoolPropWrapper.CoolPropWrapper.cp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">cp()</span></code></a> returns the constant pressure specific heat
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.cv">
+<span class="sig-name descname"><span class="pre">cv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.cv" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.cv" title="CoolPropWrapper.CoolPropWrapper.cv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">cv()</span></code></a> returns the mass constant volume specific heat
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.prandtl">
+<span class="sig-name descname"><span class="pre">prandtl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.prandtl" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.prandtl" title="CoolPropWrapper.CoolPropWrapper.prandtl"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">prandtl()</span></code></a> returns the Prandtl number
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.surfaceTension">
+<span class="sig-name descname"><span class="pre">surfaceTension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.surfaceTension" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.surfaceTension" title="CoolPropWrapper.CoolPropWrapper.surfaceTension"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">surfaceTension()</span></code></a> returns the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.surfaceTension" title="CoolPropWrapper.CoolPropWrapper.surfaceTension"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">surfaceTension()</span></code></a>
+TODO</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.phase">
+<span class="sig-name descname"><span class="pre">phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.phase" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.phase" title="CoolPropWrapper.CoolPropWrapper.phase"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">phase()</span></code></a> returns the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.phase" title="CoolPropWrapper.CoolPropWrapper.phase"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">phase()</span></code></a>
+TODO: convert enum to string</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapper.quality">
+<span class="sig-name descname"><span class="pre">quality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">Atype</span></em>, <em class="sig-param"><span class="pre">A</span></em>, <em class="sig-param"><span class="pre">Btype</span></em>, <em class="sig-param"><span class="pre">B</span></em><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapper.quality" title="Link to this definition"></a></dt>
+<dd><p>qualityPT calculates the <a class="reference internal" href="#CoolPropWrapper.CoolPropWrapper.quality" title="CoolPropWrapper.CoolPropWrapper.quality"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">quality()</span></code></a> given P and T
+TODO, doesn’t necessarily work?</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapperHA">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">CoolPropWrapper.</span></span><span class="sig-name descname"><span class="pre">CoolPropWrapperHA</span></span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapperHA" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>CoolPropWrapperHA Summary of this class goes here
+Detailed explanation goes here</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapperHA.CoolPropWrapperHA">
+<span class="sig-name descname"><span class="pre">CoolPropWrapperHA</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapperHA.CoolPropWrapperHA" title="Link to this definition"></a></dt>
+<dd><p><a class="reference internal" href="#CoolPropWrapper.CoolPropWrapperHA.CoolPropWrapperHA" title="CoolPropWrapper.CoolPropWrapperHA.CoolPropWrapperHA"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">CoolPropWrapperHA()</span></code></a> Construct an instance of this class
+Detailed explanation goes here</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapperHA.CoolPropHandle">
+<span class="sig-name descname"><span class="pre">CoolPropHandle</span></span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapperHA.CoolPropHandle" title="Link to this definition"></a></dt>
+<dd><p>ie. py.CoolProp</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="CoolPropWrapper.CoolPropWrapperHA.CoolPropHA">
+<span class="sig-name descname"><span class="pre">CoolPropHA</span></span><a class="headerlink" href="#CoolPropWrapper.CoolPropWrapperHA.CoolPropHA" title="Link to this definition"></a></dt>
+<dd><p>ie. py.CoolProp.AbstactState(…)</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../Packages/Solvers-FourField.html" class="btn btn-neutral float-left" title="Four-field solver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Packages/Solvers-ThreeField.html" class="btn btn-neutral float-left" title="ThreeField Solver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../Community/faq.html" class="btn btn-neutral float-right" title="OpenSTREAM FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
