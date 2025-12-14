@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two-fluid model &mdash; OpenSTREAM  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Three-field model" href="ThreeField_Model_Theory.html" />
+    <link rel="prev" title="Mixture model" href="Mixture_Model_Theory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenSTREAM
+              <img src="../../_static/logo-transparent.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Usage/gettingStarted.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../Usage/gettingStarted.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Usage/runSampleScript.html">Run sample script</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html#homogeneous-relaxation-model">Homogeneous relaxation model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html#closure-relations">Closure relations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Two-fluid model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#closure-relations">Closure relations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html#closure-relations">Closure relations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ThreeField_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html#closure-relations">Closure relations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="FourField_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">Global reference list</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Applications/publications.html">Publications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Applications/publications.html#overviews">Overviews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Applications/publications.html#two-fluid-model">Two-fluid model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Applications/publications.html#three-field-model">Three-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Applications/publications.html#four-field-model">Four-field model</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/Inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/InputEnums.html">InputEnums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/Session.html">Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Packages/Solvers.html">Solver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Packages/Solvers-FourField.html">Four-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Packages/Solvers-Mixture.html">Mixture solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Packages/Solvers-ThreeField.html">Three-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html">Two-fluid solver</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/contribute_code.html">Contribute to the code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_code.html#coding-standards">Coding Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_code.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_code.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_code.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_code.html#communication">Communication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_documentation.html#setup-sublime-text-as-text-editor">Setup Sublime Text as text editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_documentation.html#configure-python-and-sphinx">Configure Python and Sphinx</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../Community/contribute_documentation.html#setup-python">Setup Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../Community/contribute_documentation.html#install-sphinx-and-dependencies">Install Sphinx and dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_documentation.html#start-writing">Start writing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../Community/contribute_documentation.html#full-build">Full build</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Community/authors.html">Authors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/authors.html#maintainers">Maintainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Community/authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenSTREAM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory overview</a></li>
+      <li class="breadcrumb-item active">Two-fluid model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/Guides/theory/TwoFluid_Model_Theory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="two-fluid-model">
+<h1>Two-fluid model<a class="headerlink" href="#two-fluid-model" title="Link to this heading"></a></h1>
+<p>The two-Fluid simulation framework in <strong>OpenSTREAM</strong> provides a detailed representation of multiphase flow by solving six conservation equations—mass, momentum, and energy for both liquid and vapor phases. This formulation enables the simulation of key non-equilibrium effects and is foundational in nuclear reactor thermal-hydraulic code systems.</p>
+<p>The two-fluid  model serves several key roles within OpenSTREAM:</p>
+<ul class="simple">
+<li><p><strong>Full separate phase treatment</strong>: Liquid and vapor are modeled as distinct continua, each with its own set of governing equations.</p></li>
+<li><p><strong>Non-equilibrium dynamics</strong>: Captures both thermal and hydrodynamic non-equilibrium, essential for accurate transient and boiling flow simulations.</p></li>
+<li><p><strong>Industry relevance</strong>: Commonly used in reactor system codes to simulate phenomena such as evaporation, condensation, and phase separation.</p></li>
+</ul>
+<p>By explicitly modeling both liquid and vapor phases, the two-fluid approach preserves critical non-equilibrium dynamics while offering a flexible foundation for detailed model development and advanced thermal-hydraulic analysis.</p>
+<p>An overview of the two-fluid model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in <span id="id1">Le Corre <em>et al.</em> [<a class="reference internal" href="../../index_content.html#id4" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. Openstream: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025</a>]</span> and <span id="id2">Walter [<a class="reference internal" href="../references.html#id8" title="Elisabeth K. Walter. Derivation and open source implementation of a simplified one-dimensional two-fluid model. Master's thesis, KTH Royal Institute of Technology, Stockholm, Sweden, 2024. URL: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1888131.">2024</a>]</span>.</p>
+<section id="governing-equations">
+<h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
+<p><strong>1. Mass conservation</strong></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_l}{u_l}) + \frac{\partial W_l}{\partial z} = -A a_i (\Gamma - \Lambda) - \sum \Pi_{wall}^n \Gamma_{wb}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_v}{u_v}) + \frac{\partial W_v}{\partial z} = A a_i (\Gamma - \Lambda) + \sum \Pi_{wall}^n \Gamma_{wb}^n\)</span></p>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(W_l\)</span>, <span class="math notranslate nohighlight">\(W_v\)</span> are the liquid and vapor mass flow rates</p></li>
+<li><p><span class="math notranslate nohighlight">\(u_l\)</span>, <span class="math notranslate nohighlight">\(u_v\)</span> are the liquid and vapor velocities</p></li>
+<li><p><span class="math notranslate nohighlight">\(a_i\)</span>, is the volumetric interfacial area</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Gamma\)</span> is the interfacial evaporation mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Lambda\)</span> is the interfacial condensation mass flux</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span> is the wall boiling mass flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+</ul>
+<p><strong>2. Momentum conservation</strong></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial u_l}{\partial t} + u_l \frac{\partial u_l}{\partial z}) = -A a_i \Lambda (u_l - u_v) - A_l (\frac{\partial p}{\partial z} + \cos\theta g \rho_l) + A a_i \tau_{v,l} - \sum \Pi_{wall}^n \tau_{wall,l}^n\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v (\frac{\partial u_v}{\partial t} + u_v \frac{\partial u_v}{\partial z}) = (A a_i \Gamma + \sum \Pi_{wall}^n \Gamma_{wb}^n) (u_l - u_v) - A_v (\frac{\partial p}{\partial z} + \cos\theta g \rho_v) - A a_i \tau_{v,l} - \sum \Pi_{wall}^n \tau_{wall,v}^n\)</span></p>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(A_l\)</span>, <span class="math notranslate nohighlight">\(A_v\)</span> are the liquid and vapor cross-sectional areas</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{v,l}\)</span> is the interfacial shear stress</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{wall,l}\)</span>, <span class="math notranslate nohighlight">\(\tau_{wall,v}\)</span> are the liquid and vapor wall shear stresses</p></li>
+</ul>
+<p><strong>3. Energy conservation</strong></p>
+<p>Liquid: <span class="math notranslate nohighlight">\(\rho_l A_l (\frac{\partial h_l}{\partial t} + u_l \frac{\partial h_l}{\partial z}) = -A a_i \Lambda (h_l - h_v) + \sum \Pi_{wall}^n ({q^{\prime\prime}}_{wall,l}^n - (h_v - h_l) \Gamma_{wb}^n)\)</span></p>
+<p>Vapor: <span class="math notranslate nohighlight">\(\rho_v A_v (\frac{\partial h_v}{\partial t} + u_v \frac{\partial h_v}{\partial z}) = A a_i \Gamma (h_l - h_v) + \sum \Pi_{wall}^n {q^{\prime\prime}}_{wall,v}^n\)</span></p>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h_l\)</span>, <span class="math notranslate nohighlight">\(h_v\)</span> are the liquid and vapor specific enthalpies</p></li>
+<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,l}^n\)</span>, <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,v}^n\)</span> are the wall heat flux to liquid and vapor for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+</ul>
+</section>
+<section id="closure-relations">
+<h2>Closure relations<a class="headerlink" href="#closure-relations" title="Link to this heading"></a></h2>
+<p>To complete the conservation equations, several closure relations are required:</p>
+<ul class="simple">
+<li><p>Volumetric interfacial area: <span class="math notranslate nohighlight">\(a_i\)</span></p></li>
+<li><p>Interfacial evaporation and condensation mass fluxes: <span class="math notranslate nohighlight">\(\Gamma\)</span>, <span class="math notranslate nohighlight">\(\Lambda\)</span></p></li>
+<li><p>Wall boiling mass flux: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n\)</span></p></li>
+<li><p>Interfacial shears stress: <span class="math notranslate nohighlight">\(\tau_{v,l}\)</span></p></li>
+<li><p>Wall shear stress for each phase: <span class="math notranslate nohighlight">\(\tau_{wall,l}\)</span>, <span class="math notranslate nohighlight">\(\tau_{wall,v}\)</span></p></li>
+<li><p>Wall heat flux for each phase: <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,l}^n\)</span>, <span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall,v}^n\)</span></p></li>
+<li><p>Wall heat transfer models</p></li>
+</ul>
+<p>These relations depend on the local flow regime, which is determined by an additional flow regime identification model.</p>
+<p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure relations are implemented in <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a>, which the users can modify to suit specific simulation needs.</p>
+<p>In addition, the thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
+</section>
+<section id="features-and-assumptions">
+<h2>Features and assumptions<a class="headerlink" href="#features-and-assumptions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Supports both steady-state and transient simulations in straight channels</p></li>
+<li><p>Supports uniform and non-uniform wall heat flux distribution</p></li>
+<li><p>Captures phase-specific velocities and temperatures</p></li>
+<li><p>Includes interfacial mass, momentum, and energy exchange</p></li>
+<li><p>Supports wall boiling and condensation</p></li>
+<li><p>Neglects minor contributions such as frictional heating and temporal pressure gradient contributions</p></li>
+</ul>
+</section>
+<section id="role-in-openstream">
+<h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
+<p>The two-fluid model is the legacy framework for simulating non-equilibrium two-phase flows. It is validated against system codes like TRACE and supports both steady-state and transient simulations.</p>
+</section>
+<hr class="docutils" />
+<section id="implementation-notes">
+<h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading"></a></h2>
+<p>Package</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers.html#module-Solvers" title="Solvers"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers</span></code></a></p></li>
+</ul>
+<p>Module</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#module-Solvers.TwoFluid" title="Solvers.TwoFluid"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.TwoFluid</span></code></a></p></li>
+</ul>
+<p>Two-fluid solver class</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a></p></li>
+</ul>
+<p>Phase classes</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a></p></li>
+</ul>
+<p>Flow regime enumeration class</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.REGIMES" title="Solvers.TwoFluid.REGIMES"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.REGIMES</span></code></a></p></li>
+</ul>
+<p>Key solver methods</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.solve" title="Solvers.TwoFluid.TwoFluidSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.solve()</span></code></a></p></li>
+</ul>
+<p>Key field properties:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.W" title="Solvers.TwoFluid.Liquid.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.U" title="Solvers.TwoFluid.Liquid.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.U</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.H" title="Solvers.TwoFluid.Liquid.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.H</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.W" title="Solvers.TwoFluid.Vapor.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.W</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.U" title="Solvers.TwoFluid.Vapor.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.U</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.H" title="Solvers.TwoFluid.Vapor.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.H</span></code></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Mixture_Model_Theory.html" class="btn btn-neutral float-left" title="Mixture model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ThreeField_Model_Theory.html" class="btn btn-neutral float-right" title="Three-field model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
