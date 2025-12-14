@@ -32,7 +32,7 @@
    /Applications/publications
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 5
    :glob:
    :hidden:
    :caption: Code packages
@@ -69,6 +69,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 * `MATLAB Module Index <mat-modindex.html>`_

@@ -6,4 +6,4 @@ The :mod:`CoolPropWrapper` package is designed to serve as a MATLAB interface to
 .. automodule:: CoolPropWrapper
    :show-inheritance:
    :members:
-   :exclude-members: sample
+.. :exclude-member: sample

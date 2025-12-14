@@ -1,4 +1,4 @@
-Solvers
+Solver
 =======
 
 The :mod:`Solvers` package defines the **OpenSTREAM** core solver modules and their associated superclasses. Each solver is tailored to simulate specific regimes of one-dimensional, two-phase flow, with increasing levels of physical detail and complexity.
@@ -6,13 +6,10 @@ The :mod:`Solvers` package defines the **OpenSTREAM** core solver modules and th
 Explore the available solver frameworks:
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :glob:
    
-   /Packages/Solvers-Mixture
-   /Packages/Solvers-TwoFluid
-   /Packages/Solvers-ThreeField
-   /Packages/Solvers-FourField
+   Solvers-*
 
 The following is a list of associated superclasses, each with its respective properties and methods. These foundational components provide shared functionality and structure across solver implementations.
 
@@ -28,4 +25,7 @@ The following is a list of associated superclasses, each with its respective pro
 .. automodule:: Solvers
    :show-inheritance:
    :members: 
+   :private-members:
 .. :exclude-members: 
+
+----
