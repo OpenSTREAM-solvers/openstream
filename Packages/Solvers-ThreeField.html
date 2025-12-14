@@ -356,8 +356,10 @@ flow by balancing droplet deposition and film entrainment rates.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
+<li><p>Enhanced drop deposition is disabled</p></li>
 <li><p>Uses interpolation for improved convergence</p></li>
 <li><p>Falls back to ad-hoc update if interpolation fails</p></li>
+<li><p>Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process</p></li>
 </ul>
 </dd></dl>
 
@@ -837,14 +839,16 @@ Windecker correlation or other models based on <a class="reference internal" hre
 
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop.MDEP">
-<span class="sig-name descname"><span class="pre">MDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.MDEP" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">enhanced</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop.MDEP" title="Link to this definition"></a></dt>
 <dd><p>MDEP Drop deposition mass flux [kg/m^2/s]</p>
 <p>Implements various deposition models selected based on <a class="reference internal" href="Inputs.html#Inputs.Model.DEPOSITION" title="Inputs.Model.DEPOSITION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DEPOSITION</span></code></a>.
-Applies enhancement factors, and restricts deposition to annular flow region.</p>
+Applies enhancement factors, and restricts deposition to annular flow region.
+The enhancement flag allow to enable/disable deposition enhancement</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>drop  — <a class="reference internal" href="#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a> object</p></li>
-<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+<li><p>drop     — <a class="reference internal" href="#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a> object</p></li>
+<li><p>zIdx     — Axial indices to evaluate (optional)</p></li>
+<li><p>enhanced — Flag indicating enhanced deposition downstream obstructions (optional, default = true)</p></li>
 </ul>
 </dd></dl>
 
