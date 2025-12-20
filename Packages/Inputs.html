@@ -205,6 +205,370 @@
 <p>These input definitions form the backbone of each simulation setup, ensuring consistency, flexibility, and clarity across different solver frameworks.</p>
 <hr class="docutils" />
 <dl class="mat class" id="module-Inputs">
+<dt class="sig sig-object mat" id="Inputs.Options">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">optionsID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
+<p>OPTIONS Class for defining and managing numerical solver options</p>
+<p>This class encapsulates all numerical parameters used in the simulations,
+including time stepping, convergence criteria, and relaxation factors
+for all solvers. It reads options data from input files and handles default
+values as well as input validation.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.Options.Options">
+<span class="sig-name descname"><span class="pre">Options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">optionsID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options.Options" title="Link to this definition"></a></dt>
+<dd><p>MODEL Constructor for Options class</p>
+<p>Parses options input file and initializes properties.
+Applies default values and validates entries.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePath  — Path to options input file</p></li>
+<li><p>optionsID — Identifier for options configuration</p></li>
+</ul>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.AXIALINTERP">
+<span class="sig-name descname"><span class="pre">AXIALINTERP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'next'</span></em><a class="headerlink" href="#Inputs.Options.AXIALINTERP" title="Link to this definition"></a></dt>
+<dd><p>Method for interpolating axial power distribution</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORFW">
+<span class="sig-name descname"><span class="pre">ERRORFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORFW" title="Link to this definition"></a></dt>
+<dd><p>Wave frequency error target in inner iterations [Hz]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORH">
+<span class="sig-name descname"><span class="pre">ERRORH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORH" title="Link to this definition"></a></dt>
+<dd><p>Enthalpy error target in inner iterations [J/kg]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORP">
+<span class="sig-name descname"><span class="pre">ERRORP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORP" title="Link to this definition"></a></dt>
+<dd><p>Pressure error target in inner iterations [Pa]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORU">
+<span class="sig-name descname"><span class="pre">ERRORU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.ERRORU" title="Link to this definition"></a></dt>
+<dd><p>Velocity error target in inner iterations [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORUD">
+<span class="sig-name descname"><span class="pre">ERRORUD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.ERRORUD" title="Link to this definition"></a></dt>
+<dd><p>Drop velocity error target in inner iterations [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORUF">
+<span class="sig-name descname"><span class="pre">ERRORUF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.ERRORUF" title="Link to this definition"></a></dt>
+<dd><p>Film velocity error target in inner iterations [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORW">
+<span class="sig-name descname"><span class="pre">ERRORW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.ERRORW" title="Link to this definition"></a></dt>
+<dd><p>Mass flow rate error target in inner iterations [kg/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ERRORWF">
+<span class="sig-name descname"><span class="pre">ERRORWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.ERRORWF" title="Link to this definition"></a></dt>
+<dd><p>Film mass flow rate error target in inner iterations [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#Inputs.Options.ID" title="Link to this definition"></a></dt>
+<dd><p>Identifier for the options configuration</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.MAXITER">
+<span class="sig-name descname"><span class="pre">MAXITER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">100</span></em><a class="headerlink" href="#Inputs.Options.MAXITER" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of inner iterations per time step</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXFW">
+<span class="sig-name descname"><span class="pre">RELAXFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXFW" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the wave number conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXHL">
+<span class="sig-name descname"><span class="pre">RELAXHL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHL" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the liquid energy conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXHM">
+<span class="sig-name descname"><span class="pre">RELAXHM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHM" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the mixture energy conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXHV">
+<span class="sig-name descname"><span class="pre">RELAXHV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#Inputs.Options.RELAXHV" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the vapor  energy conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXPM">
+<span class="sig-name descname"><span class="pre">RELAXPM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXPM" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the mixture momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUB">
+<span class="sig-name descname"><span class="pre">RELAXUB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUB" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the base momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUD">
+<span class="sig-name descname"><span class="pre">RELAXUD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUD" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the drop momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUF">
+<span class="sig-name descname"><span class="pre">RELAXUF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUF" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the film momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUL">
+<span class="sig-name descname"><span class="pre">RELAXUL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXUL" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the liquid momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUV">
+<span class="sig-name descname"><span class="pre">RELAXUV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXUV" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the vapor  momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXUW">
+<span class="sig-name descname"><span class="pre">RELAXUW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUW" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the wave momentum conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWB">
+<span class="sig-name descname"><span class="pre">RELAXWB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWB" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the base mass conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWF">
+<span class="sig-name descname"><span class="pre">RELAXWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWF" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the film mass conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWL">
+<span class="sig-name descname"><span class="pre">RELAXWL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXWL" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the liquid mass conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWM">
+<span class="sig-name descname"><span class="pre">RELAXWM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXWM" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the mixture mass conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWV">
+<span class="sig-name descname"><span class="pre">RELAXWV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#Inputs.Options.RELAXWV" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the vapor  mass conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.RELAXWW">
+<span class="sig-name descname"><span class="pre">RELAXWW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWW" title="Link to this definition"></a></dt>
+<dd><p>Relaxation factor for the wave mass conservation equation [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVFW">
+<span class="sig-name descname"><span class="pre">SSCONVFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.SSCONVFW" title="Link to this definition"></a></dt>
+<dd><p>Wave frequency steady-state convergence criterion [Hz]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVH">
+<span class="sig-name descname"><span class="pre">SSCONVH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.SSCONVH" title="Link to this definition"></a></dt>
+<dd><p>Enthalpy steady-state convergence criterion [J/kg]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVP">
+<span class="sig-name descname"><span class="pre">SSCONVP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.SSCONVP" title="Link to this definition"></a></dt>
+<dd><p>Pressure steady-state convergence criterion [Pa]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVU">
+<span class="sig-name descname"><span class="pre">SSCONVU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.SSCONVU" title="Link to this definition"></a></dt>
+<dd><p>Velocity steady-state convergence criterion [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVUD">
+<span class="sig-name descname"><span class="pre">SSCONVUD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.SSCONVUD" title="Link to this definition"></a></dt>
+<dd><p>Drop velocity steady-state convergence criterion [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVUF">
+<span class="sig-name descname"><span class="pre">SSCONVUF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.SSCONVUF" title="Link to this definition"></a></dt>
+<dd><p>Film velocity steady-state convergence criterion [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVW">
+<span class="sig-name descname"><span class="pre">SSCONVW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.SSCONVW" title="Link to this definition"></a></dt>
+<dd><p>Mass flow rate steady-state convergence criterion [kg/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSCONVWF">
+<span class="sig-name descname"><span class="pre">SSCONVWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.SSCONVWF" title="Link to this definition"></a></dt>
+<dd><p>Film mass flow rate steady-state convergence criterion [kg/s/m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSMAXITER">
+<span class="sig-name descname"><span class="pre">SSMAXITER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">30</span></em><a class="headerlink" href="#Inputs.Options.SSMAXITER" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of steady-state iterations</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.SSTSTEP">
+<span class="sig-name descname"><span class="pre">SSTSTEP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#Inputs.Options.SSTSTEP" title="Link to this definition"></a></dt>
+<dd><p>Time step size for steady-state iterations [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.TIMEINTERP">
+<span class="sig-name descname"><span class="pre">TIMEINTERP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'linear'</span></em><a class="headerlink" href="#Inputs.Options.TIMEINTERP" title="Link to this definition"></a></dt>
+<dd><p>Method for interpolating time-dependent boundary conditions</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Options.TSTEP">
+<span class="sig-name descname"><span class="pre">TSTEP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.1</span></em><a class="headerlink" href="#Inputs.Options.TSTEP" title="Link to this definition"></a></dt>
+<dd><p>Time step size for transient simulations [s]</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="Inputs.Options.writeInputFile">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">ID</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options.writeInputFile" title="Link to this definition"></a></dt>
+<dd><p>Writes numerical options configuration to input file</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>filePathName — Path to output file</p></li>
+<li><p>ID           — Options identifier</p></li>
+<li><p>varargin     — Additional name-value pairs for options properties</p></li>
+</ul>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Inputs.InputSet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet" title="Link to this definition"></a></dt>
+<dd><p>INPUTSET Class for managing a complete set of input objects</p>
+<p>This class initializes and stores all input components required for a simulation run.
+It handles model, options, geometry, and boundary condition inputs, and sets up logging
+via a Session object. It also supports applying solver-dependent property modifications.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.InputSet.InputSet">
+<span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.InputSet" title="Link to this definition"></a></dt>
+<dd><p>INPUTSET Constructor for InputSet class</p>
+<p>Initializes all input objects and sets up logging session.
+Parses input files and handles warnings.</p>
+<p>Inputs:</p>
+<ul>
+<li><p>opts — Struct with fields:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>modelFilePath, modelID</p></li>
+<li><p>optionsFilePath, optionsID</p></li>
+<li><p>geometryFilePath, geometryID</p></li>
+<li><p>bcFilePath</p></li>
+<li><p>LOGMODE, sessionName, sessionDirName</p></li>
+<li><p>sessionParentDir, overwriteSessionFiles</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.InputSet.bc">
+<span class="sig-name descname"><span class="pre">bc</span></span><a class="headerlink" href="#Inputs.InputSet.bc" title="Link to this definition"></a></dt>
+<dd><p>BoundaryConditions input object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.InputSet.geometry">
+<span class="sig-name descname"><span class="pre">geometry</span></span><a class="headerlink" href="#Inputs.InputSet.geometry" title="Link to this definition"></a></dt>
+<dd><p>Geometry input object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.InputSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#Inputs.InputSet.model" title="Link to this definition"></a></dt>
+<dd><p>Model input object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.InputSet.options">
+<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#Inputs.InputSet.options" title="Link to this definition"></a></dt>
+<dd><p>Options input object</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.InputSet.session">
+<span class="sig-name descname"><span class="pre">session</span></span><a class="headerlink" href="#Inputs.InputSet.session" title="Link to this definition"></a></dt>
+<dd><p>Session object for logging and file management</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Inputs.InputSet.applySolverDependentProps">
+<span class="sig-name descname"><span class="pre">applySolverDependentProps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">solverName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.applySolverDependentProps" title="Link to this definition"></a></dt>
+<dd><p>APPLYSOLVERDEPENDENTPROPS Applies solver-dependent property modifications to all input objects</p>
+<p>Useful for customizing inputs based on selected solver</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>inputSet   — InputSet object</p></li>
+<li><p>solverName — Name of the solver to apply dependencies for</p></li>
+</ul>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Inputs.Geometry">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">geometryID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Geometry" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
@@ -294,87 +658,6 @@ Applies default values if no input is provided.</p>
 <li><p>filePathName — Path to output file</p></li>
 <li><p>ID           — Geometry identifier</p></li>
 <li><p>varargin     — Additional name-value pairs for geometry properties</p></li>
-</ul>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.InputSet">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet" title="Link to this definition"></a></dt>
-<dd><p>INPUTSET Class for managing a complete set of input objects</p>
-<p>This class initializes and stores all input components required for a simulation run.
-It handles model, options, geometry, and boundary condition inputs, and sets up logging
-via a Session object. It also supports applying solver-dependent property modifications.</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.InputSet.InputSet">
-<span class="sig-name descname"><span class="pre">InputSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.InputSet" title="Link to this definition"></a></dt>
-<dd><p>INPUTSET Constructor for InputSet class</p>
-<p>Initializes all input objects and sets up logging session.
-Parses input files and handles warnings.</p>
-<p>Inputs:</p>
-<ul>
-<li><p>opts — Struct with fields:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>modelFilePath, modelID</p></li>
-<li><p>optionsFilePath, optionsID</p></li>
-<li><p>geometryFilePath, geometryID</p></li>
-<li><p>bcFilePath</p></li>
-<li><p>LOGMODE, sessionName, sessionDirName</p></li>
-<li><p>sessionParentDir, overwriteSessionFiles</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.InputSet.bc">
-<span class="sig-name descname"><span class="pre">bc</span></span><a class="headerlink" href="#Inputs.InputSet.bc" title="Link to this definition"></a></dt>
-<dd><p>BoundaryConditions input object</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.InputSet.geometry">
-<span class="sig-name descname"><span class="pre">geometry</span></span><a class="headerlink" href="#Inputs.InputSet.geometry" title="Link to this definition"></a></dt>
-<dd><p>Geometry input object</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.InputSet.model">
-<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#Inputs.InputSet.model" title="Link to this definition"></a></dt>
-<dd><p>Model input object</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.InputSet.options">
-<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#Inputs.InputSet.options" title="Link to this definition"></a></dt>
-<dd><p>Options input object</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.InputSet.session">
-<span class="sig-name descname"><span class="pre">session</span></span><a class="headerlink" href="#Inputs.InputSet.session" title="Link to this definition"></a></dt>
-<dd><p>Session object for logging and file management</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.InputSet.applySolverDependentProps">
-<span class="sig-name descname"><span class="pre">applySolverDependentProps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">solverName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.InputSet.applySolverDependentProps" title="Link to this definition"></a></dt>
-<dd><p>APPLYSOLVERDEPENDENTPROPS Applies solver-dependent property modifications to all input objects</p>
-<p>Useful for customizing inputs based on selected solver</p>
-<p>Inputs:</p>
-<ul class="simple">
-<li><p>inputSet   — InputSet object</p></li>
-<li><p>solverName — Name of the solver to apply dependencies for</p></li>
 </ul>
 </dd></dl>
 
@@ -894,289 +1177,6 @@ Saturated properties are computed and assigned to each object instance.</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Inputs.Options">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">optionsID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
-<p>OPTIONS Class for defining and managing numerical solver options</p>
-<p>This class encapsulates all numerical parameters used in the simulations,
-including time stepping, convergence criteria, and relaxation factors
-for all solvers. It reads options data from input files and handles default
-values as well as input validation.</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Inputs.Options.Options">
-<span class="sig-name descname"><span class="pre">Options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">optionsID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options.Options" title="Link to this definition"></a></dt>
-<dd><p>MODEL Constructor for Options class</p>
-<p>Parses options input file and initializes properties.
-Applies default values and validates entries.</p>
-<p>Inputs:</p>
-<ul class="simple">
-<li><p>filePath  — Path to options input file</p></li>
-<li><p>optionsID — Identifier for options configuration</p></li>
-</ul>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.AXIALINTERP">
-<span class="sig-name descname"><span class="pre">AXIALINTERP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'next'</span></em><a class="headerlink" href="#Inputs.Options.AXIALINTERP" title="Link to this definition"></a></dt>
-<dd><p>Method for interpolating axial power distribution</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORFW">
-<span class="sig-name descname"><span class="pre">ERRORFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORFW" title="Link to this definition"></a></dt>
-<dd><p>Wave frequency error target in inner iterations [Hz]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORH">
-<span class="sig-name descname"><span class="pre">ERRORH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORH" title="Link to this definition"></a></dt>
-<dd><p>Enthalpy error target in inner iterations [J/kg]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORP">
-<span class="sig-name descname"><span class="pre">ERRORP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.ERRORP" title="Link to this definition"></a></dt>
-<dd><p>Pressure error target in inner iterations [Pa]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORU">
-<span class="sig-name descname"><span class="pre">ERRORU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.ERRORU" title="Link to this definition"></a></dt>
-<dd><p>Velocity error target in inner iterations [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORUD">
-<span class="sig-name descname"><span class="pre">ERRORUD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.ERRORUD" title="Link to this definition"></a></dt>
-<dd><p>Drop velocity error target in inner iterations [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORUF">
-<span class="sig-name descname"><span class="pre">ERRORUF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.ERRORUF" title="Link to this definition"></a></dt>
-<dd><p>Film velocity error target in inner iterations [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORW">
-<span class="sig-name descname"><span class="pre">ERRORW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.ERRORW" title="Link to this definition"></a></dt>
-<dd><p>Mass flow rate error target in inner iterations [kg/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ERRORWF">
-<span class="sig-name descname"><span class="pre">ERRORWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.ERRORWF" title="Link to this definition"></a></dt>
-<dd><p>Film mass flow rate error target in inner iterations [kg/s/m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><a class="headerlink" href="#Inputs.Options.ID" title="Link to this definition"></a></dt>
-<dd><p>Identifier for the options configuration</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.MAXITER">
-<span class="sig-name descname"><span class="pre">MAXITER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">100</span></em><a class="headerlink" href="#Inputs.Options.MAXITER" title="Link to this definition"></a></dt>
-<dd><p>Maximum number of inner iterations per time step</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXFW">
-<span class="sig-name descname"><span class="pre">RELAXFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXFW" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the wave number conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXHL">
-<span class="sig-name descname"><span class="pre">RELAXHL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHL" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the liquid energy conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXHM">
-<span class="sig-name descname"><span class="pre">RELAXHM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXHM" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the mixture energy conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXHV">
-<span class="sig-name descname"><span class="pre">RELAXHV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#Inputs.Options.RELAXHV" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the vapor  energy conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXPM">
-<span class="sig-name descname"><span class="pre">RELAXPM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXPM" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the mixture momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXUB">
-<span class="sig-name descname"><span class="pre">RELAXUB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUB" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the base momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXUD">
-<span class="sig-name descname"><span class="pre">RELAXUD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUD" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the drop momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXUF">
-<span class="sig-name descname"><span class="pre">RELAXUF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUF" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the film momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXUL">
-<span class="sig-name descname"><span class="pre">RELAXUL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXUL" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the liquid momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXUV">
-<span class="sig-name descname"><span class="pre">RELAXUV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXUV" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the vapor  momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXUW">
-<span class="sig-name descname"><span class="pre">RELAXUW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.2</span></em><a class="headerlink" href="#Inputs.Options.RELAXUW" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the wave momentum conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXWB">
-<span class="sig-name descname"><span class="pre">RELAXWB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWB" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the base mass conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXWF">
-<span class="sig-name descname"><span class="pre">RELAXWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWF" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the film mass conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXWL">
-<span class="sig-name descname"><span class="pre">RELAXWL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXWL" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the liquid mass conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXWM">
-<span class="sig-name descname"><span class="pre">RELAXWM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.Options.RELAXWM" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the mixture mass conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXWV">
-<span class="sig-name descname"><span class="pre">RELAXWV</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.8</span></em><a class="headerlink" href="#Inputs.Options.RELAXWV" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the vapor  mass conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.RELAXWW">
-<span class="sig-name descname"><span class="pre">RELAXWW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#Inputs.Options.RELAXWW" title="Link to this definition"></a></dt>
-<dd><p>Relaxation factor for the wave mass conservation equation [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVFW">
-<span class="sig-name descname"><span class="pre">SSCONVFW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-1</span></em><a class="headerlink" href="#Inputs.Options.SSCONVFW" title="Link to this definition"></a></dt>
-<dd><p>Wave frequency steady-state convergence criterion [Hz]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVH">
-<span class="sig-name descname"><span class="pre">SSCONVH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.SSCONVH" title="Link to this definition"></a></dt>
-<dd><p>Enthalpy steady-state convergence criterion [J/kg]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVP">
-<span class="sig-name descname"><span class="pre">SSCONVP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E+0</span></em><a class="headerlink" href="#Inputs.Options.SSCONVP" title="Link to this definition"></a></dt>
-<dd><p>Pressure steady-state convergence criterion [Pa]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVU">
-<span class="sig-name descname"><span class="pre">SSCONVU</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.SSCONVU" title="Link to this definition"></a></dt>
-<dd><p>Velocity steady-state convergence criterion [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVUD">
-<span class="sig-name descname"><span class="pre">SSCONVUD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.SSCONVUD" title="Link to this definition"></a></dt>
-<dd><p>Drop velocity steady-state convergence criterion [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVUF">
-<span class="sig-name descname"><span class="pre">SSCONVUF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-2</span></em><a class="headerlink" href="#Inputs.Options.SSCONVUF" title="Link to this definition"></a></dt>
-<dd><p>Film velocity steady-state convergence criterion [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVW">
-<span class="sig-name descname"><span class="pre">SSCONVW</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-3</span></em><a class="headerlink" href="#Inputs.Options.SSCONVW" title="Link to this definition"></a></dt>
-<dd><p>Mass flow rate steady-state convergence criterion [kg/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSCONVWF">
-<span class="sig-name descname"><span class="pre">SSCONVWF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E-4</span></em><a class="headerlink" href="#Inputs.Options.SSCONVWF" title="Link to this definition"></a></dt>
-<dd><p>Film mass flow rate steady-state convergence criterion [kg/s/m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSMAXITER">
-<span class="sig-name descname"><span class="pre">SSMAXITER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">30</span></em><a class="headerlink" href="#Inputs.Options.SSMAXITER" title="Link to this definition"></a></dt>
-<dd><p>Maximum number of steady-state iterations</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.SSTSTEP">
-<span class="sig-name descname"><span class="pre">SSTSTEP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#Inputs.Options.SSTSTEP" title="Link to this definition"></a></dt>
-<dd><p>Time step size for steady-state iterations [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.TIMEINTERP">
-<span class="sig-name descname"><span class="pre">TIMEINTERP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'linear'</span></em><a class="headerlink" href="#Inputs.Options.TIMEINTERP" title="Link to this definition"></a></dt>
-<dd><p>Method for interpolating time-dependent boundary conditions</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Options.TSTEP">
-<span class="sig-name descname"><span class="pre">TSTEP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.1</span></em><a class="headerlink" href="#Inputs.Options.TSTEP" title="Link to this definition"></a></dt>
-<dd><p>Time step size for transient simulations [s]</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat staticmethod">
-<dt class="sig sig-object mat" id="Inputs.Options.writeInputFile">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">writeInputFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePathName</span></em>, <em class="sig-param"><span class="pre">ID</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Options.writeInputFile" title="Link to this definition"></a></dt>
-<dd><p>Writes numerical options configuration to input file</p>
-<p>Inputs:</p>
-<ul class="simple">
-<li><p>filePathName — Path to output file</p></li>
-<li><p>ID           — Options identifier</p></li>
-<li><p>varargin     — Additional name-value pairs for options properties</p></li>
-</ul>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
 <dt class="sig sig-object mat" id="Inputs.Model">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Inputs.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">filePath</span></em>, <em class="sig-param"><span class="pre">modelID</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Inputs.Model" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Inputs.Input" title="Inputs.Input"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Input</span></code></a></p>
@@ -1496,9 +1496,21 @@ Applies default values and validates entries.</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Inputs.Model.NEARWALLHMULT">
-<span class="sig-name descname"><span class="pre">NEARWALLHMULT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#Inputs.Model.NEARWALLHMULT" title="Link to this definition"></a></dt>
-<dd><p>Near-wall equilibrium enthalpy multiplier [-]</p>
+<dt class="sig sig-object mat" id="Inputs.Model.NEARWALLEQOAF">
+<span class="sig-name descname"><span class="pre">NEARWALLEQOAF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Inputs.Model.NEARWALLEQOAF" title="Link to this definition"></a></dt>
+<dd><p>Near-wall equilibrium at onset of annular two-phase flow</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.NEARWALLH">
+<span class="sig-name descname"><span class="pre">NEARWALLH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'RATIO'</span></em><a class="headerlink" href="#Inputs.Model.NEARWALLH" title="Link to this definition"></a></dt>
+<dd><p>Near-wall equilibrium enthalpy model selected from <a class="reference internal" href="InputEnums.html#InputEnums.NEARWALLH" title="InputEnums.NEARWALLH"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">InputEnums.NEARWALLH</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Inputs.Model.NEARWALLHRATIO">
+<span class="sig-name descname"><span class="pre">NEARWALLHRATIO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#Inputs.Model.NEARWALLHRATIO" title="Link to this definition"></a></dt>
+<dd><p>Near-wall equilibrium enthalpy ratio [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">

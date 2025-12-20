@@ -213,6 +213,108 @@
 </ul>
 <hr class="docutils" />
 <dl class="mat class" id="module-Solvers">
+<dt class="sig sig-object mat" id="Solvers.AbstractField">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractField</span></span><a class="headerlink" href="#Solvers.AbstractField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">matlab.mixin.Copyable</span></code></p>
+<p>ABSTRACTFIELD Base class for field definitions across solvers</p>
+<p>This abstract class defines shared properties and methods for all field-type
+classes used in solver implementations. It provides mechanisms for transient
+data extraction, plotting, memoization, struct conversion, and property copying.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.AbstractField">
+<span class="sig-name descname"><span class="pre">AbstractField</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.AbstractField" title="Link to this definition"></a></dt>
+<dd><p>ABSTRACTFIELD Constructor for AbstractField class</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><a class="headerlink" href="#Solvers.AbstractField.DT" title="Link to this definition"></a></dt>
+<dd><p>Time step size [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.ITR">
+<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.AbstractField.ITR" title="Link to this definition"></a></dt>
+<dd><p>Iteration properties</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><a class="headerlink" href="#Solvers.AbstractField.NTIME" title="Link to this definition"></a></dt>
+<dd><p>Number of time steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><a class="headerlink" href="#Solvers.AbstractField.NZ" title="Link to this definition"></a></dt>
+<dd><p>Number of axial steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.TIDX">
+<span class="sig-name descname"><span class="pre">TIDX</span></span><a class="headerlink" href="#Solvers.AbstractField.TIDX" title="Link to this definition"></a></dt>
+<dd><p>Time step index [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Solvers.AbstractField.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time series [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><a class="headerlink" href="#Solvers.AbstractField.Z" title="Link to this definition"></a></dt>
+<dd><p>Elevation [m]</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.copyFlowProperties">
+<span class="sig-name descname"><span class="pre">copyFlowProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">srcObj</span></em>, <em class="sig-param"><span class="pre">targetObj</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.copyFlowProperties" title="Link to this definition"></a></dt>
+<dd><p>COPYFLOWPROPERTIES Copies flow properties from source to target field object</p>
+<p>Supports full or partial copying depending on ‘opts.all’
+flag.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.memoizeFunction">
+<span class="sig-name descname"><span class="pre">memoizeFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">methodStr</span></em>, <em class="sig-param"><span class="pre">methodHandle</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.memoizeFunction" title="Link to this definition"></a></dt>
+<dd><p>MEMOIZEDMETHOD Registers and retrieves memoized function handles</p>
+<p>Avoids redundant computation by caching results.</p>
+<p>Adapted from <a class="reference external" href="https://stackoverflow.com/a/75037451" rel="noreferrer" target="_blank">https://stackoverflow.com/a/75037451</a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.plotzt">
+<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">ylabelText</span></em>, <em class="sig-param"><span class="pre">ylabelUnit</span></em>, <em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">opt</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">annular</span></em>, <em class="sig-param"><span class="pre">time</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.plotzt" title="Link to this definition"></a></dt>
+<dd><p>PLOTZT 2D Generates a 2D space-time distribution plot for a given parameter</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.struct">
+<span class="sig-name descname"><span class="pre">struct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.struct" title="Link to this definition"></a></dt>
+<dd><p>STRUCT Converts field object to a structured array</p>
+<p>Includes TIME, ITR, and flow properties.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractField.transient">
+<span class="sig-name descname"><span class="pre">transient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.transient" title="Link to this definition"></a></dt>
+<dd><p>TRANSIENT Extracts transient distribution array for a given parameter</p>
+<p>Supports wall-wise and axial/time slicing with optional
+subobject access.</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractFilm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
@@ -407,111 +509,23 @@ shear  [m/s]</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.AbstractFilm.X">
+<span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.X" title="Link to this definition"></a></dt>
+<dd><p>X Vapor quality in the near-wall region [-]</p>
+<p>Vapor quality in the near-wall region, considering only the
+film for the liquid phase. The near-wall region is defined in
+the mixture solver.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>drop  — <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a> object</p></li>
+<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.YPLUS2THICK">
 <span class="sig-name descname"><span class="pre">YPLUS2THICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">yplus</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.YPLUS2THICK" title="Link to this definition"></a></dt>
 <dd><p>YPLUS2THICK Thickness based on wall unit value [m]</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.AbstractField">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractField</span></span><a class="headerlink" href="#Solvers.AbstractField" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">matlab.mixin.Copyable</span></code></p>
-<p>ABSTRACTFIELD Base class for field definitions across solvers</p>
-<p>This abstract class defines shared properties and methods for all field-type
-classes used in solver implementations. It provides mechanisms for transient
-data extraction, plotting, memoization, struct conversion, and property copying.</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.AbstractField">
-<span class="sig-name descname"><span class="pre">AbstractField</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.AbstractField" title="Link to this definition"></a></dt>
-<dd><p>ABSTRACTFIELD Constructor for AbstractField class</p>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.DT">
-<span class="sig-name descname"><span class="pre">DT</span></span><a class="headerlink" href="#Solvers.AbstractField.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.ITR">
-<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.AbstractField.ITR" title="Link to this definition"></a></dt>
-<dd><p>Iteration properties</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.NTIME">
-<span class="sig-name descname"><span class="pre">NTIME</span></span><a class="headerlink" href="#Solvers.AbstractField.NTIME" title="Link to this definition"></a></dt>
-<dd><p>Number of time steps [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.NZ">
-<span class="sig-name descname"><span class="pre">NZ</span></span><a class="headerlink" href="#Solvers.AbstractField.NZ" title="Link to this definition"></a></dt>
-<dd><p>Number of axial steps [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.TIDX">
-<span class="sig-name descname"><span class="pre">TIDX</span></span><a class="headerlink" href="#Solvers.AbstractField.TIDX" title="Link to this definition"></a></dt>
-<dd><p>Time step index [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#Solvers.AbstractField.TIME" title="Link to this definition"></a></dt>
-<dd><p>Time series [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><a class="headerlink" href="#Solvers.AbstractField.Z" title="Link to this definition"></a></dt>
-<dd><p>Elevation [m]</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.copyFlowProperties">
-<span class="sig-name descname"><span class="pre">copyFlowProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">srcObj</span></em>, <em class="sig-param"><span class="pre">targetObj</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.copyFlowProperties" title="Link to this definition"></a></dt>
-<dd><p>COPYFLOWPROPERTIES Copies flow properties from source to target field object</p>
-<p>Supports full or partial copying depending on ‘opts.all’
-flag.</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.memoizeFunction">
-<span class="sig-name descname"><span class="pre">memoizeFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">methodStr</span></em>, <em class="sig-param"><span class="pre">methodHandle</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.memoizeFunction" title="Link to this definition"></a></dt>
-<dd><p>MEMOIZEDMETHOD Registers and retrieves memoized function handles</p>
-<p>Avoids redundant computation by caching results.</p>
-<p>Adapted from <a class="reference external" href="https://stackoverflow.com/a/75037451" rel="noreferrer" target="_blank">https://stackoverflow.com/a/75037451</a></p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.plotzt">
-<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">ylabelText</span></em>, <em class="sig-param"><span class="pre">ylabelUnit</span></em>, <em class="sig-param"><span class="pre">k</span></em>, <em class="sig-param"><span class="pre">opt</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">annular</span></em>, <em class="sig-param"><span class="pre">time</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.plotzt" title="Link to this definition"></a></dt>
-<dd><p>PLOTZT 2D Generates a 2D space-time distribution plot for a given parameter</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.struct">
-<span class="sig-name descname"><span class="pre">struct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.struct" title="Link to this definition"></a></dt>
-<dd><p>STRUCT Converts field object to a structured array</p>
-<p>Includes TIME, ITR, and flow properties.</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.AbstractField.transient">
-<span class="sig-name descname"><span class="pre">transient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param</span></em>, <em class="sig-param"><span class="pre">subobj</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractField.transient" title="Link to this definition"></a></dt>
-<dd><p>TRANSIENT Extracts transient distribution array for a given parameter</p>
-<p>Supports wall-wise and axial/time slicing with optional
-subobject access.</p>
 </dd></dl>
 
 </dd>
@@ -527,6 +541,24 @@ subobject access.</p>
 <p>This abstract class serves as a common interface for all phase-type
 classes used in solver implementations. It is intended to provide a
 foundation for shared behavior and structure.</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.SolverState">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverState</span></span><a class="headerlink" href="#Solvers.SolverState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
+<p>SOLVERSTATE Enumeration of solver execution states</p>
+<p>This enumeration defines the possible states a solver can be in
+during or after execution. It is used to track solver execution and
+convergence status.</p>
+<p>States:</p>
+<ul class="simple">
+<li><p>UNSOLVED                — Solver has not yet run</p></li>
+<li><p>SOLVEDCONVERGED         — Solver completed and converged successfully</p></li>
+<li><p>SOLVEDNOTCONVERGED      — Solver completed but did not converge</p></li>
+<li><p>INITIALSTEPCONVERGED    — Initial steady-state step completed and converged</p></li>
+<li><p>INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge</p></li>
+</ul>
 </dd></dl>
 
 <dl class="mat class">
@@ -757,24 +789,6 @@ Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
 </dd>
 </dl>
 </div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.SolverState">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverState</span></span><a class="headerlink" href="#Solvers.SolverState" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
-<p>SOLVERSTATE Enumeration of solver execution states</p>
-<p>This enumeration defines the possible states a solver can be in
-during or after execution. It is used to track solver execution and
-convergence status.</p>
-<p>States:</p>
-<ul class="simple">
-<li><p>UNSOLVED                — Solver has not yet run</p></li>
-<li><p>SOLVEDCONVERGED         — Solver completed and converged successfully</p></li>
-<li><p>SOLVEDNOTCONVERGED      — Solver completed but did not converge</p></li>
-<li><p>INITIALSTEPCONVERGED    — Initial steady-state step completed and converged</p></li>
-<li><p>INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge</p></li>
-</ul>
 </dd></dl>
 
 <hr class="docutils" />

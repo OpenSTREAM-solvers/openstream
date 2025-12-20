@@ -538,6 +538,164 @@ iterations, convergence checks, and logging.</p>
 
 <hr class="docutils" />
 <dl class="mat class" id="module-Solvers.Mixture">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
+<p>VAPOR Represents the vapor phase in a mixture solver simulation.</p>
+<p>The Vapor class provides access to vapor-specific properties and
+calculations derived from the mixture solution. It encapsulates
+methods for computing flow, thermodynamic, and transport properties
+of the vapor phase at each axial node.</p>
+<p>Responsibilities:</p>
+<ul class="simple">
+<li><p>Compute vapor mass fraction and void fraction</p></li>
+<li><p>Calculate vapor velocity, enthalpy, and temperature</p></li>
+<li><p>Evaluate wall heat flux and wall evaporation contributions</p></li>
+<li><p>Support derived quantities such as Reynolds number and mass flux</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>All methods assume access to a valid <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
+<li><p>Axial indexing is optional; defaults to full axial domain</p></li>
+<li><p>Enthalpy calculations adapt to thermal non-equilibrium models</p></li>
+<li><p>Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability</p></li>
+</ul>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Vapor">
+<span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Vapor" title="Link to this definition"></a></dt>
+<dd><p>VAPOR Constructor of the Vapor class</p>
+<p>Initializes the Vapor object from one or more instances of the
+<a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> class. Each Vapor instance
+stores a reference to its corresponding Mixture object and the
+number of axial nodes (NZ).</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>mix — Array of <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> objects representing the simulation state</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Supports vectorized initialization for transient simulations</p></li>
+<li><p>Assumes each <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object is fully initialized</p></li>
+</ul>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.FW">
+<span class="sig-name descname"><span class="pre">FW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.FW" title="Link to this definition"></a></dt>
+<dd><p>FW Vapor wall friction factor [-]</p>
+<p>Computes the Fanning wall friction factor based on
+<a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> model.</p>
+<p>Supported models</p>
+<ul class="simple">
+<li><p>BLASIUS: Blasius model (<span class="math notranslate nohighlight">\(f = C(1) Re^{C(2)} + C(3)\)</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a> coefficients</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.H">
+<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.H" title="Link to this definition"></a></dt>
+<dd><p>H Vapor enthalpy [J/kg]</p>
+<p>Calculation depends on <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALNONEQ" title="Inputs.Model.THERMALNONEQ"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALNONEQ</span></code></a>
+model.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>HFLUX Wall heat flux to vapor [W/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HFLUXWALEVAP">
+<span class="sig-name descname"><span class="pre">HFLUXWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HFLUXWALEVAP" title="Link to this definition"></a></dt>
+<dd><p>HFLUX Wall evaporation heat flux [W/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HWALL">
+<span class="sig-name descname"><span class="pre">HWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HWALL" title="Link to this definition"></a></dt>
+<dd><p>HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]</p>
+<p>Computes the wall heat transfer coefficient using vapor thermal
+conductivity and Nusselt number.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.MFLUX">
+<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.MFLUX" title="Link to this definition"></a></dt>
+<dd><p>MFLUX Vapor mass flux [kg/m^2-s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.NU">
+<span class="sig-name descname"><span class="pre">NU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.NU" title="Link to this definition"></a></dt>
+<dd><p>NU Vapor wall Nusselt number [-]</p>
+<p>Computes the Nusselt number for wall heat transfer to vapor
+based on <a class="reference internal" href="Inputs.html#Inputs.Model.SPHTM" title="Inputs.Model.SPHTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPHTM</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.RE">
+<span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.RE" title="Link to this definition"></a></dt>
+<dd><p>RE Vapor Reynolds number [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.T">
+<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.T" title="Link to this definition"></a></dt>
+<dd><p>T Vapor temperature [K]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.TAUW">
+<span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.TAUW" title="Link to this definition"></a></dt>
+<dd><p>TAUW Vapor wall shear stress [N/m^2]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.TIME" title="Link to this definition"></a></dt>
+<dd><p>TIME Time series [s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.U">
+<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.U" title="Link to this definition"></a></dt>
+<dd><p>U Vapor velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.VF">
+<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.VF" title="Link to this definition"></a></dt>
+<dd><p>VF Void fraction [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.W">
+<span class="sig-name descname"><span class="pre">W</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.W" title="Link to this definition"></a></dt>
+<dd><p>W Vapor mass flow rate [kg/s]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.X">
+<span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.X" title="Link to this definition"></a></dt>
+<dd><p>X Vapor mass fraction [-]</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Z" title="Link to this definition"></a></dt>
+<dd><p>Z Axial nodes [m]</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
@@ -1719,164 +1877,6 @@ based on <a class="reference internal" href="Inputs.html#Inputs.Model.SPHTM" tit
 <dt class="sig sig-object mat" id="Solvers.Mixture.Liquid.Z">
 <span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Liquid.Z" title="Link to this definition"></a></dt>
 <dd><p>Z Axial node positions [m]</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.Mixture.</span></span><span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
-<p>VAPOR Represents the vapor phase in a mixture solver simulation.</p>
-<p>The Vapor class provides access to vapor-specific properties and
-calculations derived from the mixture solution. It encapsulates
-methods for computing flow, thermodynamic, and transport properties
-of the vapor phase at each axial node.</p>
-<p>Responsibilities:</p>
-<ul class="simple">
-<li><p>Compute vapor mass fraction and void fraction</p></li>
-<li><p>Calculate vapor velocity, enthalpy, and temperature</p></li>
-<li><p>Evaluate wall heat flux and wall evaporation contributions</p></li>
-<li><p>Support derived quantities such as Reynolds number and mass flux</p></li>
-</ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>All methods assume access to a valid <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object</p></li>
-<li><p>Axial indexing is optional; defaults to full axial domain</p></li>
-<li><p>Enthalpy calculations adapt to thermal non-equilibrium models</p></li>
-<li><p>Velocity and enthalpy calculations include fallback logic to handle single-phase liquid regions and numerical stability</p></li>
-</ul>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Vapor">
-<span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Vapor" title="Link to this definition"></a></dt>
-<dd><p>VAPOR Constructor of the Vapor class</p>
-<p>Initializes the Vapor object from one or more instances of the
-<a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> class. Each Vapor instance
-stores a reference to its corresponding Mixture object and the
-number of axial nodes (NZ).</p>
-<p>Input:</p>
-<ul class="simple">
-<li><p>mix — Array of <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> objects representing the simulation state</p></li>
-</ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>Supports vectorized initialization for transient simulations</p></li>
-<li><p>Assumes each <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object is fully initialized</p></li>
-</ul>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.FW">
-<span class="sig-name descname"><span class="pre">FW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.FW" title="Link to this definition"></a></dt>
-<dd><p>FW Vapor wall friction factor [-]</p>
-<p>Computes the Fanning wall friction factor based on
-<a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> model.</p>
-<p>Supported models</p>
-<ul class="simple">
-<li><p>BLASIUS: Blasius model (<span class="math notranslate nohighlight">\(f = C(1) Re^{C(2)} + C(3)\)</span>) using user-defined <a class="reference internal" href="Inputs.html#Inputs.Model.FRICTION" title="Inputs.Model.FRICTION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.FRICTION</span></code></a> coefficients</p></li>
-</ul>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.H">
-<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.H" title="Link to this definition"></a></dt>
-<dd><p>H Vapor enthalpy [J/kg]</p>
-<p>Calculation depends on <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALNONEQ" title="Inputs.Model.THERMALNONEQ"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALNONEQ</span></code></a>
-model.</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HFLUX">
-<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HFLUX" title="Link to this definition"></a></dt>
-<dd><p>HFLUX Wall heat flux to vapor [W/m^2]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HFLUXWALEVAP">
-<span class="sig-name descname"><span class="pre">HFLUXWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HFLUXWALEVAP" title="Link to this definition"></a></dt>
-<dd><p>HFLUX Wall evaporation heat flux [W/m^2]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HWALL">
-<span class="sig-name descname"><span class="pre">HWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HWALL" title="Link to this definition"></a></dt>
-<dd><p>HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]</p>
-<p>Computes the wall heat transfer coefficient using vapor thermal
-conductivity and Nusselt number.</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.MFLUX">
-<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.MFLUX" title="Link to this definition"></a></dt>
-<dd><p>MFLUX Vapor mass flux [kg/m^2-s]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.NU">
-<span class="sig-name descname"><span class="pre">NU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.NU" title="Link to this definition"></a></dt>
-<dd><p>NU Vapor wall Nusselt number [-]</p>
-<p>Computes the Nusselt number for wall heat transfer to vapor
-based on <a class="reference internal" href="Inputs.html#Inputs.Model.SPHTM" title="Inputs.Model.SPHTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPHTM</span></code></a> model.</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.RE">
-<span class="sig-name descname"><span class="pre">RE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.RE" title="Link to this definition"></a></dt>
-<dd><p>RE Vapor Reynolds number [-]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.T">
-<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.T" title="Link to this definition"></a></dt>
-<dd><p>T Vapor temperature [K]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.TAUW">
-<span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.TAUW" title="Link to this definition"></a></dt>
-<dd><p>TAUW Vapor wall shear stress [N/m^2]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.TIME" title="Link to this definition"></a></dt>
-<dd><p>TIME Time series [s]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.U">
-<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.U" title="Link to this definition"></a></dt>
-<dd><p>U Vapor velocity [m/s]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.VF">
-<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.VF" title="Link to this definition"></a></dt>
-<dd><p>VF Void fraction [-]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.W">
-<span class="sig-name descname"><span class="pre">W</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.W" title="Link to this definition"></a></dt>
-<dd><p>W Vapor mass flow rate [kg/s]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.X">
-<span class="sig-name descname"><span class="pre">X</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.X" title="Link to this definition"></a></dt>
-<dd><p>X Vapor mass fraction [-]</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.Z" title="Link to this definition"></a></dt>
-<dd><p>Z Axial nodes [m]</p>
 </dd></dl>
 
 </dd>
