@@ -1462,29 +1462,44 @@ classdef Mixture < Solvers.AbstractField
             area = mix.NEARWALLRATIO.*geom.RWALL.*geom.AREA;
         end
 
-        function heq = HNEARWALLEQ(mix, zIdx)
+        function heq = HNEARWALLEQ(mix, zIdx, skipAdjustments)
             %HNEARWALLEQ Near-wall equilibrium entalpy [J/kg]
             %
-            % Compute the near-wall equilibrium enthalpy.
+            % Compute the near-wall equilibrium enthalpy. May be considered
+            % away from 1 for annular two-phase -flow
             %
             % Inputs:
             %
-            % - mix — :class:`Solvers.Mixture.Mixture` object containing geometry data
+            % - mix  — :class:`Solvers.Mixture.Mixture` object containing geometry data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            % - raw  — No adjustment
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            if nargin < 3, skipAdjustments = false; end
 
             model = mix.inputSet.model;
 
             h   = mix.H(zIdx);
 
-            % Multiplier to 1D-enthalpy
-            heq = model.NEARWALLHMULT.*h;
+            % Applier near-wall / 1-D enthalpy ratio
+            switch model.NEARWALLH
+                case InputEnums.NEARWALLH.RATIO
+                    % Constant ratio from user input (default = 1)
+                    ratio = model.NEARWALLHRATIO;
+                case InputEnums.NEARWALLH.FILM
+                    % Mass flux-dependent input for annular two-phase flow
+                    G1 = 900; n = 0.35;                                    % Model constants (TODO: to be moved to model inputs)
+                    ratio = max(1,(mix.MFLUX(zIdx)./G1).^n);
+            end
+            heq = ratio.*h;
 
-            % Separate treatment for spacers
-            idx = ismember(zIdx,mix.KIDX);
-            heq(idx) = h(idx);
+            if ~skipAdjustments
+                % Separate treatment for spacers
+                idx = ismember(zIdx,mix.KIDX);
+                heq(idx) = h(idx);
 
-            heq = mix.AFDISTR(h,heq,zIdx);        
+                heq = mix.AFDISTR(h,heq,zIdx);
+            end
         end
 
     end
@@ -2267,7 +2282,8 @@ classdef Mixture < Solvers.AbstractField
             %
             % Supported Models:
             % - QUALITY: Interpolates relaxation time from predefined quality-time pairs
-            % - VOID: Computes relaxation time based on void fraction and fluid properties
+            % - VOID   : Computes relaxation time based on void fraction and fluid properties
+            % - FILM   : Relaxation time model for annular two-phase flow
             %
             % Notes:
             % - Local perturbation overrides are applied using mix.KTRELAX
@@ -2292,6 +2308,24 @@ classdef Mixture < Solvers.AbstractField
                     dvf    = model.NEARWALLRELAXCOEF(3);                   % [-] Small phase volumetric ratio bias to avoid singularity
                     ALPHAL = mix.fluid.ALPHAL(mix.liquid.H(zIdx));
                     t = d0.^2./ALPHAL./(mix.vapor.VF(zIdx)+dvf).^n;        % [s] Time relaxation
+
+                case InputEnums.NEARWALLRELAX.FILM
+                    % Model for annular two-phase flow applications
+                    % Model fit to three-field liquid film simulations from drop entrainment/deposition
+
+                    OAFX = mix.OAFX(zIdx);                                 % [-] Onset of annular two-phase flow
+                    X    = mix.XEQ(zIdx);                                  % [-] Equilibrium thermodynamic quality
+                    G    = mix.MFLUX(zIdx);                                % [kg/s/m^2] Mass flux
+                    RHOV = mix.fluid.RHOV(mix.vapor.H(zIdx));              % [kg/m^3] Vapor density
+                    RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));             % [kg/m^3] Liquid density
+
+                    % Linear model
+                    t0 = 0.0541; Lx = 0.88; Lg = 0.16; Lr = 386; G0 = 2000;% Model constants (TODO: to be moved to model inputs)
+                    t = t0.*(1-Lx.*X).*min(1,1+Lg.*(1-G./G0)).*(1+Lr.*(RHOV./RHOL).^2); % [s] Time relaxation
+                    
+                    % Behavior upstream OAF
+                    tups = 0.13;                                           % [s] Upstream time relaxation (TODO: to be replaced by relevant model)
+                    t(mix.XEQ(zIdx)<=OAFX) = tups;                         % [s] Upstream OAF adjustment
             end
 
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations

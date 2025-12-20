@@ -306,8 +306,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
                     Wd(k) = (0.7-double(delta(k-1)>0)*0.4).*W;             % [kg/s] Next guess: 30% or 70% of liquid mass in droplet field (depending on sign of delta)
-                elseif k == 3
-                    Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
+                %elseif k == 3
+                %    Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
                 else
                     if all(diff(delta)./diff(Wd) > 0)
                         % Expected behavior
@@ -369,7 +369,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             arguments
                 tfSolver
                 tIdx              (:,1) double {mustBeInteger,mustBePositive}                                         = []
-                opts.display      {matlab.system.mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opts.display      {matlab.system.mustBeMember(opts.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL','VR'})} = {'HFLUX','W','U'}
                 opts.solveMode    {mustBeMember(opts.solveMode,{'REAL','NULL'})}                                      = 'REAL'
                 opts.wall         (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.inputSet.geometry.NWALL
                 opts.zIdx         (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                            = 1:tfSolver.NZ
@@ -378,6 +378,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opts.unitTemp     {mustBeMember(opts.unitTemp,{'K','C'})}                                             = 'K'
                 opts.arrangement  {mustBeMember(opts.arrangement,{'flow','vertical','horizontal'})}                   = 'flow'
                 opts.resize       (1,1) double {mustBeNonnegative}                                                    = 0
+                opts.nearWall     (1,1) logical                                                                       = false
             end
 
             if length(opts.zIdx) < 2
@@ -470,9 +471,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         'xlabel',          'Axial position [m]', ...
                         'ylabel', 'Field mass flow rate [kg/s]');
                     plotter.plotz(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                           );
-                    plotter.plotz(drp.W(opts.zIdx)                           ,'Drop'  ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.W(opts.zIdx,:)                         ,'Film'  ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(mix.vapor.W(opts.zIdx)                     ,'Vapor'                             );
+                    plotter.plotz(drp.W(opts.zIdx)                            ,'Drop'  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(flm.W(opts.zIdx,:)                          ,'Film'  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plotz(mix.vapor.W(opts.zIdx)                      ,'Vapor'                             );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -582,6 +583,32 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                         plotter.plotK(klocZ);
                     end
                 end
+
+                % Vapor ratios (void fraction and qualities)
+                if displayVariable({'VR'})
+                    plotter.addTile( ...
+                        'tileTitle', 'Void fraction and qualities', ...
+                        'xlabel'   ,          'Axial position [m]', ...
+                        'ylabel'   , 'Quality / Void fraction [-]');
+                    mix = flm.mix;
+                    plotter.plotz(mix.XEQ(opts.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
+                    plotter.plotz(mix.X(opts.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
+                    plotter.plotz(mix.VF(opts.zIdx) ,'VoidFraction','DisplayName','Void fraction'      );
+                    if opts.nearWall
+                        plotter.plotz(flm.X(opts.zIdx),'NearWall','DisplayName','Near-wall (film) mass quality','XData',zaf,'subset',zafIdx);
+                        plotter.plotz(drp.X(opts.zIdx),'Bulk'    ,'DisplayName','Bulk (drop) mass quality'     ,'XData',zaf,'subset',zafIdx);
+                    end
+                    plotter.legend('show', "Location", 'best');
+                    plotter.xlim([min(z) max(z)]);
+                    ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                    ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                    plotter.ylim([ymin ymax]);
+                    plotter.plotOAF(oafZ);
+                    if opts.obstructions
+                        plotter.plotK(klocZ);
+                    end
+                end
+
             end
 
             if opts.resize > 0
@@ -619,7 +646,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             arguments
                 tfSolver
                 zIdx            (1,1) double {mustBeScalarOrEmpty,mustBeInteger,mustBePositive}                    = tfSolver.NZ
-                opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL'})} = {'HFLUX','W','U'}
+                opt.display     {mustBeMember(opt.display,{'HFLUX','W','WL','U','THICK','FWE','FME','DME','ALL','VR'})} = {'HFLUX','W','U'}
                 opt.solveMode   {mustBeMember(opt.solveMode,{'REAL','NULL'})}                                      = 'REAL'
                 opt.wall        (1,:) double {mustBeVector,mustBeInteger,mustBePositive}                           = 1:tfSolver.inputSet.geometry.NWALL
                 opt.tIdx        (:,1) double {mustBeVector,mustBeInteger,mustBePositive}                           = []
@@ -627,6 +654,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opt.unitTemp    {mustBeMember(opt.unitTemp,{'K','C'})}                                             = 'K'
                 opt.arrangement {mustBeMember(opt.arrangement,{'flow','vertical','horizontal'})}                   = 'flow'
                 opt.resize      (1,1) double {mustBeNonnegative}                                                   = 0
+                opt.nearWall    (1,1) logical                                                                      = false
             end
 
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
@@ -762,6 +790,26 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 plotter.plotz(drp.transient('FGRAV',    'zIdx',zIdx)','Gravity'                                     );
                 plotter.plotz(drp.transient('FTOT' ,flm,'zIdx',zIdx)','Total'                                       );
                 plotter.legend('show', 'Location', 'best');
+            end
+
+            % Vapor ratios (void fraction and qualities)
+            if any(ismember({'VR'},opt.display))
+                plotter.newTile( ...
+                    'tileTitle', 'Void fraction and qualities', ...
+                    'xlabel'   ,                    'Time [s]', ...
+                    'ylabel'   , 'Quality / Void fraction [-]');
+                mix = flm.mix;
+                plotter.plotz(mix.transient('XEQ','zIdx',zIdx)','Equil','DisplayName','Equilibrium quality');
+                plotter.plotz(mix.transient('X'  ,'zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
+                plotter.plotz(mix.transient('VF' ,'zIdx',zIdx)','VF'   ,'DisplayName','Void faction'       );
+                if opt.nearWall
+                    plotter.plotz(flm.transient('X','zIdx',zIdx)','NearWall','DisplayName','Near-wall (film) mass quality');
+                    plotter.plotz(drp.transient('X','zIdx',zIdx)','Bulk'    ,'DisplayName','Bulk (drop) mass quality'     );
+                end
+                plotter.legend("show", "Location", 'best');
+                ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
+                ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
+                plotter.ylim([ymin ymax]);
             end
 
             if opt.resize > 0

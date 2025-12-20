@@ -65,7 +65,9 @@ classdef Model < Inputs.Input
         % Mixture near-wall models
 
         NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1)}  = 0.5                             % Near-wall mass flow distribution ratio [-]
-        NEARWALLHMULT    (1,1) double  {mustBePositive}                    = 1.0                             % Near-wall equilibrium enthalpy multiplier [-]
+        NEARWALLEQOAF    (1,1) logical                                     = false                           % Near-wall equilibrium at onset of annular two-phase flow
+        NEARWALLH        (1,1) InputEnums.NEARWALLH                        = 'RATIO'                         % Near-wall equilibrium enthalpy model selected from :class:`InputEnums.NEARWALLH`
+        NEARWALLHRATIO   (1,1) double  {mustBePositive}                    = 1.0                             % Near-wall equilibrium enthalpy ratio [-]
         NEARWALLRELAX    (1,1) InputEnums.NEARWALLRELAX                    = 'QUALITY'                       % Near-wall energy transfer time relaxation model selected from :class:`InputEnums.NEARWALLRELAX`
         NEARWALLRELAXX   (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Near-wall exchange relaxation time thermodynamic quality [-]
         NEARWALLRELAXT   (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Near-wall energy transfer relaxation time array [s]

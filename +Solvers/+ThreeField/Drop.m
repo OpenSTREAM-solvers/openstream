@@ -559,6 +559,24 @@ classdef Drop < Solvers.AbstractField
             Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),drop.U(zIdx),zIdx);
         end
 
+        function X = X(drop,zIdx)
+            %X Vapor quality in the bulk (drop) region [-]
+            %
+            % Vapor quality in the bulk region, considering only the
+            % droplet for the liquid phase. The bulk region is
+            % complementary of the near-wall region, defined in the mixture
+            % solver.
+            %
+            % Inputs:
+            %
+            % - drop  — :class:`Solvers.ThreeField.Drop` object
+            % - zIdx  — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:drop(1).NZ).'; end
+
+            X = 1-drop.W(zIdx)./drop.mix.NEARWALL.WBULK(zIdx);
+        end
+
     end
 
     methods(Access = protected)

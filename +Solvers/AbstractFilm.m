@@ -341,6 +341,23 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),absfilm.U(zIdx,:),zIdx);
         end
 
+        function X = X(absfilm,zIdx)
+            %X Vapor quality in the near-wall region [-]
+            %
+            % Vapor quality in the near-wall region, considering only the
+            % film for the liquid phase. The near-wall region is defined in
+            % the mixture solver.
+            %
+            % Inputs:
+            %
+            % - drop  — :class:`Solvers.ThreeField.Drop` object
+            % - zIdx  — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
+
+            X = 1-absfilm.W(zIdx,:)./absfilm.mix.NEARWALL.W(zIdx,:);
+        end
+
     end
 
     methods(Access = private)
