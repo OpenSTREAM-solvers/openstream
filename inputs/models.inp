@@ -8,10 +8,10 @@ MOMENTLIQUID  ! Liquid momentum conservation model                         > FUL
 MOMENTGAS     ! Gas momentum conservation model                            > FULL
 MOMENTFILM    ! Film momentum conservation model                           > FULL
 MOMENTDROP    ! Drop momentum conservation model                           > FULL
-WAVEBASEINT   ! Wave / base film interfacial momentum transfer model       > VAPORSHEARDROPMASS
-OAFFILMSPLIT  ! Film mass flow split model at onset of annular flow        > RATIO
-OAFBASERATIO  ! Base/Film mass ratio at onset of annular flow [-]          > 0.2
-BASEEQTHICK   ! Equlibrium base film thickness model                       > YPLUS
+WAVEBASEINT   ! Wave / base film interfacial momentum transfer model        > VAPORSHEARDROPMASS
+OAFFILMSPLIT  ! Film mass flow split model at onset of annular flow          > RATIO
+OAFBASERATIO  ! Base/Film mass ratio at onset of annular flow [-]           > 0.2
+BASEEQTHICK   ! Equlibrium base film thickness model                        > YPLUS
 END
 
 ID            ! Model ID                                                   > TUTORIAL2A

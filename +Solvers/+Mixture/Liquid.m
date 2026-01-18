@@ -136,8 +136,11 @@ classdef Liquid < Solvers.AbstractPhase
             %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            re = 4.*liquid.W(zIdx)./liquid.mix.fluid.MUL(liquid.H(zIdx))...
-                ./sum(liquid.mix.inputSet.geometry.PERIM);
+
+            geom = liquid.mix.inputSet.geometry;
+            fluid = liquid.mix.fluid;
+
+            re = 4.*liquid.W(zIdx)./fluid.MUL(liquid.H(zIdx))./sum(geom.PERIM);
         end
 
         function hfluxwalheat = HFLUX(liquid, zIdx)

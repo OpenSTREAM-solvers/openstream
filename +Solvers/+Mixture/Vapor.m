@@ -144,7 +144,7 @@ classdef Vapor < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
 
-            geom  = vapor.mix.inputSet.geometry;
+            geom = vapor.mix.inputSet.geometry;
             fluid = vapor.mix.fluid;
 
             %re = 4.*vapor.W(zIdx)./fluid.MUV(vapor.H(zIdx))./sum(geom.PERIM);

@@ -28,7 +28,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
-        fluid        {isa(fluid,'Inputs.FluidProperties')}                             % Fluid object :class:`Inputs.FluidProperties`
+        fluid        {isa(fluid,'Inputs.FluidProperties')}                               % Fluid object :class:`Inputs.FluidProperties`
         boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
 
         mixtureInit                                                                    % Null transient mixture object

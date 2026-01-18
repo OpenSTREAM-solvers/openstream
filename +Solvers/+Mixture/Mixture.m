@@ -1854,7 +1854,7 @@ classdef Mixture < Solvers.AbstractField
                     end
 
                 case 'HRM'
-                    % [-] Homogegeneous Relaxation Model
+                    % [-] Homogeneous Relaxation Model
                     %
                     % Model based on interfacial phase change time relaxation approach (main calculations in solve.m)
                     % Physical approach to geometrical and thermal inhomogeneities

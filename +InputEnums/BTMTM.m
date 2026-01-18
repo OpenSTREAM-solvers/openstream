@@ -7,7 +7,7 @@ classdef BTMTM
     %
     % Models:
     %
-    % - TPFM  — Wall momentum transfer based on  two-phase friction multiplier, using multiplier selected in :attr:`Inputs.Model.TPFM`
+    % - TPFM  — Wall momentum transfer based on two-phase friction multiplier, using multiplier selected in :attr:`Inputs.Model.TPFM`
     % - VAPOR — Wall momentum transfer based on vapor phase only, using single-phase momentum transfer model selected in :attr:`Inputs.Model.SPMTM`
 
     enumeration
