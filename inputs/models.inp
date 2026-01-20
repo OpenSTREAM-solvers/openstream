@@ -2,14 +2,14 @@ ID            ! Models ID                                                  > TUT
 NNODES        ! Number of axial nodes                                      > 100
 FLUID         ! Fluid ID                                                   > WATER
 INTNU         ! Interfacial heat transfer model                            > RELAXATION
-RELAXX        ! Condensation relaxation time [s]                           > -0.5 1.0
-RELAXTCOND    ! Condensation relaxation time [s]                           >  0.5 0.5 0.01
+RELAXX        ! Interfacial phase change relaxation time Xeq [-]           > -0.5 1.0
+RELAXTCOND    ! Interfacial condensation relaxation time [s]               >  0.5 0.5
 MOMENTLIQUID  ! Liquid momentum conservation model                         > FULL
 MOMENTGAS     ! Gas momentum conservation model                            > FULL
 MOMENTFILM    ! Film momentum conservation model                           > FULL
 MOMENTDROP    ! Drop momentum conservation model                           > FULL
-WAVEBASEINT   ! Wave / base film interfacial momentum transfer model        > VAPORSHEARDROPMASS
 OAFFILMSPLIT  ! Film mass flow split model at onset of annular flow          > RATIO
+WAVEBASEINT   ! Wave / base film interfacial momentum transfer model        > VAPORSHEARDROPMASS
 OAFBASERATIO  ! Base/Film mass ratio at onset of annular flow [-]           > 0.2
 BASEEQTHICK   ! Equlibrium base film thickness model                        > YPLUS
 END
@@ -45,3 +45,24 @@ FLUID         ! Fluid ID                                                   > WAT
 VOID          ! Void fraction model                                        > BESTION
 THERMALNONEQ  ! Thermal non-equilibrium model                              > HRM
 END
+
+ID            ! Model ID                                                   > TUTORIAL2F
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
+SPMTM         ! Single-phase wall momentum transfer model                  > BLASIUS
+FRICTION      ! Wall friction coefficients [-]                              > 0.2 -0.2 0
+TPFM          ! Two-phase friction multiplier model                        > EPRI
+END
+
+ID            ! Model ID                                                   > TUTORIAL2G
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
+KLOC          ! Elevation of local perturbations [m]                       > 1   2   3   4   5
+KLOSS         ! Pressure loss coefficients of local perturbations [-]       > 0.5 0.5 0.5 0.5 0.5
+TPKM          ! Two-phase local loss multiplier model                      > HOMOGENEOUS
+END
+       
