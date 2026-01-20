@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Three-field solver &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
@@ -160,7 +160,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#maintainers">Maintainers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors-and-users">Contributors and users</a></li>
 </ul>
 </li>
 </ul>
@@ -202,7 +202,31 @@
 <li><p>Field class methods for calculating secondary three-field parameters.</p></li>
 </ul>
 <hr class="docutils" />
-<dl class="mat class" id="module-Solvers.ThreeField.ThreeFieldSolver">
+<dl class="mat function" id="module-Solvers.ThreeField.ThreeFieldSolver">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.solve">
+<span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE Executes the three-field solver for steady-state and transient simulations.</p>
+<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a>
+object. It manages initialization, time stepping, axial sweeps, inner
+iterations, convergence checks, and logging.</p>
+<p>Workflow:</p>
+<ul class="simple">
+<li><p>Enables logging and opens persistent log file</p></li>
+<li><p>Validates solver state before execution</p></li>
+<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
+<li><p>If initial step converges, proceeds with transient simulation</p></li>
+<li><p>Handles exceptions and ensures proper log closure</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
+<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
+<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Logs progress and outputs to session directory</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.</span></span><span class="sig-name descname"><span class="pre">ThreeFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p>
@@ -481,32 +505,94 @@ and null (initial) transient data.</p>
 </div>
 </dd></dl>
 
-<dl class="mat function">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.ThreeFieldSolver.solve">
-<span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.ThreeFieldSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">tfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.ThreeFieldSolver.solve" title="Link to this definition"></a></dt>
-<dd><p>SOLVE Executes the three-field solver for steady-state and transient simulations.</p>
-<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a>
-object. It manages initialization, time stepping, axial sweeps, inner
-iterations, convergence checks, and logging.</p>
-<p>Workflow:</p>
-<ul class="simple">
-<li><p>Enables logging and opens persistent log file</p></li>
-<li><p>Validates solver state before execution</p></li>
-<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
-<li><p>If initial step converges, proceeds with transient simulation</p></li>
-<li><p>Handles exceptions and ensures proper log closure</p></li>
-</ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
-<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
-<li><p>Supports thermal non-equilibrium modeling</p></li>
-<li><p>Logs progress and outputs to session directory</p></li>
-</ul>
-</dd></dl>
-
 <hr class="docutils" />
 <dl class="mat class" id="module-Solvers.ThreeField">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.</span></span><span class="sig-name descname"><span class="pre">Film</span></span><a class="headerlink" href="#Solvers.ThreeField.Film" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p>
+<p>FILM Class for modeling liquid film in three-field solver</p>
+<p>This class encapsulates the physical and numerical properties of the film field,
+including flow variables and phase interactions.</p>
+<div class="members docutils container">
+<dl>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.DT">
+<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.DT" title="Link to this definition"></a></dt>
+<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.H">
+<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.H" title="Link to this definition"></a></dt>
+<dd><p>Enthalpy [J/kg]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>Film heat flux [W/m^2]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.ITR">
+<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.ThreeField.Film.ITR" title="Link to this definition"></a></dt>
+<dd><p>Iteration tracking</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.MEVAP">
+<span class="sig-name descname"><span class="pre">MEVAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.MEVAP" title="Link to this definition"></a></dt>
+<dd><p>Evaporation mass flux   [kg/s/m^2]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NTIME">
+<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NTIME" title="Link to this definition"></a></dt>
+<dd><p>Number of time steps [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NZ">
+<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NZ" title="Link to this definition"></a></dt>
+<dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.TIDX">
+<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.TIDX" title="Link to this definition"></a></dt>
+<dd><p>Time step index [-]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.TIME" title="Link to this definition"></a></dt>
+<dd><p>Time series [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.U">
+<span class="sig-name descname"><span class="pre">U</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.U" title="Link to this definition"></a></dt>
+<dd><p>Velocity [m/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.W">
+<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.W" title="Link to this definition"></a></dt>
+<dd><p>Mass flow rate [kg/s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.Z" title="Link to this definition"></a></dt>
+<dd><p>Elevation [m]</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.ThreeField.Drop">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.ThreeField.Drop" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
@@ -888,92 +974,6 @@ solver.</p>
 </div>
 </dd></dl>
 
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.ThreeField.</span></span><span class="sig-name descname"><span class="pre">Film</span></span><a class="headerlink" href="#Solvers.ThreeField.Film" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p>
-<p>FILM Class for modeling liquid film in three-field solver</p>
-<p>This class encapsulates the physical and numerical properties of the film field,
-including flow variables and phase interactions.</p>
-<div class="members docutils container">
-<dl>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.DT">
-<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.DT" title="Link to this definition"></a></dt>
-<dd><p>Time step size [s] from <a class="reference internal" href="Inputs.html#Inputs.Options.TSTEP" title="Inputs.Options.TSTEP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.TSTEP</span></code></a></p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.H">
-<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.H" title="Link to this definition"></a></dt>
-<dd><p>Enthalpy [J/kg]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.HFLUX">
-<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.HFLUX" title="Link to this definition"></a></dt>
-<dd><p>Film heat flux [W/m^2]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.ITR">
-<span class="sig-name descname"><span class="pre">ITR</span></span><a class="headerlink" href="#Solvers.ThreeField.Film.ITR" title="Link to this definition"></a></dt>
-<dd><p>Iteration tracking</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.MEVAP">
-<span class="sig-name descname"><span class="pre">MEVAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.MEVAP" title="Link to this definition"></a></dt>
-<dd><p>Evaporation mass flux   [kg/s/m^2]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NTIME">
-<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NTIME" title="Link to this definition"></a></dt>
-<dd><p>Number of time steps [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.NZ">
-<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.NZ" title="Link to this definition"></a></dt>
-<dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.TIDX">
-<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.TIDX" title="Link to this definition"></a></dt>
-<dd><p>Time step index [-]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.TIME" title="Link to this definition"></a></dt>
-<dd><p>Time series [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.U">
-<span class="sig-name descname"><span class="pre">U</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.U" title="Link to this definition"></a></dt>
-<dd><p>Velocity [m/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.W">
-<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.W" title="Link to this definition"></a></dt>
-<dd><p>Mass flow rate [kg/s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.ThreeField.Film.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.ThreeField.Film.Z" title="Link to this definition"></a></dt>
-<dd><p>Elevation [m]</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
 <hr class="docutils" />
 </section>
 
@@ -988,7 +988,7 @@ including flow variables and phase interactions.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024–2026, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

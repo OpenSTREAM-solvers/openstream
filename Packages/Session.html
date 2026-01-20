@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Session &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
@@ -160,7 +160,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#maintainers">Maintainers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors-and-users">Contributors and users</a></li>
 </ul>
 </li>
 </ul>
@@ -198,24 +198,7 @@
 <li><p>Session management: <a class="reference internal" href="#Session.Session" title="Session.Session"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.Session</span></code></a></p></li>
 </ul>
 <hr class="docutils" />
-<dl class="mat function" id="module-Session">
-<dt class="sig sig-object mat" id="Session.isLegalPath">
-<span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
-<dd><p>ISLEGALPATH Checks if the given pathname is valid on the current operating system</p>
-<p>This function attempts to convert the input pathname to a Java Path object.
-If the conversion succeeds, the path is considered legal and the function returns true.
-If an exception is thrown during conversion, the path is considered illegal and the function returns false.</p>
-<p>Input:</p>
-<ul class="simple">
-<li><p>pathname — String representing the file or folder path to validate</p></li>
-</ul>
-<p>Output:</p>
-<ul class="simple">
-<li><p>bool     — Logical true if the path is valid, false otherwise</p></li>
-</ul>
-</dd></dl>
-
-<dl class="mat class">
+<dl class="mat class" id="module-Session">
 <dt class="sig sig-object mat" id="Session.Session">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
@@ -426,6 +409,23 @@ Creates log file and session directory if needed.</p>
 </div>
 </dd></dl>
 
+<dl class="mat function">
+<dt class="sig sig-object mat" id="Session.isLegalPath">
+<span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
+<dd><p>ISLEGALPATH Checks if the given pathname is valid on the current operating system</p>
+<p>This function attempts to convert the input pathname to a Java Path object.
+If the conversion succeeds, the path is considered legal and the function returns true.
+If an exception is thrown during conversion, the path is considered illegal and the function returns false.</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>pathname — String representing the file or folder path to validate</p></li>
+</ul>
+<p>Output:</p>
+<ul class="simple">
+<li><p>bool     — Logical true if the path is valid, false otherwise</p></li>
+</ul>
+</dd></dl>
+
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Session.LogMode">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">LogMode</span></span><a class="headerlink" href="#Session.LogMode" title="Link to this definition"></a></dt>
@@ -450,7 +450,7 @@ both, or suppressed entirely.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024–2025, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024–2026, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
