@@ -28,6 +28,7 @@ classdef FluidProperties
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
         PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
+        UC         (1,1) double  {mustBeNumeric}                           = 1                     % Kutateladze critical velocity [m/s]
 
     end
 
@@ -96,6 +97,7 @@ classdef FluidProperties
 
             % Critical properties
             PCRIT    = coolpropH.CoolProp.p_critical;                      % [Pa] Critical pressure
+            UC       = (SIGMA*modelObj.G*(RHOF-RHOG)/RHOG^2)^0.25;         % [m/s] Kutateladze vapor critical velocity
 
             % Limiting properties for which CoolProp has valid data for the fluid
             TMIN     = coolpropH.CoolProp.Tmin+1;                          % [K] Minimum temperature
@@ -133,6 +135,7 @@ classdef FluidProperties
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
                 obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
+                obj(i).UC       = UC;                                      % [m/s] Kutateladze critical velocity
                 obj(i).TMIN     = TMIN;                                    % [K] Minimum temperature
                 obj(i).HMIN     = HMIN(i);                                 % [J/kg] Minimum enthalpy
                 obj(i).TMAX     = TMAX;                                    % [K] Maximum temperature
