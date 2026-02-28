@@ -61,7 +61,7 @@ end
 
 ffSolver.inputSet.session.log.closeLog();
 ffSolver.inputSet.session.log.diaryOff();
-ffSolver.log('Output directory: %s\n',ffSolver.inputSet.session.directory);
+ffSolver.log('Output directory: %s\n\n',ffSolver.inputSet.session.directory);
 
 
 function solver(solveINIT)

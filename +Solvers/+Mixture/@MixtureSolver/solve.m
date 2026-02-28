@@ -61,7 +61,7 @@ end
 
 mixSolver.inputSet.session.log.closeLog();
 mixSolver.inputSet.session.log.diaryOff();
-mixSolver.log('Output directory: %s\n',mixSolver.inputSet.session.directory);
+mixSolver.log('Output directory: %s\n\n',mixSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes
@@ -162,7 +162,7 @@ function solver(solveINIT)
                         Mvtot = mix(tIdx).MTOT(zIdx);                                                      % [kg/s/m] Linear vapor mass transfer rate
                         Wvnew = Uv.*(mix(tIdx).HRM.WV(zIdx-1,:)+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
                         Wvnew = max(0,Wvnew);                                                              % [kg/s] Constrain solution so that Wv cannot be negative
-                        %Wvnew = min(mix(tIdx).WWALL(zIdx),Wvnew);
+                        %Wvnew = min(mix(tIdx).WWALL(zIdx),Wvnew);                                          % [kg/s] Constrain solution so that Wv cannot be larger than the total flow rate
                         mix(tIdx).HRM.WV(zIdx,:) = (1-options.RELAXWV).*Wviter+options.RELAXWV.*Wvnew;     % [kg/s] Apply relaxation
 
                         mix(tIdx).HRM.X(zIdx,:)  = mix(tIdx).HRM.WV(zIdx,:)./mix(tIdx).WWALL(zIdx);        % [-] Relaxed vapor quality

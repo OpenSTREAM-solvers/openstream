@@ -61,7 +61,7 @@ end
 
 tfSolver.inputSet.session.log.closeLog();
 tfSolver.inputSet.session.log.diaryOff();
-tfSolver.log('Output directory: %s\n',tfSolver.inputSet.session.directory);
+tfSolver.log('Output directory: %s\n\n',tfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes

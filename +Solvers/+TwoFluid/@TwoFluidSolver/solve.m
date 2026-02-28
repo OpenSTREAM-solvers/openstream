@@ -61,7 +61,7 @@ end
 
 twfSolver.inputSet.session.log.closeLog();
 twfSolver.inputSet.session.log.diaryOff();
-twfSolver.log('Output directory: %s\n',twfSolver.inputSet.session.directory);
+twfSolver.log('Output directory: %s\n\n',twfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes
@@ -74,7 +74,7 @@ function solver(solveINIT)
         twfSolver.log('\nSolve steady-state ...\n');
         liquid = twfSolver.liquidInit;
         vapor  = twfSolver.vaporInit;
-        fluid = repmat(twfSolver.fluid(1),1,length(liquid));
+        fluid  = repmat(twfSolver.fluid(1),1,length(liquid));
         mix    = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
     else
         if length(twfSolver.liquid) < 2
