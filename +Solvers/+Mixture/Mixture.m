@@ -558,9 +558,9 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function fw = FW(mix, zIdx)
-            %FW Fanning wall friction factor [-]
+            %FW Darcy wall friction factor [-]
             %
-            % Computes the Fanning wall friction factor based on
+            % Computes the Darcy wall friction factor based on
             % :attr:`Inputs.Model.SPMTM` model.
             %
             % Inputs:
@@ -585,9 +585,9 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function fwl = FWL(mix, zIdx)
-            %FWL Liquid-equivalent Fanning wall friction factor [-]
+            %FWL Liquid-equivalent Darcy wall friction factor [-]
             %
-            % Computes the Fanning friction factor, using liquid-equivalent
+            % Computes the Darcy friction factor, using liquid-equivalent
             % Reynolds number, based on :attr:`Inputs.Model.SPMTM` model.
             %
             % Inputs:
@@ -889,6 +889,50 @@ classdef Mixture < Solvers.AbstractField
 
     methods
 
+         function cbtz = CBTZ(mix, zIdx)
+             %CBTZ Length from upstream CBT [m]
+             %
+             % Compute the distance from the upstream critical boiling
+             % transition. Support multiple transitions.
+             %
+             % Inputs:
+             %
+             % - mix  — :class:`Solvers.Mixture.Mixture` object
+             % - zIdx — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            geom  = mix.inputSet.geometry;
+
+            idxbt = mix.CBT | mix.MFBT;                                    % Boiling transition flag
+            cbtz = zeros(mix.NZ,geom.NWALL);                               % [m] Initialize
+
+            for k = 1:geom.NWALL
+                indTransition = find(diff(idxbt(:,k)) == 1);                 % Indexes of transition
+                upZ = mix.Z;                                               % [m] Initialize upstream CBT elevations
+                for i = 1:numel(indTransition)
+                    upZ(indTransition(i):end) = upZ(indTransition(i));     % [m] Fill in upstream CBT elevations
+                end
+                cbtz(:,k) = mix.Z(zIdx)-upZ(zIdx);
+            end
+         end
+
+         function cbtIdx = CBTIDX(mix)
+             %CBTIDX Index of first CBT occurrence [-]
+             %
+             % Compute the index of first CBT occurrence.
+             % If no occurrence if found, NaN is returned.
+             %
+             % Inputs
+             %
+             % - mix  — :class:`Solvers.Mixture.Mixture` object
+
+             cbtIdx = find(any(mix.CBT,2),1);
+             if isempty(cbtIdx)
+                 cbtIdx = NaN;
+             end
+         end
+
          function hwallboil = HWALLBOIL(mix, zIdx)
             %HWALLBOIL Boiling wall heat transfer coefficient [W/m^2/K]
             %
@@ -919,47 +963,126 @@ classdef Mixture < Solvers.AbstractField
             hwallboil = max(0,hwallboil);
          end
 
-         function hwall = HWALL(mix, zIdx)
+         function [hwallbt, Tbv] = HWALLPOSTCBT(mix, twall, zIdx)
+             %HWALLPOSTCBT Post-CBT wall heat transfer coefficient [W/m^2/K]
+             %
+             % Computes the effective wall heat transfer coefficient under
+             % post-CBT conditions. based on :attr:`Inputs.Model.BTHTM` model.
+             %
+             % Inputs:
+             %
+             % - mix   — :class:`Solvers.Mixture.Mixture` object
+             % - twall — Wall temperature
+             % - zIdx  — Axial indices to evaluate (optional)
+             %
+             % Supported wall heat transfer models
+             %
+             % - VAPOR: Heat transfer to vapor phase
+             % - DOUGALL: Dougall-Rohsenow model (:cite:t:`DougallRohsenow1963`)
+             % - DELORME: Groeneveld-Delorme model (:cite:t:`GroeneveldDelorme1976`)
+
+             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+
+             fld    = mix.fluid;
+             model = mix.inputSet.model;
+             geom  = mix.inputSet.geometry;
+
+             % Saturated vapor properties
+             PRG  = fld.PRANDTLG;                                           % [-] Saturated vapor Prandtl number
+             KG   = fld.KG;                                                 % [W/m/K] Saturated vapor conductivity
+             RHOG = fld.RHOG;                                               % [kg/m^3] Saturated vapor density
+             RHOF = fld.RHOF;                                               % [kg/m^3] Saturated liquid density
+             MUG  = fld.MUG;                                                % [Pa.s] Saturated vapor viscosity
+
+             switch model.BTHTM
+                 case 'VAPOR'
+                     % Single-phase vapor
+                     hwallbt = mix.vapor.HWALL(twall,zIdx);
+                     Tbv     = mix.vapor.T(zIdx);
+                 case 'DOUGALL'
+                     % Dougall-Rohsenow model
+                     %TODO: Check
+                     XEQ  = max(0,mix.XEQ(zIdx));                          % [-] Equilibrium quality
+                     U    = mix.MFLUX(zIdx)./RHOG.*(XEQ+(RHOG/RHOF).*(1-XEQ)); % [m/s] Throughput velocity ((Ql+Qv)/AREA under thermal equilibrium assumption)
+                     REG  = RHOG.*U.*geom.HDIAM./MUG;                      % [-] Throughput Reynolds number
+                     NU  = 0.023.*REG.^0.8.*PRG.^0.4;                      % [-] Nusselt number
+
+                     hwallbt = NU.*(KG/geom.HDIAM);
+                     Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
+                 case 'DELORME'
+                     % Groeneveld-Delorme model
+                     % TODO: Check. Vapor superheat (TVa) does not start at Tsat at CBT
+                     a1 =  0.13864;  b0 =  1.3072;
+                     a2 =  0.2031 ;  b1 = -1.0833;
+                     a3 =  0.20006;  b2 =  0.8455;
+                     a4 = -0.09232;
+
+                     CPG = fld.CPG;                                         % [J/kg/K] Saturated vapor constant pressure specific heat
+                     HF  = fld.HF;                                          % [J/kg] Saturated vapor enthalpy
+                     HG  = fld.HG;                                          % [J/kg] Saturated vapor enthalpy
+                     HFG = fld.HFG;                                         % [J/kg] Latent heat of evaporation
+
+                     RHOV = RHOG;                                          % [kg/m^3] Vapor density
+                     %RHOV = fld.RHOV(HVa);                                  % This option needs iterations since HVa is not known here
+                     X1 = min(1,max(0,mix.XEQ(zIdx)));                     % [-] Vapor mass quality based on HEM
+                     VFHOM = X1.*RHOF./(X1.*RHOF+(1-X1).*RHOV);            % [-] Void fraction based on HEM
+
+                     X = max(0,mix.XEQ(zIdx));                             % [-]
+                     REHOM = mix.MFLUX(zIdx).*geom.HDIAM.*X1./MUG./VFHOM;  % [-] Reynolds number based on HEM
+                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*X+b2.*X.^2); % [-]
+                     Phi = min(pi/2,max(0,Phi));                           % [-]
+
+                     HVa = max(HG,mix.H(zIdx))+HFG.*exp(-tan(Phi)).*exp(-(3.*VFHOM).^(-4)); % [J/kg] Superheated vapor enthalpy
+                     %HVa = max(HG,mix.H(zIdx));                           % [J/kg] Saturated vapor enthalpy
+                     TVa = fld.T(HVa);                                      % [K] Resulting vapor temperature
+                     Xa  = HFG.*mix.XEQ(zIdx)./(HVa-HF);                   % [-] Resulting vapor mass quality
+
+                     Tf  = max(fld.TSAT+1E-6,(TVa+twall)/2);                % [K] Film temperature
+                     Hf  = fld.H(Tf);                                       % [J/kg] Resulting film enthalpy
+
+                     RHOV = fld.RHOV(HVa);                                  % [kg/m3] Vapor density
+                     REV  = mix.MFLUX(zIdx).*geom.HDIAM./fld.MUV(Hf).*(Xa+(RHOV/RHOF).*(1-Xa)); % [-] Vapor Reynolds number
+                     PRF  = fld.PRANDTLV(Hf);                               % [-] Vapor Prandtl number at film temperature
+                     NU   = 0.008348.*REV.^0.8774.*PRF.^0.6112;            % [-] Nusselt number
+
+                     KVF = fld.KV(Hf);                                      % [W/m/K] Vapor conductivity at film temperature
+                     hwallbt = NU.*(KVF/geom.HDIAM);
+                     Tbv     = TVa;
+             end
+         end
+
+         function [hwall, Tbv] = HWALL(mix, twall, zIdx)
             %HWALL Wall heat transfer coefficient [W/m^2/K]
             %
             % Computes the effective wall heat transfer coefficient by
-            % combining single-phase and boiling models. Supports  multiple
-            % walls and adjusts for boiling transition conditions using
-            % :attr:`Inputs.Model.BTHTM` model.
+            % combining single-phase, boiling and post-CBT models. Supports
+            % multiple walls
             %
             % Inputs:
             %
             % - mix  — :class:`Solvers.Mixture.Mixture` object
             % - zIdx — Axial indices to evaluate (optional)
-            %
-            % Supported boiling transition models
-            %
-            % - VAPOR: Heat transfer to vapor phase
 
-            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
             % Pre-CBT
-            hsp = mix.liquid.HWALL(zIdx);                                  % [W/m^2/K] Single-phase liquid
+            hsp = mix.liquid.HWALL(twall,zIdx);                            % [W/m^2/K] Single-phase liquid
             hboil = mix.HWALLBOIL(zIdx);                                   % [W/m^2/K] Boiling
             hwall = max(hsp,hboil);                                        % [W/m^2/K]
+            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),1);
 
             % Post-CBT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
 
             if any(idxbt(:))
-                model = mix.inputSet.model;
-
-                switch model.BTHTM
-                    case 'VAPOR'
-                        hwallbt = mix.vapor.HWALL(zIdx);                   % [W/m^2/K] Single-phase vapor
-                end
-
                 % Replace hwall values at BT locations with corrected values
-                hwall(idxbt) = hwallbt(idxbt);
+                [hwallbt,Tbvbt] = mix.HWALLPOSTCBT(twall,zIdx);            % [W/m^2/K]
+                hwall(idxbt) = hwallbt(idxbt);                             % [W/m^2/K]
+                Tbv(idxbt)   = Tbvbt(idxbt);                               % [K]
             end
         end
 
-        function twall = TWALL(mix, zIdx)
+        function [twall, tbulk] = TWALL(mix, zIdx)
             %TWALL Wall temperature [K]
             %
             % Computes the wall temperature based on heat flux and wall heat transfer
@@ -973,18 +1096,39 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
+            geom  = mix.inputSet.geometry;
+            model = mix.inputSet.model;
+
             q = mix.HFLUX(zIdx,:);                                         % [W/m^2]
-            hwall = mix.HWALL(zIdx);                                       % [W/m^2/K]
 
-            % Pre-CBT
-            Tb    = mix.liquid.T(zIdx);                                    % [K] Fluid bulk temperature based on liquid phase
-            twall = Tb + q./hwall;                                         % [K]
+            Tbl = repmat(mix.liquid.T(zIdx),1,geom.NWALL);                 % [K] Fluid bulk temperature based on liquid phase
 
-            % Post-CBT
-            Tb       = mix.vapor.T(zIdx);                                  % [K] Fluid bulk temperature based on vapor phase
-            twallcbt = Tb + q./hwall;                                      % [K]
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
-            twall(idxbt) = twallcbt(idxbt);                                % [K]
+
+            % Initialize Twall based on bulk liquid temperature
+            twall = Tbl;                                                   % [K]
+
+            % Iterate (HWALL may depend on TWALL)
+            MaxIter = 10;                                                  % Maximum number of iterations
+            MaxErr  = 0.1;                                                 % [K] Maximum wall temperature error
+            for k = 1:MaxIter
+                twold = twall;
+                [hwall, Tbv] = mix.HWALL(twall,zIdx);                      % [W/m^2/K]
+                %Tbv = repmat(Tbv,1,geom.NWALL);                            % [K] Fluid bulk temperature based on vapor phase    
+
+                % Pre-CBT
+                twall = Tbl + q./hwall;                                    % [K]
+
+                % Post-CBT
+                twallcbt = Tbv + q./hwall;                                 % [K]
+                twall(idxbt) = twallcbt(idxbt);                            % [K]
+
+                err = max(abs(twall(:)-twold(:)));
+                if err < MaxErr; break; end
+            end
+            if err > MaxErr, fprintf('%s Wall temperature : not converged -> err = %0.4f\n',class(mix), err); end
+            tbulk = Tbl;
+            tbulk(idxbt) = Tbv(idxbt);
         end
 
     end
@@ -1159,7 +1303,7 @@ classdef Mixture < Solvers.AbstractField
             n    = model.WBOILINGN;                                        % Exponent of wall boiling function [-]
 
             xeq = mix.XEQ(zIdx);                                           % [-]
-            walevapratio = min(1,max(0,((xeq-xsub)./(xsat-xsub)).^n));     % [-]
+            walevapratio = ((min(xsat,(max(xsub,xeq)))-xsub)./(xsat-xsub)).^n; % [-]
 
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
             walevapratio = walevapratio.*double(~idxbt);                   % [-]
@@ -1383,6 +1527,223 @@ classdef Mixture < Solvers.AbstractField
 
             Hvtot = Htot./WV;                                              % [J/kg/m]
             Hvtot(WV <= 1E-8) = 0;
+        end
+
+    end
+
+    %% --- HRM modeling ---
+    methods
+
+        function Fo = FOURIERCOND(mix, zIdx)
+            %FOURIERCOND Calculates the non-dimensional relaxation time for
+            % wall-dependent interfacial condensation.
+            %
+            % Computes the non-dimensional relaxation time (akin to a
+            % Fourier number) associated with interfacial condensation at
+            % the specified axial indices, based on the thermal relaxation
+            % model defined in :attr:`Inputs.Model.THERMALRELAX`.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - FOURIERX: Interpolate Fourier number from pre-defined quality-time pairs
+            % - TIMEX: Interpolate relaxation time from pre-defined quality-time pairs
+            % - VOID: Computes Fourier number based on void fraction and fluid properties
+            % - HOMOGENEOUS: Computes Fourier number based on homogeneous approach
+            % - NONHOMOGENEOUS: Computes Fourier number based on non-homogeneous approach
+            % - FOURIER: Empirical Fourier number correlation
+            %
+            % Notes:
+            %
+            % - TODO: Investigate whether this parameter should be wall-dependent
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            geom  = mix.inputSet.geometry;
+            model = mix.inputSet.model;
+            fld   = mix.fluid;
+
+            HDIAM = geom.HDIAM;                                            % [-] Hydraulic diameter
+
+            X   = model.RELAXX;                                            % [-] Equilibrium quality array
+            dg0 = model.RELAXCONDCOEF(1);                                  % [m] Reference gas particle Sauter mean diameter
+            n   = model.RELAXCONDCOEF(2);                                  % [-] Exponent of phase volumetric ratio
+            dvf = model.RELAXCONDCOEF(3);                                  % [-] Small phase volumetric ratio bias to avoid singularity
+            b   = model.RELAXCONDCOEF(4);                                  % [-] Exponent of quality difference
+
+            Xeq = mix.XEQ(zIdx);                                           % [-] Equilibrium quality
+
+            switch model.THERMALRELAX
+
+                case InputEnums.THERMALRELAX.FOURIERX
+                    FO = model.RELAXCONDFO(1:length(model.RELAXX));        % [-] Fourier number array
+                    Fo = interp1(X,FO,Xeq,'linear','extrap');              % [s] Interpolated Fourier number
+                    Fo(Xeq<X(1))   = FO(1);                                % [s] Lower bound limit
+                    Fo(Xeq>X(end)) = FO(end);                              % [s] Upper bound limit
+
+                case InputEnums.THERMALRELAX.TIMEX
+                    T = model.RELAXCONDT(1:length(model.RELAXX));          % [-] Time relaxation array
+                    t = interp1(X,T,Xeq,'linear','extrap');                % [s] Interpolated time relaxation
+                    t(Xeq<X(1))   = T(1);                                  % [s] Lower bound limit
+                    t(Xeq>X(end)) = T(end);                                % [s] Upper bound limit
+
+                    ALPHAL = fld.ALPHAL(mix.liquid.H(zIdx));               % [m/s^2] Liquid thermal diffusivity
+                    Fo     = t.*ALPHAL./HDIAM.^2;                          % [-] Fourier number
+
+                case InputEnums.THERMALRELAX.VOID
+                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
+                    deltaX = mix.XEQ(zIdx)-mix.HRM.X(zIdx,:);              % [-] Quality difference
+
+                    Fo     = 1./(VF+dvf).^n./abs(deltaX).^b.*(dg0./HDIAM).^2; % [-] Void model
+
+                case InputEnums.THERMALRELAX.HOMOGENEOUS
+                    RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
+                    RHOV   = fld.RHOV(mix.vapor.H(zIdx));                  % [kg/m^3] Vapor density
+                    X      = mix.liquid.X(zIdx);                           % [-] Liquid mass quality
+
+                    dg     = dg0;                                          % [m] Keep dg0
+
+                    Fo     = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
+
+                case InputEnums.THERMALRELAX.NONHOMOGENEOUS
+                    RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
+                    RHO    = mix.RHO(zIdx);                                % [kg/m^3] Mixture density
+                    X      = mix.liquid.X(zIdx);                           % [-] Liquid mass quality
+                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
+                    U      = mix.U(zIdx);                                  % [m/s] Mixture velocity
+                    UG     = mix.vapor.U(zIdx);                            % [m/s] Vapor velocity
+                    NUI    = 2; %!!!For now                                % [-] Nusselt number for interfacial condensation (approximated)
+
+                    dg     = dg0;                                          % [m] Keep dg0
+
+                    Fo     = (RHO./RHOL).*(U./UG).*X./(VF+dvf)./(6.*NUI).*(dg./HDIAM).^2; % [-] Non-homogeneous model
+
+                case InputEnums.THERMALRELAX.FOURIER
+                    % TODO: Dummy model for now
+                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
+
+                    Fo     = 1./(VF+dvf).^n.*(dg0./HDIAM).^2; %!!!For now
+
+                    % RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
+                    % RHOV   = fld.RHOV(mix.vapor.H(zIdx));                  % [kg/m^3] Vapor density
+                    % X      = mix.liquid.X(zIdx);                          % [-] Liquid mass quality
+                    %
+                    % dg     = dg0;                                         % [m] Keep dg0
+                    %
+                    % Fo     = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
+            end
+        end
+
+        function Fo = FOURIEREVAP(mix, zIdx)
+            %FOURIEREVAP Calculates the non-dimensional relaxation time for
+            % wall-dependent interfacial evaporation.
+            %
+            % Computes the non-dimensional relaxation time (akin to a
+            % Fourier number) associated with interfacial evaporation at
+            % the specified axial indices, based on the thermal relaxation
+            % model defined in :attr:`Inputs.Model.THERMALRELAX`.
+            %
+            % Inputs:
+            %
+            % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
+            %
+            % Supported Models:
+            %
+            % - FOURIERX: Interpolate Fourier number from pre-defined quality-time pairs
+            % - TIMEX: Interpolate relaxation time from pre-defined quality-time pairs
+            % - VOID: Computes relaxation time based on void fraction and fluid properties
+            % - HOMOGENEOUS: Computes Fourier number based on homogeneous approach
+            % - NONHOMOGENEOUS: Computes Fourier number based on non-homogeneous approach
+            % - FOURIER: Empirical Fourier number correlation
+            %
+            % Notes:
+            %
+            % - TODO: Investigate whether this parameter should be wall-dependent
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            geom  = mix.inputSet.geometry;
+            model = mix.inputSet.model;
+            fld   = mix.fluid;
+
+            HDIAM = geom.HDIAM;                                            % [-] Hydraulic diameter
+
+            X   = model.RELAXX;                                            % [-] Equilibrium quality array
+            dl0 = model.RELAXEVAPCOEF(1);                                  % [m] Reference liquid particle Sauter mean diameter
+            n   = model.RELAXEVAPCOEF(2);                                  % [-] Exponent of phase volumetric ratio
+            dvf = model.RELAXEVAPCOEF(3);                                  % [-] Small phase volumetric or mass ratio bias to avoid singularity
+            b   = model.RELAXEVAPCOEF(4);                                  % [-] Exponent of quality difference
+
+            Xeq = mix.XEQ(zIdx);                                           % [-] Equilibrium quality
+
+            switch model.THERMALRELAX
+
+                case InputEnums.THERMALRELAX.FOURIERX
+                    FO = model.RELAXEVAPFO(1:length(model.RELAXX));        % [-] Fourier number array
+                    Fo = interp1(X,FO,Xeq,'linear','extrap');              % [s] Interpolated Fourier number
+                    Fo(Xeq<X(1))   = FO(1);                                % [s] Lower bound limit
+                    Fo(Xeq>X(end)) = FO(end);                              % [s] Upper bound limit
+
+                case InputEnums.THERMALRELAX.TIMEX
+                    T = model.RELAXEVAPT(1:length(model.RELAXX));          % [-] Time relaxation array
+                    t = interp1(X,T,Xeq,'linear','extrap');                % [s] Interpolated time relaxation
+                    t(Xeq<X(1))   = T(1);                                  % [s] Lower bound limit
+                    t(Xeq>X(end)) = T(end);                                % [s] Upper bound limit
+
+                    ALPHAV = fld.ALPHAV(mix.vapor.H(zIdx));                % [m/s^2] Vapor thermal diffusivity
+                    Fo     = t.*ALPHAV./HDIAM.^2;                          % [-] Fourier number
+
+                case InputEnums.THERMALRELAX.VOID
+                    VF     = mix.liquid.VF(zIdx);                          % [-] Liquid volume fraction
+                    deltaX = mix.XEQ(zIdx)-mix.HRM.X(zIdx,:);              % [-] Quality difference
+
+                    Fo     = 1./(VF+dvf).^n./abs(deltaX).^b.*(dl0./HDIAM).^2; % [-] Void model
+
+                case InputEnums.THERMALRELAX.HOMOGENEOUS
+                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
+                    RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
+                    X    = mix.vapor.X(zIdx);                              % [-] Vapor mass quality
+                    VF   = mix.liquid.VF(zIdx);                            % [-] Liquid volume fraction
+
+                    cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
+                    if isnan(cbtIdx), cbtIdx = zIdx; end
+                    VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
+                    dl  = dl0.*(VF./VF0).^n;                               % [m]
+
+                    Fo = (RHOL./RHOV).*X./(1-X+dvf)./12.*(dl./HDIAM).^2;   % [-] Homogeneous model
+
+                case InputEnums.THERMALRELAX.NONHOMOGENEOUS
+                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
+                    RHO  = mix.RHO(zIdx);                                  % [kg/m^3] Mixture density
+                    X    = mix.vapor.X(zIdx);                              % [-] Vapor mass quality
+                    VF   = mix.liquid.VF(zIdx);                            % [-] Liquid volume fraction
+                    U    = mix.U(zIdx);                                    % [m/s] Mixture velocity
+                    UG   = mix.vapor.U(zIdx);                              % [m/s] Vapor velocity
+                    NUI  = 2; %!!!For now                                  % [-] Nusselt number for interfacial evaporation (approximated)
+
+                    cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
+                    if isnan(cbtIdx), cbtIdx = zIdx; end
+                    VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
+                    dl  = dl0.*(VF./VF0).^n;                               % [m]
+
+                    Fo     = (RHO./RHOV).*(U./UG).*X./(VF+dvf)./(6.*NUI).*(dl./HDIAM).^2; % [-] Non-homogeneous model
+
+                case InputEnums.THERMALRELAX.FOURIER
+                    Re0 = model.RELAXEVAPFOCOEF(1);                        % [-] Reference vapor Reynolds number
+                    n   = model.RELAXEVAPFOCOEF(2);                        % [-] Overall exponent
+                    p   = model.RELAXEVAPFOCOEF(3);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
+
+                    Kp  = fld.RHOG.*(fld.HG-fld.HF).*fld.UC;               % [W/m^2] Characteristics hydrodynamic heat flux scale
+                    Kps = Kp./3.0148E7;                                    % [-] Normalized with maximum value
+                    Rev = mix.vapor.RE(zIdx);                              % [-] Vapor Reynolds number
+
+                    Fo  = 1E-4.*(Kps.^p.*Re0./Rev).^n;                     % [-] Empirical model
+            end
         end
 
     end
@@ -1821,7 +2182,7 @@ classdef Mixture < Solvers.AbstractField
                     REL      = mix.liquid.RE;                              % [-] Reynolds number based on liquid phase
 
                     qWD  = mix.HFLUX;                                      % [W/m^2]
-                    HDB  = mix.HWALLLIQ;                                   % [W/m^2/K] Dittus-Boelter correaltion
+                    HDB  = mix.HWALLLIQ;                                   % [W/m^2/K] Dittus-Boelter correlation
                     HB   = 193.*exp(-mix.P./4.344E6);                      % [Btu/hr/ft^2/F] Modified (?) Thom correlation
                     HB   = HB.*0.29307107./0.3048^2./(5/9);                % [W/m^2/K]
                     CHN  = 0.2;                                            % [-] Hancox and Nicoll coefficient (0.2 for channels and tubes)
@@ -1939,7 +2300,7 @@ classdef Mixture < Solvers.AbstractField
                     ugj = @(vf) 1.41.*((RHOL-RHOV).*SIG.*model.G./RHOL.^2).^(1/4).*((1-vf)./(1+vf)).^(1/2).*cos(model.ANGLE/180*pi); % [m/s] Drift velocity
 
                     vf = vfslip(mix.X(zIdx),1);                            % [-] Initialize void fraction
-                    MaxIter = 100;                                         % Maximum number fo iterations
+                    MaxIter = 100;                                         % Maximum number of iterations
                     MaxErr  = 0.001;                                       % [-] Maximum void fraction error
                     for i = 1:MaxIter
                         mix.vf(zIdx) = vfdrift(C0(vf),ugj(vf));
@@ -1947,7 +2308,7 @@ classdef Mixture < Solvers.AbstractField
                         if err < MaxErr, break; end
                         vf = mix.vf(zIdx);
                     end
-                    if i == MaxIter, fprintf('%s EPRI void model : not converged -> err=%0.4f\n',class(mix), err); end
+                    if err > MaxErr, fprintf('%s EPRI void model : not converged -> err = %0.4f\n',class(mix), err); end
             end
 
             function vf = vfslip(x,S)
@@ -2152,17 +2513,12 @@ classdef Mixture < Solvers.AbstractField
             %
             % Computes the time relaxation associated with interfacial
             % condensation at the specified axial indices, based on the
-            % thermal relaxation model defined in :attr:`Inputs.Model.THERMALRELAXTHERMALRELAX.
+            % thermal relaxation model defined in :attr:`Inputs.Model.THERMALRELAX.
             %
             % Inputs:
             %
             % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
-            %
-            % Supported Models:
-            %
-            % - QUALITY: Interpolates relaxation time from predefined quality-time pairs
-            % - VOID: Computes relaxation time based on void fraction and fluid properties
             %
             % Notes:
             %
@@ -2172,38 +2528,22 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            model = mix.inputSet.model;
-            fld = mix.fluid;
+            geom  = mix.inputSet.geometry;
+            fld   = mix.fluid;
 
-            Xeq = mix.XEQ(zIdx);
+            HDIAM  = geom.HDIAM;                                           % [m] Hydraulic diameter
+            ALPHAL = fld.ALPHAL(mix.liquid.H(zIdx));                       % [m/s^2] Liquid thermal diffusivity
+            Fo     = mix.FOURIERCOND(zIdx);                                % [-] Fourier number
 
-            switch model.THERMALRELAX
-                case InputEnums.THERMALRELAX.QUALITY
-                    X = model.RELAXX;                                      % [-] Equilibrium quality array
-                    T = model.RELAXTCOND(1:length(model.RELAXX));          % [-] Corresponding time relaxation
-
-                    t = interp1(X,T,Xeq,'linear','extrap');                % [s] Interpolated time relaxation
-                    t(Xeq<X(1))   = T(1);                                  % [s] Lower bound limit
-                    t(Xeq>X(end)) = T(end);                                % [s] Upper bound limit
-
-                case InputEnums.THERMALRELAX.VOID
-                    d0     = model.RELAXCONDCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
-                    n      = model.RELAXCONDCOEF(2);                       % [-] Exponent of phase volumetric ratio
-                    dvf    = model.RELAXCONDCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
-                    b      = model.RELAXCONDCOEF(4);                       % [-] Exponent of quality difference
-                    ALPHAL = fld.ALPHAL(mix.liquid.H(zIdx));               % [m/s^2] Liquid thermal diffusivity
-                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
-                    deltaX = Xeq-mix.HRM.X(zIdx,:);                        % [-] Quality difference
-                    Fo     = 1./(VF+dvf).^n./abs(deltaX).^b;               % [-] Fourier number
-
-                    t = d0.^2./ALPHAL.*Fo;                                 % [s] Time relaxation
-            end
+            t      = HDIAM.^2./ALPHAL.*Fo;                                 % [s] Time relaxation
 
             %geom  = mix.inputSet.geometry;
             %t = repmat(t,1,geom.NWALL);                                    % Expand to all wall
 
+            % Perturbation effect
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
             t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
+            
             t = max(1E-6,t);
             mix.relaxtcond(zIdx,:) = t;
         end
@@ -2221,11 +2561,6 @@ classdef Mixture < Solvers.AbstractField
             % - mix  — :attr:`Solvers.Mixture.Mixture` object containing fluid and model data
             % - zIdx — Axial indices to evaluate (optional; defaults to full axial domain)
             %
-            % Supported Models:
-            %
-            % - QUALITY: Interpolates relaxation time from predefined quality-time pairs
-            % - VOID: Computes relaxation time based on void fraction and fluid properties
-            %
             % Notes:
             %
             % - Local perturbation overrides are applied using mix.KTRELAX
@@ -2234,35 +2569,19 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            model = mix.inputSet.model;
-            fld = mix.fluid;
+            geom  = mix.inputSet.geometry;
+            fld   = mix.fluid;
 
-            Xeq = mix.XEQ(zIdx);
+            HDIAM  = geom.HDIAM;                                           % [m] Hydraulic diameter
+            ALPHAV = fld.ALPHAV(mix.vapor.H(zIdx));                        % [m/s^2] Vapor thermal diffusivity
+            Fo     = mix.FOURIEREVAP(zIdx);                                % [-] Fourier number
 
-            switch model.THERMALRELAX
-                case InputEnums.THERMALRELAX.QUALITY
-                    X = model.RELAXX;                                      % [-] Equilibrium quality array
-                    T = model.RELAXTEVAP(1:length(model.RELAXX));          % [-] Corresponding time relaxation
+            t      = HDIAM.^2./ALPHAV.*Fo;                                 % [s] Time relaxation
 
-                    t = interp1(X,T,Xeq,'linear','extrap');                % [s] Interpolated time relaxation
-                    t(Xeq<X(1))   = T(1);                                  % [s] Lower bound limit
-                    t(Xeq>X(end)) = T(end);                                % [s] Upper bound limit
-
-                case InputEnums.THERMALRELAX.VOID
-                    d0     = model.RELAXEVAPCOEF(1);                       % [m] Reference fluid particle Sauter mean diameter
-                    n      = model.RELAXEVAPCOEF(2);                       % [-] Exponent of phase volumetric ratio
-                    dvf    = model.RELAXEVAPCOEF(3);                       % [-] Small phase volumetric ratio bias to avoid singularity
-                    b      = model.RELAXCONDCOEF(4);                       % [-] Exponent of quality difference
-                    ALPHAV = fld.ALPHAV(mix.vapor.H(zIdx));                % [m/s^2] Liquid thermal diffusivity
-                    VF     = mix.liquid.VF(zIdx);                          % [-] Liquid volume fraction
-                    deltaX = Xeq-mix.HRM.X(zIdx,:);                        % [-] Quality difference
-                    Fo     = 1./(VF+dvf).^n./abs(deltaX).^b;               % [-] Fourier number
-
-                    t = d0.^2./ALPHAV.*Fo;                                 % [s] Time relaxation
-            end
-
+            % Perturbation effect
             idx = mix.KTRELAX(zIdx)>0;                                     % Index of local perturbations
             t(idx,:) = mix.KTRELAX(zIdx(idx));                             % [s] Time relaxation at local perturbations
+            
             t = max(1E-6,t);
             mix.relaxtevap(zIdx,:) = t;
         end
