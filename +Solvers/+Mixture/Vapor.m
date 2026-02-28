@@ -91,6 +91,13 @@ classdef Vapor < Solvers.AbstractPhase
             w = vapor.X(zIdx) .* vapor.mix.W(zIdx);
         end
 
+        function q = Q(vapor, zIdx)
+            %Q Vapor volumetric flow rate [m^3/s]
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            q = vapor.W(zIdx)./vapor.mix.fluid.RHOV(vapor.H(zIdx));
+        end
+
         function u = U(vapor, zIdx)
             %U Vapor velocity [m/s]
 
@@ -154,7 +161,7 @@ classdef Vapor < Solvers.AbstractPhase
         function fw = FW(vapor, zIdx)
             %FW Vapor wall friction factor [-]
             %
-            % Computes the Fanning wall friction factor based on
+            % Computes the Darcy wall friction factor based on
             % :attr:`Inputs.Model.SPMTM` model.
             %
             % Supported models
@@ -211,13 +218,13 @@ classdef Vapor < Solvers.AbstractPhase
             t = vapor.mix.fluid.T(vapor.H(zIdx));
         end
 
-        function nu = NU(vapor, zIdx)
+        function nu = NU(vapor, twall, zIdx)
             %NU Vapor wall Nusselt number [-]
             %
             % Computes the Nusselt number for wall heat transfer to vapor
             % based on :attr:`Inputs.Model.SPHTM` model.
 
-            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
             model = vapor.mix.inputSet.model;
             geom  = vapor.mix.inputSet.geometry;
@@ -230,27 +237,48 @@ classdef Vapor < Solvers.AbstractPhase
             switch model.SPHTM
                 case 'DITTUSBOELTER'
                     nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                    nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
                 case 'DITTUSBOELTERGEN' 
                     c = model.DITTUSBOELTERCOEF;
                     nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+                    nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
+                case 'SIEDERTATE'
+                    nu = 0.027.*Re.^0.8.*Pr.^(1/3);                        % [-]
+                    mub = repmat(fluid.MUV(vapor.H(zIdx)),1,geom.NWALL);    % [Pa.s] Bulk vapor viscosity
+                    Hwall = fluid.coolpropH.enthalpy('P',fluid.PRESSURE,'T',max(fluid.TSAT,twall)+1E-6); % [J/kg] Vapor enthalpy at wall temperature
+                    muw = reshape(fluid.MUV(Hwall),[],geom.NWALL);          % [Pa.s] Wall vapor viscosity
+                    nu = nu.*(mub./muw).^0.14;                             % [-] Corrected Nusselt number
+                case 'GNIELINSKI'
+                    f = vapor.FW(zIdx);                                    % [-] Wall (Darcy) friction factor
+                    nu = (f./8).*(Re-1000).*Pr./(1+12.7.*(f./8).^(0.5).*(Pr.^(2/3)-1));
+                    nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
             end
-            nu = repmat(nu,1,geom.NWALL);                                  % Expand to all walls
+
+            % HT degradation downstream CBT
+            % rhob = repmat(fluid.RHOV(vapor.H(zIdx)),1,geom.NWALL);          % [kg/m^3] Bulk vapor density
+            % Hwall = fluid.coolpropH.enthalpy('P',fluid.PRESSURE,'T',max(fluid.TSAT,twall)+1E-6); % [J/kg] Vapor enthalpy at wall temperature
+            % rhow = reshape(fluid.RHOV(Hwall),[],geom.NWALL);                % [kg/m^3] Wall vapor density
+            % m = rhow./rhob;                                                % [-]
+            % devL = geom.HDIAM*50;                                          % [m] Development length
+            % nut = nu.*(m+vapor.mix.CBTZ(zIdx)./devL.*(1-m));               % [m] Transition Nusselt number
+            % icbt = vapor.mix.CBT(zIdx);
+            % nu(icbt) = min(nu(icbt),nut(icbt));                            % Apply to post-CBT region only
         end
 
-        function hwall = HWALL(vapor, zIdx)
+        function hwall = HWALL(vapor, twall, zIdx)
             %HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]
             %
             % Computes the wall heat transfer coefficient using vapor thermal
             % conductivity and Nusselt number.
   
-            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
             geom  = vapor.mix.inputSet.geometry;
             fluid = vapor.mix.fluid;
 
             k = fluid.KV(vapor.H(zIdx));                                   % [W/m/K] Fluid thermal conductivity based on liquid phase
             HDIAM = geom.HDIAM;                                            % [m] Hydraulic diameter
-            hwall = vapor.NU(zIdx).*k./HDIAM;                              % [W/m^2/K] Single phase
+            hwall = vapor.NU(twall,zIdx).*k./HDIAM;                        % [W/m^2/K] Single phase
         end
 
     end

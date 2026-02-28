@@ -90,6 +90,13 @@ classdef Liquid < Solvers.AbstractPhase
             w = liquid.X(zIdx) .* liquid.mix.W(zIdx);
         end
 
+        function q = Q(liquid, zIdx)
+            %Q Liquid volumetric flow rate [m^3/s]
+
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            q = liquid.W(zIdx)./liquid.mix.fluid.RHOL(liquid.H(zIdx));
+        end
+
         function u = U(liquid, zIdx)
             %U Liquid velocity [m/s]
 
@@ -158,13 +165,13 @@ classdef Liquid < Solvers.AbstractPhase
             t = liquid.mix.fluid.T(liquid.H(zIdx));
         end
 
-        function nu = NU(liquid, zIdx)
+        function nu = NU(liquid, twall, zIdx)
             %NU Liquid wall Nusselt number [-]
             %
             % Computes the Nusselt number for wall heat transfer to liquid
             % based on :attr:`Inputs.Model.SPHTM` model.
 
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
             model = liquid.mix.inputSet.model;
             geom  = liquid.mix.inputSet.geometry;
@@ -177,27 +184,38 @@ classdef Liquid < Solvers.AbstractPhase
             switch model.SPHTM
                 case 'DITTUSBOELTER'
                     nu = 0.023.*Re.^0.8.*Pr.^0.4;                          % [-]
+                    nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
                 case 'DITTUSBOELTERGEN' 
                     c = model.DITTUSBOELTERCOEF;
                     nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+                    nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
+                case 'SIEDERTATE'
+                    nu = 0.027.*Re.^0.8.*Pr.^(1/3);                        % [-]
+                    mub = repmat(fluid.MUL(liquid.H(zIdx)),1,geom.NWALL);   % [Pa.s] Bulk liquid viscosity
+                    Hwall = fluid.coolpropH.enthalpy('P',fluid.PRESSURE,'T',min(fluid.TSAT,twall)-1E-6); % [J/kg] Liquid enthalpy at wall temperature
+                    muw = reshape(fluid.MUL(Hwall),[],geom.NWALL);          % [Pa.s] Wall liquid viscosity
+                    nu = nu.*(mub./muw).^0.14;                             % [-] Corrected Nusselt number
+                case 'GNIELINSKI'
+                    f = liquid.mix.FWL(zIdx);                              % [-] Wall (Darcy) friction factor
+                    nu = (f./8).*(Re-1000).*Pr./(1+12.7.*(f./8).^(0.5).*(Pr.^(2/3)-1)); % [-]
+                    nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
             end
-            nu = repmat(nu,1,geom.NWALL);                                  % Expand to all walls
         end
 
-        function hwall = HWALL(liquid, zIdx)
+        function hwall = HWALL(liquid, twall, zIdx)
             %HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]
             %
             % Computes the wall heat transfer coefficient using liquid thermal
             % conductivity and Nusselt number.
   
-            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
             geom  = liquid.mix.inputSet.geometry;
             fluid = liquid.mix.fluid;
 
             k = fluid.KL(liquid.H(zIdx));                                  % [W/m/K] Fluid thermal conductivity based on liquid phase
             HDIAM = geom.HDIAM;                                            % [m] Hydraulic diameter
-            hwall = liquid.NU(zIdx).*k./HDIAM;                             % [W/m^2/K] Single phase
+            hwall = liquid.NU(twall,zIdx).*k./HDIAM;                       % [W/m^2/K] Single phase
         end
 
     end
