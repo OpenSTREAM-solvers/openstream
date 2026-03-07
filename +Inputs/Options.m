@@ -28,7 +28,7 @@ classdef Options < Inputs.Input
         RELAXPM          (1,1) double  {mustBeInRange(RELAXPM,0,1)}        = 1                     % Relaxation factor for the mixture momentum conservation equation [-]
         RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1                     % Relaxation factor for the mixture energy conservation equation [-]
 
-        % Mixture (HRM) solver models
+        % Mixture (MRM) solver models
 
         RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.8                   % Relaxation factor for the vapor  mass conservation equation [-]
         RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 0.8                   % Relaxation factor for the vapor  energy conservation equation [-]

@@ -43,7 +43,7 @@ ID            ! Model ID                                                   > TUT
 NNODES        ! Number of axial nodes                                      > 100
 FLUID         ! Fluid ID                                                   > WATER
 VOID          ! Void fraction model                                        > BESTION
-THERMALNONEQ  ! Thermal non-equilibrium model                              > HRM
+THERMALNONEQ  ! Thermal non-equilibrium model                              > MRM
 END
 
 ID            ! Model ID                                                   > TUTORIAL2F
@@ -65,4 +65,18 @@ KLOC          ! Elevation of local perturbations [m]                       > 1  
 KLOSS         ! Pressure loss coefficients of local perturbations [-]       > 0.5 0.5 0.5 0.5 0.5
 TPKM          ! Two-phase local loss multiplier model                      > HOMOGENEOUS
 END
-       
+ 
+ID            ! Models ID                                                  > TUTORIAL3A
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+END 
+
+ID            ! Models ID                                                  > TUTORIAL3B
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+INTNU         ! Interfacial heat transfer model                            > RELAXATION
+RELAXX        ! Interfacial phase change relaxation time Xeq [-]           > -0.5 1.0
+RELAXTCOND    ! Interfacial condensation relaxation time [s]               >  0.5 0.5
+MOMENTLIQUID  ! Liquid momentum conservation model                         > FULL
+MOMENTGAS     ! Gas momentum conservation model                            > FULL
+END

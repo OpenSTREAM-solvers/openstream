@@ -3,7 +3,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
     %
     % The MixtureSolver class handles the setup, execution, and visualization
     % of thermal-hydraulic simulations using a two-phase mixture approach or
-    % a Homogeneous Relaxation Model (HRM).
+    % a Mixture Relaxation Model (MRM).
     %
     % Responsibilities:
     %
@@ -99,7 +99,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             %     - Pressure drops (DP, DPSUM)
             %     - Momentum and energy derivatives (MDER)
-            %     - Homogeneous Relaxation Model (HRM)
+            %     - Mixture Relaxation Model (MRM)
             %     - Near-wall transport (NEARWALL)
             %     - Iteration tracking (ITR)
             % - Initializes fluid property objects
@@ -110,7 +110,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             %
             % - The function assumes uniform axial discretization.
             % - Wall heat flux is computed from interpolated boundary conditions.
-            % - HRM fields are initialized after enthalpy to ensure correct vapor quality (XEQ) computation.
+            % - MRM fields are initialized after enthalpy to ensure correct vapor quality (XEQ) computation.
 
             import Inputs.*
             import Solvers.Mixture.*
@@ -161,17 +161,17 @@ classdef MixtureSolver < Solvers.AbstractSolver
             MDERCell(:) = {zeros(mixSolver.NZ,1)};                         % Initialize with zeros
             MDER = cell2struct(MDERCell, MDERFields, 1);                   % Convert cell to struct with fieldnames
 
-            % Setup HRM structure
+            % Setup MRM structure
             % TCOND: [s] Relaxation time for interfacial condensation
             % TEVAP: [s] Relaxation time for interfacial evaporation
             % WV   : [kg/s] Vapor mass flow rate
             % X    : [-] Vapor mass quality
             % HV   : [J/kg] Vapor enthalpy
             % TV   : [K] Vapor temperature
-            HRMFields =  ["TCOND","TEVAP","WV","X","HV","TV"];             % Fieldnames for HRM struct
-            HRMCell = cell(numel(HRMFields),1);                            % Cell structure to convert into struct
-            HRMCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
-            HRM = cell2struct(HRMCell, HRMFields, 1);                      % Convert cell to struct with fieldnames
+            MRMFields =  ["TCOND","TEVAP","WV","X","HV","TV"];             % Fieldnames for MRM struct
+            MRMCell = cell(numel(MRMFields),1);                            % Cell structure to convert into struct
+            MRMCell(:) = {zeros(mixSolver.NZ,mixSolver.inputSet.geometry.NWALL)}; % Initialize with zeros
+            MRM = cell2struct(MRMCell, MRMFields, 1);                      % Convert cell to struct with fieldnames
 
             % Setup NEARWALL structure
             % TRELAX: [s] Near-wall energy transfer relaxation time
@@ -224,11 +224,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     [] ...
                     );
 
-                % DP, DPSUM, MDER, HRM, NEARWALL, ITR
+                % DP, DPSUM, MDER, MRM, NEARWALL, ITR
                 mixArr(tIdx).DP       = DP;
                 mixArr(tIdx).DPSUM    = DPSUM;
                 mixArr(tIdx).MDER     = MDER;
-                mixArr(tIdx).HRM      = HRM;
+                mixArr(tIdx).MRM      = MRM;
                 mixArr(tIdx).NEARWALL = NEARWALL;
                 mixArr(tIdx).ITR      = ITR;
 
@@ -245,11 +245,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 mixArr(tIdx).P = repmat(mixSolver.boundaryConditions.PRESSURE(tIdx),mixSolver.NZ,1);
                 mixArr(tIdx).H = repmat(mixSolver.boundaryConditions.HIN(tIdx),mixSolver.NZ,1);
 
-                % Initialize HRM after H to get correct XEQ
-                mixArr(tIdx).HRM.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).WWALL;
-                mixArr(tIdx).HRM.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
-                mixArr(tIdx).HRM.HV   = repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,NWALL);
-                mixArr(tIdx).HRM.TV   = reshape(mixSolver.fluid(tIdx).T(mixArr(tIdx).HRM.HV),[],NWALL);
+                % Initialize MRM after H to get correct XEQ
+                mixArr(tIdx).MRM.WV   = max(0,mixArr(tIdx).XEQ).*mixArr(tIdx).WWALL;
+                mixArr(tIdx).MRM.X    = repmat(max(0,mixArr(tIdx).XEQ),1,NWALL);
+                mixArr(tIdx).MRM.HV   = repmat(mixSolver.fluid(tIdx).HG,mixSolver.NZ,NWALL);
+                mixArr(tIdx).MRM.TV   = reshape(mixSolver.fluid(tIdx).T(mixArr(tIdx).MRM.HV),[],NWALL);
 
                 % Initialize NEARWALL
                 mixArr(tIdx).NEARWALL.W     = mixArr(tIdx).WNEARWALL;
@@ -501,7 +501,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'ylabel'   , 'Wall heat flux [W/m^2]');
                     plotter.plotz(  bcHFLUX{idx}        ,'bc'         ,'DisplayName','Boundary Condition');
                     plotter.plotz(mix.HFLUX(opts.zIdx,:),'Mixture'                                       );
-                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.HRM
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM
                         plotter.plotz(mix.liquid.HFLUX(opts.zIdx)        ,'Liquid'                                              );
                         plotter.plotz(mix.vapor.HFLUX(opts.zIdx)         ,'Vapor'                                               );
                         plotter.plotz(mix.vapor.HFLUXWALEVAP(opts.zIdx)  ,'Evaporation','DisplayName','Wall evaporation'        );
@@ -533,8 +533,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.W(opts.zIdx)       ,'Mixture');
                     plotter.plotz(mix.liquid.W(opts.zIdx),'Liquid' );
                     plotter.plotz(mix.vapor.W(opts.zIdx) ,'Vapor'  );
-                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.HRM && geom.NWALL > 1
-                        plotter.plotz(mix.HRM.WV(opts.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM && geom.NWALL > 1
+                        plotter.plotz(mix.MRM.WV(opts.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
                     end
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
@@ -607,8 +607,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.H(opts.zIdx)       ,'Mixture');
                     plotter.plotz(mix.liquid.H(opts.zIdx),'Liquid' );
                     plotter.plotz(mix.vapor.H(opts.zIdx) ,'Vapor'  );
-                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.HRM && geom.NWALL > 1
-                        plotter.plotz(mix.HRM.HV(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor (wall level)');
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM && geom.NWALL > 1
+                        plotter.plotz(mix.MRM.HV(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor (wall level)');
                     end
                     if opts.nearWall
                         plotter.plotz(mix.NEARWALL.H(opts.zIdx,:)     ,'NearWall' ,'DisplayName','Near-wall'         );
@@ -650,8 +650,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'ylabel'   , 'Quality / Void fraction [-]');
                     plotter.plotz(mix.XEQ(opts.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
                     plotter.plotz(mix.X(opts.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
-                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.HRM && geom.NWALL > 1
-                        plotter.plotz(mix.HRM.X(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
+                    if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM && geom.NWALL > 1
+                        plotter.plotz(mix.MRM.X(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
                     end
                     plotter.plotz(mix.VF(opts.zIdx) ,'VoidFraction','DisplayName','Void fraction'      );
                     if opts.nearWall
@@ -691,7 +691,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 end
 
                 % Mass exchanges
-                if displayVariable({'PWE','ALL'}) && model.THERMALNONEQ == "HRM"
+                if displayVariable({'PWE','ALL'}) && model.THERMALNONEQ == "MRM"
                     plotter.addTile( ...
                         'tileTitle',   'Vapor mass exchanges', ...
                         'xlabel'   ,     'Axial position [m]', ...
@@ -711,7 +711,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 end
 
                 % Energy exchanges
-                if displayVariable({'PEE','ALL'}) && model.THERMALNONEQ == "HRM"
+                if displayVariable({'PEE','ALL'}) && model.THERMALNONEQ == "MRM"
                     plotter.addTile( ...
                         'tileTitle', 'Vapor energy exchanges', ...
                         'xlabel'   ,     'Axial position [m]', ...
@@ -732,14 +732,14 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 end
 
                 % Time relaxations
-                if displayVariable({'TRELAX','ALL'}) && (ismember('HRM', model.THERMALNONEQ) || opts.nearWall)
+                if displayVariable({'TRELAX','ALL'}) && (ismember('MRM', model.THERMALNONEQ) || opts.nearWall)
                     plotter.addTile( ...
                         'tileTitle',    'Time relaxations', ...
                         'xlabel'   ,  'Axial position [m]', ...
                         'ylabel'   , 'Relaxation time [s]');
-                    if ismember('HRM', model.THERMALNONEQ)
-                        plotter.plotz(mix.HRM.TEVAP(opts.zIdx,:)      ,'InterfacialEvap','DisplayName','Interfacial evaporation'  )
-                        plotter.plotz(mix.HRM.TCOND(opts.zIdx,:)      ,'InterfacialCond','DisplayName','Interfacial condensation' )
+                    if ismember('MRM', model.THERMALNONEQ)
+                        plotter.plotz(mix.MRM.TEVAP(opts.zIdx,:)      ,'InterfacialEvap','DisplayName','Interfacial evaporation'  )
+                        plotter.plotz(mix.MRM.TCOND(opts.zIdx,:)      ,'InterfacialCond','DisplayName','Interfacial condensation' )
                     end
                     if opts.nearWall
                         plotter.plotz(mix.NEARWALL.TRELAX(opts.zIdx,:),'NearWall'       ,'DisplayName','Near-wall energy transfer')
@@ -860,7 +860,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'ylabel'   , 'Wall heat flux [W/m^2]');
                 plotter.plotz(             bcHFLUX               ,'bc'     ,'DisplayName','Boundary Condition');
                 plotter.plotz(mix.transient('HFLUX','zIdx',zIdx)','Mixture'                                   );
-                if ismember('HRM',model.THERMALNONEQ)
+                if ismember('MRM',model.THERMALNONEQ)
                     plotter.plotz(mix.transient('liquid.HFLUX'       ,'zIdx',zIdx)','Liquid'                                                );
                     plotter.plotz(mix.transient( 'vapor.HFLUX'       ,'zIdx',zIdx)','Vapor'                                                 );
                     plotter.plotz(mix.transient( 'vapor.HFLUXWALEVAP','zIdx',zIdx)','Evaporation','DisplayName','Wall evaporation'          );
@@ -886,8 +886,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient(       'W','zIdx',zIdx)','Mixture');
                 plotter.plotz(mix.transient('liquid.W','zIdx',zIdx)','Liquid' );
                 plotter.plotz(mix.transient( 'vapor.W','zIdx',zIdx)','Vapor'  );
-                if all([ismember('HRM',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('HRM.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor (wall level)' );
+                if all([ismember('MRM',model.THERMALNONEQ) geom.NWALL > 1])
+                    plotter.plotz(mix.transient('MRM.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor (wall level)' );
                 end
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -943,8 +943,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('H','zIdx',zIdx)','Mixture');
                 plotter.plotz(mix.transient('liquid.H','zIdx',zIdx)','Liquid'                           );
                 plotter.plotz(mix.transient( 'vapor.H','zIdx',zIdx)','Vapor'                            );
-                if all([ismember('HRM',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('HRM.HV','zIdx',zIdx)'        ,'WallVapor','DisplayName','Vapor (wall level)' );
+                if all([ismember('MRM',model.THERMALNONEQ) geom.NWALL > 1])
+                    plotter.plotz(mix.transient('MRM.HV','zIdx',zIdx)'        ,'WallVapor','DisplayName','Vapor (wall level)' );
                 end
                 if opt.nearWall
                     plotter.plotz(mix.transient('NEARWALL.H'    ,'zIdx',zIdx)','NearWall' ,'DisplayName','Near-wall'          );
@@ -978,8 +978,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'ylabel'   , 'Quality / Void fraction [-]');
                 plotter.plotz(mix.transient('XEQ','zIdx',zIdx)','Equil','DisplayName','Equilibrium quality');
                 plotter.plotz(mix.transient('X'  ,'zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
-                if all([ismember('HRM',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('HRM.X','zIdx',zIdx)'         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
+                if all([ismember('MRM',model.THERMALNONEQ) geom.NWALL > 1])
+                    plotter.plotz(mix.transient('MRM.X','zIdx',zIdx)'         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
                 end
                 plotter.plotz(mix.transient('VF' ,'zIdx',zIdx)','VF'   ,'DisplayName','Void faction'       );
                 if opt.nearWall
@@ -1010,7 +1010,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Mass exchanges
-            if all([any(ismember({'PWE','ALL'},opt.display)) ismember('HRM',model.THERMALNONEQ)])
+            if all([any(ismember({'PWE','ALL'},opt.display)) ismember('MRM',model.THERMALNONEQ)])
                 plotter.newTile( ...
                     'tileTitle',   'Vapor mass exchanges', ...
                     'xlabel'   ,               'Time [s]', ...
@@ -1026,7 +1026,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Energy exchanges
-            if all([any(ismember({'PEE','ALL'},opt.display)) ismember('HRM',model.THERMALNONEQ)])
+            if all([any(ismember({'PEE','ALL'},opt.display)) ismember('MRM',model.THERMALNONEQ)])
                 plotter.newTile( ...
                     'tileTitle', 'Vapor energy exchanges', ...
                     'xlabel'   ,               'Time [m]', ...
@@ -1048,9 +1048,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle', 'Thermal time relaxations', ...
                     'xlabel'   ,                 'Time [s]', ...
                     'ylabel'   ,      'Relaxation time [s]');
-                if ismember('HRM',model.THERMALNONEQ)
-                    plotter.plotz(mix.transient('HRM.TEVAP','zIdx',zIdx)'      ,'InterfacialEvap','DisplayName','Interfacial evaporation  ')
-                    plotter.plotz(mix.transient('HRM.TCOND','zIdx',zIdx)'      ,'InterfacialCond','DisplayName','Interfacial condensation ')
+                if ismember('MRM',model.THERMALNONEQ)
+                    plotter.plotz(mix.transient('MRM.TEVAP','zIdx',zIdx)'      ,'InterfacialEvap','DisplayName','Interfacial evaporation  ')
+                    plotter.plotz(mix.transient('MRM.TCOND','zIdx',zIdx)'      ,'InterfacialCond','DisplayName','Interfacial condensation ')
                 end
                 if opt.nearWall
                     plotter.plotz(mix.transient('NEARWALL.TRELAX','zIdx',zIdx)','NearWall'       ,'DisplayName','Near-wall energy transfer')

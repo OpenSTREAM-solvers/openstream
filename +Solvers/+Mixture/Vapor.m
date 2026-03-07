@@ -130,9 +130,9 @@ classdef Vapor < Solvers.AbstractPhase
 
             switch model.THERMALNONEQ
 
-                case 'HRM'
-                    WV = vapor.mix.HRM.WV(zIdx,:);
-                    h = sum(vapor.mix.HRM.HV(zIdx,:).*WV,2)./sum(WV,2);
+                case 'MRM'
+                    WV = vapor.mix.MRM.WV(zIdx,:);
+                    h = sum(vapor.mix.MRM.HV(zIdx,:).*WV,2)./sum(WV,2);
                     h(isnan(h)) = vapor.mix.fluid.HG;
 
                 otherwise

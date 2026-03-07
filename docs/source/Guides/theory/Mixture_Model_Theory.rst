@@ -9,7 +9,7 @@ The mixture model serves two key roles within OpenSTREAM:
 - **Efficient simulation** of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.
 - **Industry relevance** due to its simplicity and robustness, offering a practical approach for simulating averaged flow behavior in complex thermal-hydraulic systems.
 
-In addition, a Homogeneous Relaxation Model (HRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.
+In addition, a Mixture Relaxation Model (MRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.
 
 By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.
 
@@ -56,7 +56,7 @@ where:
 - :math:`h^+` is the mixture (advection) specific enthalpy
 - :math:`{q^{\prime\prime}}_{wall}^n` is the wall heat flux for wall index :math:`n`
 
-Homogeneous relaxation model
+Mixture relaxation model
 ----------------------------
 
 *Under development*
@@ -79,7 +79,7 @@ Features and assumptions
 
 - Supports both steady-state and transient simulations in straight channels
 - Supports uniform and non-uniform wall heat flux distribution
-- Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or HRM
+- Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or MRM
 - Allows phase velocity slip using drift flux models
 - Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 
