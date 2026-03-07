@@ -27,15 +27,16 @@ The mixture model solves the following conservation equations:
 where:
 
 - :math:`W` is the mixture mass flow rate
-- :math:`u` is the mixture velocity
+- :math:`u` is the mixture (static) velocity
 
 **2. Momentum conservation**
 
-:math:`\rho A (\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial z}) = -A (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta g \rho) - \sum \Pi_{wall}^n {\tau}_{wall}^n`
+:math:`\frac{\partial W}{\partial t} + \frac{\partial}{\partial z}(u^+ \cdot W) = -A \cdot (\frac{\partial p}{\partial z} + \frac{\partial p_K}{\partial z} + \cos\theta \cdot g \cdot \rho) - \sum \Pi_{wall}^n \cdot {\tau}_{wall}^n`
 
 where:
 
-- :math:`\rho` is the mixture density
+%%%%%%%%%%%%%%%%%%%- :math:`\rho` is the mixture density
+- :math:`u^+` is mixture (advection) velocity
 - :math:`A` is the cross-sectional area
 - :math:`p` is the pressure
 - :math:`K` relates to obstruction form loss
@@ -47,11 +48,12 @@ where:
 
 **3. Energy conservation**
 
-:math:`\rho A (\frac{\partial h}{\partial t} + u \frac{\partial h}{\partial z}) = \sum \Pi_{wall}^n {q^{\prime\prime}}_{wall}^n`
+:math:`\frac{\partial}{\partial t}(h \cdot \frac{W}{u}) + \frac{\partial}{\partial z}(h^+ \cdot W) = \sum \Pi_{wall}^n \cdot {q^{\prime\prime}}_{wall}^n`
 
 where:
 
-- :math:`h` is the mixture specific enthalpy
+- :math:`h` is the mixture (static) specific enthalpy
+- :math:`h^+` is the mixture (advection) specific enthalpy
 - :math:`{q^{\prime\prime}}_{wall}^n` is the wall heat flux for wall index :math:`n`
 
 Homogeneous relaxation model

@@ -70,7 +70,7 @@ classdef Liquid < Solvers.AbstractPhase
         end
 
         function x = X(liquid, zIdx)
-            %X Liquid mass fraction [-]
+            %X Liquid mass flow fraction [-]
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             x = 1-liquid.mix.X(zIdx);
@@ -81,6 +81,13 @@ classdef Liquid < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
             vf = 1-liquid.mix.VF(zIdx);
+        end
+
+        function c = C(liquid, zIdx)
+            %C Liquid mass fraction [-]
+
+            if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
+            c = liquid.VF(zIdx).*liquid.mix.fluid.RHOL(liquid.H(zIdx))./liquid.mix.RHO(zIdx);
         end
 
         function w = W(liquid, zIdx)

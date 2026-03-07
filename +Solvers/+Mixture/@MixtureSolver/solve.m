@@ -117,8 +117,11 @@ function solver(solveINIT)
             
             % Parameters from previous time step
             Wold    = mix(tIdx-1).W(zIdx);                                 % [kg/s] Mixture mass flow rate at previous time step
-            Uold    = mix(tIdx-1).U(zIdx);                                 % [m/s] Mixture velocity at previous time step
+            Uold    = mix(tIdx-1).U(zIdx);                                 % [m/s] Mixture (static) velocity at previous time step
+            UPold   = mix(tIdx-1).UP(zIdx);                                % [m/s] Mixture (advection) velocity at previous time step
+            MCTold  = mix(tIdx-1).MCT(zIdx);                               % [kg/s] Slip-induced momentum correction at previous time step
             Hold    = mix(tIdx-1).H(zIdx);                                 % [J/kg] Mixture enthalpy at previous time step
+            ECTold  = mix(tIdx-1).ECT(zIdx);                               % [J/m] Slip-induced energy correction at previous time step
             Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
             Wvold   = mix(tIdx-1).HRM.WV(zIdx,:);                          % [m/s] Relaxed vapor mass flow rate at previous time step
             Hvold   = mix(tIdx-1).HRM.HV(zIdx,:);                          % [J/kg] Relaxed vapor enthalpy at previous time step
@@ -139,11 +142,12 @@ function solver(solveINIT)
                 mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew; % [kg/s] Apply relaxation
                 
                 % Mixture momentum conservation
-                Pnew = mix(tIdx).P(zIdx-1) + mix(tIdx).DPTOT(Uold, zIdx);           % [Pa] New pressure
+                Pnew = mix(tIdx).P(zIdx-1) + mix(tIdx).DPTOT(UPold, MCTold, zIdx);  % [Pa] New pressure
                 mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
     
                 % Mixture energy conservation
-                Hnew = (mix(tIdx).H(zIdx-1)+DZ./mix(tIdx).W(zIdx)*sum(LHGR) + ...
+                dECT = -(mix(tIdx).ECT(zIdx)-ECTold)/DT;                            % [W/m] Time derivative of slip-induced energy correction term
+                Hnew = (mix(tIdx).H(zIdx-1)+DZ./mix(tIdx).W(zIdx)*(dECT+sum(LHGR)) + ...
                        Hold/U*DZ/DT)/(1+DZ/U/DT);                                   % [J/kg] Update mixture enthalpy
                 mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew; % [J/kg] Apply relaxation
                 
@@ -221,21 +225,22 @@ function solver(solveINIT)
             mix(tIdx).NEARWALL.XBULK(zIdx)    = (mix(tIdx).NEARWALL.HBULK(zIdx)-HF)./(HG - HF);         % [-] Bulk thermodynamic equilibrium quality
 
             % Save pressure drop components
-            DPparts = mix(tIdx).DPPARTS(Uold, zIdx);                       % [Pa] Pressure drop components
+            DPparts = mix(tIdx).DPPARTS(UPold, MCTold, zIdx);              % [Pa] Pressure drop components
             mix(tIdx).DP.Grav(zIdx)  = -DPparts.GRAV;                      % [Pa] Gravitational pressure drop
             mix(tIdx).DP.Wall(zIdx)  = -DPparts.WALL;                      % [Pa] Wall friction pressure drop
             mix(tIdx).DP.Acc_z(zIdx) = -DPparts.ACCZ;                      % [pa] Spatial acceleration pressure drop
             mix(tIdx).DP.Acc_t(zIdx) = -DPparts.ACCT;                      % [Pa] Temporal acceleration pressure drop
+            mix(tIdx).DP.Acc_s(zIdx) = -DPparts.ACCS;                      % [Pa] Slip-induced temporal acceleration pressure drop
             mix(tIdx).DP.K(zIdx)     = -DPparts.K;                         % [Pa] Local pressure drop
             mix(tIdx).DP.Tot(zIdx)   = -DPparts.TOT;                       % [Pa] Total pressure drop
             
             % Save material derivatives
-            mix(tIdx).MDER.U_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).U(zIdx)-mix(tIdx).U(zIdx-1))./DZ; % [m/s^2]  Convective acceleration
-            mix(tIdx).MDER.U_t(zIdx) = (mix(tIdx).U(zIdx)-Uold)./DT;                                   % [m/s^2]  Local acceleration
-            mix(tIdx).MDER.U(zIdx)   = mix(tIdx).MDER.U_z(zIdx)+mix(tIdx).MDER.U_t(zIdx);              % [m/s^2]  Total acceleration
-            mix(tIdx).MDER.H_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).H(zIdx)-mix(tIdx).H(zIdx-1))./DZ; % [J/kg/s] Convective transport of enthalpy
-            mix(tIdx).MDER.H_t(zIdx) = (mix(tIdx).H(zIdx)-Hold)./DT;                                   % [J/kg/s] Local rate of change of enthalpy
-            mix(tIdx).MDER.H(zIdx)   = mix(tIdx).MDER.H_z(zIdx)+mix(tIdx).MDER.H_t(zIdx);              % [J/kg/s] Total rate of change of enthalpy
+            mix(tIdx).MDER.U_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).UP(zIdx)-mix(tIdx).UP(zIdx-1))./DZ; % [m/s^2]  Convective acceleration
+            mix(tIdx).MDER.U_t(zIdx) = (mix(tIdx).UP(zIdx)-UPold)./DT;                                   % [m/s^2]  Local acceleration
+            mix(tIdx).MDER.U(zIdx)   = mix(tIdx).MDER.U_z(zIdx)+mix(tIdx).MDER.U_t(zIdx);                % [m/s^2]  Total acceleration
+            mix(tIdx).MDER.H_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).H(zIdx)-mix(tIdx).H(zIdx-1))./DZ;   % [J/kg/s] Convective transport of enthalpy
+            mix(tIdx).MDER.H_t(zIdx) = (mix(tIdx).H(zIdx)-Hold)./DT;                                     % [J/kg/s] Local rate of change of enthalpy
+            mix(tIdx).MDER.H(zIdx)   = mix(tIdx).MDER.H_z(zIdx)+mix(tIdx).MDER.H_t(zIdx);                % [J/kg/s] Total rate of change of enthalpy
             
             % Iteration parameters
             mix(tIdx).ITR.N(zIdx)           = itr;
@@ -252,6 +257,7 @@ function solver(solveINIT)
         mix(tIdx).DPSUM.Wall  = cumsum(mix(tIdx).DP.Wall);                 % [Pa] Wall friction pressure drop
         mix(tIdx).DPSUM.Acc_z = cumsum(mix(tIdx).DP.Acc_z);                % [pa] Spatial acceleration pressure drop
         mix(tIdx).DPSUM.Acc_t = cumsum(mix(tIdx).DP.Acc_t);                % [Pa] Temporal acceleration pressure drop
+        mix(tIdx).DPSUM.Acc_s = cumsum(mix(tIdx).DP.Acc_s);                % [Pa] Slip-induced temporal acceleration pressure drop
         mix(tIdx).DPSUM.K     = cumsum(mix(tIdx).DP.K);                    % [Pa] Local pressure drop
         mix(tIdx).DPSUM.Tot   = cumsum(mix(tIdx).DP.Tot);                  % [Pa] Total pressure drop
         

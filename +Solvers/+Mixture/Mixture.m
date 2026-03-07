@@ -73,6 +73,7 @@ classdef Mixture < Solvers.AbstractField
         vf             (:,1) double  {mustBeNumeric}                       = 1.                   % Void fraction [-]
         chf            (:,:) double  {mustBeNumeric}                                              % Critical Heat Flux [W/m^2]
         rho            (:,1) double  {mustBeNumeric}                       = 1.                   % Mixture density [kg/m^3]
+        up             (:,1) double  {mustBeNumeric}                       = 1.                   % Mixture (advection) velocity [m/s]
 
         % Onset of annular flow properties
 
@@ -317,6 +318,25 @@ classdef Mixture < Solvers.AbstractField
             end
         end
 
+        function up = UP(mix, zIdx)
+            %UP Advection velocity [m/s]
+            %
+            % Retrieves precomputed mixture (advection) velocity values by
+            % :attr:`Solvers.Mixture.Mixture.UP_CALC`,
+            % updated when mix.H is set.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to retrieve (optional)
+
+            if nargin < 2
+                up = mix.up;
+            else
+                up = mix.up(zIdx);
+            end
+        end
+
         function t = RELAXTEVAP(mix, zIdx)
             %RELAXTEVAP Time relaxation for interfacial evaporation [s]
             %
@@ -401,9 +421,9 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function u = U(mix, zIdx)
-            %U Velocity [m/s]
+            %U Static velocity [m/s]
             %
-            % Computes the mixture velocity from mass flow rate and density.
+            % Computes the mass-centered mean mixture velocity.
             %
             % Inputs:
             %
@@ -413,6 +433,22 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             u = mix.W(zIdx)./mix.RHO(zIdx)./mix.inputSet.geometry.AREA;
+        end
+
+        function mct = MCT(mix, zIdx)
+            %MCT Slip-induced momentum correction term [kg/s]
+            %
+            % Computes the slip-induced momentum correction term per unit
+            % length.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            mct = (mix.U(zIdx)-mix.UP(zIdx)).*mix.W(zIdx)./mix.U(zIdx);
         end
 
         function jl = JL(mix, zIdx)
@@ -443,6 +479,38 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             jg = mix.X(zIdx).*mix.MFLUX(zIdx)./mix.fluid.RHOV(mix.vapor.H(zIdx));
+        end
+
+        function h = HM(mix, zIdx)
+            %H Static enthalpy [J/kg]
+            %
+            % Computes the mass-centered mean mixture enthalpy.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            C = mix.vapor.C(zIdx);                                         % [-] Gas mass fraction
+            h = C.*mix.vapor.H(zIdx) + (1-C).*mix.liquid.H(zIdx);
+        end
+
+        function ect = ECT(mix, zIdx)
+            %ECT Slip-induced energy correction term [J/m]
+            %
+            % Computes the slip-induced energy correction term per unit
+            % length.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            ect = (mix.HM(zIdx)-mix.H(zIdx)).*mix.W(zIdx)./mix.U(zIdx);
         end
 
         function t = T(mix, zIdx)
@@ -794,25 +862,43 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            deltaU = diff([[mix.U(1);mix.U(1:end-1)] mix.U],[],2);         % [m/s] Calculate velocity difference
-            dpAcc_z = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*deltaU(zIdx);
+            deltaUP = diff([[mix.UP(1);mix.UP(1:end-1)] mix.UP],[],2);      % [m/s] Calculate (advection) velocity difference
+            dpAcc_z = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*deltaUP(zIdx);
         end
 
-        function dpAcc_t = DPACCT(mix, Uold, zIdx)
+        function dpAcc_t = DPACCT(mix, UPold, zIdx)
             %DPACCT Temporal acceleration pressure drop [Pa]
             %
             % Computes the pressure drop due to temporal acceleration between time steps.
             %
             % Inputs:
             %
-            % - mix   — :class:`Solvers.Mixture.Mixture` object
-            % - Uold  — Previous axial velocity [m/s]
-            % - zIdx  — Axial indices to evaluate (optional)
+            % - mix    — :class:`Solvers.Mixture.Mixture` object
+            % - UPold  — Previous axial (advection) velocity [m/s]
+            % - zIdx   — Axial indices to evaluate (optional)
 
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
-            U     = mix.U(zIdx);                                           % [m/s] Calculate velocity
-            dpAcc_t = -mix.W(zIdx)./mix.inputSet.geometry.AREA.*(1-Uold./U).*mix.DZ./mix.DT;
+            UP      = mix.UP(zIdx);                                        % [m/s] Calculate (advection) velocity
+            dpAcc_t = -mix.RHO(zIdx).*(UP-UPold).*mix.DZ./mix.DT;
+        end
+
+        function dpAcc_s = DPACCS(mix, MCTold, zIdx)
+            %DPACCS Slip-induced temporal acceleration pressure drop [Pa]
+            %
+            % Computes the pressure drop due to the slip-inducted temporal
+            % acceleration between time steps.
+            %
+            % Inputs:
+            %
+            % - mix    — :class:`Solvers.Mixture.Mixture` object
+            % - MCTold — Previous slip-induced momentum correction [kg/s]
+            % - zIdx   — Axial indices to evaluate (optional)
+
+            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+
+            MCT     = mix.MCT(zIdx);                                       % [kg/s] Calculate momentum correction
+            dpAcc_s = -1./mix.inputSet.geometry.AREA.*(MCT-MCTold).*mix.DZ./mix.DT;
         end
 
         function dpk = DPK(mix, zIdx)
@@ -831,32 +917,33 @@ classdef Mixture < Solvers.AbstractField
             dpk = -0.5.*mix.KLOSS(zIdx)./RHOL.*mix.MFLUX(zIdx).^2.*mix.PHI2K(zIdx);
         end
 
-        function dptot = DPTOT(mix, Uold, zIdx)
+        function dptot = DPTOT(mix, UPold, MCTold, zIdx)
             %DPTOT Total pressure loss [Pa]
             %
             % Computes the total pressure loss by summing all contributing components.
             %
             % Inputs:
             %
-            % - mix   — :class:`Solvers.Mixture.Mixture` object
-            % - Uold  — Previous axial velocity [m/s]
-            % - zIdx  — Axial indices to evaluate (optional)
+            % - mix    — :class:`Solvers.Mixture.Mixture` object
+            % - UPold  — Previous axial (advection) velocity [m/s]
+            % - MCTold — Previous slip-induced momentum correction [kg/s]
+            % - zIdx   — Axial indices to evaluate (optional)
 
-            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            if nargin < 4, zIdx = (1:mix(1).NZ).'; end
 
-            dptot = mix.DPGRAV(zIdx) + mix.DPWALL(zIdx) + mix.DPACCZ(zIdx) + mix.DPACCT(Uold, zIdx) + mix.DPK(zIdx);
+            dptot = mix.DPGRAV(zIdx) + mix.DPWALL(zIdx) + mix.DPACCZ(zIdx) + mix.DPACCT(UPold, zIdx) + mix.DPACCS(MCTold, zIdx) + mix.DPK(zIdx);
         end
 
-        function dpparts = DPPARTS(mix, Uold, zIdx)
+        function dpparts = DPPARTS(mix, UPold, MCTold, zIdx)
             %DPPARTS All pressure loss components [Pa]
             %
             % Returns a structure containing all individual pressure loss components.
             %
             % Inputs:
             %
-            % - mix   — :class:`Solvers.Mixture.Mixture` object
-            % - Uold  — Previous axial velocity [m/s]
-            % - zIdx  — Axial indices to evaluate (optional)
+            % - mix    — :class:`Solvers.Mixture.Mixture` object
+            % - UPold  — Previous axial (advection) velocity [m/s]
+            % - zIdx   — Axial indices to evaluate (optional)
             %
             % Returns:
             %
@@ -866,17 +953,19 @@ classdef Mixture < Solvers.AbstractField
             %   - WALL : Wall friction loss [Pa]
             %   - ACCZ : Spatial acceleration loss [Pa]
             %   - ACCT : Temporal acceleration loss [Pa]
+            %   - ACCS : Slip-induced temporal acceleration loss [Pa]
             %   - K    : Local loss [Pa]
             %   - TOT  : Total pressure loss [Pa]
 
-            if nargin < 3, zIdx = (1:mix(1).NZ).'; end
+            if nargin < 4, zIdx = (1:mix(1).NZ).'; end
 
             dpparts.GRAV = mix.DPGRAV(zIdx);
             dpparts.WALL = mix.DPWALL(zIdx);
             dpparts.ACCZ = mix.DPACCZ(zIdx);
-            dpparts.ACCT = mix.DPACCT(Uold, zIdx);
+            dpparts.ACCT = mix.DPACCT(UPold, zIdx);
+            dpparts.ACCS = mix.DPACCS(MCTold, zIdx);
             dpparts.K    = mix.DPK(zIdx);
-            dpparts.TOT  = mix.DPTOT(Uold, zIdx);
+            dpparts.TOT  = mix.DPTOT(UPold, MCTold, zIdx);
         end
 
     end
@@ -2487,6 +2576,7 @@ classdef Mixture < Solvers.AbstractField
             % - Automatically invokes VF_CALC to ensure void fraction is up to date
             % - Also triggers calculation of related thermal relaxation and transition flags:
             %
+            %     - UP_CALC
             %     - CBT_CALC
             %     - MFBT_CALC
             %     - RELAXTEVAP_CALC
@@ -2500,11 +2590,27 @@ classdef Mixture < Solvers.AbstractField
             mix.rho(zIdx) = vf.*mix.fluid.RHOV(mix.vapor.H(zIdx)) + ...
                 (1-vf).*mix.fluid.RHOL(mix.liquid.H(zIdx));
 
+            mix.UP_CALC(zIdx);
             mix.CBT_CALC(zIdx);
             mix.MFBT_CALC(zIdx);
             mix.RELAXTEVAP_CALC(zIdx);
             mix.RELAXTCOND_CALC(zIdx);
             mix.NEARWALLTRELAX_CALC(zIdx);
+        end
+
+        function UP_CALC(mix, zIdx)
+            %UP Calculate the advection velocity [m/s] at specified axial positions.
+            %
+            % Computes the mass-flux centered mean mixture velocity.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object
+            % - zIdx — Axial indices to evaluate (optional)
+
+            x = mix.X(zIdx);
+            mix.up(zIdx) = x.*mix.vapor.U(zIdx) + (1-x).*mix.liquid.U(zIdx);
+            %mix.up(zIdx) = mix.W(zIdx)./mix.RHO(zIdx)./mix.inputSet.geometry.AREA;
         end
 
         function RELAXTCOND_CALC(mix, zIdx)

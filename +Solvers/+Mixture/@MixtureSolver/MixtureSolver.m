@@ -140,9 +140,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Wall:     [Pa] Wall friction pressure drop
             % Acc_z:    [pa] Spatial acceleration pressure drop
             % Acc_t:    [Pa] Temporal acceleration pressure drop
+            % Acc_s:    [Pa] Slip-induced temporal acceleration pressure drop
             % K:        [Pa] Local pressure drop
             % Tot:      [Pa] Total pressure drop
-            DPFields =  ["Grav","Wall","Acc_z","Acc_t","K","Tot"];         % Fieldnames for DP struct
+            DPFields =  ["Grav","Wall","Acc_z","Acc_t","Acc_s","K","Tot"]; % Fieldnames for DP struct
             DPCell = cell(numel(DPFields),1);                              % Cell structure to convert into struct
             DPCell(:) = {zeros(mixSolver.NZ,1)};                           % Initialize with zeros
             DP    = cell2struct(DPCell, DPFields, 1);                      % Convert cell to struct with fieldnames
@@ -419,6 +420,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % - Temperature unit conversion is applied if 'C' is selected.
             % - Obstruction locations are plotted if opts.obstructions is true.
             % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+            % - In the pressure drop plot, the temporal acceleration includes the slip-induced contribution (if any) 
 
             arguments
                 mixSolver
@@ -553,7 +555,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     plotter.plotz(mix.DPSUM.Grav(opts.zIdx) ,'Gravitational'                     )
                     plotter.plotz(mix.DPSUM.Wall(opts.zIdx) ,'Wall'                              )
                     plotter.plotz(mix.DPSUM.Acc_z(opts.zIdx),'Z'           ,'DisplayName','Acc Z')
-                    plotter.plotz(mix.DPSUM.Acc_t(opts.zIdx),'T'           ,'DisplayName','Acc t')
+                    plotter.plotz(mix.DPSUM.Acc_t(opts.zIdx)+mix.DPSUM.Acc_s(opts.zIdx),'T'           ,'DisplayName','Acc t')
                     plotter.plotz(mix.DPSUM.K(opts.zIdx)    ,'Local'                             )
                     plotter.plotz(mix.DPSUM.Tot(opts.zIdx)  ,'Total'                             )
                     plotter.legend('show', "Location", 'best');
@@ -797,6 +799,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % - Temperature unit conversion is applied if 'C' is selected.
             % - Near-wall data is included if opt.nearWall is true.
             % - Each wall is plotted in a separate tile with appropriate legends and axis scaling.
+            % - In the pressure drop plot, the temporal acceleration includes the slip-induced contribution (if any) 
 
             arguments
                 mixSolver
@@ -901,7 +904,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 plotter.plotz(mix.transient('DPSUM.Grav' ,'zIdx',zIdx)','Gravitational'          );
                 plotter.plotz(mix.transient('DPSUM.Wall' ,'zIdx',zIdx)','Wall'                   );
                 plotter.plotz(mix.transient('DPSUM.Acc_z','zIdx',zIdx)','Z','DisplayName','Acc Z');
-                plotter.plotz(mix.transient('DPSUM.Acc_t','zIdx',zIdx)','T','DisplayName','Acc t');
+                plotter.plotz(mix.transient('DPSUM.Acc_t','zIdx',zIdx)'+mix.transient('DPSUM.Acc_s','zIdx',zIdx)','T','DisplayName','Acc t');
                 plotter.plotz(mix.transient('DPSUM.K'    ,'zIdx',zIdx)','Local'                  );
                 plotter.plotz(mix.transient('DPSUM.Tot'  ,'zIdx',zIdx)','Total'                  );
                 plotter.legend('show', 'Location', 'best');

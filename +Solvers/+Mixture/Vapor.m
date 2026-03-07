@@ -71,7 +71,7 @@ classdef Vapor < Solvers.AbstractPhase
         end
 
         function x = X(vapor, zIdx)
-            %X Vapor mass fraction [-]
+            %X Vapor mass flow fraction [-]
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             x = vapor.mix.X(zIdx);
@@ -82,6 +82,13 @@ classdef Vapor < Solvers.AbstractPhase
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             vf = vapor.mix.VF(zIdx);
+        end
+
+        function c = C(vapor, zIdx)
+            %C Vapor mass fraction [-]
+
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
+            c = vapor.VF(zIdx).*vapor.mix.fluid.RHOV(vapor.H(zIdx))./vapor.mix.RHO(zIdx);
         end
 
         function w = W(vapor, zIdx)
@@ -147,8 +154,6 @@ classdef Vapor < Solvers.AbstractPhase
         function re = RE(vapor, zIdx)
             %RE Vapor Reynolds number [-]
             
-            %TODO: It is not clear how the liquid and vapor Reynolds number should be defined for two-phase applications
-
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
 
             geom = vapor.mix.inputSet.geometry;
