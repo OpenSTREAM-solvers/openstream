@@ -45,6 +45,7 @@ classdef Model < Inputs.Input
         DITTUSBOELTERCOEF (1,3) double  {mustBeNumeric}                    = [0.023 0.8 0.4]                 % Dittus-Boelter coefficients [-]
         TPHTM            (1,1) InputEnums.TPHTM                            = 'THOM'                          % Two-phase wall heat transfer model selected from :class:`InputEnums.TPHTM`
         BTHTM            (1,1) InputEnums.BTHTM                            = 'VAPOR'                         % Boiling transition wall heat transfer model selected from :class:`InputEnums.BTHTM`
+        MOECKCOEF        (1,4) double  {mustBeNumeric}                     = [1.09E-3 0.989 1.41 -1.15]      % Groeneveld-Moeck post-boiling transition model coefficients [-]
 
         % Mixture solver models
 

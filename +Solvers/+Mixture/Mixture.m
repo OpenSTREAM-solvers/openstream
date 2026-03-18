@@ -1068,20 +1068,23 @@ classdef Mixture < Solvers.AbstractField
              %
              % - VAPOR: Heat transfer to vapor phase
              % - DOUGALL: Dougall-Rohsenow model (:cite:t:`DougallRohsenow1963`)
+             % - MOECK: Groeneveld-Moeck model (:cite:t:`GroeneveldMoeck1969`)
              % - DELORME: Groeneveld-Delorme model (:cite:t:`GroeneveldDelorme1976`)
 
              if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
-             fld    = mix.fluid;
+             fld   = mix.fluid;
              model = mix.inputSet.model;
              geom  = mix.inputSet.geometry;
+             bc    = mix.inputSet.bc;
 
              % Saturated vapor properties
-             PRG  = fld.PRANDTLG;                                           % [-] Saturated vapor Prandtl number
-             KG   = fld.KG;                                                 % [W/m/K] Saturated vapor conductivity
-             RHOG = fld.RHOG;                                               % [kg/m^3] Saturated vapor density
-             RHOF = fld.RHOF;                                               % [kg/m^3] Saturated liquid density
-             MUG  = fld.MUG;                                                % [Pa.s] Saturated vapor viscosity
+             TSAT = fld.TSAT;                                              % [K] Saturated temperature
+             PRG  = fld.PRANDTLG;                                          % [-] Saturated vapor Prandtl number
+             KG   = fld.KG;                                                % [W/m/K] Saturated vapor conductivity
+             RHOG = fld.RHOG;                                              % [kg/m^3] Saturated vapor density
+             RHOF = fld.RHOF;                                              % [kg/m^3] Saturated liquid density
+             MUG  = fld.MUG;                                               % [Pa.s] Saturated vapor viscosity
 
              switch model.BTHTM
                  case 'VAPOR'
@@ -1090,51 +1093,73 @@ classdef Mixture < Solvers.AbstractField
                      Tbv     = mix.vapor.T(zIdx);
                  case 'DOUGALL'
                      % Dougall-Rohsenow model
-                     %TODO: Check
-                     XEQ  = max(0,mix.XEQ(zIdx));                          % [-] Equilibrium quality
-                     U    = mix.MFLUX(zIdx)./RHOG.*(XEQ+(RHOG/RHOF).*(1-XEQ)); % [m/s] Throughput velocity ((Ql+Qv)/AREA under thermal equilibrium assumption)
-                     REG  = RHOG.*U.*geom.HDIAM./MUG;                      % [-] Throughput Reynolds number
+
+                     % Input parameter calculations assumes thermal equilibrium
+                     Xe  = min(1,max(0,mix.XEQ(zIdx)));                    % [-] Vapor mass quality
+                     U   = mix.MFLUX(zIdx).*(Xe./RHOG+(1-Xe)./RHOF);       % [m/s] Throughput velocity ((Ql+Qg)/AREA), i.e., homogeneous assumption
+                     REG = RHOG.*U.*geom.HDIAM./MUG;                       % [-] Throughput Reynolds number, i.e., homogeneous assumption
+                     
                      NU  = 0.023.*REG.^0.8.*PRG.^0.4;                      % [-] Nusselt number
+
+                     hwallbt = NU.*(KG/geom.HDIAM);
+                     Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
+                 case 'MOECK'
+                     % Groeneveld-Moeck model
+                     % Note that the Vapor Reynolds number is derived based on the original reference but is equivalent to Dougall-Rohsenow model.
+                     coef = model.MOECKCOEF;
+
+                     % Input parameter calculations assumes thermal equilibrium
+                     Xe  = min(1,max(0,mix.XEQ(zIdx)));                    % [-] Vapor mass quality
+                     REG = mix.MFLUX(zIdx).*geom.HDIAM./MUG;               % [-] Vapor Reynolds number (based on total mass flux)
+                     REG = REG.*(Xe+(RHOG/RHOF).*(1-Xe));                  % [-] Vapor Reynolds number (based on homogeneous assumption)
+                     
+                     Y   = 1-0.1.*(RHOF/RHOG-1).^0.4.*(1-Xe).^0.4;         % [-]
+                     PRW = fld.coolpropH.prandtl('P',bc.PRESSURE,'T',max(TSAT+1E-6,twall)); % [-] Gas Prandtl number at wall temperature
+
+                     NU  = coef(1).*REG.^coef(2).*PRW.^coef(3).*Y.^coef(4); % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
                      Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
                  case 'DELORME'
                      % Groeneveld-Delorme model
-                     % TODO: Check. Vapor superheat (TVa) does not start at Tsat at CBT
+                     % TODO: Check Vapor superheat (TVa) does not start at Tsat at CBT
+                     % TODO: Should it be RHOG or RHOF in VFHOM?
+                     % TODO: How is Pr defined?
+
                      a1 =  0.13864;  b0 =  1.3072;
                      a2 =  0.2031 ;  b1 = -1.0833;
                      a3 =  0.20006;  b2 =  0.8455;
                      a4 = -0.09232;
 
                      CPG = fld.CPG;                                         % [J/kg/K] Saturated vapor constant pressure specific heat
-                     HF  = fld.HF;                                          % [J/kg] Saturated vapor enthalpy
+                     HF  = fld.HF;                                          % [J/kg] Saturated liquid enthalpy
                      HG  = fld.HG;                                          % [J/kg] Saturated vapor enthalpy
                      HFG = fld.HFG;                                         % [J/kg] Latent heat of evaporation
 
-                     RHOV = RHOG;                                          % [kg/m^3] Vapor density
+                     RHOV = RHOG;                                          % [kg/m^3] Saturated vapor density
                      %RHOV = fld.RHOV(HVa);                                  % This option needs iterations since HVa is not known here
+
                      X1 = min(1,max(0,mix.XEQ(zIdx)));                     % [-] Vapor mass quality based on HEM
                      VFHOM = X1.*RHOF./(X1.*RHOF+(1-X1).*RHOV);            % [-] Void fraction based on HEM
-
-                     X = max(0,mix.XEQ(zIdx));                             % [-]
                      REHOM = mix.MFLUX(zIdx).*geom.HDIAM.*X1./MUG./VFHOM;  % [-] Reynolds number based on HEM
-                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*X+b2.*X.^2); % [-]
-                     Phi = min(pi/2,max(0,Phi));                           % [-]
+
+                     Xe = max(0,mix.XEQ(zIdx));                            % [-] Equilibrium vapor quality (can be larger than 1)
+                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*Xe+b2.*Xe.^2); % [-]
+                     Phi = min(pi/2,max(0,Phi));                           % [-] Impose boundaries
 
                      HVa = max(HG,mix.H(zIdx))+HFG.*exp(-tan(Phi)).*exp(-(3.*VFHOM).^(-4)); % [J/kg] Superheated vapor enthalpy
-                     %HVa = max(HG,mix.H(zIdx));                           % [J/kg] Saturated vapor enthalpy
+                     Xa  = HFG.*Xe./(HVa-HF);                              % [-] Resulting vapor mass quality
                      TVa = fld.T(HVa);                                      % [K] Resulting vapor temperature
-                     Xa  = HFG.*mix.XEQ(zIdx)./(HVa-HF);                   % [-] Resulting vapor mass quality
 
                      Tf  = max(fld.TSAT+1E-6,(TVa+twall)/2);                % [K] Film temperature
                      Hf  = fld.H(Tf);                                       % [J/kg] Resulting film enthalpy
 
-                     RHOV = fld.RHOV(HVa);                                  % [kg/m3] Vapor density
+                     RHOV = fld.RHOV(HVa);                                  % [kg/m3] Vapor density at vapor temperature
                      REV  = mix.MFLUX(zIdx).*geom.HDIAM./fld.MUV(Hf).*(Xa+(RHOV/RHOF).*(1-Xa)); % [-] Vapor Reynolds number
                      PRF  = fld.PRANDTLV(Hf);                               % [-] Vapor Prandtl number at film temperature
                      NU   = 0.008348.*REV.^0.8774.*PRF.^0.6112;            % [-] Nusselt number
 
-                     KVF = fld.KV(Hf);                                      % [W/m/K] Vapor conductivity at film temperature
+                     KVF  = fld.KV(Hf);                                     % [W/m/K] Vapor conductivity at film temperature
                      hwallbt = NU.*(KVF/geom.HDIAM);
                      Tbv     = TVa;
              end
