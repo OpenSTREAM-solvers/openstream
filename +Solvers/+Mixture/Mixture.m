@@ -1715,32 +1715,29 @@ classdef Mixture < Solvers.AbstractField
                     Fo     = 1./(VF+dvf).^n./abs(deltaX).^b.*(dg0./HDIAM).^2; % [-] Void model
 
                 case InputEnums.THERMALRELAX.HOMOGENEOUS
-                    RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
-                    RHOV   = fld.RHOV(mix.vapor.H(zIdx));                  % [kg/m^3] Vapor density
-                    X      = mix.liquid.X(zIdx);                           % [-] Liquid mass quality
+                    RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
+                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
+                    X    = mix.liquid.X(zIdx);                             % [-] Liquid mass quality
 
-                    dg     = dg0;                                          % [m] Keep dg0
+                    dg   = dg0;                                            % [m] Keep dg0
 
-                    Fo     = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
+                    Fo   = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
 
                 case InputEnums.THERMALRELAX.NONHOMOGENEOUS
-                    RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
-                    RHO    = mix.RHO(zIdx);                                % [kg/m^3] Mixture density
-                    X      = mix.liquid.X(zIdx);                           % [-] Liquid mass quality
-                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
-                    U      = mix.U(zIdx);                                  % [m/s] Mixture velocity
-                    UG     = mix.vapor.U(zIdx);                            % [m/s] Vapor velocity
-                    NUI    = 2; %!!!For now                                % [-] Nusselt number for interfacial condensation (approximated)
+                    RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
+                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
+                    X    = mix.liquid.X(zIdx);                             % [-] Liquid mass quality
+                    NUI  = 2; %!!!For now                                  % [-] Nusselt number for interfacial condensation (approximated)
 
-                    dg     = dg0;                                          % [m] Keep dg0
+                    dg   = dg0;                                            % [m] Keep dg0
 
-                    Fo     = (RHO./RHOL).*(U./UG).*X./(VF+dvf)./(6.*NUI).*(dg./HDIAM).^2; % [-] Non-homogeneous model
+                    Fo   = (RHOV./RHOL).*X./(1-X+dvf)./(6.*NUI).*(dg./HDIAM).^2; % [-] Non-homogeneous model
 
                 case InputEnums.THERMALRELAX.FOURIER
                     % TODO: Dummy model for now
-                    VF     = mix.vapor.VF(zIdx);                           % [-] Vapor volume fraction
+                    VF  = mix.vapor.VF(zIdx);                              % [-] Vapor volume fraction
 
-                    Fo     = 1./(VF+dvf).^n.*(dg0./HDIAM).^2; %!!!For now
+                    Fo  = 1./(VF+dvf).^n.*(dg0./HDIAM).^2; %!!!For now
 
                     % RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
                     % RHOV   = fld.RHOV(mix.vapor.H(zIdx));                  % [kg/m^3] Vapor density
@@ -1819,33 +1816,29 @@ classdef Mixture < Solvers.AbstractField
                     Fo     = 1./(VF+dvf).^n./abs(deltaX).^b.*(dl0./HDIAM).^2; % [-] Void model
 
                 case InputEnums.THERMALRELAX.HOMOGENEOUS
-                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
-                    RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
-                    X    = mix.vapor.X(zIdx);                              % [-] Vapor mass quality
-                    VF   = mix.liquid.VF(zIdx);                            % [-] Liquid volume fraction
+                    %RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
+                    %RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
+                    %X   = mix.vapor.X(zIdx);                              % [-] Vapor mass quality
+                    VF  = mix.liquid.VF(zIdx);                             % [-] Liquid volume fraction
 
                     cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
                     if isnan(cbtIdx), cbtIdx = zIdx; end
                     VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
                     dl  = dl0.*(VF./VF0).^n;                               % [m]
 
-                    Fo = (RHOL./RHOV).*X./(1-X+dvf)./12.*(dl./HDIAM).^2;   % [-] Homogeneous model
+                    %Fo  = (RHOL./RHOV).*X./(1-X+dvf)./12.*(dl./HDIAM).^2;  % [-] Homogeneous model
+                    Fo  = (1-VF)./(VF+dvf)./12.*(dl./HDIAM).^2;            % [-] Homogeneous model
 
                 case InputEnums.THERMALRELAX.NONHOMOGENEOUS
-                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
-                    RHO  = mix.RHO(zIdx);                                  % [kg/m^3] Mixture density
-                    X    = mix.vapor.X(zIdx);                              % [-] Vapor mass quality
-                    VF   = mix.liquid.VF(zIdx);                            % [-] Liquid volume fraction
-                    U    = mix.U(zIdx);                                    % [m/s] Mixture velocity
-                    UG   = mix.vapor.U(zIdx);                              % [m/s] Vapor velocity
-                    NUI  = 2; %!!!For now                                  % [-] Nusselt number for interfacial evaporation (approximated)
+                    VF  = mix.liquid.VF(zIdx);                             % [-] Liquid volume fraction
+                    NUI = 2; %!!!For now                                   % [-] Nusselt number for interfacial evaporation (approximated)
 
                     cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
                     if isnan(cbtIdx), cbtIdx = zIdx; end
                     VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
                     dl  = dl0.*(VF./VF0).^n;                               % [m]
 
-                    Fo     = (RHO./RHOV).*(U./UG).*X./(VF+dvf)./(6.*NUI).*(dl./HDIAM).^2; % [-] Non-homogeneous model
+                    Fo  = (1-VF)./(VF+dvf)./(6.*NUI).*(dl./HDIAM).^2;      % [-] Non-homogeneous model
 
                 case InputEnums.THERMALRELAX.FOURIER
                     Re0 = model.RELAXEVAPFOCOEF(1);                        % [-] Reference vapor Reynolds number
