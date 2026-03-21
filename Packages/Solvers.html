@@ -66,7 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../Guides/theory/index.html">Theory overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html">Mixture model</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#homogeneous-relaxation-model">Homogeneous relaxation model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#mixture-relaxation-model">Mixture relaxation model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#closure-relations">Closure relations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
@@ -213,180 +213,6 @@
 </ul>
 <hr class="docutils" />
 <dl class="mat class" id="module-Solvers">
-<dt class="sig sig-object mat" id="Solvers.SolverState">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverState</span></span><a class="headerlink" href="#Solvers.SolverState" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
-<p>SOLVERSTATE Enumeration of solver execution states</p>
-<p>This enumeration defines the possible states a solver can be in
-during or after execution. It is used to track solver execution and
-convergence status.</p>
-<p>States:</p>
-<ul class="simple">
-<li><p>UNSOLVED                — Solver has not yet run</p></li>
-<li><p>SOLVEDCONVERGED         — Solver completed and converged successfully</p></li>
-<li><p>SOLVEDNOTCONVERGED      — Solver completed but did not converge</p></li>
-<li><p>INITIALSTEPCONVERGED    — Initial steady-state step completed and converged</p></li>
-<li><p>INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge</p></li>
-</ul>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>SOLVERPLOTTER Framework for generating solver plots</p>
-<p>This class provides a flexible plotting interface for visualizing solver results.
-It supports tiled layouts, animated series, and customizable plot styles.
-It also includes UI controls for animation playback and export.</p>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.SolverPlotter">
-<span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.SolverPlotter" title="Link to this definition"></a></dt>
-<dd><p>SOLVERPLOTTER Constructor method to initialize plotter objects and layout</p>
-</dd></dl>
-
-</dd>
-<dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.FontSize">
-<span class="sig-name descname"><span class="pre">FontSize</span></span><em class="property"> <span class="pre">=</span> <span class="pre">13</span></em><a class="headerlink" href="#Solvers.SolverPlotter.FontSize" title="Link to this definition"></a></dt>
-<dd><p>Font size of text in plots</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Grid">
-<span class="sig-name descname"><span class="pre">Grid</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'on'</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Grid" title="Link to this definition"></a></dt>
-<dd><p>Grid display option</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Title">
-<span class="sig-name descname"><span class="pre">Title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Title" title="Link to this definition"></a></dt>
-<dd><p>Title of the figure</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Ts">
-<span class="sig-name descname"><span class="pre">Ts</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Ts" title="Link to this definition"></a></dt>
-<dd><p>Time series [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.WallIdx">
-<span class="sig-name descname"><span class="pre">WallIdx</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.SolverPlotter.WallIdx" title="Link to this definition"></a></dt>
-<dd><p>Wall index for multi-wall simulations</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Zs">
-<span class="sig-name descname"><span class="pre">Zs</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Zs" title="Link to this definition"></a></dt>
-<dd><p>Axial positions [m]</p>
-</dd></dl>
-
-<dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.currentAhIdx">
-<span class="sig-name descname"><span class="pre">currentAhIdx</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.SolverPlotter.currentAhIdx" title="Link to this definition"></a></dt>
-<dd><p>Index of current active axes</p>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.addTile">
-<span class="sig-name descname"><span class="pre">addTile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.addTile" title="Link to this definition"></a></dt>
-<dd><p>ADDTILE Method to add a new tile to the layout or retrieve existing one by title</p>
-</dd></dl>
-
-<dl class="mat staticmethod">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.fieldName2plotStyle">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fieldName2plotStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fieldName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.fieldName2plotStyle" title="Link to this definition"></a></dt>
-<dd><p>FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.gca">
-<span class="sig-name descname"><span class="pre">gca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.gca" title="Link to this definition"></a></dt>
-<dd><p>GCA Get Method to retrieve current axes handle</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.gcf">
-<span class="sig-name descname"><span class="pre">gcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.gcf" title="Link to this definition"></a></dt>
-<dd><p>GCF Method to retrieve current plotter handle</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.legend">
-<span class="sig-name descname"><span class="pre">legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.legend" title="Link to this definition"></a></dt>
-<dd><p>legend Method to add legend to current axes</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.newTile">
-<span class="sig-name descname"><span class="pre">newTile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.newTile" title="Link to this definition"></a></dt>
-<dd><p>NEWTILE Method to create a new tile with labels and formatting</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotK">
-<span class="sig-name descname"><span class="pre">plotK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">klocZ</span></em>, <em class="sig-param"><span class="pre">ah</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotK" title="Link to this definition"></a></dt>
-<dd><p>PLOTK Method to plot obstruction elevation indicators</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotOAF">
-<span class="sig-name descname"><span class="pre">plotOAF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">oafZ</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotOAF" title="Link to this definition"></a></dt>
-<dd><p>PLOTOAF Method to plot onset of annular flow boundary indicator</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotz">
-<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">YData</span></em>, <em class="sig-param"><span class="pre">fieldName</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotz" title="Link to this definition"></a></dt>
-<dd><p>PLOTZ Method to plot spatial or temporal data (YData) on the current axes</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.resizeFigure">
-<span class="sig-name descname"><span class="pre">resizeFigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">scaleFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.resizeFigure" title="Link to this definition"></a></dt>
-<dd><p>resizeFigure Resizes the figure based on tiledlayout rows/columns
-Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
-<p>Usage:</p>
-<ul class="simple">
-<li><p>plotters.resizeFigure()    — Default scaleFactor = 1</p></li>
-<li><p>plotters.resizeFigure(1.2) — Tiles 20% larger</p></li>
-<li><p>plotters.resizeFigure(0.8) — Tiles 20% smaller</p></li>
-</ul>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.setZs">
-<span class="sig-name descname"><span class="pre">setZs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">Zs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.setZs" title="Link to this definition"></a></dt>
-<dd><p>SETZS Method to assign the parameter(space or time) on the plotter x-axis</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.xlim">
-<span class="sig-name descname"><span class="pre">xlim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.xlim" title="Link to this definition"></a></dt>
-<dd><p>xlim Method to get or set x-axis limits for current axes</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.ylabels">
-<span class="sig-name descname"><span class="pre">ylabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">labels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.ylabels" title="Link to this definition"></a></dt>
-<dd><p>YLABEL Method to set y-axis tick labels</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.ylim">
-<span class="sig-name descname"><span class="pre">ylim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.ylim" title="Link to this definition"></a></dt>
-<dd><p>YLIM Method to get or set y-axis limits for current axes</p>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.AbstractSolver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
@@ -680,16 +506,6 @@ the mixture solver.</p>
 </dd></dl>
 
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.AbstractPhase">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractPhase</span></span><a class="headerlink" href="#Solvers.AbstractPhase" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>ABSTRACTPHASE Base class for phase definitions across solvers</p>
-<p>This abstract class serves as a common interface for all phase-type
-classes used in solver implementations. It is intended to provide a
-foundation for shared behavior and structure.</p>
-</dd></dl>
-
-<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.AbstractField">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractField</span></span><a class="headerlink" href="#Solvers.AbstractField" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">matlab.mixin.Copyable</span></code></p>
@@ -789,6 +605,190 @@ subobject access.</p>
 </dd>
 </dl>
 </div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.AbstractPhase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">AbstractPhase</span></span><a class="headerlink" href="#Solvers.AbstractPhase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>ABSTRACTPHASE Base class for phase definitions across solvers</p>
+<p>This abstract class serves as a common interface for all phase-type
+classes used in solver implementations. It is intended to provide a
+foundation for shared behavior and structure.</p>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>SOLVERPLOTTER Framework for generating solver plots</p>
+<p>This class provides a flexible plotting interface for visualizing solver results.
+It supports tiled layouts, animated series, and customizable plot styles.
+It also includes UI controls for animation playback and export.</p>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.SolverPlotter">
+<span class="sig-name descname"><span class="pre">SolverPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">titles</span></em>, <em class="sig-param"><span class="pre">WallIdxs</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.SolverPlotter" title="Link to this definition"></a></dt>
+<dd><p>SOLVERPLOTTER Constructor method to initialize plotter objects and layout</p>
+</dd></dl>
+
+</dd>
+<dt>Property Summary</dt><dd><dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.FontSize">
+<span class="sig-name descname"><span class="pre">FontSize</span></span><em class="property"> <span class="pre">=</span> <span class="pre">13</span></em><a class="headerlink" href="#Solvers.SolverPlotter.FontSize" title="Link to this definition"></a></dt>
+<dd><p>Font size of text in plots</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Grid">
+<span class="sig-name descname"><span class="pre">Grid</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'on'</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Grid" title="Link to this definition"></a></dt>
+<dd><p>Grid display option</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Title">
+<span class="sig-name descname"><span class="pre">Title</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Title" title="Link to this definition"></a></dt>
+<dd><p>Title of the figure</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Ts">
+<span class="sig-name descname"><span class="pre">Ts</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Ts" title="Link to this definition"></a></dt>
+<dd><p>Time series [s]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.WallIdx">
+<span class="sig-name descname"><span class="pre">WallIdx</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.SolverPlotter.WallIdx" title="Link to this definition"></a></dt>
+<dd><p>Wall index for multi-wall simulations</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Zs">
+<span class="sig-name descname"><span class="pre">Zs</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[]</span></em><a class="headerlink" href="#Solvers.SolverPlotter.Zs" title="Link to this definition"></a></dt>
+<dd><p>Axial positions [m]</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.currentAhIdx">
+<span class="sig-name descname"><span class="pre">currentAhIdx</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.SolverPlotter.currentAhIdx" title="Link to this definition"></a></dt>
+<dd><p>Index of current active axes</p>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.addTile">
+<span class="sig-name descname"><span class="pre">addTile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.addTile" title="Link to this definition"></a></dt>
+<dd><p>ADDTILE Method to add a new tile to the layout or retrieve existing one by title</p>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.fieldName2plotStyle">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">fieldName2plotStyle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">fieldName</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.fieldName2plotStyle" title="Link to this definition"></a></dt>
+<dd><p>FIELDNAME2PLOTSTYLE Static method to map field names to plot styles (color, line, marker)</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.gca">
+<span class="sig-name descname"><span class="pre">gca</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.gca" title="Link to this definition"></a></dt>
+<dd><p>GCA Get Method to retrieve current axes handle</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.gcf">
+<span class="sig-name descname"><span class="pre">gcf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.gcf" title="Link to this definition"></a></dt>
+<dd><p>GCF Method to retrieve current plotter handle</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.legend">
+<span class="sig-name descname"><span class="pre">legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.legend" title="Link to this definition"></a></dt>
+<dd><p>legend Method to add legend to current axes</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.newTile">
+<span class="sig-name descname"><span class="pre">newTile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.newTile" title="Link to this definition"></a></dt>
+<dd><p>NEWTILE Method to create a new tile with labels and formatting</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotK">
+<span class="sig-name descname"><span class="pre">plotK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">klocZ</span></em>, <em class="sig-param"><span class="pre">ah</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotK" title="Link to this definition"></a></dt>
+<dd><p>PLOTK Method to plot obstruction elevation indicators</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotOAF">
+<span class="sig-name descname"><span class="pre">plotOAF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">oafZ</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotOAF" title="Link to this definition"></a></dt>
+<dd><p>PLOTOAF Method to plot onset of annular flow boundary indicator</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotz">
+<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">YData</span></em>, <em class="sig-param"><span class="pre">fieldName</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotz" title="Link to this definition"></a></dt>
+<dd><p>PLOTZ Method to plot spatial or temporal data (YData) on the current axes</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.resizeFigure">
+<span class="sig-name descname"><span class="pre">resizeFigure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">scaleFactor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.resizeFigure" title="Link to this definition"></a></dt>
+<dd><p>resizeFigure Resizes the figure based on tiledlayout rows/columns
+Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>plotters.resizeFigure()    — Default scaleFactor = 1</p></li>
+<li><p>plotters.resizeFigure(1.2) — Tiles 20% larger</p></li>
+<li><p>plotters.resizeFigure(0.8) — Tiles 20% smaller</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.setZs">
+<span class="sig-name descname"><span class="pre">setZs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">Zs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.setZs" title="Link to this definition"></a></dt>
+<dd><p>SETZS Method to assign the parameter(space or time) on the plotter x-axis</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.xlim">
+<span class="sig-name descname"><span class="pre">xlim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.xlim" title="Link to this definition"></a></dt>
+<dd><p>xlim Method to get or set x-axis limits for current axes</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.ylabels">
+<span class="sig-name descname"><span class="pre">ylabels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">labels</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.ylabels" title="Link to this definition"></a></dt>
+<dd><p>YLABEL Method to set y-axis tick labels</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.ylim">
+<span class="sig-name descname"><span class="pre">ylim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">newLim</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.ylim" title="Link to this definition"></a></dt>
+<dd><p>YLIM Method to get or set y-axis limits for current axes</p>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.SolverState">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.</span></span><span class="sig-name descname"><span class="pre">SolverState</span></span><a class="headerlink" href="#Solvers.SolverState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
+<p>SOLVERSTATE Enumeration of solver execution states</p>
+<p>This enumeration defines the possible states a solver can be in
+during or after execution. It is used to track solver execution and
+convergence status.</p>
+<p>States:</p>
+<ul class="simple">
+<li><p>UNSOLVED                — Solver has not yet run</p></li>
+<li><p>SOLVEDCONVERGED         — Solver completed and converged successfully</p></li>
+<li><p>SOLVEDNOTCONVERGED      — Solver completed but did not converge</p></li>
+<li><p>INITIALSTEPCONVERGED    — Initial steady-state step completed and converged</p></li>
+<li><p>INITIALSTEPNOTCONVERGED — Initial steady-state step completed but did not converge</p></li>
+</ul>
 </dd></dl>
 
 <hr class="docutils" />

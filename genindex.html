@@ -62,7 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Guides/theory/index.html">Theory overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html">Mixture model</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html#homogeneous-relaxation-model">Homogeneous relaxation model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html#mixture-relaxation-model">Mixture relaxation model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html#closure-relations">Closure relations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Guides/theory/Mixture_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
@@ -360,6 +360,12 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Liquid.C">C() (Solvers.Mixture.Liquid method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Vapor.C">(Solvers.Mixture.Vapor method)</a>
+</li>
+      </ul></li>
       <li><a href="Packages/InputEnums.html#InputEnums.CBT">CBT (class in InputEnums)</a>
 
       <ul>
@@ -376,9 +382,13 @@
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Model.CBTELEVATION">CBTELEVATION (Inputs.Model attribute)</a>
 </li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.CBTIDX">CBTIDX() (Solvers.Mixture.Mixture method)</a>
+</li>
       <li><a href="Packages/Inputs.html#Inputs.Model.CBTKEFFECT">CBTKEFFECT (Inputs.Model attribute)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.CBTMULT">CBTMULT (Inputs.Model attribute)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.CBTZ">CBTZ() (Solvers.Mixture.Mixture method)</a>
 </li>
       <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.CD">CD() (Solvers.TwoFluid.Liquid method)</a>
 
@@ -410,14 +420,14 @@
         <li><a href="ExternalPackages/CoolPropWrapper.html#CoolPropWrapper.CoolPropWrapperHA.CoolPropHandle">(CoolPropWrapper.CoolPropWrapperHA attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ExternalPackages/CoolPropWrapper.html#CoolPropWrapper.CoolPropWrapper">CoolPropWrapper (class in CoolPropWrapper)</a>
 
       <ul>
         <li><a href="ExternalPackages/CoolPropWrapper.html#module-CoolPropWrapper">(module)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ExternalPackages/CoolPropWrapper.html#CoolPropWrapper.CoolPropWrapper.CoolPropWrapper">CoolPropWrapper() (CoolPropWrapper.CoolPropWrapper method)</a>
 </li>
       <li><a href="ExternalPackages/CoolPropWrapper.html#CoolPropWrapper.CoolPropWrapperHA">CoolPropWrapperHA (class in CoolPropWrapper)</a>
@@ -510,6 +520,8 @@
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DP">DP (Solvers.Mixture.Mixture attribute)</a>
 </li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPACCS">DPACCS() (Solvers.Mixture.Mixture method)</a>
+</li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPACCT">DPACCT() (Solvers.Mixture.Mixture method)</a>
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPACCZ">DPACCZ() (Solvers.Mixture.Mixture method)</a>
@@ -528,10 +540,10 @@
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPWALL">DPWALL() (Solvers.Mixture.Mixture method)</a>
 </li>
-      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.DRAG">DRAG() (Solvers.ThreeField.Drop method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.DRAG">DRAG() (Solvers.ThreeField.Drop method)</a>
+</li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.DRAGCOEF">DRAGCOEF() (Solvers.FourField.Wave method)</a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Drop">Drop (class in Solvers.FourField)</a>
@@ -606,6 +618,8 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.ECT">ECT() (Solvers.Mixture.Mixture method)</a>
+</li>
       <li><a href="ExternalPackages/CoolPropWrapper.html#CoolPropWrapper.CoolPropWrapper.enthalpy">enthalpy() (CoolPropWrapper.CoolPropWrapper method)</a>
 </li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.ENTNUM">ENTNUM() (Solvers.AbstractFilm method)</a>
@@ -638,10 +652,10 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.EQSTROUHALCOEF">EQSTROUHALCOEF (Inputs.Model attribute)</a>
 </li>
-      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Base.EQTHICK">EQTHICK() (Solvers.FourField.Base method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Base.EQTHICK">EQTHICK() (Solvers.FourField.Base method)</a>
+</li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Film.EQUIL">EQUIL() (Solvers.FourField.Film method)</a>
 
       <ul>
@@ -789,6 +803,10 @@
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.FourFieldSolver">FourFieldSolver (class in Solvers.FourField.FourFieldSolver)</a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.FourFieldSolver.FourFieldSolver">FourFieldSolver() (Solvers.FourField.FourFieldSolver.FourFieldSolver method)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.FOURIERCOND">FOURIERCOND() (Solvers.Mixture.Mixture method)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.FOURIEREVAP">FOURIEREVAP() (Solvers.Mixture.Mixture method)</a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.FREQUENCY">FREQUENCY (Solvers.FourField.Wave attribute)</a>
 </li>
@@ -968,7 +986,7 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.HINTEVAP">(Solvers.TwoFluid.Vapor method)</a>
 </li>
       </ul></li>
-      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.HRM">HRM (Solvers.Mixture.Mixture attribute)</a>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.HM">HM() (Solvers.Mixture.Mixture method)</a>
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.HTOT">HTOT() (Solvers.Mixture.Mixture method)</a>
 
@@ -1005,6 +1023,8 @@
 </li>
       </ul></li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.HWALLBOIL">HWALLBOIL() (Solvers.Mixture.Mixture method)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.HWALLPOSTCBT">HWALLPOSTCBT() (Solvers.Mixture.Mixture method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1278,6 +1298,8 @@
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.MBASE">MBASE() (Solvers.FourField.Wave method)</a>
 </li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.MCT">MCT() (Solvers.Mixture.Mixture method)</a>
+</li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Base.MDEP">MDEP() (Solvers.FourField.Base method)</a>
 
       <ul>
@@ -1400,6 +1422,8 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.Model">Model() (Inputs.Model method)</a>
 </li>
+      <li><a href="Packages/Inputs.html#Inputs.Model.MOECKCOEF">MOECKCOEF (Inputs.Model attribute)</a>
+</li>
       <li><a href="Packages/InputEnums.html#InputEnums.MOMENTBASE">MOMENTBASE (class in InputEnums)</a>
 
       <ul>
@@ -1436,6 +1460,8 @@
         <li><a href="Packages/Inputs.html#Inputs.Model.MOMENTWAVE">(Inputs.Model attribute)</a>
 </li>
       </ul></li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.MRM">MRM (Solvers.Mixture.Mixture attribute)</a>
+</li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.MTOT">MTOT() (Solvers.AbstractFilm method)</a>
 
       <ul>
@@ -1742,6 +1768,14 @@
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Liquid.Q">Q() (Solvers.Mixture.Liquid method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Vapor.Q">(Solvers.Mixture.Vapor method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ExternalPackages/CoolPropWrapper.html#CoolPropWrapper.CoolPropWrapper.quality">quality() (CoolPropWrapper.CoolPropWrapper method)</a>
 </li>
   </ul></td>
@@ -1780,7 +1814,17 @@
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Model.RELAXCONDCOEF">RELAXCONDCOEF (Inputs.Model attribute)</a>
 </li>
+      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXCONDFO">RELAXCONDFO (Inputs.Model attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXCONDT">RELAXCONDT (Inputs.Model attribute)</a>
+</li>
       <li><a href="Packages/Inputs.html#Inputs.Model.RELAXEVAPCOEF">RELAXEVAPCOEF (Inputs.Model attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXEVAPFO">RELAXEVAPFO (Inputs.Model attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXEVAPFOCOEF">RELAXEVAPFOCOEF (Inputs.Model attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXEVAPT">RELAXEVAPT (Inputs.Model attribute)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Options.RELAXFW">RELAXFW (Inputs.Options attribute)</a>
 </li>
@@ -1794,24 +1838,20 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.RELAXTB">RELAXTB (Inputs.Model attribute)</a>
 </li>
-      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXTCOND">RELAXTCOND (Inputs.Model attribute)</a>
-</li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.RELAXTCOND">RELAXTCOND() (Solvers.Mixture.Mixture method)</a>
 
       <ul>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Mixture.RELAXTCOND">(Solvers.TwoFluid.Mixture method)</a>
 </li>
       </ul></li>
-      <li><a href="Packages/Inputs.html#Inputs.Model.RELAXTEVAP">RELAXTEVAP (Inputs.Model attribute)</a>
-</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.RELAXTEVAP">RELAXTEVAP() (Solvers.Mixture.Mixture method)</a>
 
       <ul>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Mixture.RELAXTEVAP">(Solvers.TwoFluid.Mixture method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Inputs.html#Inputs.Model.RELAXTW">RELAXTW (Inputs.Model attribute)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Options.RELAXUB">RELAXUB (Inputs.Options attribute)</a>
@@ -2210,6 +2250,8 @@
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.UALGEBR">(Solvers.ThreeField.Drop method)</a>
 </li>
       </ul></li>
+      <li><a href="Packages/Inputs.html#Inputs.FluidProperties.UC">UC (Inputs.FluidProperties attribute)</a>
+</li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.UEQUIL">UEQUIL() (Solvers.AbstractFilm method)</a>
 
       <ul>
@@ -2217,6 +2259,8 @@
 </li>
       </ul></li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.UEQUILS">UEQUILS() (Solvers.AbstractFilm method)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.UP">UP() (Solvers.Mixture.Mixture method)</a>
 </li>
       <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.USLIP">USLIP() (Solvers.ThreeField.Drop method)</a>
 
