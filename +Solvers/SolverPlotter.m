@@ -830,6 +830,7 @@ classdef SolverPlotter < handle
                     out(idx,:) = xlim(plotter.ahs(plotter.currentAhIdx));
                 else
                     xlim(plotter.ahs(plotter.currentAhIdx), newLim);
+                    plotter.gca.UserData.xlim = newLim;
                 end
             end
         end
@@ -844,6 +845,7 @@ classdef SolverPlotter < handle
                     out(idx,:) = ylim(plotter.ahs(plotter.currentAhIdx));
                 else
                     ylim(plotter.ahs(plotter.currentAhIdx), newLim);
+                    plotter.gca.UserData.ylim = newLim;
                 end
             end
         end
