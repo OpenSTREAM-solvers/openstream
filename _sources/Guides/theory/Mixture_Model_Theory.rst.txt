@@ -35,7 +35,7 @@ where:
 
 where:
 
-%%%%%%%%%%%%%%%%%%%- :math:`\rho` is the mixture density
+- :math:`\rho` is the mixture density
 - :math:`u^+` is mixture (advection) velocity
 - :math:`A` is the cross-sectional area
 - :math:`p` is the pressure
