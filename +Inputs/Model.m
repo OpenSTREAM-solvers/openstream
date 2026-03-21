@@ -144,7 +144,7 @@ classdef Model < Inputs.Input
         MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'FULLNOP'                       % Base film momentum conservation model selected from :class:`InputEnums.MOMENTBASE`
         MOMENTWAVE       (1,1) InputEnums.MOMENTWAVE                       = 'FULL'                          % Wave momentum conservation model selected from :class:`InputEnums.MOMENTWAVE`
         WAVEBASEINT      (1,1) InputEnums.WAVEBASEINT                      = 'VAPORSHEAR'                    % Wave / base film interfacial momentum transfer model selected from :class:`InputEnums.WAVEBASEINT`
-        SHAPEFACTORCOEF  (:,1) double  {mustBeNumeric}                     = [1.325E5 2]                     % Wave shape factor coefficients [-]
+        SHAPEFACTORCOEF  (:,1) double  {mustBeNumeric}                     = [1.325E5 2 1 0]                 % Wave shape factor coefficients [-]
         WAVEDRAGCOEF     (:,1) double  {mustBeNumeric}                     = [0.02 1.350E5 0.437]            % Wave drag coefficient [-]
         THINWAVETHICK    (1,1) double  {mustBePositive}                    = 1E-5                            % Minimum thin wave thickness [m]
 

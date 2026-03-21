@@ -447,7 +447,10 @@ classdef Wave < Solvers.AbstractFilm
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
             coef = wave.inputSet.model.SHAPEFACTORCOEF;
-            shapefactor = (wave.RE(zIdx)./coef(1)).^coef(2);
+
+            re_v = wave.film.mix.vapor.RE(zIdx);                           % [-]
+            re_w = wave.RE(zIdx);                                          % [-]
+            shapefactor = (re_w./coef(1)).^coef(2).*coef(3).*re_v.^coef(4);
         end
 
         function eqst = EQSTROUHAL(wave, zIdx)
