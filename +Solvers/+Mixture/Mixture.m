@@ -2001,6 +2001,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % - WALLIS: Full Wallis model
             % - WALLIS_SIMP: Simplified Wallis model
+            % - LEVITAN: Levitan model
             
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -2013,13 +2014,18 @@ classdef Mixture < Solvers.AbstractField
             RHOG = mix.fluid.RHOG;
             DELTARHO = RHOF-RHOG;
 
+            SIG = mix.fluid.SIGMA;
+
             switch model.OAF
                 case InputEnums.OAF.WALLIS
                     % Wallis model
-                    oafx = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG)); % [-] Quality at onset of annular flow
+                    oafx = (0.6+0.4.*sqrt(model.G*HDIAM*(DELTARHO)*RHOF)./MFLUX)./(0.6+sqrt(RHOF/RHOG));
                 case InputEnums.OAF.WALLIS_SIMP
                     % Simplified Wallis model
                     oafx = sqrt(model.G*HDIAM*(DELTARHO)*RHOG)./MFLUX;
+                case InputEnums.OAF.LEVITAN
+                    % Levitan model
+                    oafx = 2.7.*(RHOG.*SIG./MFLUX.^2./HDIAM).^(1/4).*(RHOG/RHOF)^(1/3);
             end
         end
 
