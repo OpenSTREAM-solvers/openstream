@@ -1068,6 +1068,7 @@ classdef Mixture < Solvers.AbstractField
              %
              % - VAPOR: Heat transfer to vapor phase
              % - DOUGALL: Dougall-Rohsenow model (:cite:t:`DougallRohsenow1963`)
+             % - BISHOP: Bishop-Sandberg-Tong model (:cite:t:`Bishop1965`)
              % - MOECK: Groeneveld-Moeck model (:cite:t:`GroeneveldMoeck1969`)
              % - DELORME: Groeneveld-Delorme model (:cite:t:`GroeneveldDelorme1976`)
 
@@ -1103,6 +1104,24 @@ classdef Mixture < Solvers.AbstractField
 
                      hwallbt = NU.*(KG/geom.HDIAM);
                      Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
+                 case 'BISHOP'
+                     % Bishop-Sandberg-Tong model
+
+                     % Input parameter calculations assumes thermal equilibrium
+                     Xe  = min(1,max(0,mix.XEQ(zIdx)));                    % [-] Vapor mass quality
+                     RHOGRHOB = Xe + (1-Xe).*(RHOG/RHOF);                  % [-] Saturated vapor to bulk density
+                     RHOGRHOL = RHOG/RHOF;                                 % [-] Saturated vapor to liquid density
+
+                     Tf = max(TSAT+1E-6,(mix.T(zIdx)+twall)./2);           % [K] Vapor film temperature
+                     MUf = fld.coolpropH.viscosity('P',bc.PRESSURE,'T',Tf); % [Pa.s] Vapor viscosity at film temperature
+                     Kf  = fld.coolpropH.conductivity('P',bc.PRESSURE,'T',Tf); % [Pa.s] Vapor conductivity at film temperature
+                     PRf = fld.coolpropH.prandtl('P',bc.PRESSURE,'T',Tf);   % [-] Gas Prandtl number at film temperature
+                     REf = mix.MFLUX(zIdx).*geom.HDIAM./MUf;               % [-] Vapor Reynolds number (based on total mass flux)
+
+                     NU = 0.0193.*REf.^0.80.*PRf.^1.23.*RHOGRHOB.^0.68.*RHOGRHOL.^0.068; % [-] Nusselt number
+
+                     hwallbt = NU.*Kf./geom.HDIAM;
+                     Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
                  case 'MOECK'
                      % Groeneveld-Moeck model
                      % Note that the Vapor Reynolds number is derived based on the original reference but is equivalent to Dougall-Rohsenow model.
@@ -1114,7 +1133,9 @@ classdef Mixture < Solvers.AbstractField
                      REG = REG.*(Xe+(RHOG/RHOF).*(1-Xe));                  % [-] Vapor Reynolds number (based on homogeneous assumption)
                      
                      Y   = 1-0.1.*(RHOF/RHOG-1).^0.4.*(1-Xe).^0.4;         % [-]
-                     PRW = fld.coolpropH.prandtl('P',bc.PRESSURE,'T',max(TSAT+1E-6,twall)); % [-] Gas Prandtl number at wall temperature
+
+                     Tw = max(TSAT+1E-6,twall);                            % [K] Vapor wall temperature
+                     PRW = fld.coolpropH.prandtl('P',bc.PRESSURE,'T',Tw);   % [-] Vapor Prandtl number at wall temperature
 
                      NU  = coef(1).*REG.^coef(2).*PRW.^coef(3).*Y.^coef(4); % [-] Nusselt number
 
