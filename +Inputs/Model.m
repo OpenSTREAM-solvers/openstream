@@ -63,7 +63,8 @@ classdef Model < Inputs.Input
         RELAXEVAPT       (1,:) double                                      = [ 0.3  0.3   0.3 0.3 0.3]       % Interfacial evaporation  relaxation time array [s]
         RELAXCONDCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05 0.0]           % Interfacial condensation time relaxation coefficients for homogeneous/non-homogeneous models
         RELAXEVAPCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5 0.0]           % Interfacial evaporation  time relaxation coefficients for homogeneous/non-homogeneous models
-        RELAXEVAPFOCOEF  (1,3) double  {mustBeNumeric}                     = [5.75E5 3 0.8]                  % Interfacial evaporation  time relaxation coefficients for empirical Fourier number model
+        RELAXCONDFOCOEF  (1,4) double  {mustBeNumeric}                     = [5E-5 5E5 0 0]                  % Interfacial condensation  time relaxation coefficients for empirical Fourier number model
+        RELAXEVAPFOCOEF  (1,6) double  {mustBeNumeric}                     = [1E-4 5E5 2 1 10E-3 1]          % Interfacial evaporation   time relaxation coefficients for empirical Fourier number model
         KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
 
         % Mixture near-wall models

@@ -1071,6 +1071,7 @@ classdef Mixture < Solvers.AbstractField
              % - BISHOP: Bishop-Sandberg-Tong model (:cite:t:`Bishop1965`)
              % - MOECK: Groeneveld-Moeck model (:cite:t:`GroeneveldMoeck1969`)
              % - DELORME: Groeneveld-Delorme model (:cite:t:`GroeneveldDelorme1976`)
+             % - CONDIEIV: Condie-Bengston IV model (:cite:t:`Morris1982`)
 
              if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
@@ -1103,7 +1104,8 @@ classdef Mixture < Solvers.AbstractField
                      NU  = 0.023.*REG.^0.8.*PRG.^0.4;                      % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
+                     %Tbv     = repmat(fld.TSAT,length(zIdx),1);
+                     Tbv     = max(fld.TSAT,mix.T(zIdx));
                  case 'BISHOP'
                      % Bishop-Sandberg-Tong model
 
@@ -1112,16 +1114,17 @@ classdef Mixture < Solvers.AbstractField
                      RHOGRHOB = Xe + (1-Xe).*(RHOG/RHOF);                  % [-] Saturated vapor to bulk density
                      RHOGRHOL = RHOG/RHOF;                                 % [-] Saturated vapor to liquid density
 
-                     Tf = max(TSAT+1E-6,(mix.T(zIdx)+twall)./2);           % [K] Vapor film temperature
-                     MUf = fld.coolpropH.viscosity('P',bc.PRESSURE,'T',Tf); % [Pa.s] Vapor viscosity at film temperature
-                     Kf  = fld.coolpropH.conductivity('P',bc.PRESSURE,'T',Tf); % [Pa.s] Vapor conductivity at film temperature
-                     PRf = fld.coolpropH.prandtl('P',bc.PRESSURE,'T',Tf);   % [-] Gas Prandtl number at film temperature
+                     Tf = max(TSAT+10,(TSAT+twall)./2);                    % [K] Vapor film temperature, use TSAT+10 for robustness
+                     hf  = fld.H(Tf);                                      % [J/kg] Vapor film enthalpy 
+                     MUf = fld.MUV(hf);                                    % [Pa.s] Vapor viscosity at film temperature
+                     Kf  = fld.KV(hf);                                     % [Pa.s] Vapor conductivity at film temperature
+                     PRf = fld.PRANDTLV(hf);                               % [-] Gas Prandtl number at film temperature
                      REf = mix.MFLUX(zIdx).*geom.HDIAM./MUf;               % [-] Vapor Reynolds number (based on total mass flux)
 
                      NU = 0.0193.*REf.^0.80.*PRf.^1.23.*RHOGRHOB.^0.68.*RHOGRHOL.^0.068; % [-] Nusselt number
 
                      hwallbt = NU.*Kf./geom.HDIAM;
-                     Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
+                     Tbv     = max(fld.TSAT,mix.T(zIdx));
                  case 'MOECK'
                      % Groeneveld-Moeck model
                      % Note that the Vapor Reynolds number is derived based on the original reference but is equivalent to Dougall-Rohsenow model.
@@ -1134,13 +1137,13 @@ classdef Mixture < Solvers.AbstractField
                      
                      Y   = 1-0.1.*(RHOF/RHOG-1).^0.4.*(1-Xe).^0.4;         % [-]
 
-                     Tw = max(TSAT+1E-6,twall);                            % [K] Vapor wall temperature
-                     PRW = fld.coolpropH.prandtl('P',bc.PRESSURE,'T',Tw);   % [-] Vapor Prandtl number at wall temperature
+                     Tw  = max(TSAT+10,twall);                             % [K] Vapor wall temperature, use TSAT+10 for robustness                  
+                     PRW = fld.PRANDTLV(fld.H(Tw));                         % [J/kg] Vapor wall Prandtl number at wall temperature
 
                      NU  = coef(1).*REG.^coef(2).*PRW.^coef(3).*Y.^coef(4); % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     Tbv     = repmat(mix.fluid.TSAT,length(zIdx),1);
+                     Tbv     = max(fld.TSAT,mix.T(zIdx));
                  case 'DELORME'
                      % Groeneveld-Delorme model
                      % TODO: Check Vapor superheat (TVa) does not start at Tsat at CBT
@@ -1152,13 +1155,13 @@ classdef Mixture < Solvers.AbstractField
                      a3 =  0.20006;  b2 =  0.8455;
                      a4 = -0.09232;
 
-                     CPG = fld.CPG;                                         % [J/kg/K] Saturated vapor constant pressure specific heat
-                     HF  = fld.HF;                                          % [J/kg] Saturated liquid enthalpy
-                     HG  = fld.HG;                                          % [J/kg] Saturated vapor enthalpy
-                     HFG = fld.HFG;                                         % [J/kg] Latent heat of evaporation
+                     CPG = fld.CPG;                                        % [J/kg/K] Saturated vapor constant pressure specific heat
+                     HF  = fld.HF;                                         % [J/kg] Saturated liquid enthalpy
+                     HG  = fld.HG;                                         % [J/kg] Saturated vapor enthalpy
+                     HFG = fld.HFG;                                        % [J/kg] Latent heat of evaporation
 
                      RHOV = RHOG;                                          % [kg/m^3] Saturated vapor density
-                     %RHOV = fld.RHOV(HVa);                                  % This option needs iterations since HVa is not known here
+                     %RHOV = fld.RHOV(HVa);                                 % This option needs iterations since HVa is not known here
 
                      X1 = min(1,max(0,mix.XEQ(zIdx)));                     % [-] Vapor mass quality based on HEM
                      VFHOM = X1.*RHOF./(X1.*RHOF+(1-X1).*RHOV);            % [-] Void fraction based on HEM
@@ -1172,7 +1175,7 @@ classdef Mixture < Solvers.AbstractField
                      Xa  = HFG.*Xe./(HVa-HF);                              % [-] Resulting vapor mass quality
                      TVa = fld.T(HVa);                                      % [K] Resulting vapor temperature
 
-                     Tf  = max(fld.TSAT+1E-6,(TVa+twall)/2);                % [K] Film temperature
+                     Tf  = max(TSAT+10,(TVa+twall)/2);                     % [K] Film temperature, use TSAT+10 for robustness
                      Hf  = fld.H(Tf);                                       % [J/kg] Resulting film enthalpy
 
                      RHOV = fld.RHOV(HVa);                                  % [kg/m3] Vapor density at vapor temperature
@@ -1183,7 +1186,27 @@ classdef Mixture < Solvers.AbstractField
                      KVF  = fld.KV(Hf);                                     % [W/m/K] Vapor conductivity at film temperature
                      hwallbt = NU.*(KVF/geom.HDIAM);
                      Tbv     = TVa;
+                 case 'CONDIEIV'
+                     % Condie-Bengston IV model
+
+                     % Input parameter calculations assumes thermal equilibrium
+                     Xe  = min(1,max(0,mix.XEQ(zIdx)));                    % [-] Vapor mass quality
+                     REG = mix.MFLUX(zIdx).*geom.HDIAM./MUG;               % [-] Vapor Reynolds number (based on total mass flux)
+                     KG = KG/1E3;                                          % [kW/m/K] Vapor conductivity
+
+                     Tw  = max(TSAT+10,twall);                             % [K] Vapor wall temperature
+                     PRW = fld.PRANDTLV(fld.H(Tw));                         % [-] Vapor Prandtl number at wall temperature
+
+                     hwallbt = 0.00128.*KG.^0.4593.*PRW.^2.2598./geom.HDIAM.^0.8095./(1+Xe).^2.0514.*REG.^(0.6249+0.2043.*log(Xe+1)); % [kW/m^2/K]
+                     hwallbt = hwallbt.*1E3;                               % [W/m^2/K]
+                     Tbv     = max(fld.TSAT,mix.T(zIdx));
              end
+             
+             % Switch to full single-phase vapor
+             %TODO: Check how transition should be performed (xeq = 1, min(htc), etc)
+             %      Not used for now due to observed discontinuity and better performance
+             %idx = mix.XEQ(zIdx) > 1;
+             %hwallbt(idx) = mix.vapor.HWALL(twall,zIdx(idx));
          end
 
          function [hwall, Tbv] = HWALL(mix, twall, zIdx)
@@ -1244,7 +1267,7 @@ classdef Mixture < Solvers.AbstractField
             twall = Tbl;                                                   % [K]
 
             % Iterate (HWALL may depend on TWALL)
-            MaxIter = 10;                                                  % Maximum number of iterations
+            MaxIter = 20;                                                  % Maximum number of iterations
             MaxErr  = 0.1;                                                 % [K] Maximum wall temperature error
             for k = 1:MaxIter
                 twold = twall;
@@ -1756,17 +1779,17 @@ classdef Mixture < Solvers.AbstractField
 
                 case InputEnums.THERMALRELAX.FOURIER
                     % TODO: Dummy model for now
-                    VF  = mix.vapor.VF(zIdx);                              % [-] Vapor volume fraction
+                    L   = model.RELAXCONDFOCOEF(1);                        % [-] Leading coefficient
+                    Re0 = model.RELAXCONDFOCOEF(2);                        % [-] Reference liquid Reynolds number
+                    n   = model.RELAXCONDFOCOEF(3);                        % [-] Overall exponent
+                    p   = model.RELAXCONDFOCOEF(4);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
 
-                    Fo  = 1./(VF+dvf).^n.*(dg0./HDIAM).^2; %!!!For now
+                    Kp  = fld.RHOG.*(fld.HG-fld.HF).*fld.UC;               % [W/m^2] Characteristics hydrodynamic heat flux scale
+                    Kps = Kp./3.0148E7;                                    % [-] Normalized with maximum value
+                    Rel = mix.liquid.RE(zIdx);                             % [-] Liquid Reynolds number
 
-                    % RHOL   = fld.RHOL(mix.liquid.H(zIdx));                 % [kg/m^3] Liquid density
-                    % RHOV   = fld.RHOV(mix.vapor.H(zIdx));                  % [kg/m^3] Vapor density
-                    % X      = mix.liquid.X(zIdx);                          % [-] Liquid mass quality
-                    %
-                    % dg     = dg0;                                         % [m] Keep dg0
-                    %
-                    % Fo     = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
+                    Fo  = L.*(Kps.^p.*Re0./Rel).^n;                        % [-] Empirical model
+                    Fo  = max(2E-6,Fo);                                    % [-] Impose lower bound for numerical stability
             end
         end
 
@@ -1837,9 +1860,6 @@ classdef Mixture < Solvers.AbstractField
                     Fo     = 1./(VF+dvf).^n./abs(deltaX).^b.*(dl0./HDIAM).^2; % [-] Void model
 
                 case InputEnums.THERMALRELAX.HOMOGENEOUS
-                    %RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
-                    %RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
-                    %X   = mix.vapor.X(zIdx);                              % [-] Vapor mass quality
                     VF  = mix.liquid.VF(zIdx);                             % [-] Liquid volume fraction
 
                     cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
@@ -1847,7 +1867,6 @@ classdef Mixture < Solvers.AbstractField
                     VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
                     dl  = dl0.*(VF./VF0).^n;                               % [m]
 
-                    %Fo  = (RHOL./RHOV).*X./(1-X+dvf)./12.*(dl./HDIAM).^2;  % [-] Homogeneous model
                     Fo  = (1-VF)./(VF+dvf)./12.*(dl./HDIAM).^2;            % [-] Homogeneous model
 
                 case InputEnums.THERMALRELAX.NONHOMOGENEOUS
@@ -1862,15 +1881,20 @@ classdef Mixture < Solvers.AbstractField
                     Fo  = (1-VF)./(VF+dvf)./(6.*NUI).*(dl./HDIAM).^2;      % [-] Non-homogeneous model
 
                 case InputEnums.THERMALRELAX.FOURIER
-                    Re0 = model.RELAXEVAPFOCOEF(1);                        % [-] Reference vapor Reynolds number
-                    n   = model.RELAXEVAPFOCOEF(2);                        % [-] Overall exponent
-                    p   = model.RELAXEVAPFOCOEF(3);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
+                    L   = model.RELAXEVAPFOCOEF(1);                        % [-] Leading coefficient
+                    Re0 = model.RELAXEVAPFOCOEF(2);                        % [-] Reference vapor Reynolds number
+                    n   = model.RELAXEVAPFOCOEF(3);                        % [-] Overall exponent
+                    p   = model.RELAXEVAPFOCOEF(4);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
+                    D0  = model.RELAXEVAPFOCOEF(5);                        % [m] Reference hydraulic diameter
+                    q   = model.RELAXEVAPFOCOEF(6);                        % [-] Diameter ratio exponent
 
                     Kp  = fld.RHOG.*(fld.HG-fld.HF).*fld.UC;               % [W/m^2] Characteristics hydrodynamic heat flux scale
                     Kps = Kp./3.0148E7;                                    % [-] Normalized with maximum value
                     Rev = mix.vapor.RE(zIdx);                              % [-] Vapor Reynolds number
 
-                    Fo  = 1E-4.*(Kps.^p.*Re0./Rev).^n;                     % [-] Empirical model
+                    Fo  = L.*(Kps.^p.*Re0./Rev).^n;                        % [-] Empirical model
+                    Fo  = Fo.*max(HDIAM/D0,(HDIAM/D0)^q);                  % [-] Apply diameter correction
+                    Fo  = max(2E-6,Fo);                                    % [-] Impose lower bound for numerical stability
             end
         end
 
