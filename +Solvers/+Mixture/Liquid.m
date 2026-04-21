@@ -108,11 +108,15 @@ classdef Liquid < Solvers.AbstractPhase
             %U Liquid velocity [m/s]
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
-            u = liquid.MFLUX(zIdx)./liquid.VF(zIdx)./liquid.mix.fluid.RHOL(liquid.H(zIdx));
+            VF = liquid.VF(zIdx);
+            u = liquid.MFLUX(zIdx)./VF./liquid.mix.fluid.RHOL(liquid.H(zIdx));
+            %C = liquid.mix.vapor.C(zIdx);
+            %u = (liquid.mix.U(zIdx)-C.*liquid.mix.vapor.U(zIdx))./(1-C);
 
             % Set to the mixture velocity in the single-phase vapor region
-            mixU           = liquid.mix.U(zIdx);
-            singlePhaseIdx = isnan(u);
+            mixU = liquid.mix.U(zIdx);
+            X = liquid.mix.X(zIdx);
+            singlePhaseIdx = isnan(u) | 1-X < 1E-2;
             u(singlePhaseIdx) = mixU(singlePhaseIdx);
         end
 
@@ -121,8 +125,6 @@ classdef Liquid < Solvers.AbstractPhase
             %
             % Calculated based on mixture and vapor enthalpies, and vapor
             % quality.
-
-            % TODO: Find a better way to prevent division by small 1-X and negative h
 
             if nargin < 2, zIdx = (1:liquid(1).NZ).'; end
 
@@ -133,8 +135,11 @@ classdef Liquid < Solvers.AbstractPhase
             h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
 
             fluid = liquid.mix.fluid;
-            h(isnan(h) | isinf(h)) = fluid.HF;
-            h = min(h,liquid.mix.fluid.HF);                                % Constrain solution so that Hl > Hf (no superheated liquid)
+            h = min(h,fluid.HF);                                           % Constrain solution so that Hl > Hf (no superheated liquid)
+            
+            % Set to saturated liquid enthalpy in the single-phase vapor region
+            singlePhaseIdx = isnan(h) | 1-X < 1E-2;
+            h(singlePhaseIdx) = fluid.HF;
         end
 
         function mflux = MFLUX(liquid, zIdx)
