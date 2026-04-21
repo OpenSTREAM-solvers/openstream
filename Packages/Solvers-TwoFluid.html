@@ -203,31 +203,7 @@
 <li><p>Field class methods for calculating secondary two-fluid parameters.</p></li>
 </ul>
 <hr class="docutils" />
-<dl class="mat function" id="module-Solvers.TwoFluid.TwoFluidSolver">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.TwoFluidSolver.solve">
-<span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">twfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.solve" title="Link to this definition"></a></dt>
-<dd><p>SOLVE Executes the two-fluid solver for steady-state and transient simulations.</p>
-<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a>
-object. It manages initialization, time stepping, axial sweeps, inner
-iterations, convergence checks, and logging.</p>
-<p>Workflow:</p>
-<ul class="simple">
-<li><p>Enables logging and opens persistent log file</p></li>
-<li><p>Validates solver state before execution</p></li>
-<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
-<li><p>If initial step converges, proceeds with transient simulation</p></li>
-<li><p>Handles exceptions and ensures proper log closure</p></li>
-</ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
-<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
-<li><p>Supports thermal non-equilibrium modeling</p></li>
-<li><p>Logs progress and outputs to session directory</p></li>
-</ul>
-</dd></dl>
-
-<dl class="mat class">
+<dl class="mat class" id="module-Solvers.TwoFluid.TwoFluidSolver">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.</span></span><span class="sig-name descname"><span class="pre">TwoFluidSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p>
@@ -473,6 +449,30 @@ and null (initial) transient data.</p>
 </dd>
 </dl>
 </div>
+</dd></dl>
+
+<dl class="mat function">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.TwoFluidSolver.solve">
+<span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">twfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE Executes the two-fluid solver for steady-state and transient simulations.</p>
+<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a>
+object. It manages initialization, time stepping, axial sweeps, inner
+iterations, convergence checks, and logging.</p>
+<p>Workflow:</p>
+<ul class="simple">
+<li><p>Enables logging and opens persistent log file</p></li>
+<li><p>Validates solver state before execution</p></li>
+<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
+<li><p>If initial step converges, proceeds with transient simulation</p></li>
+<li><p>Handles exceptions and ensures proper log closure</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
+<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
+<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Logs progress and outputs to session directory</p></li>
+</ul>
 </dd></dl>
 
 <hr class="docutils" />
@@ -1177,294 +1177,6 @@ ratio and densities.</p>
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
 <li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
 </ul>
-</dd></dl>
-
-</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixture</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
-<p>MIXTURE Class for two-fluid mixture properties in thermal-hydraulic solver</p>
-<p>Represents combined properties of liquid and vapor phases in a two-fluid
-solver. Provides methods to compute mixture-level quantities such as
-mass flow, density, velocity, heat flux, and thermodynamic quality.</p>
-<p>Responsibilities:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Aggregate liquid and vapor properties into mixture-level results</p></li>
-<li><p>Compute derived quantities (void fraction, equilibrium quality, CHF)</p></li>
-<li><p>Provide access to geometry and fluid properties for calculations</p></li>
-</ul>
-</div></blockquote>
-<p>Key features:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Supports axial indexing for spatially resolved calculations</p></li>
-<li><p>Interfaces with liquid and vapor sub-objects for phase-specific data</p></li>
-</ul>
-</div></blockquote>
-<div class="members docutils container">
-<dl>
-<dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.Mixture">
-<span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixture</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.Mixture" title="Link to this definition"></a></dt>
-<dd><p>MIXTURE Constructor for Mixture class</p>
-<p>Initializes the mixture object by linking liquid and vapor phase objects
-and copying solver configuration and fluid properties.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mixture — <a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object
-liquid  — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object
-vapor   — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd>
-<dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.AFDISTR">
-<span class="sig-name descname"><span class="pre">AFDISTR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">param1</span></em>, <em class="sig-param"><span class="pre">param2</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.AFDISTR" title="Link to this definition"></a></dt>
-<dd><p>AFDISTR Annular flow distribution function [-]</p>
-<p>Computes the annular flow distribution function for given parameters.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix     — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-param1  — First parameter for distribution function
-param2  — Second parameter for distribution function
-zIdx    — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.CBT">
-<span class="sig-name descname"><span class="pre">CBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.CBT" title="Link to this definition"></a></dt>
-<dd><p>CBT Critical Boiling Transition flag [-]</p>
-<p>Returns the CBT flag for each axial location.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.CHF">
-<span class="sig-name descname"><span class="pre">CHF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.CHF" title="Link to this definition"></a></dt>
-<dd><p>CHF Critical Heat Flux [W/m^2]</p>
-<p>Returns the CHF value for each axial location.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.DPDZ">
-<span class="sig-name descname"><span class="pre">DPDZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.DPDZ" title="Link to this definition"></a></dt>
-<dd><p>DPDZ Pressure gradient [Pa/m]</p>
-<p>Computes the axial pressure gradient from mixture pressure drop.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.H">
-<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.H" title="Link to this definition"></a></dt>
-<dd><p>H Mixture enthalpy [J/kg]</p>
-<p>Calculates the mixture enthalpy as a mass-weighted average of phase enthalpies.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.HFLUX">
-<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.HFLUX" title="Link to this definition"></a></dt>
-<dd><p>HFLUX Wall heat flux [W/m^2]</p>
-<p>Returns the wall heat flux distribution along the axial domain.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.LHGR">
-<span class="sig-name descname"><span class="pre">LHGR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.LHGR" title="Link to this definition"></a></dt>
-<dd><p>LHGR Linear heat generation rate [W/m]</p>
-<p>Computes the linear heat generation rate from wall heat flux and perimeter.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.MFLUX">
-<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.MFLUX" title="Link to this definition"></a></dt>
-<dd><p>MFLUX Mixture mass flux [kg/m^2/s]</p>
-<p>Calculates the mixture mass flux using total flow and channel area.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.OAFX">
-<span class="sig-name descname"><span class="pre">OAFX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.OAFX" title="Link to this definition"></a></dt>
-<dd><p>OAFX Onset of annular flow equilibrium quality [-]</p>
-<p>Returns the OAF quality from the mixture object.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RELAXTCOND">
-<span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
-<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]</p>
-<p>Returns the relaxation time applied to interfacial evaporation processes
-in the two-fluid mixture model.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RELAXTEVAP">
-<span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RELAXTEVAP" title="Link to this definition"></a></dt>
-<dd><p>RELAXTEVAP Time relaxation for interfacial condensation [s]</p>
-<p>Returns the relaxation time applied to interfacial condensation processes
-in the two-fluid mixture model.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RHO">
-<span class="sig-name descname"><span class="pre">RHO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RHO" title="Link to this definition"></a></dt>
-<dd><p>RHO Mixture density [kg/m^3]</p>
-<p>Computes the mixture density based on void fraction and phase densities.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.TAUW">
-<span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.TAUW" title="Link to this definition"></a></dt>
-<dd><p>TAUW Wall shear stress [N/m^2]</p>
-<p>Returns the wall shear stress from the mixture object.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.TIME" title="Link to this definition"></a></dt>
-<dd><p>TIME Time series [s]</p>
-<p>Returns the time array from the mixture object.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.U">
-<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.U" title="Link to this definition"></a></dt>
-<dd><p>U Mixture velocity [m/s]</p>
-<p>Calculates the mixture velocity as a mass-weighted average of phase velocities.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.VF">
-<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.VF" title="Link to this definition"></a></dt>
-<dd><p>VF Void fraction [-]</p>
-<p>Computes the vapor volume fraction in the mixture.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.W">
-<span class="sig-name descname"><span class="pre">W</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.W" title="Link to this definition"></a></dt>
-<dd><p>W Mixture mass flow rate [kg/s]</p>
-<p>Computes the total mass flow rate as the sum of liquid and vapor flows.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.WALEVAPRATIO">
-<span class="sig-name descname"><span class="pre">WALEVAPRATIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.WALEVAPRATIO" title="Link to this definition"></a></dt>
-<dd><p>WALEVAPRATIO Wall mass evaporation ratio [-]</p>
-<p>Returns the ratio of wall heat flux converted to evaporation.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.XEQ">
-<span class="sig-name descname"><span class="pre">XEQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.XEQ" title="Link to this definition"></a></dt>
-<dd><p>XEQ Equilibrium thermodynamic quality [-]</p>
-<p>Returns the equilibrium quality from the mixture object.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.Z" title="Link to this definition"></a></dt>
-<dd><p>Z Axial nodes [m]</p>
-<p>Returns the axial positions for the mixture domain.</p>
-<dl class="simple">
-<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
-zIdx — Axial indices to evaluate (optional)</p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd>
@@ -2213,6 +1925,294 @@ different calculations are carried out for different flow regimes.</p>
 <li><p>ANNULAR           — Annular flow</p></li>
 <li><p>DFFB              — Dispersed Flow Film Boiling</p></li>
 </ul>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixture</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractPhase" title="Solvers.AbstractPhase"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractPhase</span></code></a></p>
+<p>MIXTURE Class for two-fluid mixture properties in thermal-hydraulic solver</p>
+<p>Represents combined properties of liquid and vapor phases in a two-fluid
+solver. Provides methods to compute mixture-level quantities such as
+mass flow, density, velocity, heat flux, and thermodynamic quality.</p>
+<p>Responsibilities:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Aggregate liquid and vapor properties into mixture-level results</p></li>
+<li><p>Compute derived quantities (void fraction, equilibrium quality, CHF)</p></li>
+<li><p>Provide access to geometry and fluid properties for calculations</p></li>
+</ul>
+</div></blockquote>
+<p>Key features:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Supports axial indexing for spatially resolved calculations</p></li>
+<li><p>Interfaces with liquid and vapor sub-objects for phase-specific data</p></li>
+</ul>
+</div></blockquote>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.Mixture">
+<span class="sig-name descname"><span class="pre">Mixture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mixture</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.Mixture" title="Link to this definition"></a></dt>
+<dd><p>MIXTURE Constructor for Mixture class</p>
+<p>Initializes the mixture object by linking liquid and vapor phase objects
+and copying solver configuration and fluid properties.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mixture — <a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object
+liquid  — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object
+vapor   — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.AFDISTR">
+<span class="sig-name descname"><span class="pre">AFDISTR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">param1</span></em>, <em class="sig-param"><span class="pre">param2</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.AFDISTR" title="Link to this definition"></a></dt>
+<dd><p>AFDISTR Annular flow distribution function [-]</p>
+<p>Computes the annular flow distribution function for given parameters.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix     — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+param1  — First parameter for distribution function
+param2  — Second parameter for distribution function
+zIdx    — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.CBT">
+<span class="sig-name descname"><span class="pre">CBT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.CBT" title="Link to this definition"></a></dt>
+<dd><p>CBT Critical Boiling Transition flag [-]</p>
+<p>Returns the CBT flag for each axial location.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.CHF">
+<span class="sig-name descname"><span class="pre">CHF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.CHF" title="Link to this definition"></a></dt>
+<dd><p>CHF Critical Heat Flux [W/m^2]</p>
+<p>Returns the CHF value for each axial location.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.DPDZ">
+<span class="sig-name descname"><span class="pre">DPDZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.DPDZ" title="Link to this definition"></a></dt>
+<dd><p>DPDZ Pressure gradient [Pa/m]</p>
+<p>Computes the axial pressure gradient from mixture pressure drop.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.H">
+<span class="sig-name descname"><span class="pre">H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.H" title="Link to this definition"></a></dt>
+<dd><p>H Mixture enthalpy [J/kg]</p>
+<p>Calculates the mixture enthalpy as a mass-weighted average of phase enthalpies.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.HFLUX">
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.HFLUX" title="Link to this definition"></a></dt>
+<dd><p>HFLUX Wall heat flux [W/m^2]</p>
+<p>Returns the wall heat flux distribution along the axial domain.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.LHGR">
+<span class="sig-name descname"><span class="pre">LHGR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.LHGR" title="Link to this definition"></a></dt>
+<dd><p>LHGR Linear heat generation rate [W/m]</p>
+<p>Computes the linear heat generation rate from wall heat flux and perimeter.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.MFLUX">
+<span class="sig-name descname"><span class="pre">MFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.MFLUX" title="Link to this definition"></a></dt>
+<dd><p>MFLUX Mixture mass flux [kg/m^2/s]</p>
+<p>Calculates the mixture mass flux using total flow and channel area.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.OAFX">
+<span class="sig-name descname"><span class="pre">OAFX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.OAFX" title="Link to this definition"></a></dt>
+<dd><p>OAFX Onset of annular flow equilibrium quality [-]</p>
+<p>Returns the OAF quality from the mixture object.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RELAXTCOND">
+<span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
+<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]</p>
+<p>Returns the relaxation time applied to interfacial evaporation processes
+in the two-fluid mixture model.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RELAXTEVAP">
+<span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RELAXTEVAP" title="Link to this definition"></a></dt>
+<dd><p>RELAXTEVAP Time relaxation for interfacial condensation [s]</p>
+<p>Returns the relaxation time applied to interfacial condensation processes
+in the two-fluid mixture model.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RHO">
+<span class="sig-name descname"><span class="pre">RHO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RHO" title="Link to this definition"></a></dt>
+<dd><p>RHO Mixture density [kg/m^3]</p>
+<p>Computes the mixture density based on void fraction and phase densities.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.TAUW">
+<span class="sig-name descname"><span class="pre">TAUW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.TAUW" title="Link to this definition"></a></dt>
+<dd><p>TAUW Wall shear stress [N/m^2]</p>
+<p>Returns the wall shear stress from the mixture object.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.TIME" title="Link to this definition"></a></dt>
+<dd><p>TIME Time series [s]</p>
+<p>Returns the time array from the mixture object.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.U">
+<span class="sig-name descname"><span class="pre">U</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.U" title="Link to this definition"></a></dt>
+<dd><p>U Mixture velocity [m/s]</p>
+<p>Calculates the mixture velocity as a mass-weighted average of phase velocities.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.VF">
+<span class="sig-name descname"><span class="pre">VF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.VF" title="Link to this definition"></a></dt>
+<dd><p>VF Void fraction [-]</p>
+<p>Computes the vapor volume fraction in the mixture.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.W">
+<span class="sig-name descname"><span class="pre">W</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.W" title="Link to this definition"></a></dt>
+<dd><p>W Mixture mass flow rate [kg/s]</p>
+<p>Computes the total mass flow rate as the sum of liquid and vapor flows.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.WALEVAPRATIO">
+<span class="sig-name descname"><span class="pre">WALEVAPRATIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.WALEVAPRATIO" title="Link to this definition"></a></dt>
+<dd><p>WALEVAPRATIO Wall mass evaporation ratio [-]</p>
+<p>Returns the ratio of wall heat flux converted to evaporation.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.XEQ">
+<span class="sig-name descname"><span class="pre">XEQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.XEQ" title="Link to this definition"></a></dt>
+<dd><p>XEQ Equilibrium thermodynamic quality [-]</p>
+<p>Returns the equilibrium quality from the mixture object.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.Z" title="Link to this definition"></a></dt>
+<dd><p>Z Axial nodes [m]</p>
+<p>Returns the axial positions for the mixture domain.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
+zIdx — Axial indices to evaluate (optional)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <hr class="docutils" />
