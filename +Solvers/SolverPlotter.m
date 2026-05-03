@@ -871,23 +871,60 @@ classdef SolverPlotter < handle
             end
         end
 
-        function lhs = legend(plotters, varargin)
-            %legend Method to add legend to current axes
+        function lgds = legend(plotters, varargin)
+            %LEGEND Control legends on current tile, a specific tile, or all tiles
+            %
+            % Usage:
+            %   plotter.legend('Location','northwest')
+            %   plotter.legend('Tile',2,'Location','best')
+            %   plotter.legend('AllTiles',true,'Location','south')
+            %   plotter.legend('Axes',ah,'off')
 
-            % Loop through plotters
-            for idx = 1:length(plotters)
-                plotter = plotters(idx);
-                
-                % Update graphics
-                if isempty(plotter.gca().Legend)
-                    lhs(idx) = legend(plotter.gca(), varargin{:});
-                    drawnow limitrate;
+            % Parse targeting options
+            tileIdx    = [];
+            targetAxes = [];
+            allTiles   = false;
+
+            i = 1;
+            while i <= numel(varargin)
+                switch lower(string(varargin{i}))
+                    case "tile"
+                        tileIdx = varargin{i+1};
+                        varargin(i:i+1) = [];
+                    case "axes"
+                        targetAxes = varargin{i+1};
+                        varargin(i:i+1) = [];
+                    case "alltiles"
+                        allTiles = varargin{i+1};
+                        varargin(i:i+1) = [];
+                    otherwise
+                        i = i + 1;
+                end
+            end
+
+            % Apply legend commands
+            lgds = matlab.graphics.illustration.Legend.empty;
+
+            for pIdx = 1:numel(plotters)
+                plotter = plotters(pIdx);
+
+                if allTiles
+                    axesList = plotter.ahs;
+                elseif ~isempty(targetAxes)
+                    axesList = targetAxes;
+                elseif ~isempty(tileIdx)
+                    axesList = plotter.ahs(tileIdx);
+                    plotter.currentAhIdx = tileIdx;  % keep state consistent
+                else
+                    axesList = plotter.ahs(plotter.currentAhIdx);
                 end
 
-                % Set legend location to "none"
-                lhs(idx).Location = "none";
-                
-
+                % Apply legend to each selected axes
+                for ax = reshape(axesList,1,[])
+                    lgd = legend(ax, varargin{:});
+                    lgd.AutoUpdate = "off";
+                    lgds(end+1) = lgd;
+                end
             end
         end
 
@@ -916,6 +953,9 @@ classdef SolverPlotter < handle
                     error('No tiledlayout found in the current figure.');
                 end
                 t = layouts(1);
+
+                drawnow;          % force redraw
+                drawnow limitrate % allow layout completion
 
                 % Get rows and columns
                 nRows = t.GridSize(1);
