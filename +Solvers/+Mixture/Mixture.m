@@ -1201,6 +1201,8 @@ classdef Mixture < Solvers.AbstractField
                      hwallbt = hwallbt.*1E3;                               % [W/m^2/K]
                      Tbv     = max(fld.TSAT,mix.T(zIdx));
              end
+
+             Tbv = repmat(Tbv,geom.NWALL);
              
              % Switch to full single-phase vapor
              %TODO: Check how transition should be performed (xeq = 1, min(htc), etc)
@@ -1223,11 +1225,13 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:mix(1).NZ).'; end
 
+            geom  = mix.inputSet.geometry;
+
             % Pre-CBT
-            hsp = mix.liquid.HWALL(twall,zIdx);                            % [W/m^2/K] Single-phase liquid
+            hsp   = mix.liquid.HWALL(twall,zIdx);                          % [W/m^2/K] Single-phase liquid
             hboil = mix.HWALLBOIL(zIdx);                                   % [W/m^2/K] Boiling
             hwall = max(hsp,hboil);                                        % [W/m^2/K]
-            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),1);
+            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),geom.NWALL);         % [K] Saturated vapor temperature
 
             % Post-CBT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
@@ -1255,7 +1259,6 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
             geom  = mix.inputSet.geometry;
-            model = mix.inputSet.model;
 
             q = mix.HFLUX(zIdx,:);                                         % [W/m^2]
 
@@ -1272,7 +1275,6 @@ classdef Mixture < Solvers.AbstractField
             for k = 1:MaxIter
                 twold = twall;
                 [hwall, Tbv] = mix.HWALL(twall,zIdx);                      % [W/m^2/K]
-                %Tbv = repmat(Tbv,1,geom.NWALL);                            % [K] Fluid bulk temperature based on vapor phase    
 
                 % Pre-CBT
                 twall = Tbl + q./hwall;                                    % [K]
@@ -1712,7 +1714,6 @@ classdef Mixture < Solvers.AbstractField
             % - TIMEX: Interpolate relaxation time from pre-defined quality-time pairs
             % - VOID: Computes Fourier number based on void fraction and fluid properties
             % - HOMOGENEOUS: Computes Fourier number based on homogeneous approach
-            % - NONHOMOGENEOUS: Computes Fourier number based on non-homogeneous approach
             % - FOURIER: Empirical Fourier number correlation
             %
             % Notes:
@@ -1762,20 +1763,9 @@ classdef Mixture < Solvers.AbstractField
                     RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
                     RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
                     X    = mix.liquid.X(zIdx);                             % [-] Liquid mass quality
-
-                    dg   = dg0;                                            % [m] Keep dg0
+                    dg   = dg0;                                            % [m] Constant dg (for now)
 
                     Fo   = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
-
-                case InputEnums.THERMALRELAX.NONHOMOGENEOUS
-                    RHOL = fld.RHOL(mix.liquid.H(zIdx));                   % [kg/m^3] Liquid density
-                    RHOV = fld.RHOV(mix.vapor.H(zIdx));                    % [kg/m^3] Vapor density
-                    X    = mix.liquid.X(zIdx);                             % [-] Liquid mass quality
-                    NUI  = 2; %!!!For now                                  % [-] Nusselt number for interfacial condensation (approximated)
-
-                    dg   = dg0;                                            % [m] Keep dg0
-
-                    Fo   = (RHOV./RHOL).*X./(1-X+dvf)./(6.*NUI).*(dg./HDIAM).^2; % [-] Non-homogeneous model
 
                 case InputEnums.THERMALRELAX.FOURIER
                     % TODO: Dummy model for now
@@ -1784,11 +1774,10 @@ classdef Mixture < Solvers.AbstractField
                     n   = model.RELAXCONDFOCOEF(3);                        % [-] Overall exponent
                     p   = model.RELAXCONDFOCOEF(4);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
 
-                    Kp  = fld.RHOG.*(fld.HG-fld.HF).*fld.UC;               % [W/m^2] Characteristics hydrodynamic heat flux scale
-                    Kps = Kp./3.0148E7;                                    % [-] Normalized with maximum value
                     Rel = mix.liquid.RE(zIdx);                             % [-] Liquid Reynolds number
+                    qks = fld.QK/fld.QKMAX;                                  % [-] Kutateladze characteristic heat flux (normalized with maximum value)
 
-                    Fo  = L.*(Kps.^p.*Re0./Rel).^n;                        % [-] Empirical model
+                    Fo  = L.*(Re0./Rel).^n.*qks.^p;                        % [-] Empirical model
                     Fo  = max(2E-6,Fo);                                    % [-] Impose lower bound for numerical stability
             end
         end
@@ -1813,7 +1802,6 @@ classdef Mixture < Solvers.AbstractField
             % - TIMEX: Interpolate relaxation time from pre-defined quality-time pairs
             % - VOID: Computes relaxation time based on void fraction and fluid properties
             % - HOMOGENEOUS: Computes Fourier number based on homogeneous approach
-            % - NONHOMOGENEOUS: Computes Fourier number based on non-homogeneous approach
             % - FOURIER: Empirical Fourier number correlation
             %
             % Notes:
@@ -1865,20 +1853,9 @@ classdef Mixture < Solvers.AbstractField
                     cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
                     if isnan(cbtIdx), cbtIdx = zIdx; end
                     VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
-                    dl  = dl0.*(VF./VF0).^n;                               % [m]
+                    dl  = dl0.*(VF./VF0).^n;                               % [m] Droplet evaporation model with constant dl0 (for now)
 
                     Fo  = (1-VF)./(VF+dvf)./12.*(dl./HDIAM).^2;            % [-] Homogeneous model
-
-                case InputEnums.THERMALRELAX.NONHOMOGENEOUS
-                    VF  = mix.liquid.VF(zIdx);                             % [-] Liquid volume fraction
-                    NUI = 2; %!!!For now                                   % [-] Nusselt number for interfacial evaporation (approximated)
-
-                    cbtIdx = mix.CBTIDX;                                   % [-] Index of first CBT occurrence
-                    if isnan(cbtIdx), cbtIdx = zIdx; end
-                    VF0 = mix.liquid.VF(cbtIdx);                           % [-] Liquid volume fraction at first CBT occurrence
-                    dl  = dl0.*(VF./VF0).^n;                               % [m]
-
-                    Fo  = (1-VF)./(VF+dvf)./(6.*NUI).*(dl./HDIAM).^2;      % [-] Non-homogeneous model
 
                 case InputEnums.THERMALRELAX.FOURIER
                     L   = model.RELAXEVAPFOCOEF(1);                        % [-] Leading coefficient
@@ -1888,11 +1865,10 @@ classdef Mixture < Solvers.AbstractField
                     D0  = model.RELAXEVAPFOCOEF(5);                        % [m] Reference hydraulic diameter
                     q   = model.RELAXEVAPFOCOEF(6);                        % [-] Diameter ratio exponent
 
-                    Kp  = fld.RHOG.*(fld.HG-fld.HF).*fld.UC;               % [W/m^2] Characteristics hydrodynamic heat flux scale
-                    Kps = Kp./3.0148E7;                                    % [-] Normalized with maximum value
                     Rev = mix.vapor.RE(zIdx);                              % [-] Vapor Reynolds number
+                    qks = fld.QK/fld.QKMAX;                                  % [-] Kutateladze characteristic heat flux (normalized with maximum value)
 
-                    Fo  = L.*(Kps.^p.*Re0./Rev).^n;                        % [-] Empirical model
+                    Fo  = L.*(Re0./Rev).^n.*qks.^p;                        % [-] Empirical model
                     Fo  = Fo.*max(HDIAM/D0,(HDIAM/D0)^q);                  % [-] Apply diameter correction
                     Fo  = max(2E-6,Fo);                                    % [-] Impose lower bound for numerical stability
             end

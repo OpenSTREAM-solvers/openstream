@@ -27,8 +27,10 @@ classdef FluidProperties
         ALPHAG     (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor thermal diffusivity [m^2/s]
         PRANDTLF   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated liquid Prandtl number [-]
         PRANDTLG   (1,1) double  {mustBeNumeric}                           = 1                     % Saturated vapor Prandtl number [-]
-        PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [-]
-        UC         (1,1) double  {mustBeNumeric}                           = 1                     % Kutateladze critical velocity [m/s]
+        PCRIT      (1,1) double  {mustBeNumeric}                           = 1                     % Critical pressure [Pa]
+        PTRIPLE    (1,1) double  {mustBeNumeric}                           = 1                     % Triple point pressure [Pa]
+        UC         (1,1) double  {mustBeNumeric}                           = 1                     % Kutateladze vapor critical velocity [m/s]
+        QK         (1,1) double  {mustBeNumeric}                           = 1                     % Kutateladze characteristic heat flux [W/m^2]
 
     end
 
@@ -38,6 +40,7 @@ classdef FluidProperties
         HMIN       (1,1) double  {mustBeNumeric}                           = 1                     % Minimum enthalpy [J/kg]
         TMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum temperature [K]
         HMAX       (1,1) double  {mustBeNumeric}                           = 1                     % Maximum enthalpy [J/kg]
+        QKMAX      (1,1) double  {mustBeNumeric}                           = 1                     % Maximum Kutateladze characteristic heat flux [W/m^2]
 
         coolpropH   CoolPropWrapper.CoolPropWrapper
 
@@ -97,13 +100,23 @@ classdef FluidProperties
 
             % Critical properties
             PCRIT    = coolpropH.CoolProp.p_critical;                      % [Pa] Critical pressure
+            PTRIPLE  = coolpropH.CoolPropHandle.CoolProp.PropsSI('ptriple',coolpropH.fluid); % [Pa] Triple point pressure
             UC       = (SIGMA.*modelObj.G.*(RHOF-RHOG)./RHOG.^2).^0.25;    % [m/s] Kutateladze vapor critical velocity
+            QK       = RHOG.*(HG-HF).*UC;                                  % [W/m^2] Kutateladze characteristic heat flux (hydrodynamic latent heat flux scale)
 
             % Limiting properties for which CoolProp has valid data for the fluid
             TMIN     = coolpropH.CoolProp.Tmin+1;                          % [K] Minimum temperature
             HMIN     = coolpropH.enthalpy('P',P,'T',TMIN);                 % [J/kg] Minimum enthalpy
             TMAX     = coolpropH.CoolProp.Tmax-1;                          % [K] Maximum temperature
             HMAX     = coolpropH.enthalpy('P',P,'T',TMAX);                 % [J/kg] Maximum enthalpy
+
+            % Maximum Kutateladze characteristic heat flux
+            QKF = @(P) coolpropH.density('P',P,'Q',1).* ...
+                (coolpropH.enthalpy('P',P,'Q',1)-coolpropH.enthalpy('P',P,'Q',0)).* ...
+                (coolpropH.surfaceTension('P',P,'Q',1).*modelObj.G.* ...
+                (coolpropH.density('P',P,'Q',0)-coolpropH.density('P',P,'Q',1))./coolpropH.density('P',P,'Q',1).^2).^0.25;
+            [P_opt, QK_max_neg] = fminbnd(@(P) -QKF(P), PTRIPLE, PCRIT);   % [Pa,W/m^2]
+            QKMAX = -QK_max_neg;                                           % [W/m^2] Maximum Kutateladze characteristic heat flux
 
             % Assign properties to each object
             for i = 1:length(obj)
@@ -135,11 +148,14 @@ classdef FluidProperties
                 obj(i).PRANDTLF = PRANDTLF(i);                             % [-] Saturated liquid Prandtl number
                 obj(i).PRANDTLG = PRANDTLG(i);                             % [-] Saturated vapor Prandtl number
                 obj(i).PCRIT    = PCRIT;                                   % [Pa] Critical pressure
-                obj(i).UC       = UC(i);                                   % [m/s] Kutateladze critical velocity
+                obj(i).PTRIPLE  = PTRIPLE;                                 % [Pa] Triple point pressure
+                obj(i).UC       = UC(i);                                   % [m/s] Kutateladze vapor critical velocity
+                obj(i).QK       = QK(i);                                   % [W/m^2] Kutateladze characteristic heat flux
                 obj(i).TMIN     = TMIN;                                    % [K] Minimum temperature
                 obj(i).HMIN     = HMIN(i);                                 % [J/kg] Minimum enthalpy
                 obj(i).TMAX     = TMAX;                                    % [K] Maximum temperature
                 obj(i).HMAX     = HMAX(i);                                 % [J/kg] Maximum enthalpy
+                obj(i).QKMAX    = QKMAX;                                   % [W/m^2] Maximum Kutateladze characteristic heat flux
 
             end
         end

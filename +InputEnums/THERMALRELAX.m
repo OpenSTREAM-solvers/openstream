@@ -7,19 +7,17 @@ classdef THERMALRELAX
     %
     % Models:
     %
-    % - TIMEX          — Simple model relating relaxation time to equilibrium quality using user-defined :attr:`Inputs.Model.TRELAXX`, :attr:`Inputs.Model.TRELAXTCOND` and :attr:`Inputs.Model.TRELAXTEVAP`
-    % - FOURIERX       — Simple model relating the Fourier number to equilibrium quality using user-defined :attr:`Inputs.Model.TRELAXX`, :attr:`Inputs.Model.TRELAXFOCOND` and :attr:`Inputs.Model.TRELAXFOEVAP`
-    % - HOMOGENEOUS    — Physical model based on homogeneous assumptions and spherical dispersed phase
-    % - NONHOMOGENEOUS — Physical model based on non-homogeneous (i.e., uses the calculated phase velocity slip) assumptions and spherical dispersed phase
-    % - VOID           — Physical model simplified to Fourier number dependence on phase volumetric fraction and input characteristic length of the dispersed phase at CBT using user-defined :attr:`Inputs.Model.TRELAXCONDCOEF` and :attr:`Inputs.Model.TRELAXEVAPCOEF`
-    % - FOURIER        — Empirical model
+    % - FOURIERX    — Simple model relating the Fourier number to equilibrium quality using user-defined :attr:`Inputs.Model.RELAXX`, :attr:`Inputs.Model.RELAXCONDFO` and :attr:`Inputs.Model.RELAXEVAPFO`
+    % - TIMEX       — Simple model relating relaxation time to equilibrium quality using user-defined :attr:`Inputs.Model.RELAXX`, :attr:`Inputs.Model.RELAXCONDT` and :attr:`Inputs.Model.RELAXTEVAPT`
+    % - VOID        — Physical model simplified to Fourier number dependence on phase volumetric fraction and input characteristic length of the dispersed phase at CBT using user-defined :attr:`Inputs.Model.RELAXCONDCOEF` and :attr:`Inputs.Model.RELAXEVAPCOEF`
+    % - HOMOGENEOUS — Physical model based on homogeneous assumptions and spherical dispersed phase
+    % - FOURIER     — Empirical model based on Fourier number dependence on Reynolds number, etc, using user-defined :attr:`Inputs.Model.RELAXCONDFOCOEF` and :attr:`Inputs.Model.RELAXEVAPFOCOEF`
 
     enumeration
-        TIMEX                % Relaxation time function of equilibrium quality
         FOURIERX             % Fourier number function of equilibrium quality
-        HOMOGENEOUS          % Homogeneous model
-        NONHOMOGENEOUS       % Non-homogeneous model
+        TIMEX                % Relaxation time function of equilibrium quality
         VOID                 % Fourier number correlation function of phase volumetric fraction and dispersed phase length scale
+        HOMOGENEOUS          % Homogeneous model
         FOURIER              % Fourier number correlation
     end
 end

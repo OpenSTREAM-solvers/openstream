@@ -61,10 +61,10 @@ classdef Model < Inputs.Input
         RELAXEVAPFO      (1,:) double                                      = [ 1.0  1.0   1.0 1.0 1.0].*5E-5 % Interfacial evaporation  Fourier number array [s]
         RELAXCONDT       (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Interfacial condensation relaxation time array [s]
         RELAXEVAPT       (1,:) double                                      = [ 0.3  0.3   0.3 0.3 0.3]       % Interfacial evaporation  relaxation time array [s]
-        RELAXCONDCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05 0.0]           % Interfacial condensation time relaxation coefficients for homogeneous/non-homogeneous models
-        RELAXEVAPCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5 0.0]           % Interfacial evaporation  time relaxation coefficients for homogeneous/non-homogeneous models
-        RELAXCONDFOCOEF  (1,4) double  {mustBeNumeric}                     = [5E-5 5E5 0 0]                  % Interfacial condensation  time relaxation coefficients for empirical Fourier number model
-        RELAXEVAPFOCOEF  (1,6) double  {mustBeNumeric}                     = [1E-4 5E5 2 1 10E-3 1]          % Interfacial evaporation   time relaxation coefficients for empirical Fourier number model
+        RELAXCONDCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 0.05 0.0]           % Interfacial condensation time relaxation coefficients for homogeneous models
+        RELAXEVAPCOEF    (1,4) double  {mustBeNumeric}                     = [0.1E-3 1/3 1E-5 0.0]           % Interfacial evaporation  time relaxation coefficients for homogeneous models
+        RELAXCONDFOCOEF  (1,4) double  {mustBeNumeric}                     = [5E-5 5E5 0 0]                  % Interfacial condensation time relaxation coefficients for empirical Fourier number model
+        RELAXEVAPFOCOEF  (1,6) double  {mustBeNumeric}                     = [1E-4 5E5 2 2 10E-3 1]          % Interfacial evaporation  time relaxation coefficients for empirical Fourier number model
         KTRELAX          (1,:) double  {mustBeNumeric,mustBeNonempty}      = NaN                             % Thermal relaxation time at local perturbations [s]
 
         % Mixture near-wall models
