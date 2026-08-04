@@ -59,7 +59,7 @@ where:
 Mixture relaxation model
 ----------------------------
 
-The Mixture Relaxation Model (MRM) extends the equilibrium mixture formulation by introducing thermal nonequilibrium between the liquid and vapor phases. In addition to the mixture conservation equations presented above, two supplementary conservation equations are solved for the vapor phase. These equations provide the information required to determine the vapor mass fraction and vapor enthalpy while accounting for delayed interfacial heat and mass transfer. The resulting five-equation framework remains computationally efficient while allowing departures from thermodynamic equilibrium in subcooled boiling, saturated boiling, and post-boiling transition conditions.
+In addition to the mixture conservation equations presented above, two supplementary conservation equations are solved for the vapor phase. These equations provide the information required to determine the vapor mass fraction and vapor enthalpy while accounting for delayed interfacial heat and mass transfer. The resulting five-equation framework remains computationally efficient while allowing departures from thermodynamic equilibrium in subcooled boiling, saturated boiling, and post-boiling transition conditions.
 
 **1. Vapor mass conservation**
 
@@ -103,7 +103,7 @@ To complete the conservation equations, several closure relations are required:
 - Wall shear stress: :math:`\tau_w^n`
 - Form pressure losses: :math:`\frac{\partial p_K}{\partial z}`
 - Wall heat transfer models
-- Relaxation time for the interfacial mass transfer (required for the MRM model only): :math:`t_[Relax}`
+- Relaxation time for the interfacial mass transfer (required for the MRM model only): :math:`t_{Relax}`
 
 For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
 

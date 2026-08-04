@@ -14,8 +14,17 @@ Overviews
 
 ----
 
+Mixture model
+-------------
+
+.. bibliography::
+   :filter: keywords % "mixture"
+   :style: plain
+
+----
+
 Two-fluid model
----------------
+--------------
 
 .. bibliography::
    :filter: keywords % "twofluid"
@@ -24,7 +33,7 @@ Two-fluid model
 ----
 
 Three-field model
------------------
+----------------
 
 .. bibliography::
    :filter: keywords % "threefield"
@@ -33,7 +42,7 @@ Three-field model
 ----
 
 Four-field model
-----------------
+---------------
 
 .. bibliography::
    :filter: keywords % "fourfield"
