@@ -66,6 +66,13 @@ jobs:
         run: make latex
         working-directory: ./docs
 
+      - name: Make pdf file
+        id: makepdf
+        uses: xu-cheng/latex-action@v4
+        working-directory: ./docs
+        with:
+          root_file: ./build/latex/OpenSTREAM.tex        
+
       #- name: Install TeXlive
       #  run: sudo apt-get update && sudo apt-get install texlive latexmk texlive-publishers texlive-science  cm-super
       #
@@ -74,10 +81,10 @@ jobs:
       #  run: make latexpdf
       #  working-directory: ./docs
 
-      #- name: Copy pdf file
-      #  if: steps.makepdf.outcome == 'success'
-      #  run: mkdir -p ./build/html/files && cp ./build/latex/OpenSTREAM.pdf ./build/html/files/OpenSTREAM.pdf
-      #  working-directory: ./docs
+      - name: Copy pdf file
+        if: steps.makepdf.outcome == 'success'
+        run: mkdir -p ./build/html/files && cp ./build/latex/OpenSTREAM.pdf ./build/html/files/OpenSTREAM.pdf
+        working-directory: ./docs
         
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
