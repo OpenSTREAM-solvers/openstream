@@ -71,7 +71,8 @@ jobs:
         id: makepdf
         uses: xu-cheng/latex-action@v4
         with:
-          root_file: ./docs/build/latex/OpenSTREAM.tex        
+          working_directory: ./docs/build/latex/
+          root_file: OpenSTREAM.tex        
 
       #- name: Install TeXlive
       #  run: sudo apt-get update && sudo apt-get install texlive latexmk texlive-publishers texlive-science  cm-super
