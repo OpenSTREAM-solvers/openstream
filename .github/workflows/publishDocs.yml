@@ -6,6 +6,7 @@ on:
       - main
       - docs
       - lecorre
+      - latexpdf-action
 
   workflow_dispatch:
     inputs:
