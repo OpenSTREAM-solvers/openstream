@@ -9,7 +9,7 @@ The mixture model serves two key roles within OpenSTREAM:
 - **Efficient simulation** of flows with hydrodynamically well-coupled phases, where the mixture approximation remains physically meaningful.
 - **Industry relevance** due to its simplicity and robustness, offering a practical approach for simulating averaged flow behavior in complex thermal-hydraulic systems.
 
-In addition, a Mixture Relaxation Model (MRM) is currently under development. This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.
+In addition, a Mixture Relaxation Model (MRM) is available (:cite:t:`LeCorre2026MRM`). This extended formulation introduces vapor mass and energy conservation equations, allowing for thermal non-equilibrium between phases and expanding the model’s applicability to more dynamic flow regimes.
 
 By reducing complexity while preserving essential dynamics, the mixture model offers a practical entry point for both model development and exploratory analysis in thermal-hydraulic systems.
 
@@ -59,7 +59,41 @@ where:
 Mixture relaxation model
 ----------------------------
 
-*Under development*
+The Mixture Relaxation Model (MRM) extends the equilibrium mixture formulation by introducing thermal nonequilibrium between the liquid and vapor phases. In addition to the mixture conservation equations presented above, two supplementary conservation equations are solved for the vapor phase. These equations provide the information required to determine the vapor mass fraction and vapor enthalpy while accounting for delayed interfacial heat and mass transfer. The resulting five-equation framework remains computationally efficient while allowing departures from thermodynamic equilibrium in subcooled boiling, saturated boiling, and post-boiling transition conditions.
+
+**1. Vapor mass conservation**
+
+:math:`\frac{\partial}{\partial t}(\frac{W_v}{u_v}) + \frac{\partial W_v}{\partial z} = A \cdot a_i \cdot (\Gamma - \Lambda) + \sum \Pi_{wall}^n \cdot {\Gamma}_{wb}^n`
+
+where:
+
+- :math:`W_v` is the vapor mass flow rate
+- :math:`u_v` is the vapor velocity
+- :math:`a_i`, is the volumetric interfacial area
+- :math:`\Gamma` is the interfacial evaporation mass flux
+- :math:`\Lambda` is the interfacial condensation mass flux
+- :math:`\Gamma_{wb}^n` is the wall boiling mass flux for wall index :math:`n`
+
+**2. Vapor energy conservation**
+
+:math:`\frac{W_v}{u_v} \cdot \frac{\partial}{\partial t}(h_v) + W_v \cdot \frac{\partial}{\partial z}(h_v) = A \cdot a_i \cdot (h_l - h_v)\cdot {\Gamma_i} + \sum \Pi_{wall}^n \cdot {q^{\prime\prime}}_{wall,v}^n`
+
+where:
+
+- :math:`h_v` is the vapor specific enthalpy
+- :math:`{q^{\prime\prime}}_{wall,v}^n` is the wall heat flux vapor for wall index :math:`n`
+
+**3. Time relaxation approximation**
+
+The fundamental assumption of the MRM is to consider that the interfacial mass exchanges are governed by the deviation from thermal equilibrium under a time relaxation principle:
+
+:math:`A \cdot a_i \cdot (\Gamma - \Lambda) = \frac{x_{eq} \cdot W - W_v}{u_v \cdot t_{Relax}}`
+
+where:
+
+- :math:`x_{eq}` is the thermodynamic equilibrium quality
+- :math:`t_{Relax}` is the relaxation time for the interfacial mass transfer (evaporatyion or condensation)
+
 
 Closure relations
 -----------------
@@ -69,6 +103,7 @@ To complete the conservation equations, several closure relations are required:
 - Wall shear stress: :math:`\tau_w^n`
 - Form pressure losses: :math:`\frac{\partial p_K}{\partial z}`
 - Wall heat transfer models
+- Relaxation time for the interfacial mass transfer (required for the MRM model only): :math:`t_[Relax}`
 
 For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
 
