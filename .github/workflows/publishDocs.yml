@@ -70,9 +70,8 @@ jobs:
       - name: Make pdf file
         id: makepdf
         uses: xu-cheng/latex-action@v4
-        working-directory: ./docs
         with:
-          root_file: ./build/latex/OpenSTREAM.tex        
+          root_file: ./docs/build/latex/OpenSTREAM.tex        
 
       #- name: Install TeXlive
       #  run: sudo apt-get update && sudo apt-get install texlive latexmk texlive-publishers texlive-science  cm-super
