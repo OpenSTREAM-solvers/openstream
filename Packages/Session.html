@@ -317,6 +317,23 @@ Creates log file and session directory if needed.</p>
 </div>
 </dd></dl>
 
+<dl class="mat function">
+<dt class="sig sig-object mat" id="Session.isLegalPath">
+<span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
+<dd><p>ISLEGALPATH Checks if the given pathname is valid on the current operating system</p>
+<p>This function attempts to convert the input pathname to a Java Path object.
+If the conversion succeeds, the path is considered legal and the function returns true.
+If an exception is thrown during conversion, the path is considered illegal and the function returns false.</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>pathname — String representing the file or folder path to validate</p></li>
+</ul>
+<p>Output:</p>
+<ul class="simple">
+<li><p>bool     — Logical true if the path is valid, false otherwise</p></li>
+</ul>
+</dd></dl>
+
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Session.Session">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session" title="Link to this definition"></a></dt>
@@ -407,23 +424,6 @@ closes open files and diaries if necessary, and creates the directory.</p>
 </dd>
 </dl>
 </div>
-</dd></dl>
-
-<dl class="mat function">
-<dt class="sig sig-object mat" id="Session.isLegalPath">
-<span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
-<dd><p>ISLEGALPATH Checks if the given pathname is valid on the current operating system</p>
-<p>This function attempts to convert the input pathname to a Java Path object.
-If the conversion succeeds, the path is considered legal and the function returns true.
-If an exception is thrown during conversion, the path is considered illegal and the function returns false.</p>
-<p>Input:</p>
-<ul class="simple">
-<li><p>pathname — String representing the file or folder path to validate</p></li>
-</ul>
-<p>Output:</p>
-<ul class="simple">
-<li><p>bool     — Logical true if the path is valid, false otherwise</p></li>
-</ul>
 </dd></dl>
 
 <dl class="mat class">
