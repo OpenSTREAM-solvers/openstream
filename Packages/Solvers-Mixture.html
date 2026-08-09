@@ -194,7 +194,7 @@
              
   <section id="mixture-solver">
 <h1>Mixture solver<a class="headerlink" href="#mixture-solver" title="Link to this heading"></a></h1>
-<p>The <code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.MixtureSolver</span></code> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating two-phase flows using a mixture approach. In this method, all phases are treated as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which introduces thermal non-equilibrium between phases by solving separate mass and energy conservation equations for the vapor phase.</p>
+<p>The <a class="reference internal" href="#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating two-phase flows using a mixture approach. In this method, all phases are treated as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which introduces thermal non-equilibrium between phases by solving separate mass and energy conservation equations for the vapor phase.</p>
 <p>This module includes:</p>
 <ul class="simple">
 <li><p>Solver class for mixture-based flow simulations: <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a></p></li>
@@ -1119,10 +1119,6 @@ model defined in <a class="reference internal" href="Inputs.html#Inputs.Model.TH
 <li><p>HOMOGENEOUS: Computes Fourier number based on homogeneous approach</p></li>
 <li><p>FOURIER: Empirical Fourier number correlation</p></li>
 </ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>TODO: Investigate whether this parameter should be wall-dependent</p></li>
-</ul>
 </dd></dl>
 
 <dl class="mat method">
@@ -1146,10 +1142,6 @@ model defined in <a class="reference internal" href="Inputs.html#Inputs.Model.TH
 <li><p>VOID: Computes relaxation time based on void fraction and fluid properties</p></li>
 <li><p>HOMOGENEOUS: Computes Fourier number based on homogeneous approach</p></li>
 <li><p>FOURIER: Empirical Fourier number correlation</p></li>
-</ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>TODO: Investigate whether this parameter should be wall-dependent</p></li>
 </ul>
 </dd></dl>
 
@@ -1741,9 +1733,27 @@ viscosity.</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RELAXT">
+<span class="sig-name descname"><span class="pre">RELAXT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXT" title="Link to this definition"></a></dt>
+<dd><p>RELAXT Interfacial time relaxation [s]</p>
+<p>Computes interfacial time relaxation based on sign of
+deviation from equilibrium vapor flow.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>mix  — <a class="reference internal" href="#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a> object with flow and relaxation data</p></li>
+<li><p>zIdx — Axial indices to evaluate (optional; defaults to full axial range)</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses mix.MRM.WV for equilibrium deviation</p></li>
+<li><p>Vapor mass deviation from equilibrium, Wint, must be consistent with MINT method</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Mixture.RELAXTCOND">
 <span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
-<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]</p>
+<dd><p>RELAXTCOND Time relaxation for interfacial condensation [s]</p>
 <p>Retrieves precomputed time relaxation values for condensation by
 <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture.RELAXTCOND_CALC</span></code>,
 updated when mix.H is set.</p>
