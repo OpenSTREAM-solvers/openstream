@@ -156,27 +156,63 @@ function solver(solveINIT)
                         % Five-equation thermal non-equilibrium model based on time-relaxed vapor mass and energy conservation
                         
                         % Save parameters from previous point iteration
-                        Wviter = mix(tIdx).MRM.WV(zIdx,:);                          % [J/kg] Vapor mass flow rate
+                        Wviter = mix(tIdx).MRM.WV(zIdx,:);                          % [kg/s] Vapor mass flow rate
                         Hviter = mix(tIdx).MRM.HV(zIdx,:);                          % [J/kg] Vapor enthalpy
                         
                         % Update secondary parameters
                         Uv     = mix(tIdx).vapor.U(zIdx);                           % [m/s] Vapor velocity
+                        WVeq   = mix(tIdx).WWALL(zIdx).*mix(tIdx).XEQ(zIdx);        % [kg/s] Equilibrium vapor mass flow rate per wall
+                        relaxt = mix(tIdx).RELAXT(zIdx);                            % [s] Interfacial time relaxation
+                       
+                        switch options.MRMTIMEINT
+                            case 'EULER'
+                                % Fully implicit backward Euler time integration method
+                                
+                                % Vapor mass conservation
+                                Mvtot = mix(tIdx).MTOT(zIdx);                                              % [kg/s/m] Linear vapor mass transfer rate
+                                Wvnew = Uv.*(mix(tIdx).MRM.WV(zIdx-1,:)+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
+                                
+                                % Vapor energy conservation
+                                Hvtot = mix(tIdx).HVTOT(zIdx);                                             % [J/kg/m] Linear vapor enthalpy transfer
+                                Htot  = Hvtot.*Uv;                                                         % [W/kg]
+                                %Htot  = Htot.*double(mix(tIdx).WWALL(zIdx)>mix(tIdx).MRM.WV(zIdx,:));
+                                Hvnew = (Uv.*mix(tIdx).MRM.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT); % [J/kg] Update vapor enthalpy
+                                
+                            case 'EXPONENTIAL'
+                                % Exponential time integration method for numerical stability at small relaxation time
+                                
+                                % Vapor mass conservation
+                                Mwall  = mix(tIdx).MWALEVAP(zIdx);                                         % [kg/s/m] Linear wall mass evaporation rate
+                                a = Uv./DZ + 1./relaxt;                                                    % [1/s] Total vapor mass response rate coefficient
+                                b = mix(tIdx).MRM.WV(zIdx-1,:)./DZ + Mwall + WVeq./Uv./relaxt;             % [kg/m/s] Source rate for vapor mass per unit axial length
+                                Wvnew = Uv.*(Wvold./Uvold.*exp(-a.*DT)-b./a.*expm1(-a.*DT));
+                                
+                                % Vapor energy conservation
+                                Hwall = mix(tIdx).HWALEVAP(zIdx) + mix(tIdx).HWALHEAT(zIdx);               % [W/m] Linear wall heat to vapor rate (input + evaporation)
+                                WV = mix(tIdx).MRM.WV(zIdx,:);
+                                %WV   = sum(WV,2); Hwall = sum(Hwall,2);                                    % [kg/s,W/m] Wall lump approach
+                                Hvwall = Hwall./WV;                                                        % [J/kg/m]
+                                D = max(0,(WVeq-mix(tIdx).MRM.WV(zIdx,:)))./mix(tIdx).MRM.WV(zIdx,:);      % [-] Interfacial evaporation coefficient
+                                Hvwall(WV <= 1E-8) = 0; D(WV <= 1E-8) = 0;
+                                switch model.INTTRANSH
+                                    case 'BULK'
+                                        hl = mix(tIdx).liquid.H(zIdx);                                     % [J/kg] Bulk liquid approach
+                                    case 'SATURATED'
+                                        hl = fluid(tIdx).HF;                                                % [J/kg] Saturated liquid approach
+                                end
+                                a = Uv./DZ + D./relaxt;                                                    % [1/s] Total vapor specific enthalpy response rate coefficient
+                                b = Uv.*mix(tIdx).MRM.HV(zIdx-1,:)./DZ + D./relaxt.*hl + Uv.*Hvwall;       % [J/kg/s] Source rate for vapor specific enthalpy
+                                Hvnew = Hvold.*exp(-a.*DT)-b./a.*expm1(-a.*DT);
+                        end
                         
-                        % Vapor mass conservation
-                        Mvtot = mix(tIdx).MTOT(zIdx);                                                      % [kg/s/m] Linear vapor mass transfer rate
-                        Wvnew = Uv.*(mix(tIdx).MRM.WV(zIdx-1,:)+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
+                        % Bound and update
                         Wvnew = max(0,Wvnew);                                                              % [kg/s] Constrain solution so that Wv cannot be negative
-                        %Wvnew = min(mix(tIdx).WWALL(zIdx),Wvnew);                                          % [kg/s] Constrain solution so that Wv cannot be larger than the total flow rate
+                        Wvnew = min(mix(tIdx).WWALL(zIdx),Wvnew);                                          % [kg/s] Constrain solution so that Wv cannot be larger than the total flow rate
                         mix(tIdx).MRM.WV(zIdx,:) = (1-options.RELAXWV).*Wviter+options.RELAXWV.*Wvnew;     % [kg/s] Apply relaxation
-
+                        
                         mix(tIdx).MRM.X(zIdx,:)  = mix(tIdx).MRM.WV(zIdx,:)./mix(tIdx).WWALL(zIdx);        % [-] Relaxed vapor quality
                         
-                        % Vapor energy conservation
-                        Hvtot = mix(tIdx).HVTOT(zIdx);                                                     % [J/kg/m] Linear vapor enthalpy transfer
-                        Htot  = Hvtot.*Uv;                                                                 % [W/kg]
-                        %Htot  = Htot.*double(mix(tIdx).WWALL(zIdx)>Wvnew);
-                        Hvnew = (Uv.*mix(tIdx).MRM.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);         % [J/kg] Update vapor enthalpy
-                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                 % [J/kg] Constrain solution so that Hv > Hg (no subcooled vapor)
+                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                  % [J/kg] Constrain solution so that Hv > Hg (no subcooled vapor)
                         Hvnew = max(mix(tIdx).H(zIdx),Hvnew);                                              % [J/kg] Constrain solution so that Hv > H
                         mix(tIdx).MRM.HV(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;     % [J/kg] Apply relaxation
                         
@@ -196,7 +232,7 @@ function solver(solveINIT)
                     mixSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                     break;
                 end
-    
+                
             end
             
             % Save Mixture Relaxation Model terms

@@ -18,20 +18,21 @@ classdef Options < Inputs.Input
 
         % Mixture solver options
 
+        MRMTIMEINT       (1,1) InputEnums.MRMTIMEINT                       = 'EXPONENTIAL'         % Time integration for vapor mass/energy conservation equations
         ERRORW           (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate error target in inner iterations [kg/s]
         ERRORP           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Pressure error target in inner iterations [Pa]
         ERRORH           (1,1) double  {mustBeNumeric}                     = 1E-1                  % Enthalpy error target in inner iterations [J/kg]
         SSCONVW          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Mass flow rate steady-state convergence criterion [kg/s]
         SSCONVP          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Pressure steady-state convergence criterion [Pa]
         SSCONVH          (1,1) double  {mustBeNumeric}                     = 1E+0                  % Enthalpy steady-state convergence criterion [J/kg]
-        RELAXWM          (1,1) double  {mustBeInRange(RELAXWM,0,1)}        = 1                     % Relaxation factor for the mixture mass conservation equation [-]
-        RELAXPM          (1,1) double  {mustBeInRange(RELAXPM,0,1)}        = 1                     % Relaxation factor for the mixture momentum conservation equation [-]
-        RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1                     % Relaxation factor for the mixture energy conservation equation [-]
+        RELAXWM          (1,1) double  {mustBeInRange(RELAXWM,0,1)}        = 1.0                   % Relaxation factor for the mixture mass conservation equation [-]
+        RELAXPM          (1,1) double  {mustBeInRange(RELAXPM,0,1)}        = 1.0                   % Relaxation factor for the mixture momentum conservation equation [-]
+        RELAXHM          (1,1) double  {mustBeInRange(RELAXHM,0,1)}        = 1.0                   % Relaxation factor for the mixture energy conservation equation [-]
 
         % Mixture (MRM) solver models
 
-        RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.8                   % Relaxation factor for the vapor  mass conservation equation [-]
-        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 0.8                   % Relaxation factor for the vapor  energy conservation equation [-]
+        RELAXWV          (1,1) double  {mustBeInRange(RELAXWV,0,1)}        = 0.7                   % Relaxation factor for the vapor  mass conservation equation [-]
+        RELAXHV          (1,1) double  {mustBeInRange(RELAXHV,0,1)}        = 0.7                   % Relaxation factor for the vapor  energy conservation equation [-]
 
         % Two-fluid solver options
 

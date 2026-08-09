@@ -357,7 +357,7 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function t = RELAXTCOND(mix, zIdx)
-            %RELAXTCOND Time relaxation for interfacial evaporation [s]
+            %RELAXTCOND Time relaxation for interfacial condensation [s]
             %
             % Retrieves precomputed time relaxation values for condensation by
             % :attr:`Solvers.Mixture.Mixture.RELAXTCOND_CALC`,
@@ -1339,6 +1339,33 @@ classdef Mixture < Solvers.AbstractField
             ktrelax = ktrelax(zIdx);                                       % [s] Restrict to selected input nodes
         end
 
+        function relaxt = RELAXT(mix, zIdx)
+            %RELAXT Interfacial time relaxation [s]
+            %
+            % Computes interfacial time relaxation based on sign of
+            % deviation from equilibrium vapor flow.
+            %
+            % Inputs:
+            %
+            % - mix  — :class:`Solvers.Mixture.Mixture` object with flow and relaxation data
+            % - zIdx — Axial indices to evaluate (optional; defaults to full axial range)
+            %
+            % Notes:
+            %
+            % - Uses mix.MRM.WV for equilibrium deviation
+            % - Vapor mass deviation from equilibrium, Wint, must be consistent with MINT method
+
+            if nargin < 2, zIdx = (1:mix(1).NZ).'; end
+
+            WVeq = mix.WWALL(zIdx).*mix.XEQ(zIdx);                         % [kg/s] Equilibrium vapor mass flow rate per wall
+            Wint = WVeq-mix.MRM.WV(zIdx,:);                                % [kg/s] Vapor mass deviation from equilibrium
+
+            tcond = mix.RELAXTCOND(zIdx);                                  % [s] Condensation
+            tevap = mix.RELAXTEVAP(zIdx);                                  % [s] Evaporation
+
+            relaxt = double(Wint<0).*tcond + double(Wint>=0).*tevap;
+        end
+
         function [Mcond, Mevap] = MINT(mix, zIdx)
             %MINT Linear interfacial mass transfer rates [kg/s/m]
             %
@@ -1716,9 +1743,8 @@ classdef Mixture < Solvers.AbstractField
             % - HOMOGENEOUS: Computes Fourier number based on homogeneous approach
             % - FOURIER: Empirical Fourier number correlation
             %
-            % Notes:
-            %
-            % - TODO: Investigate whether this parameter should be wall-dependent
+            
+            % TODO: Investigate whether this parameter should be wall-dependent
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -1765,7 +1791,8 @@ classdef Mixture < Solvers.AbstractField
                     X    = mix.liquid.X(zIdx);                             % [-] Liquid mass quality
                     dg   = dg0;                                            % [m] Constant dg (for now)
 
-                    Fo   = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
+                    %Fo   = (RHOV./RHOL).*X./(1-X+dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
+                    Fo   = (RHOV./RHOL).*X./max(1-X,dvf)./12.*(dg./HDIAM).^2; % [-] Homogeneous model
 
                 case InputEnums.THERMALRELAX.FOURIER
                     % TODO: Dummy model for now
@@ -1804,9 +1831,8 @@ classdef Mixture < Solvers.AbstractField
             % - HOMOGENEOUS: Computes Fourier number based on homogeneous approach
             % - FOURIER: Empirical Fourier number correlation
             %
-            % Notes:
-            %
-            % - TODO: Investigate whether this parameter should be wall-dependent
+            
+            % TODO: Investigate whether this parameter should be wall-dependent
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -2249,7 +2275,8 @@ classdef Mixture < Solvers.AbstractField
             % - Automatically invokes XEQ_CALC to ensure equilibrium quality is up to date
             % - Quality is bounded between 0 and 1 for physical consistency
             % - SAHAZUBER and EPRI models include empirical correlations and unit conversions
-            % - TODO: Validate applicability of models for asymmetric wall heating
+
+            % TODO: Validate applicability of models for asymmetric wall heating
 
             % Call XEQ first
             mix.XEQ_CALC(zIdx);                                            % Use mix.xeq to calculate x
@@ -2487,7 +2514,8 @@ classdef Mixture < Solvers.AbstractField
             %
             % - CHF can adjusted using user-defined multipliers :attr:`Inputs.Model.CBTMULT` and obstruction effects defined by :attr:`Inputs.Model.CBTKEFFECT`
             % - CBT flag is set where wall heat flux exceeds CHF or based on elevation
-            % - TODO: Extend with additional CHF correlations as necessary
+
+            % TODO: Extend with additional CHF correlations as necessary
 
             %fld   = mix.fluid;
             model = mix.inputSet.model;
@@ -2580,9 +2608,8 @@ classdef Mixture < Solvers.AbstractField
             % - NONE: Disables MFBT detection
             % - CONSTANT: Applies a fixed temperature margin (DTMFB) above saturation
             %
-            % Notes:
-            %
-            % - TODO: Extend with additional MFBT models as necessary 
+           
+            % TODO: Extend with additional MFBT models as necessary 
 
 
             %MFBT_CALC Helper function to calculate the Minimum Film Boiling
@@ -2675,7 +2702,8 @@ classdef Mixture < Solvers.AbstractField
             %
             % - Local perturbation overrides are applied using mix.KTRELAX
             % - Relaxation time is bounded below by 1e-6 to ensure numerical stability
-            % - TODO: Investigate whether this parameter should be wall-dependent
+
+            % TODO: Investigate whether this parameter should be wall-dependent
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
@@ -2716,7 +2744,8 @@ classdef Mixture < Solvers.AbstractField
             %
             % - Local perturbation overrides are applied using mix.KTRELAX
             % - Relaxation time is bounded below by 1e-6 to ensure numerical stability
-            % - TODO: Investigate whether this parameter should be wall-dependent
+
+            % TODO: Investigate whether this parameter should be wall-dependent
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
