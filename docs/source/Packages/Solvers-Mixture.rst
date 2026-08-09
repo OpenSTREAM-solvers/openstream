@@ -1,7 +1,7 @@
 Mixture solver
 ==============
 
-The :mod:`Solvers.MixtureSolver` module in **OpenSTREAM** provides classes and tools for simulating two-phase flows using a mixture approach. In this method, all phases are treated as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which introduces thermal non-equilibrium between phases by solving separate mass and energy conservation equations for the vapor phase.
+The :mod:`Solvers.Mixture` module in **OpenSTREAM** provides classes and tools for simulating two-phase flows using a mixture approach. In this method, all phases are treated as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which introduces thermal non-equilibrium between phases by solving separate mass and energy conservation equations for the vapor phase.
 
 This module includes:
 

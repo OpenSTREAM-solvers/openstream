@@ -4,7 +4,7 @@ Getting started
 Prerequisites and installation
 ------------------------------
 
-**OpenSTREAM** is a MATLAB program for simulating one-dimensionnal two-phase flows.
+**OpenSTREAM** is a MATLAB program for simulating one-dimensional two-phase flows.
 The Python version of
 `CoolProp <http://www.coolprop.org>`__ is
 used for calculating the fluid properties.
@@ -71,7 +71,7 @@ executable. The following instructions are from the
 
    -  Run ``pyenv()``
 
-      -  If the results are empty or a incompatible Python version is
+      -  If the results are empty or an incompatible Python version is
          shown, go to step 3.
       -  If the results are satisfactory, continue to step 5.
 
@@ -82,7 +82,7 @@ executable. The following instructions are from the
       specific version of Python you need. Follow the setup procedure.
    -  **Linux**: Chances are, you already have a version of Python
       installed. Verify the version using ``python3 --version``. If
-      Python is not installed, or a incompatible version is installed,
+      Python is not installed, or an incompatible version is installed,
       install appropriate version using the OS package manager. For
       Debian-based Linux distros (such as Ubuntu), use
       ``sudo apt-get install python3.x`` to install the *x* version of
@@ -91,7 +91,7 @@ executable. The following instructions are from the
 
 4. Specify Python installation location in MATLAB:
 
-   -  Run ``pyenv('Version', pathtopython')``, where ``pathtopython`` is the path
+   -  Run ``pyenv('Version', 'pathtopython')``, where ``pathtopython`` is the path
       to where Python is installed. Here are some typical locations
       depending on your OS:
 

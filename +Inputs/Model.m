@@ -80,7 +80,7 @@ classdef Model < Inputs.Input
 
         % Two-fluid solver models
 
-        INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'                      % Interfacial length scale model model selected from :class:`InputEnums.INTLENGTH`
+        INTLENGTH        (1,1) InputEnums.INTLENGTH                        = 'CONSTANT'                      % Interfacial length scale model selected from :class:`InputEnums.INTLENGTH`
         INTAREA          (1,1) InputEnums.INTAREA                          = 'DISPGAS2DISPLIQ'               % Interfacial area model selected from :class:`InputEnums.INTAREA`
         INTLENGTHVCST    (1,1) double                                      = 2E-3                            % Dispersed gas    constant interfacial length scale [m]
         INTLENGTHLCST    (1,1) double                                      = 2E-3                            % Dispersed liquid constant interfacial length scale [m]
