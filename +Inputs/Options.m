@@ -70,7 +70,7 @@ classdef Options < Inputs.Input
     methods
 
         function obj = Options(filePath,optionsID)
-            %MODEL Constructor for Options class
+            %OPTIONS Constructor for Options class
             %
             % Parses options input file and initializes properties.
             % Applies default values and validates entries.

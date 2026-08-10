@@ -12,7 +12,7 @@ classdef REGIMES < double
     %
     % - LIQUID            — Single-phase liquid
     % - BUBBLY_SUBCOOLED  — Bubbly flow in subcooled region
-    % - BUBBLY_SATURATED  — Bubble flow in saturated region
+    % - BUBBLY_SATURATED  — Bubbly flow in saturated region
     % - INTERMEDIATE      — Intermediate flow region
     % - ANNULAR           — Annular flow
     % - DFFB              — Dispersed Flow Film Boiling

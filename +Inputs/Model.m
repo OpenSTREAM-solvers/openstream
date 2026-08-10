@@ -123,7 +123,7 @@ classdef Model < Inputs.Input
 
         MOMENTDROP       (1,1) InputEnums.MOMENTDROP                       = 'SLIP'                          % Drop momentum conservation model selected from :class:`InputEnums.MOMENTDROP`
         DROPSLIP         (1,1) double  {mustBePositive}                    = 1.0                             % Drop/vapor velocity ratio [-]
-        DROPDIAM         (1,1) double  {mustBePositive}                    = 1E-3                            % Drop diameter [mm]
+        DROPDIAM         (1,1) double  {mustBePositive}                    = 1E-3                            % Drop diameter [m]
 
         % Four-field solver models
 

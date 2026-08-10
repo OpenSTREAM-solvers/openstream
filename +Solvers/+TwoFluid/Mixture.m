@@ -338,9 +338,9 @@ classdef Mixture < Solvers.AbstractPhase
         end
 
         function t = RELAXTCOND(mix, zIdx)
-            %RELAXTCOND Time relaxation for interfacial evaporation [s]
+            %RELAXTCOND Time relaxation for interfacial condensation [s]
             %
-            % Returns the relaxation time applied to interfacial evaporation processes
+            % Returns the relaxation time applied to interfacial condensation processes
             % in the two-fluid mixture model.
             %
             % Inputs:
@@ -355,9 +355,9 @@ classdef Mixture < Solvers.AbstractPhase
         end
 
         function t = RELAXTEVAP(mix, zIdx)
-            %RELAXTEVAP Time relaxation for interfacial condensation [s]
+            %RELAXTEVAP Time relaxation for interfacial evaporation [s]
             %
-            % Returns the relaxation time applied to interfacial condensation processes
+            % Returns the relaxation time applied to interfacial evaporation processes
             % in the two-fluid mixture model.
             %
             % Inputs:

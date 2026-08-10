@@ -81,8 +81,8 @@ html_theme_options = {
     "includehidden": True,
 }
 
-# -- Options fpr LaTex output ------------------------------------------------
+# -- Options for LaTex output ------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
 latex_engine = 'pdflatex'
 #latex_toplevel_sectioning = 'section'
-latex_documents = [('index_latex', f'{project}.tex', f"{project} Manual", author, 'manual')]
+latex_documents = [('index_latex', f'{project}.tex', f"{project} Documentation", author, 'manual')]

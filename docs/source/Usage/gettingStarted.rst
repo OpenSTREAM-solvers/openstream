@@ -87,7 +87,12 @@ executable. The following instructions are from the
       Debian-based Linux distros (such as Ubuntu), use
       ``sudo apt-get install python3.x`` to install the *x* version of
       Python3.
-   -  **MacOS**: Someone with a Mac, please write how you do this…
+   -  **MacOS**: Most recent versions of macOS include Python or can
+      install it through Homebrew or the official Python installer.
+      Verify the installed version using: ``python3 --version``. If a
+      compatible version is not available, install one using Homebrew:
+      ``brew install python`` or download the appropriate version directly
+      from python.org <https://www.python.org/downloads/>`__.
 
 4. Specify Python installation location in MATLAB:
 
@@ -100,7 +105,9 @@ executable. The following instructions are from the
          for version 3.10.
       -  **Linux**: ``/usr/bin/python3.10``, for version 3.10. Use
          ``whereis python3`` to find possible locations.
-      -  **MacOS**: Someone with a Mac, please write how you do this…
+      -  **MacOS**: The Python executable is typically located using:
+         ``which python3``. Common installation locations include:
+         ``/usr/local/bin/python3`` and ``/opt/homebrew/bin/python3``.
 
 5. Try creating an instance of CoolPropWrapper() in MATLAB:
 

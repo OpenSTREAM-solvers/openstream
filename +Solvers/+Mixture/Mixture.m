@@ -886,7 +886,7 @@ classdef Mixture < Solvers.AbstractField
         function dpAcc_s = DPACCS(mix, MCTold, zIdx)
             %DPACCS Slip-induced temporal acceleration pressure drop [Pa]
             %
-            % Computes the pressure drop due to the slip-inducted temporal
+            % Computes the pressure drop due to the slip-induced temporal
             % acceleration between time steps.
             %
             % Inputs:
@@ -1010,7 +1010,7 @@ classdef Mixture < Solvers.AbstractField
              %CBTIDX Index of first CBT occurrence [-]
              %
              % Compute the index of first CBT occurrence.
-             % If no occurrence if found, NaN is returned.
+             % If no occurrence is found, NaN is returned.
              %
              % Inputs
              %
