@@ -3,7 +3,7 @@ Authors
 
 The **OpenSTREAM solvers** have been developed and validated through a dynamic and growing international collaboration that began in 2023 between **Westinghouse Electric Sweden** (WSE) and the **University of Wisconsin–Madison** (UWM). Since its inception, the initiative has expanded to include partnerships with the **Naval Nuclear Laboratory** (NNL), the **Royal Institute of Technology** (KTH), the **Massachusetts Institute of Technology** (MIT), and the **Swiss Federal Institute of Technology Zurich** (ETHZ). In addition, the solvers are being utilized in research programs at other leading institutions, including the **Paul Scherrer Institut** (PSI) and **McMaster University**.
 
-This effort is driven by the OpenSTREAM code development team, with active contributions from MSc and PhD students as part of their research and coursework under the guidance of their academic supervisors. The collaboration continues to grow, with the goal of engaging more academic and research institutions working on advanced multiphase flow modeling and thermal-hydraulic simulation.
+This effort is driven by the OpenSTREAM code development team, with active contributions from MSc and PhD students as part of their research and coursework under the guidance of their academic supervisors. The collaboration continues to grow, with the goal of engaging more academic and research institutions working on advanced two-phase flow modeling and thermal-hydraulic simulation.
 
 ----
 

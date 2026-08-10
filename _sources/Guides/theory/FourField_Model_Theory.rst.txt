@@ -80,12 +80,12 @@ where:
 - :math:`N_w^{eq,n}` is the equilibrium wave number density
 - :math:`t_w^{Relax}` is the relaxation time associated with wave formation, merging, and dissipation.
 
-Closure relations
------------------
+Closure models
+--------------
 
-To complete the conservation equations, several closure relations are required:
+To complete the conservation equations, several closure models are required:
 
-- Same closure relations as for the :doc:`three-field model <ThreeField_Model_Theory>`
+- Same closure models as for the :doc:`three-field model <ThreeField_Model_Theory>`
 - Base film/wave mass flow rate split at onset of annular two-phase flow
 - Drop deposition split between base film and wave fields
 - Exchange mass fluxes between film and waves: :math:`\Psi_w^n`, :math:`\Psi_b^n`
@@ -97,7 +97,7 @@ To complete the conservation equations, several closure relations are required:
 - Equilibrium wave number density: :math:`N_w^{eq,n}`
 - Relaxation time associated with wave formation, merging, and dissipation: :math:`t_w^{Relax}`
 
-The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure relations are implemented in :class:`Solvers.FourField.Wave` and :class:`Solvers.FourField.Base`, which the users can modify to suit specific simulation needs.
+The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.FourField.Wave` and :class:`Solvers.FourField.Base`, which the users can modify to suit specific simulation needs.
 
 In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
