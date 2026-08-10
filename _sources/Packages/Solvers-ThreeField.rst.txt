@@ -1,7 +1,7 @@
 Three-field solver
 ==================
 
-The :mod:`Solvers.ThreeField` module in **OpenSTREAM** provides classes and tools for simulating annular two-phase flows using a three-field approach. In this method, the two liquid fields (film and droplets) are treated separately, each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the :mod:`Solvers.Mixture` module. This framework enables explicit modeling of liquid–liquid interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it well-suited for applications involving annular boiling two-phase flow regimes where field separation and interfacial dynamics are significant.
+The :mod:`Solvers.ThreeField` module in **OpenSTREAM** provides classes and tools for simulating annular two-phase flows using a three-field approach. In this method, the two liquid fields (film and droplets) are treated separately, each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the :mod:`Solvers.Mixture` module. This framework enables explicit modeling of interactions between the film and droplet liquid fields, slip velocities, and hydrodynamic non-equilibrium effects, making it well-suited for applications involving annular boiling two-phase flow regimes where field separation and interfacial dynamics are significant.
 
 This module includes:
 

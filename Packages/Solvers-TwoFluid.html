@@ -1352,8 +1352,8 @@ zIdx — Axial indices to evaluate (optional)</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RELAXTCOND">
 <span class="sig-name descname"><span class="pre">RELAXTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RELAXTCOND" title="Link to this definition"></a></dt>
-<dd><p>RELAXTCOND Time relaxation for interfacial evaporation [s]</p>
-<p>Returns the relaxation time applied to interfacial evaporation processes
+<dd><p>RELAXTCOND Time relaxation for interfacial condensation [s]</p>
+<p>Returns the relaxation time applied to interfacial condensation processes
 in the two-fluid mixture model.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
@@ -1365,8 +1365,8 @@ zIdx — Axial indices to evaluate (optional)</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Mixture.RELAXTEVAP">
 <span class="sig-name descname"><span class="pre">RELAXTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Mixture.RELAXTEVAP" title="Link to this definition"></a></dt>
-<dd><p>RELAXTEVAP Time relaxation for interfacial condensation [s]</p>
-<p>Returns the relaxation time applied to interfacial condensation processes
+<dd><p>RELAXTEVAP Time relaxation for interfacial evaporation [s]</p>
+<p>Returns the relaxation time applied to interfacial evaporation processes
 in the two-fluid mixture model.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><p>mix  — <a class="reference internal" href="#Solvers.TwoFluid.Mixture" title="Solvers.TwoFluid.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Mixture</span></code></a> object
@@ -1963,7 +1963,7 @@ heat flux-based or relaxation-based models.</p>
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.MINTCOND">
 <span class="sig-name descname"><span class="pre">MINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.MINTCOND" title="Link to this definition"></a></dt>
 <dd><p>MINTEVAP Linear interfacial condensation mass transfer [kg/s/m]</p>
-<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.TwoFluid.Liquid.MINT" title="Solvers.TwoFluid.Liquid.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.MINT</span></code></a>.</p>
+<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.TwoFluid.Liquid.MINT" title="Solvers.TwoFluid.Liquid.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.MINT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>liquid — <a class="reference internal" href="#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> object</p></li>
@@ -2223,7 +2223,7 @@ different calculations are carried out for different flow regimes.</p>
 <ul class="simple">
 <li><p>LIQUID            — Single-phase liquid</p></li>
 <li><p>BUBBLY_SUBCOOLED  — Bubbly flow in subcooled region</p></li>
-<li><p>BUBBLY_SATURATED  — Bubble flow in saturated region</p></li>
+<li><p>BUBBLY_SATURATED  — Bubbly flow in saturated region</p></li>
 <li><p>INTERMEDIATE      — Intermediate flow region</p></li>
 <li><p>ANNULAR           — Annular flow</p></li>
 <li><p>DFFB              — Dispersed Flow Film Boiling</p></li>

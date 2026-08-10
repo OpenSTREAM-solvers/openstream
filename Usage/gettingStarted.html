@@ -294,7 +294,12 @@ install appropriate version using the OS package manager. For
 Debian-based Linux distros (such as Ubuntu), use
 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3.x</span></code> to install the <em>x</em> version of
 Python3.</p></li>
-<li><p><strong>MacOS</strong>: Someone with a Mac, please write how you do this…</p></li>
+<li><p><strong>MacOS</strong>: Most recent versions of macOS include Python or can
+install it through Homebrew or the official Python installer.
+Verify the installed version using: <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If a
+compatible version is not available, install one using Homebrew:
+<code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">python</span></code> or download the appropriate version directly
+from python.org &lt;<a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">https://www.python.org/downloads/</a>&gt;`__.</p></li>
 </ul>
 </li>
 <li><p>Specify Python installation location in MATLAB:</p>
@@ -308,7 +313,9 @@ depending on your OS:</p>
 for version 3.10.</p></li>
 <li><p><strong>Linux</strong>: <code class="docutils literal notranslate"><span class="pre">/usr/bin/python3.10</span></code>, for version 3.10. Use
 <code class="docutils literal notranslate"><span class="pre">whereis</span> <span class="pre">python3</span></code> to find possible locations.</p></li>
-<li><p><strong>MacOS</strong>: Someone with a Mac, please write how you do this…</p></li>
+<li><p><strong>MacOS</strong>: The Python executable is typically located using:
+<code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python3</span></code>. Common installation locations include:
+<code class="docutils literal notranslate"><span class="pre">/usr/local/bin/python3</span></code> and <code class="docutils literal notranslate"><span class="pre">/opt/homebrew/bin/python3</span></code>.</p></li>
 </ul>
 </li>
 </ul>
