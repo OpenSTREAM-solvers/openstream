@@ -165,7 +165,7 @@ classdef Wave < Solvers.AbstractFilm
         end
 
         function eta = ETA(wave, zIdx)
-            %ETA Wave film deposition fraction
+            %ETA Wave film deposition fraction [-]
             %
             % Computes the fraction of deposition attributed to waves.
             %

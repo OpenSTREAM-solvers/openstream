@@ -3,7 +3,7 @@ classdef MFBT
     %
     % This class defines the available :attr:`Inputs.Model.MFBT` models for
     % evaluating the Minimum Film Boiling Transition, used by the mixture
-    % field.
+    % solver.
     %
     % Models:
     %

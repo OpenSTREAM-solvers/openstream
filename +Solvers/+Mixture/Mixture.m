@@ -2268,7 +2268,7 @@ classdef Mixture < Solvers.AbstractField
             % - EQUILIBRIUM: Uses equilibrium quality directly
             % - SAHAZUBER: Applies Saha-Zuber correlation for subcooled boiling
             % - EPRI: Uses EPRI correlation with bubble departure modeling
-            % - MRM: Computes quality from Homogeneous Relaxation Model
+            % - MRM: Computes quality from Mixture Relaxation Model
             %
             % Notes:
             %
@@ -2376,7 +2376,7 @@ classdef Mixture < Solvers.AbstractField
                     end
 
                 case 'MRM'
-                    % [-] Homogeneous Relaxation Model
+                    % [-] Mixture Relaxation Model
                     %
                     % Model based on interfacial phase change time relaxation approach (main calculations in solve.m)
                     % Physical approach to geometrical and thermal inhomogeneities

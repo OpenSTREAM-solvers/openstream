@@ -19,7 +19,7 @@ classdef BoundaryConditions < Inputs.Input
         HIN              double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Inlet enthalpy [J/kg]
         MFLOW            double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Mass flow rate [kg/s]
         POWER      (1,1) double  {mustBeNonnegative}                       = 0                     % Total power [W]
-        WMESH      (1,:) double  {mustBePositive}                          = 1                     % Relative power node size distribution [m]
+        WMESH      (1,:) double  {mustBePositive}                          = 1                     % Node size distribution [m]
         WPOWER     (:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-]
 
     end

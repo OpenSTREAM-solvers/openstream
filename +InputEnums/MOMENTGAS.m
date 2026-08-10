@@ -8,7 +8,7 @@ classdef MOMENTGAS
     % Models:
     %
     % - MIXTURE  — Uses the same gas velocity as in the mixture model
-    % - SLIP     — Slip ratio model (gas/liquid velocity) using% user-defined :attr:`Inputs.Model.SLIP`
+    % - SLIP     — Slip ratio model (gas/liquid velocity) using user-defined :attr:`Inputs.Model.SLIP`
     % - FULL     — Full non-equilibrium momentum model (:cite:t:`LeCorre2025OpenSTREAM`, :cite:t:`Walter2024`)
 
     enumeration

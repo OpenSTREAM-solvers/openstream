@@ -8,7 +8,7 @@ classdef THERMALRELAX
     % Models:
     %
     % - FOURIERX    — Simple model relating the Fourier number to equilibrium quality using user-defined :attr:`Inputs.Model.RELAXX`, :attr:`Inputs.Model.RELAXCONDFO` and :attr:`Inputs.Model.RELAXEVAPFO`
-    % - TIMEX       — Simple model relating relaxation time to equilibrium quality using user-defined :attr:`Inputs.Model.RELAXX`, :attr:`Inputs.Model.RELAXCONDT` and :attr:`Inputs.Model.RELAXTEVAPT`
+    % - TIMEX       — Simple model relating relaxation time to equilibrium quality using user-defined :attr:`Inputs.Model.RELAXX`, :attr:`Inputs.Model.RELAXCONDT` and :attr:`Inputs.Model.RELAXEVAPT`
     % - VOID        — Physical model simplified to Fourier number dependence on phase volumetric fraction and input characteristic length of the dispersed phase at CBT using user-defined :attr:`Inputs.Model.RELAXCONDCOEF` and :attr:`Inputs.Model.RELAXEVAPCOEF`
     % - HOMOGENEOUS — Physical model based on homogeneous assumptions and spherical dispersed phase
     % - FOURIER     — Empirical model based on Fourier number dependence on Reynolds number, etc, using user-defined :attr:`Inputs.Model.RELAXCONDFOCOEF` and :attr:`Inputs.Model.RELAXEVAPFOCOEF`

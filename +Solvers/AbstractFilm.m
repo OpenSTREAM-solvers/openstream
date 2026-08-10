@@ -350,8 +350,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - drop  — :class:`Solvers.ThreeField.Drop` object
-            % - zIdx  — Axial indices to evaluate (optional)
+            % - absfilm  — :class:`Solvers.AbstractFilm` object
+            % - zIdx    — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
 
@@ -382,7 +382,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             %CV_WALLISTHICK_CALC Private method to calculate the interfacial
             % shear factor [-]
             % 
-            % Based on the :attr:`InputEnums.VAPORFRIC` = `WALLISTHICK` model.
+            % Based on the :attr:`Inputs.Model.VAPORFRIC` = `WALLISTHICK` model.
 
             area = absfilm.inputSet.geometry.AREA;                         % [m^2] Cross-section area
             perim = absfilm.inputSet.geometry.PERIM;                       % [m]   Perimeter(s)
@@ -447,7 +447,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
         function [ke, n2] = OKAWACOEFS(absfilm, entnum, coefs)
             %OKAWACOEFS Private method to determine the coefficients used in
-            % :attr:`InputEnums.ENTRAINMENT` = `OKAWA` entrainment models
+            % :attr:`Inputs.Model.ENTRAINMENT` = `OKAWA` entrainment models
             % 
             % Based on the calculated entrainment number
 

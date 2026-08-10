@@ -618,7 +618,7 @@ classdef Liquid < Solvers.AbstractField
         end
 
         function Mintcond = MINTCOND(liquid,vapor,zIdx)
-            %MINTEVAP Linear interfacial condensation mass transfer [kg/s/m]
+            %MINTCOND Linear interfacial condensation mass transfer [kg/s/m]
             %
             % Extracts the condensation component from :attr:`Solvers.TwoFluid.Liquid.MINT`.
             %

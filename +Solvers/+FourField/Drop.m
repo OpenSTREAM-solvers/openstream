@@ -6,7 +6,7 @@ classdef Drop < Solvers.ThreeField.Drop
     % It supports multiple solver models and provides methods for computing derived
     % quantities.
     %
-    % All methods are inherited from :class:`Solvers.ThreeField.ThreeFieldSolver`
+    % All methods are inherited from :class:`Solvers.ThreeField.Drop`
 
     properties (SetAccess={?Solvers.AbstractSolver, ?Solvers.AbstractField})
 

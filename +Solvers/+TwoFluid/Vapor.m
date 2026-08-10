@@ -412,7 +412,7 @@ classdef Vapor < Solvers.AbstractField
             %
             % Notes:
             %
-            % - Uses :attr:`Solvers.TwoFluid.Vapor.HWALHEAT` divided by wall perimeter
+            % - Uses :meth:`Solvers.TwoFluid.Vapor.HWALHEAT` divided by wall perimeter
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
 
@@ -429,7 +429,7 @@ classdef Vapor < Solvers.AbstractField
             %MINT Linear interfacial mass transfer rates [kg/s/m]
             %
             % Computes condensation and evaporation mass transfer rates for the vapor
-            % phase by reversing the sign of liquid-phase values (attr:`Solvers.TwoFluid.Liquid.MINT`).
+            % phase by reversing the sign of liquid-phase values (:meth:`Solvers.TwoFluid.Liquid.MINT`).
             %
             % Inputs:
             %
@@ -451,7 +451,7 @@ classdef Vapor < Solvers.AbstractField
         function Mintevap = MINTEVAP(vapor,liquid,zIdx)
             %MINTEVAP Linear interfacial evaporation mass transfer [kg/s/m]
             %
-            % Extracts the evaporation component from :attr:`Solvers.TwoFluid.Vapor.MINT`.
+            % Extracts the evaporation component from :meth:`Solvers.TwoFluid.Vapor.MINT`.
             %
             % Inputs:
             %
@@ -467,7 +467,7 @@ classdef Vapor < Solvers.AbstractField
         function Mintcond = MINTCOND(vapor,liquid,zIdx)
             %MINTCOND Linear interfacial condensation mass transfer [kg/s/m]
             %
-            % Extracts the condensation component from :attr:`Solvers.TwoFluid.Vapor.MINT`.
+            % Extracts the condensation component from :metho:`Solvers.TwoFluid.Vapor.MINT`.
             %
             % Inputs:
             %
@@ -504,7 +504,7 @@ classdef Vapor < Solvers.AbstractField
             %MWALEVAP Linear wall mass evaporation rate [kg/s/m]
             %
             % Computes the wall boiling mass transfer rate for vapor by reversing the sign
-            % of the liquid-phase value (meth:`Solvers.TwoFluid.Liquid.MWALEVAP`).
+            % of the liquid-phase value (:meth:`Solvers.TwoFluid.Liquid.MWALEVAP`).
             %
             % Inputs:
             %
@@ -634,7 +634,7 @@ classdef Vapor < Solvers.AbstractField
         function Hintevap = HINTEVAP(vapor,liquid,zIdx)
             %HINTEVAP Linear interfacial heat evaporation rate [W/m]
             %
-            % Extracts the evaporation component from :attr:`Solvers.TwoFluid.Vapor.HINT`.
+            % Extracts the evaporation component from :meth:`Solvers.TwoFluid.Vapor.HINT`.
             %
             % Inputs:
             %
@@ -650,7 +650,7 @@ classdef Vapor < Solvers.AbstractField
         function Hintcond = HINTCOND(vapor,liquid,zIdx)
             %HINTCOND Linear interfacial heat condensation rate [W/m]
             %
-            % Extracts the condensation component from :attr:`Solvers.TwoFluid.Vapor.HINT`.
+            % Extracts the condensation component from :meth:`Solvers.TwoFluid.Vapor.HINT`.
             %
             % Inputs:
             %

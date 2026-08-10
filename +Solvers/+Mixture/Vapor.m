@@ -271,7 +271,7 @@ classdef Vapor < Solvers.AbstractPhase
         end
 
         function hwall = HWALL(vapor, twall, zIdx)
-            %HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]
+            %HWALLL Single-phase vapor wall heat transfer coefficient [W/m^2/K]
             %
             % Computes the wall heat transfer coefficient using vapor thermal
             % conductivity and Nusselt number.

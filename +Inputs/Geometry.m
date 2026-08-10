@@ -11,7 +11,7 @@ classdef Geometry < Inputs.Input
         LENGTH     (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Axial length [m]
         AREA       (1,1) double  {mustBePositive,mustBeNonempty}           = 1                     % Coolant area [m^2]
         PERIM      (1,:) double  {mustBePositive,mustBeNonempty}           = 1                     % Perimeter(s) of the channel walls [m]
-        ANGLE      (1,1) double  {mustBeNumeric}                           = 0                     % Inclination angle [rad]
+        ANGLE      (1,1) double  {mustBeNumeric}                           = 0                     % Inclination angle from vertical [deg]
 
     end
 
