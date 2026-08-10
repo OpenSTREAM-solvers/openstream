@@ -108,28 +108,16 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Notation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#general-conventions">General conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#primary-variables">Primary variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#recommended-phase-and-field-subscripts">Recommended phase and field subscripts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#recommended-source-term-notation">Recommended source-term notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mixture-quantities">Mixture quantities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#common-balance-equation-structure">Common balance-equation structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phase-and-field-subscripts">Phase and field subscripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#source-term-notation">Source-term notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conservation-equation-structure">Conservation equation structure</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#mass-balance">Mass balance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#momentum-balance">Momentum balance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#energy-balance">Energy balance</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#closure-model-notation">Closure-model notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#relaxation-notation">Relaxation notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#equation-labels-and-cross-references">Equation labels and cross references</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#recommended-equation-label-prefixes">Recommended equation-label prefixes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#cross-reference-conventions">Cross-reference conventions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#section-label-conventions">Section-label conventions</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#style-recommendations">Style recommendations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#suggested-toctree-entry">Suggested toctree entry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closure-model-notation">Closure model notation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">Global reference list</a></li>
@@ -324,397 +312,9 @@
 </tbody>
 </table>
 </section>
-<section id="recommended-phase-and-field-subscripts">
-<h2>Recommended phase and field subscripts<a class="headerlink" href="#recommended-phase-and-field-subscripts" title="Link to this heading"></a></h2>
-<p>The notation should distinguish between thermodynamic phases and computational fields. A phase is a physical state of matter, such as liquid or vapor. A field is a computationally resolved constituent with its own transported variables.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 30.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Subscript</p></th>
-<th class="head"><p>Suggested meaning</p></th>
-<th class="head"><p>Notes</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(l\)</span></p></td>
-<td><p>liquid phase</p></td>
-<td><p>Use for the liquid phase when the liquid is not split into several fields.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
-<td><p>vapor phase</p></td>
-<td><p>Use consistently for vapor or gas. Avoid switching between <span class="math notranslate nohighlight">\(g\)</span> and <span class="math notranslate nohighlight">\(v\)</span> unless required by a specific model.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
-<td><p>liquid film</p></td>
-<td><p>Use for the wall liquid-film field in annular-flow models.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
-<td><p>droplets</p></td>
-<td><p>Use for entrained liquid droplets in the vapor core.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(w\)</span></p></td>
-<td><p>wall</p></td>
-<td><p>Use for wall quantities, such as <span class="math notranslate nohighlight">\(T_w\)</span> or <span class="math notranslate nohighlight">\(q''_w\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(i\)</span></p></td>
-<td><p>interface</p></td>
-<td><p>Use for interfacial quantities, such as <span class="math notranslate nohighlight">\(a_i\)</span> or <span class="math notranslate nohighlight">\(h_i\)</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
-<td><p>mixture</p></td>
-<td><p>Use for mixture-averaged quantities.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(dw\)</span></p></td>
-<td><p>disturbance wave</p></td>
-<td><p>Use for disturbance-wave quantities when a compact subscript is needed.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="recommended-source-term-notation">
-<h2>Recommended source-term notation<a class="headerlink" href="#recommended-source-term-notation" title="Link to this heading"></a></h2>
-<p>Source terms should make clear which conserved quantity is affected and which interaction is represented.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 30.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Symbol</p></th>
-<th class="head"><p>Suggested name</p></th>
-<th class="head"><p>Meaning</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\Gamma_k\)</span></p></td>
-<td><p>mass source</p></td>
-<td><p>Net mass source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(M_k\)</span></p></td>
-<td><p>momentum source</p></td>
-<td><p>Net momentum source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(Q_k\)</span></p></td>
-<td><p>energy source</p></td>
-<td><p>Net energy source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Gamma_{a \rightarrow b}\)</span></p></td>
-<td><p>mass transfer rate</p></td>
-<td><p>Mass transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(M_{a \rightarrow b}\)</span></p></td>
-<td><p>momentum transfer</p></td>
-<td><p>Momentum transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(Q_{a \rightarrow b}\)</span></p></td>
-<td><p>heat or energy transfer</p></td>
-<td><p>Energy transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>When source terms are written as net terms, the sign convention should be stated explicitly. A recommended convention is:</p>
-<div class="math notranslate nohighlight">
-\[\Gamma_k &gt; 0\]</div>
-<p>for net mass added to field <span class="math notranslate nohighlight">\(k\)</span>, and</p>
-<div class="math notranslate nohighlight">
-\[\Gamma_k &lt; 0\]</div>
-<p>for net mass removed from field <span class="math notranslate nohighlight">\(k\)</span>.</p>
-<p>If pairwise transfer notation is used, the direction should be included in the subscript, for example:</p>
-<div class="math notranslate nohighlight">
-\[\Gamma_{l \rightarrow g}\]</div>
-<p>for evaporation from liquid to vapor, and</p>
-<div class="math notranslate nohighlight">
-\[\Gamma_{g \rightarrow l}\]</div>
-<p>for condensation from vapor to liquid.</p>
-</section>
-<section id="mixture-quantities">
-<h2>Mixture quantities<a class="headerlink" href="#mixture-quantities" title="Link to this heading"></a></h2>
-<p>Mixture quantities are typically denoted with the subscript <span class="math notranslate nohighlight">\(m\)</span>. For example:</p>
-<div class="math notranslate nohighlight">
-\[\rho_m = \sum_k \alpha_k \rho_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(\rho_m\)</span> is the mixture density, <span class="math notranslate nohighlight">\(\alpha_k\)</span> is the volume fraction of field or phase <span class="math notranslate nohighlight">\(k\)</span>, and <span class="math notranslate nohighlight">\(\rho_k\)</span> is the corresponding density.</p>
-<p>A mass-weighted mixture velocity may be written as:</p>
-<div class="math notranslate nohighlight">
-\[u_m = \frac{\sum_k \alpha_k \rho_k u_k}{\rho_m}\]</div>
-<p>where <span class="math notranslate nohighlight">\(u_m\)</span> is the mixture velocity and <span class="math notranslate nohighlight">\(u_k\)</span> is the velocity of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p>
-<p>If a different averaging convention is used in a specific solver, define it locally in the corresponding theory page.</p>
-</section>
-<section id="common-balance-equation-structure">
-<h2>Common balance-equation structure<a class="headerlink" href="#common-balance-equation-structure" title="Link to this heading"></a></h2>
-<p>A generic one-dimensional conservation equation may be written as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-generic-conservation">
-<span class="eqno">(1)<a class="headerlink" href="#equation-eq-generic-conservation" title="Link to this equation"></a></span>\[\frac{\partial \mathbf{U}}{\partial t}
-+ \frac{\partial \mathbf{F}}{\partial z}
-= \mathbf{S}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{U}\)</span> is the vector of conserved variables, <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> is the flux vector, and <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> is the source-term vector.</p>
-<p>When referring to this equation from another page, use:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>Equation <span class="na">:eq:</span><span class="nv">`eq-generic-conservation`</span>
-</pre></div>
-</div>
-<p>rather than manually typing the equation number.</p>
-<section id="mass-balance">
-<h3>Mass balance<a class="headerlink" href="#mass-balance" title="Link to this heading"></a></h3>
-<p>A generic field mass balance can be written as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-generic-field-mass">
-<span class="eqno">(2)<a class="headerlink" href="#equation-eq-generic-field-mass" title="Link to this equation"></a></span>\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k\right)
-+ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k\right)
-= \Gamma_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Gamma_k\)</span> is the net mass source to field <span class="math notranslate nohighlight">\(k\)</span>.</p>
-</section>
-<section id="momentum-balance">
-<h3>Momentum balance<a class="headerlink" href="#momentum-balance" title="Link to this heading"></a></h3>
-<p>A generic field momentum balance can be written as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-generic-field-momentum">
-<span class="eqno">(3)<a class="headerlink" href="#equation-eq-generic-field-momentum" title="Link to this equation"></a></span>\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k u_k\right)
-+ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k^2\right)
-= -\alpha_k \frac{\partial p}{\partial z} + M_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(M_k\)</span> represents the net momentum source to field <span class="math notranslate nohighlight">\(k\)</span>, including the effects that are retained in the selected model.</p>
-</section>
-<section id="energy-balance">
-<h3>Energy balance<a class="headerlink" href="#energy-balance" title="Link to this heading"></a></h3>
-<p>A generic field energy balance can be written as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-generic-field-energy">
-<span class="eqno">(4)<a class="headerlink" href="#equation-eq-generic-field-energy" title="Link to this equation"></a></span>\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k h_k\right)
-+ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k h_k\right)
-= Q_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(Q_k\)</span> is the net energy source to field <span class="math notranslate nohighlight">\(k\)</span>.</p>
-<p>These generic equations are intended as notation examples. Solver-specific theory pages should provide the actual equations used by each formulation.</p>
-</section>
-</section>
-<section id="closure-model-notation">
-<h2>Closure-model notation<a class="headerlink" href="#closure-model-notation" title="Link to this heading"></a></h2>
-<p>Closure models should use notation that clearly identifies the modeled process. Recommended examples include:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 35.0%" />
-<col style="width: 40.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Symbol</p></th>
-<th class="head"><p>Suggested meaning</p></th>
-<th class="head"><p>Typical use</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C_D\)</span></p></td>
-<td><p>drag coefficient</p></td>
-<td><p>Interfacial or droplet drag model.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(f_w\)</span></p></td>
-<td><p>wall friction factor</p></td>
-<td><p>Wall momentum loss.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(h_{tc}\)</span></p></td>
-<td><p>heat-transfer coefficient</p></td>
-<td><p>Wall or interfacial heat transfer.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(a_i\)</span></p></td>
-<td><p>interfacial area concentration</p></td>
-<td><p>Interfacial transfer models.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\tau_w\)</span></p></td>
-<td><p>wall shear stress</p></td>
-<td><p>Wall friction and pressure drop.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\tau_i\)</span></p></td>
-<td><p>interfacial shear stress</p></td>
-<td><p>Momentum exchange between fields.</p></td>
-</tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\tau_r\)</span></p></td>
-<td><p>relaxation time</p></td>
-<td><p>Relaxation models.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Avoid using the same symbol for unrelated closures in different theory pages. If reuse is unavoidable, define the symbol locally and explicitly.</p>
-</section>
-<section id="relaxation-notation">
-<h2>Relaxation notation<a class="headerlink" href="#relaxation-notation" title="Link to this heading"></a></h2>
-<p>Relaxation models are often written as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-generic-relaxation">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eq-generic-relaxation" title="Link to this equation"></a></span>\[\frac{d \phi}{d t} = \frac{\phi^{eq} - \phi}{\tau_r}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\phi\)</span> is the relaxing variable, <span class="math notranslate nohighlight">\(\phi^{eq}\)</span> is its equilibrium or target value, and <span class="math notranslate nohighlight">\(\tau_r\)</span> is the relaxation time.</p>
-<p>For discretized forms, use notation that distinguishes the old, new, and equilibrium states. For example:</p>
-<div class="math notranslate nohighlight">
-\[\phi^{n+1} = \phi^n + \Delta t \frac{\phi^{eq} - \phi^n}{\tau_r}\]</div>
-<p>where <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(n+1\)</span> denote time levels and <span class="math notranslate nohighlight">\(\Delta t\)</span> is the time-step size.</p>
-<p>If both explicit Euler and exponential relaxation updates are documented, use consistent names such as:</p>
-<ul class="simple">
-<li><p>explicit Euler relaxation update</p></li>
-<li><p>exponential relaxation update</p></li>
-</ul>
-</section>
-<section id="equation-labels-and-cross-references">
-<h2>Equation labels and cross references<a class="headerlink" href="#equation-labels-and-cross-references" title="Link to this heading"></a></h2>
-<p>All displayed equations that are referenced in the text should be labeled using the Sphinx <code class="docutils literal notranslate"><span class="pre">:label:</span></code> option:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">math</span><span class="p">::</span>
-   <span class="nc">:label:</span> eq-mixture-mass
-
-   \frac{\partial \rho_m}{\partial t}
-   <span class="m">+</span> \frac{\partial}{\partial z}\left(\rho_m u_m\right)
-   = 0
-</pre></div>
-</div>
-<p>Then refer to the equation using:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>Equation <span class="na">:eq:</span><span class="nv">`eq-mixture-mass`</span>
-</pre></div>
-</div>
-<p>Do not manually type equation numbers such as <code class="docutils literal notranslate"><span class="pre">Equation</span> <span class="pre">(12)</span></code> in the text, because the numbering may change when equations are added, removed, or reordered.</p>
-<section id="recommended-equation-label-prefixes">
-<h3>Recommended equation-label prefixes<a class="headerlink" href="#recommended-equation-label-prefixes" title="Link to this heading"></a></h3>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 35.0%" />
-<col style="width: 65.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Prefix</p></th>
-<th class="head"><p>Use for</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eq-mixture-</span></code></p></td>
-<td><p>Mixture-model equations.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">eq-twofluid-</span></code></p></td>
-<td><p>Two-fluid-model equations.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eq-threefield-</span></code></p></td>
-<td><p>Three-field-model equations.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">eq-fourfield-</span></code></p></td>
-<td><p>Four-field-model equations.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eq-closure-</span></code></p></td>
-<td><p>Closure-model equations.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">eq-relaxation-</span></code></p></td>
-<td><p>Relaxation-model equations.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eq-numerics-</span></code></p></td>
-<td><p>Numerical-method equations.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Examples:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="nc">:label:</span> eq-mixture-mass
-<span class="nc">:label:</span> eq-twofluid-vapor-momentum
-<span class="nc">:label:</span> eq-threefield-film-mass
-<span class="nc">:label:</span> eq-fourfield-wave-number-density
-<span class="nc">:label:</span> eq-relaxation-exponential-update
-</pre></div>
-</div>
-</section>
-</section>
-<section id="cross-reference-conventions">
-<h2>Cross-reference conventions<a class="headerlink" href="#cross-reference-conventions" title="Link to this heading"></a></h2>
-<p>Use Sphinx roles consistently:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 30.0%" />
-<col style="width: 70.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Role</p></th>
-<th class="head"><p>Recommended use</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">:doc:</span></code></p></td>
-<td><p>Link to another documentation page.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">:ref:</span></code></p></td>
-<td><p>Link to a labeled section, figure, table, or paragraph.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">:eq:</span></code></p></td>
-<td><p>Link to a labeled equation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">:term:</span></code></p></td>
-<td><p>Link to a glossary entry.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">:class:</span></code></p></td>
-<td><p>Link to an API-documented class, when available.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">:meth:</span></code></p></td>
-<td><p>Link to an API-documented method, when available.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">:attr:</span></code></p></td>
-<td><p>Link to an API-documented property or attribute, when available.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Examples:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>See <span class="na">:doc:</span><span class="nv">`theory/index`</span> for the theory overview.
-
-The distinction between <span class="na">:term:</span><span class="nv">`phase`</span> and <span class="na">:term:</span><span class="nv">`field`</span> is important in multi-field models.
-
-The generic conservation form is given by Equation <span class="na">:eq:</span><span class="nv">`eq-generic-conservation`</span>.
-
-The implementation is documented in <span class="na">:class:</span><span class="nv">`Solvers.AbstractSolver`</span>.
-</pre></div>
-</div>
-<section id="section-label-conventions">
-<h3>Section-label conventions<a class="headerlink" href="#section-label-conventions" title="Link to this heading"></a></h3>
-<p>Use explicit section labels for pages and major subsections that are referenced elsewhere:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">_notation-source-terms:</span>
-
-<span class="gh">Recommended source-term notation</span>
-<span class="gh">--------------------------------</span>
-</pre></div>
-</div>
-<p>Then refer to the section using:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>See <span class="na">:ref:</span><span class="nv">`notation-source-terms`</span>.
-</pre></div>
-</div>
-<p>Recommended label prefixes include:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 35.0%" />
-<col style="width: 65.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Prefix</p></th>
-<th class="head"><p>Use for</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">notation-</span></code></p></td>
-<td><p>Sections in this notation page.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">theory-</span></code></p></td>
-<td><p>General theory sections.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mixture-</span></code></p></td>
-<td><p>Mixture-model sections.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">twofluid-</span></code></p></td>
-<td><p>Two-fluid-model sections.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">threefield-</span></code></p></td>
-<td><p>Three-field-model sections.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fourfield-</span></code></p></td>
-<td><p>Four-field-model sections.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">closure-</span></code></p></td>
-<td><p>Closure-model sections.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numerics-</span></code></p></td>
-<td><p>Numerical-method sections.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
 <section id="units">
 <h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
-<p>Use SI units consistently unless a specific model, correlation, or input file requires otherwise. Define units in text or tables when variables are introduced.</p>
+<p>SI units are used consistently unless a specific model, correlation, or input file requires otherwise.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 20.0%" />
@@ -723,7 +323,7 @@ The implementation is documented in <span class="na">:class:</span><span class="
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Quantity</p></th>
-<th class="head"><p>Typical unit</p></th>
+<th class="head"><p>Unit</p></th>
 <th class="head"><p>Notes</p></th>
 </tr>
 </thead>
@@ -771,32 +371,183 @@ The implementation is documented in <span class="na">:class:</span><span class="
 </tbody>
 </table>
 </section>
-<section id="style-recommendations">
-<h2>Style recommendations<a class="headerlink" href="#style-recommendations" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>Use roman text in equations for descriptive labels only when needed, for example <span class="math notranslate nohighlight">\(\phi^{eq}\)</span> for equilibrium value.</p></li>
-<li><p>Use italic mathematical symbols for variables.</p></li>
-<li><p>Avoid changing notation between theory pages unless a model-specific reason exists.</p></li>
-<li><p>Avoid using the same symbol for both a field index and a physical variable.</p></li>
-<li><p>Prefer descriptive equation labels over numbered labels.</p></li>
-<li><p>Define every symbol near its first use, even if it also appears in this notation page.</p></li>
-<li><p>Use <a class="reference internal" href="glossary.html#term-Closure-model"><span class="xref std std-term">closure model</span></a> consistently when referring to implemented model components.</p></li>
-<li><p>Use <a class="reference internal" href="glossary.html#term-Thermal-non-equilibrium"><span class="xref std std-term">thermal non-equilibrium</span></a> and <a class="reference internal" href="glossary.html#term-Hydrodynamic-non-equilibrium"><span class="xref std std-term">hydrodynamic non-equilibrium</span></a> consistently.</p></li>
-<li><p>Use <a class="reference internal" href="glossary.html#term-Field"><span class="xref std std-term">field</span></a> and <a class="reference internal" href="glossary.html#term-Phase"><span class="xref std std-term">phase</span></a> according to their distinct meanings.</p></li>
-</ul>
+<section id="phase-and-field-subscripts">
+<h2>Phase and field subscripts<a class="headerlink" href="#phase-and-field-subscripts" title="Link to this heading"></a></h2>
+<p>The notation distinguishes between thermodynamic phases and computational fields. A phase is a physical state of matter, such as liquid or vapor. A field is a computationally resolved constituent with its own transported variables.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Subscript</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(l\)</span></p></td>
+<td><p>liquid phase</p></td>
+<td><p>Used for iquid phase.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>vapor phase</p></td>
+<td><p>Used consistently for vapor or gas.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
+<td><p>liquid film</p></td>
+<td><p>Used for the wall liquid-film field in annular flow models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>droplets</p></td>
+<td><p>Used for entrained liquid droplets in the vapor core.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(wall\)</span></p></td>
+<td><p>wall</p></td>
+<td><p>Used for wall quantities, such as <span class="math notranslate nohighlight">\(T_{wall}\)</span> or <span class="math notranslate nohighlight">\(q''_{wall}\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(i\)</span></p></td>
+<td><p>interface</p></td>
+<td><p>Used for interfacial quantities, such as <span class="math notranslate nohighlight">\(a_i\)</span> or <span class="math notranslate nohighlight">\(htc_i\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(w\)</span></p></td>
+<td><p>disturbance wave</p></td>
+<td><p>Use for disturbance wave quantities when a compact subscript is needed.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="suggested-toctree-entry">
-<h2>Suggested toctree entry<a class="headerlink" href="#suggested-toctree-entry" title="Link to this heading"></a></h2>
-<p>If this file is placed under <code class="docutils literal notranslate"><span class="pre">Guides</span></code>, add it to the relevant <code class="docutils literal notranslate"><span class="pre">toctree</span></code> as follows:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
-   <span class="nc">:maxdepth:</span> 2
-
-   theory/index
-   tutorials
-   glossary
-   notation
-</pre></div>
-</div>
+<section id="source-term-notation">
+<h2>Source-term notation<a class="headerlink" href="#source-term-notation" title="Link to this heading"></a></h2>
+<p>Source terms make it clear which conserved quantity is affected and which interaction is represented.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\Gamma_k\)</span></p></td>
+<td><p>mass source</p></td>
+<td><p>Net mass source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(M_k\)</span></p></td>
+<td><p>momentum source</p></td>
+<td><p>Net momentum source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(Q_k\)</span></p></td>
+<td><p>energy source</p></td>
+<td><p>Net energy source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Gamma_{a \rightarrow b}\)</span></p></td>
+<td><p>mass transfer rate</p></td>
+<td><p>Mass transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(M_{a \rightarrow b}\)</span></p></td>
+<td><p>momentum transfer</p></td>
+<td><p>Momentum transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(Q_{a \rightarrow b}\)</span></p></td>
+<td><p>heat or energy transfer</p></td>
+<td><p>Energy transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="conservation-equation-structure">
+<h2>Conservation equation structure<a class="headerlink" href="#conservation-equation-structure" title="Link to this heading"></a></h2>
+<p>A generic one-dimensional conservation equation may be written as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-generic-conservation">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-generic-conservation" title="Link to this equation"></a></span>\[\frac{\partial \mathbf{U}}{\partial t}
++ \frac{\partial \mathbf{F}}{\partial z}
+= \mathbf{S}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{U}\)</span> is the vector of conserved variables, <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> is the flux vector, and <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> is the source-term vector.</p>
+<section id="mass-balance">
+<h3>Mass balance<a class="headerlink" href="#mass-balance" title="Link to this heading"></a></h3>
+<p>A generic field mass balance is written as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-generic-field-mass">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-generic-field-mass" title="Link to this equation"></a></span>\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k\right)
++ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k\right)
+= \Gamma_k\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Gamma_k\)</span> is the net mass source to field <span class="math notranslate nohighlight">\(k\)</span>.</p>
+</section>
+<section id="momentum-balance">
+<h3>Momentum balance<a class="headerlink" href="#momentum-balance" title="Link to this heading"></a></h3>
+<p>A generic field momentum balance is written as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-generic-field-momentum">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-generic-field-momentum" title="Link to this equation"></a></span>\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k u_k\right)
++ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k^2\right)
+= -\alpha_k \frac{\partial p}{\partial z} + M_k\]</div>
+<p>where <span class="math notranslate nohighlight">\(M_k\)</span> represents the net momentum source to field <span class="math notranslate nohighlight">\(k\)</span>, including the effects that are retained in the selected model.</p>
+</section>
+<section id="energy-balance">
+<h3>Energy balance<a class="headerlink" href="#energy-balance" title="Link to this heading"></a></h3>
+<p>A generic field energy balance is written as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-generic-field-energy">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-generic-field-energy" title="Link to this equation"></a></span>\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k h_k\right)
++ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k h_k\right)
+= Q_k\]</div>
+<p>where <span class="math notranslate nohighlight">\(Q_k\)</span> is the net energy source to field <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>These generic equations are intended as notation examples. Solver-specific theory pages should provide the actual equations used by each formulation.</p>
+</section>
+</section>
+<section id="closure-model-notation">
+<h2>Closure model notation<a class="headerlink" href="#closure-model-notation" title="Link to this heading"></a></h2>
+<p>Closure models use notation that clearly identifies the modeled process. Examples include:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 35.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Suggested meaning</p></th>
+<th class="head"><p>Typical use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C_D\)</span></p></td>
+<td><p>drag coefficient</p></td>
+<td><p>Interfacial or droplet drag model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(f_{wall}\)</span></p></td>
+<td><p>wall friction factor</p></td>
+<td><p>Wall momentum loss.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(htc_{wall}\)</span></p></td>
+<td><p>Wall heat-transfer coefficient</p></td>
+<td><p>Wall heat transfer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(htc_i\)</span></p></td>
+<td><p>Interfacial heat-transfer coefficient</p></td>
+<td><p>Interfacial heat transfer.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(a_i\)</span></p></td>
+<td><p>interfacial area concentration</p></td>
+<td><p>Interfacial transfer models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\tau_{wall}\)</span></p></td>
+<td><p>wall shear stress</p></td>
+<td><p>Wall friction and pressure drop.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\tau_i\)</span></p></td>
+<td><p>interfacial shear stress</p></td>
+<td><p>Momentum exchange between fields.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\t_{relax}\)</span></p></td>
+<td><p>relaxation time</p></td>
+<td><p>Relaxation models.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
