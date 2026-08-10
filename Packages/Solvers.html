@@ -463,7 +463,7 @@ Specific entrainment models (e.g., Okawa, Govan) and friction models are impleme
 <span class="sig-name descname"><span class="pre">CV_WALLISTHICK_CALC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">thick</span></em>, <em class="sig-param"><span class="pre">C</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.CV_WALLISTHICK_CALC" title="Link to this definition"></a></dt>
 <dd><p>CV_WALLISTHICK_CALC Private method to calculate the interfacial
 shear factor [-]</p>
-<p>Based on the <a class="reference internal" href="InputEnums.html#InputEnums.VAPORFRIC" title="InputEnums.VAPORFRIC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">InputEnums.VAPORFRIC</span></code></a> = <cite>WALLISTHICK</cite> model.</p>
+<p>Based on the <a class="reference internal" href="Inputs.html#Inputs.Model.VAPORFRIC" title="Inputs.Model.VAPORFRIC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.VAPORFRIC</span></code></a> = <cite>WALLISTHICK</cite> model.</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -547,7 +547,7 @@ friction factor [-]</p>
 <dt class="sig sig-object mat" id="Solvers.AbstractFilm.OKAWACOEFS">
 <span class="sig-name descname"><span class="pre">OKAWACOEFS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">absfilm</span></em>, <em class="sig-param"><span class="pre">entnum</span></em>, <em class="sig-param"><span class="pre">coefs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.AbstractFilm.OKAWACOEFS" title="Link to this definition"></a></dt>
 <dd><p>OKAWACOEFS Private method to determine the coefficients used in
-<a class="reference internal" href="InputEnums.html#InputEnums.ENTRAINMENT" title="InputEnums.ENTRAINMENT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">InputEnums.ENTRAINMENT</span></code></a> = <cite>OKAWA</cite> entrainment models</p>
+<a class="reference internal" href="Inputs.html#Inputs.Model.ENTRAINMENT" title="Inputs.Model.ENTRAINMENT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.ENTRAINMENT</span></code></a> = <cite>OKAWA</cite> entrainment models</p>
 <p>Based on the calculated entrainment number</p>
 </dd></dl>
 
@@ -611,8 +611,8 @@ film for the liquid phase. The near-wall region is defined in
 the mixture solver.</p>
 <p>Inputs:</p>
 <ul class="simple">
-<li><p>drop  — <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a> object</p></li>
-<li><p>zIdx  — Axial indices to evaluate (optional)</p></li>
+<li><p>absfilm  — <a class="reference internal" href="#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a> object</p></li>
+<li><p>zIdx    — Axial indices to evaluate (optional)</p></li>
 </ul>
 </dd></dl>
 

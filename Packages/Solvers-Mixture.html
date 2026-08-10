@@ -208,7 +208,7 @@
              
   <section id="mixture-solver">
 <h1>Mixture solver<a class="headerlink" href="#mixture-solver" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating two-phase flows using a mixture approach. In this method, all phases are treated as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Homogeneous Relaxation Model (HRM), which introduces thermal non-equilibrium between phases by solving separate mass and energy conservation equations for the vapor phase.</p>
+<p>The <a class="reference internal" href="#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating two-phase flows using a mixture approach. In this method, all phases are treated as a single continuum with averaged properties, making it suitable for cases where phase separation is minimal or not explicitly resolved. Additionally, the solver supports a Mixture Relaxation Model (MRM), which introduces thermal non-equilibrium between phases by solving separate mass and energy conservation equations for the vapor phase.</p>
 <p>This module includes:</p>
 <ul class="simple">
 <li><p>Solver class for mixture-based flow simulations: <a class="reference internal" href="#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a></p></li>
@@ -640,7 +640,7 @@ model.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.Mixture.Vapor.HWALL">
 <span class="sig-name descname"><span class="pre">HWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">twall</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.Mixture.Vapor.HWALL" title="Link to this definition"></a></dt>
-<dd><p>HWALLLIQ Single-phase vapor wall heat transfer coefficient [W/m^2/K]</p>
+<dd><p>HWALLL Single-phase vapor wall heat transfer coefficient [W/m^2/K]</p>
 <p>Computes the wall heat transfer coefficient using vapor thermal
 conductivity and Nusselt number.</p>
 </dd></dl>

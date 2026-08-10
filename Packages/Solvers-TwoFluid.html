@@ -741,7 +741,7 @@ buoyancy, wall shear, drag, and interfacial momentum exchanges.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Uses <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HWALHEAT" title="Solvers.TwoFluid.Vapor.HWALHEAT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HWALHEAT</span></code></a> divided by wall perimeter</p></li>
+<li><p>Uses <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HWALHEAT" title="Solvers.TwoFluid.Vapor.HWALHEAT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HWALHEAT()</span></code></a> divided by wall perimeter</p></li>
 </ul>
 </dd></dl>
 
@@ -784,7 +784,7 @@ model).</p>
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HINTCOND">
 <span class="sig-name descname"><span class="pre">HINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HINTCOND" title="Link to this definition"></a></dt>
 <dd><p>HINTCOND Linear interfacial heat condensation rate [W/m]</p>
-<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HINT" title="Solvers.TwoFluid.Vapor.HINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HINT</span></code></a>.</p>
+<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HINT" title="Solvers.TwoFluid.Vapor.HINT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HINT()</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
@@ -797,7 +797,7 @@ model).</p>
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.HINTEVAP">
 <span class="sig-name descname"><span class="pre">HINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.HINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>HINTEVAP Linear interfacial heat evaporation rate [W/m]</p>
-<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HINT" title="Solvers.TwoFluid.Vapor.HINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HINT</span></code></a>.</p>
+<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.HINT" title="Solvers.TwoFluid.Vapor.HINT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.HINT()</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
@@ -936,7 +936,7 @@ evaporation.</p>
 <span class="sig-name descname"><span class="pre">MINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MINT" title="Link to this definition"></a></dt>
 <dd><p>MINT Linear interfacial mass transfer rates [kg/s/m]</p>
 <p>Computes condensation and evaporation mass transfer rates for the vapor
-phase by reversing the sign of liquid-phase values (attr:<cite>Solvers.TwoFluid.Liquid.MINT</cite>).</p>
+phase by reversing the sign of liquid-phase values (<a class="reference internal" href="#Solvers.TwoFluid.Liquid.MINT" title="Solvers.TwoFluid.Liquid.MINT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.MINT()</span></code></a>).</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
@@ -954,7 +954,7 @@ phase by reversing the sign of liquid-phase values (attr:<cite>Solvers.TwoFluid.
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MINTCOND">
 <span class="sig-name descname"><span class="pre">MINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MINTCOND" title="Link to this definition"></a></dt>
 <dd><p>MINTCOND Linear interfacial condensation mass transfer [kg/s/m]</p>
-<p>Extracts the condensation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.MINT" title="Solvers.TwoFluid.Vapor.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.MINT</span></code></a>.</p>
+<p>Extracts the condensation component from <a href="#id1"><span class="problematic" id="id2">:metho:`Solvers.TwoFluid.Vapor.MINT`</span></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
@@ -967,7 +967,7 @@ phase by reversing the sign of liquid-phase values (attr:<cite>Solvers.TwoFluid.
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor.MINTEVAP">
 <span class="sig-name descname"><span class="pre">MINTEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MINTEVAP" title="Link to this definition"></a></dt>
 <dd><p>MINTEVAP Linear interfacial evaporation mass transfer [kg/s/m]</p>
-<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.MINT" title="Solvers.TwoFluid.Vapor.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.MINT</span></code></a>.</p>
+<p>Extracts the evaporation component from <a class="reference internal" href="#Solvers.TwoFluid.Vapor.MINT" title="Solvers.TwoFluid.Vapor.MINT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor.MINT()</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
@@ -995,7 +995,7 @@ the liquid-phase total (<a class="reference internal" href="#Solvers.TwoFluid.Li
 <span class="sig-name descname"><span class="pre">MWALEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor.MWALEVAP" title="Link to this definition"></a></dt>
 <dd><p>MWALEVAP Linear wall mass evaporation rate [kg/s/m]</p>
 <p>Computes the wall boiling mass transfer rate for vapor by reversing the sign
-of the liquid-phase value (meth:<cite>Solvers.TwoFluid.Liquid.MWALEVAP</cite>).</p>
+of the liquid-phase value (<a class="reference internal" href="#Solvers.TwoFluid.Liquid.MWALEVAP" title="Solvers.TwoFluid.Liquid.MWALEVAP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.MWALEVAP()</span></code></a>).</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>vapor  — <a class="reference internal" href="#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a> object</p></li>
@@ -1962,7 +1962,7 @@ heat flux-based or relaxation-based models.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Liquid.MINTCOND">
 <span class="sig-name descname"><span class="pre">MINTCOND</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">liquid</span></em>, <em class="sig-param"><span class="pre">vapor</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Liquid.MINTCOND" title="Link to this definition"></a></dt>
-<dd><p>MINTEVAP Linear interfacial condensation mass transfer [kg/s/m]</p>
+<dd><p>MINTCOND Linear interfacial condensation mass transfer [kg/s/m]</p>
 <p>Extracts the condensation component from <a class="reference internal" href="#Solvers.TwoFluid.Liquid.MINT" title="Solvers.TwoFluid.Liquid.MINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid.MINT</span></code></a>.</p>
 <p>Inputs:</p>
 <ul class="simple">

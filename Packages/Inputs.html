@@ -283,7 +283,7 @@ Validates consistency with geometry and applies default values if needed.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.BoundaryConditions.WMESH">
 <span class="sig-name descname"><span class="pre">WMESH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Inputs.BoundaryConditions.WMESH" title="Link to this definition"></a></dt>
-<dd><p>Relative power node size distribution [m]</p>
+<dd><p>Node size distribution [m]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -822,49 +822,49 @@ Applies default values and validates entries.</p>
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXCONDCOEF">
 <span class="sig-name descname"><span class="pre">RELAXCONDCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.1E-31/30.050.0]</span></em><a class="headerlink" href="#Inputs.Model.RELAXCONDCOEF" title="Link to this definition"></a></dt>
-<dd><p>Interfacial condensation time relaxation coefficients for homogeneous models</p>
+<dd><p>Interfacial condensation time relaxation coefficients for THERMALRELAX HOMOGENEOUS model</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXCONDFO">
 <span class="sig-name descname"><span class="pre">RELAXCONDFO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.01.01.01.01.0].*1E-4</span></em><a class="headerlink" href="#Inputs.Model.RELAXCONDFO" title="Link to this definition"></a></dt>
-<dd><p>Interfacial condensation Fourier number array [s]</p>
+<dd><p>Interfacial condensation Fourier number array  for THERMALRELAX FOURIERX model [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXCONDFOCOEF">
 <span class="sig-name descname"><span class="pre">RELAXCONDFOCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[5E-55E500]</span></em><a class="headerlink" href="#Inputs.Model.RELAXCONDFOCOEF" title="Link to this definition"></a></dt>
-<dd><p>Interfacial condensation time relaxation coefficients for empirical Fourier number model</p>
+<dd><p>Interfacial condensation time relaxation coefficients for THERMALRELAX FOURIER model</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXCONDT">
 <span class="sig-name descname"><span class="pre">RELAXCONDT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.00.50.30.10.1]</span></em><a class="headerlink" href="#Inputs.Model.RELAXCONDT" title="Link to this definition"></a></dt>
-<dd><p>Interfacial condensation relaxation time array [s]</p>
+<dd><p>Interfacial condensation relaxation time array  for THERMALRELAX TIMEX model [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXEVAPCOEF">
 <span class="sig-name descname"><span class="pre">RELAXEVAPCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.1E-31/31E-50.0]</span></em><a class="headerlink" href="#Inputs.Model.RELAXEVAPCOEF" title="Link to this definition"></a></dt>
-<dd><p>Interfacial evaporation  time relaxation coefficients for homogeneous models</p>
+<dd><p>Interfacial evaporation  time relaxation coefficients for THERMALRELAX HOMOGENEOUS model</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXEVAPFO">
 <span class="sig-name descname"><span class="pre">RELAXEVAPFO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1.01.01.01.01.0].*5E-5</span></em><a class="headerlink" href="#Inputs.Model.RELAXEVAPFO" title="Link to this definition"></a></dt>
-<dd><p>Interfacial evaporation  Fourier number array [s]</p>
+<dd><p>Interfacial evaporation  Fourier number array  for THERMALRELAX FOURIERX model [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXEVAPFOCOEF">
 <span class="sig-name descname"><span class="pre">RELAXEVAPFOCOEF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1E-45E52210E-31]</span></em><a class="headerlink" href="#Inputs.Model.RELAXEVAPFOCOEF" title="Link to this definition"></a></dt>
-<dd><p>Interfacial evaporation  time relaxation coefficients for empirical Fourier number model</p>
+<dd><p>Interfacial evaporation  time relaxation coefficients for THERMALRELAX FOURIER model</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Model.RELAXEVAPT">
 <span class="sig-name descname"><span class="pre">RELAXEVAPT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0.30.30.30.30.3]</span></em><a class="headerlink" href="#Inputs.Model.RELAXEVAPT" title="Link to this definition"></a></dt>
-<dd><p>Interfacial evaporation  relaxation time array [s]</p>
+<dd><p>Interfacial evaporation  relaxation time array  for THERMALRELAX TIMEX model [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -1361,7 +1361,7 @@ Applies default values if no input is provided.</p>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Inputs.Geometry.ANGLE">
 <span class="sig-name descname"><span class="pre">ANGLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Inputs.Geometry.ANGLE" title="Link to this definition"></a></dt>
-<dd><p>Inclination angle [rad]</p>
+<dd><p>Inclination angle from vertical [deg]</p>
 </dd></dl>
 
 <dl class="mat attribute">

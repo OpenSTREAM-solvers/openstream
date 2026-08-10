@@ -442,7 +442,7 @@ iterations, convergence checks, and logging.</p>
 including flow variables and phase interactions.
 It supports multiple solver models and provides methods for computing derived
 quantities.</p>
-<p>All methods are inherited from <a class="reference internal" href="Solvers-ThreeField.html#module-Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a></p>
+<p>All methods are inherited from <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a></p>
 </dd></dl>
 
 <dl class="mat class">
@@ -970,7 +970,7 @@ thickness and turbulent mixing contribution.</p>
 <dd><p>TBASE Base film exposure time [s]</p>
 <p>Calculates the time during which the base film is exposed to vapor
 between successive waves, based on wave spacing and relative velocity
-(eq 24 of <span class="bibtex-citation" id="id1">Le Corre [<a class="reference internal" href="../Guides/references.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>).</p>
+(eq 24 of <span class="bibtex-citation" id="id1">Le Corre [<a class="reference internal" href="../Guides/references.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022a. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022a</a>]</span>).</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>base  — <a class="reference internal" href="#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a> object</p></li>
@@ -999,7 +999,7 @@ not occur.</p>
 <dd><p>THICKMIN Minimum base film thickness [m]</p>
 <p>Calculates the minimum thickness of the base film at the end of its
 exposure period, based on mass flow rate, liquid density, velocity,
-and channel perimeter (eq. 28 of <span class="bibtex-citation" id="id2">Le Corre [<a class="reference internal" href="../Guides/references.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022</a>]</span>).</p>
+and channel perimeter (eq. 28 of <span class="bibtex-citation" id="id2">Le Corre [<a class="reference internal" href="../Guides/references.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022a. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:https://doi.org/10.1016/j.ijmultiphaseflow.2022.104057.">2022a</a>]</span>).</p>
 <p>Inputs:</p>
 <ul class="simple">
 <li><p>base  — <a class="reference internal" href="#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a> object</p></li>
@@ -1279,7 +1279,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.ETA">
 <span class="sig-name descname"><span class="pre">ETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.ETA" title="Link to this definition"></a></dt>
-<dd><p>ETA Wave film deposition fraction</p>
+<dd><p>ETA Wave film deposition fraction [-]</p>
 <p>Computes the fraction of deposition attributed to waves.</p>
 <p>Inputs:</p>
 <ul class="simple">

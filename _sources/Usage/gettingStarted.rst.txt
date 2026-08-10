@@ -92,7 +92,7 @@ executable. The following instructions are from the
       Verify the installed version using: ``python3 --version``. If a
       compatible version is not available, install one using Homebrew:
       ``brew install python`` or download the appropriate version directly
-      from python.org <https://www.python.org/downloads/>`__.
+      from `python.org <https://www.python.org/downloads/>`__.
 
 4. Specify Python installation location in MATLAB:
 
