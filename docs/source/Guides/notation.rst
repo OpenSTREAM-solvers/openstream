@@ -1,12 +1,12 @@
 Notation
 ========
 
-This page summarizes the notation conventions used in the OpenSTREAM documentation. The goal is to keep the theory pages, solver descriptions, closure model documentation, and implementation notes consistent across the mixture, two-fluid, three-field, and four-field formulations.
+This page summarizes the notation conventions used in the OpenSTREAM documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.
 
 General conventions
 -------------------
 
-OpenSTREAM uses one-dimensional, cross-section-averaged conservation equations. Unless otherwise stated, the independent variables are time and the axial coordinate:
+OpenSTREAM uses one-dimensional, cross-section averaged conservation equations. Unless otherwise stated, the independent variables are time and the axial coordinate:
 
 .. math::
 
@@ -82,49 +82,6 @@ Primary variables
      - gravitational acceleration
      - Gravitational acceleration.
 
-Units
------
-
-SI units are used consistently unless a specific model, correlation, or input file requires otherwise.
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 30 50
-
-   * - Quantity
-     - Unit
-     - Notes
-   * - Length
-     - m
-     - Use for :math:`z`, hydraulic diameter, and channel dimensions.
-   * - Time
-     - s
-     - Use for :math:`t`, time steps, and relaxation times.
-   * - Pressure
-     - Pa
-     - Use for absolute pressure unless otherwise stated.
-   * - Temperature
-     - K
-     - Use kelvin in equations. Celsius may be used in user-facing examples if clearly stated.
-   * - Density
-     - kg/m\ :sup:`3`
-     - Use for phase, field, and mixture density.
-   * - Velocity
-     - m/s
-     - Use for axial velocities.
-   * - Mass flow rate
-     - kg/s
-     - Use for total or field-specific mass flow rates.
-   * - Mass flux
-     - kg/m\ :sup:`2`/s
-     - Use for area-normalized mass flow rate.
-   * - Heat flux
-     - W/m\ :sup:`2`
-     - Use for wall heat flux.
-   * - Specific enthalpy
-     - J/kg
-     - Use for phase or field enthalpy.
-
 Phase and field subscripts
 -------------------------
 
@@ -190,56 +147,6 @@ Source terms make it clear which conserved quantity is affected and which intera
      - heat or energy transfer
      - Energy transferred from field :math:`a` to field :math:`b`.
 
-Conservation equation structure
----------------------------------
-
-A generic one-dimensional conservation equation may be written as:
-
-.. math::
-   \frac{\partial \mathbf{U}}{\partial t}
-   + \frac{\partial \mathbf{F}}{\partial z}
-   = \mathbf{S}
-
-where :math:`\mathbf{U}` is the vector of conserved variables, :math:`\mathbf{F}` is the flux vector, and :math:`\mathbf{S}` is the source-term vector.
-
-Mass balance
-~~~~~~~~~~~~
-
-A generic field mass balance is written as:
-
-.. math::
-   \frac{\partial}{\partial t}\left(\alpha_k \rho_k\right)
-   + \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k\right)
-   = \Gamma_k
-
-where :math:`\Gamma_k` is the net mass source to field :math:`k`.
-
-Momentum balance
-~~~~~~~~~~~~~~~~
-
-A generic field momentum balance is written as:
-
-.. math::
-   \frac{\partial}{\partial t}\left(\alpha_k \rho_k u_k\right)
-   + \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k^2\right)
-   = -\alpha_k \frac{\partial p}{\partial z} + M_k
-
-where :math:`M_k` represents the net momentum source to field :math:`k`, including the effects that are retained in the selected model.
-
-Energy balance
-~~~~~~~~~~~~~~
-
-A generic field energy balance is written as:
-
-.. math::
-   \frac{\partial}{\partial t}\left(\alpha_k \rho_k h_k\right)
-   + \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k h_k\right)
-   = Q_k
-
-where :math:`Q_k` is the net energy source to field :math:`k`.
-
-These generic equations are intended as notation examples. Solver-specific theory pages should provide the actual equations used by each formulation.
-
 Closure model notation
 ----------------------
 
@@ -276,3 +183,46 @@ Closure models use notation that clearly identifies the modeled process. Example
    * - :math:`t_{relax}`
      - relaxation time
      - Relaxation models.
+
+Units
+-----
+
+SI units are used consistently unless a specific model, correlation, or input file requires otherwise.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 30 50
+
+   * - Quantity
+     - Unit
+     - Notes
+   * - Length
+     - m
+     - Use for :math:`z`, hydraulic diameter, and channel dimensions.
+   * - Time
+     - s
+     - Use for :math:`t`, time steps, and relaxation times.
+   * - Pressure
+     - Pa
+     - Use for absolute pressure unless otherwise stated.
+   * - Temperature
+     - K
+     - Use kelvin in equations. Celsius may be used in user-facing examples if clearly stated.
+   * - Density
+     - kg/m\ :sup:`3`
+     - Use for phase, field, and mixture density.
+   * - Velocity
+     - m/s
+     - Use for axial velocities.
+   * - Mass flow rate
+     - kg/s
+     - Use for total or field-specific mass flow rates.
+   * - Mass flux
+     - kg/m\ :sup:`2`/s
+     - Use for area-normalized mass flow rate.
+   * - Heat flux
+     - W/m\ :sup:`2`
+     - Use for wall heat flux.
+   * - Specific enthalpy
+     - J/kg
+     - Use for phase or field enthalpy.
