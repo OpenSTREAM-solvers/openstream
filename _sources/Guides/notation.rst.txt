@@ -14,14 +14,14 @@ OpenSTREAM uses one-dimensional, cross-section-averaged conservation equations. 
 
 where :math:`t` is time and :math:`z` is the axial coordinate along the flow channel.
 
-The following conventions are recommended throughout the documentation:
+The following conventions are used throughout the documentation:
 
-* Use :math:`z` for the axial coordinate.
-* Use :math:`t` for time.
-* Use :math:`k` as a generic field or phase index when no specific constituent is intended.
-* Use subscripts to identify phases, fields, interfaces, and walls.
-* Use superscripts for time levels, iteration counters, or model-specific states only when needed.
-* Define all symbols immediately after the equation in which they first appear.
+* :math:`z` for the axial coordinate.
+* :math:`t` for time.
+* :math:`k` as a generic field or phase index when no specific constituent is intended.
+* Subscripts identify phases, fields, interfaces, and walls.
+* Superscripts identify time levels, iteration counters, or model-specific states when needed.
+* All symbols are defined immediately after the equation in which they first appear.
 
 Primary variables
 -----------------
@@ -59,7 +59,7 @@ Primary variables
      - Axial velocity of field or phase :math:`k`.
    * - :math:`p`
      - pressure
-     - Pressure. In most one-dimensional formulations, pressure is shared among fields.
+     - Pressure (shared among fields).
    * - :math:`T_k`
      - temperature
      - Temperature of field or phase :math:`k`.
@@ -74,13 +74,13 @@ Primary variables
      - Total specific energy of field or phase :math:`k`, if used.
    * - :math:`x`
      - vapor quality
-     - Vapor mass fraction in a two-phase mixture. Use only when this definition is intended.
+     - Vapor mass fraction in a two-phase mixture.
    * - :math:`q''_w`
      - wall heat flux
      - Heat flux imposed at, or transferred through, the wall.
    * - :math:`g`
      - gravitational acceleration
-     - Gravitational acceleration projected along the relevant direction.
+     - Gravitational acceleration.
 
 Units
 -----
@@ -196,8 +196,6 @@ Conservation equation structure
 A generic one-dimensional conservation equation may be written as:
 
 .. math::
-   :label: eq-generic-conservation
-
    \frac{\partial \mathbf{U}}{\partial t}
    + \frac{\partial \mathbf{F}}{\partial z}
    = \mathbf{S}
@@ -210,8 +208,6 @@ Mass balance
 A generic field mass balance is written as:
 
 .. math::
-   :label: eq-generic-field-mass
-
    \frac{\partial}{\partial t}\left(\alpha_k \rho_k\right)
    + \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k\right)
    = \Gamma_k
@@ -224,8 +220,6 @@ Momentum balance
 A generic field momentum balance is written as:
 
 .. math::
-   :label: eq-generic-field-momentum
-
    \frac{\partial}{\partial t}\left(\alpha_k \rho_k u_k\right)
    + \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k^2\right)
    = -\alpha_k \frac{\partial p}{\partial z} + M_k
@@ -238,8 +232,6 @@ Energy balance
 A generic field energy balance is written as:
 
 .. math::
-   :label: eq-generic-field-energy
-
    \frac{\partial}{\partial t}\left(\alpha_k \rho_k h_k\right)
    + \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k h_k\right)
    = Q_k
@@ -281,6 +273,6 @@ Closure models use notation that clearly identifies the modeled process. Example
    * - :math:`\tau_i`
      - interfacial shear stress
      - Momentum exchange between fields.
-   * - :math:`\t_{relax}`
+   * - :math:`t_{relax}`
      - relaxation time
      - Relaxation models.
