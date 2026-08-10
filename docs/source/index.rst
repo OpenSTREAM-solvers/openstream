@@ -19,6 +19,8 @@
 
    /Guides/theory/index
    /Guides/tutorials
+   /Guides/glossary
+   /Guides/notation
    /Guides/references
 
 .. toctree::
