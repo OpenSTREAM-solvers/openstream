@@ -108,16 +108,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Notation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#general-conventions">General conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#primary-variables">Primary variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#phase-and-field-subscripts">Phase and field subscripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#source-term-notation">Source-term notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#conservation-equation-structure">Conservation equation structure</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#mass-balance">Mass balance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#momentum-balance">Momentum balance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#energy-balance">Energy balance</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#closure-model-notation">Closure model notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">Global reference list</a></li>
@@ -213,10 +207,10 @@
              
   <section id="notation">
 <h1>Notation<a class="headerlink" href="#notation" title="Link to this heading"></a></h1>
-<p>This page summarizes the notation conventions used in the OpenSTREAM documentation. The goal is to keep the theory pages, solver descriptions, closure model documentation, and implementation notes consistent across the mixture, two-fluid, three-field, and four-field formulations.</p>
+<p>This page summarizes the notation conventions used in the OpenSTREAM documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.</p>
 <section id="general-conventions">
 <h2>General conventions<a class="headerlink" href="#general-conventions" title="Link to this heading"></a></h2>
-<p>OpenSTREAM uses one-dimensional, cross-section-averaged conservation equations. Unless otherwise stated, the independent variables are time and the axial coordinate:</p>
+<p>OpenSTREAM uses one-dimensional, cross-section averaged conservation equations. Unless otherwise stated, the independent variables are time and the axial coordinate:</p>
 <div class="math notranslate nohighlight">
 \[t \quad \text{and} \quad z\]</div>
 <p>where <span class="math notranslate nohighlight">\(t\)</span> is time and <span class="math notranslate nohighlight">\(z\)</span> is the axial coordinate along the flow channel.</p>
@@ -312,65 +306,6 @@
 </tbody>
 </table>
 </section>
-<section id="units">
-<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
-<p>SI units are used consistently unless a specific model, correlation, or input file requires otherwise.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 30.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Quantity</p></th>
-<th class="head"><p>Unit</p></th>
-<th class="head"><p>Notes</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Length</p></td>
-<td><p>m</p></td>
-<td><p>Use for <span class="math notranslate nohighlight">\(z\)</span>, hydraulic diameter, and channel dimensions.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Time</p></td>
-<td><p>s</p></td>
-<td><p>Use for <span class="math notranslate nohighlight">\(t\)</span>, time steps, and relaxation times.</p></td>
-</tr>
-<tr class="row-even"><td><p>Pressure</p></td>
-<td><p>Pa</p></td>
-<td><p>Use for absolute pressure unless otherwise stated.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Temperature</p></td>
-<td><p>K</p></td>
-<td><p>Use kelvin in equations. Celsius may be used in user-facing examples if clearly stated.</p></td>
-</tr>
-<tr class="row-even"><td><p>Density</p></td>
-<td><p>kg/m<sup>3</sup></p></td>
-<td><p>Use for phase, field, and mixture density.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Velocity</p></td>
-<td><p>m/s</p></td>
-<td><p>Use for axial velocities.</p></td>
-</tr>
-<tr class="row-even"><td><p>Mass flow rate</p></td>
-<td><p>kg/s</p></td>
-<td><p>Use for total or field-specific mass flow rates.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Mass flux</p></td>
-<td><p>kg/m<sup>2</sup>/s</p></td>
-<td><p>Use for area-normalized mass flow rate.</p></td>
-</tr>
-<tr class="row-even"><td><p>Heat flux</p></td>
-<td><p>W/m<sup>2</sup></p></td>
-<td><p>Use for wall heat flux.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Specific enthalpy</p></td>
-<td><p>J/kg</p></td>
-<td><p>Use for phase or field enthalpy.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="phase-and-field-subscripts">
 <h2>Phase and field subscripts<a class="headerlink" href="#phase-and-field-subscripts" title="Link to this heading"></a></h2>
 <p>The notation distinguishes between thermodynamic phases and computational fields. A phase is a physical state of matter, such as liquid or vapor. A field is a computationally resolved constituent with its own transported variables.</p>
@@ -461,43 +396,6 @@
 </tbody>
 </table>
 </section>
-<section id="conservation-equation-structure">
-<h2>Conservation equation structure<a class="headerlink" href="#conservation-equation-structure" title="Link to this heading"></a></h2>
-<p>A generic one-dimensional conservation equation may be written as:</p>
-<div class="math notranslate nohighlight">
-\[\frac{\partial \mathbf{U}}{\partial t}
-+ \frac{\partial \mathbf{F}}{\partial z}
-= \mathbf{S}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{U}\)</span> is the vector of conserved variables, <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> is the flux vector, and <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> is the source-term vector.</p>
-<section id="mass-balance">
-<h3>Mass balance<a class="headerlink" href="#mass-balance" title="Link to this heading"></a></h3>
-<p>A generic field mass balance is written as:</p>
-<div class="math notranslate nohighlight">
-\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k\right)
-+ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k\right)
-= \Gamma_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Gamma_k\)</span> is the net mass source to field <span class="math notranslate nohighlight">\(k\)</span>.</p>
-</section>
-<section id="momentum-balance">
-<h3>Momentum balance<a class="headerlink" href="#momentum-balance" title="Link to this heading"></a></h3>
-<p>A generic field momentum balance is written as:</p>
-<div class="math notranslate nohighlight">
-\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k u_k\right)
-+ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k^2\right)
-= -\alpha_k \frac{\partial p}{\partial z} + M_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(M_k\)</span> represents the net momentum source to field <span class="math notranslate nohighlight">\(k\)</span>, including the effects that are retained in the selected model.</p>
-</section>
-<section id="energy-balance">
-<h3>Energy balance<a class="headerlink" href="#energy-balance" title="Link to this heading"></a></h3>
-<p>A generic field energy balance is written as:</p>
-<div class="math notranslate nohighlight">
-\[\frac{\partial}{\partial t}\left(\alpha_k \rho_k h_k\right)
-+ \frac{\partial}{\partial z}\left(\alpha_k \rho_k u_k h_k\right)
-= Q_k\]</div>
-<p>where <span class="math notranslate nohighlight">\(Q_k\)</span> is the net energy source to field <span class="math notranslate nohighlight">\(k\)</span>.</p>
-<p>These generic equations are intended as notation examples. Solver-specific theory pages should provide the actual equations used by each formulation.</p>
-</section>
-</section>
 <section id="closure-model-notation">
 <h2>Closure model notation<a class="headerlink" href="#closure-model-notation" title="Link to this heading"></a></h2>
 <p>Closure models use notation that clearly identifies the modeled process. Examples include:</p>
@@ -545,6 +443,65 @@
 <tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(t_{relax}\)</span></p></td>
 <td><p>relaxation time</p></td>
 <td><p>Relaxation models.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
+<p>SI units are used consistently unless a specific model, correlation, or input file requires otherwise.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantity</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Length</p></td>
+<td><p>m</p></td>
+<td><p>Use for <span class="math notranslate nohighlight">\(z\)</span>, hydraulic diameter, and channel dimensions.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Time</p></td>
+<td><p>s</p></td>
+<td><p>Use for <span class="math notranslate nohighlight">\(t\)</span>, time steps, and relaxation times.</p></td>
+</tr>
+<tr class="row-even"><td><p>Pressure</p></td>
+<td><p>Pa</p></td>
+<td><p>Use for absolute pressure unless otherwise stated.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Temperature</p></td>
+<td><p>K</p></td>
+<td><p>Use kelvin in equations. Celsius may be used in user-facing examples if clearly stated.</p></td>
+</tr>
+<tr class="row-even"><td><p>Density</p></td>
+<td><p>kg/m<sup>3</sup></p></td>
+<td><p>Use for phase, field, and mixture density.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Velocity</p></td>
+<td><p>m/s</p></td>
+<td><p>Use for axial velocities.</p></td>
+</tr>
+<tr class="row-even"><td><p>Mass flow rate</p></td>
+<td><p>kg/s</p></td>
+<td><p>Use for total or field-specific mass flow rates.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mass flux</p></td>
+<td><p>kg/m<sup>2</sup>/s</p></td>
+<td><p>Use for area-normalized mass flow rate.</p></td>
+</tr>
+<tr class="row-even"><td><p>Heat flux</p></td>
+<td><p>W/m<sup>2</sup></p></td>
+<td><p>Use for wall heat flux.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Specific enthalpy</p></td>
+<td><p>J/kg</p></td>
+<td><p>Use for phase or field enthalpy.</p></td>
 </tr>
 </tbody>
 </table>
