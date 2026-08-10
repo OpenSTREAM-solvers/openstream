@@ -1,5 +1,5 @@
 classdef SolverPlotter < handle
-    %SOLVERPLOTTER Framework for generating solver plots
+    %SOLVERPLOTTER Visualization framework for solver results.
     %
     % This class provides a flexible plotting interface for visualizing solver results.
     % It supports tiled layouts, animated series, and customizable plot styles.

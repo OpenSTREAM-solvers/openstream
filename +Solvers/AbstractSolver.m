@@ -89,7 +89,7 @@ classdef (Abstract) AbstractSolver < handle
     methods (Static)
 
         function ITR = CreateITR(NZ, ITRFields)
-            %CreateITR Create a structure for inner iteration values
+            %CreateITR Create and initialize the inner iteration storage structure
             %
             % Inputs:
             %

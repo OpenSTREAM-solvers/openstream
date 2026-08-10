@@ -36,7 +36,7 @@ For detailed equations, derivations, and implementation notes, check out the ind
 
 .. line-block::
 
-   ◦ Purpose: Design for annular flow with vapor, droplets, and liquid film.
+   ◦ Purpose: Modeling annular two-phase flow with separate vapor, droplets, and liquid film fields.
    ◦ Assumptions: Thermal equilibrium (for now), valid up to film dryout.
    ◦ Equations: Conservation of mass and momentum for the three fields.
 
@@ -47,7 +47,7 @@ For detailed equations, derivations, and implementation notes, check out the ind
 
 .. line-block::
 
-   ◦ Purpose: Advanced modeling of disturbance waves in annular flow, including non-equilibrium dynamics.
+   ◦ Purpose: Advanced annular flow modeling with explicit representation of disturbance waves, including non-equilibrium dynamics.
    ◦ Assumptions: Thermal equilibrium (for now).
    ◦ Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 

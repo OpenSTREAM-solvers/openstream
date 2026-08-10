@@ -95,17 +95,17 @@ where:
 - :math:`t_{Relax}` is the relaxation time for the interfacial mass transfer (evaporatyion or condensation)
 
 
-Closure relations
------------------
+Closure models
+--------------
 
-To complete the conservation equations, several closure relations are required:
+To complete the conservation equations, several closure models are required:
 
 - Wall shear stress: :math:`\tau_w^n`
 - Form pressure losses: :math:`\frac{\partial p_K}{\partial z}`
 - Wall heat transfer models
 - Relaxation time for the interfacial mass transfer (required for the MRM model only): :math:`t_{Relax}`
 
-For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure relations are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
+For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure models are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
 
 In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
@@ -114,7 +114,7 @@ Features and assumptions
 
 - Supports both steady-state and transient simulations in straight channels
 - Supports uniform and non-uniform wall heat flux distribution
-- Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via constitutive models or MRM
+- Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via closure models or MRM
 - Allows phase velocity slip using drift flux models
 - Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 

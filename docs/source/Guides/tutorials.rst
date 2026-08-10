@@ -8,6 +8,6 @@ Each tutorial is provided as a MATLAB LiveScript in the OpenSTREAM ``tutorials``
 .. raw:: html
 
    <ul>
-     <li><a href="../_static/html/tutorial1.html">Tutorial #1: Basic capabilities and functionalities</a></li>
+     <li><a href="../_static/html/tutorial1.html">Tutorial #1: Basic features and core functionality</a></li>
      <li><a href="../_static/html/tutorial2.html">Tutorial #2: Mixture solver</a></li>
    </ul>
