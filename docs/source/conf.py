@@ -78,6 +78,7 @@ html_css_files = [
     "custom.css",
 ]
 html_logo = '_static/logo-transparent.png'
+latex_logo = '_static/logo-transparent.png'
 html_favicon = '_static/favicon.ico'
 includehidden = True
 html_theme_options = {
