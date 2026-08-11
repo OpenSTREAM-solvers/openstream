@@ -38,5 +38,5 @@ Looking for a printable version? You can download the full documentation here: `
 ----
 
 .. bibliography:: 
+   :list: bullet
    :filter: docname in docnames
-   :style: plain

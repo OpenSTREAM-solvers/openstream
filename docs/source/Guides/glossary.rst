@@ -23,11 +23,11 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
    Droplet field
       A dispersed liquid field representing entrained droplets transported within the vapor core. In annular flow modeling, the droplet field is distinct from the wall liquid film field.
 
-   Entrainment
-      The transfer of liquid from the wall film into the vapor core as droplets. Entrainment is typically represented through a closure model in annular flow formulations.
-
    Deposition
       The transfer of liquid droplets from the vapor core back to the wall film. Deposition is typically represented through a closure model in annular flow formulations.
+
+   Entrainment
+      The transfer of liquid from the wall film into the vapor core as droplets. Entrainment is typically represented through a closure model in annular flow formulations.
 
    Field
       A computationally resolved constituent with its own set of transported variables or conservation equations. A field is not always identical to a thermodynamic phase. For example, liquid droplets and a wall liquid film are both liquid phase constituents, but they may be represented as separate fields.
@@ -62,8 +62,14 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
    Multi-field model
       A model in which different constituents of the flow are represented as separate computational fields. Multi-field models allow different phases or flow structures, such as vapor, droplets, liquid film, and disturbance waves, to be described with different transported variables.
 
+   Multi-wall channel
+      A channel representation that may include more than one heated or unheated wall surface. This allows wall-specific thermal or hydraulic conditions to be represented in the model formulation.
+
    Non-equilibrium
       A condition in which one or more variables are not shared among phases or fields. Non-equilibrium may be thermal, hydrodynamic, mechanical, or chemical depending on the variables considered.
+
+   One-dimensional model
+      A model in which flow variables vary primarily along one spatial coordinate, usually the axial direction. Cross-sectional effects are represented through averaged quantities and closure models rather than resolved explicitly.
 
    Phase
       A physically distinct thermodynamic state of matter, such as liquid or vapor. A phase may be represented by one or more fields in a multi-field model.
@@ -82,6 +88,9 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
 
    Solver
       A computational implementation of a mathematical model and numerical method used to solve a specific set of governing equations. In OpenSTREAM, different solvers correspond to different levels of physical detail and modeling assumptions.
+
+   Straight channel
+      A flow path without geometric bends or complex three-dimensional features. In one-dimensional modeling, a straight channel is represented along a single axial coordinate.
 
    Thermal equilibrium
       A modeling assumption in which phases or fields share the same temperature, or in which temperature differences are neglected.
@@ -106,15 +115,6 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
 
    Wall friction
       Momentum loss associated with shear stress at the wall. Wall friction is usually represented by a closure model or friction factor correlation.
-
-   One-dimensional model
-      A model in which flow variables vary primarily along one spatial coordinate, usually the axial direction. Cross-sectional effects are represented through averaged quantities and closure models rather than resolved explicitly.
-
-   Straight channel
-      A flow path without geometric bends or complex three-dimensional features. In one-dimensional modeling, a straight channel is represented along a single axial coordinate.
-
-   Multi-wall channel
-      A channel representation that may include more than one heated or unheated wall surface. This allows wall-specific thermal or hydraulic conditions to be represented in the model formulation.
 
 Recommended terminology
 -----------------------

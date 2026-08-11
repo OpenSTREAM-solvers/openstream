@@ -96,7 +96,7 @@ The notation distinguishes between thermodynamic phases and computational fields
      - Notes
    * - :math:`l`
      - liquid phase
-     - Used for iquid phase.
+     - Used for liquid phase.
    * - :math:`g`
      - vapor phase
      - Used consistently for vapor or gas.

@@ -5,4 +5,5 @@ Guides
    :maxdepth: 3
    :glob:
 
+   theory/index
    /Guides/*
