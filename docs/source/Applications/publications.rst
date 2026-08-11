@@ -9,7 +9,7 @@ Overviews
 ---------
 
 .. bibliography::
-   :list: bullet
+   :list: enumerated
    :filter: keywords % "overview"
 
 ----
@@ -18,7 +18,7 @@ Mixture model
 -------------
 
 .. bibliography::
-   :list: bullet
+   :list: enumerated
    :filter: keywords % "mixture"
 
 ----
@@ -27,7 +27,7 @@ Two-fluid model
 --------------
 
 .. bibliography::
-   :list: bullet
+   :list: enumerated
    :filter: keywords % "twofluid"
 
 ----
@@ -36,7 +36,7 @@ Three-field model
 ----------------
 
 .. bibliography::
-   :list: bullet
+   :list: enumerated
    :filter: keywords % "threefield"
 
 ----
@@ -45,5 +45,5 @@ Four-field model
 ---------------
 
 .. bibliography::
-   :list: bullet
+   :list: enumerated
    :filter: keywords % "fourfield"
