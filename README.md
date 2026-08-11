@@ -1,3 +1,5 @@
+![Documentation](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml/badge.svg)
+
 # OpenSTREAM
 
 OpenSTREAM (**Open** **S**olvers for **T**wo-phase flow **R**esearch, **E**ngineering **A**nalysis and **M**odeling) is an open-source computational environment for simulating one-dimensional, multi-field, two-phase flows, including phase change. It is designed to support efficient and collaborative model development, performance evaluation, and validation across users and institutions.
