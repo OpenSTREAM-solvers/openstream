@@ -76,7 +76,7 @@ where:
 
 **2. Vapor energy conservation**
 
-:math:`\frac{W_v}{u_v} \cdot \frac{\partial}{\partial t}(h_v) + W_v \cdot \frac{\partial}{\partial z}(h_v) = A \cdot a_i \cdot (h_l - h_v)\cdot {\Gamma_i} + \sum \Pi_{wall}^n \cdot {q^{\prime\prime}}_{wall,v}^n`
+:math:`\frac{W_v}{u_v} \cdot \frac{\partial}{\partial t}(h_v) + W_v \cdot \frac{\partial}{\partial z}(h_v) = A \cdot a_i \cdot (h_l - h_v)\cdot {\Gamma} + \sum \Pi_{wall}^n \cdot {q^{\prime\prime}}_{wall,v}^n`
 
 where:
 
