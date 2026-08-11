@@ -215,7 +215,7 @@ classdef Liquid < Solvers.AbstractPhase
         end
 
         function hwall = HWALL(liquid, twall, zIdx)
-            %HWALLLIQ Single-phase liquid wall heat transfer coefficient [W/m^2/K]
+            %HWALL Single-phase liquid wall heat transfer coefficient [W/m^2/K]
             %
             % Computes the wall heat transfer coefficient using liquid thermal
             % conductivity and Nusselt number.
