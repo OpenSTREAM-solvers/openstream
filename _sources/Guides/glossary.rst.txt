@@ -4,6 +4,7 @@ Glossary
 This glossary defines terminology used throughout the OpenSTREAM documentation. The intent is to make the documentation more consistent and to clarify the distinction between closely related concepts used in one-dimensional, multi-field, two-phase flow modeling.
 
 .. glossary::
+   :sorted:
 
    Annular flow
       A two-phase flow regime in which a continuous vapor core is surrounded by a liquid film along the wall. Liquid droplets may also be entrained in the vapor core. In OpenSTREAM, annular flow models may represent vapor, droplets, liquid film, and, in advanced formulations, disturbance waves as separate fields.
@@ -83,11 +84,11 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
    Relaxation time
       A characteristic timescale over which a variable approaches an equilibrium or target value in a relaxation model. Smaller relaxation times correspond to faster return toward the target state.
 
-   Source term
-      A term in a conservation or transport equation representing production, destruction, or exchange of a quantity. Source terms may arise from wall interaction, interfacial transfer, external forces, or phase change.
-
    Solver
       A computational implementation of a mathematical model and numerical method used to solve a specific set of governing equations. In OpenSTREAM, different solvers correspond to different levels of physical detail and modeling assumptions.
+
+   Source term
+      A term in a conservation or transport equation representing production, destruction, or exchange of a quantity. Source terms may arise from wall interaction, interfacial transfer, external forces, or phase change.
 
    Straight channel
       A flow path without geometric bends or complex three-dimensional features. In one-dimensional modeling, a straight channel is represented along a single axial coordinate.
@@ -110,11 +111,11 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
    Wall boiling
       Boiling that occurs at a heated wall. Wall boiling models typically include mechanisms such as nucleation, evaporation, convection, quenching, and associated wall heat partitioning, depending on the level of model detail.
 
-   Wall heat flux
-      The heat flux imposed at, or transferred through, a wall boundary. In heated channel simulations, wall heat flux is a key input or result depending on the problem formulation.
-
    Wall friction
       Momentum loss associated with shear stress at the wall. Wall friction is usually represented by a closure model or friction factor correlation.
+
+   Wall heat flux
+      The heat flux imposed at, or transferred through, a wall boundary. In heated channel simulations, wall heat flux is a key input or result depending on the problem formulation.
 
 Recommended terminology
 -----------------------
