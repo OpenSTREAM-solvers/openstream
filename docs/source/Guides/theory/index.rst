@@ -7,16 +7,6 @@ Whether you're just getting started or diving deep into advanced simulations, th
 
 For detailed equations, derivations, and implementation notes, check out the individual theory pages linked below. 
 
-
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-
-   Mixture_Model_Theory
-   TwoFluid_Model_Theory
-   ThreeField_Model_Theory
-   FourField_Model_Theory
-
 :doc:`Mixture model <Mixture_Model_Theory>`
    * Purpose: Initialization and robust predictions under relevant simplifications.
    * Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
@@ -38,3 +28,12 @@ For detailed equations, derivations, and implementation notes, check out the ind
    * Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 
 Ready to dive deeper? Pick a model and start exploring!
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   Mixture_Model_Theory
+   TwoFluid_Model_Theory
+   ThreeField_Model_Theory
+   FourField_Model_Theory
