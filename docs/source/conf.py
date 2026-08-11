@@ -94,5 +94,24 @@ latex_documents = [('index_latex', f'{project}.tex', f"{project} Documentation",
 latex_table_style = ['booktabs']
 
 latex_elements = {
-    'printindex': r'\def\twocolumn[#1]{#1}\printindex'
+    'printindex': r'\def\twocolumn[#1]{#1}\printindex',
+    'maketitle': r'''
+    \begin{titlepage}
+    \centering
+    \makeatletter
+    \vspace*{3cm}
+    {\Huge\bfseries \@title \par}
+    \vspace{1.5cm}
+    {\Large \py@authoraddress \par}
+    \vspace{0.5cm}
+    {\large \@author \par}
+    \vspace{0.5cm}
+    {\large \@date \par}
+    \vfill
+    \includegraphics[width=0.35\textwidth]{logo-transparent.png}
+    \vspace{2cm}
+    \makeatother
+    \end{titlepage}
+    \clearpage
+    ''',
 }
