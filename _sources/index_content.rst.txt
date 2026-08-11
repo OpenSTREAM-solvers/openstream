@@ -32,7 +32,9 @@ This guide will walk you through:
 - Example applications and use cases
 - How to contribute
 
-Looking for a printable version? You can download the full documentation here: `OpenSTREAM.pdf <./files/OpenSTREAM.pdf>`_
+.. only:: html
+
+   Looking for a printable version? You can download the full documentation here: `OpenSTREAM.pdf <./files/OpenSTREAM.pdf>`_
 
 
 ----

@@ -7,48 +7,34 @@ Whether you're just getting started or diving deep into advanced simulations, th
 
 For detailed equations, derivations, and implementation notes, check out the individual theory pages linked below. 
 
+
 .. toctree::
    :maxdepth: 1
+   :hidden:
 
    Mixture_Model_Theory
-
-.. line-block::
-
-   ◦ Purpose: Initialization and robust predictions under relevant simplifications.
-   ◦ Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
-   ◦ Equations: Conservation of mass, momentum, and energy for the mixture.
-
-.. toctree::
-   :maxdepth: 1
-
    TwoFluid_Model_Theory
-
-.. line-block::
-
-   ◦ Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.
-   ◦ Assumptions: Separate conservation equations for liquid and vapor.
-   ◦ Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).
-
-.. toctree::
-   :maxdepth: 1
-
    ThreeField_Model_Theory
-
-.. line-block::
-
-   ◦ Purpose: Modeling annular two-phase flow with separate vapor, droplets, and liquid film fields.
-   ◦ Assumptions: Thermal equilibrium (for now), valid up to film dryout.
-   ◦ Equations: Conservation of mass and momentum for the three fields.
-
-.. toctree::
-   :maxdepth: 1
-
    FourField_Model_Theory
 
-.. line-block::
+:doc:`Mixture model <Mixture_Model_Theory>`
+   * Purpose: Initialization and robust predictions under relevant simplifications.
+   * Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.
+   * Equations: Conservation of mass, momentum, and energy for the mixture.
 
-   ◦ Purpose: Advanced annular flow modeling with explicit representation of disturbance waves, including non-equilibrium dynamics.
-   ◦ Assumptions: Thermal equilibrium (for now).
-   ◦ Equations: Conservation of mass and momentum for the four fields + wave number density transport.
+:doc:`Two-fluid model <TwoFluid_Model_Theory>`
+   * Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.
+   * Assumptions: Separate conservation equations for liquid and vapor.
+   * Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).
+
+:doc:`Three-field model <ThreeField_Model_Theory>`
+   * Purpose: Modeling annular two-phase flow with separate vapor, droplets, and liquid film fields.
+   * Assumptions: Thermal equilibrium (for now), valid up to film dryout.
+   * Equations: Conservation of mass and momentum for the three fields.
+
+:doc:`Four-field model <FourField_Model_Theory>`
+   * Purpose: Advanced annular flow modeling with explicit representation of disturbance waves, including non-equilibrium dynamics.
+   * Assumptions: Thermal equilibrium (for now).
+   * Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 
 Ready to dive deeper? Pick a model and start exploring!

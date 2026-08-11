@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=8d0270a2" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
@@ -211,45 +212,33 @@
 <p>Whether you’re just getting started or diving deep into advanced simulations, this guide will help you understand the purpose, assumptions, and structure behind each solver.</p>
 <p>For detailed equations, derivations, and implementation notes, check out the individual theory pages linked below.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a></li>
+</div>
+<dl class="simple">
+<dt><a class="reference internal" href="Mixture_Model_Theory.html"><span class="doc">Mixture model</span></a></dt><dd><ul class="simple">
+<li><p>Purpose: Initialization and robust predictions under relevant simplifications.</p></li>
+<li><p>Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.</p></li>
+<li><p>Equations: Conservation of mass, momentum, and energy for the mixture.</p></li>
 </ul>
-</div>
-<div class="line-block">
-<div class="line">◦ Purpose: Initialization and robust predictions under relevant simplifications.</div>
-<div class="line">◦ Assumptions: Single mixture field with or without thermal non-equilibrium capabilities.</div>
-<div class="line">◦ Equations: Conservation of mass, momentum, and energy for the mixture.</div>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="TwoFluid_Model_Theory.html">Two-fluid model</a></li>
+</dd>
+<dt><a class="reference internal" href="TwoFluid_Model_Theory.html"><span class="doc">Two-fluid model</span></a></dt><dd><ul class="simple">
+<li><p>Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.</p></li>
+<li><p>Assumptions: Separate conservation equations for liquid and vapor.</p></li>
+<li><p>Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).</p></li>
 </ul>
-</div>
-<div class="line-block">
-<div class="line">◦ Purpose: Captures hydrodynamic and thermal non-equilibrium between phases.</div>
-<div class="line">◦ Assumptions: Separate conservation equations for liquid and vapor.</div>
-<div class="line">◦ Equations: Conservation of mass, momentum, and energy for each phase (six-equation model).</div>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ThreeField_Model_Theory.html">Three-field model</a></li>
+</dd>
+<dt><a class="reference internal" href="ThreeField_Model_Theory.html"><span class="doc">Three-field model</span></a></dt><dd><ul class="simple">
+<li><p>Purpose: Modeling annular two-phase flow with separate vapor, droplets, and liquid film fields.</p></li>
+<li><p>Assumptions: Thermal equilibrium (for now), valid up to film dryout.</p></li>
+<li><p>Equations: Conservation of mass and momentum for the three fields.</p></li>
 </ul>
-</div>
-<div class="line-block">
-<div class="line">◦ Purpose: Modeling annular two-phase flow with separate vapor, droplets, and liquid film fields.</div>
-<div class="line">◦ Assumptions: Thermal equilibrium (for now), valid up to film dryout.</div>
-<div class="line">◦ Equations: Conservation of mass and momentum for the three fields.</div>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="FourField_Model_Theory.html">Four-field model</a></li>
+</dd>
+<dt><a class="reference internal" href="FourField_Model_Theory.html"><span class="doc">Four-field model</span></a></dt><dd><ul class="simple">
+<li><p>Purpose: Advanced annular flow modeling with explicit representation of disturbance waves, including non-equilibrium dynamics.</p></li>
+<li><p>Assumptions: Thermal equilibrium (for now).</p></li>
+<li><p>Equations: Conservation of mass and momentum for the four fields + wave number density transport.</p></li>
 </ul>
-</div>
-<div class="line-block">
-<div class="line">◦ Purpose: Advanced annular flow modeling with explicit representation of disturbance waves, including non-equilibrium dynamics.</div>
-<div class="line">◦ Assumptions: Thermal equilibrium (for now).</div>
-<div class="line">◦ Equations: Conservation of mass and momentum for the four fields + wave number density transport.</div>
-</div>
+</dd>
+</dl>
 <p>Ready to dive deeper? Pick a model and start exploring!</p>
 </section>
 

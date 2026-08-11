@@ -9,6 +9,10 @@ The goal of this section is to help you implement a workflow for contributing to
   
 The contents of this guide is partially taken from `here <https://sublime-and-sphinx-guide.readthedocs.io/en/latest/create_project.html>`_.
 
+
+.. _setup-sublime-text-as-text-editor:
+
+
 Setup Sublime Text as text editor
 ---------------------------------
 Any text editor, such as Vi, Nano, Sublime Text, and Visual Studio Code, or integrated development environment(IDE) software, such as Visual Studio, can be used to write and manage the files needed to create this documentation. For convenience, Sublime Text will be used for this guide. 
@@ -101,7 +105,7 @@ This section assumes you are using the `build` function of Sublime Text to build
 Quick preview
 *************
 
-For a quick preview of the document you are currently working on, use `ctrl+alt+o`(Win/Linux) or `cmd+opt+o`(Mac). Alternatively, open the `Command Palette` and select `OmniMarkupPreviewer: Preview Current Markup in Browser`. This functionality requires the `OmniMarkupPreviewer` package mentioned in :ref:`Setup Sublime Text as text editor`, and does not use `Sphinx`. 
+For a quick preview of the document you are currently working on, use `ctrl+alt+o`(Win/Linux) or `cmd+opt+o`(Mac). Alternatively, open the `Command Palette` and select `OmniMarkupPreviewer: Preview Current Markup in Browser`. This functionality requires the `OmniMarkupPreviewer` package mentioned in :ref:`Setup Sublime Text as text editor <setup-sublime-text-as-text-editor>`, and does not use `Sphinx`. 
 
 Full build
 **********
