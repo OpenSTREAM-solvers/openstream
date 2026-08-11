@@ -40,5 +40,5 @@ This guide will walk you through:
 ----
 
 .. bibliography:: 
+   :list: bullet
    :filter: docname in docnames
-   :style: plain
