@@ -25,9 +25,10 @@ extensions = [
     'sphinx_copybutton',
     'sphinxcontrib.bibtex', 
     'sphinx_new_tab_link',
-    'sphinx.ext.autosectionlabel',
-    'sphinx_new_tab_link'
+    'sphinx.ext.autosectionlabel'
 ]
+
+autosectionlabel_prefix_document = True
 
 numfig = False
 numfig_format = {
