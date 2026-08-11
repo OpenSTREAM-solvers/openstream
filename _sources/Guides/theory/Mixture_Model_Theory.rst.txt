@@ -92,7 +92,7 @@ The fundamental assumption of the MRM is to consider that the interfacial mass e
 where:
 
 - :math:`x_{eq}` is the thermodynamic equilibrium quality
-- :math:`t_{Relax}` is the relaxation time for the interfacial mass transfer (evaporatyion or condensation)
+- :math:`t_{Relax}` is the relaxation time for the interfacial mass transfer (evaporation or condensation)
 
 
 Closure models
