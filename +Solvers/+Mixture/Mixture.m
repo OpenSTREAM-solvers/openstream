@@ -2343,7 +2343,7 @@ classdef Mixture < Solvers.AbstractField
                     REL      = mix.liquid.RE;                              % [-] Reynolds number based on liquid phase
 
                     qWD  = mix.HFLUX;                                      % [W/m^2]
-                    HDB  = mix.HWALLLIQ;                                   % [W/m^2/K] Dittus-Boelter correlation
+                    HDB  = mix.liquid.HWALL(mix.TWALL);                    % [W/m^2/K] Dittus-Boelter correlation
                     HB   = 193.*exp(-mix.P./4.344E6);                      % [Btu/hr/ft^2/F] Modified (?) Thom correlation
                     HB   = HB.*0.29307107./0.3048^2./(5/9);                % [W/m^2/K]
                     CHN  = 0.2;                                            % [-] Hancox and Nicoll coefficient (0.2 for channels and tubes)
