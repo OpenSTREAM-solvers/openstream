@@ -1,6 +1,9 @@
 name: MATLAB CI
 
 on:
+  push:
+    branches:
+      - matlab-ci
   workflow_dispatch:
 
 jobs:
