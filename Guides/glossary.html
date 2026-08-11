@@ -220,9 +220,9 @@
 </dd>
 <dt id="term-Droplet-field">Droplet field<a class="headerlink" href="#term-Droplet-field" title="Link to this term"></a></dt><dd><p>A dispersed liquid field representing entrained droplets transported within the vapor core. In annular flow modeling, the droplet field is distinct from the wall liquid film field.</p>
 </dd>
-<dt id="term-Entrainment">Entrainment<a class="headerlink" href="#term-Entrainment" title="Link to this term"></a></dt><dd><p>The transfer of liquid from the wall film into the vapor core as droplets. Entrainment is typically represented through a closure model in annular flow formulations.</p>
-</dd>
 <dt id="term-Deposition">Deposition<a class="headerlink" href="#term-Deposition" title="Link to this term"></a></dt><dd><p>The transfer of liquid droplets from the vapor core back to the wall film. Deposition is typically represented through a closure model in annular flow formulations.</p>
+</dd>
+<dt id="term-Entrainment">Entrainment<a class="headerlink" href="#term-Entrainment" title="Link to this term"></a></dt><dd><p>The transfer of liquid from the wall film into the vapor core as droplets. Entrainment is typically represented through a closure model in annular flow formulations.</p>
 </dd>
 <dt id="term-Field">Field<a class="headerlink" href="#term-Field" title="Link to this term"></a></dt><dd><p>A computationally resolved constituent with its own set of transported variables or conservation equations. A field is not always identical to a thermodynamic phase. For example, liquid droplets and a wall liquid film are both liquid phase constituents, but they may be represented as separate fields.</p>
 </dd>
@@ -246,7 +246,11 @@
 </dd>
 <dt id="term-Multi-field-model">Multi-field model<a class="headerlink" href="#term-Multi-field-model" title="Link to this term"></a></dt><dd><p>A model in which different constituents of the flow are represented as separate computational fields. Multi-field models allow different phases or flow structures, such as vapor, droplets, liquid film, and disturbance waves, to be described with different transported variables.</p>
 </dd>
+<dt id="term-Multi-wall-channel">Multi-wall channel<a class="headerlink" href="#term-Multi-wall-channel" title="Link to this term"></a></dt><dd><p>A channel representation that may include more than one heated or unheated wall surface. This allows wall-specific thermal or hydraulic conditions to be represented in the model formulation.</p>
+</dd>
 <dt id="term-Non-equilibrium">Non-equilibrium<a class="headerlink" href="#term-Non-equilibrium" title="Link to this term"></a></dt><dd><p>A condition in which one or more variables are not shared among phases or fields. Non-equilibrium may be thermal, hydrodynamic, mechanical, or chemical depending on the variables considered.</p>
+</dd>
+<dt id="term-One-dimensional-model">One-dimensional model<a class="headerlink" href="#term-One-dimensional-model" title="Link to this term"></a></dt><dd><p>A model in which flow variables vary primarily along one spatial coordinate, usually the axial direction. Cross-sectional effects are represented through averaged quantities and closure models rather than resolved explicitly.</p>
 </dd>
 <dt id="term-Phase">Phase<a class="headerlink" href="#term-Phase" title="Link to this term"></a></dt><dd><p>A physically distinct thermodynamic state of matter, such as liquid or vapor. A phase may be represented by one or more fields in a multi-field model.</p>
 </dd>
@@ -259,6 +263,8 @@
 <dt id="term-Source-term">Source term<a class="headerlink" href="#term-Source-term" title="Link to this term"></a></dt><dd><p>A term in a conservation or transport equation representing production, destruction, or exchange of a quantity. Source terms may arise from wall interaction, interfacial transfer, external forces, or phase change.</p>
 </dd>
 <dt id="term-Solver">Solver<a class="headerlink" href="#term-Solver" title="Link to this term"></a></dt><dd><p>A computational implementation of a mathematical model and numerical method used to solve a specific set of governing equations. In OpenSTREAM, different solvers correspond to different levels of physical detail and modeling assumptions.</p>
+</dd>
+<dt id="term-Straight-channel">Straight channel<a class="headerlink" href="#term-Straight-channel" title="Link to this term"></a></dt><dd><p>A flow path without geometric bends or complex three-dimensional features. In one-dimensional modeling, a straight channel is represented along a single axial coordinate.</p>
 </dd>
 <dt id="term-Thermal-equilibrium">Thermal equilibrium<a class="headerlink" href="#term-Thermal-equilibrium" title="Link to this term"></a></dt><dd><p>A modeling assumption in which phases or fields share the same temperature, or in which temperature differences are neglected.</p>
 </dd>
@@ -275,12 +281,6 @@
 <dt id="term-Wall-heat-flux">Wall heat flux<a class="headerlink" href="#term-Wall-heat-flux" title="Link to this term"></a></dt><dd><p>The heat flux imposed at, or transferred through, a wall boundary. In heated channel simulations, wall heat flux is a key input or result depending on the problem formulation.</p>
 </dd>
 <dt id="term-Wall-friction">Wall friction<a class="headerlink" href="#term-Wall-friction" title="Link to this term"></a></dt><dd><p>Momentum loss associated with shear stress at the wall. Wall friction is usually represented by a closure model or friction factor correlation.</p>
-</dd>
-<dt id="term-One-dimensional-model">One-dimensional model<a class="headerlink" href="#term-One-dimensional-model" title="Link to this term"></a></dt><dd><p>A model in which flow variables vary primarily along one spatial coordinate, usually the axial direction. Cross-sectional effects are represented through averaged quantities and closure models rather than resolved explicitly.</p>
-</dd>
-<dt id="term-Straight-channel">Straight channel<a class="headerlink" href="#term-Straight-channel" title="Link to this term"></a></dt><dd><p>A flow path without geometric bends or complex three-dimensional features. In one-dimensional modeling, a straight channel is represented along a single axial coordinate.</p>
-</dd>
-<dt id="term-Multi-wall-channel">Multi-wall channel<a class="headerlink" href="#term-Multi-wall-channel" title="Link to this term"></a></dt><dd><p>A channel representation that may include more than one heated or unheated wall surface. This allows wall-specific thermal or hydraulic conditions to be represented in the model formulation.</p>
 </dd>
 </dl>
 <section id="recommended-terminology">
