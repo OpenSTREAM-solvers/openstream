@@ -3,7 +3,7 @@ Three-field model
 
 The three-field simulation framework in **OpenSTREAM** provides a structured representation of annular two-phase flow by solving relevant conservation equations for the liquid film and droplet fields, with the vapor field derived from the mixture solver. This formulation is tailored for saturated flow conditions within a theoretical framework used in other codes, such as in subchannel analysis for Boiling Water Reactor (BWR) fuel simulations (:cite:t:`ADAMSSON20112843`)(:cite:t:`ADAMSSON2014316`).
 
-The three distinct flow fields: vapor, entrained droplets and liquid film, are illustrated in Figure 1.
+The three distinct flow fields: vapor, entrained droplets and liquid film, are illustrated in :numref:`fig-three-field-framework`.
 
 .. _fig-three-field-framework:
 
@@ -12,7 +12,7 @@ The three distinct flow fields: vapor, entrained droplets and liquid film, are i
    :width: 500px
    :align: center
 
-   Figure 1. Field geometrical characteristics in the three-field simulation framework (vapor, drops and film).
+   Field geometrical characteristics in the three-field simulation framework (vapor, drops and film).
 
 The three-field model serves several key roles within OpenSTREAM:
 

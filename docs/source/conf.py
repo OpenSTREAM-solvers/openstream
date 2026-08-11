@@ -30,7 +30,7 @@ extensions = [
 
 autosectionlabel_prefix_document = True
 
-numfig = False
+numfig = True
 numfig_format = {
     'figure': 'Figure %s',
     'table': 'Table %s',

@@ -17,14 +17,14 @@ This glossary defines terminology used throughout the OpenSTREAM documentation. 
    Conservation equation
       A governing equation expressing the conservation of a physical quantity, such as mass, momentum, or energy. In OpenSTREAM, conservation equations are formulated for the mixture, phase, or field variables depending on the selected solver.
 
+   Deposition
+      The transfer of liquid droplets from the vapor core back to the wall film. Deposition is typically represented through a closure model in annular flow formulations.
+
    Disturbance wave
       A coherent liquid structure traveling along the liquid film in annular flow. Disturbance waves can influence wall wetting, film mass transport, entrainment, deposition, and interfacial momentum transfer.
 
    Droplet field
       A dispersed liquid field representing entrained droplets transported within the vapor core. In annular flow modeling, the droplet field is distinct from the wall liquid film field.
-
-   Deposition
-      The transfer of liquid droplets from the vapor core back to the wall film. Deposition is typically represented through a closure model in annular flow formulations.
 
    Entrainment
       The transfer of liquid from the wall film into the vapor core as droplets. Entrainment is typically represented through a closure model in annular flow formulations.

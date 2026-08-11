@@ -1,7 +1,7 @@
 Two-fluid model
 ===============
 
-The two-Fluid simulation framework in **OpenSTREAM** provides a detailed representation of two-phase flow by solving six conservation equations—mass, momentum, and energy for both liquid and vapor phases. This formulation enables the simulation of key non-equilibrium effects and is foundational in nuclear reactor thermal-hydraulic code systems.
+The two-fluid simulation framework in **OpenSTREAM** provides a detailed representation of two-phase flow by solving six conservation equations—mass, momentum, and energy for both liquid and vapor phases. This formulation enables the simulation of key non-equilibrium effects and is foundational in nuclear reactor thermal-hydraulic code systems.
 
 The two-fluid  model serves several key roles within OpenSTREAM:
 
