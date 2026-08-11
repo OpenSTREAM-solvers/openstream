@@ -88,3 +88,7 @@ latex_engine = 'pdflatex'
 #latex_toplevel_sectioning = 'section'
 latex_documents = [('index_latex', f'{project}.tex', f"{project} Documentation", author, 'manual')]
 latex_table_style = ['booktabs']
+
+latex_elements = {
+    'printindex': r'\def\twocolumn[#1]{#1}\printindex'
+}
