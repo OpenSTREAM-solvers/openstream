@@ -18,6 +18,12 @@ jobs:
         with:
           submodules: true
 
+      - name: Checkout openstream-database
+        uses: actions/checkout@v6
+        with:
+          repository: OpenSTREAM-solvers/openstream-database
+          path: ../openstream-database
+
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
