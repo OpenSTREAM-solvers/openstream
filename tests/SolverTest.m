@@ -21,7 +21,6 @@ classdef SolverTest < matlab.unittest.TestCase
             %   TODO: create parameterized files
             %
             addpath('../../openstream-database')
-            addpath('../../openstream')
 
             % Demo inputs
             entryData = table;
