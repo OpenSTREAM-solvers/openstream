@@ -1,12 +1,16 @@
 name: MATLAB CI
 
 on:
+  push:
+    branches:
+      - matlab-ci
   workflow_dispatch:
 
 jobs:
 
   build:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, matlab]
     steps:
     
       - name: Checkout with submodules
@@ -17,7 +21,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.101'
+          python-version: '3.11'
 
       - name: Upgrade pip
         run: |
@@ -40,9 +44,12 @@ jobs:
         run: pip install -r ./+CoolPropWrapper/requirements.txt
 
       # Sets up MATLAB on a GitHub-hosted runner
-      - name: Set up MATLAB
-        uses: matlab-actions/setup-matlab@v3
-
+      #- name: Set up MATLAB
+      #  uses: matlab-actions/setup-matlab@v3
+      - name: MATLAB version
+        run: |
+          /opt/MATLAB/R2026a/bin/matlab -batch "version"
+          
       # Runs a set of commands using the runners shell
       - name: Run all tests
         uses: matlab-actions/run-tests@v3
