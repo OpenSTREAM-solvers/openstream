@@ -4,13 +4,13 @@ Getting started
 Prerequisites and installation
 ------------------------------
 
-OpenSTREAM is a MATLAB program for simulating two-phase flow
-behaviors. The Python version of
-`CoolProp <http://www.coolprop.org/index.html#what-is-coolprop>`__ is
+**OpenSTREAM** is a MATLAB program for simulating one-dimensional two-phase flows.
+The Python version of
+`CoolProp <http://www.coolprop.org>`__ is
 used for calculating the fluid properties.
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
 MATLAB interface that interacts with CoolProp through Python. Both
-OpenSTREAM and CoolProp are hosted here on GitHub. Making a copy
+OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
 (cloning) of these programs will be our first step.
 
 Install using Git and Github
@@ -27,7 +27,7 @@ Install using Git and Github
 
    -  **Command line interface**
 
-      -  Clone (make a copy of) the **repo**\ sitory using:
+      -  Clone (make a copy of) the repository using:
          ``git clone --recursive git@github.com:OpenSTREAM-solvers/openstream.git``
          (`SSH
          authentication <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>`__)
@@ -56,9 +56,9 @@ Install using Git and Github
 MATLAB-Python compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before using the OpenSTREAM, we need to make sure Python with the
-appropriate version is installed, and MATLAB knows the location of the
-Python executable. The following instructions are from the
+Before using OpenSTREAM, we need to make sure Python with the appropriate
+version is installed, and MATLAB knows the location of the Python
+executable. The following instructions are from the
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_ repo.
 
 1. Determine which versions of Python are compatible with your version
@@ -71,7 +71,7 @@ Python executable. The following instructions are from the
 
    -  Run ``pyenv()``
 
-      -  If the results are empty or a incompatible Python version is
+      -  If the results are empty or an incompatible Python version is
          shown, go to step 3.
       -  If the results are satisfactory, continue to step 5.
 
@@ -82,16 +82,21 @@ Python executable. The following instructions are from the
       specific version of Python you need. Follow the setup procedure.
    -  **Linux**: Chances are, you already have a version of Python
       installed. Verify the version using ``python3 --version``. If
-      Python is not installed, or a incompatible version is installed,
+      Python is not installed, or an incompatible version is installed,
       install appropriate version using the OS package manager. For
       Debian-based Linux distros (such as Ubuntu), use
       ``sudo apt-get install python3.x`` to install the *x* version of
       Python3.
-   -  **MacOS**: Someone with a Mac, please write how you do this…
+   -  **MacOS**: Most recent versions of macOS include Python or can
+      install it through Homebrew or the official Python installer.
+      Verify the installed version using: ``python3 --version``. If a
+      compatible version is not available, install one using Homebrew:
+      ``brew install python`` or download the appropriate version directly
+      from `python.org <https://www.python.org/downloads/>`__.
 
 4. Specify Python installation location in MATLAB:
 
-   -  Run ``pyenv('Version', pathtopython')``, where ``pathtopython`` is the path
+   -  Run ``pyenv('Version', 'pathtopython')``, where ``pathtopython`` is the path
       to where Python is installed. Here are some typical locations
       depending on your OS:
 
@@ -100,7 +105,9 @@ Python executable. The following instructions are from the
          for version 3.10.
       -  **Linux**: ``/usr/bin/python3.10``, for version 3.10. Use
          ``whereis python3`` to find possible locations.
-      -  **MacOS**: Someone with a Mac, please write how you do this…
+      -  **MacOS**: The Python executable is typically located using:
+         ``which python3``. Common installation locations include:
+         ``/usr/local/bin/python3`` and ``/opt/homebrew/bin/python3``.
 
 5. Try creating an instance of CoolPropWrapper() in MATLAB:
 
@@ -119,4 +126,4 @@ Next steps
 
 Congrats! Hopefully, at this point, you have successfully made a copy of
 this repo and installed the required programs. Next, let’s run the
-Tutorial script to make sure everything is working properly.
+sample script to make sure everything is working properly.

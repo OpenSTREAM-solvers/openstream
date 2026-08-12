@@ -10,8 +10,10 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
@@ -22,7 +24,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Solvers" href="Solvers.html" />
+    <link rel="next" title="Solver" href="Solvers.html" />
     <link rel="prev" title="InputEnums" href="InputEnums.html" /> 
 </head>
 
@@ -36,6 +38,7 @@
           
           <a href="../index.html" class="icon icon-home">
             OpenSTREAM
+              <img src="../_static/logo-transparent.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -47,17 +50,99 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Packages</span></p>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/theory/index.html">Theory overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html">Mixture model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#mixture-relaxation-model">Mixture relaxation model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/Mixture_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/theory/TwoFluid_Model_Theory.html">Two-fluid model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/TwoFluid_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/TwoFluid_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/TwoFluid_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/TwoFluid_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/TwoFluid_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/theory/ThreeField_Model_Theory.html">Three-field model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/ThreeField_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/ThreeField_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/ThreeField_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/ThreeField_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/ThreeField_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/theory/FourField_Model_Theory.html">Four-field model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/FourField_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/FourField_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/FourField_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/FourField_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/theory/FourField_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/glossary.html">Glossary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#recommended-terminology">Recommended terminology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#style-notes">Style notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/notation.html">Notation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/notation.html#general-conventions">General conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/notation.html#primary-variables">Primary variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/notation.html#phase-and-field-subscripts">Phase and field subscripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/notation.html#source-term-notation">Source-term notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/notation.html#closure-model-notation">Closure model notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/notation.html#units">Units</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/references.html">Global reference list</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#overviews">Overviews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#mixture-model">Mixture model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#two-fluid-model">Two-fluid model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#three-field-model">Three-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#four-field-model">Four-field model</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code packages</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Inputs.html">Inputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="InputEnums.html">InputEnums</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Session</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Solvers.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Solvers.html">Solver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-FourField.html">Four-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-Mixture.html">Mixture solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-ThreeField.html">Three-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Solvers-TwoFluid.html">Two-fluid solver</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">External Packages</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External packages</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
 </ul>
@@ -65,8 +150,35 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/contribute.html">Contribute to the documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#coding-standards">Coding Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#communication">Communication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#setup-sublime-text-as-text-editor">Setup Sublime Text as text editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#configure-python-and-sphinx">Configure Python and Sphinx</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#setup-python">Setup Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#install-sphinx-and-dependencies">Install Sphinx and dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#start-writing">Start writing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#full-build">Full build</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#maintainers">Maintainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors-and-users">Contributors and users</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -95,75 +207,115 @@
              
   <section id="session">
 <h1>Session<a class="headerlink" href="#session" title="Link to this heading"></a></h1>
-<dl class="mat class" id="module-Session">
-<dt class="sig sig-object mat" id="Session.Log">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log" title="Link to this definition"></a></dt>
+<p>The <a class="reference internal" href="#module-Session" title="Session"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Session</span></code></a> package in <strong>OpenSTREAM</strong> provides tools for managing session environments, logging, and file structure during simulations. It helps ensure organized workflows and consistent runtime behavior. This includes:</p>
+<ul class="simple">
+<li><p>Session logging manager <a class="reference internal" href="#Session.Log" title="Session.Log"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.Log</span></code></a></p></li>
+<li><p>Logging mode: <a class="reference internal" href="#Session.LogMode" title="Session.LogMode"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.LogMode</span></code></a></p></li>
+<li><p>Session management: <a class="reference internal" href="#Session.Session" title="Session.Session"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.Session</span></code></a></p></li>
+</ul>
+<hr class="docutils" />
+<dl class="mat function" id="module-Session">
+<dt class="sig sig-object mat" id="Session.isLegalPath">
+<span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
+<dd><p>ISLEGALPATH Checks if the given pathname is valid on the current operating system</p>
+<p>This function attempts to convert the input pathname to a Java Path object.
+If the conversion succeeds, the path is considered legal and the function returns true.
+If an exception is thrown during conversion, the path is considered illegal and the function returns false.</p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>pathname — String representing the file or folder path to validate</p></li>
+</ul>
+<p>Output:</p>
+<ul class="simple">
+<li><p>bool     — Logical true if the path is valid, false otherwise</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat class">
+<dt class="sig sig-object mat" id="Session.Session">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>LOG Console log manager
-Detailed explanation goes here</p>
+<p>SESSION Class for managing simulation session metadata and logging</p>
+<p>This class handles session naming, directory creation, and logging setup.
+It ensures that session directories are valid and manages file overwriting behavior.
+It also integrates with the Log class to control output and warnings.</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.Log">
-<span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.Log" title="Link to this definition"></a></dt>
-<dd><p>LOG Construct an instance of this class
-Detailed explanation goes here</p>
+<dt class="sig sig-object mat" id="Session.Session.Session">
+<span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.Session" title="Link to this definition"></a></dt>
+<dd><p>SESSION Constructor for Session class</p>
+<p>Initializes session metadata including name, directory, and overwrite behavior.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>opt.name            — Session name</p></li>
+<li><p>opt.dirName         — Directory name</p></li>
+<li><p>opt.parentDir       — Parent directory path</p></li>
+<li><p>opt.overwriteFiles  — Flag to allow overwriting existing session files</p></li>
+</ul>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Log.LOGFID">
-<span class="sig-name descname"><span class="pre">LOGFID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1</span></em><a class="headerlink" href="#Session.Log.LOGFID" title="Link to this definition"></a></dt>
-<dd><p>log file</p>
+<dt class="sig sig-object mat" id="Session.Session.dirName">
+<span class="sig-name descname"><span class="pre">dirName</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Session.Session.dirName" title="Link to this definition"></a></dt>
+<dd><p>Name of the session directory</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Log.showWarnings">
-<span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Log.showWarnings" title="Link to this definition"></a></dt>
-<dd><p>Warnings</p>
+<dt class="sig sig-object mat" id="Session.Session.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#Session.Session.directory" title="Link to this definition"></a></dt>
+<dd><p>Full path to the session directory</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.log">
+<span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#Session.Session.log" title="Link to this definition"></a></dt>
+<dd><p>Log object for managing output and warnings</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Session.Session.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the session (used for log file naming)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.overwriteFiles">
+<span class="sig-name descname"><span class="pre">overwriteFiles</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Session.Session.overwriteFiles" title="Link to this definition"></a></dt>
+<dd><p>Flag to allow overwriting existing session files</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.parentDir">
+<span class="sig-name descname"><span class="pre">parentDir</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;&quot;</span></em><a class="headerlink" href="#Session.Session.parentDir" title="Link to this definition"></a></dt>
+<dd><p>Parent directory where session folder will be created</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Session.showWarnings">
+<span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Session.showWarnings" title="Link to this definition"></a></dt>
+<dd><p>Flag to control display of warnings</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.log" title="Link to this definition"></a></dt>
-<dd><p>LOG Log events</p>
+<dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
+<span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
+<dd><p>MAKESESSIONDIRECTORY Creates the session directory</p>
+<p>Validates path legality, handles existing directories,
+closes open files and diaries if necessary, and creates the directory.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.warning">
-<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.warning" title="Link to this definition"></a></dt>
-<dd><p>WARNING Log warnings</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.diaryOff">
-<span class="sig-name descname"><span class="pre">diaryOff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.diaryOff" title="Link to this definition"></a></dt>
-<dd><p>DIARYOFF   Turn diary off</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.diaryOn">
-<span class="sig-name descname"><span class="pre">diaryOn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.diaryOn" title="Link to this definition"></a></dt>
-<dd><p>DIARYON    Turn diary on</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.delete">
-<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
-<dd><p>DELETE Deconstructor of Log</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.openLog">
-<span class="sig-name descname"><span class="pre">openLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.openLog" title="Link to this definition"></a></dt>
-<dd><p>SETUPLOG Open/Setup the logging file</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Log.closeLog">
-<span class="sig-name descname"><span class="pre">closeLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.closeLog" title="Link to this definition"></a></dt>
-<dd><p>CLOSELOG Close log file reference</p>
+<dt class="sig sig-object mat" id="Session.Session.setupLog">
+<span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
+<dd><p>SETUPLOG Initializes the Log object for the session</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>LOGMODE     — Logging mode (console, file, both, none)</p></li>
+<li><p>opts.LOGFID — Optional file ID for logging</p></li>
+</ul>
 </dd></dl>
 
 </dd>
@@ -171,46 +323,118 @@ Detailed explanation goes here</p>
 </div>
 </dd></dl>
 
-<dl class="mat function">
-<dt class="sig sig-object mat" id="Session.isLegalPath">
-<span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">isLegalPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">pathname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.isLegalPath" title="Link to this definition"></a></dt>
-<dd><p>ISLEGALPATH Determine if a path is legal in current OS</p>
-</dd></dl>
-
 <dl class="mat class">
-<dt class="sig sig-object mat" id="Session.Session">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session" title="Link to this definition"></a></dt>
+<dt class="sig sig-object mat" id="Session.Log">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
-<p>SESSION Summary of this class goes here
-Detailed explanation goes here</p>
+<p>LOG Console and file-based logging manager</p>
+<p>This class manages logging of messages and warnings to console and/or file.
+It supports multiple logging modes, integrates with session management,
+and provides diary functionality for persistent logs.</p>
 <div class="members docutils container">
 <dl>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.Session">
-<span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.Session" title="Link to this definition"></a></dt>
-<dd><p>SESSION Construct an instance of this class
-Detailed explanation goes here</p>
+<dt class="sig sig-object mat" id="Session.Log.Log">
+<span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.Log" title="Link to this definition"></a></dt>
+<dd><p>LOG Constructor for Log class</p>
+<p>Initializes logging mode, session context, and warning settings.
+Creates log file and session directory if needed.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>LOGMODE          — Determines where logs go (console, file, both, or none), using <a class="reference internal" href="#Session.LogMode" title="Session.LogMode"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Session.LogMode</span></code></a>.</p></li>
+<li><p>opt.session      — Session object for directory and naming context</p></li>
+<li><p>opt.LOGFID       — File ID for the open log file.</p></li>
+<li><p>opt.showWarnings — Whether to display warnings in the console.</p></li>
+</ul>
 </dd></dl>
 
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
-<dt class="sig sig-object mat" id="Session.Session.showWarnings">
-<span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Session.showWarnings" title="Link to this definition"></a></dt>
-<dd><p>Warnings</p>
+<dt class="sig sig-object mat" id="Session.Log.LOGFID">
+<span class="sig-name descname"><span class="pre">LOGFID</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1</span></em><a class="headerlink" href="#Session.Log.LOGFID" title="Link to this definition"></a></dt>
+<dd><p>File ID for log file</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.LOGMODE">
+<span class="sig-name descname"><span class="pre">LOGMODE</span></span><a class="headerlink" href="#Session.Log.LOGMODE" title="Link to this definition"></a></dt>
+<dd><p>Logging mode (console only, file only, both, or none)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.diaryFilePath">
+<span class="sig-name descname"><span class="pre">diaryFilePath</span></span><a class="headerlink" href="#Session.Log.diaryFilePath" title="Link to this definition"></a></dt>
+<dd><p>Full path to the diary file</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.diaryIsOn">
+<span class="sig-name descname"><span class="pre">diaryIsOn</span></span><em class="property"> <span class="pre">=</span> <span class="pre">false</span></em><a class="headerlink" href="#Session.Log.diaryIsOn" title="Link to this definition"></a></dt>
+<dd><p>Flag indicating whether MATLAB diary is active</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.logFileName">
+<span class="sig-name descname"><span class="pre">logFileName</span></span><a class="headerlink" href="#Session.Log.logFileName" title="Link to this definition"></a></dt>
+<dd><p>Name of the log file (without extension)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.logFilePath">
+<span class="sig-name descname"><span class="pre">logFilePath</span></span><a class="headerlink" href="#Session.Log.logFilePath" title="Link to this definition"></a></dt>
+<dd><p>Full path to the log file</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt class="sig sig-object mat" id="Session.Log.showWarnings">
+<span class="sig-name descname"><span class="pre">showWarnings</span></span><em class="property"> <span class="pre">=</span> <span class="pre">true</span></em><a class="headerlink" href="#Session.Log.showWarnings" title="Link to this definition"></a></dt>
+<dd><p>Flag to control display of warnings</p>
 </dd></dl>
 
 </dd>
 <dt>Method Summary</dt><dd><dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.setupLog">
-<span class="sig-name descname"><span class="pre">setupLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">session</span></em>, <em class="sig-param"><span class="pre">LOGMODE</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.setupLog" title="Link to this definition"></a></dt>
-<dd><p>SETUPLOG Setup log</p>
+<dt class="sig sig-object mat" id="Session.Log.closeLog">
+<span class="sig-name descname"><span class="pre">closeLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.closeLog" title="Link to this definition"></a></dt>
+<dd><p>CLOSELOG Closes log file and resets file ID</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Session.Session.makeSessionDirectory">
-<span class="sig-name descname"><span class="pre">makeSessionDirectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Session.makeSessionDirectory" title="Link to this definition"></a></dt>
-<dd><p>MAKESESSIONDIRECTORY Make the session directory</p>
-<p>Check if session directory is legal and/or exists</p>
+<dt class="sig sig-object mat" id="Session.Log.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.delete" title="Link to this definition"></a></dt>
+<dd><p>DELETE Destructor for log class</p>
+<p>Ensures log file and diary are properly closed</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Log.diaryOff">
+<span class="sig-name descname"><span class="pre">diaryOff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.diaryOff" title="Link to this definition"></a></dt>
+<dd><p>DIARYOFF Turn off diary logging</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Log.diaryOn">
+<span class="sig-name descname"><span class="pre">diaryOn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.diaryOn" title="Link to this definition"></a></dt>
+<dd><p>DIARYON Turn on diary logging if applicable</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Log.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.log" title="Link to this definition"></a></dt>
+<dd><p>LOG Logs messages to console and/or file depending on LOGMODE</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Log.openLog">
+<span class="sig-name descname"><span class="pre">openLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.openLog" title="Link to this definition"></a></dt>
+<dd><p>OPENLOG Opens log file for writing</p>
+<p>Optionally keeps it open between writes</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Session.Log.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">varargin</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Session.Log.warning" title="Link to this definition"></a></dt>
+<dd><p>WARNING Logs warnings using MATLAB’s built-in warning mechanism</p>
+<p>Optionally writes to file if warnings are suppressed</p>
 </dd></dl>
 
 </dd>
@@ -222,7 +446,11 @@ Detailed explanation goes here</p>
 <dt class="sig sig-object mat" id="Session.LogMode">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Session.</span></span><span class="sig-name descname"><span class="pre">LogMode</span></span><a class="headerlink" href="#Session.LogMode" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">uint16</span></code></p>
-<p>LOGMODE Enumeration class of possible log modes</p>
+<p>LOGMODE Enumeration of supported logging modes</p>
+<p>This enumeration defines the available logging configurations
+for the simulation framework. It is used to control whether
+messages and warnings are printed to the console, written to a file,
+both, or suppressed entirely.</p>
 </dd></dl>
 
 </section>
@@ -232,13 +460,13 @@ Detailed explanation goes here</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="InputEnums.html" class="btn btn-neutral float-left" title="InputEnums" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Solvers.html" class="btn btn-neutral float-right" title="Solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Solvers.html" class="btn btn-neutral float-right" title="Solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, The OpenSTREAM Team.</p>
+    <p>&#169; Copyright 2024–2026, The OpenSTREAM Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

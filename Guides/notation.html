@@ -1,0 +1,543 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notation &mdash; OpenSTREAM  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Global reference list" href="references.html" />
+    <link rel="prev" title="Glossary" href="glossary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenSTREAM
+              <img src="../_static/logo-transparent.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and Github</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Theory overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory/Mixture_Model_Theory.html">Mixture model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#mixture-relaxation-model">Mixture relaxation model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="theory/TwoFluid_Model_Theory.html">Two-fluid model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="theory/TwoFluid_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/TwoFluid_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/TwoFluid_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/TwoFluid_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/TwoFluid_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="theory/ThreeField_Model_Theory.html">Three-field model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="theory/ThreeField_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/ThreeField_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/ThreeField_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/ThreeField_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/ThreeField_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="theory/FourField_Model_Theory.html">Four-field model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="theory/FourField_Model_Theory.html#governing-equations">Governing equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/FourField_Model_Theory.html#closure-models">Closure models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/FourField_Model_Theory.html#features-and-assumptions">Features and assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/FourField_Model_Theory.html#role-in-openstream">Role in OpenSTREAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/FourField_Model_Theory.html#implementation-notes">Implementation notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#recommended-terminology">Recommended terminology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="glossary.html#style-notes">Style notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Notation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-conventions">General conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#primary-variables">Primary variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phase-and-field-subscripts">Phase and field subscripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#source-term-notation">Source-term notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closure-model-notation">Closure model notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">Global reference list</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#overviews">Overviews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#mixture-model">Mixture model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#two-fluid-model">Two-fluid model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#three-field-model">Three-field model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#four-field-model">Four-field model</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Packages/Inputs.html">Inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Packages/InputEnums.html">InputEnums</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Packages/Session.html">Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Packages/Solvers.html">Solver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Packages/Solvers-FourField.html">Four-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Packages/Solvers-Mixture.html">Mixture solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Packages/Solvers-ThreeField.html">Three-field solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Packages/Solvers-TwoFluid.html">Two-fluid solver</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External packages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ExternalPackages/CoolPropWrapper.html">CoolPropWrapper</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#coding-standards">Coding Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#communication">Communication</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#setup-sublime-text-as-text-editor">Setup Sublime Text as text editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#configure-python-and-sphinx">Configure Python and Sphinx</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#setup-python">Setup Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#install-sphinx-and-dependencies">Install Sphinx and dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#start-writing">Start writing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#full-build">Full build</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#maintainers">Maintainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors-and-users">Contributors and users</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenSTREAM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Notation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Guides/notation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="notation">
+<h1>Notation<a class="headerlink" href="#notation" title="Link to this heading"></a></h1>
+<p>This page summarizes the notation conventions used in the OpenSTREAM documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.</p>
+<section id="general-conventions">
+<h2>General conventions<a class="headerlink" href="#general-conventions" title="Link to this heading"></a></h2>
+<p>OpenSTREAM uses one-dimensional, cross-section averaged conservation equations. Unless otherwise stated, the independent variables are time and the axial coordinate:</p>
+<div class="math notranslate nohighlight">
+\[t \quad \text{and} \quad z\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is time and <span class="math notranslate nohighlight">\(z\)</span> is the axial coordinate along the flow channel.</p>
+<p>The following conventions are used throughout the documentation:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(z\)</span> for the axial coordinate.</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> for time.</p></li>
+<li><p><span class="math notranslate nohighlight">\(k\)</span> as a generic field or phase index when no specific constituent is intended.</p></li>
+<li><p>Subscripts identify phases, fields, interfaces, and walls.</p></li>
+<li><p>Superscripts identify time levels, iteration counters, or model-specific states when needed.</p></li>
+<li><p>All symbols are defined immediately after the equation in which they first appear.</p></li>
+</ul>
+</section>
+<section id="primary-variables">
+<h2>Primary variables<a class="headerlink" href="#primary-variables" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 25.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Suggested name</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(t\)</span></p></td>
+<td><p>time</p></td>
+<td><p>Time coordinate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(z\)</span></p></td>
+<td><p>axial coordinate</p></td>
+<td><p>One-dimensional spatial coordinate along the flow path.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>flow area</p></td>
+<td><p>Cross-sectional flow area.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(P_w\)</span></p></td>
+<td><p>wetted perimeter</p></td>
+<td><p>Wall perimeter in contact with the fluid or liquid film.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(D_h\)</span></p></td>
+<td><p>hydraulic diameter</p></td>
+<td><p>Hydraulic diameter of the channel.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\alpha_k\)</span></p></td>
+<td><p>volume fraction</p></td>
+<td><p>Volume fraction of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\rho_k\)</span></p></td>
+<td><p>density</p></td>
+<td><p>Density of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(u_k\)</span></p></td>
+<td><p>velocity</p></td>
+<td><p>Axial velocity of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(p\)</span></p></td>
+<td><p>pressure</p></td>
+<td><p>Pressure (shared among fields).</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(T_k\)</span></p></td>
+<td><p>temperature</p></td>
+<td><p>Temperature of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(h_k\)</span></p></td>
+<td><p>specific enthalpy</p></td>
+<td><p>Specific enthalpy of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(e_k\)</span></p></td>
+<td><p>specific internal energy</p></td>
+<td><p>Specific internal energy of field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(E_k\)</span></p></td>
+<td><p>total specific energy</p></td>
+<td><p>Total specific energy of field or phase <span class="math notranslate nohighlight">\(k\)</span>, if used.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(x\)</span></p></td>
+<td><p>vapor quality</p></td>
+<td><p>Vapor mass fraction in a two-phase mixture.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(q''_w\)</span></p></td>
+<td><p>wall heat flux</p></td>
+<td><p>Heat flux imposed at, or transferred through, the wall.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>gravitational acceleration</p></td>
+<td><p>Gravitational acceleration.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="phase-and-field-subscripts">
+<h2>Phase and field subscripts<a class="headerlink" href="#phase-and-field-subscripts" title="Link to this heading"></a></h2>
+<p>The notation distinguishes between thermodynamic phases and computational fields. A phase is a physical state of matter, such as liquid or vapor. A field is a computationally resolved constituent with its own transported variables.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Subscript</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(l\)</span></p></td>
+<td><p>liquid phase</p></td>
+<td><p>Used for liquid phase.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>vapor phase</p></td>
+<td><p>Used consistently for vapor or gas.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
+<td><p>liquid film</p></td>
+<td><p>Used for the wall liquid-film field in annular flow models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>droplets</p></td>
+<td><p>Used for entrained liquid droplets in the vapor core.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(wall\)</span></p></td>
+<td><p>wall</p></td>
+<td><p>Used for wall quantities, such as <span class="math notranslate nohighlight">\(T_{wall}\)</span> or <span class="math notranslate nohighlight">\(q''_{wall}\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(i\)</span></p></td>
+<td><p>interface</p></td>
+<td><p>Used for interfacial quantities, such as <span class="math notranslate nohighlight">\(a_i\)</span> or <span class="math notranslate nohighlight">\(htc_i\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(w\)</span></p></td>
+<td><p>disturbance wave</p></td>
+<td><p>Use for disturbance wave quantities when a compact subscript is needed.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="source-term-notation">
+<h2>Source-term notation<a class="headerlink" href="#source-term-notation" title="Link to this heading"></a></h2>
+<p>Source terms make it clear which conserved quantity is affected and which interaction is represented.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\Gamma_k\)</span></p></td>
+<td><p>mass source</p></td>
+<td><p>Net mass source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(M_k\)</span></p></td>
+<td><p>momentum source</p></td>
+<td><p>Net momentum source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(Q_k\)</span></p></td>
+<td><p>energy source</p></td>
+<td><p>Net energy source to field or phase <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Gamma_{a \rightarrow b}\)</span></p></td>
+<td><p>mass transfer rate</p></td>
+<td><p>Mass transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(M_{a \rightarrow b}\)</span></p></td>
+<td><p>momentum transfer</p></td>
+<td><p>Momentum transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(Q_{a \rightarrow b}\)</span></p></td>
+<td><p>heat or energy transfer</p></td>
+<td><p>Energy transferred from field <span class="math notranslate nohighlight">\(a\)</span> to field <span class="math notranslate nohighlight">\(b\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="closure-model-notation">
+<h2>Closure model notation<a class="headerlink" href="#closure-model-notation" title="Link to this heading"></a></h2>
+<p>Closure models use notation that clearly identifies the modeled process. Examples include:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 35.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Suggested meaning</p></th>
+<th class="head"><p>Typical use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(C_D\)</span></p></td>
+<td><p>drag coefficient</p></td>
+<td><p>Interfacial or droplet drag model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(f_{wall}\)</span></p></td>
+<td><p>wall friction factor</p></td>
+<td><p>Wall momentum loss.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(htc_{wall}\)</span></p></td>
+<td><p>Wall heat-transfer coefficient</p></td>
+<td><p>Wall heat transfer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(htc_i\)</span></p></td>
+<td><p>Interfacial heat-transfer coefficient</p></td>
+<td><p>Interfacial heat transfer.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(a_i\)</span></p></td>
+<td><p>interfacial area concentration</p></td>
+<td><p>Interfacial transfer models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\tau_{wall}\)</span></p></td>
+<td><p>wall shear stress</p></td>
+<td><p>Wall friction and pressure drop.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\tau_i\)</span></p></td>
+<td><p>interfacial shear stress</p></td>
+<td><p>Momentum exchange between fields.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(t_{relax}\)</span></p></td>
+<td><p>relaxation time</p></td>
+<td><p>Relaxation models.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
+<p>SI units are used consistently unless a specific model, correlation, or input file requires otherwise.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Quantity</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Length</p></td>
+<td><p>m</p></td>
+<td><p>Use for <span class="math notranslate nohighlight">\(z\)</span>, hydraulic diameter, and channel dimensions.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Time</p></td>
+<td><p>s</p></td>
+<td><p>Use for <span class="math notranslate nohighlight">\(t\)</span>, time steps, and relaxation times.</p></td>
+</tr>
+<tr class="row-even"><td><p>Pressure</p></td>
+<td><p>Pa</p></td>
+<td><p>Use for absolute pressure unless otherwise stated.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Temperature</p></td>
+<td><p>K</p></td>
+<td><p>Use kelvin in equations. Celsius may be used in user-facing examples if clearly stated.</p></td>
+</tr>
+<tr class="row-even"><td><p>Density</p></td>
+<td><p>kg/m<sup>3</sup></p></td>
+<td><p>Use for phase, field, and mixture density.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Velocity</p></td>
+<td><p>m/s</p></td>
+<td><p>Use for axial velocities.</p></td>
+</tr>
+<tr class="row-even"><td><p>Mass flow rate</p></td>
+<td><p>kg/s</p></td>
+<td><p>Use for total or field-specific mass flow rates.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mass flux</p></td>
+<td><p>kg/m<sup>2</sup>/s</p></td>
+<td><p>Use for area-normalized mass flow rate.</p></td>
+</tr>
+<tr class="row-even"><td><p>Heat flux</p></td>
+<td><p>W/m<sup>2</sup></p></td>
+<td><p>Use for wall heat flux.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Specific enthalpy</p></td>
+<td><p>J/kg</p></td>
+<td><p>Use for phase or field enthalpy.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="glossary.html" class="btn btn-neutral float-left" title="Glossary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="references.html" class="btn btn-neutral float-right" title="Global reference list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024–2026, The OpenSTREAM Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
