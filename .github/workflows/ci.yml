@@ -17,14 +17,14 @@ jobs:
         uses: actions/checkout@v7
         with:
           submodules: true
-          path: ../openstream
+          path: ./openstream
 
       - name: Checkout openstream-database
         uses: actions/checkout@v6
         with:
           repository: OpenSTREAM-solvers/openstream-database
           token:  ${{ secrets.ORG_REPO_TOKEN }}
-          path: ../openstream-database
+          path: ./openstream-database
           ref: lecorre
       
       - name: Setup Python
