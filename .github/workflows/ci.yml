@@ -69,4 +69,4 @@ jobs:
         uses: matlab-actions/run-tests@v3
         with:
           output-detail: verbose
-          source-folder: ./openstream/openstream/tests
+          source-folder: ./openstream/tests
