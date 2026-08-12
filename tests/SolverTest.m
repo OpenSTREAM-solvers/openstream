@@ -7,8 +7,9 @@ classdef SolverTest < matlab.unittest.TestCase
     end
     
     methods (TestClassSetup)
+
         % Shared setup for the entire test class
-        function makeInputFiles(testCase)
+        function makeTestInputFiles(testCase)
             
             % Currently assumes openstream-database is in parent directory
             %   TODO: improve this configuration setting. Maybe we can use
