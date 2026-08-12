@@ -12,18 +12,19 @@ jobs:
     #runs-on: ubuntu-latest
     runs-on: [self-hosted, linux, x64, matlab]
     steps:
-    
-      - name: Checkout with submodules
-        uses: actions/checkout@v7
-        with:
-          submodules: true
 
       - name: Checkout openstream-database
         uses: actions/checkout@v6
         with:
           repository: OpenSTREAM-solvers/openstream-database
-          path: ../openstream-database
-
+          path: ./openstream-database
+    
+      - name: Checkout with submodules
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+          path: ./openstream
+      
       - name: Setup Python
         uses: actions/setup-python@v7
         with:
