@@ -13,7 +13,7 @@ MATLAB interface that interacts with CoolProp through Python. Both
 OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
 (cloning) of these programs will be our first step.
 
-Install using Git and Github
+Install using Git and GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  There are two main ways of interacting with GitHub to use and
@@ -83,7 +83,7 @@ executable. The following instructions are from the
    -  **Linux**: Chances are, you already have a version of Python
       installed. Verify the version using ``python3 --version``. If
       Python is not installed, or an incompatible version is installed,
-      install appropriate version using the OS package manager. For
+      install an appropriate version using the OS package manager. For
       Debian-based Linux distros (such as Ubuntu), use
       ``sudo apt-get install python3.x`` to install the *x* version of
       Python3.
