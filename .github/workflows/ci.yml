@@ -14,12 +14,12 @@ jobs:
     steps:
     
       - name: Checkout with submodules
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: true
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -33,7 +33,7 @@ jobs:
         run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -46,7 +46,7 @@ jobs:
       # Sets up MATLAB on a GitHub-hosted runner
       #- name: Set up MATLAB
       #  uses: matlab-actions/setup-matlab@v3
-      - name: MATLAB version
+      - name: Query MATLAB version
         run: |
           /opt/MATLAB/R2026a/bin/matlab -batch "version"
           
