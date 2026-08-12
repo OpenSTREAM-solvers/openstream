@@ -53,3 +53,5 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run all tests
         uses: matlab-actions/run-tests@v3
+        with:
+          output-detail: verbose
