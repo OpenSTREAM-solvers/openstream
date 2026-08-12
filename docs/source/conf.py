@@ -85,13 +85,6 @@ html_theme_options = {
     "collapse_navigation": False,
     "includehidden": True,
 }
-html_context = {
-    "display_github": True,
-    "github_user": "OpenSTREAM-solvers",
-    "github_repo": "openstream",
-    "github_version": "main",
-    "conf_py_path": "/docs/source/",
-}
 
 # -- Options for LaTex output ------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-latex-output
@@ -129,7 +122,7 @@ latex_elements = {
     \vfill
 
     \includegraphics[width=0.40\textwidth]{logo-transparent.png}\par
-    \vspace{1cm}
+    \vspace{4cm}
 
     {\small\color{gray} \textcopyright\ 2024--\the\year\ The OpenSTREAM Team \\ Licensed under the MIT License \\ https://github.com/OpenSTREAM-solvers/openstream \par}
     \vspace{1cm}
