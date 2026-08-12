@@ -17,8 +17,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: OpenSTREAM-solvers/openstream-database
-          token:  ${{ secrets.GITHUB_TOKEN  }}
+          token:  ${{ secrets.ORG_REPO_TOKEN }}
           path: ./openstream-database
+          ref: lecorre
     
       - name: Checkout with submodules
         uses: actions/checkout@v7
