@@ -20,7 +20,8 @@ classdef SolverTest < matlab.unittest.TestCase
             %   some kind of configuration file... YAML?
             %   TODO: create parameterized files
             %
-            addpath('../../openstream-database')
+            %addpath('../../openstream-database')
+
 
             % Demo inputs
             entryData = table;
@@ -54,9 +55,9 @@ classdef SolverTest < matlab.unittest.TestCase
     methods (Test)
         % Test methods
 
-        %function solverTest(testCase)
-        %    testCase.verifyFail("Unimplemented test");
-        %end
+        function solverTest(testCase)
+           testCase.verifyFail("Unimplemented test");
+        end
     end
 
     methods (TestClassTeardown)
