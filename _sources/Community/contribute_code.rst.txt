@@ -10,6 +10,7 @@ How to Contribute
 
 .. 
 
+   - The OpenSTREAM repository is available at `OpenSTREAM-solvers/openstream <https://github.com/OpenSTREAM-solvers/openstream>`_
    - Click the **Fork** button on GitHub to create your copy.
 
 .. 
