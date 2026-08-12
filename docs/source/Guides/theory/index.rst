@@ -19,12 +19,12 @@ For detailed equations, derivations, and implementation notes, check out the ind
 
 :doc:`Three-field model <ThreeField_Model_Theory>`
    * Purpose: Modeling annular two-phase flow with separate vapor, droplets, and liquid film fields.
-   * Assumptions: Thermal equilibrium (for now), valid up to film dryout.
+   * Assumptions: Thermal equilibrium, valid up to film dryout.
    * Equations: Conservation of mass and momentum for the three fields.
 
 :doc:`Four-field model <FourField_Model_Theory>`
    * Purpose: Advanced annular flow modeling with explicit representation of disturbance waves, including non-equilibrium dynamics.
-   * Assumptions: Thermal equilibrium (for now).
+   * Assumptions: Thermal equilibrium, valid up to film dryout.
    * Equations: Conservation of mass and momentum for the four fields + wave number density transport.
 
 Ready to dive deeper? Pick a model and start exploring!

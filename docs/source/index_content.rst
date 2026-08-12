@@ -10,7 +10,7 @@ What's inside?
 OpenSTREAM offers a suite of solver frameworks tailored to different modeling needs:
 
 - A **mixture solver** – with thermal non-equilibrium capabilities
-- A generic **two-fluid solver** – for generic separate-phase modeling
+- A generic **two-fluid solver** – for separate-phase modeling
 - A **three-field solver** – for annular two-phase flow
 - An advanced **four-field solver** – for annular two-phase flow explicitly capturing disturbance waves
 
