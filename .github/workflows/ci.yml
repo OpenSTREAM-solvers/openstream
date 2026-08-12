@@ -13,6 +13,12 @@ jobs:
     runs-on: [self-hosted, linux, x64, matlab]
     steps:
 
+      - name: Checkout with submodules
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+          path: ./openstream
+
       - name: Checkout openstream-database
         uses: actions/checkout@v6
         with:
@@ -20,12 +26,6 @@ jobs:
           token:  ${{ secrets.ORG_REPO_TOKEN }}
           path: ./openstream-database
           ref: lecorre
-    
-      - name: Checkout with submodules
-        uses: actions/checkout@v7
-        with:
-          submodules: true
-          path: ./openstream
       
       - name: Setup Python
         uses: actions/setup-python@v7
