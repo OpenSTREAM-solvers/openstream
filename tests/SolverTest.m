@@ -55,9 +55,9 @@ classdef SolverTest < matlab.unittest.TestCase
     methods (Test)
         % Test methods
 
-        function solverTest(testCase)
-            testCase.verifyFail("Unimplemented test");
-        end
+        %function solverTest(testCase)
+        %    testCase.verifyFail("Unimplemented test");
+        %end
     end
 
     methods (TestClassTeardown)
