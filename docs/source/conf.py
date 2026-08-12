@@ -95,21 +95,39 @@ latex_table_style = ['booktabs']
 
 latex_elements = {
     'printindex': r'\def\twocolumn[#1]{#1}\printindex',
+    'preamble': r'''
+    \usepackage{xcolor}
+    \definecolor{openstreamblue}{RGB}{63,66,161}      % primary  #3F42A1
+    \definecolor{openstreamlight}{RGB}{120,123,200}   % lighter  ~ for subtitles/rules
+    \definecolor{openstreampale}{RGB}{225,226,242}    % pale     ~ for background bands
+    ''',
     'maketitle': r'''
     \begin{titlepage}
     \centering
     \makeatletter
-    \vspace*{3cm}
-    {\Huge\bfseries \@title \par}
-    \vspace{1.5cm}
-    {\Large \py@authoraddress \par}
+    \vspace*{2cm}
+
+    {\color{openstreamblue}\rule{\linewidth}{1.2pt}}\par
+    \vspace{0.6cm}
+    {\Huge\bfseries\color{openstreamblue} \@title \par}
+    \vspace{0.4cm}
+    {\large\itshape\color{openstreamlight} Open Solvers for Two-phase flow Research,\\
+     Engineering Analysis and Modeling\par}
     \vspace{0.5cm}
-    {\large \@author \par}
-    \vspace{0.5cm}
+    {\color{openstreamblue}\rule{\linewidth}{1.2pt}}\par
+
+    \vspace{1.2cm}
+    {\Large \@author \par}
+    \vspace{0.3cm}
     {\large \@date \par}
+
     \vfill
-    \includegraphics[width=0.35\textwidth]{logo-transparent.png}
-    \vspace{2cm}
+
+    \includegraphics[width=0.40\textwidth]{logo-transparent.png}\par
+    \vspace{1cm}
+
+    {\small\color{gray} https://openstream-solvers.github.io/openstream \par}
+    \vspace{1cm}
     \makeatother
     \end{titlepage}
     \clearpage
