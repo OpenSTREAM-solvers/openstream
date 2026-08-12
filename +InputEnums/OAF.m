@@ -8,7 +8,7 @@ classdef OAF
     % Models:
     %
     % - WALLIS       — Full Wallis correlation (:cite:t:`wallis1969`, Equation 11.1019)
-    % - WALLIS_SIMP  — Simplified Wallis correlation (:cite:t:`sanmiguel2023`, Equation 6), used for compatibility with codes employing this approach
+    % - WALLIS_SIMP  — Simplified Wallis correlation (:cite:t:`sanmiguel2015`, Equation 6), used for compatibility with codes employing this approach
     % - LEVITAN      — Levitan correlation (:cite:t:`Levitan1989`)
 
     enumeration

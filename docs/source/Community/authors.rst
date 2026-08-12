@@ -28,8 +28,8 @@ OpenSTREAM is built through the collaborative efforts of many talented individua
 - `Cole Dunbar <www.linkedin.com/in/cole-dunbar>`_ (UWM)
 - `Elisabeth Walter <www.linkedin.com/in/elisabeth-walter>`_ (ETHZ)
 - Evan Hurlburt (NNL)
-- `Juliana Duarte <www.linkedin.com/in/julianapduarte>`_ (UWM)
 - Haipeng Li (KTH)
+- `Juliana Duarte <www.linkedin.com/in/julianapduarte>`_ (UWM)
 - `Tyler Lee <www.linkedin.com/in/tyler-lee-6072841b4>`_ (UWM)
 
 ..
