@@ -58,6 +58,13 @@ jobs:
       - name: Query MATLAB version
         run: |
           /opt/MATLAB/R2026a/bin/matlab -batch "version"
+
+      - name: Debug MATLAB paths
+        run: |
+          matlab -batch "disp('--- PWD ---'); disp(pwd);"
+          matlab -batch "disp('--- SolverTest ---'); which -all SolverTest"
+          matlab -batch "disp('--- Stack ---'); which -all Stack"
+          matlab -batch "disp('--- PATH ---'); disp(path)"
           
       # Runs a set of commands using the runners shell
       - name: Run all tests
