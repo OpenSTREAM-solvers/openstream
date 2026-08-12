@@ -13,7 +13,7 @@ classdef SolverTest < matlab.unittest.TestCase
             % Currently assumes openstream-database is in parent directory
             %   TODO: improve this configuration setting. Maybe we can use
             %   some kind of configuration file... YAML?
-            addpath('../openstream-database')
+            addpath('../../openstream-database')
 
             % Demo inputs
             entryData = table;
