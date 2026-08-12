@@ -16,6 +16,15 @@ OpenSTREAM offers a suite of solver frameworks tailored to different modeling ne
 
 These solvers are designed to simulate single-component, thermally expandable, steady-state and transient boiling two-phase flows in straight multi-wall channels, which may be uniformly or non-uniformly heated. The implementation relies on a set of reasonable simplifying assumptions to ensure computational efficiency and stability. Each solver includes a set of baseline closure models, which can be customized by modifying the corresponding class methods in the source code.
 
+Links
+-----
+ 
+OpenSTREAM is developed openly on GitHub:
+
+- **Source code:** `OpenSTREAM-solvers/openstream <https://github.com/OpenSTREAM-solvers/openstream>`_
+- **Report an issue:** `Issue tracker <https://github.com/OpenSTREAM-solvers/openstream/issues>`_
+- **Contribute:** see the :doc:`Community </Community/index>` section
+
 Why OpenSTREAM?
 ---------------
 
