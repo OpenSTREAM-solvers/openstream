@@ -20,7 +20,8 @@ classdef SolverTest < matlab.unittest.TestCase
             %   some kind of configuration file... YAML?
             %   TODO: create parameterized files
             %
-            %addpath('../../openstream-database')
+            addpath('../../openstream-database')
+            addpath('../../openstream')
 
 
             % Demo inputs
