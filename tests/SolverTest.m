@@ -64,7 +64,7 @@ classdef SolverTest < matlab.unittest.TestCase
     methods (Test)
         % Test methods
 
-        function solverTest(testCase)
+        function solverInitialConditionsTest(testCase)
             
             % solver results
             results = testCase.dataset.results;
@@ -88,6 +88,32 @@ classdef SolverTest < matlab.unittest.TestCase
                 0.07, ...
                 "Initial inlet mass flow rate mismatch", ...
                 RelTol=0.001)
+
+            % Check steady state and 1st time step solver properties are
+            % the same
+            mixtureSteady = results.mixtureInit(end);
+            mixtureStep = results.mixture(1);
+            
+            % List of property names, in column shape for looping
+            solverProperties = properties(mixtureSteady);
+            solverProperties = reshape(solverProperties,1,[]);
+
+            % Iterate through double and struct properties.
+            % Time-related properties are expected to be different, so skip
+            for solverProperty=solverProperties
+                propertyType = class(mixtureSteady.(solverProperty{1}));
+                if ismember(string(solverProperty{1}), ["NTIME","TIME","DT","TIDX"])
+                    continue;
+                elseif ismember(string(propertyType),["double","struct"])
+                    testCase.verifyEqual( ...
+                        mixtureStep.(solverProperty{1}), ...
+                        mixtureSteady.(solverProperty{1}), ...
+                        sprintf("Property %s does not match.\n", solverProperty{1}) ...
+                        );
+                else
+                    continue;
+                end
+            end
 
         end
     end
