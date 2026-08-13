@@ -219,7 +219,31 @@
 <li><p>Field class methods for calculating secondary two-fluid parameters.</p></li>
 </ul>
 <hr class="docutils" />
-<dl class="mat class" id="module-Solvers.TwoFluid.TwoFluidSolver">
+<dl class="mat function" id="module-Solvers.TwoFluid.TwoFluidSolver">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.TwoFluidSolver.solve">
+<span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">twfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE Executes the two-fluid solver for steady-state and transient simulations.</p>
+<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a>
+object. It manages initialization, time stepping, axial sweeps, inner
+iterations, convergence checks, and logging.</p>
+<p>Workflow:</p>
+<ul class="simple">
+<li><p>Enables logging and opens persistent log file</p></li>
+<li><p>Validates solver state before execution</p></li>
+<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
+<li><p>If initial step converges, proceeds with transient simulation</p></li>
+<li><p>Handles exceptions and ensures proper log closure</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
+<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
+<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Logs progress and outputs to session directory</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.</span></span><span class="sig-name descname"><span class="pre">TwoFluidSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractSolver" title="Solvers.AbstractSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractSolver</span></code></a></p>
@@ -467,32 +491,29 @@ and null (initial) transient data.</p>
 </div>
 </dd></dl>
 
-<dl class="mat function">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.TwoFluidSolver.solve">
-<span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.TwoFluidSolver.</span></span><span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">twfSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.TwoFluidSolver.solve" title="Link to this definition"></a></dt>
-<dd><p>SOLVE Executes the two-fluid solver for steady-state and transient simulations.</p>
-<p>Runs the full solution process for the <a class="reference internal" href="#module-Solvers.TwoFluid.TwoFluidSolver" title="Solvers.TwoFluid.TwoFluidSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.TwoFluidSolver</span></code></a>
-object. It manages initialization, time stepping, axial sweeps, inner
-iterations, convergence checks, and logging.</p>
-<p>Workflow:</p>
+<hr class="docutils" />
+<dl class="mat class" id="module-Solvers.TwoFluid">
+<dt class="sig sig-object mat" id="Solvers.TwoFluid.REGIMES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">REGIMES</span></span><a class="headerlink" href="#Solvers.TwoFluid.REGIMES" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">double</span></code></p>
+<p>REGIMES Enumeration of two-phase flow regimes</p>
+<p>This class defines the available two-phase flow regimes for constitutive
+model selection, used by the two-fluid solver.</p>
+<p>The flow regimes are defined as an enum class to increase computational
+efficiency while increasing readability of code, particularly when
+different calculations are carried out for different flow regimes.</p>
+<p>Flow regimes:</p>
 <ul class="simple">
-<li><p>Enables logging and opens persistent log file</p></li>
-<li><p>Validates solver state before execution</p></li>
-<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
-<li><p>If initial step converges, proceeds with transient simulation</p></li>
-<li><p>Handles exceptions and ensures proper log closure</p></li>
-</ul>
-<p>Notes:</p>
-<ul class="simple">
-<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
-<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
-<li><p>Supports thermal non-equilibrium modeling</p></li>
-<li><p>Logs progress and outputs to session directory</p></li>
+<li><p>LIQUID            — Single-phase liquid</p></li>
+<li><p>BUBBLY_SUBCOOLED  — Bubbly flow in subcooled region</p></li>
+<li><p>BUBBLY_SATURATED  — Bubbly flow in saturated region</p></li>
+<li><p>INTERMEDIATE      — Intermediate flow region</p></li>
+<li><p>ANNULAR           — Annular flow</p></li>
+<li><p>DFFB              — Dispersed Flow Film Boiling</p></li>
 </ul>
 </dd></dl>
 
-<hr class="docutils" />
-<dl class="mat class" id="module-Solvers.TwoFluid">
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.TwoFluid.Vapor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">Vapor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.TwoFluid.Vapor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractField" title="Solvers.AbstractField"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractField</span></code></a></p>
@@ -2208,27 +2229,6 @@ various models (AREAMEAN, SCALED, DRIFT, FLOWREGIME) based on
 </dd>
 </dl>
 </div>
-</dd></dl>
-
-<dl class="mat class">
-<dt class="sig sig-object mat" id="Solvers.TwoFluid.REGIMES">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.TwoFluid.</span></span><span class="sig-name descname"><span class="pre">REGIMES</span></span><a class="headerlink" href="#Solvers.TwoFluid.REGIMES" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">double</span></code></p>
-<p>REGIMES Enumeration of two-phase flow regimes</p>
-<p>This class defines the available two-phase flow regimes for constitutive
-model selection, used by the two-fluid solver.</p>
-<p>The flow regimes are defined as an enum class to increase computational
-efficiency while increasing readability of code, particularly when
-different calculations are carried out for different flow regimes.</p>
-<p>Flow regimes:</p>
-<ul class="simple">
-<li><p>LIQUID            — Single-phase liquid</p></li>
-<li><p>BUBBLY_SUBCOOLED  — Bubbly flow in subcooled region</p></li>
-<li><p>BUBBLY_SATURATED  — Bubbly flow in saturated region</p></li>
-<li><p>INTERMEDIATE      — Intermediate flow region</p></li>
-<li><p>ANNULAR           — Annular flow</p></li>
-<li><p>DFFB              — Dispersed Flow Film Boiling</p></li>
-</ul>
 </dd></dl>
 
 <hr class="docutils" />
