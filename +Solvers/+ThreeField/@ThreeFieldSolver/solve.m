@@ -33,7 +33,7 @@ tfSolver.inputSet.session.log.diaryOn();
 tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if tfSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
+    error('OpenSTREAM:ThreeFieldSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
 else
     tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
 
@@ -246,6 +246,9 @@ function solver(solveINIT)
             if all([timeDWL < options.SSCONVWF, timeDUf < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
+                if tfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                    tfSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                end
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
                 tfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)

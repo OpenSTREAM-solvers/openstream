@@ -33,7 +33,7 @@ ffSolver.inputSet.session.log.diaryOn();
 ffSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if ffSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
+    error('OpenSTREAM:FourFieldSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
 else
     ffSolver.log('\n\n------------------------------------------- Four-field solver run initiated --------------------------------------------\n')
 
@@ -351,6 +351,9 @@ function solver(solveINIT)
             if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF,timeDWLw < options.SSCONVWF , timeDUw < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
+                if ffSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                    ffSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                end
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
                 ffSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
