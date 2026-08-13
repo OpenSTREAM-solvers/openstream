@@ -25,7 +25,7 @@ jobs:
           path: ./openstream
 
       - name: Checkout openstream-database
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: OpenSTREAM-solvers/openstream-database
           token:  ${{ secrets.ORG_REPO_TOKEN }}
