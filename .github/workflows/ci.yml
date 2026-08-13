@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - matlab-ci
+      - lecorre
+      - main
   workflow_dispatch:
 
 jobs:
