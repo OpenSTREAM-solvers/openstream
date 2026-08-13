@@ -140,15 +140,15 @@ classdef Film < Solvers.AbstractFilm
                     eb = film.EQUIL(Wf, zIdx);
             end
             if isscalar(zIdx) && size(Wf,1)~=1
-                error('Film.DISTRIBUTEOAFW: Matrix W cannot be used with scalar zIdx');
+                error('OpenSTREAM:FourFieldSolver:VectorzIdxRequired','Film.DISTRIBUTEOAFW: Matrix W cannot be used with scalar zIdx');
             elseif ~isscalar(zIdx) && size(Wf,1)~=length(zIdx)
-                error('Film.DISTRIBUTEOAFW: Matrix W and zIdx size mismatch');
+                error('OpenSTREAM:FourFieldSolver:WandzIdxSizeConstencyRequired','Film.DISTRIBUTEOAFW: Matrix W and zIdx size mismatch');
             elseif ~isscalar(zIdx) && size(Wf,1)==1
                 Wf = repmat(Wf,length(zIdx),1);                            % [kg/s]
             end
 
             if ~isobject(film.wave) || ~isobject(film.base)
-                error('Film.DISTRIBUTEOAFW: base or wave not initialized');
+                error('OpenSTREAM:FourFieldSolver:SolverInitializationRequired','Film.DISTRIBUTEOAFW: base or wave not initialized');
             end
 
             film.wave.W(zIdx,:) = (1-eb) .* Wf;                            % [kg/s]
