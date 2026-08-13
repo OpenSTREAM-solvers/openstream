@@ -82,10 +82,10 @@ jobs:
       #  run: make latexpdf
       #  working-directory: ./docs
 
-      - name: Copy pdf file
-        if: steps.makepdf.outcome == 'success'
-        run: mkdir -p ./build/html/files && cp ./build/latex/OpenSTREAM.pdf ./build/html/files/OpenSTREAM.pdf
-        working-directory: ./docs
+      #- name: Copy pdf file
+      #  if: steps.makepdf.outcome == 'success'
+      #  run: mkdir -p ./build/html/files && cp ./build/latex/OpenSTREAM.pdf ./build/html/files/OpenSTREAM.pdf
+      #  working-directory: ./docs
         
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
