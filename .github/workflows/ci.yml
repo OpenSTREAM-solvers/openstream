@@ -63,6 +63,7 @@ jobs:
         run: |
           matlab -batch "disp('--- SolverTest ---'); which -all SolverTest"
           matlab -batch "disp('GITHUB_WORKSPACE:'); disp('$GITHUB_WORKSPACE'); disp('MATLAB PWD:'); disp(pwd)"
+          find "${GITHUB_WORKSPACE}" -type f \( -name '*Test.m' -o -name '*Tests.m' \) -print
           
       # Runs a set of commands using the runners shell
       - name: Run all tests
