@@ -537,6 +537,8 @@ classdef Drop < Solvers.AbstractField
             if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             if nargin < 4, opt = 0; end                                    % Option for complete or simplified force balance
 
+            options = drop.inputSet.options;
+
             iter(1).U = drop.U(zIdx);                                      % [m/s]
             iter(1).Ftot = drop.FTOT(film,zIdx,opt);                       % [N/m^3]
 
@@ -545,15 +547,16 @@ classdef Drop < Solvers.AbstractField
             iter(2).Ftot = drop.FTOT(film,zIdx,opt);% [N/m^3]
 
             eps = 1.0;
-            for k = 3:100
+            for k = 3:options.UDEQUILMAXITER
                 Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot); % [m/s]
                 iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;               % [m/s]
                 drop.U(zIdx) = iter(k).U;                                  % [m/s]
                 iter(k).Ftot = drop.FTOT(film,zIdx,opt);                   % [N/m^3]
                 err = max(abs(iter(k).Ftot),[],'all');                     % [N/m^3]
-                if err<1E-3, break; end
+                if err < options.UDEQUILTOL, break; end
             end
-            if err > 1E-3, disp('Drop UEQUIL model : not converged')
+            if err > options.UDEQUILTOL
+                drop.log('\nEquilibrium drop velocity not converged at node %d after %d iterations. \nVolumetric force residual = %g N/m^3.\n',zIdx,k,err);
             end
 
             Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),drop.U(zIdx),zIdx);

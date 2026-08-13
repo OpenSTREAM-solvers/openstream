@@ -290,6 +290,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
 
+            options = absfilm.inputSet.options;
+
             iter(1).U = absfilm.U(zIdx,:);
             iter(1).Ftot = absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx);
 
@@ -298,15 +300,15 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             iter(2).Ftot = absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx);
 
             eps = 1.0;
-            for k = 3:100
+            for k = 3:options.UFEQUILMAXITER
                 Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
                 iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
                 absfilm.U(zIdx,:)=iter(k).U;
                 iter(k).Ftot = absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx);
                 err = max(abs(iter(k).Ftot),[],'all');
-                if err<1E-3, break; end
+                if err < options.UFEQUILTOL, break; end
             end
-            if err > 1E-3
+            if err > options.UFEQUILTOL
                 fprintf('%s UEQUILS model : not converged -> err=%0.4f\n',class(absfilm), err);
             end
 
@@ -318,6 +320,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
 
+            options = absfilm.inputSet.options;
+
             iter(1).U = absfilm.U(zIdx,:);
             iter(1).Ftot = absfilm.FTOT(drop,zIdx);
 
@@ -326,15 +330,15 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             iter(2).Ftot = absfilm.FTOT(drop,zIdx);
 
             eps = 1.0;
-            for k = 3:100
+            for k = 3:options.UFEQUILMAXITER
                 Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
                 iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
                 absfilm.U(zIdx,:)=iter(k).U;
                 iter(k).Ftot = absfilm.FTOT(drop,zIdx);
                 err = max(abs(iter(k).Ftot),[],'all');
-                if err<1E-3, break; end
+                if err < options.UFEQUILTOL, break; end
             end
-            if err > 1E-3
+            if err > options.UFEQUILTOL
                 fprintf('%s UEQUIL model : not converged -> err=%0.4f\n',class(absfilm), err);
             end
 
@@ -394,6 +398,8 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             %
             % Based on Okawa model assumptions.
 
+            options = absfilm.inputSet.options;
+
             vapor = absfilm.mix.vapor;
             rhof  = absfilm.fluid.RHOF;                                    % [kg/m^3] Saturated liquid density
             rhog  = absfilm.fluid.RHOG;                                    % [kg/m^3] Saturated vapor density
@@ -409,17 +415,18 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             % Film thickness (model consistent with entrainment correlation derivation)
             %delta0 = Wf./film.UEQUILS(mix,zIdx)./perim./rhof;              % Could use this simpler option instead if VAPORFRIC=WALLISTHICK could be selected specifically for this calculation
             slip = ones(size(Wf)); err=1;                                  % [-, -] Set initial guess and error for delta search
-            for it = 1:100
+            for it = 1:options.ENTNUMMAXITER
                 delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim; % [m] Film thickness(es)
                 Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);            % [-] Interfacial friction factor, thick=delta, C=0.005
                 newslip = sqrt(Cw./Cv.*(rhof/rhog));                       % [-] Slip formulation
                 err = max(abs((newslip)./(slip)-1));                       % [-] Error
                 slip = newslip;                                            % [-] Update slip
-                if err < 0.01; break
+                if err < options.ENTNUMTOL; break
                 end
             end
-            if err > 0.01
+            if err > options.ENTNUMTOL
                 disp('Okawa correlation : not converged')
+                absfilm.log('\nEntrainment number not converged at node %d after %d iterations. \nSlip residual = %g.\n',zIdx,it,err);
             end
 
             entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
