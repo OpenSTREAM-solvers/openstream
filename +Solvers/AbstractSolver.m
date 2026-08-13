@@ -1,56 +1,116 @@
 classdef (Abstract) AbstractSolver < handle
-    %ABSTRACTSOLVER Summary of this class goes here
-    %   Detailed explanation goes here
+    %ABSTRACTSOLVER Defines the base interface and shared functionality for all solver classes.
+    %
+    % Subclasses must implement the abstract methods and properties defined here.
 
     properties (SetAccess=protected, Abstract)
+
+        % Input configuration object of type :class:`Inputs.InputSet`
         inputSet    {isa(inputSet,'Inputs.InputSet')}
+
     end
 
     properties (SetAccess=protected, Abstract)
 
-        STATE (1,1) Solvers.SolverState                                     % Solver state defined by SolverState enum
+        % Solver state, defined by :class:`Solvers.SolverState` enumeration
+        STATE (1,1) Solvers.SolverState
 
     end
 
     methods (Abstract)
+
         initializeSolver
         solve
         plotz
         plott
-        saveResults
+        plotzt
+
     end
 
     methods
 
         function solver = AbstractSolver(inputSet)
-        %ABSTRACTSOLVER Constructor
-        %
-            
-            % Store inputSet as object property
-            solver.inputSet = inputSet;
+            %ABSTRACTSOLVER Constructor for AbstractSolver
+            %
+            % Initializes the solver with a given :class:`Inputs.InputSet`
+            % and applies solver-specific properties.
 
+            solverName = regexpi(metaclass(solver).Name, '(?<=\.)[^.]+(?=\.)', 'match','once'); % Extract Solver name
+            solver.inputSet = inputSet.applySolverDependentProps(solverName);
         end
-        
+
         function log(solver, varargin)
-        %LOG Log events
-        %
+            %LOG Log messages to the session log
+
             solver.inputSet.session.log.log(varargin{:});
         end
-        
+
+        function name = solverName(solver)
+            %SOLVERNAME Returns the name of the solver
+
+            parts = split(class(solver),'.');
+            name = parts{end};
+        end
+
+        function save(solver, opts)
+            %SAVE Save the solver object to a .mat file with a customizable name.
+            %
+            % Inputs:
+            %
+            % - solver        — The solver object to be saved.
+            % - opts.name     — (string) Name of the variable under which to save the solver. Default set to solver name
+            % - opts.showpath — (logical) Whether to display the save path. Default: true.
+
+            arguments
+                solver
+                opts.name     (1,1) string  {mustBeTextScalar}             = solver.solverName()
+                opts.showpath (1,1) logical                                = true
+            end
+
+            session = solver.inputSet.session;
+
+            if ~isfolder(session.directory)
+                error('Directory %s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
+            end
+
+            outputFile = fullfile(session.directory, session.name + '_' + solver.solverName() + '.mat');
+            dataStruct = struct();
+            dataStruct.(opts.name) = solver;
+
+            save(outputFile,'-struct','dataStruct');
+
+            if opts.showpath
+                fprintf('\nOutput file saved to %s\n\n',outputFile)
+            end
+        end
+
     end
 
     methods (Static)
+
         function ITR = CreateITR(NZ, ITRFields)
-            % Create inner iteration value struct
+            %CreateITR Create and initialize the inner iteration storage structure
+            %
+            % Inputs:
+            %
+            % - NZ        — Number of axial nodes (scalar)
+            % - ITRFields — (string array) Names of fields to include in the struct
+            %
+            % Output:
+            %
+            % - ITR       — Struct with fields initialized to zero vectors of length NZ
+
             arguments
-                NZ        (1,1) double  
-                ITRFields (1,:) string  = ["N","DW","DU"]                   % Cell structure to convert into struct
+                NZ        (1,1) double
+                ITRFields (1,:) string  = ["N","DW","DU"]                  % Cell structure to convert into struct
             end
 
-            ITRCell = cell(numel(ITRFields),1);                            
-            ITRCell(:) = {zeros(NZ,1)};                                     % Initialize with zeros
-            ITR = cell2struct(ITRCell, ITRFields, 1);                       % Convert cell to struct with fieldnames
+            ITRCell = cell(numel(ITRFields),1);
+            ITRCell(:) = {zeros(NZ,1)};                                    % Initialize with zeros
+            ITR = cell2struct(ITRCell, ITRFields, 1);                      % Convert cell to struct with fieldnames
         end
+
     end
+
 end
 

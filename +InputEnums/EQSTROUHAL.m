@@ -1,12 +1,23 @@
 classdef EQSTROUHAL
-%EQSTROUHAL Equilibrium Strouhal number
-%   Defines which base film equilibrium model to use
-%
+    %EQSTROUHAL Enumeration of wave equilibrium Strouhal number models
+    %
+    % This class defines the available :attr:`Inputs.Model.EQSTROUHAL`
+    % models for calculating the wave equilibrium Strouhal number, used by
+    % the four-field solver.
+    %
+    % Models:
+    %
+    % - RISO     — Based on RISO dataset (:cite:t:`LECORREMODEL`)
+    % - SAWAI    — Based on SAWAI dataset (:cite:t:`LECORREMODEL`)
+    % - MFVAL    — MFVAL model (under development)
+    % - CUSTOM   — Custom model using user-defined :attr:`Inputs.Model.EQSTROUHALCOEF`
+    % - CSTFRQ   — Custom constant frequency using user-defined :attr:`Inputs.Model.CSTWAVEFREQ`
+
     enumeration
-        RISO        % RISO Dataset from Le Corre (2022)
-        SAWAI       % SAWAI Dataset from Le Corre (2022)
-        MFVAL       % MFVAL, in progress (20XX)
-        CUSTOM      % Custom option using EQSTROUHALCOEF
+        RISO                 % RISO dataset model (Le Corre, 2022)
+        SAWAI                % SAWAI dataset model (Le Corre, 2022)
+        MFVAL                % MFVAL model (in development)
+        CUSTOM               % Custom model using EQSTROUHALCOEF
+        CSTFREQ              % Custom constant frequency using CSTWAVEFREQ
     end
 end
-    

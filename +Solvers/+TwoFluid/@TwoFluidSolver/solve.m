@@ -1,6 +1,25 @@
 function solve(twfSolver)
-%SOLVE  
-% 
+%SOLVE Executes the two-fluid solver for steady-state and transient simulations.
+%
+% Runs the full solution process for the :class:`Solvers.TwoFluid.TwoFluidSolver`
+% object. It manages initialization, time stepping, axial sweeps, inner
+% iterations, convergence checks, and logging.
+%
+% Workflow:
+%
+% - Enables logging and opens persistent log file
+% - Validates solver state before execution
+% - Runs steady-state initialization (solveINIT = true)
+% - If initial step converges, proceeds with transient simulation
+% - Handles exceptions and ensures proper log closure
+%
+% Notes:
+%
+% - Uses internal `solver` function to handle both steady-state and transient modes
+% - Applies relaxation factors for phase flows, velocities, and enthalpies
+% - Supports thermal non-equilibrium modeling
+% - Logs progress and outputs to session directory
+
 arguments
     twfSolver
 end
@@ -10,7 +29,7 @@ import Solvers.SolverState
 % Enable diary
 twfSolver.inputSet.session.log.diaryOn();
 
-% Open log in presistent mode
+% Open log in persistent mode
 twfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if twfSolver.STATE ~= SolverState.UNSOLVED
@@ -21,53 +40,60 @@ else
     try
         % Solve init
         solver(true);
-    
+
         % Continue solving if init converged
         if twfSolver.STATE == SolverState.INITIALSTEPCONVERGED
             solver(false);
         else
-            twfSolver.log('\t\tSkipping transient solver ...\n');
+            if length(twfSolver.liquid) > 1
+                twfSolver.log('\t\tSkipping transient solver ...\n');
+            end
         end
+
     catch ME
         twfSolver.inputSet.session.log.closeLog();
         twfSolver.inputSet.session.log.diaryOff();
         rethrow(ME)
     end
-    
-    twfSolver.log('\n---------------------------------------------- Two-fluid solver run completed ----------------------------------------------\n\n')
+
+    twfSolver.log('\n-------------------------------------------- Two-fluid solver run completed --------------------------------------------\n\n')
 end
 
 twfSolver.inputSet.session.log.closeLog();
 twfSolver.inputSet.session.log.diaryOff();
-twfSolver.log('Output directory: %s\n',twfSolver.inputSet.session.directory);
-
+twfSolver.log('Output directory: %s\n\n',twfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
+    % Internal solver routine for steady-state and transient modes
+    % Handles time stepping, axial sweeps, and inner iterations
+    % Applies relaxation and convergence checks
+    % Updates mixture properties and logs progress
 
     % check if solving liquidInit and vaporInit
     if solveINIT
-        twfSolver.log('\nRun steady-state ...\n');
+        twfSolver.log('\nSolve steady-state ...\n');
         liquid = twfSolver.liquidInit;
-        vapor = twfSolver.vaporInit;
-        fluid = twfSolver.fluidInit;
-        mix = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
-        solveMODE = 'INITIAL';
+        vapor  = twfSolver.vaporInit;
+        fluid  = repmat(twfSolver.fluid(1),1,length(liquid));
+        mix    = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
     else
-        twfSolver.log('\nRun transient ...\n');
+        if length(twfSolver.liquid) < 2
+            return
+        end
+        twfSolver.log('\nSolve transient ...\n');
         liquid = twfSolver.liquid;
-        vapor = twfSolver.vapor;
-        fluid = twfSolver.fluid;
-        mix = twfSolver.mixSolver.mixture;
-        solveMODE = 'SPECIFIED';
+        vapor  = twfSolver.vapor;
+        fluid  = twfSolver.fluid;
+        mix    = twfSolver.mixSolver.mixture;
     end
 
     % set SOLVED flag to SOLVECONVERGED
     twfSolver.STATE = SolverState.SOLVEDCONVERGED;
     
     % Shortcut to inputSet objects
-    model = twfSolver.inputSet.model;
+    model   = twfSolver.inputSet.model;
     options = twfSolver.inputSet.options;
-    geom = twfSolver.inputSet.geometry;
+    %geom    = twfSolver.inputSet.geometry;
     
     % Uniform mesh size
     DZ = twfSolver.DZ;    
@@ -80,8 +106,8 @@ function solver(solveINIT)
         
         twfSolver.log('Time %5.2f [s]',liquid(tIdx).TIME)
 
-        DT = liquid(tIdx).DT;                                              % Current time step size
-        RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
+        DT = liquid(tIdx).DT;                                              % [s] Current time step size
+        %RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
         
         % Update two-field property guesses from previous time step
         liquid(tIdx-1).copyFlowProperties(liquid(tIdx));
@@ -89,7 +115,7 @@ function solver(solveINIT)
 
         
         % Axial sweep
-        for zIdx = 2:twfSolver.NZ                                                        % Loop over axial nodes
+        for zIdx = 2:twfSolver.NZ                                          % Loop over axial nodes
             
             Wlold = liquid(tIdx-1).W(zIdx);                                % [kg/s] Liquid mass flow rate at previous time step
             Ulold = liquid(tIdx-1).U(zIdx);                                % [m/s]  Liquid velocity at previous time step
@@ -115,25 +141,20 @@ function solver(solveINIT)
                 Uviter = vapor(tIdx).U(zIdx);                              % [m/s] Vapor velocity
                 Hviter = vapor(tIdx).H(zIdx);                              % [J/kg] Vapor enthalpy
                 
-                % Update secondary parameters
-                %VEL   = mix(tIdx).U([zIdx-1 zIdx]);                                     % [m/s] Calculate velocity array for speed
-                %U     = VEL(2); Uups = VEL(1);                                          % [m/s] Mixture velocities at node k and k-1
-                %Uold  = mix(tIdx-1).U(zIdx);                                            % [m/s] Mixture velocity at previous time step
-                %RHO   = mix(tIdx).RHO(zIdx);                                            % [kg/m^3] Mixture density
-                %TAUW  = mix(tIdx).TAUW(zIdx);                                           % [Pa] Wall shear stress
-                %HFLUX = mix(tIdx).HFLUX(zIdx,:);                                        % [W/m^2] Wall heat flux
-                
                 % Liquid mass conservation
                 Mtot = liquid(tIdx).MTOT(vapor(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with liquid
+                Mtot = sum(Mtot,2);                                                      % [kg/s/m] Lumped approach
                 Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);         % [kg/s] Update liquid mass flow rate
                 liquid(tIdx).W(zIdx) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
                 
                 % Vapor mass conservation
                 Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with vapor
+                Mtot = sum(Mtot,2);
                 Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);         % [kg/s] Update vapor mass flow rate
                 vapor(tIdx).W(zIdx) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
                 
                 % Liquid momentum conservation
+                %TODO: Add equilibrium and simplified equilibrium options
                 switch model.MOMENTLIQUID
                     case InputEnums.MOMENTLIQUID.MIXTURE
                     % Already initialized to mixture solution
@@ -149,10 +170,14 @@ function solver(solveINIT)
                         Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                    % [N/m]
                         Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
                         Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT); % [m/s] Update liquid velocity
+                        Ulnew = min(max(Ulnew,0),1.5*mix(tIdx).liquid.U(zIdx));          % [m/s] Keep within realistic bounds to help convergence
+                        %Ulnew(Wliter <= 1E-3) = liquid(tIdx).USLIP(vapor(tIdx),zIdx);
+                        Ulnew(Wliter <= 1E-3) = Uliter;
                 end
                 liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew;   % [m/s] Apply relaxation
                 
                 % Vapor momentum conservation
+                %TODO: Add equilibrium and simplified equilibrium options
                 switch model.MOMENTGAS
                     case InputEnums.MOMENTGAS.MIXTURE
                     % Already initialized to mixture solution   
@@ -167,17 +192,22 @@ function solver(solveINIT)
                         Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                    % [N/m]
                         Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
                         Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT); % [m/s] Update vapor velocity
+                        Uvnew = min(max(Uvnew,0),1.5*mix(tIdx).vapor.U(zIdx));           % [m/s] Keep within realistic bounds to help convergence
+                        %Uvnew(Wviter <= 1E-3) = vapor(tIdx).USLIP(liquid(tIdx),zIdx);
+                        Uvnew(Wviter <= 1E-3) = Uviter;
                 end
                 vapor(tIdx).U(zIdx) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;    % [m/s] Apply relaxation
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid
+                Htot = sum(Htot,2);
                 Htot = Htot/(Wliter/Uliter); Htot(Wliter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hlnew = (Hlups*Uliter+Hlold*DZ/DT+Htot*DZ)/(Uliter+DZ/DT);                 % [J/kg] Update liquid enthalpy
                 liquid(tIdx).H(zIdx) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew;   % [J/kg] Apply relaxation
                 
                 % Vapor energy conservation
                 Htot = vapor(tIdx).HTOT(liquid(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with vapor
+                Htot = sum(Htot,2);
                 Htot = Htot/(Wviter/Uviter); Htot(Wviter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
                 Hvnew = (Hvups*Uviter+Hvold*DZ/DT+Htot*DZ)/(Uviter+DZ/DT);                 % [J/kg] Update vapor enthalpy
                 vapor(tIdx).H(zIdx) = (1-options.RELAXHV)*Hviter+options.RELAXHV*Hvnew;    % [J/kg] Apply relaxation
@@ -210,11 +240,6 @@ function solver(solveINIT)
             vapor(tIdx).ITR.DW(zIdx)  = dWv;
             vapor(tIdx).ITR.DU(zIdx)  = dUv;
             vapor(tIdx).ITR.DH(zIdx)  = dHv;
-
-            % Stop running if solver did not converge
-            %if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-            %    break;
-            %end
     
         end
         
@@ -225,7 +250,7 @@ function solver(solveINIT)
         maxDWv = max(vapor(tIdx).ITR.DW);
         maxDUv = max(vapor(tIdx).ITR.DU);
         maxDHv = max(vapor(tIdx).ITR.DH);
-        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
+        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]                    \r',maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
         
         % Temporal deviations in W, U, and H
         timeDWl = max(abs(liquid(tIdx).W - liquid(tIdx-1).W));
@@ -236,7 +261,7 @@ function solver(solveINIT)
         timeDHv = max(abs(vapor(tIdx).H - vapor(tIdx-1).H));
         
         if solveINIT
-            % Finish steady state solver when SS convergence criterions are met
+            % Finish steady state solver when SS convergence criteria are met
             if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
                 
                 % Indicate init converged
@@ -255,26 +280,23 @@ function solver(solveINIT)
                 break;
             
             % otherwise, update next timestep with current flow properties
-            elseif tIdx < length(liquid)-1
-                % unless non-convergence occurred
-                if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    twfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv) 
-                    break;
-                end
-
+            elseif tIdx < length(liquid)
                 twfSolver.liquidInit(tIdx).copyFlowProperties(twfSolver.liquidInit(tIdx+1));
                 twfSolver.vaporInit(tIdx).copyFlowProperties(twfSolver.vaporInit(tIdx+1));
+                
             % otherwise, not converged
             else
                 twfSolver.STATE = "INITIALSTEPNOTCONVERGED";
-                twfSolver.log('\t\tSTEADY-STATE FAILED TO CONVERGE     max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDHl,timeDHv) % ,timeDP,timeDH , P = %.5f [Pa], H = %.5f [J/kg]
-                break;
+                twfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
+                
+                % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
+                twfSolver.liquidInit(end).copyFlowProperties(twfSolver.liquid(1));
+                twfSolver.vaporInit(end).copyFlowProperties(twfSolver.vapor(1));
             end
         end
     
     end
     
-    %twfSolver.log('\n---------------------- %s solver run completed ----------------------\n\n', solveMODE)
     twfSolver.log('\n')
     
     % End timer

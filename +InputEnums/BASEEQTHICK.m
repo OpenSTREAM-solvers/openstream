@@ -1,12 +1,21 @@
 classdef BASEEQTHICK
-%BASEEQTHICK Base film equilibrium thickness model
-%   Defines which base film equilibrium model to use
-%
+    %BASEEQTHICK Enumeration of base film equilibrium thickness models
+    %
+    % This class defines the available :attr:`Inputs.Model.BASEEQTHICK`
+    % models for calculating the equilibrium base film thickness, used by
+    % the four-field solver.
+    %
+    % Models:
+    %
+    % - RISO   — Based on RISO dataset (:cite:t:`LECORREMODEL`)
+    % - COEFS  — Generalized RISO model using user-defined :attr:`Inputs.Model.BASEEQTHICKCOEF`
+    % - YPLUS  — Based on dimensionless wall distance (y+) using user-defined :attr:`Inputs.Model.BASEYPLUS`
+    % - MFVAL  — MFVAL model (under development)
+
     enumeration
-        DEFAULT     % Default from Le Corre (2022)
-        MFVAL       % MFVAL, in progress (20XX)
-        COEFS       % Manually specified coeffients
-        YPLUS
+        RISO                 % RISO dataset-based model (Le Corre, 2022)
+        COEFS                % Generalized form of RISO model with specified coefficients
+        YPLUS                % Model based on specified y+ value
+        MFVAL                % MFVA model (under development)
     end
 end
-    

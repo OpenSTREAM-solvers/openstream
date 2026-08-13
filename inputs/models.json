@@ -1,91 +1,25 @@
 [
   {
-    "ID": "WATERS",
+    "ID": "TUTORIAL1",
     "NNODES": 100,
-    "FLUID": "water",
-    "PROPERTIES": "saturated",
-    "FRICTION": [
-      0.2,
-      -0.2,
-      0
+    "FLUID": "WATER",
+    "INTNU": "RELAXATION",
+    "RELAXX": [
+      -0.5,
+      1.0
     ],
-    "TPFM": "homogeneous",
-    "KLOC": [
-      1,
-      2,
-      3
-    ],
-    "KLOSS": [
+    "RELAXTCOND": [
       0.5,
       0.5,
-      0.5
+      0.01
     ],
-    "TPKM": "homogeneous",
-    "SCBOIL": "none",
-    "VOID": "slip",
-    "SLIP": 1
-  },
-  {
-    "ID": "WATERP",
-    "NNODES": 100,
-    "FLUID": "water",
-    "PROPERTIES": "psystem",
-    "FRICTION": [
-      0.2,
-      -0.2,
-      0
-    ],
-    "TPFM": "homogeneous",
-    "KLOC": [
-      1,
-      2,
-      3
-    ],
-    "KLOSS": [
-      0.5,
-      0.5,
-      0.5
-    ],
-    "TPKM": "homogeneous",
-    "SCBOIL": "none",
-    "VOID": "homogeneous",
-    "SLIP": 1
-  },
-  {
-    "ID": "MFVALS",
-    "NNODES": 100,
-    "FLUID": "r245fa",
-    "PROPERTIES": "saturated",
-    "FRICTION": [
-      0.2,
-      -0.2,
-      0
-    ],
-    "TPFM": "homogeneous",
-    "KLOC": "",
-    "KLOSS": "",
-    "TPKM": "homogeneous",
-    "SCBOIL": "none",
-    "VOID": "homogeneous",
-    "SLIP": 1
-  },
-  {
-    "ID": "MFVALP",
-    "NNODES": 100,
-    "FLUID": "r245fa",
-    "PROPERTIES": "psystem",
-    "FRICTION": [
-      0.2,
-      -0.2,
-      0
-    ],
-    "TPFM": "homogeneous",
-    "KLOC": "",
-    "KLOSS": "",
-    "TPKM": "homogeneous",
-    "SCBOIL": "none",
-    "VOID": "homogeneous",
-    "SLIP": 1,
-    "FLUID": "WATER"
+    "MOMENTLIQUID": "FULL",
+    "MOMENTGAS": "FULL",
+    "MOMENTFILM": "FULL",
+    "MOMENTDROP": "FULL",
+    "WAVEBASEINT": "VAPORSHEARDROPMASS",
+    "OAFFILMSPLIT": "RATIO",
+    "OAFBASERATIO": 0.2,
+    "BASEEQTHICK": "YPLUS"
   }
 ]

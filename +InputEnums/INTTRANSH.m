@@ -1,10 +1,17 @@
 classdef INTTRANSH
-%INTTRANSH Interfacial enthalpy transfer
-% Defines the interfacial enthalpy exchange model from interfacial mass transfer
-% The mass can be transfered either at phase bulk enthalpy, or at saturated enthaply
+    %INTTRANSH Enumeration of interfacial enthalpy transfer models
+    %
+    % This class defines the available :attr:`Inputs.Model.INTTRANSH` models
+    % for calculating the phase enthalpy associated with interfacial mass
+    % transfer, used by the mixture and two-fluid solvers.
+    %
+    % Models:
+    %
+    % - BULK       — Uses bulk phase enthalpy
+    % - SATURATED  — Uses saturated phase enthalpy
+
     enumeration
-        BULK      % Bulk enthalpy
-        SATURATED % Saturated enthalpy
+        BULK                 % Bulk phase enthalpy
+        SATURATED            % Saturated phase enthalpy
     end
 end
-    

@@ -1,11 +1,19 @@
 classdef MOMENTLIQUID
-%MOMENTLIQUID Liquid momentum conservation model
-%   This defines the type of conservation model used on the liquid phase in
-%   the liquid class. 
+    %MOMENTLIQUID Enumeration of liquid momentum conservation models
+    %
+    % This class defines the available :attr:`Inputs.Model.MOMENTLIQUID`
+    % models for solving the momentum conservation equation for the liquid
+    % phase, used to compute liquid velocity in the two-fluid solver.
+    %
+    % Models:
+    %
+    % - MIXTURE  — Uses the same velocity as in the mixture model
+    % - SLIP     — Slip ratio model (gas/liquid velocity) using user-defined :attr:`Inputs.Model.SLIP`
+    % - FULL     — Full non-equilibrium momentum model (:cite:t:`LeCorre2025OpenSTREAM`, :cite:t:`Walter2024`)
+
     enumeration
-        MIXTURE
-        SLIP
-        FULL
+        MIXTURE              % Liquid velocity equal to mixture velocity
+        SLIP                 % Slip ratio model (gas/liquid velocity) 
+        FULL                 % Full non-equilibrium momentum model
     end
 end
-    

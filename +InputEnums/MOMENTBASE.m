@@ -1,12 +1,23 @@
 classdef MOMENTBASE
-%MOMENTBASE Base film momentum conservation model
-%   Defines the type of momentum conservation used on the liquid film. The
-%   conservation equations are used to solve for liquid-film velocity
+    %MOMENTBASE Enumeration of base film momentum conservation models
+    %
+    % This class defines the available :attr:`Inputs.Model.MOMENTBASE` models
+    % for solving the base film momentum conservation equation, used to
+    % compute the base film velocity in the four-field solver.
+    %
+    % Models:
+    %
+    % - ALGEBRAIC     — Simple algebraic model (:cite:t:`ADAMSSON2014316`, Equations 21 or 23)
+    % - EQUILIBRIUM   — Equilibrium model
+    % - EQUILIBRIUMS  — Simplified equilibrium model based on force balance (:math:`F_{\mathrm{wall}} + F_{\mathrm{vapor}} = 0`)
+    % - FULL          — Full non-equilibrium model (:cite:t:`LECORREMODEL`)
+    % - FULLNOP       — Full non-equilibrium model excluding pressure terms (gravity and buoyancy)
+
     enumeration
-        ALGEBRAIC  % Consistent with mixture model (tau_wall = tau_f_wall)
-        EQUILIBRIUM % (tau_int = tau_wall)
-        EQUILIBRIUMS 
-        FULL 
+        ALGEBRAIC            % Simple algebraic momentum model
+        EQUILIBRIUM          % Equilibrium momentum model
+        EQUILIBRIUMS         % Simplified force balance model (Fwall + Fvapor = 0)
+        FULL                 % Full non-equilibrium momentum model
+        FULLNOP              % Full non-equilibrium momentum model without pressure terms
     end
 end
-    

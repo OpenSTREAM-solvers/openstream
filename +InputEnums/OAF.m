@@ -1,12 +1,19 @@
 classdef OAF
-%OAF Onset of annular flow model
-%  Defines the model to predict the position at which the onset of
-%  annualr flow occurs based on local flow conditions. Wallis correlation 
-%  is Equation 11.1019  in One-dimensional two-phase flow. Wallis (1969).
-%  The correlation was built using air-water data.
+    %OAF Enumeration of onset of annular flow models
+    %
+    % This class defines the available :attr:`Inputs.Model.OAF` models for
+    % predicting the onset of annular flow, used by the three-field and
+    % four-field solvers.
+    %
+    % Models:
+    %
+    % - WALLIS       — Full Wallis correlation (:cite:t:`wallis1969`, Equation 11.1019)
+    % - WALLIS_SIMP  — Simplified Wallis correlation (:cite:t:`sanmiguel2015`, Equation 6), used for compatibility with codes employing this approach
+    % - LEVITAN      — Levitan correlation (:cite:t:`Levitan1989`)
+
     enumeration
-        WALLIS % Full Wallis correlation
-        WALLIS_SIMP % Simplifed Wallis correlation (Justification?)
+        WALLIS               % Full Wallis correlation (1969)
+        WALLIS_SIMP          % Simplified Wallis correlation
+        LEVITAN              % Levitan correlation
     end
 end
-    

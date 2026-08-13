@@ -1,48 +1,47 @@
 Run sample script
 =================
 
-At this point, you are ready to run the sample script. You will see some of the basic usages of  OpenSTREAM. 
+After installation, you're all set to launch your first simulation!
+
+As a first exercise, open MATLAB and run the commands listed below from within the ``openstream`` folder, which will simulate an example of boiling two-phase flow in a uniformly heated tube followed by an adiabatic region. The **OpenSTREAM** mixture model will be used, which defaults to the Homogeneous Equilibrium Model (HEM) when the physical models are not modified by the user.
+
+This is the quickest and easiest way to start exploring what OpenSTREAM can do, and to confirm everything is working smoothly under the hood.
 
 .. code-block:: matlab
 
-	% Clear existing variables from workspace
-	clearvars
+    % Clear existing variables from workspace
+    clearvars
 
-	% Import some of the package classes
-	import Inputs.*
-	import Solvers.*
-	import Solvers.Mixture.*
+    % Import the necessary classes for inputs and solvers
+    import Inputs.*
+    import Solvers.*
+    import Solvers.Mixture.*
 
-	% InputSet is used to create a collection of input settings
-	inputSet = InputSet( ...
-	            modelFilePath         = './inputs/models.inp',  modelID    = 'BARCS', ...
-	            optionsFilePath       = './inputs/options.inp', optionsID  = 'STEADY', ...
-	            geometryFilePath      = './inputs/geom.inp',    geometryID = 'BARC', ...
-	            bcFilePath            = './inputs/bc_barc.inp', ...
-	            sessionParentDir      = fullfile(pwd,'outputs'), ...
-	            overwriteSessionFiles = true, ...
-	            LOGMODE               = 'BOTH');        
-	
-	% Create a mixture solver
-	mixSolver = MixtureSolver(inputSet);
+    % Turn off warnings during input setup
+    warning off
+    % Create the input set using paths to model, options, geometry, and boundary condition files
+    inputSet = InputSet( ...
+                modelFilePath         = './inputs/models.inp',  modelID    = 'TUTORIAL1', ...
+                optionsFilePath       = './inputs/options.inp', optionsID  = 'DEFAULT', ...
+                geometryFilePath      = './inputs/geom.inp',    geometryID = 'TUTORIAL1', ...
+                bcFilePath            = './inputs/tutorial1.inp', ...
+                sessionParentDir      = fullfile(pwd,'outputs'), ...
+                overwriteSessionFiles = true, ...
+                LOGMODE               = 'BOTH');        
 
-	% mixSolver is initialized at construction. Here, it is explicitly initialized for clarity.
-	mixSolver.initializeSolver(); 
+    % Create a mixture solver object
+    mixSolver = MixtureSolver(inputSet);
 
-	% Solve (does not accept any argument)
-	mixSolver.solve();
+    % Solve
+    mixSolver.solve();
 
-	% Axial and temporal plots
-	mixSolver.plotz(1);                                     % Axial plot at 1st time step
-	mixSolver.plotz(mixSolver.NTIME);                      % Axial plot at final time step
-	mixSolver.plott(mixSolver.NZ)                          % Temporal plot at last spatial node
-	mixSolver.plott(mixSolver.NZ,'solveMode','STEADY')     % Temporal plot at last spatial node of steady state solution
-	mixSolver.plotzt(mixSolver.NZ,"solveMode","TRANSIENT"); % Spatial-temporal map of transient solution at channel exit
-	
-	% Save results
-	mixSolver.saveResults(saveFormat="MAT");
+    % Default axial plots
+    mixSolver.plotz();
+
+    % Save results
+    mixSolver.save();
 
 
 .. figure:: sample_mix_plotz.png
 
-   Sample figure of axial distributions of mixture parameters at 0 [s].
+   Sample figure of axial distributions of mixture parameters.

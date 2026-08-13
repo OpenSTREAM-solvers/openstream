@@ -1,12 +1,19 @@
 classdef MOMENTWAVE
-%MOMENTWAVE Film momentum conservation model
-%   Defines the type of momentum conservation used on the liquid film. The
-%   conservation equations are used to solve for liquid-film velocity
+    %MOMENTWAVE Enumeration of film momentum conservation models
+    %
+    % This class defines the available :attr:`Inputs.Model.MOMENTWAVE` models
+    % for solving the momentum conservation equation for the wave field, used
+    % to compute wave velocity in the four-field solver.
+    %
+    % Models:
+    %
+    % - ALGEBRAIC    — Simple algebraic model (:cite:t:`ADAMSSON2014316`, Equations 21 or 23)
+    % - EQUILIBRIUM  — Equilibrium model
+    % - FULL         — Full non-equilibrium momentum model (:cite:t:`LECORREMODEL`)
+
     enumeration
-        ALGEBRAIC  % Consistent with mixture model (tau_wall = tau_f_wall)
-        EQUILIBRIUM % (tau_int = tau_wall)
-        EQUILIBRIUMS 
-        FULL 
+        ALGEBRAIC            % Algebraic momentum model
+        EQUILIBRIUM          % Equilibrium momentum model
+        FULL                 % Full non-equilibrium momentum model
     end
 end
-    

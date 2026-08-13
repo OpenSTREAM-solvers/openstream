@@ -1,16 +1,17 @@
-===============
- OpenSTREAM
-===============
+====================================
+ OpenSTREAM – Two-Phase Flow Solvers
+====================================
 
 .. toctree::
    :maxdepth: 3
    :glob:
    :hidden:
-   :caption: Usage
+   :caption: Contents
 
    index_content
    /Usage/index
+   /Guides/index
+   /Applications/index
    /Packages/index
    /ExternalPackages/index
-
-
+   /Community/index

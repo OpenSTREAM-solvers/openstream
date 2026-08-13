@@ -2,10 +2,12 @@ name: Publish Sphinx docs to GitHub Pages
 
 on:
   push:
-    branches: 
+    branches:
       - main
-      - docs      
-    
+      - docs
+      - lecorre
+      - latexpdf-action
+
   workflow_dispatch:
     inputs:
         logLevel:
@@ -27,12 +29,12 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - name: Checkout with submodules
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: true
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v7
         with:
           python-version: '3.10'
 
@@ -46,7 +48,7 @@ jobs:
         run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -64,6 +66,13 @@ jobs:
         id: makelatex
         run: make latex
         working-directory: ./docs
+
+      - name: Make pdf file
+        id: makepdf
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: ./docs/build/latex/
+          root_file: OpenSTREAM.tex        
 
       #- name: Install TeXlive
       #  run: sudo apt-get update && sudo apt-get install texlive latexmk texlive-publishers texlive-science  cm-super

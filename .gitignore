@@ -6,6 +6,13 @@ sandbox/
 !sandbox/*.md
 !sandbox/*_default.m
 docs/build/**
+docs/make.log
+docs/**/*.aux
+docs/**/*.fdb_latexmk
+docs/**/*.fls
+docs/**/*.log
+/docs/venv*/
+
 
 **/.DS_Store
 
