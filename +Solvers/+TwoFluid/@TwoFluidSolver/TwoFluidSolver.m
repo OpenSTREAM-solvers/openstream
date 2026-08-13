@@ -66,10 +66,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % Input:
             %
             % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            % - mixSolver — An optional solved :class:`Solvers.Mixture.MixtureSolver` object
             %
             % Notes:
             %
             % - This constructor assumes :class:`Inputs.InputSet` is fully validated.
+            % - A solved mixture-model solution is required for initialization. If a solved mixture solver is supplied, its solution is reused. If unsolved of if no mixture solver is supplied, one is created and solved automatically.
             % - Solver initialization includes liquid and vapor objects setup.
             % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
 

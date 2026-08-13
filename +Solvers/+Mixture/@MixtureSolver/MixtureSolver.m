@@ -138,7 +138,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Setup DP structure
             % Grav:     [Pa] Gravitational pressure drop
             % Wall:     [Pa] Wall friction pressure drop
-            % Acc_z:    [pa] Spatial acceleration pressure drop
+            % Acc_z:    [Pa] Spatial acceleration pressure drop
             % Acc_t:    [Pa] Temporal acceleration pressure drop
             % Acc_s:    [Pa] Slip-induced temporal acceleration pressure drop
             % K:        [Pa] Local pressure drop
