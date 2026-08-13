@@ -8,6 +8,7 @@ classdef SolverTest < matlab.unittest.TestCase
     
     properties
         testInputFile
+        dataset
     end
 
     methods (TestClassSetup)
@@ -22,7 +23,10 @@ classdef SolverTest < matlab.unittest.TestCase
             %
             addpath('../../openstream-database')
             addpath('../../openstream')
-
+            
+            % Some session options
+            inputSetOpts = {'overwriteSessionFiles', true, 'LOGMODE', 'BOTH'};
+            saveResultsToFile = false;
 
             % Demo inputs
             entryData = table;
@@ -38,13 +42,17 @@ classdef SolverTest < matlab.unittest.TestCase
             entryData.Fluid         = 'water';                                 %        Fluid
             
             % Create a Dataset
-            ds = Dataset(1,'isLightWeight',true,'lightWeightEntryData',entryData);
+            testCase.dataset = Dataset(1,'isLightWeight',true,'lightWeightEntryData',entryData);
             
             % inputOptions
-            opts = ds.inputOptions();
+            opts = testCase.dataset.inputOptions();
             opts.options.AXIALINTERP = 'NEXT';                                 % Axial power interpolation method
+    
+            % Generate the input files
+            testCase.testInputFile = testCase.dataset.makeInputFiles(opts);
 
-            testCase.testInputFile = ds.makeInputFiles(opts);
+            % Run the mixture solver
+            testCase.dataset.runCase('Mixture','inputSetOpts',inputSetOpts,'saveResultsToFile',saveResultsToFile);
 
         end
     end
@@ -57,7 +65,30 @@ classdef SolverTest < matlab.unittest.TestCase
         % Test methods
 
         function solverTest(testCase)
-           testCase.verifyFail("Unimplemented test");
+            
+            % solver results
+            results = testCase.dataset.results;
+
+            % Check solver state is INITIALSTEPCONVERGED
+            testCase.verifyEqual( ...
+                results.STATE, ...
+                Solvers.SolverState.INITIALSTEPCONVERGED ...
+                )
+
+            % Check inlet pressure matches to 0.1% of expected
+            testCase.verifyEqual( ...
+                results.mixtureInit(end).P(1), ...
+                6E6, ...
+                "Initial inlet pressure mismatch", ...
+                RelTol=0.001)
+
+            % Check inlet mass flow rate matches to 0.1% of expected
+            testCase.verifyEqual( ...
+                results.mixtureInit(end).W(1), ...
+                0.07, ...
+                "Initial inlet mass flow rate mismatch", ...
+                RelTol=0.001)
+
         end
     end
 
