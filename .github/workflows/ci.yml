@@ -1,0 +1,78 @@
+name: MATLAB CI
+
+on:
+  push:
+    branches:
+      - matlab-ci
+      - lecorre
+      - main
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    #runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, matlab]
+    steps:
+
+      #- name: Clean workspace
+      #  run: rm -rf ./* .[^.]*
+
+      - name: Checkout with submodules
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+          path: ./openstream
+
+      - name: Checkout openstream-database
+        uses: actions/checkout@v6
+        with:
+          repository: OpenSTREAM-solvers/openstream-database
+          token:  ${{ secrets.ORG_REPO_TOKEN }}
+          path: ./openstream-database
+          ref: lecorre
+      
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: Upgrade pip
+        run: |
+          # install pip=>20.1 to use "pip cache dir"
+          pip install --upgrade pip
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -r ./openstream/+CoolPropWrapper/requirements.txt
+
+      # Sets up MATLAB on a GitHub-hosted runner
+      #- name: Set up MATLAB
+      #  uses: matlab-actions/setup-matlab@v3
+      - name: Query MATLAB version
+        run: |
+          /opt/MATLAB/R2026a/bin/matlab -batch "version"
+
+      - name: Debug MATLAB paths
+        run: |
+          matlab -batch "disp('--- SolverTest ---'); which -all SolverTest"
+          matlab -batch "disp('GITHUB_WORKSPACE:'); disp('$GITHUB_WORKSPACE'); disp('MATLAB PWD:'); disp(pwd)"
+          find "${GITHUB_WORKSPACE}" -type f \( -name '*Test.m' -o -name '*Tests.m' \) -print
+          
+      # Runs a set of commands using the runners shell
+      - name: Run all tests
+        uses: matlab-actions/run-tests@v3
+        with:
+          output-detail: verbose
+          source-folder: ./openstream
