@@ -2,7 +2,7 @@
 sphinx
 
 # MATLAB Domain
-sphinxcontrib-matlabdomain==0.19.0
+sphinxcontrib-matlabdomain==0.22.1
 
 # RTD theme
 sphinx_rtd_theme
