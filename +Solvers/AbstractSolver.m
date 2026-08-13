@@ -70,7 +70,7 @@ classdef (Abstract) AbstractSolver < handle
             session = solver.inputSet.session;
 
             if ~isfolder(session.directory)
-                error('Directory %s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
+                error('OpenSTREAM:AbstractSolver:DirectoryDoesNotExist','Directory %s does not exist. Check Session.log.LOGMODE. Try session.makeSessionDirectory()',session.directory);
             end
 
             outputFile = fullfile(session.directory, session.name + '_' + solver.solverName() + '.mat');

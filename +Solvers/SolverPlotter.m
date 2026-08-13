@@ -603,7 +603,7 @@ classdef SolverPlotter < handle
 
             % Check if Zs are set
             isZSet = all(not(cellfun(@isempty,{plotters.Zs})));
-            if ~isZSet, error('Not all Z arrays are set'); end
+            if ~isZSet, error('OpenSTREAM:SolverPlotter:SetZarrays','PLOTZ: Not all Z arrays are set'); end
 
             % Determine plot style and color from fieldName
             plotStyles = Solvers.SolverPlotter.fieldName2plotStyle(fieldName);
@@ -950,7 +950,7 @@ classdef SolverPlotter < handle
                 % Find tiledlayout object
                 layouts = findall(fig, 'Type', 'tiledlayout');
                 if isempty(layouts)
-                    error('No tiledlayout found in the current figure.');
+                    error('OpenSTREAM:FourFieldSolver:NoTitledLayout','RESIZEFIGURE: No tiledlayout found in the current figure.');
                 end
                 t = layouts(1);
 
