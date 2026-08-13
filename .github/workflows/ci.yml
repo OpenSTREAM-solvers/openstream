@@ -13,8 +13,8 @@ jobs:
     runs-on: [self-hosted, linux, x64, matlab]
     steps:
 
-      - name: Clean workspace
-        run: rm -rf ./* .[^.]*
+      #- name: Clean workspace
+      #  run: rm -rf ./* .[^.]*
 
       - name: Checkout with submodules
         uses: actions/checkout@v7
