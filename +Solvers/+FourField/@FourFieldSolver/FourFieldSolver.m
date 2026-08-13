@@ -66,11 +66,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % Input:
             %
             % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            % - mixSolver — An optional solved :class:`Solvers.Mixture.MixtureSolver` object
             %
             % Notes:
             %
-            % - If mixSolver is unsolved, it will be solved automatically.
+            % - This constructor assumes :class:`Inputs.InputSet` is fully validated.
+            % - A solved mixture-model solution is required for initialization. If a mixture solver is supplied, its solution is reused. If no mixture solver is supplied, one is created and solved automatically.
             % - Initialization includes film, wave, base, and droplet objects.
+            % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
 
             arguments
                 inputSet            {isa(inputSet,'Inputs.InputSet')}
@@ -282,15 +285,19 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             %
             % Notes:
             %
+            % - Enhanced drop deposition is disabled
             % - Uses interpolation for improved convergence
             % - Falls back to ad-hoc update if interpolation fails
+            % - Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
 
-            errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
+            options = ffSolver.inputSet.options;
+
+            errMax = options.OAFEQUILTOL; errMax0 = errMax;                % [kg/s/m] Convergence criterion
             nwall = ffSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = ffSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
             W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
 
-            for k = 1:100
+            for k = 1:options.OAFEQUILMAXITER
                 if k == 1
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
@@ -315,15 +322,16 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
                 flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx); % [kg/s] Corresponding film flow distribution (considered uniform)
-                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entraiment mass flow rate
+                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entrainment mass flow rate
                 err = abs(delta(k));
                 if err < errMax, break; end
             end
-            if err > errMax
-                disp('Equilibrium entrainment ratio at onset of annular flow: not converged')
-            end
-
+            
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
+
+            if err > errMax
+                ffSolver.log('\nEquilibrium entrainment ratio at onset of annular flow not converged at node %d after %d iterations. \nLinear mass flux residual = %g kg/s/m; entrained ratio = %g.\n',zIdx,k,err,e0);
+            end
         end
 
         function plotter = plotz(ffSolver, tIdx, opts)

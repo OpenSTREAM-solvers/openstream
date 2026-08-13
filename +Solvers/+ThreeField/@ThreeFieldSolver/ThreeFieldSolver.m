@@ -66,10 +66,12 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Input:
             %
             % - inputSet — An :class:`Inputs.InputSet` object containing model configuration, geometry, boundary conditions, and solver options.
+            % - mixSolver — An optional solved :class:`Solvers.Mixture.MixtureSolver` object
             %
             % Notes:
             %
             % - This constructor assumes :class:`Inputs.InputSet` is fully validated.
+            % - A solved mixture-model solution is required for initialization. If a solved mixture solver is supplied, its solution is reused. If unsolved of if no mixture solver is supplied, one is created and solved automatically.
             % - Solver initialization includes liquid and vapor objects setup.
             % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
 
@@ -296,12 +298,14 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % - Falls back to ad-hoc update if interpolation fails
             % - Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
 
-            errMax = 1E-4; errMax0 = errMax;                               % [kg/s/m] Convergence criterion
+            options = tfSolver.inputSet.options;
+
+            errMax = options.OAFEQUILTOL; errMax0 = errMax;                % [kg/s/m] Convergence criterion
             nwall = tfSolver.inputSet.geometry.NWALL;                      % Number of walls
             perim = tfSolver.inputSet.geometry.PERIM;                      % [m] Perimeter
             W = mix.liquid.W(zIdx);                                        % [kg/s] Liquid flow rate
 
-            for k = 1:100
+            for k = 1:options.OAFEQUILMAXITER
                 if k == 1
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
@@ -330,11 +334,12 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 err = abs(delta(k));
                 if err < errMax, break; end
             end
-            if err > errMax
-                disp('Equilibrium entrainment ratio at onset of annular flow: not converged')
-            end
 
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
+
+            if err > errMax
+                tfSolver.log('\nEquilibrium entrainment ratio at onset of annular flow not converged at node %d after %d iterations. \nLinear mass flux residual = %g kg/s/m; entrained ratio = %g.\n',zIdx,k,err,e0);
+            end
         end
 
         function plotter = plotz(tfSolver, tIdx, opts)
