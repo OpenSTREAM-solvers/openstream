@@ -33,7 +33,7 @@ mixSolver.inputSet.session.log.diaryOn();
 mixSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if mixSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
+    error('OpenSTREAM:MixtureSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
 else
     mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
 
@@ -123,7 +123,7 @@ function solver(solveINIT)
             Hold    = mix(tIdx-1).H(zIdx);                                 % [J/kg] Mixture enthalpy at previous time step
             ECTold  = mix(tIdx-1).ECT(zIdx);                               % [J/m] Slip-induced energy correction at previous time step
             Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
-            Wvold   = mix(tIdx-1).MRM.WV(zIdx,:);                          % [m/s] Relaxed vapor mass flow rate at previous time step
+            Wvold   = mix(tIdx-1).MRM.WV(zIdx,:);                          % [kg/s] Relaxed vapor mass flow rate at previous time step
             Hvold   = mix(tIdx-1).MRM.HV(zIdx,:);                          % [J/kg] Relaxed vapor enthalpy at previous time step
             
             % Inner (point) iterations
@@ -237,7 +237,7 @@ function solver(solveINIT)
             
             % Save Mixture Relaxation Model terms
             mix(tIdx).MRM.TCOND(zIdx,:) = mix(tIdx).RELAXTCOND(zIdx);               % [s] Condensation time relaxation
-            mix(tIdx).MRM.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);               % [s] Condensation time relaxation
+            mix(tIdx).MRM.TEVAP(zIdx,:) = mix(tIdx).RELAXTEVAP(zIdx);               % [s] Evaporation time relaxation
             mix(tIdx).MRM.TV(zIdx,:)    = fluid(tIdx).T(mix(tIdx).MRM.HV(zIdx,:))'; % [J/kg] Relaxed vapor temperature
             
             % Save near-wall terms
@@ -264,7 +264,7 @@ function solver(solveINIT)
             DPparts = mix(tIdx).DPPARTS(UPold, MCTold, zIdx);              % [Pa] Pressure drop components
             mix(tIdx).DP.Grav(zIdx)  = -DPparts.GRAV;                      % [Pa] Gravitational pressure drop
             mix(tIdx).DP.Wall(zIdx)  = -DPparts.WALL;                      % [Pa] Wall friction pressure drop
-            mix(tIdx).DP.Acc_z(zIdx) = -DPparts.ACCZ;                      % [pa] Spatial acceleration pressure drop
+            mix(tIdx).DP.Acc_z(zIdx) = -DPparts.ACCZ;                      % [Pa] Spatial acceleration pressure drop
             mix(tIdx).DP.Acc_t(zIdx) = -DPparts.ACCT;                      % [Pa] Temporal acceleration pressure drop
             mix(tIdx).DP.Acc_s(zIdx) = -DPparts.ACCS;                      % [Pa] Slip-induced temporal acceleration pressure drop
             mix(tIdx).DP.K(zIdx)     = -DPparts.K;                         % [Pa] Local pressure drop
@@ -291,7 +291,7 @@ function solver(solveINIT)
         % Save cumulative pressure drop components
         mix(tIdx).DPSUM.Grav  = cumsum(mix(tIdx).DP.Grav);                 % [Pa] Gravitational pressure drop
         mix(tIdx).DPSUM.Wall  = cumsum(mix(tIdx).DP.Wall);                 % [Pa] Wall friction pressure drop
-        mix(tIdx).DPSUM.Acc_z = cumsum(mix(tIdx).DP.Acc_z);                % [pa] Spatial acceleration pressure drop
+        mix(tIdx).DPSUM.Acc_z = cumsum(mix(tIdx).DP.Acc_z);                % [Pa] Spatial acceleration pressure drop
         mix(tIdx).DPSUM.Acc_t = cumsum(mix(tIdx).DP.Acc_t);                % [Pa] Temporal acceleration pressure drop
         mix(tIdx).DPSUM.Acc_s = cumsum(mix(tIdx).DP.Acc_s);                % [Pa] Slip-induced temporal acceleration pressure drop
         mix(tIdx).DPSUM.K     = cumsum(mix(tIdx).DP.K);                    % [Pa] Local pressure drop
@@ -322,6 +322,9 @@ function solver(solveINIT)
             if all([timeDW < options.SSCONVW, timeDP < options.SSCONVP ,timeDH < options.SSCONVH, timeDWv < options.SSCONVW, timeDHv < options.SSCONVH])
                 
                 % Indicate init converged
+                if mixSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                    mixSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                end
                 mixSolver.STATE = SolverState.INITIALSTEPCONVERGED;
                 
                 switch model.THERMALNONEQ
@@ -345,7 +348,7 @@ function solver(solveINIT)
             
             % otherwise, not converged
             else
-                mixSolver.STATE = "INITIALSTEPNOTCONVERGED";
+                mixSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
                 
                 switch model.THERMALNONEQ
                     case 'MRM'
