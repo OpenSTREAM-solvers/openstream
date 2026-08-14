@@ -1,6 +1,66 @@
 OpenSTREAM FAQ
 ==============
 
+This page answers common questions about installing, configuring, running,
+and extending **OpenSTREAM**. Click a question to display its answer.
+
+Getting started
+---------------
+
+.. dropdown:: What is OpenSTREAM?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   **OpenSTREAM**, short for *Open Solvers for Two-phase flow Research,
+   Engineering Analysis and Modeling*, is an open-source, object-oriented
+   MATLAB environment for simulating one-dimensional, multi-field,
+   liquid-vapor two-phase flows in straight channels.
+
+   OpenSTREAM includes four solver frameworks:
+
+   * a mixture solver;
+   * a two-fluid solver;
+   * a three-field solver for annular two-phase flow;
+   * a four-field solver that separates the liquid film into base-film and
+     disturbance-wave fields.
+
+.. dropdown:: What should I read first?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   A suggested learning path is:
+
+   #. Follow the installation instructions in the Usage section.
+   #. Run **Tutorial #1: OpenSTREAM Quick Start**.
+   #. Continue with the solver-specific tutorial that matches your needs.
+   #. Consult the theory pages for governing equations and assumptions.
+   #. Use the package reference for available model options and methods.
+
+.. dropdown:: How do I make OpenSTREAM available in MATLAB?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Add the OpenSTREAM root folder to the MATLAB search path. When running
+   a tutorial from the ``tutorials`` folder:
+
+   .. code-block:: matlab
+
+      osp = './..';
+      addpath(osp);
+
+   You can check whether MATLAB finds the relevant classes with:
+
+   .. code-block:: matlab
+
+      which Inputs.InputSet
+      which Solvers.Mixture.MixtureSolver
+
+
+
+
+
+
+
 This page answers common questions about installing, configuring, running,and extending **OpenSTREAM**. For a first simulation, begin with :ref:`Tutorial #1 <tutorials>`. For mathematical details and model assumptions, consult the theory overview and the individual solver pages.
 
 Getting started
