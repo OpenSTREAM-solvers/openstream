@@ -1,8 +1,9 @@
 OpenSTREAM FAQ
 ==============
 
-This page answers common questions about installing, configuring, running,
-and extending **OpenSTREAM**. Click a question to display its answer.
+This page provides concise answers to common questions about installing,
+configuring, running, troubleshooting, and extending **OpenSTREAM**.
+Select a question to display its answer.
 
 Getting started
 ---------------
@@ -24,6 +25,9 @@ Getting started
    * a four-field solver that separates the liquid film into base-film and
      disturbance-wave fields.
 
+   The solvers provide different levels of physical detail and support
+   education, model development, performance evaluation, and validation.
+
 .. dropdown:: What should I read first?
    :animate: fade-in-slide-down
    :chevron: right-down
@@ -32,721 +36,827 @@ Getting started
 
    #. Follow the installation instructions in the Usage section.
    #. Run **Tutorial #1: OpenSTREAM Quick Start**.
-   #. Continue with the solver-specific tutorial that matches your needs.
+   #. Continue with the solver-specific tutorial that matches your needs:
+
+      * Tutorial #2 for the mixture solver;
+      * Tutorial #3 for the two-fluid solver;
+      * Tutorial #4 for the three-field solver;
+      * Tutorial #5 for the four-field solver.
+
    #. Consult the theory pages for governing equations and assumptions.
-   #. Use the package reference for available model options and methods.
+   #. Use the package reference to inspect model options, object properties,
+      and methods.
 
 .. dropdown:: How do I make OpenSTREAM available in MATLAB?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   Add the OpenSTREAM root folder to the MATLAB search path. When running
-   a tutorial from the ``tutorials`` folder:
+   Add the OpenSTREAM root folder to the MATLAB search path. For example,
+   when running a tutorial from the ``tutorials`` folder:
 
    .. code-block:: matlab
 
       osp = './..';
       addpath(osp);
 
-   You can check whether MATLAB finds the relevant classes with:
+   If MATLAB cannot find a class such as ``InputSet`` or
+   ``MixtureSolver``, verify that the OpenSTREAM root folder is correct and
+   present on the MATLAB path.
+
+   You can inspect the resolved location of a class with:
 
    .. code-block:: matlab
 
       which Inputs.InputSet
       which Solvers.Mixture.MixtureSolver
 
+.. dropdown:: Why does OpenSTREAM require Python?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
+   OpenSTREAM uses the Python version of **CoolProp** to calculate fluid
+   thermophysical properties. ``CoolPropWrapper`` provides the interface
+   between MATLAB and Python.
 
+   MATLAB must therefore use a compatible Python installation. Check the
+   active Python environment with:
 
+   .. code-block:: matlab
 
+      pyenv
 
+   You can test the property interface with:
 
-This page answers common questions about installing, configuring, running,and extending **OpenSTREAM**. For a first simulation, begin with :ref:`Tutorial #1 <tutorials>`. For mathematical details and model assumptions, consult the theory overview and the individual solver pages.
+   .. code-block:: matlab
 
-Getting started
----------------
+      cp = CoolPropWrapper.CoolPropWrapper();
 
-What is OpenSTREAM?
-~~~~~~~~~~~~~~~~~~~
-
-**OpenSTREAM**, short for *Open Solvers for Two-phase flow Research,
-Engineering Analysis and Modeling*, is an open-source, object-oriented
-MATLAB environment for simulating one-dimensional, multi-field,
-liquid-vapor two-phase flows in straight channels.
-
-OpenSTREAM includes four solver frameworks:
-
-* a mixture solver;
-* a two-fluid solver;
-* a three-field solver for annular two-phase flow;
-* a four-field solver that separates the liquid film into base-film and
-  disturbance-wave fields.
-
-The solvers provide different levels of physical detail and are intended
-to support education, model development, performance evaluation, and
-validation.
-
-What should I read first?
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-A suggested learning path is:
-
-#. Follow the installation instructions in the :doc:`Usage <../usage>`
+   If Python or CoolProp cannot be loaded, follow the MATLAB-Python
+   compatibility and CoolPropWrapper setup instructions in the installation
    section.
-#. Run **Tutorial #1: OpenSTREAM Quick Start**.
-#. Continue with the solver-specific tutorial that matches your needs:
 
-   * Tutorial #2 for the mixture solver;
-   * Tutorial #3 for the two-fluid solver;
-   * Tutorial #4 for the three-field solver;
-   * Tutorial #5 for the four-field solver.
+.. dropdown:: Which MATLAB version should I use?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-#. Use the theory pages to understand the governing equations and
-   assumptions.
-#. Use the package reference to inspect available model options, object
-   properties, and methods.
+   Use a MATLAB release compatible with the OpenSTREAM code version and
+   with a supported Python version. The documentation and tutorials should
+   state the MATLAB release used for their preparation.
 
-The tutorials are MATLAB Live Scripts and are intended to be run
-interactively.
+   When reproducing or reporting a result, record the MATLAB release with:
 
-How do I make OpenSTREAM available in MATLAB?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   .. code-block:: matlab
 
-Add the OpenSTREAM root folder to the MATLAB search path. For example,
-when running a tutorial from the ``tutorials`` folder:
+      version('-release')
 
-.. code-block:: matlab
+   Also record the Python and CoolProp versions when fluid-property behavior
+   is relevant.
 
-   osp = './..';
-   addpath(osp);
+.. dropdown:: Where can I find working examples?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-If MATLAB cannot find a class such as ``InputSet`` or ``MixtureSolver``,
-verify that:
+   The ``tutorials`` folder contains MATLAB Live Scripts that can be run and
+   modified directly. The documentation also provides completed HTML
+   versions for reference.
 
-* the OpenSTREAM root folder is the expected folder;
-* the repository was cloned completely;
-* required submodules are present;
-* the current MATLAB path includes the OpenSTREAM root folder.
-
-You can inspect the resolved location of a class with:
-
-.. code-block:: matlab
-
-   which Inputs.InputSet
-   which Solvers.Mixture.MixtureSolver
-
-Why does OpenSTREAM require Python?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-OpenSTREAM uses the Python version of **CoolProp** to calculate fluid
-thermophysical properties. ``CoolPropWrapper`` provides the interface
-between MATLAB and Python.
-
-MATLAB must therefore be configured to use a compatible Python
-installation. Check the active Python environment with:
-
-.. code-block:: matlab
-
-   pyenv
-
-You can test the property interface with:
-
-.. code-block:: matlab
-
-   cp = CoolPropWrapper.CoolPropWrapper();
-
-If Python or CoolProp cannot be loaded, follow the MATLAB-Python
-compatibility and CoolPropWrapper setup instructions in the installation
-section.
-
-Which MATLAB version should I use?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Use a MATLAB release compatible with the code version and with a supported
-Python version. The documentation build and distributed tutorials should
-state the MATLAB release used for their preparation.
-
-When reproducing or reporting a result, record the MATLAB release with:
-
-.. code-block:: matlab
-
-   version('-release')
-
-Also record the Python and CoolProp versions when fluid-property behavior
-is relevant.
+   Start with **Tutorial #1: OpenSTREAM Quick Start**, then continue with
+   the solver-specific tutorial that matches your application.
 
 Running simulations
 -------------------
 
-What is the minimum workflow for running a case?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What is the minimum workflow for running a case?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-A basic mixture-solver calculation consists of four steps:
+   A basic mixture-solver calculation consists of four steps:
 
-#. import the required packages;
-#. construct an ``InputSet``;
-#. construct the solver;
-#. call ``solve``.
+   #. import the required packages;
+   #. construct an ``InputSet``;
+   #. construct the solver;
+   #. call ``solve``.
 
-For example:
+   For example:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   import Inputs.*
-   import Solvers.*
-   import Solvers.Mixture.*
+      import Inputs.*
+      import Solvers.*
+      import Solvers.Mixture.*
 
-   inputSet = InputSet( ...
-       modelFilePath          = './inputs/models.inp', ...
-       modelID                = 'TUTORIAL1', ...
-       optionsFilePath        = './inputs/options.inp', ...
-       optionsID              = 'DEFAULT', ...
-       geometryFilePath       = './inputs/geom.inp', ...
-       geometryID             = 'TUTORIAL1', ...
-       bcFilePath             = './inputs/tutorial1.inp', ...
-       sessionParentDir       = fullfile(pwd,'outputs'), ...
-       overwriteSessionFiles = true, ...
-       LOGMODE                = 'BOTH');
+      inputSet = InputSet( ...
+          modelFilePath          = './inputs/models.inp', ...
+          modelID                = 'TUTORIAL1', ...
+          optionsFilePath        = './inputs/options.inp', ...
+          optionsID              = 'DEFAULT', ...
+          geometryFilePath       = './inputs/geom.inp', ...
+          geometryID             = 'TUTORIAL1', ...
+          bcFilePath             = './inputs/tutorial1.inp', ...
+          sessionParentDir       = fullfile(pwd,'outputs'), ...
+          overwriteSessionFiles = true, ...
+          LOGMODE                = 'BOTH');
 
-   mixSolver = MixtureSolver(inputSet);
-   mixSolver.solve();
-   mixSolver.plotz();
+      mixSolver = MixtureSolver(inputSet);
+      mixSolver.solve();
+      mixSolver.plotz();
 
-The supplied tutorials contain complete examples for every solver.
+.. dropdown:: How are OpenSTREAM inputs organized?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-How are OpenSTREAM inputs organized?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   An OpenSTREAM case is assembled from separate input categories:
 
-An OpenSTREAM case is assembled from separate input categories:
+   * **Model inputs** select physical models and closure models.
+   * **Numerical options** control time steps, iterations, relaxation
+     factors, and convergence criteria.
+   * **Geometry inputs** define channel length, flow area, wall perimeters,
+     and orientation.
+   * **Boundary conditions** define pressure, inlet enthalpy, mass flow,
+     power, and axial power distribution.
 
-* **Model inputs** select physical models and closure models.
-* **Numerical options** control time steps, iterations, relaxation factors,
-  and convergence criteria.
-* **Geometry inputs** define the channel length, flow area, wall
-  perimeters, and orientation.
-* **Boundary conditions** define pressure, inlet enthalpy, mass flow,
-  power, and axial power distribution.
+   A file may contain several input sets. An identifier such as
+   ``TUTORIAL1`` or ``DEFAULT`` selects the required set. This organization
+   allows one geometry or option set to be reused in several simulations.
 
-A file may contain several sets of inputs. An identifier such as
-``TUTORIAL1`` or ``DEFAULT`` selects the required set.
+.. dropdown:: What input-file formats are supported?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-This separation makes it possible to reuse one geometry with several
-physical-model or boundary-condition configurations.
+   OpenSTREAM examples use the native ``.inp`` format. The input framework
+   can also read equivalent JSON input where supported by the corresponding
+   input class.
 
-What happens if I do not specify a model or numerical option?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Use one format consistently within a case and verify that the selected
+   IDs and imported property values are identical when comparing formats.
 
-Unspecified entries use the default values defined by the corresponding
-input class, principally ``Inputs.Model`` and ``Inputs.Options``.
+.. dropdown:: What happens if I do not specify a model or numerical option?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Default values make simple cases easier to configure, but they should not
-be treated as universally appropriate. For research or validation work,
-review and document all influential model and numerical selections.
+   Unspecified entries use the default values defined by the corresponding
+   input class, principally ``Inputs.Model`` and ``Inputs.Options``.
 
-Why does MATLAB print many default-value warnings?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Defaults make basic cases easier to configure, but they should not be
+   treated as universally appropriate. For research or validation work,
+   review and document all influential physical and numerical selections.
 
-The warnings identify input properties that were not explicitly specified
-and therefore use their class defaults.
+.. dropdown:: Why does MATLAB print many default-value warnings?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-These messages are useful when developing or reviewing a case. Tutorials
-may temporarily suppress them to keep the displayed output concise:
+   The warnings identify properties that were not explicitly specified and
+   therefore use their class defaults.
 
-.. code-block:: matlab
+   These messages are useful while developing or reviewing a case.
+   Tutorials may temporarily suppress them to keep the displayed output
+   concise:
 
-   warning off
-   inputSet = InputSet(...);
-   warning on
+   .. code-block:: matlab
 
-Do not suppress warnings routinely until the input configuration has been
-reviewed. An unexpected warning can reveal a misspelled, unsupported, or
-omitted input.
+      warning off
+      inputSet = InputSet(...);
+      warning on
 
-Why does OpenSTREAM report that an input entry was not used?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Do not suppress warnings routinely until the configuration has been
+   reviewed. An unexpected warning can reveal an omitted or unsupported
+   input.
 
-The input parser can report entries that remain after recognized
-properties have been processed. Common causes include:
+.. dropdown:: Why does OpenSTREAM report that an input entry was not used?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-* a misspelled keyword;
-* a keyword that does not belong to the selected input class;
-* an obsolete keyword;
-* an entry intended for another model configuration.
+   Common causes include:
 
-Check the spelling against ``Inputs.Model``, ``Inputs.Options``,
-``Inputs.Geometry``, or the relevant package-reference page. Do not assume
-that an unused entry affected the simulation.
+   * a misspelled keyword;
+   * a keyword that does not belong to the selected input class;
+   * an obsolete keyword;
+   * an entry intended for another model configuration.
 
-How do I define a steady-state calculation?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Check the spelling against ``Inputs.Model``, ``Inputs.Options``,
+   ``Inputs.Geometry``, or the relevant package-reference page. Do not
+   assume that an unused entry affected the simulation.
 
-A boundary-condition file containing a single time entry defines a
-steady-state case.
+.. dropdown:: How do I define a steady-state calculation?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The solver obtains the steady-state solution through pseudo-time
-advancement. The pseudo-time sequence is a numerical procedure used to
-approach a stationary solution and should not be interpreted as a physical
-transient.
+   A boundary-condition file containing a single time entry defines a
+   steady-state case.
 
-How do I define a transient calculation?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   The solver obtains the steady-state solution through pseudo-time
+   advancement. The pseudo-time sequence is a numerical procedure used to
+   approach a stationary solution and should not be interpreted as a
+   physical transient.
 
-Provide boundary-condition values at multiple physical times. Depending on
-the boundary-condition interface, pressure, inlet enthalpy, inlet mass flow,
-power, and axial power distribution can vary with time.
+.. dropdown:: How do I define a transient calculation?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The solver first calculates the initial steady state. The physical
-transient proceeds only after the initial solution has converged.
+   Provide boundary-condition values at multiple physical times. Depending
+   on the boundary-condition interface, pressure, inlet enthalpy, inlet
+   mass flow, power, and axial power distribution can vary with time.
 
-The physical time step is controlled through the numerical options. A
-time-step sensitivity study is recommended when transient timing or peak
-values are important.
+   The solver first calculates the initial steady state. The physical
+   transient proceeds only after the initial solution has converged.
 
-Why is the mixture solver run before the other solvers?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   The physical time step is controlled through the numerical options. A
+   time-step sensitivity study is recommended when transient timing or peak
+   values are important.
 
-The two-fluid, three-field, and four-field solvers use a solved mixture
-solution for initialization. They also reuse information from the mixture
-solution, including the pressure-gradient solution.
+.. dropdown:: Why is the mixture solver run before the other solvers?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-A solved mixture solver can be passed explicitly:
+   The two-fluid, three-field, and four-field solvers require a solved
+   mixture solution for initialization. They also reuse information from
+   the mixture solution, including the pressure-gradient solution.
 
-.. code-block:: matlab
+   A solved mixture solver can be passed explicitly:
 
-   mixSolver = MixtureSolver(inputSet);
-   mixSolver.solve();
+   .. code-block:: matlab
 
-   twfSolver = TwoFluidSolver(inputSet, mixSolver);
-   tfSolver  = ThreeFieldSolver(inputSet, mixSolver);
-   ffSolver  = FourFieldSolver(inputSet, mixSolver);
+      mixSolver = MixtureSolver(inputSet);
+      mixSolver.solve();
 
-If a mixture solver is not supplied, the advanced solver constructor
-creates one and solves it when required. Passing an existing solved object
-avoids repeating the same mixture calculation.
+      twfSolver = TwoFluidSolver(inputSet, mixSolver);
+      tfSolver  = ThreeFieldSolver(inputSet, mixSolver);
+      ffSolver  = FourFieldSolver(inputSet, mixSolver);
 
-Can I call ``solve`` more than once on the same solver object?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   If a mixture solver is not supplied, the advanced solver constructor
+   creates and solves one when required. Passing an existing solved object
+   avoids repeating the same mixture calculation.
 
-A solver object is intended to represent a specific initialized
-calculation. Calling ``solve`` again on an already solved object can produce
-an error indicating that the solver must be reinitialized.
+.. dropdown:: Can I call solve more than once on the same solver object?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-For a new calculation, construct a new ``InputSet`` and solver object. This
-also keeps the simulation configuration and stored results clearly
-separated.
+   A solver object represents a specific initialized calculation. Calling
+   ``solve`` again on an already solved object can produce an error stating
+   that the solver must be reinitialized.
+
+   For a new calculation, construct a new ``InputSet`` and solver object.
+   This keeps each simulation configuration and its stored results clearly
+   separated.
+
+.. dropdown:: How do I reduce the amount of information printed in the MATLAB Command Window?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Set ``LOGMODE`` to ``'LOGTOFILEONLY'`` when constructing the
+   ``InputSet``:
+
+   .. code-block:: matlab
+
+      inputSet = InputSet( ...
+          ...
+          LOGMODE = 'LOGTOFILEONLY');
+
+   Solver progress remains available in the session log while most Command
+   Window output is suppressed.
 
 Choosing a solver
 -----------------
 
-Which solver should I use?
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Which solver should I use?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The appropriate solver depends on the physical phenomena and level of
-detail required.
+   The appropriate solver depends on the physical phenomena and level of
+   detail required.
 
-**Mixture solver**
-   Use for robust initialization, efficient calculations with mixture
-   quantities, hydrodynamically coupled phases, and mixture-based thermal
-   non-equilibrium models.
+   **Mixture solver**
+      Use for robust initialization, efficient calculations with mixture
+      quantities, hydrodynamically coupled phases, and mixture-based thermal
+      non-equilibrium models.
 
-**Two-fluid solver**
-   Use when separate liquid and vapor mass, momentum, and energy behavior
-   is needed. The solver can represent different phase velocities,
-   enthalpies, and temperatures.
+   **Two-fluid solver**
+      Use when separate liquid and vapor mass, momentum, and energy behavior
+      is needed. The solver can represent different phase velocities,
+      enthalpies, and temperatures.
 
-**Three-field solver**
-   Use for annular two-phase flow when the liquid distribution between a
-   wall film and entrained droplets is important.
+   **Three-field solver**
+      Use for annular two-phase flow when the liquid distribution between a
+      wall film and entrained droplets is important.
 
-**Four-field solver**
-   Use for annular two-phase flow when the liquid film must be separated
-   into base-film and disturbance-wave fields and wave transport is part of
-   the analysis.
+   **Four-field solver**
+      Use for annular two-phase flow when the liquid film must be separated
+      into base-film and disturbance-wave fields and wave transport is part
+      of the analysis.
 
-Increasing the number of fields does not automatically make a simulation
-more accurate. Every solver has assumptions and closure models that must be
-appropriate for the application.
+   Increasing the number of fields does not automatically make a simulation
+   more accurate. The selected solver assumptions and closure models must
+   be appropriate for the application.
 
-What is the difference between a phase and a field?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What is the difference between a phase and a field?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-A **phase** is a thermodynamic state of matter, such as liquid or vapor.
+   A **phase** is a thermodynamic state of matter, such as liquid or vapor.
 
-A **field** is a computationally resolved constituent with its own
-transported variables or conservation equations. One phase can be
-represented by more than one field. For example, the three-field solver
-represents the liquid phase through a wall-film field and a droplet field.
+   A **field** is a computationally resolved constituent with its own
+   transported variables or conservation equations. One phase can be
+   represented by more than one field. For example, the three-field solver
+   represents the liquid phase through a wall-film field and a droplet
+   field.
 
-The four-field solver further divides the wall film into a base-film field
-and a disturbance-wave field.
+   The four-field solver further divides the wall film into a base-film
+   field and a disturbance-wave field.
 
-Are the three-field and four-field solvers thermal
-non-equilibrium models?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Are the three-field and four-field solvers thermal non-equilibrium models?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The current three-field and four-field formulations assume thermal
-equilibrium. Their additional detail concerns the hydrodynamic distribution
-and transport of the liquid fields.
+   The current three-field and four-field formulations assume thermal
+   equilibrium. Their additional detail concerns the hydrodynamic
+   distribution and transport of liquid fields.
 
-Use the mixture relaxation model or the two-fluid solver when separate
-thermal behavior is required, subject to the assumptions and implemented
-closure models of the selected framework.
+   Use the mixture relaxation model or the two-fluid solver when separate
+   thermal behavior is required, subject to the assumptions and implemented
+   closure models of the selected framework.
 
-Where do the three-field and four-field equations begin?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Where do the three-field and four-field equations begin?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The separate annular-flow field equations are solved from the predicted
-onset of annular flow. Upstream of that location, mixture-solver results
-are used to initialize the field quantities.
+   The separate annular-flow field equations are solved from the predicted
+   onset of annular flow. Upstream of that location, mixture-solver results
+   are used to initialize the field quantities.
 
-The onset model, the initial film-droplet split, and, for the four-field
-solver, the initial base-wave split can therefore influence the solution
-near the transition.
+   The onset model, initial film-droplet split, and, for the four-field
+   solver, initial base-wave split can therefore influence the solution near
+   the transition.
 
-Why can results near the onset of annular flow be sensitive?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Why can results near the onset of annular flow be sensitive?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The initial liquid distribution among film, droplets, base film, and waves
-depends on selected onset and field-splitting models. Entrainment and
-deposition then redistribute liquid as the solution develops downstream.
+   The initial liquid distribution among film, droplets, base film, and
+   waves depends on the selected onset and field-splitting models.
+   Entrainment and deposition then redistribute liquid as the solution
+   develops downstream.
 
-When the region near annular-flow onset is important, examine sensitivity
-to:
+   When the region near annular-flow onset is important, examine
+   sensitivity to:
 
-* the onset-of-annular-flow model;
-* the initial entrained-droplet fraction;
-* the initial base-film and wave split;
-* entrainment and deposition models;
-* spatial resolution.
+   * the onset-of-annular-flow model;
+   * the initial entrained-droplet fraction;
+   * the initial base-film and wave split;
+   * entrainment and deposition models;
+   * spatial resolution.
 
-The selected assumptions and sensitivity results should be documented.
+.. dropdown:: Should entrainment and deposition models be selected together?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Should entrainment and deposition models be selected together?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Yes. Entrainment and deposition are coupled processes that exchange liquid
-between the film and droplet fields. When available, use a consistent
-entrainment and deposition model family unless there is a documented reason
-to combine different models.
+   Yes. Entrainment and deposition are coupled processes that exchange
+   liquid between the film and droplet fields. When available, use a
+   consistent entrainment and deposition model family unless there is a
+   documented reason to combine different models.
 
 Numerical convergence
 ---------------------
 
-What is the difference between point convergence and steady-state
-convergence?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What is the difference between point convergence and steady-state convergence?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-At each axial node and time step, OpenSTREAM performs local point
-iterations for the nonlinear equations. **Point convergence** refers to the
-change in solved variables between these local iterations.
+   At each axial node and time step, OpenSTREAM performs local point
+   iterations for the nonlinear equations. **Point convergence** refers to
+   the change in solved variables between these local iterations.
 
-For a steady-state calculation, OpenSTREAM also compares solutions between
-successive pseudo-time steps. **Steady-state convergence** refers to these
-temporal changes becoming smaller than the specified steady-state
-criteria.
+   For a steady-state calculation, OpenSTREAM also compares solutions
+   between successive pseudo-time steps. **Steady-state convergence** refers
+   to these temporal changes becoming smaller than the specified
+   steady-state criteria.
 
-A calculation therefore needs adequately converged local iterations and an
-adequately converged pseudo-time solution.
+   A calculation therefore needs adequately converged local iterations and
+   an adequately converged pseudo-time solution.
 
-What does ``solveMode='NULL'`` mean in plotting methods?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What does solveMode='NULL' mean in plotting methods?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The ``NULL`` solve mode displays the pseudo-time history used to obtain the
-initial steady-state solution. It does not represent the physical
-transient.
+   The ``NULL`` solve mode displays the pseudo-time history used to obtain
+   the initial steady-state solution. It does not represent the physical
+   transient.
 
-For example:
+   For example:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   solver.plott( ...
-       solver.NZ, ...
-       'display', {'W','U'}, ...
-       'solveMode', 'NULL');
+      solver.plott( ...
+          solver.NZ, ...
+          'display', {'W','U'}, ...
+          'solveMode', 'NULL');
 
-Use the regular or ``REAL`` mode for the stored physical solution.
+   Use the regular or ``REAL`` mode for the stored physical solution.
 
-What should I do if the steady-state calculation does not converge?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What should I do if the steady-state calculation does not converge?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Start with the information printed by the solver:
+   Start with the information printed by the solver:
 
-* identify the node with the largest point-iteration count;
-* identify which variable has the largest residual;
-* inspect the final solver state;
-* plot the pseudo-time history with ``solveMode='NULL'``;
-* check the model, geometry, and boundary-condition warnings;
-* verify that units and input values are physically reasonable.
+   * identify the node with the largest point-iteration count;
+   * identify which variable has the largest residual;
+   * inspect the final solver state;
+   * plot the pseudo-time history with ``solveMode='NULL'``;
+   * check model, geometry, and boundary-condition warnings;
+   * verify that input values and units are physically reasonable.
 
-Numerical options that may affect convergence include:
+   Numerical options that may affect convergence include:
 
-* maximum point iterations;
-* maximum steady-state pseudo-time iterations;
-* pseudo-time step;
-* variable-specific relaxation factors;
-* pointwise convergence criteria;
-* steady-state convergence criteria.
+   * maximum point iterations;
+   * maximum steady-state pseudo-time iterations;
+   * pseudo-time step;
+   * variable-specific relaxation factors;
+   * pointwise convergence criteria;
+   * steady-state convergence criteria.
 
-Change one numerical setting at a time. After convergence improves, verify
-that the converged physical result has not changed materially.
+   Change one numerical setting at a time. After convergence improves,
+   verify that the converged physical result has not changed materially.
 
-Why was my transient skipped?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Why was my transient skipped?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The physical transient is not calculated when the initial steady-state
-solution fails to converge. The solver log indicates that the transient is
-being skipped.
+   The physical transient is not calculated when the initial steady-state
+   solution fails to converge. The solver log indicates that the transient
+   is being skipped.
 
-Inspect the initial pseudo-time solution, correct any input or model
-problems, and obtain a converged initial state before interpreting transient
-results.
+   Inspect the initial pseudo-time solution, correct any input or model
+   problems, and obtain a converged initial state before interpreting
+   transient results.
 
-Can a converged calculation still be inaccurate?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Can a converged calculation still be inaccurate?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Yes. Numerical convergence indicates that the implemented discrete
-equations have been solved to the selected tolerances. It does not establish
-that:
+   Yes. Numerical convergence indicates that the implemented discrete
+   equations have been solved to the selected tolerances. It does not
+   establish that:
 
-* the spatial mesh is sufficiently refined;
-* the physical time step is sufficiently small;
-* the selected closure models are valid for the conditions;
-* the one-dimensional assumptions are appropriate;
-* the model has been validated for the application.
+   * the spatial mesh is sufficiently refined;
+   * the physical time step is sufficiently small;
+   * the selected closure models are valid for the conditions;
+   * the one-dimensional assumptions are appropriate;
+   * the model has been validated for the application.
 
-Mesh sensitivity, time-step sensitivity, conservation checks, and
-comparison with appropriate reference data remain necessary.
+   Mesh sensitivity, time-step sensitivity, conservation checks, and
+   comparison with appropriate reference data remain necessary.
+
+.. dropdown:: Which numerical options control steady-state convergence?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Relevant options include the pseudo-time step, the maximum number of
+   steady-state iterations, variable-specific relaxation factors, local
+   point-iteration tolerances, and steady-state temporal convergence
+   criteria.
+
+   The exact property names and defaults are listed in ``Inputs.Options``.
+   Use the solver-specific tutorials and package reference when changing
+   these values.
 
 Results and post-processing
 ---------------------------
 
-How do I display results?
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: How do I display results?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The solver classes provide plotting methods for common result types.
+   The solver classes provide plotting methods for common result types.
 
-``plotz``
-   Plots axial distributions. Multiple physical time indices can produce an
-   animated axial plot.
+   ``plotz``
+      Plots axial distributions. Multiple physical time indices can produce
+      an animated axial plot.
 
-``plott``
-   Plots time histories at a selected axial location.
+   ``plott``
+      Plots time histories at a selected axial location.
 
-``plotzt``
-   Plots time-elevation distributions where implemented.
+   ``plotzt``
+      Plots time-elevation distributions where implemented.
 
-For example:
+   For example:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   mixSolver.plotz( ...
-       'display', {'W','VR'}, ...
-       'arrangement', 'horizontal', ...
-       'resize', 1);
+      mixSolver.plotz( ...
+          'display', {'W','VR'}, ...
+          'arrangement', 'horizontal', ...
+          'resize', 1);
 
-The available display names depend on the selected solver. Consult the
-corresponding solver class in the package reference.
+   Available display names depend on the selected solver. Consult the
+   corresponding solver class in the package reference.
 
-Why are Live Script outputs shown beside the code?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Why are Live Script outputs shown beside the code?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-MATLAB Live Editor can display output either beside the code or inline
-below it. The OpenSTREAM tutorials are designed for **inline output**, so
-that figures and results appear immediately below the code that generates
-them.
+   MATLAB Live Editor can display output either beside the code or inline
+   below it. The OpenSTREAM tutorials are designed for **inline output**, so
+   that figures and results appear immediately below the code that generates
+   them.
 
-In the MATLAB Live Editor, select the output-layout option that places
-output below the code, then save the Live Script.
+   In the MATLAB Live Editor, select the output-layout option that places
+   output below the code, then save the Live Script.
 
-Can I access the results without using the built-in plots?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Can I access results without using the built-in plots?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Yes. Solver objects retain their solution objects and arrays. Examples
-include:
+   Yes. Solver objects retain their solution objects and arrays. Examples
+   include:
 
-* mixture variables in ``mixSolver.mixture``;
-* liquid and vapor variables in ``twfSolver.liquid`` and
-  ``twfSolver.vapor``;
-* film and droplet variables in ``tfSolver.film`` and
-  ``tfSolver.drop``;
-* base-film and wave variables through the four-field film object.
+   * mixture variables in ``mixSolver.mixture``;
+   * liquid and vapor variables in ``twfSolver.liquid`` and
+     ``twfSolver.vapor``;
+   * film and droplet variables in ``tfSolver.film`` and ``tfSolver.drop``;
+   * base-film and wave variables through the four-field film object.
 
-The package reference lists the available properties and methods. Check the
-dimensions of a property before processing it because arrays may vary over
-axial position, time, and wall index.
+   The package reference lists the available properties and methods. Check
+   property dimensions before processing because arrays may vary over axial
+   position, time, and wall index.
 
-How do I save a solver object?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: How do I save a solver object?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Use the solver ``save`` method:
+   Use the solver ``save`` method:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   mixSolver.save( ...
-       'name', 'mixSolver', ...
-       'showpath', true);
+      mixSolver.save( ...
+          'name', 'mixSolver', ...
+          'showpath', true);
 
-The solver object contains the imported inputs, solution objects, and
-associated simulation information. Saving the object allows later
-post-processing without repeating the calculation.
+   The solver object contains the imported inputs, solution objects, and
+   associated simulation information. Saving it allows later post-processing
+   without repeating the calculation.
 
-Where are simulation outputs stored?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Where are simulation outputs stored?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The ``sessionParentDir`` argument defines the parent output folder. Each
-solver uses its session infrastructure to store logs and requested results.
+   The ``sessionParentDir`` argument defines the parent output folder. Each
+   solver uses the session infrastructure to store logs and requested
+   results.
 
-For example:
+   For example:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   sessionParentDir = fullfile(pwd,'outputs');
+      sessionParentDir = fullfile(pwd,'outputs');
 
-Use a separate session directory or case name for parameter studies. Be
-careful with:
+   Use a separate session directory or case name for parameter studies. Be
+   careful with:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   overwriteSessionFiles = true
+      overwriteSessionFiles = true
 
-because existing files for the corresponding session may be replaced.
+   because existing files for the corresponding session may be replaced.
 
-Why do my plots show results only from the onset of annular flow?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Why do my plots show results only from the onset of annular flow?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-The three-field and four-field plotting functions can restrict
-field-specific results to the annular-flow region. This is appropriate
-because the separate film, droplet, base-film, and wave equations apply from
-the onset of annular flow.
+   The three-field and four-field plotting functions can restrict
+   field-specific results to the annular-flow region. This is appropriate
+   because separate film, droplet, base-film, and wave equations apply from
+   the onset of annular flow.
 
-Where supported, set the ``annular`` plotting option to ``false`` to inspect
-initialization outside that region:
+   Where supported, set the ``annular`` plotting option to ``false`` to
+   inspect initialization outside that region:
 
-.. code-block:: matlab
+   .. code-block:: matlab
 
-   solver.plotz( ...
-       'display', 'W', ...
-       'annular', false);
+      solver.plotz( ...
+          'display', 'W', ...
+          'annular', false);
 
-Interpret pre-annular field values as initialization quantities rather than
-as a complete pre-annular multi-field model.
+   Interpret pre-annular field values as initialization quantities rather
+   than as a complete pre-annular multi-field model.
+
+.. dropdown:: How do I plot only part of the channel or selected times?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Use the solver plotting options for selected axial indices and time
+   indices. For example, ``zIdx`` limits the plotted axial range and the
+   first positional plot argument can identify one or more stored time
+   indices.
+
+   Check the signature of the selected solver's ``plotz`` or ``plott``
+   method because supported options vary by solver.
+
+.. dropdown:: How do I compare several model configurations?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Create one ``InputSet`` and solver object per model ID, store each object
+   separately, and extract the same comparison quantities from every case.
+
+   Use distinct session directories to avoid overwriting results. A compact
+   MATLAB table is useful for comparing scalar metrics, while solver objects
+   can be retained separately for detailed post-processing.
 
 Physical scope and limitations
 ------------------------------
 
-What geometries can OpenSTREAM represent?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What geometries can OpenSTREAM represent?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-OpenSTREAM represents one-dimensional flow in straight channels.
-Cross-sectional geometry is described through averaged quantities such as
-flow area and wall perimeter.
+   OpenSTREAM represents one-dimensional flow in straight channels.
+   Cross-sectional geometry is described through averaged quantities such
+   as flow area and wall perimeter.
 
-The formulation supports multi-wall channel representations, allowing
-different wall surfaces and heating distributions to be considered.
-Examples may include tubes, annuli, rectangular channels, and simplified
-small rod-bundle representations when the one-dimensional approximation is
-appropriate.
+   The formulation supports multi-wall channel representations, allowing
+   different wall surfaces and heating distributions to be considered.
+   Examples may include tubes, annuli, rectangular channels, and simplified
+   small rod-bundle representations when the one-dimensional approximation
+   is appropriate.
 
-OpenSTREAM does not resolve bends, crossflow, or detailed three-dimensional
-velocity and temperature distributions.
+   OpenSTREAM does not resolve bends, crossflow, or detailed
+   three-dimensional velocity and temperature distributions.
 
-What units should I use?
-~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: What units should I use?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-OpenSTREAM uses SI units unless a specific input or model explicitly states
-otherwise. Common units include:
+   OpenSTREAM uses SI units unless a specific model or input explicitly
+   states otherwise. Common units include:
 
-* length in metres;
-* time in seconds;
-* pressure in pascals;
-* temperature in kelvin;
-* mass flow rate in kilograms per second;
-* velocity in metres per second;
-* specific enthalpy in joules per kilogram;
-* wall heat flux in watts per square metre.
+   * length in metres;
+   * time in seconds;
+   * pressure in pascals;
+   * temperature in kelvin;
+   * mass flow rate in kilograms per second;
+   * velocity in metres per second;
+   * specific enthalpy in joules per kilogram;
+   * wall heat flux in watts per square metre.
 
-Check the comments in example input files and the relevant property
-documentation before entering a value.
+   Check comments in the example input files and the relevant property
+   documentation before entering a value.
 
-Can OpenSTREAM be used directly for safety or licensing analysis?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: Can OpenSTREAM be used directly for safety or licensing analysis?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-OpenSTREAM is intended for transparent research, education, model
-development, performance evaluation, and validation. Suitability for a
-specific engineering, safety, or licensing application depends on the
-selected solver, closure models, numerical verification, validation
-evidence, quality-assurance requirements, and application-specific review.
+   OpenSTREAM is intended for transparent research, education, model
+   development, performance evaluation, and validation. Suitability for a
+   specific engineering, safety, or licensing application depends on the
+   selected solver, closure models, numerical verification, validation
+   evidence, quality-assurance requirements, and application-specific
+   review.
 
-Do not assume that availability of a model implies validation for every
-fluid, geometry, pressure, flow regime, or operating condition.
+   Do not assume that availability of a model implies validation for every
+   fluid, geometry, pressure, flow regime, or operating condition.
 
-How are fluid properties calculated?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. dropdown:: How are fluid properties calculated?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Fluid properties are calculated using CoolProp through CoolPropWrapper.
-The property assumptions are selected through the model inputs. Review the
-fluid identifier and property option used by the case, particularly when
-the simulation includes thermal non-equilibrium.
+   Fluid properties are calculated using CoolProp through CoolPropWrapper.
+   Property assumptions are selected through the model inputs. Review the
+   fluid identifier and property option used by the case, particularly when
+   the simulation includes thermal non-equilibrium.
 
-Extending OpenSTREAM
---------------------
+.. dropdown:: Does a more detailed solver always give a better result?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-How do I select another closure model?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   No. Greater field resolution introduces additional equations, closure
+   models, numerical parameters, and applicability limits. A more detailed
+   solver is useful only when its modeled phenomena and validation basis
+   match the application.
 
-Closure models are selected in the physical-model input file. Valid values
-are defined by classes in the ``InputEnums`` package.
+   Select the simplest solver that represents the required physics and
+   document the sensitivity to influential assumptions.
 
-For example, model selections may control:
+.. dropdown:: What should I verify before trusting a result?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-* void fraction;
-* wall friction;
-* interfacial heat transfer;
-* phase momentum;
-* entrainment and deposition;
-* onset of annular flow;
-* base-film thickness;
-* disturbance-wave frequency.
+   At minimum, check:
 
-Consult the relevant ``InputEnums`` class and ``Inputs.Model`` property
-before adding an entry. If a selection is not explicitly provided, the
-documented default is used.
+   * input values, IDs, units, and warnings;
+   * point and steady-state convergence;
+   * mass and energy consistency;
+   * spatial-mesh sensitivity;
+   * physical time-step sensitivity for transients;
+   * sensitivity to influential closure models;
+   * applicability and validation of the selected models.
 
-How do I add a new closure model?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Extending and contributing
+--------------------------
 
-Adding a closure model normally requires coordinated changes to:
+.. dropdown:: How do I select another closure model?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-#. the relevant ``InputEnums`` class;
-#. any new model properties and defaults in ``Inputs.Model``;
-#. the solver or field method that evaluates the closure;
-#. model documentation and references;
-#. input examples;
-#. verification and regression tests.
+   Closure models are selected in the physical-model input file. Valid
+   values are defined by classes in the ``InputEnums`` package.
 
-The implementation should clearly document equations, units, assumptions,
-validity range, and source references. Verify the closure independently
-before using it in model validation or engineering analysis.
+   Model selections may control, for example:
 
-Where should I report a bug or request a feature?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * void fraction;
+   * wall friction;
+   * interfacial heat transfer;
+   * phase or field momentum;
+   * entrainment and deposition;
+   * onset of annular flow;
+   * base-film thickness;
+   * disturbance-wave frequency.
 
-Use the OpenSTREAM GitHub issue tracker:
+   Consult the relevant ``InputEnums`` class and ``Inputs.Model`` property
+   before adding an entry. If a selection is not explicitly provided, the
+   documented default is used.
 
-* https://github.com/OpenSTREAM-solvers/openstream/issues
+.. dropdown:: How do I add a new closure model?
+   :animate: fade-in-slide-down
+   :chevron: right-down
 
-Before opening an issue:
+   Adding a closure model normally requires coordinated changes to:
 
-* search for an existing report;
-* provide the OpenSTREAM revision;
-* provide the MATLAB, Python, and CoolProp versions;
-* include the smallest input case that reproduces the problem;
-* include the complete error message and stack trace;
-* distinguish unexpected code behavior from a model-validity question.
+   #. the relevant ``InputEnums`` class;
+   #. any new model properties and defaults in ``Inputs.Model``;
+   #. the solver or field method that evaluates the closure;
+   #. model documentation and references;
+   #. input examples;
+   #. verification and regression tests.
 
-How can I contribute?
-~~~~~~~~~~~~~~~~~~~~~
+   The implementation should document equations, units, assumptions,
+   validity range, and source references. Verify the closure independently
+   before using it in validation or engineering analysis.
 
-Fork the repository, create a focused branch, implement and test the change,
-and submit a pull request. Follow the coding, testing, documentation, and
-code-of-conduct 
+.. dropdown:: How should I report a bug?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Use the OpenSTREAM GitHub issue tracker. Before opening an issue:
+
+   * search for an existing report;
+   * provide the OpenSTREAM revision;
+   * provide the MATLAB, Python, and CoolProp versions;
+   * include the smallest input case that reproduces the problem;
+   * include the complete error message and stack trace;
+   * distinguish unexpected code behavior from a model-validity question.
+
+   Issue tracker:
+
+   * https://github.com/OpenSTREAM-solvers/openstream/issues
+
+.. dropdown:: How can I request a feature?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Open a GitHub issue describing:
+
+   * the use case and physical or workflow need;
+   * the proposed behavior;
+   * which solver or package is affected;
+   * any relevant equations, references, or examples;
+   * how the feature could be verified.
+
+   Search existing issues first to avoid duplicating an active request.
+
+.. dropdown:: How can I contribute?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Fork the repository, create a focused branch, implement and test the
+   change, and submit a pull request. Follow the coding, testing,
+   documentation, and code-of-conduct guidance in the Community section.
+
+   Keep changes focused and include documentation and tests when behavior or
+   interfaces change.
+
+.. dropdown:: How do I contribute to the documentation?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Edit the reStructuredText source files, build the documentation locally
+   when possible, and verify both HTML and PDF outputs. Add or update links,
+   references, examples, and package documentation as needed.
+
+   The FAQ dropdowns use the ``sphinx-design`` extension. The extension must
+   remain listed in the documentation requirements and in ``conf.py``.
+
+.. dropdown:: Where can I get additional help?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Consult, in this order:
+
+   #. the Quick Start and solver-specific tutorials;
+   #. the theory overview;
+   #. the glossary and notation guide;
+   #. the package reference;
+   #. existing GitHub issues;
+   #. the GitHub issue tracker for a new question or reproducible problem.
+
+   When requesting help, include enough information for another user to
+   reproduce the calculation.
