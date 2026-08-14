@@ -807,6 +807,51 @@ three-dimensional velocity and temperature distributions.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What are the current limitations of OpenSTREAM?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM is under active development. The current implementation is
+intended for one-dimensional, thermally expandable, single-component,
+liquid-vapor boiling flows in straight channels. The thermally expandable
+formulation accounts for changes in fluid properties with the local
+thermodynamic state, but it is not a general compressible-flow
+formulation.</p>
+<p class="sd-card-text">The principal current limitations include:</p>
+<ul>
+<li><p class="sd-card-text"><strong>No general compressible-flow or pressure-wave formulation.</strong>
+OpenSTREAM accounts for thermodynamic density changes associated with
+heating, cooling, pressure variation, and phase change. This
+thermally expandable treatment is suitable for the intended boiling-flow
+applications, but it is not a fully compressible-flow formulation.</p>
+<p class="sd-card-text">In particular, the current implementation is not intended to resolve
+acoustic-wave propagation, rapid pressure waves, shock waves, expansion
+waves, choked flow, water hammer, or other phenomena for which
+compressible pressure-wave dynamics are essential.</p>
+</li>
+<li><p class="sd-card-text"><strong>No wall condensation model.</strong> OpenSTREAM can represent interfacial
+condensation within the fluid, where supported by the selected solver
+and closure models, but it does not currently calculate condensation
+caused by heat transfer to a cooled wall.</p></li>
+<li><p class="sd-card-text"><strong>No counter-current flow.</strong> The current solution algorithms and
+boundary-condition treatment are intended for co-current flow in a
+single axial direction.</p></li>
+</ul>
+<p class="sd-card-text">In addition, OpenSTREAM does not currently support:</p>
+<ul class="simple">
+<li><p class="sd-card-text">multi-component fluid mixtures;</p></li>
+<li><p class="sd-card-text">non-condensable gases;</p></li>
+<li><p class="sd-card-text">wall heat conduction or conjugate heat transfer;</p></li>
+<li><p class="sd-card-text">continuously varying channel area;</p></li>
+<li><p class="sd-card-text">bends, junctions, plena, or connected flow networks;</p></li>
+<li><p class="sd-card-text">crossflow between neighboring channels;</p></li>
+<li><p class="sd-card-text">multidimensional flow resolution;</p></li>
+<li><p class="sd-card-text">general-purpose component models such as pumps, valves, tanks, or heat exchangers;</p></li>
+<li><p class="sd-card-text">thermal non-equilibrium in the three-field and four-field solvers;</p></li>
+<li><p class="sd-card-text">fully coupled pressure-velocity solution in the advanced solvers;</p></li>
+<li><p class="sd-card-text">safety or licensing analysis.</p></li>
+</ul>
+<p class="sd-card-text">Some currently unsupported capabilities may be considered for future development.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">What units should I use?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text">OpenSTREAM uses SI units unless a specific model or input explicitly
 states otherwise. Common units include:</p>
