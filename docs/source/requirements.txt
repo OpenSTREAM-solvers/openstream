@@ -16,3 +16,6 @@ sphinxcontrib-bibtex
 # Open external links in new tab
 sphinx-new-tab-link
 
+# Interactive dropdowns and design components
+sphinx-design
+
