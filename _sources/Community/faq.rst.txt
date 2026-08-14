@@ -355,11 +355,11 @@ Choosing a solver
 
    A **field** is a computationally resolved constituent with its own
    transported variables or conservation equations. One phase can be
-   represented by more than one field. For example,
+   represented by more than one field. For example:
 
    * the three-field solver represents the liquid phase through a wall-film
    field and a droplet field;
-   * The four-field solver further divides the wall film into a base-film
+   * the four-field solver further divides the wall film into a base-film
    field and a disturbance-wave field.
 
 .. dropdown:: Are the three-field and four-field solvers thermal non-equilibrium models?
@@ -374,17 +374,23 @@ Choosing a solver
    thermal behavior is required, subject to the assumptions and implemented
    closure models of the selected framework.
 
-.. dropdown:: Where do the three-field and four-field equations begin?
+.. dropdown:: Where are the three-field and four-field equations applied?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   The separate annular-flow field equations are solved from the predicted
-   onset of annular flow. Upstream of that location, mixture-solver results
-   are used to initialize the field quantities.
+   Although the separate annular-flow field equations are numerically solved
+   from the channel inlet, their results are physically meaningful only from
+   the onset of annular flow. Upstream of this location, the conservation
+   equations are formulated so that the annular-flow field variables evolve
+   smoothly toward the prescribed conditions at the onset of annular flow.
 
-   The onset model, initial film-droplet split, and, for the four-field
-   solver, initial base-wave split can therefore influence the solution near
-   the transition.
+   Solving the field equations upstream of the onset of annular flow ensures
+   that all required field variables are available at the preceding time
+   step if the onset location moves upstream during a transient calculation.
+
+   The onset-of-annular-flow model, the initial film-droplet split, and, for
+   the four-field solver, the initial base-film and disturbance-wave split
+   can therefore influence the solution near the transition.
 
 .. dropdown:: Why can results near the onset of annular flow be sensitive?
    :animate: fade-in-slide-down

@@ -520,12 +520,12 @@ be appropriate for the application.</p>
 <p class="sd-card-text">A <strong>phase</strong> is a thermodynamic state of matter, such as liquid or vapor.</p>
 <p class="sd-card-text">A <strong>field</strong> is a computationally resolved constituent with its own
 transported variables or conservation equations. One phase can be
-represented by more than one field. For example,</p>
+represented by more than one field. For example:</p>
 <ul class="simple">
 <li><p class="sd-card-text">the three-field solver represents the liquid phase through a wall-film</p></li>
 </ul>
 <p class="sd-card-text">field and a droplet field;
-* The four-field solver further divides the wall film into a base-film
+* the four-field solver further divides the wall film into a base-film
 field and a disturbance-wave field.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
@@ -540,13 +540,18 @@ closure models of the selected framework.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
-<span class="sd-summary-text">Where do the three-field and four-field equations begin?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
-<p class="sd-card-text">The separate annular-flow field equations are solved from the predicted
-onset of annular flow. Upstream of that location, mixture-solver results
-are used to initialize the field quantities.</p>
-<p class="sd-card-text">The onset model, initial film-droplet split, and, for the four-field
-solver, initial base-wave split can therefore influence the solution near
-the transition.</p>
+<span class="sd-summary-text">Where are the three-field and four-field equations applied?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Although the separate annular-flow field equations are numerically solved
+from the channel inlet, their results are physically meaningful only from
+the onset of annular flow. Upstream of this location, the conservation
+equations are formulated so that the annular-flow field variables evolve
+smoothly toward the prescribed conditions at the onset of annular flow.</p>
+<p class="sd-card-text">Solving the field equations upstream of the onset of annular flow ensures
+that all required field variables are available at the preceding time
+step if the onset location moves upstream during a transient calculation.</p>
+<p class="sd-card-text">The onset-of-annular-flow model, the initial film-droplet split, and, for
+the four-field solver, the initial base-film and disturbance-wave split
+can therefore influence the solution near the transition.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
