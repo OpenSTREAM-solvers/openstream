@@ -184,8 +184,7 @@ Running simulations
    :chevron: right-down
 
    OpenSTREAM examples use the native ``.inp`` format. The input framework
-   can also read equivalent JSON input where supported by the corresponding
-   input class.
+   can also read equivalent JSON input.
 
    Use one format consistently within a case and verify that the selected
    IDs and imported property values are identical when comparing formats.
@@ -292,7 +291,7 @@ Running simulations
    :chevron: right-down
 
    A solver object represents a specific initialized calculation. Calling
-   ``solve`` again on an already solved object can produce an error stating
+   ``solve`` again on an already solved object produces an error stating
    that the solver must be reinitialized.
 
    For a new calculation, construct a new ``InputSet`` and solver object.
@@ -356,11 +355,11 @@ Choosing a solver
 
    A **field** is a computationally resolved constituent with its own
    transported variables or conservation equations. One phase can be
-   represented by more than one field. For example, the three-field solver
-   represents the liquid phase through a wall-film field and a droplet
-   field.
+   represented by more than one field. For example,
 
-   The four-field solver further divides the wall film into a base-film
+   * the three-field solver represents the liquid phase through a wall-film
+   field and a droplet field;
+   * The four-field solver further divides the wall film into a base-film
    field and a disturbance-wave field.
 
 .. dropdown:: Are the three-field and four-field solvers thermal non-equilibrium models?
@@ -701,19 +700,20 @@ Physical scope and limitations
    Check comments in the example input files and the relevant property
    documentation before entering a value.
 
-.. dropdown:: Can OpenSTREAM be used directly for safety or licensing analysis?
+.. dropdown:: Can OpenSTREAM be used for safety or licensing analysis?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   OpenSTREAM is intended for transparent research, education, model
-   development, performance evaluation, and validation. Suitability for a
-   specific engineering, safety, or licensing application depends on the
-   selected solver, closure models, numerical verification, validation
-   evidence, quality-assurance requirements, and application-specific
-   review.
+   No. **OpenSTREAM must not be used for safety or licensing analysis.**
 
-   Do not assume that availability of a model implies validation for every
-   fluid, geometry, pressure, flow regime, or operating condition.
+   OpenSTREAM is intended for research, education, model development,
+   performance evaluation, and validation activities. It is not a licensed
+   safety-analysis code and has not been qualified for use in regulatory or
+   licensing applications.
+ 
+   Results produced with OpenSTREAM must not be used as the basis for safety
+   decisions, licensing submissions, regulatory compliance demonstrations,
+   or the operation of safety-related systems.
 
 .. dropdown:: How are fluid properties calculated?
    :animate: fade-in-slide-down
