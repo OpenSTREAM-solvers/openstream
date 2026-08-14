@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
@@ -21,6 +22,7 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -149,7 +151,8 @@
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Getting started</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#what-is-openstream">What is OpenSTREAM?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#what-should-i-read-first">What should I read first?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-do-i-make-openstream-available-in-matlab">How do I make OpenSTREAM available in MATLAB?</a></li>
@@ -267,9 +270,57 @@
              
   <section id="openstream-faq">
 <h1>OpenSTREAM FAQ<a class="headerlink" href="#openstream-faq" title="Link to this heading"></a></h1>
-<p>This page answers common questions about installing, configuring, running,and extending <strong>OpenSTREAM</strong>. For a first simulation, begin with <span class="xref std std-ref">Tutorial #1</span>. For mathematical details and model assumptions, consult the theory overview and the individual solver pages.</p>
+<p>This page answers common questions about installing, configuring, running,
+and extending <strong>OpenSTREAM</strong>. Click a question to display its answer.</p>
 <section id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is OpenSTREAM?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>OpenSTREAM</strong>, short for <em>Open Solvers for Two-phase flow Research,
+Engineering Analysis and Modeling</em>, is an open-source, object-oriented
+MATLAB environment for simulating one-dimensional, multi-field,
+liquid-vapor two-phase flows in straight channels.</p>
+<p class="sd-card-text">OpenSTREAM includes four solver frameworks:</p>
+<ul class="simple">
+<li><p class="sd-card-text">a mixture solver;</p></li>
+<li><p class="sd-card-text">a two-fluid solver;</p></li>
+<li><p class="sd-card-text">a three-field solver for annular two-phase flow;</p></li>
+<li><p class="sd-card-text">a four-field solver that separates the liquid film into base-film and
+disturbance-wave fields.</p></li>
+</ul>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What should I read first?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">A suggested learning path is:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">Follow the installation instructions in the Usage section.</p></li>
+<li><p class="sd-card-text">Run <strong>Tutorial #1: OpenSTREAM Quick Start</strong>.</p></li>
+<li><p class="sd-card-text">Continue with the solver-specific tutorial that matches your needs.</p></li>
+<li><p class="sd-card-text">Consult the theory pages for governing equations and assumptions.</p></li>
+<li><p class="sd-card-text">Use the package reference for available model options and methods.</p></li>
+</ol>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I make OpenSTREAM available in MATLAB?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Add the OpenSTREAM root folder to the MATLAB search path. When running
+a tutorial from the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">osp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./..&#39;</span><span class="p">;</span>
+<span class="nb">addpath</span><span class="p">(</span><span class="n">osp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">You can check whether MATLAB finds the relevant classes with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Inputs</span><span class="p">.</span><span class="n">InputSet</span>
+<span class="nb">which</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="p">.</span><span class="n">MixtureSolver</span>
+</pre></div>
+</div>
+</div>
+</details><p>This page answers common questions about installing, configuring, running,and extending <strong>OpenSTREAM</strong>. For a first simulation, begin with <span class="xref std std-ref">Tutorial #1</span>. For mathematical details and model assumptions, consult the theory overview and the individual solver pages.</p>
+</section>
+<section id="id1">
+<h2>Getting started<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <section id="what-is-openstream">
 <h3>What is OpenSTREAM?<a class="headerlink" href="#what-is-openstream" title="Link to this heading"></a></h3>
 <p><strong>OpenSTREAM</strong>, short for <em>Open Solvers for Two-phase flow Research,
