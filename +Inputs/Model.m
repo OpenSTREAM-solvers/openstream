@@ -13,7 +13,6 @@ classdef Model < Inputs.Input
                                                                            = 100                             % Number of axial nodes used in the simulation
         FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % CoolProp fluid identifier
         PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties selected from :class:`InputEnums.FLUIDPROPERTIES`
-        ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
         KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Elevation of local perturbations [m]
 
         % Two-phase flow regime and wall heat transfer transitions

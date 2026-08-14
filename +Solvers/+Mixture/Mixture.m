@@ -830,7 +830,10 @@ classdef Mixture < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
-            dpGrav  = -mix.inputSet.model.G*cos(mix.inputSet.model.ANGLE*pi/180)*mix.RHO(zIdx)*mix.DZ;
+            geom = mix.inputSet.geometry;
+            model = mix.inputSet.model;
+
+            dpGrav  = -model.G*cos(geom.ANGLE*pi/180)*mix.RHO(zIdx)*mix.DZ;
         end
 
         function dpWall = DPWALL(mix, zIdx)
@@ -847,7 +850,7 @@ classdef Mixture < Solvers.AbstractField
 
             geom = mix.inputSet.geometry;
 
-            dpWall  = -sum(geom.PERIM.*mix.TAUW(zIdx),2)./mix.inputSet.geometry.AREA.*mix.DZ;
+            dpWall  = -sum(geom.PERIM.*mix.TAUW(zIdx),2)./geom.AREA.*mix.DZ;
         end
 
         function dpAcc_z = DPACCZ(mix, zIdx)
@@ -2458,7 +2461,7 @@ classdef Mixture < Solvers.AbstractField
                     L = @(vf) (1-exp(-C1.*vf))./(1-exp(-C1));              % [-]
 
                     C0  = @(vf) L(vf)./(K0+(1-K0).*vf.^r);                 % [-] Distribution parameter
-                    ugj = @(vf) 1.41.*((RHOL-RHOV).*SIG.*model.G./RHOL.^2).^(1/4).*((1-vf)./(1+vf)).^(1/2).*cos(model.ANGLE/180*pi); % [m/s] Drift velocity
+                    ugj = @(vf) 1.41.*((RHOL-RHOV).*SIG.*model.G./RHOL.^2).^(1/4).*((1-vf)./(1+vf)).^(1/2).*cos(geom.ANGLE/180*pi); % [m/s] Drift velocity
 
                     vf = vfslip(mix.X(zIdx),1);                            % [-] Initialize void fraction
                     MaxIter = 100;                                         % Maximum number of iterations

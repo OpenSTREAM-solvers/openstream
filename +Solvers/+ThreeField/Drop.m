@@ -399,10 +399,11 @@ classdef Drop < Solvers.AbstractField
  
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
+            geom = drop.inputSet.geometry;
             model = drop.inputSet.model;
             rhof = drop.fluid.RHOF;                                        % [kg/m^3] Liquid density
 
-            Fgrav = -model.G*cos(model.ANGLE*pi/180)*rhof;                 % [N/m^3]
+            Fgrav = -model.G*cos(geom.ANGLE*pi/180)*rhof;                  % [N/m^3]
 
             Fgrav = drop.mix.AFDISTR(0,Fgrav,zIdx);
         end
