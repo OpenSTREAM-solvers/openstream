@@ -687,6 +687,55 @@ Physical scope and limitations
    OpenSTREAM does not resolve bends, crossflow, or detailed
    three-dimensional velocity and temperature distributions.
 
+.. dropdown:: What are the current limitations of OpenSTREAM?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM is under active development. The current implementation is
+   intended for one-dimensional, thermally expandable, single-component,
+   liquid-vapor boiling flows in straight channels. The thermally expandable
+   formulation accounts for changes in fluid properties with the local
+   thermodynamic state, but it is not a general compressible-flow
+   formulation.
+
+   The principal current limitations include:
+
+   * **No general compressible-flow or pressure-wave formulation.**
+     OpenSTREAM accounts for thermodynamic density changes associated with
+     heating, cooling, pressure variation, and phase change. This
+     thermally expandable treatment is suitable for the intended boiling-flow
+     applications, but it is not a fully compressible-flow formulation.
+
+     In particular, the current implementation is not intended to resolve
+     acoustic-wave propagation, rapid pressure waves, shock waves, expansion
+     waves, choked flow, water hammer, or other phenomena for which
+     compressible pressure-wave dynamics are essential.
+
+   * **No wall condensation model.** OpenSTREAM can represent interfacial
+     condensation within the fluid, where supported by the selected solver
+     and closure models, but it does not currently calculate condensation
+     caused by heat transfer to a cooled wall.
+
+   * **No counter-current flow.** The current solution algorithms and
+     boundary-condition treatment are intended for co-current flow in a
+     single axial direction.
+
+   In addition, OpenSTREAM does not currently support:
+
+   * multi-component fluid mixtures;
+   * non-condensable gases;
+   * wall heat conduction or conjugate heat transfer;
+   * continuously varying channel area;
+   * bends, junctions, plena, or connected flow networks;
+   * crossflow between neighboring channels;
+   * multidimensional flow resolution;
+   * general-purpose component models such as pumps, valves, tanks, or heat exchangers;
+   * thermal non-equilibrium in the three-field and four-field solvers;
+   * fully coupled pressure-velocity solution in the advanced solvers;
+   * safety or licensing analysis.
+
+   Some currently unsupported capabilities may be considered for future development.
+
 .. dropdown:: What units should I use?
    :animate: fade-in-slide-down
    :chevron: right-down
