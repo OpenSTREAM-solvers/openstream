@@ -148,7 +148,67 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-openstream">What is OpenSTREAM?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-should-i-read-first">What should I read first?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-make-openstream-available-in-matlab">How do I make OpenSTREAM available in MATLAB?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-does-openstream-require-python">Why does OpenSTREAM require Python?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#which-matlab-version-should-i-use">Which MATLAB version should I use?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-simulations">Running simulations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-the-minimum-workflow-for-running-a-case">What is the minimum workflow for running a case?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-are-openstream-inputs-organized">How are OpenSTREAM inputs organized?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-happens-if-i-do-not-specify-a-model-or-numerical-option">What happens if I do not specify a model or numerical option?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-does-matlab-print-many-default-value-warnings">Why does MATLAB print many default-value warnings?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-does-openstream-report-that-an-input-entry-was-not-used">Why does OpenSTREAM report that an input entry was not used?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-define-a-steady-state-calculation">How do I define a steady-state calculation?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-define-a-transient-calculation">How do I define a transient calculation?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-is-the-mixture-solver-run-before-the-other-solvers">Why is the mixture solver run before the other solvers?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-call-solve-more-than-once-on-the-same-solver-object">Can I call <code class="docutils literal notranslate"><span class="pre">solve</span></code> more than once on the same solver object?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-a-solver">Choosing a solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#which-solver-should-i-use">Which solver should I use?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-the-difference-between-a-phase-and-a-field">What is the difference between a phase and a field?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#where-do-the-three-field-and-four-field-equations-begin">Where do the three-field and four-field equations begin?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-can-results-near-the-onset-of-annular-flow-be-sensitive">Why can results near the onset of annular flow be sensitive?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#should-entrainment-and-deposition-models-be-selected-together">Should entrainment and deposition models be selected together?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-convergence">Numerical convergence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-does-solvemode-null-mean-in-plotting-methods">What does <code class="docutils literal notranslate"><span class="pre">solveMode='NULL'</span></code> mean in plotting methods?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-should-i-do-if-the-steady-state-calculation-does-not-converge">What should I do if the steady-state calculation does not converge?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-was-my-transient-skipped">Why was my transient skipped?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-a-converged-calculation-still-be-inaccurate">Can a converged calculation still be inaccurate?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-post-processing">Results and post-processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-display-results">How do I display results?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-are-live-script-outputs-shown-beside-the-code">Why are Live Script outputs shown beside the code?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-access-the-results-without-using-the-built-in-plots">Can I access the results without using the built-in plots?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-save-a-solver-object">How do I save a solver object?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#where-are-simulation-outputs-stored">Where are simulation outputs stored?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#why-do-my-plots-show-results-only-from-the-onset-of-annular-flow">Why do my plots show results only from the onset of annular flow?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#physical-scope-and-limitations">Physical scope and limitations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-geometries-can-openstream-represent">What geometries can OpenSTREAM represent?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-units-should-i-use">What units should I use?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-openstream-be-used-directly-for-safety-or-licensing-analysis">Can OpenSTREAM be used directly for safety or licensing analysis?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-are-fluid-properties-calculated">How are fluid properties calculated?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#extending-openstream">Extending OpenSTREAM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-select-another-closure-model">How do I select another closure model?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-add-a-new-closure-model">How do I add a new closure model?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#where-should-i-report-a-bug-or-request-a-feature">Where should I report a bug or request a feature?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-can-i-contribute">How can I contribute?</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute_code.html">Contribute to the code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contribute_code.html#how-to-contribute">How to Contribute</a></li>
@@ -207,8 +267,597 @@
              
   <section id="openstream-faq">
 <h1>OpenSTREAM FAQ<a class="headerlink" href="#openstream-faq" title="Link to this heading"></a></h1>
-<p>Welcome to the <strong>OpenSTREAM</strong> FAQ section. This resource is designed to help users and developers navigate common questions and challenges when working with the OpenSTREAM solver frameworks. Whether you’re just getting started or you’re troubleshooting advanced configurations, this FAQ provides concise, practical answers to streamline your experience.</p>
-<p><em>This section is under development. In the meantime, please consult the tutorials, theory documentation, and package reference pages.</em></p>
+<p>This page answers common questions about installing, configuring, running,and extending <strong>OpenSTREAM</strong>. For a first simulation, begin with <span class="xref std std-ref">Tutorial #1</span>. For mathematical details and model assumptions, consult the theory overview and the individual solver pages.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<section id="what-is-openstream">
+<h3>What is OpenSTREAM?<a class="headerlink" href="#what-is-openstream" title="Link to this heading"></a></h3>
+<p><strong>OpenSTREAM</strong>, short for <em>Open Solvers for Two-phase flow Research,
+Engineering Analysis and Modeling</em>, is an open-source, object-oriented
+MATLAB environment for simulating one-dimensional, multi-field,
+liquid-vapor two-phase flows in straight channels.</p>
+<p>OpenSTREAM includes four solver frameworks:</p>
+<ul class="simple">
+<li><p>a mixture solver;</p></li>
+<li><p>a two-fluid solver;</p></li>
+<li><p>a three-field solver for annular two-phase flow;</p></li>
+<li><p>a four-field solver that separates the liquid film into base-film and
+disturbance-wave fields.</p></li>
+</ul>
+<p>The solvers provide different levels of physical detail and are intended
+to support education, model development, performance evaluation, and
+validation.</p>
+</section>
+<section id="what-should-i-read-first">
+<h3>What should I read first?<a class="headerlink" href="#what-should-i-read-first" title="Link to this heading"></a></h3>
+<p>A suggested learning path is:</p>
+<ol class="arabic simple">
+<li><p>Follow the installation instructions in the <span class="xref std std-doc">Usage</span>
+section.</p></li>
+<li><p>Run <strong>Tutorial #1: OpenSTREAM Quick Start</strong>.</p></li>
+<li><p>Continue with the solver-specific tutorial that matches your needs:</p>
+<ul class="simple">
+<li><p>Tutorial #2 for the mixture solver;</p></li>
+<li><p>Tutorial #3 for the two-fluid solver;</p></li>
+<li><p>Tutorial #4 for the three-field solver;</p></li>
+<li><p>Tutorial #5 for the four-field solver.</p></li>
+</ul>
+</li>
+<li><p>Use the theory pages to understand the governing equations and
+assumptions.</p></li>
+<li><p>Use the package reference to inspect available model options, object
+properties, and methods.</p></li>
+</ol>
+<p>The tutorials are MATLAB Live Scripts and are intended to be run
+interactively.</p>
+</section>
+<section id="how-do-i-make-openstream-available-in-matlab">
+<h3>How do I make OpenSTREAM available in MATLAB?<a class="headerlink" href="#how-do-i-make-openstream-available-in-matlab" title="Link to this heading"></a></h3>
+<p>Add the OpenSTREAM root folder to the MATLAB search path. For example,
+when running a tutorial from the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">osp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./..&#39;</span><span class="p">;</span>
+<span class="nb">addpath</span><span class="p">(</span><span class="n">osp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If MATLAB cannot find a class such as <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> or <code class="docutils literal notranslate"><span class="pre">MixtureSolver</span></code>,
+verify that:</p>
+<ul class="simple">
+<li><p>the OpenSTREAM root folder is the expected folder;</p></li>
+<li><p>the repository was cloned completely;</p></li>
+<li><p>required submodules are present;</p></li>
+<li><p>the current MATLAB path includes the OpenSTREAM root folder.</p></li>
+</ul>
+<p>You can inspect the resolved location of a class with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Inputs</span><span class="p">.</span><span class="n">InputSet</span>
+<span class="nb">which</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="p">.</span><span class="n">MixtureSolver</span>
+</pre></div>
+</div>
+</section>
+<section id="why-does-openstream-require-python">
+<h3>Why does OpenSTREAM require Python?<a class="headerlink" href="#why-does-openstream-require-python" title="Link to this heading"></a></h3>
+<p>OpenSTREAM uses the Python version of <strong>CoolProp</strong> to calculate fluid
+thermophysical properties. <code class="docutils literal notranslate"><span class="pre">CoolPropWrapper</span></code> provides the interface
+between MATLAB and Python.</p>
+<p>MATLAB must therefore be configured to use a compatible Python
+installation. Check the active Python environment with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pyenv</span>
+</pre></div>
+</div>
+<p>You can test the property interface with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">CoolPropWrapper</span><span class="p">.</span><span class="n">CoolPropWrapper</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>If Python or CoolProp cannot be loaded, follow the MATLAB-Python
+compatibility and CoolPropWrapper setup instructions in the installation
+section.</p>
+</section>
+<section id="which-matlab-version-should-i-use">
+<h3>Which MATLAB version should I use?<a class="headerlink" href="#which-matlab-version-should-i-use" title="Link to this heading"></a></h3>
+<p>Use a MATLAB release compatible with the code version and with a supported
+Python version. The documentation build and distributed tutorials should
+state the MATLAB release used for their preparation.</p>
+<p>When reproducing or reporting a result, record the MATLAB release with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">version</span><span class="p">(</span><span class="s">&#39;-release&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Also record the Python and CoolProp versions when fluid-property behavior
+is relevant.</p>
+</section>
+</section>
+<section id="running-simulations">
+<h2>Running simulations<a class="headerlink" href="#running-simulations" title="Link to this heading"></a></h2>
+<section id="what-is-the-minimum-workflow-for-running-a-case">
+<h3>What is the minimum workflow for running a case?<a class="headerlink" href="#what-is-the-minimum-workflow-for-running-a-case" title="Link to this heading"></a></h3>
+<p>A basic mixture-solver calculation consists of four steps:</p>
+<ol class="arabic simple">
+<li><p>import the required packages;</p></li>
+<li><p>construct an <code class="docutils literal notranslate"><span class="pre">InputSet</span></code>;</p></li>
+<li><p>construct the solver;</p></li>
+<li><p>call <code class="docutils literal notranslate"><span class="pre">solve</span></code>.</p></li>
+</ol>
+<p>For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">import</span><span class="w"> </span><span class="n">Inputs</span><span class="o">.*</span>
+<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="o">.*</span>
+<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="o">.*</span>
+
+<span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">modelFilePath</span><span class="w">          </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/models.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">modelID</span><span class="w">                </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">optionsFilePath</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/options.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">optionsID</span><span class="w">              </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;DEFAULT&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">geometryFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/geom.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">geometryID</span><span class="w">             </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">bcFilePath</span><span class="w">             </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/tutorial1.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">sessionParentDir</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">&#39;outputs&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">LOGMODE</span><span class="w">                </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BOTH&#39;</span><span class="p">);</span>
+
+<span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The supplied tutorials contain complete examples for every solver.</p>
+</section>
+<section id="how-are-openstream-inputs-organized">
+<h3>How are OpenSTREAM inputs organized?<a class="headerlink" href="#how-are-openstream-inputs-organized" title="Link to this heading"></a></h3>
+<p>An OpenSTREAM case is assembled from separate input categories:</p>
+<ul class="simple">
+<li><p><strong>Model inputs</strong> select physical models and closure models.</p></li>
+<li><p><strong>Numerical options</strong> control time steps, iterations, relaxation factors,
+and convergence criteria.</p></li>
+<li><p><strong>Geometry inputs</strong> define the channel length, flow area, wall
+perimeters, and orientation.</p></li>
+<li><p><strong>Boundary conditions</strong> define pressure, inlet enthalpy, mass flow,
+power, and axial power distribution.</p></li>
+</ul>
+<p>A file may contain several sets of inputs. An identifier such as
+<code class="docutils literal notranslate"><span class="pre">TUTORIAL1</span></code> or <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> selects the required set.</p>
+<p>This separation makes it possible to reuse one geometry with several
+physical-model or boundary-condition configurations.</p>
+</section>
+<section id="what-happens-if-i-do-not-specify-a-model-or-numerical-option">
+<h3>What happens if I do not specify a model or numerical option?<a class="headerlink" href="#what-happens-if-i-do-not-specify-a-model-or-numerical-option" title="Link to this heading"></a></h3>
+<p>Unspecified entries use the default values defined by the corresponding
+input class, principally <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code> and <code class="docutils literal notranslate"><span class="pre">Inputs.Options</span></code>.</p>
+<p>Default values make simple cases easier to configure, but they should not
+be treated as universally appropriate. For research or validation work,
+review and document all influential model and numerical selections.</p>
+</section>
+<section id="why-does-matlab-print-many-default-value-warnings">
+<h3>Why does MATLAB print many default-value warnings?<a class="headerlink" href="#why-does-matlab-print-many-default-value-warnings" title="Link to this heading"></a></h3>
+<p>The warnings identify input properties that were not explicitly specified
+and therefore use their class defaults.</p>
+<p>These messages are useful when developing or reviewing a case. Tutorials
+may temporarily suppress them to keep the displayed output concise:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">warning</span><span class="w"> </span><span class="n">off</span>
+<span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="k">...</span><span class="c">);</span>
+<span class="n">warning</span><span class="w"> </span><span class="s">on</span>
+</pre></div>
+</div>
+<p>Do not suppress warnings routinely until the input configuration has been
+reviewed. An unexpected warning can reveal a misspelled, unsupported, or
+omitted input.</p>
+</section>
+<section id="why-does-openstream-report-that-an-input-entry-was-not-used">
+<h3>Why does OpenSTREAM report that an input entry was not used?<a class="headerlink" href="#why-does-openstream-report-that-an-input-entry-was-not-used" title="Link to this heading"></a></h3>
+<p>The input parser can report entries that remain after recognized
+properties have been processed. Common causes include:</p>
+<ul class="simple">
+<li><p>a misspelled keyword;</p></li>
+<li><p>a keyword that does not belong to the selected input class;</p></li>
+<li><p>an obsolete keyword;</p></li>
+<li><p>an entry intended for another model configuration.</p></li>
+</ul>
+<p>Check the spelling against <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code>, <code class="docutils literal notranslate"><span class="pre">Inputs.Options</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Inputs.Geometry</span></code>, or the relevant package-reference page. Do not assume
+that an unused entry affected the simulation.</p>
+</section>
+<section id="how-do-i-define-a-steady-state-calculation">
+<h3>How do I define a steady-state calculation?<a class="headerlink" href="#how-do-i-define-a-steady-state-calculation" title="Link to this heading"></a></h3>
+<p>A boundary-condition file containing a single time entry defines a
+steady-state case.</p>
+<p>The solver obtains the steady-state solution through pseudo-time
+advancement. The pseudo-time sequence is a numerical procedure used to
+approach a stationary solution and should not be interpreted as a physical
+transient.</p>
+</section>
+<section id="how-do-i-define-a-transient-calculation">
+<h3>How do I define a transient calculation?<a class="headerlink" href="#how-do-i-define-a-transient-calculation" title="Link to this heading"></a></h3>
+<p>Provide boundary-condition values at multiple physical times. Depending on
+the boundary-condition interface, pressure, inlet enthalpy, inlet mass flow,
+power, and axial power distribution can vary with time.</p>
+<p>The solver first calculates the initial steady state. The physical
+transient proceeds only after the initial solution has converged.</p>
+<p>The physical time step is controlled through the numerical options. A
+time-step sensitivity study is recommended when transient timing or peak
+values are important.</p>
+</section>
+<section id="why-is-the-mixture-solver-run-before-the-other-solvers">
+<h3>Why is the mixture solver run before the other solvers?<a class="headerlink" href="#why-is-the-mixture-solver-run-before-the-other-solvers" title="Link to this heading"></a></h3>
+<p>The two-fluid, three-field, and four-field solvers use a solved mixture
+solution for initialization. They also reuse information from the mixture
+solution, including the pressure-gradient solution.</p>
+<p>A solved mixture solver can be passed explicitly:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
+
+<span class="n">twfSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">TwoFluidSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">,</span><span class="w"> </span><span class="n">mixSolver</span><span class="p">);</span>
+<span class="n">tfSolver</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="n">ThreeFieldSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">,</span><span class="w"> </span><span class="n">mixSolver</span><span class="p">);</span>
+<span class="n">ffSolver</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="n">FourFieldSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">,</span><span class="w"> </span><span class="n">mixSolver</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If a mixture solver is not supplied, the advanced solver constructor
+creates one and solves it when required. Passing an existing solved object
+avoids repeating the same mixture calculation.</p>
+</section>
+<section id="can-i-call-solve-more-than-once-on-the-same-solver-object">
+<h3>Can I call <code class="docutils literal notranslate"><span class="pre">solve</span></code> more than once on the same solver object?<a class="headerlink" href="#can-i-call-solve-more-than-once-on-the-same-solver-object" title="Link to this heading"></a></h3>
+<p>A solver object is intended to represent a specific initialized
+calculation. Calling <code class="docutils literal notranslate"><span class="pre">solve</span></code> again on an already solved object can produce
+an error indicating that the solver must be reinitialized.</p>
+<p>For a new calculation, construct a new <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> and solver object. This
+also keeps the simulation configuration and stored results clearly
+separated.</p>
+</section>
+</section>
+<section id="choosing-a-solver">
+<h2>Choosing a solver<a class="headerlink" href="#choosing-a-solver" title="Link to this heading"></a></h2>
+<section id="which-solver-should-i-use">
+<h3>Which solver should I use?<a class="headerlink" href="#which-solver-should-i-use" title="Link to this heading"></a></h3>
+<p>The appropriate solver depends on the physical phenomena and level of
+detail required.</p>
+<dl class="simple">
+<dt><strong>Mixture solver</strong></dt><dd><p>Use for robust initialization, efficient calculations with mixture
+quantities, hydrodynamically coupled phases, and mixture-based thermal
+non-equilibrium models.</p>
+</dd>
+<dt><strong>Two-fluid solver</strong></dt><dd><p>Use when separate liquid and vapor mass, momentum, and energy behavior
+is needed. The solver can represent different phase velocities,
+enthalpies, and temperatures.</p>
+</dd>
+<dt><strong>Three-field solver</strong></dt><dd><p>Use for annular two-phase flow when the liquid distribution between a
+wall film and entrained droplets is important.</p>
+</dd>
+<dt><strong>Four-field solver</strong></dt><dd><p>Use for annular two-phase flow when the liquid film must be separated
+into base-film and disturbance-wave fields and wave transport is part of
+the analysis.</p>
+</dd>
+</dl>
+<p>Increasing the number of fields does not automatically make a simulation
+more accurate. Every solver has assumptions and closure models that must be
+appropriate for the application.</p>
+</section>
+<section id="what-is-the-difference-between-a-phase-and-a-field">
+<h3>What is the difference between a phase and a field?<a class="headerlink" href="#what-is-the-difference-between-a-phase-and-a-field" title="Link to this heading"></a></h3>
+<p>A <strong>phase</strong> is a thermodynamic state of matter, such as liquid or vapor.</p>
+<p>A <strong>field</strong> is a computationally resolved constituent with its own
+transported variables or conservation equations. One phase can be
+represented by more than one field. For example, the three-field solver
+represents the liquid phase through a wall-film field and a droplet field.</p>
+<p>The four-field solver further divides the wall film into a base-film field
+and a disturbance-wave field.</p>
+<p>Are the three-field and four-field solvers thermal
+non-equilibrium models?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+<p>The current three-field and four-field formulations assume thermal
+equilibrium. Their additional detail concerns the hydrodynamic distribution
+and transport of the liquid fields.</p>
+<p>Use the mixture relaxation model or the two-fluid solver when separate
+thermal behavior is required, subject to the assumptions and implemented
+closure models of the selected framework.</p>
+</section>
+<section id="where-do-the-three-field-and-four-field-equations-begin">
+<h3>Where do the three-field and four-field equations begin?<a class="headerlink" href="#where-do-the-three-field-and-four-field-equations-begin" title="Link to this heading"></a></h3>
+<p>The separate annular-flow field equations are solved from the predicted
+onset of annular flow. Upstream of that location, mixture-solver results
+are used to initialize the field quantities.</p>
+<p>The onset model, the initial film-droplet split, and, for the four-field
+solver, the initial base-wave split can therefore influence the solution
+near the transition.</p>
+</section>
+<section id="why-can-results-near-the-onset-of-annular-flow-be-sensitive">
+<h3>Why can results near the onset of annular flow be sensitive?<a class="headerlink" href="#why-can-results-near-the-onset-of-annular-flow-be-sensitive" title="Link to this heading"></a></h3>
+<p>The initial liquid distribution among film, droplets, base film, and waves
+depends on selected onset and field-splitting models. Entrainment and
+deposition then redistribute liquid as the solution develops downstream.</p>
+<p>When the region near annular-flow onset is important, examine sensitivity
+to:</p>
+<ul class="simple">
+<li><p>the onset-of-annular-flow model;</p></li>
+<li><p>the initial entrained-droplet fraction;</p></li>
+<li><p>the initial base-film and wave split;</p></li>
+<li><p>entrainment and deposition models;</p></li>
+<li><p>spatial resolution.</p></li>
+</ul>
+<p>The selected assumptions and sensitivity results should be documented.</p>
+</section>
+<section id="should-entrainment-and-deposition-models-be-selected-together">
+<h3>Should entrainment and deposition models be selected together?<a class="headerlink" href="#should-entrainment-and-deposition-models-be-selected-together" title="Link to this heading"></a></h3>
+<p>Yes. Entrainment and deposition are coupled processes that exchange liquid
+between the film and droplet fields. When available, use a consistent
+entrainment and deposition model family unless there is a documented reason
+to combine different models.</p>
+</section>
+</section>
+<section id="numerical-convergence">
+<h2>Numerical convergence<a class="headerlink" href="#numerical-convergence" title="Link to this heading"></a></h2>
+<p>What is the difference between point convergence and steady-state
+convergence?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p>
+<p>At each axial node and time step, OpenSTREAM performs local point
+iterations for the nonlinear equations. <strong>Point convergence</strong> refers to the
+change in solved variables between these local iterations.</p>
+<p>For a steady-state calculation, OpenSTREAM also compares solutions between
+successive pseudo-time steps. <strong>Steady-state convergence</strong> refers to these
+temporal changes becoming smaller than the specified steady-state
+criteria.</p>
+<p>A calculation therefore needs adequately converged local iterations and an
+adequately converged pseudo-time solution.</p>
+<section id="what-does-solvemode-null-mean-in-plotting-methods">
+<h3>What does <code class="docutils literal notranslate"><span class="pre">solveMode='NULL'</span></code> mean in plotting methods?<a class="headerlink" href="#what-does-solvemode-null-mean-in-plotting-methods" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">NULL</span></code> solve mode displays the pseudo-time history used to obtain the
+initial steady-state solution. It does not represent the physical
+transient.</p>
+<p>For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">solver</span><span class="p">.</span><span class="n">NZ</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;display&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&#39;W&#39;</span><span class="p">,</span><span class="s">&#39;U&#39;</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;solveMode&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;NULL&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Use the regular or <code class="docutils literal notranslate"><span class="pre">REAL</span></code> mode for the stored physical solution.</p>
+</section>
+<section id="what-should-i-do-if-the-steady-state-calculation-does-not-converge">
+<h3>What should I do if the steady-state calculation does not converge?<a class="headerlink" href="#what-should-i-do-if-the-steady-state-calculation-does-not-converge" title="Link to this heading"></a></h3>
+<p>Start with the information printed by the solver:</p>
+<ul class="simple">
+<li><p>identify the node with the largest point-iteration count;</p></li>
+<li><p>identify which variable has the largest residual;</p></li>
+<li><p>inspect the final solver state;</p></li>
+<li><p>plot the pseudo-time history with <code class="docutils literal notranslate"><span class="pre">solveMode='NULL'</span></code>;</p></li>
+<li><p>check the model, geometry, and boundary-condition warnings;</p></li>
+<li><p>verify that units and input values are physically reasonable.</p></li>
+</ul>
+<p>Numerical options that may affect convergence include:</p>
+<ul class="simple">
+<li><p>maximum point iterations;</p></li>
+<li><p>maximum steady-state pseudo-time iterations;</p></li>
+<li><p>pseudo-time step;</p></li>
+<li><p>variable-specific relaxation factors;</p></li>
+<li><p>pointwise convergence criteria;</p></li>
+<li><p>steady-state convergence criteria.</p></li>
+</ul>
+<p>Change one numerical setting at a time. After convergence improves, verify
+that the converged physical result has not changed materially.</p>
+</section>
+<section id="why-was-my-transient-skipped">
+<h3>Why was my transient skipped?<a class="headerlink" href="#why-was-my-transient-skipped" title="Link to this heading"></a></h3>
+<p>The physical transient is not calculated when the initial steady-state
+solution fails to converge. The solver log indicates that the transient is
+being skipped.</p>
+<p>Inspect the initial pseudo-time solution, correct any input or model
+problems, and obtain a converged initial state before interpreting transient
+results.</p>
+</section>
+<section id="can-a-converged-calculation-still-be-inaccurate">
+<h3>Can a converged calculation still be inaccurate?<a class="headerlink" href="#can-a-converged-calculation-still-be-inaccurate" title="Link to this heading"></a></h3>
+<p>Yes. Numerical convergence indicates that the implemented discrete
+equations have been solved to the selected tolerances. It does not establish
+that:</p>
+<ul class="simple">
+<li><p>the spatial mesh is sufficiently refined;</p></li>
+<li><p>the physical time step is sufficiently small;</p></li>
+<li><p>the selected closure models are valid for the conditions;</p></li>
+<li><p>the one-dimensional assumptions are appropriate;</p></li>
+<li><p>the model has been validated for the application.</p></li>
+</ul>
+<p>Mesh sensitivity, time-step sensitivity, conservation checks, and
+comparison with appropriate reference data remain necessary.</p>
+</section>
+</section>
+<section id="results-and-post-processing">
+<h2>Results and post-processing<a class="headerlink" href="#results-and-post-processing" title="Link to this heading"></a></h2>
+<section id="how-do-i-display-results">
+<h3>How do I display results?<a class="headerlink" href="#how-do-i-display-results" title="Link to this heading"></a></h3>
+<p>The solver classes provide plotting methods for common result types.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">plotz</span></code></dt><dd><p>Plots axial distributions. Multiple physical time indices can produce an
+animated axial plot.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">plott</span></code></dt><dd><p>Plots time histories at a selected axial location.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">plotzt</span></code></dt><dd><p>Plots time-elevation distributions where implemented.</p>
+</dd>
+</dl>
+<p>For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;display&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&#39;W&#39;</span><span class="p">,</span><span class="s">&#39;VR&#39;</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;arrangement&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;horizontal&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;resize&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The available display names depend on the selected solver. Consult the
+corresponding solver class in the package reference.</p>
+</section>
+<section id="why-are-live-script-outputs-shown-beside-the-code">
+<h3>Why are Live Script outputs shown beside the code?<a class="headerlink" href="#why-are-live-script-outputs-shown-beside-the-code" title="Link to this heading"></a></h3>
+<p>MATLAB Live Editor can display output either beside the code or inline
+below it. The OpenSTREAM tutorials are designed for <strong>inline output</strong>, so
+that figures and results appear immediately below the code that generates
+them.</p>
+<p>In the MATLAB Live Editor, select the output-layout option that places
+output below the code, then save the Live Script.</p>
+</section>
+<section id="can-i-access-the-results-without-using-the-built-in-plots">
+<h3>Can I access the results without using the built-in plots?<a class="headerlink" href="#can-i-access-the-results-without-using-the-built-in-plots" title="Link to this heading"></a></h3>
+<p>Yes. Solver objects retain their solution objects and arrays. Examples
+include:</p>
+<ul class="simple">
+<li><p>mixture variables in <code class="docutils literal notranslate"><span class="pre">mixSolver.mixture</span></code>;</p></li>
+<li><p>liquid and vapor variables in <code class="docutils literal notranslate"><span class="pre">twfSolver.liquid</span></code> and
+<code class="docutils literal notranslate"><span class="pre">twfSolver.vapor</span></code>;</p></li>
+<li><p>film and droplet variables in <code class="docutils literal notranslate"><span class="pre">tfSolver.film</span></code> and
+<code class="docutils literal notranslate"><span class="pre">tfSolver.drop</span></code>;</p></li>
+<li><p>base-film and wave variables through the four-field film object.</p></li>
+</ul>
+<p>The package reference lists the available properties and methods. Check the
+dimensions of a property before processing it because arrays may vary over
+axial position, time, and wall index.</p>
+</section>
+<section id="how-do-i-save-a-solver-object">
+<h3>How do I save a solver object?<a class="headerlink" href="#how-do-i-save-a-solver-object" title="Link to this heading"></a></h3>
+<p>Use the solver <code class="docutils literal notranslate"><span class="pre">save</span></code> method:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixSolver</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;mixSolver&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;showpath&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The solver object contains the imported inputs, solution objects, and
+associated simulation information. Saving the object allows later
+post-processing without repeating the calculation.</p>
+</section>
+<section id="where-are-simulation-outputs-stored">
+<h3>Where are simulation outputs stored?<a class="headerlink" href="#where-are-simulation-outputs-stored" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">sessionParentDir</span></code> argument defines the parent output folder. Each
+solver uses its session infrastructure to store logs and requested results.</p>
+<p>For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">sessionParentDir</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">&#39;outputs&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Use a separate session directory or case name for parameter studies. Be
+careful with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+<p>because existing files for the corresponding session may be replaced.</p>
+</section>
+<section id="why-do-my-plots-show-results-only-from-the-onset-of-annular-flow">
+<h3>Why do my plots show results only from the onset of annular flow?<a class="headerlink" href="#why-do-my-plots-show-results-only-from-the-onset-of-annular-flow" title="Link to this heading"></a></h3>
+<p>The three-field and four-field plotting functions can restrict
+field-specific results to the annular-flow region. This is appropriate
+because the separate film, droplet, base-film, and wave equations apply from
+the onset of annular flow.</p>
+<p>Where supported, set the <code class="docutils literal notranslate"><span class="pre">annular</span></code> plotting option to <code class="docutils literal notranslate"><span class="pre">false</span></code> to inspect
+initialization outside that region:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;display&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;W&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">&#39;annular&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Interpret pre-annular field values as initialization quantities rather than
+as a complete pre-annular multi-field model.</p>
+</section>
+</section>
+<section id="physical-scope-and-limitations">
+<h2>Physical scope and limitations<a class="headerlink" href="#physical-scope-and-limitations" title="Link to this heading"></a></h2>
+<section id="what-geometries-can-openstream-represent">
+<h3>What geometries can OpenSTREAM represent?<a class="headerlink" href="#what-geometries-can-openstream-represent" title="Link to this heading"></a></h3>
+<p>OpenSTREAM represents one-dimensional flow in straight channels.
+Cross-sectional geometry is described through averaged quantities such as
+flow area and wall perimeter.</p>
+<p>The formulation supports multi-wall channel representations, allowing
+different wall surfaces and heating distributions to be considered.
+Examples may include tubes, annuli, rectangular channels, and simplified
+small rod-bundle representations when the one-dimensional approximation is
+appropriate.</p>
+<p>OpenSTREAM does not resolve bends, crossflow, or detailed three-dimensional
+velocity and temperature distributions.</p>
+</section>
+<section id="what-units-should-i-use">
+<h3>What units should I use?<a class="headerlink" href="#what-units-should-i-use" title="Link to this heading"></a></h3>
+<p>OpenSTREAM uses SI units unless a specific input or model explicitly states
+otherwise. Common units include:</p>
+<ul class="simple">
+<li><p>length in metres;</p></li>
+<li><p>time in seconds;</p></li>
+<li><p>pressure in pascals;</p></li>
+<li><p>temperature in kelvin;</p></li>
+<li><p>mass flow rate in kilograms per second;</p></li>
+<li><p>velocity in metres per second;</p></li>
+<li><p>specific enthalpy in joules per kilogram;</p></li>
+<li><p>wall heat flux in watts per square metre.</p></li>
+</ul>
+<p>Check the comments in example input files and the relevant property
+documentation before entering a value.</p>
+</section>
+<section id="can-openstream-be-used-directly-for-safety-or-licensing-analysis">
+<h3>Can OpenSTREAM be used directly for safety or licensing analysis?<a class="headerlink" href="#can-openstream-be-used-directly-for-safety-or-licensing-analysis" title="Link to this heading"></a></h3>
+<p>OpenSTREAM is intended for transparent research, education, model
+development, performance evaluation, and validation. Suitability for a
+specific engineering, safety, or licensing application depends on the
+selected solver, closure models, numerical verification, validation
+evidence, quality-assurance requirements, and application-specific review.</p>
+<p>Do not assume that availability of a model implies validation for every
+fluid, geometry, pressure, flow regime, or operating condition.</p>
+</section>
+<section id="how-are-fluid-properties-calculated">
+<h3>How are fluid properties calculated?<a class="headerlink" href="#how-are-fluid-properties-calculated" title="Link to this heading"></a></h3>
+<p>Fluid properties are calculated using CoolProp through CoolPropWrapper.
+The property assumptions are selected through the model inputs. Review the
+fluid identifier and property option used by the case, particularly when
+the simulation includes thermal non-equilibrium.</p>
+</section>
+</section>
+<section id="extending-openstream">
+<h2>Extending OpenSTREAM<a class="headerlink" href="#extending-openstream" title="Link to this heading"></a></h2>
+<section id="how-do-i-select-another-closure-model">
+<h3>How do I select another closure model?<a class="headerlink" href="#how-do-i-select-another-closure-model" title="Link to this heading"></a></h3>
+<p>Closure models are selected in the physical-model input file. Valid values
+are defined by classes in the <code class="docutils literal notranslate"><span class="pre">InputEnums</span></code> package.</p>
+<p>For example, model selections may control:</p>
+<ul class="simple">
+<li><p>void fraction;</p></li>
+<li><p>wall friction;</p></li>
+<li><p>interfacial heat transfer;</p></li>
+<li><p>phase momentum;</p></li>
+<li><p>entrainment and deposition;</p></li>
+<li><p>onset of annular flow;</p></li>
+<li><p>base-film thickness;</p></li>
+<li><p>disturbance-wave frequency.</p></li>
+</ul>
+<p>Consult the relevant <code class="docutils literal notranslate"><span class="pre">InputEnums</span></code> class and <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code> property
+before adding an entry. If a selection is not explicitly provided, the
+documented default is used.</p>
+</section>
+<section id="how-do-i-add-a-new-closure-model">
+<h3>How do I add a new closure model?<a class="headerlink" href="#how-do-i-add-a-new-closure-model" title="Link to this heading"></a></h3>
+<p>Adding a closure model normally requires coordinated changes to:</p>
+<ol class="arabic simple">
+<li><p>the relevant <code class="docutils literal notranslate"><span class="pre">InputEnums</span></code> class;</p></li>
+<li><p>any new model properties and defaults in <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code>;</p></li>
+<li><p>the solver or field method that evaluates the closure;</p></li>
+<li><p>model documentation and references;</p></li>
+<li><p>input examples;</p></li>
+<li><p>verification and regression tests.</p></li>
+</ol>
+<p>The implementation should clearly document equations, units, assumptions,
+validity range, and source references. Verify the closure independently
+before using it in model validation or engineering analysis.</p>
+</section>
+<section id="where-should-i-report-a-bug-or-request-a-feature">
+<h3>Where should I report a bug or request a feature?<a class="headerlink" href="#where-should-i-report-a-bug-or-request-a-feature" title="Link to this heading"></a></h3>
+<p>Use the OpenSTREAM GitHub issue tracker:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">https://github.com/OpenSTREAM-solvers/openstream/issues</a></p></li>
+</ul>
+<p>Before opening an issue:</p>
+<ul class="simple">
+<li><p>search for an existing report;</p></li>
+<li><p>provide the OpenSTREAM revision;</p></li>
+<li><p>provide the MATLAB, Python, and CoolProp versions;</p></li>
+<li><p>include the smallest input case that reproduces the problem;</p></li>
+<li><p>include the complete error message and stack trace;</p></li>
+<li><p>distinguish unexpected code behavior from a model-validity question.</p></li>
+</ul>
+</section>
+<section id="how-can-i-contribute">
+<h3>How can I contribute?<a class="headerlink" href="#how-can-i-contribute" title="Link to this heading"></a></h3>
+<p>Fork the repository, create a focused branch, implement and test the change,
+and submit a pull request. Follow the coding, testing, documentation, and
+code-of-conduct</p>
+</section>
+</section>
 </section>
 
 
