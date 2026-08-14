@@ -377,8 +377,7 @@ allows one geometry or option set to be reused in several simulations.</p>
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">What input-file formats are supported?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text">OpenSTREAM examples use the native <code class="docutils literal notranslate"><span class="pre">.inp</span></code> format. The input framework
-can also read equivalent JSON input where supported by the corresponding
-input class.</p>
+can also read equivalent JSON input.</p>
 <p class="sd-card-text">Use one format consistently within a case and verify that the selected
 IDs and imported property values are identical when comparing formats.</p>
 </div>
@@ -467,7 +466,7 @@ avoids repeating the same mixture calculation.</p>
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Can I call solve more than once on the same solver object?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text">A solver object represents a specific initialized calculation. Calling
-<code class="docutils literal notranslate"><span class="pre">solve</span></code> again on an already solved object can produce an error stating
+<code class="docutils literal notranslate"><span class="pre">solve</span></code> again on an already solved object produces an error stating
 that the solver must be reinitialized.</p>
 <p class="sd-card-text">For a new calculation, construct a new <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> and solver object.
 This keeps each simulation configuration and its stored results clearly
@@ -521,10 +520,12 @@ be appropriate for the application.</p>
 <p class="sd-card-text">A <strong>phase</strong> is a thermodynamic state of matter, such as liquid or vapor.</p>
 <p class="sd-card-text">A <strong>field</strong> is a computationally resolved constituent with its own
 transported variables or conservation equations. One phase can be
-represented by more than one field. For example, the three-field solver
-represents the liquid phase through a wall-film field and a droplet
-field.</p>
-<p class="sd-card-text">The four-field solver further divides the wall film into a base-film
+represented by more than one field. For example,</p>
+<ul class="simple">
+<li><p class="sd-card-text">the three-field solver represents the liquid phase through a wall-film</p></li>
+</ul>
+<p class="sd-card-text">field and a droplet field;
+* The four-field solver further divides the wall film into a base-film
 field and a disturbance-wave field.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
@@ -819,15 +820,15 @@ documentation before entering a value.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
-<span class="sd-summary-text">Can OpenSTREAM be used directly for safety or licensing analysis?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
-<p class="sd-card-text">OpenSTREAM is intended for transparent research, education, model
-development, performance evaluation, and validation. Suitability for a
-specific engineering, safety, or licensing application depends on the
-selected solver, closure models, numerical verification, validation
-evidence, quality-assurance requirements, and application-specific
-review.</p>
-<p class="sd-card-text">Do not assume that availability of a model implies validation for every
-fluid, geometry, pressure, flow regime, or operating condition.</p>
+<span class="sd-summary-text">Can OpenSTREAM be used for safety or licensing analysis?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">No. <strong>OpenSTREAM must not be used for safety or licensing analysis.</strong></p>
+<p class="sd-card-text">OpenSTREAM is intended for research, education, model development,
+performance evaluation, and validation activities. It is not a licensed
+safety-analysis code and has not been qualified for use in regulatory or
+licensing applications.</p>
+<p class="sd-card-text">Results produced with OpenSTREAM must not be used as the basis for safety
+decisions, licensing submissions, regulatory compliance demonstrations,
+or the operation of safety-related systems.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
