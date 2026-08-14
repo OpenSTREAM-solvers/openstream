@@ -241,10 +241,11 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
 
+            geom = absfilm.inputSet.geometry;
             model = absfilm.inputSet.model;
             thick = abs(absfilm.THICK(zIdx));                              % [m] Film thickness
 
-            Fgrav = -thick.*(model.G*cos(model.ANGLE*pi/180)*absfilm.fluid.RHOF); % [N/m^2]
+            Fgrav = -thick.*(model.G*cos(geom.ANGLE*pi/180)*absfilm.fluid.RHOF); % [N/m^2]
 
             Fgrav = absfilm.mix.AFDISTR(0,Fgrav,zIdx);
         end

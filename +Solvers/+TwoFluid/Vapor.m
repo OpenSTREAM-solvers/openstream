@@ -746,11 +746,11 @@ classdef Vapor < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
+            geom = vapor.inputSet.geometry;
             model = vapor.inputSet.model;
-            AREA = vapor.inputSet.geometry.AREA;                           % [m^2] Cross-section area
             RHOV = vapor.fluid.RHOV(vapor.H(zIdx));                        % [kg/m^3] Vapor density
 
-            Fgrav = -model.G*cos(model.ANGLE*pi/180)*RHOV.*vapor.VF(liquid,zIdx).*AREA; % [N/m]
+            Fgrav = -model.G*cos(geom.ANGLE*pi/180)*RHOV.*vapor.VF(liquid,zIdx).*geom.AREA; % [N/m]
         end
 
         function Fbuoy = FBUOY(vapor,liquid,zIdx)
