@@ -28,6 +28,234 @@ Getting started
    The solvers provide different levels of physical detail and support
    education, model development, performance evaluation, and validation.
 
+.. dropdown:: Why should I use OpenSTREAM instead of another available code?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM is not intended to replace any existing thermal-hydraulic
+   code. It is designed primarily as an open, transparent, and extensible
+   environment for education, fundamental model development, implementation
+   of closure models, controlled numerical experiments, and validation of
+   one-dimensional two-phase flow formulations.
+
+   OpenSTREAM may be particularly useful when you need:
+
+   * **Full access to the source code.** The governing equations, closure
+     models, numerical algorithms, input processing, and post-processing
+     methods can be inspected and modified directly.
+
+   * **A transparent modeling environment.** Primary variables, secondary
+     quantities, source terms, field exchanges, and convergence histories
+     are accessible through the MATLAB solver objects. This facilitates
+     interpretation, debugging, and conservation checks.
+
+   * **Several solver frameworks within a common architecture.** OpenSTREAM
+     includes mixture, two-fluid, three-field, and four-field formulations.
+     The same geometry, boundary conditions, fluid-property interface, and
+     general workflow can therefore be used to compare different levels of
+     physical resolution.
+
+   * **Detailed annular-flow modeling.** The three-field solver separates
+     the liquid into wall-film and entrained-droplet fields. The four-field
+     solver further separates the liquid film into base-film and
+     disturbance-wave fields and includes wave-frequency transport.
+
+   * **A practical platform for closure-model development.** Physical models
+     are selected through documented input enumerations and implemented in
+     dedicated phase or field classes. A developer can add, modify, test,
+     and compare closure models without working within a large proprietary
+     code base.
+
+   * **Rapid prototyping in MATLAB.** MATLAB provides an interactive
+     environment for inspecting objects, modifying equations, visualizing
+     results, performing parameter studies, and developing new models.
+
+   * **Reproducible research and education.** Input sets, tutorials,
+     documentation, references, and source code can be distributed together,
+     allowing users to inspect the assumptions behind a calculation and
+     reproduce the workflow.
+
+   * **A computationally efficient one-dimensional model.** OpenSTREAM is
+     useful when cross-section-averaged axial behavior is sufficient and
+     the computational expense and geometric detail of a multidimensional
+     CFD calculation are not required.
+
+   Other codes may be more appropriate when the application requires:
+
+   * qualified or extensively validated models for a specific industrial
+     application;
+   * complete reactor-system or plant-network simulation;
+   * dedicated component models for pumps, valves, vessels, separators, or
+     heat exchangers;
+   * multidimensional CFD resolution;
+   * complex geometry, crossflow, or connected flow networks;
+   * compressible pressure-wave dynamics;
+   * multi-component fluids or non-condensable gases;
+   * safety or licensing analysis.
+
+   The appropriate code therefore depends on the purpose of the analysis.
+   OpenSTREAM is especially well suited to understanding, developing, and
+   evaluating models in a transparent one-dimensional framework. A more
+   established application code may be preferable when a broad component
+   library, an application-specific validation basis, or a qualified
+   engineering workflow is required.
+
+   Selecting OpenSTREAM does not remove the need for numerical verification,
+   closure-model assessment, applicability review, and validation against
+   appropriate reference data.
+
+.. dropdown:: What is unique about OpenSTREAM, and what are its main strengths?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM combines advanced one-dimensional two-phase flow models with
+   an open, modern, and extensible software architecture. Its purpose is not
+   only to perform simulations, but also to make the governing equations,
+   closure models, numerical methods, and calculated source terms accessible
+   for inspection, modification, and collaborative development.
+
+   Its main distinctive features and strengths include:
+
+   * **Advanced models rarely available in open-source thermal-hydraulic
+     codes.** To the best of the developers' knowledge, OpenSTREAM provides
+     the only openly available implementations of its four-field annular-flow
+     model and Mixture Relaxation Model within a general two-phase flow
+     simulation environment.
+
+     The four-field model explicitly represents vapor, entrained droplets,
+     the base liquid film, and disturbance waves. It also includes transport
+     of wave frequency, allowing the evolution of disturbance-wave behavior
+     to be studied. The model therefore provides a level of annular-flow
+     detail that is not commonly available in open-source one-dimensional
+     thermal-hydraulic codes.
+
+     The Mixture Relaxation Model extends the conventional mixture
+     formulation by solving additional vapor mass and energy conservation
+     equations. It provides a computationally efficient framework for
+     representing thermal non-equilibrium through relaxation of interfacial
+     mass and energy transfer.
+
+   * **Several solver frameworks within one consistent environment.**
+     OpenSTREAM includes mixture, two-fluid, three-field, and four-field
+     solvers. These frameworks share the same general input system,
+     geometry definition, fluid-property interface, session management, and
+     post-processing approach.
+
+     This common structure allows users to compare different levels of
+     physical resolution without moving between unrelated codes or
+     reconstructing the complete simulation workflow.
+
+   * **A modern object-oriented architecture.** OpenSTREAM is implemented
+     using MATLAB classes that represent solvers, phases, fields, inputs,
+     fluid properties, sessions, and plotting utilities. Shared behavior is
+     organized through inheritance and common base classes, while
+     solver-specific behavior is implemented in dedicated modules.
+
+     This architecture supports modular development and helps isolate
+     changes to a particular physical model, field, or solver. It also makes
+     primary variables, secondary quantities, source terms, and solver
+     methods directly accessible through the corresponding objects.
+
+   * **Direct access to primary and secondary variables.** Users can inspect
+     the primary solution variables, such as mass flow rate, pressure,
+     velocity, and enthalpy, together with derived quantities such as void
+     fraction, film thickness, interfacial area, flow regime, and
+     disturbance-wave frequency, where applicable to the selected solver.
+
+     The stored pseudo-time convergence histories also allow users to examine
+     how the steady-state solution was obtained. This level of access is
+     useful for interpretation, debugging, numerical diagnostics, and
+     verification.
+
+   * **Direct access to field exchange terms.** The mass, momentum, and
+     energy exchange terms calculated by the selected solver are readily
+     accessible through the corresponding phase and field objects.
+
+     This includes wall and interfacial transfer terms, such as evaporation,
+     condensation, entrainment, deposition, drag, shear, and heat transfer,
+     where applicable to the selected solver. Access to the individual
+     contributions facilitates interpretation of the governing equations,
+     conservation checks, closure-model evaluation, and debugging.
+
+   * **Direct access to pressure-drop contributions.** The individual
+     pressure-drop components calculated by the mixture solver are readily
+     available for inspection and post-processing.
+
+     These contributions can be examined separately to determine the
+     relative effects of gravity, wall friction, spatial acceleration,
+     temporal acceleration, and local pressure losses, as applicable to the
+     simulated case. This decomposition helps users understand the physical
+     origin of the calculated pressure distribution.
+
+   * **Integrated plotting and animation capabilities.** Each solver
+     provides dedicated methods for visualizing its principal variables and
+     calculated exchange terms. Axial distributions, time histories, and,
+     where implemented, time-elevation distributions can be generated
+     directly from the solver object.
+
+     The plotting methods support solver-specific quantities, selected axial
+     and time indices, multiple plot arrangements, and animation of transient
+     results. This allows users to inspect a calculation interactively
+     without first developing separate post-processing routines.
+
+   * **Designed for model development and comparison.** Physical models are
+     selected through documented input options and implemented in dedicated
+     phase or field classes. New closure models can therefore be introduced,
+     verified, and compared with existing models without modifying an
+     opaque or monolithic code base.
+
+     The shared solver architecture is particularly useful for studying how
+     assumptions made at the mixture, phase, or field level influence the
+     calculated results.
+
+   * **Comprehensive and integrated documentation.** The OpenSTREAM
+     documentation includes installation instructions, theory descriptions,
+     governing equations, notation, a glossary, package and class
+     references, tutorials, publications, contribution guidance, and this
+     FAQ.
+
+     Solver-specific MATLAB Live Scripts provide executable examples that
+     users can inspect and modify. The documentation is generated from the
+     same repository as the source code, helping to keep implementation
+     details and user guidance together.
+
+   * **Interactive MATLAB workflow.** MATLAB provides an environment in
+     which users can run a case, inspect solver objects, modify models,
+     visualize intermediate quantities, perform parameter studies, and
+     develop post-processing routines interactively.
+
+     MATLAB Live Scripts combine formatted explanations, executable code,
+     figures, and calculated output in a single document, making them useful
+     for education, demonstrations, and reproducible technical studies.
+
+   * **Open and modifiable source code.** OpenSTREAM is distributed under
+     the MIT License. Users can inspect, use, modify, and redistribute the
+     code in accordance with the license terms.
+
+     Open development enables independent scrutiny of the modeling basis and
+     supports collaboration among researchers and institutions. The source
+     code, documentation, input cases, and references can be considered
+     together when evaluating a model.
+
+   * **Computational efficiency.** The one-dimensional formulation and
+     streamlined numerical methods provide a computationally efficient
+     framework for steady-state and transient calculations.
+
+     This efficiency facilitates rapid model development, repeated
+     calculations, closure-model comparisons, parameter studies,
+     sensitivity analyses, and validation exercises.
+
+   These strengths do not mean that OpenSTREAM is more appropriate than
+   every other thermal-hydraulic code. Established system, subchannel, and
+   CFD codes may provide broader component libraries, more complex
+   geometries, multidimensional resolution, or a more extensive validation
+   basis for particular applications.
+
+   OpenSTREAM is most distinctive when transparency, access to the governing
+   models, advanced annular-flow modeling, thermal non-equilibrium model
+   development, and controlled comparison of solver frameworks are central
+   to the objective of the study.
+
 .. dropdown:: What should I read first?
    :animate: fade-in-slide-down
    :chevron: right-down
@@ -670,22 +898,145 @@ Results and post-processing
 Physical scope and limitations
 ------------------------------
 
-.. dropdown:: What geometries can OpenSTREAM represent?
+.. dropdown:: What are the main simplifications in OpenSTREAM, and why are they considered reasonable?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   OpenSTREAM represents one-dimensional flow in straight channels.
-   Cross-sectional geometry is described through averaged quantities such
-   as flow area and wall perimeter.
+   OpenSTREAM uses several deliberate simplifications to provide a
+   transparent, computationally efficient, and numerically robust environment
+   for developing and evaluating one-dimensional two-phase flow models.
+   These simplifications define the intended scope of the code and must be
+   considered when interpreting its results.
 
-   The formulation supports multi-wall channel representations, allowing
-   different wall surfaces and heating distributions to be considered.
-   Examples may include tubes, annuli, rectangular channels, and simplified
-   small rod-bundle representations when the one-dimensional approximation
-   is appropriate.
+   The main simplifications are:
 
-   OpenSTREAM does not resolve bends, crossflow, or detailed
-   three-dimensional velocity and temperature distributions.
+   * **One-dimensional, cross-section-averaged flow.** Flow variables vary
+     only along the channel axis. Radial, azimuthal, and other local
+     distributions are not resolved explicitly and must instead be
+     represented through averaged quantities and closure models.
+
+     This approximation is reasonable for straight channels when axial
+     transport dominates and detailed multidimensional effects, such as
+     crossflow, flow separation, or strongly asymmetric mixing, are not
+     essential to the quantity being studied. It also makes OpenSTREAM
+     suitable for rapid model development, sensitivity studies, and
+     comparison of closure models.
+
+   * **Straight channels with constant cross-sectional area.** The current
+     geometry represents a straight flow path with constant flow area.
+     Multiple wall perimeters and non-uniform wall heating can be defined,
+     and local perturbations can be represented through dedicated models,
+     but continuous geometric variation is not resolved.
+
+     This approximation covers many experimental channels and idealized
+     thermal-hydraulic problems, including tubes, annuli, rectangular
+     channels, and simplified small rod-bundle representations. It enables
+     investigation of axial two-phase flow behavior without introducing
+     additional geometric effects.
+
+   * **Mixture-based pressure-gradient solution.** The pressure-gradient
+     solution obtained from the mixture solver is reused by the two-fluid,
+     three-field, and four-field solvers rather than independently solving a
+     fully coupled pressure-velocity system in each framework.
+
+     This treatment significantly improves numerical stability and provides
+     a consistent pressure field for comparisons among the solver
+     frameworks. It introduces some inconsistency between the pressure
+     solution and the separate field momentum equations, but the available
+     OpenSTREAM publications report that this inconsistency is negligible
+     for many applications. Its acceptability must nevertheless be assessed
+     for each new application.
+
+   * **Neglect of surface-tension forces in the conservation equations.**
+     Surface tension may be used in closure quantities, but explicit
+     surface-tension force contributions are neglected in the governing
+     momentum equations.
+
+     This simplification is considered reasonable for the high-pressure
+     channel-flow conditions targeted by the current implementations, where
+     the retained pressure, inertia, gravity, and wall and interfacial
+     momentum-transfer terms are generally more important at the
+     one-dimensional field scale. It may not be appropriate for
+     capillary-dominated flows, very small channels, or problems controlled
+     by interface curvature.
+
+   * **Neglect of heating caused by friction.** Mechanical energy dissipated
+     by wall or interfacial friction is not added explicitly to the fluid
+     energy equations.
+
+     This contribution is considered small relative to the imposed wall
+     heating and phase-change energy transfer for the high-pressure boiling
+     applications for which the current models were developed. It should not
+     be neglected without assessment in applications involving exceptionally
+     large pressure losses or little external heating.
+
+   * **Neglect of temporal pressure-gradient contributions.** The current
+     formulations omit minor energy or momentum contributions associated
+     with the temporal pressure gradient.
+
+     This approximation is considered reasonable for the operational
+     transients targeted by the current high-pressure Light Water Reactor
+     applications. It is not appropriate for rapid pressure-wave,
+     depressurization, water-hammer, choking, or shock-wave problems, which
+     are outside the intended scope of OpenSTREAM.
+
+   * **Neglect of spatial gradients of saturated-fluid enthalpies.** Spatial
+     changes in saturated liquid and vapor enthalpies associated with the
+     pressure distribution are neglected in the simplified conservation
+     equations.
+
+     This approximation is considered reasonable for the high-pressure
+     conditions and operational transients targeted by the current
+     OpenSTREAM frameworks. Its adequacy should be reconsidered for cases
+     with large pressure variations or strong depressurization.
+
+   * **Simplified flow-regime and interfacial-topology transitions.** The
+     current two-fluid solver uses simplified assumptions to identify flow
+     regimes and select the corresponding closure models.
+
+     This approach provides a practical framework for implementing and
+     testing separate-phase conservation equations, but it limits the
+     physical realism of complex transients involving repeated or strongly
+     evolving changes in interfacial topology. The two-fluid results should
+     therefore be interpreted according to the maturity and validation range
+     of the selected transition and closure models.
+
+   * **Thermal equilibrium in the three-field and four-field solvers.** The
+     film, droplet, base-film, disturbance-wave, and vapor fields are assumed
+     to share the applicable saturation thermodynamic state. The solvers
+     resolve hydrodynamic non-equilibrium among the fields but do not solve
+     separate field energy equations for thermal non-equilibrium.
+
+     This approximation is reasonable for saturated annular-flow studies in
+     which liquid-field mass and momentum transport, entrainment,
+     deposition, film depletion, and disturbance-wave behavior are the
+     primary phenomena of interest. It is not appropriate when separate
+     field temperatures or post-dryout thermal non-equilibrium are essential.
+
+   * **First-order numerical discretization.** The conservation equations
+     are solved using first-order upwind spatial discretization and fully
+     implicit backward Euler time integration. Nonlinear source terms and
+     field couplings are treated through fixed-point iterations.
+
+     These methods are comparatively simple and numerically robust, which is
+     useful for an open model-development platform and for obtaining
+     steady-state solutions through pseudo-time advancement. Their numerical
+     diffusion and first-order accuracy make mesh- and time-step-sensitivity
+     studies necessary when spatial gradients, transient timing, or peak
+     values are important.
+
+   These simplifications are reasonable only within the intended application
+   domain and for quantities that are not controlled by the neglected
+   phenomena. They make the governing equations easier to understand,
+   modify, test, and compare while reducing computational cost and improving
+   numerical robustness.
+
+   A simplification must not be interpreted as universally negligible.
+   Before using OpenSTREAM for a new fluid, geometry, flow regime, or
+   transient, assess whether the neglected terms and unresolved phenomena
+   could materially affect the quantities of interest. Numerical
+   convergence, sensitivity studies, conservation checks, and comparison
+   with suitable reference data remain necessary.
 
 .. dropdown:: What are the current limitations of OpenSTREAM?
    :animate: fade-in-slide-down
@@ -736,6 +1087,23 @@ Physical scope and limitations
 
    Some currently unsupported capabilities may be considered for future development.
 
+.. dropdown:: What geometries can OpenSTREAM represent?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM represents one-dimensional flow in straight channels.
+   Cross-sectional geometry is described through averaged quantities such
+   as flow area and wall perimeter.
+
+   The formulation supports multi-wall channel representations, allowing
+   different wall surfaces and heating distributions to be considered.
+   Examples may include tubes, annuli, rectangular channels, and simplified
+   small rod-bundle representations when the one-dimensional approximation
+   is appropriate.
+
+   OpenSTREAM does not resolve bends, crossflow, or detailed
+   three-dimensional velocity and temperature distributions.
+
 .. dropdown:: What units should I use?
    :animate: fade-in-slide-down
    :chevron: right-down
@@ -769,6 +1137,34 @@ Physical scope and limitations
    Results produced with OpenSTREAM must not be used as the basis for safety
    decisions, licensing submissions, regulatory compliance demonstrations,
    or the operation of safety-related systems.
+
+.. dropdown:: Which fluids can be simulated with OpenSTREAM?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM is designed for single-component, liquid-vapor fluids whose
+   required thermophysical properties are available through CoolProp. The
+   fluid is selected using its CoolProp identifier in the ``FLUID`` model
+   input.
+
+   The CoolProp interface can be tested in MATLAB before constructing a
+   complete simulation:
+
+   .. code-block:: matlab
+
+      cp = CoolPropWrapper.CoolPropWrapper('WATER');
+
+   CoolProp compatibility alone does not demonstrate that an OpenSTREAM
+   calculation is physically applicable or validated. The selected closure
+   models must also be appropriate for the fluid and operating conditions.
+   Many current models and example cases have been developed or evaluated
+   primarily for boiling water and steam.
+
+   OpenSTREAM does not currently support multi-component fluid mixtures or
+   non-condensable gases. Pseudo-pure fluids, predefined mixtures, and
+   incompressible solutions available in CoolProp must not be assumed to be
+   compatible without verification of the full property and model
+   requirements.
 
 .. dropdown:: How are fluid properties calculated?
    :animate: fade-in-slide-down
