@@ -1,8 +1,13 @@
 OpenSTREAM FAQ
 ==============
 
-This page provides concise answers to common questions about installing,
-configuring, running, troubleshooting, and extending **OpenSTREAM**.
+This page provides concise answers to common questions about the purpose,
+distinctive features, capabilities, assumptions, simplifications, and
+limitations of **OpenSTREAM**. It also provides guidance on installation,
+configuration, solver selection, simulation setup, numerical convergence,
+result interpretation, post-processing, troubleshooting, model development,
+and contribution to the project.
+
 Select a question to display its answer.
 
 Getting started
@@ -15,28 +20,35 @@ Getting started
    **OpenSTREAM**, short for *Open Solvers for Two-phase flow Research,
    Engineering Analysis and Modeling*, is an open-source, object-oriented
    MATLAB environment for simulating one-dimensional, multi-field,
-   liquid-vapor two-phase flows in straight channels.
+   liquid-vapor two-phase flows with phase change in straight channels.
 
    OpenSTREAM includes four solver frameworks:
 
-   * a mixture solver;
-   * a two-fluid solver;
+   * a mixture solver with thermal non-equilibrium capabilities;
+   * a two-fluid solver that represents the liquid and vapor phases
+     separately;
    * a three-field solver for annular two-phase flow;
    * a four-field solver that separates the liquid film into base-film and
      disturbance-wave fields.
 
-   The solvers provide different levels of physical detail and support
-   education, model development, performance evaluation, and validation.
+   Depending on the selected solver and closure models, OpenSTREAM can
+   represent wall boiling, interfacial evaporation and condensation, and
+   the associated exchanges of mass, momentum, and energy between phases
+   and fields.
+
+   The solver frameworks provide different levels of physical detail and
+   support education, model development, performance evaluation, and
+   validation.
 
 .. dropdown:: Why should I use OpenSTREAM instead of another available code?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   OpenSTREAM is not intended to replace any existing thermal-hydraulic
-   code. It is designed primarily as an open, transparent, and extensible
-   environment for education, fundamental model development, implementation
-   of closure models, controlled numerical experiments, and validation of
-   one-dimensional two-phase flow formulations.
+   OpenSTREAM is not intended as a replacement for established
+   thermal-hydraulic codes. It is designed primarily as an open, transparent,
+   and extensible environment for education, fundamental model development,
+   closure-model implementation, controlled numerical experiments, and
+   validation of one-dimensional two-phase flow formulations.
 
    OpenSTREAM may be particularly useful when you need:
 
@@ -55,7 +67,7 @@ Getting started
      general workflow can therefore be used to compare different levels of
      physical resolution.
 
-   * **Detailed annular-flow modeling.** The three-field solver separates
+   * **State-of-the-art annular-flow modeling.** The three-field solver separates
      the liquid into wall-film and entrained-droplet fields. The four-field
      solver further separates the liquid film into base-film and
      disturbance-wave fields and includes wave-frequency transport.
@@ -85,10 +97,13 @@ Getting started
    * qualified or extensively validated models for a specific industrial
      application;
    * complete reactor-system or plant-network simulation;
+   * closed-loop systems, including natural-circulation loops;
+   * simultaneous solution of multiple connected flow paths and their flow
+     distribution;
    * dedicated component models for pumps, valves, vessels, separators, or
      heat exchangers;
-   * multidimensional CFD resolution;
-   * complex geometry, crossflow, or connected flow networks;
+   * multidimensional flow resolution;
+   * complex geometries, crossflow, or connected flow networks;
    * compressible pressure-wave dynamics;
    * multi-component fluids or non-condensable gases;
    * safety or licensing analysis.
@@ -126,7 +141,7 @@ Getting started
      the base liquid film, and disturbance waves. It also includes transport
      of wave frequency, allowing the evolution of disturbance-wave behavior
      to be studied. The model therefore provides a level of annular-flow
-     detail that is not commonly available in open-source one-dimensional
+     detail that is not commonly available in one-dimensional
      thermal-hydraulic codes.
 
      The Mixture Relaxation Model extends the conventional mixture
@@ -246,7 +261,7 @@ Getting started
      sensitivity analyses, and validation exercises.
 
    These strengths do not mean that OpenSTREAM is more appropriate than
-   every other thermal-hydraulic code. Established system, subchannel, and
+   other thermal-hydraulic codes. Established system, subchannel, and
    CFD codes may provide broader component libraries, more complex
    geometries, multidimensional resolution, or a more extensive validation
    basis for particular applications.
@@ -373,6 +388,7 @@ Running simulations
       import Solvers.*
       import Solvers.Mixture.*
 
+      % Load the inputSet.
       inputSet = InputSet( ...
           modelFilePath          = './inputs/models.inp', ...
           modelID                = 'TUTORIAL1', ...
@@ -385,37 +401,104 @@ Running simulations
           overwriteSessionFiles = true, ...
           LOGMODE                = 'BOTH');
 
+      % Create and solve the three-field solver.
       mixSolver = MixtureSolver(inputSet);
       mixSolver.solve();
+
+      % Generate defaults axial distribution plots
       mixSolver.plotz();
 
 .. dropdown:: How are OpenSTREAM inputs organized?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   An OpenSTREAM case is assembled from separate input categories:
+   An OpenSTREAM case is assembled from four separate input categories.
+   Each category is normally defined in a dedicated input file:
 
-   * **Model inputs** select physical models and closure models.
-   * **Numerical options** control time steps, iterations, relaxation
+   * **Model inputs** select the physical models and closure models.
+
+   * **Numerical options** control time steps, iteration limits, relaxation
      factors, and convergence criteria.
-   * **Geometry inputs** define channel length, flow area, wall perimeters,
-     and orientation.
-   * **Boundary conditions** define pressure, inlet enthalpy, mass flow,
-     power, and axial power distribution.
 
-   A file may contain several input sets. An identifier such as
-   ``TUTORIAL1`` or ``DEFAULT`` selects the required set. This organization
-   allows one geometry or option set to be reused in several simulations.
+   * **Geometry inputs** define the channel length, cross-sectional flow
+     area, wall perimeters, and orientation.
+
+   * **Boundary conditions** define the system pressure, inlet enthalpy,
+     inlet mass flow rate, total power, and axial power distribution.
+
+   The paths to the four input files are provided separately when
+   constructing an ``InputSet``, for example:
+
+   .. code-block:: matlab
+
+      inputSet = InputSet( ...
+          modelFilePath    = './inputs/models.inp', ...
+          modelID          = 'TUTORIAL1', ...
+          optionsFilePath  = './inputs/options.inp', ...
+          optionsID        = 'DEFAULT', ...
+          geometryFilePath = './inputs/geom.inp', ...
+          geometryID       = 'TUTORIAL1', ...
+          bcFilePath       = './inputs/tutorial1.inp');
+
+   The model, numerical-option, and geometry files may each contain several
+   input sets. An identifier such as ``TUTORIAL1`` or ``DEFAULT`` selects
+   the required set from the corresponding file.
+
+   A boundary-condition file may contain the information required
+   for a particular steady-state or transient case. Depending on how the
+   study is organized, separate boundary-condition files can be used for
+   different operating conditions or transients.
+
+   This separation allows physical models, numerical options, geometries,
+   and boundary conditions to be combined and reused without duplicating
+   complete case definitions. For example, one geometry can be evaluated
+   using several physical-model sets, or one physical-model set can be
+   applied to several boundary-condition cases.
+
+.. dropdown:: Can I specify inlet temperature instead of inlet enthalpy?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   No. The boundary-condition input interface requires the inlet specific
+   enthalpy, ``HIN``, in J/kg. Direct specification of inlet temperature is
+   not supported and is not currently planned.
+
+   Specific enthalpy provides a more general definition of the inlet
+   thermodynamic state. At a specified pressure, temperature can define a
+   single-phase subcooled-liquid or superheated-vapor state, but it cannot
+   uniquely define a saturated two-phase state. At saturation, the liquid,
+   vapor, and all intermediate two-phase states have the same saturation
+   temperature but different specific enthalpies.
+
+   In contrast, inlet specific enthalpy can represent:
+
+   * a subcooled-liquid inlet;
+   * a saturated-liquid inlet;
+   * a saturated two-phase inlet with a specified vapor quality;
+   * a saturated-vapor inlet;
+   * a superheated-vapor inlet.
+
+   If the inlet condition is known as temperature and pressure for a
+   single-phase state, first calculate the corresponding specific enthalpy
+   for the selected fluid. Enter the resulting value as ``HIN`` in the
+   boundary-condition file:
+
+   .. code-block:: text
+
+      PRESSURE    ! System pressure [Pa]           > ...
+      HIN         ! Inlet specific enthalpy [J/kg] > ...
+
+   For a saturated two-phase inlet, determine ``HIN`` from the system
+   pressure and the required inlet vapor quality. A temperature-only input
+   would not contain enough information to distinguish among saturated
+   liquid, a two-phase mixture, and saturated vapor.
 
 .. dropdown:: What input-file formats are supported?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   OpenSTREAM examples use the native ``.inp`` format. The input framework
-   can also read equivalent JSON input.
-
-   Use one format consistently within a case and verify that the selected
-   IDs and imported property values are identical when comparing formats.
+   OpenSTREAM supports its native ``.inp`` format and the JSON format. The
+   examples and tutorials generally use the native ``.inp`` format.
 
 .. dropdown:: What happens if I do not specify a model or numerical option?
    :animate: fade-in-slide-down
@@ -460,9 +543,17 @@ Running simulations
    * an obsolete keyword;
    * an entry intended for another model configuration.
 
-   Check the spelling against ``Inputs.Model``, ``Inputs.Options``,
-   ``Inputs.Geometry``, or the relevant package-reference page. Do not
-   assume that an unused entry affected the simulation.
+   Check the keyword against ``Inputs.Model``, ``Inputs.Options``,
+   ``Inputs.Geometry``, ``Inputs.BoundaryConditions``, or the relevant
+   package-reference page.
+
+   An entry reported as unused is not applied to the corresponding input
+   object. Whether this affects the simulation depends on whether the
+   corresponding valid property is used by the selected solver and model
+   configuration. If it is required, OpenSTREAM may instead use the default
+   value, and the simulation may differ from what was intended. If the
+   property is not used by the selected solver or active models, the unused
+   entry may have no effect on the results.
 
 .. dropdown:: How do I define a steady-state calculation?
    :animate: fade-in-slide-down
@@ -585,10 +676,11 @@ Choosing a solver
    transported variables or conservation equations. One phase can be
    represented by more than one field. For example:
 
-   * the three-field solver represents the liquid phase through a wall-film
-   field and a droplet field;
-   * the four-field solver further divides the wall film into a base-film
-   field and a disturbance-wave field.
+   * The three-field solver represents the liquid phase through a wall-film
+     field and a droplet field.
+
+   * The four-field solver further divides the wall film into a base-film
+     field and a disturbance-wave field.
 
 .. dropdown:: Are the three-field and four-field solvers thermal non-equilibrium models?
    :animate: fade-in-slide-down
@@ -613,8 +705,9 @@ Choosing a solver
    smoothly toward the prescribed conditions at the onset of annular flow.
 
    Solving the field equations upstream of the onset of annular flow ensures
-   that all required field variables are available at the preceding time
-   step if the onset location moves upstream during a transient calculation.
+   that preceding-time-step values are available for all required field
+   variables if the onset location moves upstream during a transient
+   calculation.
 
    The onset-of-annular-flow model, the initial film-droplet split, and, for
    the four-field solver, the initial base-film and disturbance-wave split
@@ -643,9 +736,13 @@ Choosing a solver
    :chevron: right-down
 
    Yes. Entrainment and deposition are coupled processes that exchange
-   liquid between the film and droplet fields. When available, use a
-   consistent entrainment and deposition model family unless there is a
-   documented reason to combine different models.
+   liquid between the film and droplet fields. The corresponding models are
+   generally developed and calibrated together to provide a consistent
+   representation of this exchange.
+
+   When available, use entrainment and deposition models from the same model
+   family unless there is a documented justification for combining models
+   from different families.
 
 Numerical convergence
 ---------------------
@@ -683,7 +780,7 @@ Numerical convergence
           'display', {'W','U'}, ...
           'solveMode', 'NULL');
 
-   Use the regular or ``REAL`` mode for the stored physical solution.
+   The default ``REAL`` mode is used to display the stored physical solution.
 
 .. dropdown:: What should I do if the steady-state calculation does not converge?
    :animate: fade-in-slide-down
@@ -707,8 +804,12 @@ Numerical convergence
    * pointwise convergence criteria;
    * steady-state convergence criteria.
 
-   Change one numerical setting at a time. After convergence improves,
-   verify that the converged physical result has not changed materially.
+   Change one numerical setting at a time and document each modification.
+   After convergence is achieved, check that the converged solution is not
+   excessively sensitive to the selected relaxation factors, iteration limits,
+   pseudo-time step, or convergence criteria. Do not obtain apparent
+   convergence merely by relaxing the convergence criteria without verifying
+   the resulting residuals and physical solution.
 
 .. dropdown:: Why was my transient skipped?
    :animate: fade-in-slide-down
@@ -782,18 +883,6 @@ Results and post-processing
 
    Available display names depend on the selected solver. Consult the
    corresponding solver class in the package reference.
-
-.. dropdown:: Why are Live Script outputs shown beside the code?
-   :animate: fade-in-slide-down
-   :chevron: right-down
-
-   MATLAB Live Editor can display output either beside the code or inline
-   below it. The OpenSTREAM tutorials are designed for **inline output**, so
-   that figures and results appear immediately below the code that generates
-   them.
-
-   In the MATLAB Live Editor, select the output-layout option that places
-   output below the code, then save the Live Script.
 
 .. dropdown:: Can I access results without using the built-in plots?
    :animate: fade-in-slide-down
@@ -876,13 +965,70 @@ Results and post-processing
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   Use the solver plotting options for selected axial indices and time
-   indices. For example, ``zIdx`` limits the plotted axial range and the
-   first positional plot argument can identify one or more stored time
-   indices.
+   By default, ``plotz`` includes all axial elevations and all stored
+   physical time steps. Similarly, ``plott`` includes all stored physical
+   time steps at the selected axial location.
 
-   Check the signature of the selected solver's ``plotz`` or ``plott``
-   method because supported options vary by solver.
+   The plotting methods also allow selected axial and time indices to be
+   specified. The same general syntax is used by all OpenSTREAM solvers.
+
+   To plot only part of the channel, first identify the corresponding axial
+   indices and pass them using ``zIdx``. For example, the following code
+   plots results between elevations of 1 and 4 m:
+
+   .. code-block:: matlab
+
+      zIdx = find(solver.Z >= 1 & solver.Z <= 4);
+
+      solver.plotz( ...
+          'display', {'W','U'}, ...
+          'zIdx', zIdx, ...
+          'arrangement', 'horizontal', ...
+          'resize', 1);
+
+   For a transient calculation, the first positional argument of ``plotz``
+   selects one or more stored time indices. For example, the following code
+   plots the first, middle, and final stored states over the selected axial
+   range:
+
+   .. code-block:: matlab
+
+      tIdx = unique([1, round(solver.NTIME/2), solver.NTIME]);
+      zIdx = find(solver.Z >= 1 & solver.Z <= 4);
+
+      solver.plotz( ...
+          tIdx, ...
+          'display', {'W','U'}, ...
+          'zIdx', zIdx, ...
+          'arrangement', 'horizontal', ...
+          'resize', 1);
+
+   When several time indices are selected, ``plotz`` generates an animated
+   axial plot containing the selected states.
+
+   To plot a time history at one axial location, pass the axial index as the
+   first argument of ``plott`` and select the stored time indices using
+   ``tIdx``. For example, the following code plots only the first half of
+   the transient at the axial node closest to 3.5 m:
+
+   .. code-block:: matlab
+
+      zTarget = 3.5;
+      [~, zIdx] = min(abs(solver.Z - zTarget));
+
+      tIdx = 1:ceil(solver.NTIME/2);
+
+      solver.plott( ...
+          zIdx, ...
+          'display', {'W','U'}, ...
+          'tIdx', tIdx, ...
+          'arrangement', 'horizontal', ...
+          'resize', 1);
+
+   The same index-selection approach applies to the mixture, two-fluid,
+   three-field, and four-field solvers. However, the available ``display`` values
+   depend on the selected solver because each solver stores different
+   physical quantities.
 
 .. dropdown:: How do I compare several model configurations?
    :animate: fade-in-slide-down
@@ -947,6 +1093,35 @@ Physical scope and limitations
      for many applications. Its acceptability must nevertheless be assessed
      for each new application.
 
+   * **Fluid properties evaluated at the system pressure.** Fluid
+     thermophysical properties are currently evaluated using the prescribed
+     system pressure rather than the calculated local pressure along the
+     channel.
+
+     Consequently, an axial pressure decrease does not modify the local
+     saturation properties and cannot, by itself, produce flashing.
+     OpenSTREAM therefore does not currently represent flashing caused by
+     local pressure drop along the channel.
+
+     Time-dependent changes in the prescribed system pressure are included
+     in the fluid-property evaluation. OpenSTREAM can therefore represent
+     flashing caused by a decrease in system pressure, subject to the
+     assumptions and capabilities of the selected thermal non-equilibrium
+     and phase-change models.
+
+     This simplification is considered reasonable for the high-pressure,
+     relatively short channel applications targeted by the current
+     OpenSTREAM frameworks, when the axial pressure variation is small
+     relative to the system pressure. Under these conditions, the resulting
+     variation in saturation properties along the channel is generally
+     expected to be limited.
+
+     The approximation must be reassessed when the channel pressure drop is
+     sufficiently large to affect the local saturation temperature,
+     saturation enthalpies, phase densities, or phase-change behavior. It is
+     not appropriate when pressure-drop-induced flashing is an important
+     part of the physical problem.
+
    * **Neglect of surface-tension forces in the conservation equations.**
      Surface tension may be used in closure quantities, but explicit
      surface-tension force contributions are neglected in the governing
@@ -975,10 +1150,10 @@ Physical scope and limitations
      with the temporal pressure gradient.
 
      This approximation is considered reasonable for the operational
-     transients targeted by the current high-pressure Light Water Reactor
+     transients targeted by the current high-pressure boiling
      applications. It is not appropriate for rapid pressure-wave,
      depressurization, water-hammer, choking, or shock-wave problems, which
-     are outside the intended scope of OpenSTREAM.
+     are currently outside the intended scope of OpenSTREAM.
 
    * **Neglect of spatial gradients of saturated-fluid enthalpies.** Spatial
      changes in saturated liquid and vapor enthalpies associated with the
@@ -1011,7 +1186,7 @@ Physical scope and limitations
      which liquid-field mass and momentum transport, entrainment,
      deposition, film depletion, and disturbance-wave behavior are the
      primary phenomena of interest. It is not appropriate when separate
-     field temperatures or post-dryout thermal non-equilibrium are essential.
+     field temperatures (e.g., post-dryout thermal non-equilibrium) are essential.
 
    * **First-order numerical discretization.** The conservation equations
      are solved using first-order upwind spatial discretization and fully
@@ -1038,7 +1213,7 @@ Physical scope and limitations
    convergence, sensitivity studies, conservation checks, and comparison
    with suitable reference data remain necessary.
 
-.. dropdown:: What are the current limitations of OpenSTREAM?
+.. dropdown:: What are the current practical and technical limitations of OpenSTREAM?
    :animate: fade-in-slide-down
    :chevron: right-down
 
@@ -1053,7 +1228,7 @@ Physical scope and limitations
 
    * **No general compressible-flow or pressure-wave formulation.**
      OpenSTREAM accounts for thermodynamic density changes associated with
-     heating, cooling, pressure variation, and phase change. This
+     heating, cooling, system pressure variation, and phase change. This
      thermally expandable treatment is suitable for the intended boiling-flow
      applications, but it is not a fully compressible-flow formulation.
 
@@ -1075,6 +1250,10 @@ Physical scope and limitations
 
    * multi-component fluid mixtures;
    * non-condensable gases;
+   * solid-particle flows, including liquid-solid, gas-solid, and
+     liquid-gas-solid flows;
+   * pressure-drop-induced flashing. Fluid properties are evaluated at the
+     prescribed system pressure rather than the calculated local pressure;
    * wall heat conduction or conjugate heat transfer;
    * continuously varying channel area;
    * bends, junctions, plena, or connected flow networks;
@@ -1083,9 +1262,33 @@ Physical scope and limitations
    * general-purpose component models such as pumps, valves, tanks, or heat exchangers;
    * thermal non-equilibrium in the three-field and four-field solvers;
    * fully coupled pressure-velocity solution in the advanced solvers;
-   * safety or licensing analysis.
 
    Some currently unsupported capabilities may be considered for future development.
+
+.. dropdown:: Can OpenSTREAM simulate flashing caused by a pressure decrease?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM can represent flashing caused by a time-dependent decrease in
+   the prescribed system pressure, subject to the assumptions and
+   capabilities of the selected phase-change model.
+
+   However, OpenSTREAM does not currently represent flashing caused by the
+   calculated local pressure drop along the channel. Fluid thermophysical
+   properties, including saturation properties, are evaluated using the
+   prescribed system pressure rather than the calculated local pressure.
+   Therefore, the axial pressure decrease does not locally modify the
+   saturation state used by the fluid-property calculations.
+
+   This approximation is considered reasonable for the high-pressure,
+   relatively short channel applications targeted by the current
+   OpenSTREAM frameworks when the axial pressure variation is small relative
+   to the system pressure. Under these conditions, the corresponding axial
+   variation in saturation properties is expected to remain limited.
+
+   The approximation is not suitable when pressure-drop-induced flashing or
+   axial variations in saturation properties are important to the physical
+   problem.
 
 .. dropdown:: What geometries can OpenSTREAM represent?
    :animate: fade-in-slide-down
@@ -1103,6 +1306,66 @@ Physical scope and limitations
 
    OpenSTREAM does not resolve bends, crossflow, or detailed
    three-dimensional velocity and temperature distributions.
+
+.. dropdown:: How are multi-wall geometries represented in OpenSTREAM?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM represents a multi-wall geometry as a single one-dimensional
+   flow channel bounded by two or more wall surfaces. The channel has one
+   common cross-sectional flow area, while the perimeter of each wall is
+   specified separately using the ``PERIM`` geometry input.
+
+   For example, an annular channel can be represented by defining separate
+   perimeters for the inner and outer walls. Other idealized configurations,
+   such as rectangular channels or simplified subchannels, can be represented
+   in the same way when the one-dimensional approximation is appropriate.
+
+   A simplified annular-channel geometry could, for example, use:
+
+   .. code-block:: text
+
+      ID       ! Geometry identifier                    > ANNULUS
+      LENGTH   ! Channel length [m]                     > ...
+      AREA     ! Common cross-sectional flow area [m2] > ...
+      PERIM    ! Inner and outer wall perimeters [m]   > ... ...
+      END
+
+   The number of walls is determined automatically from the number of
+   perimeter values specified in ``PERIM``. OpenSTREAM also calculates the
+   contribution of each wall to the total channel perimeter.
+
+   When several walls are present, the boundary-condition power
+   distribution must be consistent with the number of wall perimeters.
+   Wall-specific results can be inspected using the wall-selection options
+   provided by the applicable solver plotting methods. 
+
+   Wall-dependent quantities are stored separately for each wall where
+   supported by the selected solver. These quantities may include:
+
+   * imposed wall heat flux;
+   * liquid-film mass flow rate and velocity;
+   * film thickness;
+   * wall boiling or film evaporation;
+   * wall shear stress;
+   * film entrainment and droplet deposition;
+   * base-film and disturbance-wave quantities in the four-field solver.
+
+   This wall-level formulation allows different walls to have different
+   heating conditions. Heated and unheated walls, or walls with different
+   power distributions, can therefore be represented within the same
+   one-dimensional channel.
+
+   The bulk or core flow remains shared by all walls. Depending on the
+   selected solver, this includes mixture quantities, vapor quantities, and
+   the pressure distribution. Wall-specific fields interact through this
+   common bulk-flow solution and the implemented closure models.
+
+   Multi-wall treatment does not create separate connected flow channels.
+   OpenSTREAM does not currently calculate crossflow between neighboring
+   channels, independent flow redistribution among parallel channels, or
+   multidimensional transport around the channel cross-section. These
+   configurations require a different system or subchannel representation.
 
 .. dropdown:: What units should I use?
    :animate: fade-in-slide-down
@@ -1170,10 +1433,46 @@ Physical scope and limitations
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   Fluid properties are calculated using CoolProp through CoolPropWrapper.
-   Property assumptions are selected through the model inputs. Review the
-   fluid identifier and property option used by the case, particularly when
-   the simulation includes thermal non-equilibrium.
+   Fluid properties are calculated using CoolProp through
+   CoolPropWrapper. The fluid is selected using the ``FLUID`` model input,
+   while the ``PROPERTIES`` model input defines how the phase properties
+   are evaluated.
+
+   Two fluid-property options are available:
+
+   * ``SATURATED``: Phase properties are evaluated at saturated conditions
+     using the prescribed system pressure. Saturated liquid properties are
+     used for the liquid phase, and saturated vapor properties are used for
+     the vapor phase. The properties therefore do not vary with the local
+     phase enthalpy.
+
+   * ``PSYSTEM``: Phase properties are evaluated using the prescribed
+     system pressure and the local phase enthalpy. This allows liquid
+     properties to vary between subcooled and saturated-liquid conditions
+     and vapor properties to vary between saturated-vapor and superheated
+     conditions.
+
+   ``SATURATED`` is the default option and provides a simple property
+   treatment that is appropriate when variations within the subcooled
+   liquid and superheated vapor regions are not important. ``PSYSTEM`` is
+   more appropriate when thermal non-equilibrium causes the liquid or vapor
+   enthalpy to differ significantly from its saturation value.
+
+   The option is selected in the physical-model input file. For example:
+
+   .. code-block:: text
+
+      FLUID        ! CoolProp fluid identifier       > WATER
+      PROPERTIES   ! Fluid property assumptions      > PSYSTEM
+
+   For both options, the saturation temperature, saturated liquid and vapor
+   enthalpies, latent heat, saturated phase densities, and other saturation
+   properties are calculated at the prescribed system pressure.
+
+   The current implementation does not evaluate properties using the
+   calculated local pressure along the channel. Consequently, selecting
+   ``PSYSTEM`` accounts for variations with local phase enthalpy, but it
+   does not enable flashing caused by the local axial pressure drop.
 
 .. dropdown:: Does a more detailed solver always give a better result?
    :animate: fade-in-slide-down
@@ -1292,9 +1591,6 @@ Extending and contributing
    Edit the reStructuredText source files, build the documentation locally
    when possible, and verify both HTML and PDF outputs. Add or update links,
    references, examples, and package documentation as needed.
-
-   The FAQ dropdowns use the ``sphinx-design`` extension. The extension must
-   remain listed in the documentation requirements and in ``conf.py``.
 
 .. dropdown:: Where can I get additional help?
    :animate: fade-in-slide-down
