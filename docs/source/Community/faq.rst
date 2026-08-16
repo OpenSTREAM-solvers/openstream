@@ -917,6 +917,443 @@ Results and post-processing
    associated simulation information. Saving it allows later post-processing
    without repeating the calculation.
 
+.. dropdown:: How do I access the base-film and disturbance-wave objects in a four-field solution?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   In the four-field solver, the base-film and disturbance-wave objects are
+   contained within the liquid-film object. They are therefore accessed
+   through the ``film`` property of the four-field solver:
+
+   .. code-block:: matlab
+
+      base = ffSolver.film.base;
+      wave = ffSolver.film.wave;
+
+   For a transient calculation, ``ffSolver.film`` is an array containing one
+   film object for each stored physical time step. A specific time step can
+   therefore be accessed using its time index:
+
+   .. code-block:: matlab
+
+      tIdx = 1;
+
+      base = ffSolver.film(tIdx).base;
+      wave = ffSolver.film(tIdx).wave;
+
+   The base-film and disturbance-wave objects contain their separately
+   calculated field quantities. For example:
+
+   .. code-block:: matlab
+
+      baseMassFlow = ffSolver.film(tIdx).base.W;
+      baseVelocity = ffSolver.film(tIdx).base.U;
+
+      waveMassFlow = ffSolver.film(tIdx).wave.W;
+      waveVelocity = ffSolver.film(tIdx).wave.U;
+      waveFrequency = ffSolver.film(tIdx).wave.FREQUENCY;
+
+   The enclosing ``film`` object represents the total liquid film and also
+   provides aggregate film quantities derived from the solved base-film and
+   disturbance-wave fields. The droplet field is stored separately in
+   ``ffSolver.drop``, while the vapor-field solution is retained through the
+   mixture solver.
+
+   The base-film and disturbance-wave objects used during the pseudo-time
+   calculation of the initial steady state are similarly contained in the
+   stored initialization film objects:
+
+   .. code-block:: matlab
+
+      baseInit = ffSolver.filmInit(tIdx).base;
+      waveInit = ffSolver.filmInit(tIdx).wave;
+
+.. dropdown:: What is the minimum base film in the four-field solver?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   In the four-field model, disturbance waves pass over a continuous and
+   comparatively slow-moving base liquid film. The calculated base-film
+   mass flow rate represents the condition immediately after a disturbance
+   wave has passed and interacted with the base film.
+
+   Between two successive disturbance waves, the base film evolves without
+   direct replenishment from a wave. During this wave-waiting period, wall
+   evaporation removes liquid from the base film, while droplet deposition
+   can add liquid to it. The **minimum base-film mass flow rate** represents
+   the condition reached at the end of this period, immediately before the
+   next disturbance wave arrives and replenishes the base film.
+
+   The minimum base-film mass flow rate is therefore a local, periodically
+   varying quantity associated with the passage of disturbance waves. It
+   should not be interpreted as the minimum value of the calculated
+   base-film mass flow rate over the channel or over the complete transient.
+
+   Assuming that the base-film velocity remains constant during the
+   wave-waiting period, the corresponding minimum base-film thickness is
+   calculated from:
+
+   .. math::
+
+      \delta_{\mathrm{b,min}}
+      =
+      \frac{W_{\mathrm{b,min}}}
+      {\rho_{\mathrm{l,s}}\,u_{\mathrm{b}}\,\Pi}
+
+   where:
+
+   * :math:`\delta_{\mathrm{b,min}}` is the minimum base-film thickness;
+
+   * :math:`W_{\mathrm{b,min}}` is the minimum base-film mass flow rate;
+
+   * :math:`\rho_{\mathrm{l,s}}` is the saturated-liquid density;
+
+   * :math:`u_{\mathrm{b}}` is the base-film velocity;
+
+   * :math:`\Pi` is the corresponding wall perimeter.
+
+   The minimum base film is useful for evaluating intermittent base-film
+   depletion between disturbance waves. If the minimum base-film mass flow
+   rate or thickness reaches zero, the model predicts that the base film
+   becomes locally dry before being reached by the next disturbance wave.
+   This is referred to as **intermittent base-film dryout**.
+
+   The minimum base film differs from the equilibrium base film. The
+   **equilibrium base-film thickness** is the target condition used by the
+   base-film and disturbance-wave mass-exchange model, whereas the
+   **minimum base-film thickness** describes the depletion of the base film
+   during the interval between successive waves.
+
+.. dropdown:: What does it mean when the calculated liquid-film mass flow rate become negative?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   The treatment of negative liquid-film quantities is controlled by the
+   ``POSFILM`` physical-model input:
+
+   .. code-block:: text
+
+      POSFILM    ! Positive film flow-rate/thickness model    > TRUE
+
+   ``POSFILM`` is set to ``TRUE`` by default. With this setting, the film
+   mass flow rate and film thickness are restricted to non-negative values.
+
+   When ``POSFILM`` is set to ``FALSE``, OpenSTREAM allows the calculated
+   film mass flow rate and corresponding film thickness to become negative
+   after the film has been completely depleted.
+
+   A negative film mass flow rate is not physically meaningful and does not
+   represent liquid flowing in the opposite direction. It is an intentionally
+   extended numerical quantity indicating that the integrated film mass
+   balance has progressed beyond the predicted dryout condition.
+
+   The liquid-film mass conservation equation accounts for:
+
+   * liquid gain through droplet deposition;
+
+   * liquid loss through film entrainment;
+
+   * liquid loss through wall evaporation.
+
+   When the cumulative film losses exceed the available film inventory, the
+   physical film mass flow rate reaches zero and film dryout occurs. With
+   ``POSFILM`` set to ``FALSE``, the film mass-balance equation continues to
+   be integrated beyond this point, producing a negative value.
+
+   This continuation provides a signed measure of the margin to dryout:
+
+   * a positive film mass flow rate indicates that liquid film remains;
+
+   * a value close to zero indicates proximity to complete film dryout;
+
+   * a negative value indicates that the imposed conditions exceed the
+     predicted dryout condition.
+
+   This behavior is useful in critical-power calculations and model-tuning
+   studies. For example, power or a closure-model coefficient can be varied
+   until the minimum film mass flow rate is sufficiently close to zero. The
+   corresponding condition represents the predicted dryout threshold
+   according to the selected models.
+
+   Allowing negative values also improves numerical robustness during
+   parameter studies and power iterations. A trial calculation can continue
+   after exceeding the dryout condition instead of terminating when the film
+   first reaches zero.
+
+   Negative film values must be interpreted only as numerical dryout-margin
+   indicators. They must not be interpreted as physical post-dryout film
+   mass flow rates, negative film thicknesses, or reverse liquid-film flow.
+   OpenSTREAM does not use this continuation as a physical post-dryout film
+   model.
+
+.. dropdown:: What is the difference between calculated and equilibrium base-film and wave quantities?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   The four-field solver distinguishes between the locally calculated
+   base-film thickness and wave frequency and their corresponding
+   equilibrium values.
+
+   The **calculated base-film thickness** is obtained from the transported
+   base-film mass flow rate, base-film velocity, liquid density, and wall
+   perimeter. It represents the current local state of the base-film field
+   and may vary with axial position and time.
+
+   The **equilibrium base-film thickness** is obtained from the selected
+   equilibrium base-film-thickness model. It represents the base-film
+   thickness toward which the local base-film state tends under the current
+   flow conditions. It is a closure-model target rather than a separately
+   transported field variable.
+
+   The difference between the calculated and equilibrium base-film
+   thicknesses is used in the relaxation model governing mass exchange
+   between the base-film and disturbance-wave fields. In simplified form,
+   the net source driving the base film toward equilibrium is proportional
+   to:
+
+   .. math::
+
+      \frac{
+      \rho_{\mathrm{l,s}}
+      \left(
+      \delta_{\mathrm{b,eq}}-\delta_{\mathrm{b}}
+      \right)
+      }{
+      t_{\mathrm{b,relax}}
+      }
+
+   where:
+
+   * :math:`\delta_{\mathrm{b}}` is the calculated base-film thickness;
+
+   * :math:`\delta_{\mathrm{b,eq}}` is the equilibrium base-film thickness;
+
+   * :math:`\rho_{\mathrm{l,s}}` is the saturated-liquid density;
+
+   * :math:`t_{\mathrm{b,relax}}` is the base-film relaxation time.
+
+   If the calculated base-film thickness is smaller than its equilibrium
+   value, the relaxation term tends to transfer liquid from the disturbance
+   waves to the base film. If the calculated base-film thickness is larger
+   than its equilibrium value, the relaxation term tends to transfer liquid
+   from the base film to the disturbance waves.
+
+   The complete base-film and wave mass balances also include other
+   mechanisms, such as droplet deposition, wall evaporation, film
+   entrainment, and turbulent mixing. Consequently, the final base-film and
+   wave mass-exchange rates are not determined by the thickness-relaxation
+   term alone.
+
+   Similarly, the **calculated wave frequency** characterizes the current
+   local disturbance-wave field. It is related to the transported wave
+   number density and may differ from the frequency corresponding to local
+   equilibrium conditions because of wave transport and hydrodynamic
+   non-equilibrium.
+
+   The **equilibrium wave frequency** is obtained from the selected
+   equilibrium wave-frequency model. It represents the wave frequency toward
+   which the local disturbance-wave population tends under the current flow
+   conditions.
+
+   The four-field solver transports the wave number density using a
+   Boltzmann-type transport equation. Its source term represents the net
+   effect of disturbance-wave interactions, including wave creation,
+   merging, splitting, and dissipation. Using a relaxation-time
+   approximation, the source term is expressed as:
+
+   .. math::
+
+      \Phi_{\mathrm{w}}
+      =
+      \frac{
+      N_{\mathrm{w,eq}}-N_{\mathrm{w}}
+      }{
+      t_{\mathrm{w,relax}}
+      }
+
+   where:
+
+   * :math:`N_{\mathrm{w}}` is the calculated wave number density;
+
+   * :math:`N_{\mathrm{w,eq}}` is the equilibrium wave number density;
+
+   * :math:`t_{\mathrm{w,relax}}` is the wave relaxation time;
+
+   * :math:`\Phi_{\mathrm{w}}` is the net wave-number source or sink rate.
+
+   Wave frequency is often used as a more practical representation of wave
+   number density. The corresponding frequency form similarly drives the
+   calculated wave frequency toward its equilibrium value.
+
+   If the calculated wave frequency is smaller than its equilibrium value,
+   the relaxation source is positive and tends to increase the local wave
+   population. If the calculated wave frequency is larger than its
+   equilibrium value, the source is negative and tends to reduce the local
+   wave population.
+
+   The base-film and wave relaxation processes are related but distinct:
+
+   * the base-film-thickness relaxation controls mass redistribution between
+     the base-film and disturbance-wave fields;
+
+   * the wave-frequency relaxation controls the source term in the wave
+     number-density transport equation and therefore the evolution of the
+     disturbance-wave population.
+
+   The equilibrium quantities should therefore be interpreted as local
+   closure-model targets. Differences between calculated and equilibrium
+   values are expected in developing or transient annular flow and represent
+   the hydrodynamic non-equilibrium modeled by the four-field formulation.
+
+.. dropdown:: What is wave number density, and why is it transported in the four-field solver?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   In the four-field model, disturbance waves are represented as a dispersed
+   field of liquid structures moving over the continuous base film. Rather
+   than tracking every individual disturbance wave, the model describes the
+   wave population using cross-section-averaged macroscopic quantities.
+
+   One of these quantities is the **wave number density**,
+   :math:`N_{\mathrm{w}}`. It is the number of disturbance waves per unit
+   axial distance and is therefore a spatial measure of the local wave
+   population.
+
+   The wave number density is defined as the inverse of the average wave
+   spacing:
+
+   .. math::
+
+      N_{\mathrm{w}}
+      =
+      \frac{1}{\lambda_{\mathrm{w}}}
+
+   where :math:`\lambda_{\mathrm{w}}` is the average axial distance between
+   two successive disturbance waves.
+
+   Wave spacing is related to the wave velocity and wave frequency by:
+
+   .. math::
+
+      \lambda_{\mathrm{w}}
+      =
+      \frac{u_{\mathrm{w}}}{f_{\mathrm{w}}}
+
+   Consequently:
+
+   .. math::
+
+      N_{\mathrm{w}}
+      =
+      \frac{f_{\mathrm{w}}}{u_{\mathrm{w}}}
+
+   where :math:`u_{\mathrm{w}}` is the disturbance-wave velocity and
+   :math:`f_{\mathrm{w}}` is the frequency at which disturbance waves pass a
+   fixed axial location.
+
+   Wave number density and wave frequency describe related but different
+   quantities. Wave number density describes how many waves are present per
+   unit axial distance, whereas wave frequency describes how many waves pass
+   a fixed location per unit time. Their relationship therefore depends on
+   the wave velocity.
+
+   The four-field solver does not assume that the local wave population is
+   always equal to its equilibrium value. Instead, it transports the wave
+   number density using a one-dimensional wave number-density transport
+   equation.
+
+   This equation is based on the concept of a Boltzmann transport equation
+   applied to the number density of dispersed fluid particles. In the
+   four-field model, disturbance waves are treated as the dispersed fluid
+   structures. The equation is integrated over the possible wave sizes, so
+   it transports the total wave number density rather than tracking separate
+   populations for each wave size.
+
+   The transport equation can be written as:
+
+   .. math::
+
+      \frac{\partial N_{\mathrm{w}}}{\partial t}
+      +
+      \frac{\partial
+      \left(
+      u_{\mathrm{w}} N_{\mathrm{w}}
+      \right)}
+      {\partial z}
+      =
+      \Phi_{\mathrm{w}}
+
+   The left-hand side represents:
+
+   * the local temporal change in wave number density; and
+
+   * the axial transport of waves at the disturbance-wave velocity.
+
+   The right-hand side, :math:`\Phi_{\mathrm{w}}`, represents the net source
+   or sink of disturbance waves caused by interactions such as wave
+   formation, merging, splitting, and dissipation.
+
+   In the current model, these interactions are represented using a
+   relaxation-time approximation:
+
+   .. math::
+
+      \Phi_{\mathrm{w}}
+      =
+      \frac{
+      N_{\mathrm{w,eq}}-N_{\mathrm{w}}
+      }{
+      t_{\mathrm{w,relax}}
+      }
+
+   where:
+
+   * :math:`N_{\mathrm{w}}` is the calculated wave number density;
+
+   * :math:`N_{\mathrm{w,eq}}` is the equilibrium wave number density
+     obtained from the selected closure model;
+
+   * :math:`t_{\mathrm{w,relax}}` is the wave relaxation time.
+
+   If the calculated wave number density is smaller than its equilibrium
+   value, the source term is positive and increases the local wave
+   population. This represents a net effect of processes that create or
+   split waves.
+
+   If the calculated wave number density is larger than its equilibrium
+   value, the source term is negative and decreases the local wave
+   population. This represents a net effect of processes such as wave
+   merging or dissipation.
+
+   The transport equation allows the disturbance-wave population to respond
+   progressively to changing flow conditions instead of changing
+   instantaneously to its local equilibrium value. It therefore represents
+   hydrodynamic non-equilibrium associated with developing annular flow,
+   phase change, inlet effects, geometric perturbations, and transient
+   conditions.
+
+   Wave frequency is generally more convenient for interpretation and
+   comparison with measurements. OpenSTREAM therefore commonly expresses
+   and plots the transported wave population in terms of calculated and
+   equilibrium wave frequencies. However, the underlying physical concept
+   remains the transport of the spatial wave population represented by the
+   wave number density.
+
+   The wave number-density transport equation is separate from the wave mass
+   and momentum conservation equations:
+
+   * the wave mass equation determines how much liquid mass is carried by
+     the disturbance-wave field;
+
+   * the wave momentum equation determines the disturbance-wave velocity;
+
+   * the wave number-density transport equation determines how the number of
+     disturbance waves evolves.
+
+   Together with the wave shape model, these quantities are used to
+   characterize wave spacing, width, amplitude, and other properties of the
+   disturbance-wave field.
+
 .. dropdown:: Where are simulation outputs stored?
    :animate: fade-in-slide-down
    :chevron: right-down
