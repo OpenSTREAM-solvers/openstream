@@ -23,6 +23,7 @@
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -1012,6 +1013,353 @@ position, time, and wall index.</p>
 <p class="sd-card-text">The solver object contains the imported inputs, solution objects, and
 associated simulation information. Saving it allows later post-processing
 without repeating the calculation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I access the base-film and disturbance-wave objects in a four-field solution?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the four-field solver, the base-film and disturbance-wave objects are
+contained within the liquid-film object. They are therefore accessed
+through the <code class="docutils literal notranslate"><span class="pre">film</span></code> property of the four-field solver:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">base</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">.</span><span class="n">base</span><span class="p">;</span>
+<span class="n">wave</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">.</span><span class="n">wave</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">For a transient calculation, <code class="docutils literal notranslate"><span class="pre">ffSolver.film</span></code> is an array containing one
+film object for each stored physical time step. A specific time step can
+therefore be accessed using its time index:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">tIdx</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="n">base</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">;</span>
+<span class="n">wave</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The base-film and disturbance-wave objects contain their separately
+calculated field quantities. For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">baseMassFlow</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+<span class="n">baseVelocity</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">.</span><span class="n">U</span><span class="p">;</span>
+
+<span class="n">waveMassFlow</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+<span class="n">waveVelocity</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">.</span><span class="n">U</span><span class="p">;</span>
+<span class="n">waveFrequency</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">.</span><span class="n">FREQUENCY</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The enclosing <code class="docutils literal notranslate"><span class="pre">film</span></code> object represents the total liquid film and also
+provides aggregate film quantities derived from the solved base-film and
+disturbance-wave fields. The droplet field is stored separately in
+<code class="docutils literal notranslate"><span class="pre">ffSolver.drop</span></code>, while the vapor-field solution is retained through the
+mixture solver.</p>
+<p class="sd-card-text">The base-film and disturbance-wave objects used during the pseudo-time
+calculation of the initial steady state are similarly contained in the
+stored initialization film objects:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">baseInit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">filmInit</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">;</span>
+<span class="n">waveInit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">filmInit</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the minimum base film in the four-field solver?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the four-field model, disturbance waves pass over a continuous and
+comparatively slow-moving base liquid film. The calculated base-film
+mass flow rate represents the condition immediately after a disturbance
+wave has passed and interacted with the base film.</p>
+<p class="sd-card-text">Between two successive disturbance waves, the base film evolves without
+direct replenishment from a wave. During this wave-waiting period, wall
+evaporation removes liquid from the base film, while droplet deposition
+can add liquid to it. The <strong>minimum base-film mass flow rate</strong> represents
+the condition reached at the end of this period, immediately before the
+next disturbance wave arrives and replenishes the base film.</p>
+<p class="sd-card-text">The minimum base-film mass flow rate is therefore a local, periodically
+varying quantity associated with the passage of disturbance waves. It
+should not be interpreted as the minimum value of the calculated
+base-film mass flow rate over the channel or over the complete transient.</p>
+<p class="sd-card-text">Assuming that the base-film velocity remains constant during the
+wave-waiting period, the corresponding minimum base-film thickness is
+calculated from:</p>
+<div class="math notranslate nohighlight">
+\[\delta_{\mathrm{b,min}}
+=
+\frac{W_{\mathrm{b,min}}}
+{\rho_{\mathrm{l,s}}\,u_{\mathrm{b}}\,\Pi}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\delta_{\mathrm{b,min}}\)</span> is the minimum base-film thickness;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(W_{\mathrm{b,min}}\)</span> is the minimum base-film mass flow rate;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\rho_{\mathrm{l,s}}\)</span> is the saturated-liquid density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(u_{\mathrm{b}}\)</span> is the base-film velocity;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\Pi\)</span> is the corresponding wall perimeter.</p></li>
+</ul>
+<p class="sd-card-text">The minimum base film is useful for evaluating intermittent base-film
+depletion between disturbance waves. If the minimum base-film mass flow
+rate or thickness reaches zero, the model predicts that the base film
+becomes locally dry before being reached by the next disturbance wave.
+This is referred to as <strong>intermittent base-film dryout</strong>.</p>
+<p class="sd-card-text">The minimum base film differs from the equilibrium base film. The
+<strong>equilibrium base-film thickness</strong> is the target condition used by the
+base-film and disturbance-wave mass-exchange model, whereas the
+<strong>minimum base-film thickness</strong> describes the depletion of the base film
+during the interval between successive waves.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What does it mean when the calculated liquid-film mass flow rate become negative?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The treatment of negative liquid-film quantities is controlled by the
+<code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> physical-model input:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>POSFILM    ! Positive film flow-rate/thickness model    &gt; TRUE
+</pre></div>
+</div>
+<p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> is set to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> by default. With this setting, the film
+mass flow rate and film thickness are restricted to non-negative values.</p>
+<p class="sd-card-text">When <code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> is set to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>, OpenSTREAM allows the calculated
+film mass flow rate and corresponding film thickness to become negative
+after the film has been completely depleted.</p>
+<p class="sd-card-text">A negative film mass flow rate is not physically meaningful and does not
+represent liquid flowing in the opposite direction. It is an intentionally
+extended numerical quantity indicating that the integrated film mass
+balance has progressed beyond the predicted dryout condition.</p>
+<p class="sd-card-text">The liquid-film mass conservation equation accounts for:</p>
+<ul class="simple">
+<li><p class="sd-card-text">liquid gain through droplet deposition;</p></li>
+<li><p class="sd-card-text">liquid loss through film entrainment;</p></li>
+<li><p class="sd-card-text">liquid loss through wall evaporation.</p></li>
+</ul>
+<p class="sd-card-text">When the cumulative film losses exceed the available film inventory, the
+physical film mass flow rate reaches zero and film dryout occurs. With
+<code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> set to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>, the film mass-balance equation continues to
+be integrated beyond this point, producing a negative value.</p>
+<p class="sd-card-text">This continuation provides a signed measure of the margin to dryout:</p>
+<ul class="simple">
+<li><p class="sd-card-text">a positive film mass flow rate indicates that liquid film remains;</p></li>
+<li><p class="sd-card-text">a value close to zero indicates proximity to complete film dryout;</p></li>
+<li><p class="sd-card-text">a negative value indicates that the imposed conditions exceed the
+predicted dryout condition.</p></li>
+</ul>
+<p class="sd-card-text">This behavior is useful in critical-power calculations and model-tuning
+studies. For example, power or a closure-model coefficient can be varied
+until the minimum film mass flow rate is sufficiently close to zero. The
+corresponding condition represents the predicted dryout threshold
+according to the selected models.</p>
+<p class="sd-card-text">Allowing negative values also improves numerical robustness during
+parameter studies and power iterations. A trial calculation can continue
+after exceeding the dryout condition instead of terminating when the film
+first reaches zero.</p>
+<p class="sd-card-text">Negative film values must be interpreted only as numerical dryout-margin
+indicators. They must not be interpreted as physical post-dryout film
+mass flow rates, negative film thicknesses, or reverse liquid-film flow.
+OpenSTREAM does not use this continuation as a physical post-dryout film
+model.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the difference between calculated and equilibrium base-film and wave quantities?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The four-field solver distinguishes between the locally calculated
+base-film thickness and wave frequency and their corresponding
+equilibrium values.</p>
+<p class="sd-card-text">The <strong>calculated base-film thickness</strong> is obtained from the transported
+base-film mass flow rate, base-film velocity, liquid density, and wall
+perimeter. It represents the current local state of the base-film field
+and may vary with axial position and time.</p>
+<p class="sd-card-text">The <strong>equilibrium base-film thickness</strong> is obtained from the selected
+equilibrium base-film-thickness model. It represents the base-film
+thickness toward which the local base-film state tends under the current
+flow conditions. It is a closure-model target rather than a separately
+transported field variable.</p>
+<p class="sd-card-text">The difference between the calculated and equilibrium base-film
+thicknesses is used in the relaxation model governing mass exchange
+between the base-film and disturbance-wave fields. In simplified form,
+the net source driving the base film toward equilibrium is proportional
+to:</p>
+<div class="math notranslate nohighlight">
+\[\frac{
+\rho_{\mathrm{l,s}}
+\left(
+\delta_{\mathrm{b,eq}}-\delta_{\mathrm{b}}
+\right)
+}{
+t_{\mathrm{b,relax}}
+}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\delta_{\mathrm{b}}\)</span> is the calculated base-film thickness;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\delta_{\mathrm{b,eq}}\)</span> is the equilibrium base-film thickness;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\rho_{\mathrm{l,s}}\)</span> is the saturated-liquid density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(t_{\mathrm{b,relax}}\)</span> is the base-film relaxation time.</p></li>
+</ul>
+<p class="sd-card-text">If the calculated base-film thickness is smaller than its equilibrium
+value, the relaxation term tends to transfer liquid from the disturbance
+waves to the base film. If the calculated base-film thickness is larger
+than its equilibrium value, the relaxation term tends to transfer liquid
+from the base film to the disturbance waves.</p>
+<p class="sd-card-text">The complete base-film and wave mass balances also include other
+mechanisms, such as droplet deposition, wall evaporation, film
+entrainment, and turbulent mixing. Consequently, the final base-film and
+wave mass-exchange rates are not determined by the thickness-relaxation
+term alone.</p>
+<p class="sd-card-text">Similarly, the <strong>calculated wave frequency</strong> characterizes the current
+local disturbance-wave field. It is related to the transported wave
+number density and may differ from the frequency corresponding to local
+equilibrium conditions because of wave transport and hydrodynamic
+non-equilibrium.</p>
+<p class="sd-card-text">The <strong>equilibrium wave frequency</strong> is obtained from the selected
+equilibrium wave-frequency model. It represents the wave frequency toward
+which the local disturbance-wave population tends under the current flow
+conditions.</p>
+<p class="sd-card-text">The four-field solver transports the wave number density using a
+Boltzmann-type transport equation. Its source term represents the net
+effect of disturbance-wave interactions, including wave creation,
+merging, splitting, and dissipation. Using a relaxation-time
+approximation, the source term is expressed as:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{\mathrm{w}}
+=
+\frac{
+N_{\mathrm{w,eq}}-N_{\mathrm{w}}
+}{
+t_{\mathrm{w,relax}}
+}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w}}\)</span> is the calculated wave number density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w,eq}}\)</span> is the equilibrium wave number density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(t_{\mathrm{w,relax}}\)</span> is the wave relaxation time;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\Phi_{\mathrm{w}}\)</span> is the net wave-number source or sink rate.</p></li>
+</ul>
+<p class="sd-card-text">Wave frequency is often used as a more practical representation of wave
+number density. The corresponding frequency form similarly drives the
+calculated wave frequency toward its equilibrium value.</p>
+<p class="sd-card-text">If the calculated wave frequency is smaller than its equilibrium value,
+the relaxation source is positive and tends to increase the local wave
+population. If the calculated wave frequency is larger than its
+equilibrium value, the source is negative and tends to reduce the local
+wave population.</p>
+<p class="sd-card-text">The base-film and wave relaxation processes are related but distinct:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the base-film-thickness relaxation controls mass redistribution between
+the base-film and disturbance-wave fields;</p></li>
+<li><p class="sd-card-text">the wave-frequency relaxation controls the source term in the wave
+number-density transport equation and therefore the evolution of the
+disturbance-wave population.</p></li>
+</ul>
+<p class="sd-card-text">The equilibrium quantities should therefore be interpreted as local
+closure-model targets. Differences between calculated and equilibrium
+values are expected in developing or transient annular flow and represent
+the hydrodynamic non-equilibrium modeled by the four-field formulation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is wave number density, and why is it transported in the four-field solver?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the four-field model, disturbance waves are represented as a dispersed
+field of liquid structures moving over the continuous base film. Rather
+than tracking every individual disturbance wave, the model describes the
+wave population using cross-section-averaged macroscopic quantities.</p>
+<p class="sd-card-text">One of these quantities is the <strong>wave number density</strong>,
+<span class="math notranslate nohighlight">\(N_{\mathrm{w}}\)</span>. It is the number of disturbance waves per unit
+axial distance and is therefore a spatial measure of the local wave
+population.</p>
+<p class="sd-card-text">The wave number density is defined as the inverse of the average wave
+spacing:</p>
+<div class="math notranslate nohighlight">
+\[N_{\mathrm{w}}
+=
+\frac{1}{\lambda_{\mathrm{w}}}\]</div>
+<p class="sd-card-text">where <span class="math notranslate nohighlight">\(\lambda_{\mathrm{w}}\)</span> is the average axial distance between
+two successive disturbance waves.</p>
+<p class="sd-card-text">Wave spacing is related to the wave velocity and wave frequency by:</p>
+<div class="math notranslate nohighlight">
+\[\lambda_{\mathrm{w}}
+=
+\frac{u_{\mathrm{w}}}{f_{\mathrm{w}}}\]</div>
+<p class="sd-card-text">Consequently:</p>
+<div class="math notranslate nohighlight">
+\[N_{\mathrm{w}}
+=
+\frac{f_{\mathrm{w}}}{u_{\mathrm{w}}}\]</div>
+<p class="sd-card-text">where <span class="math notranslate nohighlight">\(u_{\mathrm{w}}\)</span> is the disturbance-wave velocity and
+<span class="math notranslate nohighlight">\(f_{\mathrm{w}}\)</span> is the frequency at which disturbance waves pass a
+fixed axial location.</p>
+<p class="sd-card-text">Wave number density and wave frequency describe related but different
+quantities. Wave number density describes how many waves are present per
+unit axial distance, whereas wave frequency describes how many waves pass
+a fixed location per unit time. Their relationship therefore depends on
+the wave velocity.</p>
+<p class="sd-card-text">The four-field solver does not assume that the local wave population is
+always equal to its equilibrium value. Instead, it transports the wave
+number density using a one-dimensional wave number-density transport
+equation.</p>
+<p class="sd-card-text">This equation is based on the concept of a Boltzmann transport equation
+applied to the number density of dispersed fluid particles. In the
+four-field model, disturbance waves are treated as the dispersed fluid
+structures. The equation is integrated over the possible wave sizes, so
+it transports the total wave number density rather than tracking separate
+populations for each wave size.</p>
+<p class="sd-card-text">The transport equation can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial N_{\mathrm{w}}}{\partial t}
++
+\frac{\partial
+\left(
+u_{\mathrm{w}} N_{\mathrm{w}}
+\right)}
+{\partial z}
+=
+\Phi_{\mathrm{w}}\]</div>
+<p class="sd-card-text">The left-hand side represents:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the local temporal change in wave number density; and</p></li>
+<li><p class="sd-card-text">the axial transport of waves at the disturbance-wave velocity.</p></li>
+</ul>
+<p class="sd-card-text">The right-hand side, <span class="math notranslate nohighlight">\(\Phi_{\mathrm{w}}\)</span>, represents the net source
+or sink of disturbance waves caused by interactions such as wave
+formation, merging, splitting, and dissipation.</p>
+<p class="sd-card-text">In the current model, these interactions are represented using a
+relaxation-time approximation:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{\mathrm{w}}
+=
+\frac{
+N_{\mathrm{w,eq}}-N_{\mathrm{w}}
+}{
+t_{\mathrm{w,relax}}
+}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w}}\)</span> is the calculated wave number density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w,eq}}\)</span> is the equilibrium wave number density
+obtained from the selected closure model;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(t_{\mathrm{w,relax}}\)</span> is the wave relaxation time.</p></li>
+</ul>
+<p class="sd-card-text">If the calculated wave number density is smaller than its equilibrium
+value, the source term is positive and increases the local wave
+population. This represents a net effect of processes that create or
+split waves.</p>
+<p class="sd-card-text">If the calculated wave number density is larger than its equilibrium
+value, the source term is negative and decreases the local wave
+population. This represents a net effect of processes such as wave
+merging or dissipation.</p>
+<p class="sd-card-text">The transport equation allows the disturbance-wave population to respond
+progressively to changing flow conditions instead of changing
+instantaneously to its local equilibrium value. It therefore represents
+hydrodynamic non-equilibrium associated with developing annular flow,
+phase change, inlet effects, geometric perturbations, and transient
+conditions.</p>
+<p class="sd-card-text">Wave frequency is generally more convenient for interpretation and
+comparison with measurements. OpenSTREAM therefore commonly expresses
+and plots the transported wave population in terms of calculated and
+equilibrium wave frequencies. However, the underlying physical concept
+remains the transport of the spatial wave population represented by the
+wave number density.</p>
+<p class="sd-card-text">The wave number-density transport equation is separate from the wave mass
+and momentum conservation equations:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the wave mass equation determines how much liquid mass is carried by
+the disturbance-wave field;</p></li>
+<li><p class="sd-card-text">the wave momentum equation determines the disturbance-wave velocity;</p></li>
+<li><p class="sd-card-text">the wave number-density transport equation determines how the number of
+disturbance waves evolves.</p></li>
+</ul>
+<p class="sd-card-text">Together with the wave shape model, these quantities are used to
+characterize wave spacing, width, amplitude, and other properties of the
+disturbance-wave field.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
