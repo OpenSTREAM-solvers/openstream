@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
@@ -21,6 +22,7 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -148,7 +150,16 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#running-simulations">Running simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#choosing-a-solver">Choosing a solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#numerical-convergence">Numerical convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#results-and-post-processing">Results and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#physical-scope-and-limitations">Physical scope and limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#extending-and-contributing">Extending and contributing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
@@ -255,11 +266,14 @@ internal data structures via
 <p>Input:</p>
 <ul class="simple">
 <li><p>inputSet — An <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model configuration, geometry, boundary conditions, and solver options.</p></li>
+<li><p>mixSolver — An optional solved <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> object</p></li>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>If mixSolver is unsolved, it will be solved automatically.</p></li>
+<li><p>This constructor assumes <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> is fully validated.</p></li>
+<li><p>A solved mixture-model solution is required for initialization. If a mixture solver is supplied, its solution is reused. If no mixture solver is supplied, one is created and solved automatically.</p></li>
 <li><p>Initialization includes film, wave, base, and droplet objects.</p></li>
+<li><p>Time/space discretization and boundary condition interpolation initialized by <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> are used</p></li>
 </ul>
 </dd></dl>
 
@@ -287,8 +301,10 @@ flow by balancing droplet deposition and film entrainment rates.</p>
 </ul>
 <p>Notes:</p>
 <ul class="simple">
+<li><p>Enhanced drop deposition is disabled</p></li>
 <li><p>Uses interpolation for improved convergence</p></li>
 <li><p>Falls back to ad-hoc update if interpolation fails</p></li>
+<li><p>Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process</p></li>
 </ul>
 </dd></dl>
 

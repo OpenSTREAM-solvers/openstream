@@ -9,6 +9,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=8d0270a2" />
 
   
@@ -20,6 +21,7 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
+      <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -145,7 +147,16 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Community/faq.html">OpenSTREAM FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#running-simulations">Running simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#choosing-a-solver">Choosing a solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#numerical-convergence">Numerical convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#results-and-post-processing">Results and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#physical-scope-and-limitations">Physical scope and limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#extending-and-contributing">Extending and contributing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Community/contribute_code.html">Contribute to the code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
@@ -277,11 +288,7 @@
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.AMPLITUDE">AMPLITUDE() (Solvers.FourField.Wave method)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Geometry.ANGLE">ANGLE (Inputs.Geometry attribute)</a>
-
-      <ul>
-        <li><a href="Packages/Inputs.html#Inputs.Model.ANGLE">(Inputs.Model attribute)</a>
 </li>
-      </ul></li>
       <li><a href="Guides/glossary.html#term-Annular-flow"><strong>Annular flow</strong></a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Input.applySolverDependentProperties">applySolverDependentProperties() (Inputs.Input method)</a>
@@ -622,6 +629,10 @@
 </li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.ENTNUM">ENTNUM() (Solvers.AbstractFilm method)</a>
 </li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.ENTNUMMAXITER">ENTNUMMAXITER (Inputs.Options attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.ENTNUMTOL">ENTNUMTOL (Inputs.Options attribute)</a>
+</li>
       <li><a href="Guides/glossary.html#term-Entrainment"><strong>Entrainment</strong></a>
 </li>
       <li><a href="Packages/InputEnums.html#InputEnums.ENTRAINMENT">ENTRAINMENT (class in InputEnums)</a>
@@ -650,10 +661,10 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.EQSTROUHALCOEF">EQSTROUHALCOEF (Inputs.Model attribute)</a>
 </li>
-      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Base.EQTHICK">EQTHICK() (Solvers.FourField.Base method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Base.EQTHICK">EQTHICK() (Solvers.FourField.Base method)</a>
+</li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Film.EQUIL">EQUIL() (Solvers.FourField.Film method)</a>
 
       <ul>
@@ -1656,6 +1667,10 @@
         <li><a href="Packages/Inputs.html#Inputs.Model.OAFENTRAINED">(Inputs.Model attribute)</a>
 </li>
       </ul></li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.OAFEQUILMAXITER">OAFEQUILMAXITER (Inputs.Options attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.OAFEQUILTOL">OAFEQUILTOL (Inputs.Options attribute)</a>
+</li>
       <li><a href="Packages/InputEnums.html#InputEnums.OAFFILMSPLIT">OAFFILMSPLIT (class in InputEnums)</a>
 
       <ul>
@@ -1666,10 +1681,10 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.OAFTRANSITION">OAFTRANSITION (Inputs.Model attribute)</a>
 </li>
-      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.OAFWL">OAFWL() (Solvers.Mixture.Mixture method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.OAFWL">OAFWL() (Solvers.Mixture.Mixture method)</a>
+</li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.OAFX">OAFX() (Solvers.Mixture.Mixture method)</a>
 
       <ul>
@@ -2286,15 +2301,19 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Mixture.U">(Solvers.TwoFluid.Mixture method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.UALGEBR">UALGEBR() (Solvers.AbstractFilm method)</a>
 
       <ul>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.UALGEBR">(Solvers.ThreeField.Drop method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Inputs.html#Inputs.FluidProperties.UC">UC (Inputs.FluidProperties attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.UDEQUILMAXITER">UDEQUILMAXITER (Inputs.Options attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.UDEQUILTOL">UDEQUILTOL (Inputs.Options attribute)</a>
 </li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.UEQUIL">UEQUIL() (Solvers.AbstractFilm method)</a>
 
@@ -2303,6 +2322,10 @@
 </li>
       </ul></li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.UEQUILS">UEQUILS() (Solvers.AbstractFilm method)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.UFEQUILMAXITER">UFEQUILMAXITER (Inputs.Options attribute)</a>
+</li>
+      <li><a href="Packages/Inputs.html#Inputs.Options.UFEQUILTOL">UFEQUILTOL (Inputs.Options attribute)</a>
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.UP">UP() (Solvers.Mixture.Mixture method)</a>
 </li>
