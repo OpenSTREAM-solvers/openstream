@@ -88,3 +88,13 @@ jobs:
         with:
           output-detail: verbose
           source-folder: ./openstream
+
+      # Upload artifacts
+      - name: Upload MATLAB test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: matlab-output-${{ matrix.matlab }}
+          path: |
+            ./openstream/tests/**
+          if-no-files-found: warn
