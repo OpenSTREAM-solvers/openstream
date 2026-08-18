@@ -10,16 +10,29 @@ on:
 
 jobs:
 
-  build:
+  tests:
     #runs-on: ubuntu-latest
     runs-on: [self-hosted, linux, x64, matlab]
+
+    strategy:
+      # Try to run all the tests
+      fail-fast: false
+      # Over multiple versions
+      matrix:
+        matlab: ${{ 
+          github.event_name == 'push' &&
+          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci-1') &&
+          fromJSON('["R2024b", "R2025b", "R2026b"]') ||
+          fromJSON('["R2026b"]')
+          }}
+          
     steps:
 
       #- name: Clean workspace
       #  run: rm -rf ./* .[^.]*
 
       - name: Checkout with submodules
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7 
         with:
           submodules: true
           path: ./openstream
@@ -35,7 +48,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
+          python-version: '3.14'
 
       - name: Upgrade pip
         run: |
@@ -62,9 +75,22 @@ jobs:
       # Sets up MATLAB on a GitHub-hosted runner
       #- name: Set up MATLAB
       #  uses: matlab-actions/setup-matlab@v3
+
+      - name: Select MATLAB version
+        run: |
+          echo "/opt/MATLAB/${{ matrix.matlab }}/bin" >> "$GITHUB_PATH"
+          
       - name: Query MATLAB version
         run: |
-          /opt/MATLAB/R2026a/bin/matlab -batch "version, pyenv"
+          echo "MATLAB:"
+          which matlab
+          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot)"
+
+          echo
+          echo "Python:"
+          which python
+          python --version
+          python -m pip show nanobind
 
       - name: Debug MATLAB paths
         run: |
