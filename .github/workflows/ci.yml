@@ -96,5 +96,5 @@ jobs:
         with:
           name: matlab-output-${{ matrix.matlab }}
           path: |
-            ./openstream/tests/**
+            ./openstream/tests/+*/**
           if-no-files-found: warn
