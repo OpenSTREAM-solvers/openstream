@@ -20,12 +20,18 @@ jobs:
       fail-fast: false
       # Over multiple versions
       matrix:
-        matlab: ${{ 
-          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci-1') &&
-          fromJSON('["R2024b", "R2025b", "R2026b"]') ||
-          fromJSON('["R2026b"]')
-          }}
+        include: ${{ fromJSON(
+          github.event_name == 'push' &&
+          github.ref == 'refs/heads/main'
+          && '[
+            {"matlab":"R2024b","python":"3.11"},
+            {"matlab":"R2025b","python":"3.12"},
+            {"matlab":"R2026b","python":"3.13"}
+            ]'
+          || '[
+            {"matlab":"R2026b","python":"3.12"}
+            ]'
+          ) }}
           
     steps:
 
@@ -49,25 +55,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.14'
-
-      - name: Upgrade pip
-        run: |
-          # install pip=>20.1 to use "pip cache dir"
-          pip install --upgrade pip
-
-      - name: Get pip cache dir
-        id: pip-cache
-        run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache dependencies
-        uses: actions/cache@v6
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: ./openstream/+CoolPropWrapper/requirements.txt
+       
       - name: Install dependencies
         run: |
           pip install -r ./openstream/+CoolPropWrapper/requirements.txt
@@ -85,19 +76,13 @@ jobs:
         run: |
           echo "MATLAB:"
           which matlab
-          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot)"
+          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot); fprintf('Current working directory: %s\n, pwd);"
 
           echo
           echo "Python:"
           which python
           python --version
           python -m pip show nanobind
-
-      - name: Debug MATLAB paths
-        run: |
-          matlab -batch "disp('--- SolverTest ---'); which -all SolverTest"
-          matlab -batch "disp('GITHUB_WORKSPACE:'); disp('$GITHUB_WORKSPACE'); disp('MATLAB PWD:'); disp(pwd)"
-          find "${GITHUB_WORKSPACE}" -type f \( -name '*Test.m' -o -name '*Tests.m' \) -print
           
       # Runs a set of commands using the runners shell
       - name: Run all tests
