@@ -10,7 +10,6 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
@@ -22,7 +21,6 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
-      <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -150,16 +148,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#getting-started">Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#running-simulations">Running simulations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#choosing-a-solver">Choosing a solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#numerical-convergence">Numerical convergence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#results-and-post-processing">Results and post-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#physical-scope-and-limitations">Physical scope and limitations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#extending-and-contributing">Extending and contributing</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
@@ -233,13 +222,13 @@
 <span class="nb">warning</span><span class="w"> </span><span class="n">off</span>
 <span class="c">% Create the input set using paths to model, options, geometry, and boundary condition files</span>
 <span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/models.inp&#39;</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/options.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;DEFAULT&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/geom.inp&#39;</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TUTORIAL1&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;./inputs/tutorial1.inp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">sessionParentDir</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">&#39;outputs&#39;</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/models.inp'</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/options.inp'</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">'DEFAULT'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/geom.inp'</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/tutorial1.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">            </span><span class="n">sessionParentDir</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">'outputs'</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
 <span class="w">            </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">LOGMODE</span><span class="w">               </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;BOTH&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="n">LOGMODE</span><span class="w">               </span><span class="p">=</span><span class="w"> </span><span class="s">'BOTH'</span><span class="p">);</span>
 
 <span class="c">% Create a mixture solver object</span>
 <span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
