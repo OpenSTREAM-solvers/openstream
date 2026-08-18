@@ -76,7 +76,7 @@ jobs:
         run: |
           echo "MATLAB:"
           which matlab
-          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot); fprintf('Current working directory: %s\n, pwd);"
+          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot); fprintf('Current working directory: %s\n', pwd);"
 
           echo
           echo "Python:"
