@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - matlab-ci
-      - matlab-ci-1
       - lecorre
       - main
   workflow_dispatch:
@@ -22,7 +21,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(
           (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci-1')
+          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci')
           && '[
             {"matlab":"R2024b","python":"3.11"},
             {"matlab":"R2025b","python":"3.12"},
@@ -62,7 +61,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r ./openstream/+CoolPropWrapper/requirements.txt
-          pip install nanobind
 
       # Sets up MATLAB on a GitHub-hosted runner
       #- name: Set up MATLAB
