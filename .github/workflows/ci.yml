@@ -10,16 +10,35 @@ on:
 
 jobs:
 
-  build:
+  tests:
     #runs-on: ubuntu-latest
     runs-on: [self-hosted, linux, x64, matlab]
+
+    strategy:
+      # Try to run all the tests
+      fail-fast: false
+      # Over multiple versions
+      matrix:
+        include: ${{ fromJSON(
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci')
+          && '[
+            {"matlab":"R2024b","python":"3.11"},
+            {"matlab":"R2025b","python":"3.12"},
+            {"matlab":"R2026b","python":"3.13"}
+            ]'
+          || '[
+            {"matlab":"R2026b","python":"3.12"}
+            ]'
+          ) }}
+          
     steps:
 
       #- name: Clean workspace
       #  run: rm -rf ./* .[^.]*
 
       - name: Checkout with submodules
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7 
         with:
           submodules: true
           path: ./openstream
@@ -35,40 +54,33 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.11'
-
-      - name: Upgrade pip
-        run: |
-          # install pip=>20.1 to use "pip cache dir"
-          pip install --upgrade pip
-
-      - name: Get pip cache dir
-        id: pip-cache
-        run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache dependencies
-        uses: actions/cache@v6
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: ./openstream/+CoolPropWrapper/requirements.txt
+       
       - name: Install dependencies
-        run: pip install -r ./openstream/+CoolPropWrapper/requirements.txt
+        run: |
+          pip install -r ./openstream/+CoolPropWrapper/requirements.txt
 
       # Sets up MATLAB on a GitHub-hosted runner
       #- name: Set up MATLAB
       #  uses: matlab-actions/setup-matlab@v3
+
+      - name: Select MATLAB version
+        run: |
+          echo "/opt/MATLAB/${{ matrix.matlab }}/bin" >> "$GITHUB_PATH"
+          
       - name: Query MATLAB version
         run: |
-          /opt/MATLAB/R2026a/bin/matlab -batch "version"
+          echo "MATLAB:"
+          which matlab
+          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot); fprintf('Current working directory: %s\n', pwd);"
 
-      - name: Debug MATLAB paths
-        run: |
-          matlab -batch "disp('--- SolverTest ---'); which -all SolverTest"
-          matlab -batch "disp('GITHUB_WORKSPACE:'); disp('$GITHUB_WORKSPACE'); disp('MATLAB PWD:'); disp(pwd)"
-          find "${GITHUB_WORKSPACE}" -type f \( -name '*Test.m' -o -name '*Tests.m' \) -print
+          echo
+          echo "Python:"
+          which python
+          python --version
+          python -m pip show nanobind
           
       # Runs a set of commands using the runners shell
       - name: Run all tests
@@ -76,3 +88,13 @@ jobs:
         with:
           output-detail: verbose
           source-folder: ./openstream
+
+      # Upload artifacts
+      - name: Upload MATLAB test output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: matlab-output-${{ matrix.matlab }}
+          path: |
+            ./openstream/tests/+*/**
+          if-no-files-found: warn
