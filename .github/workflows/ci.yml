@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - matlab-ci
+      - matlab-ci-1
       - lecorre
       - main
   workflow_dispatch:
@@ -20,7 +21,7 @@ jobs:
       # Over multiple versions
       matrix:
         matlab: ${{ 
-          github.event_name == 'push' &&
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
           (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci-1') &&
           fromJSON('["R2024b", "R2025b", "R2026b"]') ||
           fromJSON('["R2026b"]')
