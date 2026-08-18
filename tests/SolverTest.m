@@ -25,7 +25,15 @@ classdef SolverTest < matlab.unittest.TestCase
             addpath('../../openstream')
 
             % Remove existing files
-            rmdir('./+*','s');
+            try
+                rmdir('./+*','s');
+            catch ME
+                if ME.identifier == 'MATLAB:RMDIR:NotADirectory'
+                    disp('No existing artifacts to remove.')
+                else
+                    rethrow(ME)
+                end
+            end
             
             % Some session options
             inputSetOpts = {'overwriteSessionFiles', true, 'LOGMODE', 'BOTH'};
