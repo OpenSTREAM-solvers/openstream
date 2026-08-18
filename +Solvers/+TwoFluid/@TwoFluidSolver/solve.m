@@ -266,7 +266,7 @@ function solver(solveINIT)
                 
                 % Indicate init converged
                 if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    twfSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                    twfSolver.warning('Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 twfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
                 

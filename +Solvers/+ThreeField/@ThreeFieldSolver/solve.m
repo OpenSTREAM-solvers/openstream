@@ -247,7 +247,7 @@ function solver(solveINIT)
 
                 % Indicate init converged
                 if tfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
-                    tfSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                    tfSolver.warning('Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
