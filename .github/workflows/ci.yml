@@ -21,8 +21,8 @@ jobs:
       # Over multiple versions
       matrix:
         include: ${{ fromJSON(
-          github.event_name == 'push' &&
-          github.ref == 'refs/heads/main'
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+          (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/matlab-ci-1')
           && '[
             {"matlab":"R2024b","python":"3.11"},
             {"matlab":"R2025b","python":"3.12"},
