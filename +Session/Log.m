@@ -11,12 +11,10 @@ classdef Log < handle
         diaryIsOn             (1,1) logical         = false                % Flag indicating whether MATLAB diary is active
 
         % log file
-
         LOGFID                                      = -1                   % File ID for log file
         logFileName           (1,1) string                                 % Name of the log file (without extension)
 
         % Warnings
-
         showWarnings          (1,1) logical         = true                 % Flag to control display of warnings
 
     end
@@ -138,14 +136,22 @@ classdef Log < handle
                 % If LOGTOFILEONLY, open and write to log
                 if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
                         obj.LOGMODE == LogMode.BOTH
+
+                    % Open the log file
                     obj.openLog();
+
+                    % Write warnings to the log
                     builtin('fprintf',obj.LOGFID, 'Warning:\n');
                     builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
+
+                    % Close the log if keepLogOpen is unset
                     if ~obj.keepLogOpen
                         obj.closeLog();
                     end
+
                 end
             end
+
         end
 
         function diaryOff(obj)
@@ -157,6 +163,10 @@ classdef Log < handle
 
         function diaryOn(obj)
             %DIARYON Turn on diary logging if applicable
+            %
+            %   TODO: re-evaluate if using the diary is needed. What does
+            %   the diary do that the log doesn't? If we find a use case,
+            %   describe it here.
 
             if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
                     obj.LOGMODE == Session.LogMode.BOTH) && ~obj.diaryIsOn
