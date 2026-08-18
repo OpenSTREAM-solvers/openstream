@@ -55,7 +55,9 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: pip install -r ./openstream/+CoolPropWrapper/requirements.txt
+        run: |
+          pip install -r ./openstream/+CoolPropWrapper/requirements.txt
+          pip install nanobind
 
       # Sets up MATLAB on a GitHub-hosted runner
       #- name: Set up MATLAB
