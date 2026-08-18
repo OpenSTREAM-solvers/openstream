@@ -23,6 +23,9 @@ classdef SolverTest < matlab.unittest.TestCase
             %
             addpath('../../openstream-database')
             addpath('../../openstream')
+
+            % Remove existing files
+            rmdir('./+*','s');
             
             % Some session options
             inputSetOpts = {'overwriteSessionFiles', true, 'LOGMODE', 'BOTH'};
@@ -119,10 +122,7 @@ classdef SolverTest < matlab.unittest.TestCase
     end
 
     methods (TestClassTeardown)
-        function removeInputOutputFiles(testCase)
-            rmdir('./+*','s');
-        end
-
+        
     end
 
 end
