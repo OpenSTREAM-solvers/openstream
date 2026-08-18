@@ -45,6 +45,12 @@ classdef (Abstract) AbstractSolver < handle
             solver.inputSet.session.log.log(varargin{:});
         end
 
+        function warning(solver, varargin)
+            %LOG Log warning messages to the session log
+
+            solver.inputSet.session.log.warning(varargin{:});
+        end
+
         function name = solverName(solver)
             %SOLVERNAME Returns the name of the solver
 
