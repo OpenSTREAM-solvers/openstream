@@ -62,7 +62,7 @@ jobs:
       #  uses: matlab-actions/setup-matlab@v3
       - name: Query MATLAB version
         run: |
-          /opt/MATLAB/R2026a/bin/matlab -batch "version"
+          /opt/MATLAB/R2026a/bin/matlab -batch "version, pyenv"
 
       - name: Debug MATLAB paths
         run: |
