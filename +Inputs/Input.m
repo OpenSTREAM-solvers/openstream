@@ -152,7 +152,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             warning(previousWarnStruct);
         end
 
-        function objPropnames = listInputProperties(obj, opts)
+        function [objPropNames_filtered, objPropDefaultValues_filtered, nameValPair] = ...
+                        listInputProperties(obj, opts)
             %LISTINPUTPROPERTIES Returns list of protected property names for the object
             %
             % Optionally excludes specified properties
@@ -161,18 +162,65 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 obj
                 opts.exclude = {}   % Cell array of properties to exclude from the list
             end
-            objPropnames = string({metaclass(obj).PropertyList.Name}.');
-            objPropnames = objPropnames( ...
-                cellfun(@(setaccess) isa(setaccess, 'meta.class'), [metaclass(obj).PropertyList.SetAccess]) ...
-                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'SOLVERDEPENDENTPROPS')...
-                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'extra')...
-                & ~strcmp(string({metaclass(obj).PropertyList.Name}),'warnings'));
+            
+            % Get full list of properties
+            objProps = metaclass(obj).PropertyList;
+            % Get full list of property names
+            objPropNames = string({objProps.Name}.');
+
+            % Filter down to those:
+            %   - with a specific class with set access
+            %   - without the name of 
+            %       - SOLVERDEPENDENTPROPS
+            %       - extra
+            %       - warnings
+            objPropNames_filtered = objPropNames( ...
+                cellfun(@(setaccess) isa(setaccess, 'meta.class'), [objProps.SetAccess]) ...
+                & ~strcmp(string({objProps.Name}),'SOLVERDEPENDENTPROPS')...
+                & ~strcmp(string({objProps.Name}),'extra')...
+                & ~strcmp(string({objProps.Name}),'warnings'));
 
             % Exclude properties specified in opts.exclude
             for idx = 1:length(opts.exclude)
-                objPropnames = objPropnames( ...
-                    ~strcmpi(objPropnames,opts.exclude{idx}));
+                objPropNames_filtered = objPropNames_filtered( ...
+                    ~strcmpi(objPropNames_filtered,opts.exclude{idx}));
             end
+
+            % Retrieve default values if nargout > 1
+            if nargout < 2
+                return
+            end
+            num_props = numel(objPropNames_filtered);
+            objPropDefaultValues_filtered = cell(num_props,1);
+            for idx = 1:num_props
+                
+                % Find property in objPropNames
+                propIdx = find(objPropNames == objPropNames_filtered{idx});
+
+                % Store DefaultValue for those properties that HasDefault
+                if objProps(propIdx).HasDefault
+                    % Add default value to objPropDefaultValues
+                    objPropDefaultValues_filtered{idx} = objProps(propIdx).DefaultValue;
+                else
+                    % Try to create empty value for the property class type
+                    try
+                        defVal = eval(string(objProps(propIdx).Validation.Class.Name) + ".empty");
+                    catch
+                        % Silently ignore any resulting error.
+                        % There are potentially just too many class types
+                        % to effectively handle.
+                        defVal = NaN;
+                    end
+                    objPropDefaultValues_filtered{idx} = defVal;
+                end
+            end
+
+            % Create name-value pair struct if nargout > 2
+            if nargout < 3
+                return
+            end
+            nameValPair = cell2struct(objPropDefaultValues_filtered, objPropNames_filtered);
+               
         end
 
         function [varargout] = defaultValueUsedReport(obj, propNames, propValues)
@@ -452,6 +500,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
         function defVal = defaultValueString(defVal)
             %DEFAULTVALUESTRING Converts default value to string representation for reporting
+            %   TODO: This may be be deprecated.
 
             if isnumeric(defVal)
                 defVal = num2str(defVal);
