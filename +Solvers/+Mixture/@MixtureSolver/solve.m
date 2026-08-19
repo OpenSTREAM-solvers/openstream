@@ -325,7 +325,7 @@ function solver(solveINIT)
                 
                 % Indicate init converged
                 if ~timestepconverged
-                    mixSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                    mixSolver.warning('Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 mixSolver.STATE = SolverState.INITIALSTEPCONVERGED;
                 

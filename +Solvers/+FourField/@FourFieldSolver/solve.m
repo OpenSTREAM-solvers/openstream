@@ -354,7 +354,7 @@ function solver(solveINIT)
 
                 % Indicate init converged
                 if ~timestepconverged
-                    ffSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                    ffSolver.warning('Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
