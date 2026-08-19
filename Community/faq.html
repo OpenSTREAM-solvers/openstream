@@ -10,6 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
@@ -21,6 +22,8 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -148,7 +151,16 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-simulations">Running simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-a-solver">Choosing a solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-convergence">Numerical convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-post-processing">Results and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#physical-scope-and-limitations">Physical scope and limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extending-and-contributing">Extending and contributing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute_code.html">Contribute to the code</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contribute_code.html#how-to-contribute">How to Contribute</a></li>
@@ -207,8 +219,1756 @@
              
   <section id="openstream-faq">
 <h1>OpenSTREAM FAQ<a class="headerlink" href="#openstream-faq" title="Link to this heading"></a></h1>
-<p>Welcome to the <strong>OpenSTREAM</strong> FAQ section. This resource is designed to help users and developers navigate common questions and challenges when working with the OpenSTREAM solver frameworks. Whether you’re just getting started or you’re troubleshooting advanced configurations, this FAQ provides concise, practical answers to streamline your experience.</p>
-<p><em>This section is under development. In the meantime, please consult the tutorials, theory documentation, and package reference pages.</em></p>
+<p>This page provides concise answers to common questions about the purpose,
+distinctive features, capabilities, assumptions, simplifications, and
+limitations of <strong>OpenSTREAM</strong>. It also provides guidance on installation,
+configuration, solver selection, simulation setup, numerical convergence,
+result interpretation, post-processing, troubleshooting, model development,
+and contribution to the project.</p>
+<p>Select a question to display its answer.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is OpenSTREAM?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>OpenSTREAM</strong>, short for <em>Open Solvers for Two-phase flow Research,
+Engineering Analysis and Modeling</em>, is an open-source, object-oriented
+MATLAB environment for simulating one-dimensional, multi-field,
+liquid-vapor two-phase flows with phase change in straight channels.</p>
+<p class="sd-card-text">OpenSTREAM includes four solver frameworks:</p>
+<ul class="simple">
+<li><p class="sd-card-text">a mixture solver with thermal non-equilibrium capabilities;</p></li>
+<li><p class="sd-card-text">a two-fluid solver that represents the liquid and vapor phases
+separately;</p></li>
+<li><p class="sd-card-text">a three-field solver for annular two-phase flow;</p></li>
+<li><p class="sd-card-text">a four-field solver that separates the liquid film into base-film and
+disturbance-wave fields.</p></li>
+</ul>
+<p class="sd-card-text">Depending on the selected solver and closure models, OpenSTREAM can
+represent wall boiling, interfacial evaporation and condensation, and
+the associated exchanges of mass, momentum, and energy between phases
+and fields.</p>
+<p class="sd-card-text">The solver frameworks provide different levels of physical detail and
+support education, model development, performance evaluation, and
+validation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why should I use OpenSTREAM instead of another available code?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM is not intended as a replacement for established
+thermal-hydraulic codes. It is designed primarily as an open, transparent,
+and extensible environment for education, fundamental model development,
+closure-model implementation, controlled numerical experiments, and
+validation of one-dimensional two-phase flow formulations.</p>
+<p class="sd-card-text">OpenSTREAM may be particularly useful when you need:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><strong>Full access to the source code.</strong> The governing equations, closure
+models, numerical algorithms, input processing, and post-processing
+methods can be inspected and modified directly.</p></li>
+<li><p class="sd-card-text"><strong>A transparent modeling environment.</strong> Primary variables, secondary
+quantities, source terms, field exchanges, and convergence histories
+are accessible through the MATLAB solver objects. This facilitates
+interpretation, debugging, and conservation checks.</p></li>
+<li><p class="sd-card-text"><strong>Several solver frameworks within a common architecture.</strong> OpenSTREAM
+includes mixture, two-fluid, three-field, and four-field formulations.
+The same geometry, boundary conditions, fluid-property interface, and
+general workflow can therefore be used to compare different levels of
+physical resolution.</p></li>
+<li><p class="sd-card-text"><strong>State-of-the-art annular-flow modeling.</strong> The three-field solver separates
+the liquid into wall-film and entrained-droplet fields. The four-field
+solver further separates the liquid film into base-film and
+disturbance-wave fields and includes wave-frequency transport.</p></li>
+<li><p class="sd-card-text"><strong>A practical platform for closure-model development.</strong> Physical models
+are selected through documented input enumerations and implemented in
+dedicated phase or field classes. A developer can add, modify, test,
+and compare closure models without working within a large proprietary
+code base.</p></li>
+<li><p class="sd-card-text"><strong>Rapid prototyping in MATLAB.</strong> MATLAB provides an interactive
+environment for inspecting objects, modifying equations, visualizing
+results, performing parameter studies, and developing new models.</p></li>
+<li><p class="sd-card-text"><strong>Reproducible research and education.</strong> Input sets, tutorials,
+documentation, references, and source code can be distributed together,
+allowing users to inspect the assumptions behind a calculation and
+reproduce the workflow.</p></li>
+<li><p class="sd-card-text"><strong>A computationally efficient one-dimensional model.</strong> OpenSTREAM is
+useful when cross-section-averaged axial behavior is sufficient and
+the computational expense and geometric detail of a multidimensional
+CFD calculation are not required.</p></li>
+</ul>
+<p class="sd-card-text">Other codes may be more appropriate when the application requires:</p>
+<ul class="simple">
+<li><p class="sd-card-text">qualified or extensively validated models for a specific industrial
+application;</p></li>
+<li><p class="sd-card-text">complete reactor-system or plant-network simulation;</p></li>
+<li><p class="sd-card-text">closed-loop systems, including natural-circulation loops;</p></li>
+<li><p class="sd-card-text">simultaneous solution of multiple connected flow paths and their flow
+distribution;</p></li>
+<li><p class="sd-card-text">dedicated component models for pumps, valves, vessels, separators, or
+heat exchangers;</p></li>
+<li><p class="sd-card-text">multidimensional flow resolution;</p></li>
+<li><p class="sd-card-text">complex geometries, crossflow, or connected flow networks;</p></li>
+<li><p class="sd-card-text">compressible pressure-wave dynamics;</p></li>
+<li><p class="sd-card-text">multi-component fluids or non-condensable gases;</p></li>
+<li><p class="sd-card-text">safety or licensing analysis.</p></li>
+</ul>
+<p class="sd-card-text">The appropriate code therefore depends on the purpose of the analysis.
+OpenSTREAM is especially well suited to understanding, developing, and
+evaluating models in a transparent one-dimensional framework. A more
+established application code may be preferable when a broad component
+library, an application-specific validation basis, or a qualified
+engineering workflow is required.</p>
+<p class="sd-card-text">Selecting OpenSTREAM does not remove the need for numerical verification,
+closure-model assessment, applicability review, and validation against
+appropriate reference data.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is unique about OpenSTREAM, and what are its main strengths?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM combines advanced one-dimensional two-phase flow models with
+an open, modern, and extensible software architecture. Its purpose is not
+only to perform simulations, but also to make the governing equations,
+closure models, numerical methods, and calculated source terms accessible
+for inspection, modification, and collaborative development.</p>
+<p class="sd-card-text">Its main distinctive features and strengths include:</p>
+<ul>
+<li><p class="sd-card-text"><strong>Advanced models rarely available in open-source thermal-hydraulic
+codes.</strong> To the best of the developers’ knowledge, OpenSTREAM provides
+the only openly available implementations of its four-field annular-flow
+model and Mixture Relaxation Model within a general two-phase flow
+simulation environment.</p>
+<p class="sd-card-text">The four-field model explicitly represents vapor, entrained droplets,
+the base liquid film, and disturbance waves. It also includes transport
+of wave frequency, allowing the evolution of disturbance-wave behavior
+to be studied. The model therefore provides a level of annular-flow
+detail that is not commonly available in one-dimensional
+thermal-hydraulic codes.</p>
+<p class="sd-card-text">The Mixture Relaxation Model extends the conventional mixture
+formulation by solving additional vapor mass and energy conservation
+equations. It provides a computationally efficient framework for
+representing thermal non-equilibrium through relaxation of interfacial
+mass and energy transfer.</p>
+</li>
+<li><p class="sd-card-text"><strong>Several solver frameworks within one consistent environment.</strong>
+OpenSTREAM includes mixture, two-fluid, three-field, and four-field
+solvers. These frameworks share the same general input system,
+geometry definition, fluid-property interface, session management, and
+post-processing approach.</p>
+<p class="sd-card-text">This common structure allows users to compare different levels of
+physical resolution without moving between unrelated codes or
+reconstructing the complete simulation workflow.</p>
+</li>
+<li><p class="sd-card-text"><strong>A modern object-oriented architecture.</strong> OpenSTREAM is implemented
+using MATLAB classes that represent solvers, phases, fields, inputs,
+fluid properties, sessions, and plotting utilities. Shared behavior is
+organized through inheritance and common base classes, while
+solver-specific behavior is implemented in dedicated modules.</p>
+<p class="sd-card-text">This architecture supports modular development and helps isolate
+changes to a particular physical model, field, or solver. It also makes
+primary variables, secondary quantities, source terms, and solver
+methods directly accessible through the corresponding objects.</p>
+</li>
+<li><p class="sd-card-text"><strong>Direct access to primary and secondary variables.</strong> Users can inspect
+the primary solution variables, such as mass flow rate, pressure,
+velocity, and enthalpy, together with derived quantities such as void
+fraction, film thickness, interfacial area, flow regime, and
+disturbance-wave frequency, where applicable to the selected solver.</p>
+<p class="sd-card-text">The stored pseudo-time convergence histories also allow users to examine
+how the steady-state solution was obtained. This level of access is
+useful for interpretation, debugging, numerical diagnostics, and
+verification.</p>
+</li>
+<li><p class="sd-card-text"><strong>Direct access to field exchange terms.</strong> The mass, momentum, and
+energy exchange terms calculated by the selected solver are readily
+accessible through the corresponding phase and field objects.</p>
+<p class="sd-card-text">This includes wall and interfacial transfer terms, such as evaporation,
+condensation, entrainment, deposition, drag, shear, and heat transfer,
+where applicable to the selected solver. Access to the individual
+contributions facilitates interpretation of the governing equations,
+conservation checks, closure-model evaluation, and debugging.</p>
+</li>
+<li><p class="sd-card-text"><strong>Direct access to pressure-drop contributions.</strong> The individual
+pressure-drop components calculated by the mixture solver are readily
+available for inspection and post-processing.</p>
+<p class="sd-card-text">These contributions can be examined separately to determine the
+relative effects of gravity, wall friction, spatial acceleration,
+temporal acceleration, and local pressure losses, as applicable to the
+simulated case. This decomposition helps users understand the physical
+origin of the calculated pressure distribution.</p>
+</li>
+<li><p class="sd-card-text"><strong>Integrated plotting and animation capabilities.</strong> Each solver
+provides dedicated methods for visualizing its principal variables and
+calculated exchange terms. Axial distributions, time histories, and,
+where implemented, time-elevation distributions can be generated
+directly from the solver object.</p>
+<p class="sd-card-text">The plotting methods support solver-specific quantities, selected axial
+and time indices, multiple plot arrangements, and animation of transient
+results. This allows users to inspect a calculation interactively
+without first developing separate post-processing routines.</p>
+</li>
+<li><p class="sd-card-text"><strong>Designed for model development and comparison.</strong> Physical models are
+selected through documented input options and implemented in dedicated
+phase or field classes. New closure models can therefore be introduced,
+verified, and compared with existing models without modifying an
+opaque or monolithic code base.</p>
+<p class="sd-card-text">The shared solver architecture is particularly useful for studying how
+assumptions made at the mixture, phase, or field level influence the
+calculated results.</p>
+</li>
+<li><p class="sd-card-text"><strong>Comprehensive and integrated documentation.</strong> The OpenSTREAM
+documentation includes installation instructions, theory descriptions,
+governing equations, notation, a glossary, package and class
+references, tutorials, publications, contribution guidance, and this
+FAQ.</p>
+<p class="sd-card-text">Solver-specific MATLAB Live Scripts provide executable examples that
+users can inspect and modify. The documentation is generated from the
+same repository as the source code, helping to keep implementation
+details and user guidance together.</p>
+</li>
+<li><p class="sd-card-text"><strong>Interactive MATLAB workflow.</strong> MATLAB provides an environment in
+which users can run a case, inspect solver objects, modify models,
+visualize intermediate quantities, perform parameter studies, and
+develop post-processing routines interactively.</p>
+<p class="sd-card-text">MATLAB Live Scripts combine formatted explanations, executable code,
+figures, and calculated output in a single document, making them useful
+for education, demonstrations, and reproducible technical studies.</p>
+</li>
+<li><p class="sd-card-text"><strong>Open and modifiable source code.</strong> OpenSTREAM is distributed under
+the MIT License. Users can inspect, use, modify, and redistribute the
+code in accordance with the license terms.</p>
+<p class="sd-card-text">Open development enables independent scrutiny of the modeling basis and
+supports collaboration among researchers and institutions. The source
+code, documentation, input cases, and references can be considered
+together when evaluating a model.</p>
+</li>
+<li><p class="sd-card-text"><strong>Computational efficiency.</strong> The one-dimensional formulation and
+streamlined numerical methods provide a computationally efficient
+framework for steady-state and transient calculations.</p>
+<p class="sd-card-text">This efficiency facilitates rapid model development, repeated
+calculations, closure-model comparisons, parameter studies,
+sensitivity analyses, and validation exercises.</p>
+</li>
+</ul>
+<p class="sd-card-text">These strengths do not mean that OpenSTREAM is more appropriate than
+other thermal-hydraulic codes. Established system, subchannel, and
+CFD codes may provide broader component libraries, more complex
+geometries, multidimensional resolution, or a more extensive validation
+basis for particular applications.</p>
+<p class="sd-card-text">OpenSTREAM is most distinctive when transparency, access to the governing
+models, advanced annular-flow modeling, thermal non-equilibrium model
+development, and controlled comparison of solver frameworks are central
+to the objective of the study.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What should I read first?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">A suggested learning path is:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">Follow the installation instructions in the Usage section.</p></li>
+<li><p class="sd-card-text">Run <strong>Tutorial #1: OpenSTREAM Quick Start</strong>.</p></li>
+<li><p class="sd-card-text">Continue with the solver-specific tutorial that matches your needs:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Tutorial #2 for the mixture solver;</p></li>
+<li><p class="sd-card-text">Tutorial #3 for the two-fluid solver;</p></li>
+<li><p class="sd-card-text">Tutorial #4 for the three-field solver;</p></li>
+<li><p class="sd-card-text">Tutorial #5 for the four-field solver.</p></li>
+</ul>
+</li>
+<li><p class="sd-card-text">Consult the theory pages for governing equations and assumptions.</p></li>
+<li><p class="sd-card-text">Use the package reference to inspect model options, object properties,
+and methods.</p></li>
+</ol>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I make OpenSTREAM available in MATLAB?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Add the OpenSTREAM root folder to the MATLAB search path. For example,
+when running a tutorial from the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">osp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'./..'</span><span class="p">;</span>
+<span class="nb">addpath</span><span class="p">(</span><span class="n">osp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">If MATLAB cannot find a class such as <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> or
+<code class="docutils literal notranslate"><span class="pre">MixtureSolver</span></code>, verify that the OpenSTREAM root folder is correct and
+present on the MATLAB path.</p>
+<p class="sd-card-text">You can inspect the resolved location of a class with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Inputs</span><span class="p">.</span><span class="n">InputSet</span>
+<span class="nb">which</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="p">.</span><span class="n">MixtureSolver</span>
+</pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why does OpenSTREAM require Python?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM uses the Python version of <strong>CoolProp</strong> to calculate fluid
+thermophysical properties. <code class="docutils literal notranslate"><span class="pre">CoolPropWrapper</span></code> provides the interface
+between MATLAB and Python.</p>
+<p class="sd-card-text">MATLAB must therefore use a compatible Python installation. Check the
+active Python environment with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pyenv</span>
+</pre></div>
+</div>
+<p class="sd-card-text">You can test the property interface with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">CoolPropWrapper</span><span class="p">.</span><span class="n">CoolPropWrapper</span><span class="p">();</span>
+</pre></div>
+</div>
+<p class="sd-card-text">If Python or CoolProp cannot be loaded, follow the MATLAB-Python
+compatibility and CoolPropWrapper setup instructions in the installation
+section.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Which MATLAB version should I use?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Use a MATLAB release compatible with the OpenSTREAM code version and
+with a supported Python version. The documentation and tutorials should
+state the MATLAB release used for their preparation.</p>
+<p class="sd-card-text">When reproducing or reporting a result, record the MATLAB release with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">version</span><span class="p">(</span><span class="s">'-release'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Also record the Python and CoolProp versions when fluid-property behavior
+is relevant.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Where can I find working examples?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder contains MATLAB Live Scripts that can be run and
+modified directly. The documentation also provides completed HTML
+versions for reference.</p>
+<p class="sd-card-text">Start with <strong>Tutorial #1: OpenSTREAM Quick Start</strong>, then continue with
+the solver-specific tutorial that matches your application.</p>
+</div>
+</details></section>
+<section id="running-simulations">
+<h2>Running simulations<a class="headerlink" href="#running-simulations" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the minimum workflow for running a case?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">A basic mixture-solver calculation consists of four steps:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">import the required packages;</p></li>
+<li><p class="sd-card-text">construct an <code class="docutils literal notranslate"><span class="pre">InputSet</span></code>;</p></li>
+<li><p class="sd-card-text">construct the solver;</p></li>
+<li><p class="sd-card-text">call <code class="docutils literal notranslate"><span class="pre">solve</span></code>.</p></li>
+</ol>
+<p class="sd-card-text">For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">import</span><span class="w"> </span><span class="n">Inputs</span><span class="o">.*</span>
+<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="o">.*</span>
+<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="o">.*</span>
+
+<span class="c">% Load the inputSet.</span>
+<span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">modelFilePath</span><span class="w">          </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/models.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">modelID</span><span class="w">                </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">optionsFilePath</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/options.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">optionsID</span><span class="w">              </span><span class="p">=</span><span class="w"> </span><span class="s">'DEFAULT'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">geometryFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/geom.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">geometryID</span><span class="w">             </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">bcFilePath</span><span class="w">             </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/tutorial1.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">sessionParentDir</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">'outputs'</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">LOGMODE</span><span class="w">                </span><span class="p">=</span><span class="w"> </span><span class="s">'BOTH'</span><span class="p">);</span>
+
+<span class="c">% Create and solve the three-field solver.</span>
+<span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
+
+<span class="c">% Generate defaults axial distribution plots</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How are OpenSTREAM inputs organized?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">An OpenSTREAM case is assembled from four separate input categories.
+Each category is normally defined in a dedicated input file:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><strong>Model inputs</strong> select the physical models and closure models.</p></li>
+<li><p class="sd-card-text"><strong>Numerical options</strong> control time steps, iteration limits, relaxation
+factors, and convergence criteria.</p></li>
+<li><p class="sd-card-text"><strong>Geometry inputs</strong> define the channel length, cross-sectional flow
+area, wall perimeters, and orientation.</p></li>
+<li><p class="sd-card-text"><strong>Boundary conditions</strong> define the system pressure, inlet enthalpy,
+inlet mass flow rate, total power, and axial power distribution.</p></li>
+</ul>
+<p class="sd-card-text">The paths to the four input files are provided separately when
+constructing an <code class="docutils literal notranslate"><span class="pre">InputSet</span></code>, for example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">modelFilePath</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/models.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">modelID</span><span class="w">          </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">optionsFilePath</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/options.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">optionsID</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">'DEFAULT'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">geometryFilePath</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/geom.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">geometryID</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">bcFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/tutorial1.inp'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The model, numerical-option, and geometry files may each contain several
+input sets. An identifier such as <code class="docutils literal notranslate"><span class="pre">TUTORIAL1</span></code> or <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> selects
+the required set from the corresponding file.</p>
+<p class="sd-card-text">A boundary-condition file may contain the information required
+for a particular steady-state or transient case. Depending on how the
+study is organized, separate boundary-condition files can be used for
+different operating conditions or transients.</p>
+<p class="sd-card-text">This separation allows physical models, numerical options, geometries,
+and boundary conditions to be combined and reused without duplicating
+complete case definitions. For example, one geometry can be evaluated
+using several physical-model sets, or one physical-model set can be
+applied to several boundary-condition cases.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can I specify inlet temperature instead of inlet enthalpy?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">No. The boundary-condition input interface requires the inlet specific
+enthalpy, <code class="docutils literal notranslate"><span class="pre">HIN</span></code>, in J/kg. Direct specification of inlet temperature is
+not supported and is not currently planned.</p>
+<p class="sd-card-text">Specific enthalpy provides a more general definition of the inlet
+thermodynamic state. At a specified pressure, temperature can define a
+single-phase subcooled-liquid or superheated-vapor state, but it cannot
+uniquely define a saturated two-phase state. At saturation, the liquid,
+vapor, and all intermediate two-phase states have the same saturation
+temperature but different specific enthalpies.</p>
+<p class="sd-card-text">In contrast, inlet specific enthalpy can represent:</p>
+<ul class="simple">
+<li><p class="sd-card-text">a subcooled-liquid inlet;</p></li>
+<li><p class="sd-card-text">a saturated-liquid inlet;</p></li>
+<li><p class="sd-card-text">a saturated two-phase inlet with a specified vapor quality;</p></li>
+<li><p class="sd-card-text">a saturated-vapor inlet;</p></li>
+<li><p class="sd-card-text">a superheated-vapor inlet.</p></li>
+</ul>
+<p class="sd-card-text">If the inlet condition is known as temperature and pressure for a
+single-phase state, first calculate the corresponding specific enthalpy
+for the selected fluid. Enter the resulting value as <code class="docutils literal notranslate"><span class="pre">HIN</span></code> in the
+boundary-condition file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PRESSURE    ! System pressure [Pa]           &gt; ...
+HIN         ! Inlet specific enthalpy [J/kg] &gt; ...
+</pre></div>
+</div>
+<p class="sd-card-text">For a saturated two-phase inlet, determine <code class="docutils literal notranslate"><span class="pre">HIN</span></code> from the system
+pressure and the required inlet vapor quality. A temperature-only input
+would not contain enough information to distinguish among saturated
+liquid, a two-phase mixture, and saturated vapor.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What input-file formats are supported?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM supports its native <code class="docutils literal notranslate"><span class="pre">.inp</span></code> format and the JSON format. The
+examples and tutorials generally use the native <code class="docutils literal notranslate"><span class="pre">.inp</span></code> format.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What happens if I do not specify a model or numerical option?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Unspecified entries use the default values defined by the corresponding
+input class, principally <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code> and <code class="docutils literal notranslate"><span class="pre">Inputs.Options</span></code>.</p>
+<p class="sd-card-text">Defaults make basic cases easier to configure, but they should not be
+treated as universally appropriate. For research or validation work,
+review and document all influential physical and numerical selections.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why does MATLAB print many default-value warnings?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The warnings identify properties that were not explicitly specified and
+therefore use their class defaults.</p>
+<p class="sd-card-text">These messages are useful while developing or reviewing a case.
+Tutorials may temporarily suppress them to keep the displayed output
+concise:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">warning</span><span class="w"> </span><span class="n">off</span>
+<span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="k">...</span><span class="c">);</span>
+<span class="n">warning</span><span class="w"> </span><span class="s">on</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Do not suppress warnings routinely until the configuration has been
+reviewed. An unexpected warning can reveal an omitted or unsupported
+input.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why does OpenSTREAM report that an input entry was not used?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Common causes include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">a misspelled keyword;</p></li>
+<li><p class="sd-card-text">a keyword that does not belong to the selected input class;</p></li>
+<li><p class="sd-card-text">an obsolete keyword;</p></li>
+<li><p class="sd-card-text">an entry intended for another model configuration.</p></li>
+</ul>
+<p class="sd-card-text">Check the keyword against <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code>, <code class="docutils literal notranslate"><span class="pre">Inputs.Options</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Inputs.Geometry</span></code>, <code class="docutils literal notranslate"><span class="pre">Inputs.BoundaryConditions</span></code>, or the relevant
+package-reference page.</p>
+<p class="sd-card-text">An entry reported as unused is not applied to the corresponding input
+object. Whether this affects the simulation depends on whether the
+corresponding valid property is used by the selected solver and model
+configuration. If it is required, OpenSTREAM may instead use the default
+value, and the simulation may differ from what was intended. If the
+property is not used by the selected solver or active models, the unused
+entry may have no effect on the results.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I define a steady-state calculation?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">A boundary-condition file containing a single time entry defines a
+steady-state case.</p>
+<p class="sd-card-text">The solver obtains the steady-state solution through pseudo-time
+advancement. The pseudo-time sequence is a numerical procedure used to
+approach a stationary solution and should not be interpreted as a
+physical transient.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I define a transient calculation?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Provide boundary-condition values at multiple physical times. Depending
+on the boundary-condition interface, pressure, inlet enthalpy, inlet
+mass flow, power, and axial power distribution can vary with time.</p>
+<p class="sd-card-text">The solver first calculates the initial steady state. The physical
+transient proceeds only after the initial solution has converged.</p>
+<p class="sd-card-text">The physical time step is controlled through the numerical options. A
+time-step sensitivity study is recommended when transient timing or peak
+values are important.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why is the mixture solver run before the other solvers?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The two-fluid, three-field, and four-field solvers require a solved
+mixture solution for initialization. They also reuse information from
+the mixture solution, including the pressure-gradient solution.</p>
+<p class="sd-card-text">A solved mixture solver can be passed explicitly:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
+<span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
+
+<span class="n">twfSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">TwoFluidSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">,</span><span class="w"> </span><span class="n">mixSolver</span><span class="p">);</span>
+<span class="n">tfSolver</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="n">ThreeFieldSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">,</span><span class="w"> </span><span class="n">mixSolver</span><span class="p">);</span>
+<span class="n">ffSolver</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="n">FourFieldSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">,</span><span class="w"> </span><span class="n">mixSolver</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">If a mixture solver is not supplied, the advanced solver constructor
+creates and solves one when required. Passing an existing solved object
+avoids repeating the same mixture calculation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can I call solve more than once on the same solver object?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">A solver object represents a specific initialized calculation. Calling
+<code class="docutils literal notranslate"><span class="pre">solve</span></code> again on an already solved object produces an error stating
+that the solver must be reinitialized.</p>
+<p class="sd-card-text">For a new calculation, construct a new <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> and solver object.
+This keeps each simulation configuration and its stored results clearly
+separated.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I reduce the amount of information printed in the MATLAB Command Window?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Set <code class="docutils literal notranslate"><span class="pre">LOGMODE</span></code> to <code class="docutils literal notranslate"><span class="pre">'LOGTOFILEONLY'</span></code> when constructing the
+<code class="docutils literal notranslate"><span class="pre">InputSet</span></code>:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="k">...</span>
+<span class="w">    </span><span class="n">LOGMODE</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'LOGTOFILEONLY'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Solver progress remains available in the session log while most Command
+Window output is suppressed.</p>
+</div>
+</details></section>
+<section id="choosing-a-solver">
+<h2>Choosing a solver<a class="headerlink" href="#choosing-a-solver" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Which solver should I use?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The appropriate solver depends on the physical phenomena and level of
+detail required.</p>
+<dl class="simple">
+<dt><strong>Mixture solver</strong></dt><dd><p class="sd-card-text">Use for robust initialization, efficient calculations with mixture
+quantities, hydrodynamically coupled phases, and mixture-based thermal
+non-equilibrium models.</p>
+</dd>
+<dt><strong>Two-fluid solver</strong></dt><dd><p class="sd-card-text">Use when separate liquid and vapor mass, momentum, and energy behavior
+is needed. The solver can represent different phase velocities,
+enthalpies, and temperatures.</p>
+</dd>
+<dt><strong>Three-field solver</strong></dt><dd><p class="sd-card-text">Use for annular two-phase flow when the liquid distribution between a
+wall film and entrained droplets is important.</p>
+</dd>
+<dt><strong>Four-field solver</strong></dt><dd><p class="sd-card-text">Use for annular two-phase flow when the liquid film must be separated
+into base-film and disturbance-wave fields and wave transport is part
+of the analysis.</p>
+</dd>
+</dl>
+<p class="sd-card-text">Increasing the number of fields does not automatically make a simulation
+more accurate. The selected solver assumptions and closure models must
+be appropriate for the application.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the difference between a phase and a field?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">A <strong>phase</strong> is a thermodynamic state of matter, such as liquid or vapor.</p>
+<p class="sd-card-text">A <strong>field</strong> is a computationally resolved constituent with its own
+transported variables or conservation equations. One phase can be
+represented by more than one field. For example:</p>
+<ul class="simple">
+<li><p class="sd-card-text">The three-field solver represents the liquid phase through a wall-film
+field and a droplet field.</p></li>
+<li><p class="sd-card-text">The four-field solver further divides the wall film into a base-film
+field and a disturbance-wave field.</p></li>
+</ul>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Are the three-field and four-field solvers thermal non-equilibrium models?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The current three-field and four-field formulations assume thermal
+equilibrium. Their additional detail concerns the hydrodynamic
+distribution and transport of liquid fields.</p>
+<p class="sd-card-text">Use the mixture relaxation model or the two-fluid solver when separate
+thermal behavior is required, subject to the assumptions and implemented
+closure models of the selected framework.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Where are the three-field and four-field equations applied?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Although the separate annular-flow field equations are numerically solved
+from the channel inlet, their results are physically meaningful only from
+the onset of annular flow. Upstream of this location, the conservation
+equations are formulated so that the annular-flow field variables evolve
+smoothly toward the prescribed conditions at the onset of annular flow.</p>
+<p class="sd-card-text">Solving the field equations upstream of the onset of annular flow ensures
+that preceding-time-step values are available for all required field
+variables if the onset location moves upstream during a transient
+calculation.</p>
+<p class="sd-card-text">The onset-of-annular-flow model, the initial film-droplet split, and, for
+the four-field solver, the initial base-film and disturbance-wave split
+can therefore influence the solution near the transition.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why can results near the onset of annular flow be sensitive?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The initial liquid distribution among film, droplets, base film, and
+waves depends on the selected onset and field-splitting models.
+Entrainment and deposition then redistribute liquid as the solution
+develops downstream.</p>
+<p class="sd-card-text">When the region near annular-flow onset is important, examine
+sensitivity to:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the onset-of-annular-flow model;</p></li>
+<li><p class="sd-card-text">the initial entrained-droplet fraction;</p></li>
+<li><p class="sd-card-text">the initial base-film and wave split;</p></li>
+<li><p class="sd-card-text">entrainment and deposition models;</p></li>
+<li><p class="sd-card-text">spatial resolution.</p></li>
+</ul>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Should entrainment and deposition models be selected together?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Yes. Entrainment and deposition are coupled processes that exchange
+liquid between the film and droplet fields. The corresponding models are
+generally developed and calibrated together to provide a consistent
+representation of this exchange.</p>
+<p class="sd-card-text">When available, use entrainment and deposition models from the same model
+family unless there is a documented justification for combining models
+from different families.</p>
+</div>
+</details></section>
+<section id="numerical-convergence">
+<h2>Numerical convergence<a class="headerlink" href="#numerical-convergence" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the difference between point convergence and steady-state convergence?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">At each axial node and time step, OpenSTREAM performs local point
+iterations for the nonlinear equations. <strong>Point convergence</strong> refers to
+the change in solved variables between these local iterations.</p>
+<p class="sd-card-text">For a steady-state calculation, OpenSTREAM also compares solutions
+between successive pseudo-time steps. <strong>Steady-state convergence</strong> refers
+to these temporal changes becoming smaller than the specified
+steady-state criteria.</p>
+<p class="sd-card-text">A calculation therefore needs adequately converged local iterations and
+an adequately converged pseudo-time solution.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What does solveMode=’NULL’ mean in plotting methods?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">NULL</span></code> solve mode displays the pseudo-time history used to obtain
+the initial steady-state solution. It does not represent the physical
+transient.</p>
+<p class="sd-card-text">For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">solver</span><span class="p">.</span><span class="n">NZ</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'display'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">'W'</span><span class="p">,</span><span class="s">'U'</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'solveMode'</span><span class="p">,</span><span class="w"> </span><span class="s">'NULL'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The default <code class="docutils literal notranslate"><span class="pre">REAL</span></code> mode is used to display the stored physical solution.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What should I do if the steady-state calculation does not converge?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Start with the information printed by the solver:</p>
+<ul class="simple">
+<li><p class="sd-card-text">identify the node with the largest point-iteration count;</p></li>
+<li><p class="sd-card-text">identify which variable has the largest residual;</p></li>
+<li><p class="sd-card-text">inspect the final solver state;</p></li>
+<li><p class="sd-card-text">plot the pseudo-time history with <code class="docutils literal notranslate"><span class="pre">solveMode='NULL'</span></code>;</p></li>
+<li><p class="sd-card-text">check model, geometry, and boundary-condition warnings;</p></li>
+<li><p class="sd-card-text">verify that input values and units are physically reasonable.</p></li>
+</ul>
+<p class="sd-card-text">Numerical options that may affect convergence include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">maximum point iterations;</p></li>
+<li><p class="sd-card-text">maximum steady-state pseudo-time iterations;</p></li>
+<li><p class="sd-card-text">pseudo-time step;</p></li>
+<li><p class="sd-card-text">variable-specific relaxation factors;</p></li>
+<li><p class="sd-card-text">pointwise convergence criteria;</p></li>
+<li><p class="sd-card-text">steady-state convergence criteria.</p></li>
+</ul>
+<p class="sd-card-text">Change one numerical setting at a time and document each modification.
+After convergence is achieved, check that the converged solution is not
+excessively sensitive to the selected relaxation factors, iteration limits,
+pseudo-time step, or convergence criteria. Do not obtain apparent
+convergence merely by relaxing the convergence criteria without verifying
+the resulting residuals and physical solution.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why was my transient skipped?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The physical transient is not calculated when the initial steady-state
+solution fails to converge. The solver log indicates that the transient
+is being skipped.</p>
+<p class="sd-card-text">Inspect the initial pseudo-time solution, correct any input or model
+problems, and obtain a converged initial state before interpreting
+transient results.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can a converged calculation still be inaccurate?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Yes. Numerical convergence indicates that the implemented discrete
+equations have been solved to the selected tolerances. It does not
+establish that:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the spatial mesh is sufficiently refined;</p></li>
+<li><p class="sd-card-text">the physical time step is sufficiently small;</p></li>
+<li><p class="sd-card-text">the selected closure models are valid for the conditions;</p></li>
+<li><p class="sd-card-text">the one-dimensional assumptions are appropriate;</p></li>
+<li><p class="sd-card-text">the model has been validated for the application.</p></li>
+</ul>
+<p class="sd-card-text">Mesh sensitivity, time-step sensitivity, conservation checks, and
+comparison with appropriate reference data remain necessary.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Which numerical options control steady-state convergence?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Relevant options include the pseudo-time step, the maximum number of
+steady-state iterations, variable-specific relaxation factors, local
+point-iteration tolerances, and steady-state temporal convergence
+criteria.</p>
+<p class="sd-card-text">The exact property names and defaults are listed in <code class="docutils literal notranslate"><span class="pre">Inputs.Options</span></code>.
+Use the solver-specific tutorials and package reference when changing
+these values.</p>
+</div>
+</details></section>
+<section id="results-and-post-processing">
+<h2>Results and post-processing<a class="headerlink" href="#results-and-post-processing" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I display results?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The solver classes provide plotting methods for common result types.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">plotz</span></code></dt><dd><p class="sd-card-text">Plots axial distributions. Multiple physical time indices can produce
+an animated axial plot.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">plott</span></code></dt><dd><p class="sd-card-text">Plots time histories at a selected axial location.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">plotzt</span></code></dt><dd><p class="sd-card-text">Plots time-elevation distributions where implemented.</p>
+</dd>
+</dl>
+<p class="sd-card-text">For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'display'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">'W'</span><span class="p">,</span><span class="s">'VR'</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'arrangement'</span><span class="p">,</span><span class="w"> </span><span class="s">'horizontal'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'resize'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Available display names depend on the selected solver. Consult the
+corresponding solver class in the package reference.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can I access results without using the built-in plots?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Yes. Solver objects retain their solution objects and arrays. Examples
+include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">mixture variables in <code class="docutils literal notranslate"><span class="pre">mixSolver.mixture</span></code>;</p></li>
+<li><p class="sd-card-text">liquid and vapor variables in <code class="docutils literal notranslate"><span class="pre">twfSolver.liquid</span></code> and
+<code class="docutils literal notranslate"><span class="pre">twfSolver.vapor</span></code>;</p></li>
+<li><p class="sd-card-text">film and droplet variables in <code class="docutils literal notranslate"><span class="pre">tfSolver.film</span></code> and <code class="docutils literal notranslate"><span class="pre">tfSolver.drop</span></code>;</p></li>
+<li><p class="sd-card-text">base-film and wave variables through the four-field film object.</p></li>
+</ul>
+<p class="sd-card-text">The package reference lists the available properties and methods. Check
+property dimensions before processing because arrays may vary over axial
+position, time, and wall index.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I save a solver object?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Use the solver <code class="docutils literal notranslate"><span class="pre">save</span></code> method:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixSolver</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'name'</span><span class="p">,</span><span class="w"> </span><span class="s">'mixSolver'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'showpath'</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The solver object contains the imported inputs, solution objects, and
+associated simulation information. Saving it allows later post-processing
+without repeating the calculation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I access the base-film and disturbance-wave objects in a four-field solution?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the four-field solver, the base-film and disturbance-wave objects are
+contained within the liquid-film object. They are therefore accessed
+through the <code class="docutils literal notranslate"><span class="pre">film</span></code> property of the four-field solver:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">base</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">.</span><span class="n">base</span><span class="p">;</span>
+<span class="n">wave</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">.</span><span class="n">wave</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">For a transient calculation, <code class="docutils literal notranslate"><span class="pre">ffSolver.film</span></code> is an array containing one
+film object for each stored physical time step. A specific time step can
+therefore be accessed using its time index:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">tIdx</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="n">base</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">;</span>
+<span class="n">wave</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The base-film and disturbance-wave objects contain their separately
+calculated field quantities. For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">baseMassFlow</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+<span class="n">baseVelocity</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">.</span><span class="n">U</span><span class="p">;</span>
+
+<span class="n">waveMassFlow</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">.</span><span class="n">W</span><span class="p">;</span>
+<span class="n">waveVelocity</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">.</span><span class="n">U</span><span class="p">;</span>
+<span class="n">waveFrequency</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">film</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">.</span><span class="n">FREQUENCY</span><span class="p">;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The enclosing <code class="docutils literal notranslate"><span class="pre">film</span></code> object represents the total liquid film and also
+provides aggregate film quantities derived from the solved base-film and
+disturbance-wave fields. The droplet field is stored separately in
+<code class="docutils literal notranslate"><span class="pre">ffSolver.drop</span></code>, while the vapor-field solution is retained through the
+mixture solver.</p>
+<p class="sd-card-text">The base-film and disturbance-wave objects used during the pseudo-time
+calculation of the initial steady state are similarly contained in the
+stored initialization film objects:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">baseInit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">filmInit</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">base</span><span class="p">;</span>
+<span class="n">waveInit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ffSolver</span><span class="p">.</span><span class="n">filmInit</span><span class="p">(</span><span class="n">tIdx</span><span class="p">).</span><span class="n">wave</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the minimum base film in the four-field solver?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the four-field model, disturbance waves pass over a continuous and
+comparatively slow-moving base liquid film. The calculated base-film
+mass flow rate represents the condition immediately after a disturbance
+wave has passed and interacted with the base film.</p>
+<p class="sd-card-text">Between two successive disturbance waves, the base film evolves without
+direct replenishment from a wave. During this wave-waiting period, wall
+evaporation removes liquid from the base film, while droplet deposition
+can add liquid to it. The <strong>minimum base-film mass flow rate</strong> represents
+the condition reached at the end of this period, immediately before the
+next disturbance wave arrives and replenishes the base film.</p>
+<p class="sd-card-text">The minimum base-film mass flow rate is therefore a local, periodically
+varying quantity associated with the passage of disturbance waves. It
+should not be interpreted as the minimum value of the calculated
+base-film mass flow rate over the channel or over the complete transient.</p>
+<p class="sd-card-text">Assuming that the base-film velocity remains constant during the
+wave-waiting period, the corresponding minimum base-film thickness is
+calculated from:</p>
+<div class="math notranslate nohighlight">
+\[\delta_{\mathrm{b,min}}
+=
+\frac{W_{\mathrm{b,min}}}
+{\rho_{\mathrm{l,s}}\,u_{\mathrm{b}}\,\Pi}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\delta_{\mathrm{b,min}}\)</span> is the minimum base-film thickness;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(W_{\mathrm{b,min}}\)</span> is the minimum base-film mass flow rate;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\rho_{\mathrm{l,s}}\)</span> is the saturated-liquid density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(u_{\mathrm{b}}\)</span> is the base-film velocity;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\Pi\)</span> is the corresponding wall perimeter.</p></li>
+</ul>
+<p class="sd-card-text">The minimum base film is useful for evaluating intermittent base-film
+depletion between disturbance waves. If the minimum base-film mass flow
+rate or thickness reaches zero, the model predicts that the base film
+becomes locally dry before being reached by the next disturbance wave.
+This is referred to as <strong>intermittent base-film dryout</strong>.</p>
+<p class="sd-card-text">The minimum base film differs from the equilibrium base film. The
+<strong>equilibrium base-film thickness</strong> is the target condition used by the
+base-film and disturbance-wave mass-exchange model, whereas the
+<strong>minimum base-film thickness</strong> describes the depletion of the base film
+during the interval between successive waves.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What does it mean when the calculated liquid-film mass flow rate become negative?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The treatment of negative liquid-film quantities is controlled by the
+<code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> physical-model input:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>POSFILM    ! Positive film flow-rate/thickness model    &gt; TRUE
+</pre></div>
+</div>
+<p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> is set to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> by default. With this setting, the film
+mass flow rate and film thickness are restricted to non-negative values.</p>
+<p class="sd-card-text">When <code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> is set to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>, OpenSTREAM allows the calculated
+film mass flow rate and corresponding film thickness to become negative
+after the film has been completely depleted.</p>
+<p class="sd-card-text">A negative film mass flow rate is not physically meaningful and does not
+represent liquid flowing in the opposite direction. It is an intentionally
+extended numerical quantity indicating that the integrated film mass
+balance has progressed beyond the predicted dryout condition.</p>
+<p class="sd-card-text">The liquid-film mass conservation equation accounts for:</p>
+<ul class="simple">
+<li><p class="sd-card-text">liquid gain through droplet deposition;</p></li>
+<li><p class="sd-card-text">liquid loss through film entrainment;</p></li>
+<li><p class="sd-card-text">liquid loss through wall evaporation.</p></li>
+</ul>
+<p class="sd-card-text">When the cumulative film losses exceed the available film inventory, the
+physical film mass flow rate reaches zero and film dryout occurs. With
+<code class="docutils literal notranslate"><span class="pre">POSFILM</span></code> set to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>, the film mass-balance equation continues to
+be integrated beyond this point, producing a negative value.</p>
+<p class="sd-card-text">This continuation provides a signed measure of the margin to dryout:</p>
+<ul class="simple">
+<li><p class="sd-card-text">a positive film mass flow rate indicates that liquid film remains;</p></li>
+<li><p class="sd-card-text">a value close to zero indicates proximity to complete film dryout;</p></li>
+<li><p class="sd-card-text">a negative value indicates that the imposed conditions exceed the
+predicted dryout condition.</p></li>
+</ul>
+<p class="sd-card-text">This behavior is useful in critical-power calculations and model-tuning
+studies. For example, power or a closure-model coefficient can be varied
+until the minimum film mass flow rate is sufficiently close to zero. The
+corresponding condition represents the predicted dryout threshold
+according to the selected models.</p>
+<p class="sd-card-text">Allowing negative values also improves numerical robustness during
+parameter studies and power iterations. A trial calculation can continue
+after exceeding the dryout condition instead of terminating when the film
+first reaches zero.</p>
+<p class="sd-card-text">Negative film values must be interpreted only as numerical dryout-margin
+indicators. They must not be interpreted as physical post-dryout film
+mass flow rates, negative film thicknesses, or reverse liquid-film flow.
+OpenSTREAM does not use this continuation as a physical post-dryout film
+model.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is the difference between calculated and equilibrium base-film and wave quantities?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The four-field solver distinguishes between the locally calculated
+base-film thickness and wave frequency and their corresponding
+equilibrium values.</p>
+<p class="sd-card-text">The <strong>calculated base-film thickness</strong> is obtained from the transported
+base-film mass flow rate, base-film velocity, liquid density, and wall
+perimeter. It represents the current local state of the base-film field
+and may vary with axial position and time.</p>
+<p class="sd-card-text">The <strong>equilibrium base-film thickness</strong> is obtained from the selected
+equilibrium base-film-thickness model. It represents the base-film
+thickness toward which the local base-film state tends under the current
+flow conditions. It is a closure-model target rather than a separately
+transported field variable.</p>
+<p class="sd-card-text">The difference between the calculated and equilibrium base-film
+thicknesses is used in the relaxation model governing mass exchange
+between the base-film and disturbance-wave fields. In simplified form,
+the net source driving the base film toward equilibrium is proportional
+to:</p>
+<div class="math notranslate nohighlight">
+\[\frac{
+\rho_{\mathrm{l,s}}
+\left(
+\delta_{\mathrm{b,eq}}-\delta_{\mathrm{b}}
+\right)
+}{
+t_{\mathrm{b,relax}}
+}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\delta_{\mathrm{b}}\)</span> is the calculated base-film thickness;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\delta_{\mathrm{b,eq}}\)</span> is the equilibrium base-film thickness;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\rho_{\mathrm{l,s}}\)</span> is the saturated-liquid density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(t_{\mathrm{b,relax}}\)</span> is the base-film relaxation time.</p></li>
+</ul>
+<p class="sd-card-text">If the calculated base-film thickness is smaller than its equilibrium
+value, the relaxation term tends to transfer liquid from the disturbance
+waves to the base film. If the calculated base-film thickness is larger
+than its equilibrium value, the relaxation term tends to transfer liquid
+from the base film to the disturbance waves.</p>
+<p class="sd-card-text">The complete base-film and wave mass balances also include other
+mechanisms, such as droplet deposition, wall evaporation, film
+entrainment, and turbulent mixing. Consequently, the final base-film and
+wave mass-exchange rates are not determined by the thickness-relaxation
+term alone.</p>
+<p class="sd-card-text">Similarly, the <strong>calculated wave frequency</strong> characterizes the current
+local disturbance-wave field. It is related to the transported wave
+number density and may differ from the frequency corresponding to local
+equilibrium conditions because of wave transport and hydrodynamic
+non-equilibrium.</p>
+<p class="sd-card-text">The <strong>equilibrium wave frequency</strong> is obtained from the selected
+equilibrium wave-frequency model. It represents the wave frequency toward
+which the local disturbance-wave population tends under the current flow
+conditions.</p>
+<p class="sd-card-text">The four-field solver transports the wave number density using a
+Boltzmann-type transport equation. Its source term represents the net
+effect of disturbance-wave interactions, including wave creation,
+merging, splitting, and dissipation. Using a relaxation-time
+approximation, the source term is expressed as:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{\mathrm{w}}
+=
+\frac{
+N_{\mathrm{w,eq}}-N_{\mathrm{w}}
+}{
+t_{\mathrm{w,relax}}
+}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w}}\)</span> is the calculated wave number density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w,eq}}\)</span> is the equilibrium wave number density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(t_{\mathrm{w,relax}}\)</span> is the wave relaxation time;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(\Phi_{\mathrm{w}}\)</span> is the net wave-number source or sink rate.</p></li>
+</ul>
+<p class="sd-card-text">Wave frequency is often used as a more practical representation of wave
+number density. The corresponding frequency form similarly drives the
+calculated wave frequency toward its equilibrium value.</p>
+<p class="sd-card-text">If the calculated wave frequency is smaller than its equilibrium value,
+the relaxation source is positive and tends to increase the local wave
+population. If the calculated wave frequency is larger than its
+equilibrium value, the source is negative and tends to reduce the local
+wave population.</p>
+<p class="sd-card-text">The base-film and wave relaxation processes are related but distinct:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the base-film-thickness relaxation controls mass redistribution between
+the base-film and disturbance-wave fields;</p></li>
+<li><p class="sd-card-text">the wave-frequency relaxation controls the source term in the wave
+number-density transport equation and therefore the evolution of the
+disturbance-wave population.</p></li>
+</ul>
+<p class="sd-card-text">The equilibrium quantities should therefore be interpreted as local
+closure-model targets. Differences between calculated and equilibrium
+values are expected in developing or transient annular flow and represent
+the hydrodynamic non-equilibrium modeled by the four-field formulation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What is wave number density, and why is it transported in the four-field solver?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">In the four-field model, disturbance waves are represented as a dispersed
+field of liquid structures moving over the continuous base film. Rather
+than tracking every individual disturbance wave, the model describes the
+wave population using cross-section-averaged macroscopic quantities.</p>
+<p class="sd-card-text">One of these quantities is the <strong>wave number density</strong>,
+<span class="math notranslate nohighlight">\(N_{\mathrm{w}}\)</span>. It is the number of disturbance waves per unit
+axial distance and is therefore a spatial measure of the local wave
+population.</p>
+<p class="sd-card-text">The wave number density is defined as the inverse of the average wave
+spacing:</p>
+<div class="math notranslate nohighlight">
+\[N_{\mathrm{w}}
+=
+\frac{1}{\lambda_{\mathrm{w}}}\]</div>
+<p class="sd-card-text">where <span class="math notranslate nohighlight">\(\lambda_{\mathrm{w}}\)</span> is the average axial distance between
+two successive disturbance waves.</p>
+<p class="sd-card-text">Wave spacing is related to the wave velocity and wave frequency by:</p>
+<div class="math notranslate nohighlight">
+\[\lambda_{\mathrm{w}}
+=
+\frac{u_{\mathrm{w}}}{f_{\mathrm{w}}}\]</div>
+<p class="sd-card-text">Consequently:</p>
+<div class="math notranslate nohighlight">
+\[N_{\mathrm{w}}
+=
+\frac{f_{\mathrm{w}}}{u_{\mathrm{w}}}\]</div>
+<p class="sd-card-text">where <span class="math notranslate nohighlight">\(u_{\mathrm{w}}\)</span> is the disturbance-wave velocity and
+<span class="math notranslate nohighlight">\(f_{\mathrm{w}}\)</span> is the frequency at which disturbance waves pass a
+fixed axial location.</p>
+<p class="sd-card-text">Wave number density and wave frequency describe related but different
+quantities. Wave number density describes how many waves are present per
+unit axial distance, whereas wave frequency describes how many waves pass
+a fixed location per unit time. Their relationship therefore depends on
+the wave velocity.</p>
+<p class="sd-card-text">The four-field solver does not assume that the local wave population is
+always equal to its equilibrium value. Instead, it transports the wave
+number density using a one-dimensional wave number-density transport
+equation.</p>
+<p class="sd-card-text">This equation is based on the concept of a Boltzmann transport equation
+applied to the number density of dispersed fluid particles. In the
+four-field model, disturbance waves are treated as the dispersed fluid
+structures. The equation is integrated over the possible wave sizes, so
+it transports the total wave number density rather than tracking separate
+populations for each wave size.</p>
+<p class="sd-card-text">The transport equation can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial N_{\mathrm{w}}}{\partial t}
++
+\frac{\partial
+\left(
+u_{\mathrm{w}} N_{\mathrm{w}}
+\right)}
+{\partial z}
+=
+\Phi_{\mathrm{w}}\]</div>
+<p class="sd-card-text">The left-hand side represents:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the local temporal change in wave number density; and</p></li>
+<li><p class="sd-card-text">the axial transport of waves at the disturbance-wave velocity.</p></li>
+</ul>
+<p class="sd-card-text">The right-hand side, <span class="math notranslate nohighlight">\(\Phi_{\mathrm{w}}\)</span>, represents the net source
+or sink of disturbance waves caused by interactions such as wave
+formation, merging, splitting, and dissipation.</p>
+<p class="sd-card-text">In the current model, these interactions are represented using a
+relaxation-time approximation:</p>
+<div class="math notranslate nohighlight">
+\[\Phi_{\mathrm{w}}
+=
+\frac{
+N_{\mathrm{w,eq}}-N_{\mathrm{w}}
+}{
+t_{\mathrm{w,relax}}
+}\]</div>
+<p class="sd-card-text">where:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w}}\)</span> is the calculated wave number density;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(N_{\mathrm{w,eq}}\)</span> is the equilibrium wave number density
+obtained from the selected closure model;</p></li>
+<li><p class="sd-card-text"><span class="math notranslate nohighlight">\(t_{\mathrm{w,relax}}\)</span> is the wave relaxation time.</p></li>
+</ul>
+<p class="sd-card-text">If the calculated wave number density is smaller than its equilibrium
+value, the source term is positive and increases the local wave
+population. This represents a net effect of processes that create or
+split waves.</p>
+<p class="sd-card-text">If the calculated wave number density is larger than its equilibrium
+value, the source term is negative and decreases the local wave
+population. This represents a net effect of processes such as wave
+merging or dissipation.</p>
+<p class="sd-card-text">The transport equation allows the disturbance-wave population to respond
+progressively to changing flow conditions instead of changing
+instantaneously to its local equilibrium value. It therefore represents
+hydrodynamic non-equilibrium associated with developing annular flow,
+phase change, inlet effects, geometric perturbations, and transient
+conditions.</p>
+<p class="sd-card-text">Wave frequency is generally more convenient for interpretation and
+comparison with measurements. OpenSTREAM therefore commonly expresses
+and plots the transported wave population in terms of calculated and
+equilibrium wave frequencies. However, the underlying physical concept
+remains the transport of the spatial wave population represented by the
+wave number density.</p>
+<p class="sd-card-text">The wave number-density transport equation is separate from the wave mass
+and momentum conservation equations:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the wave mass equation determines how much liquid mass is carried by
+the disturbance-wave field;</p></li>
+<li><p class="sd-card-text">the wave momentum equation determines the disturbance-wave velocity;</p></li>
+<li><p class="sd-card-text">the wave number-density transport equation determines how the number of
+disturbance waves evolves.</p></li>
+</ul>
+<p class="sd-card-text">Together with the wave shape model, these quantities are used to
+characterize wave spacing, width, amplitude, and other properties of the
+disturbance-wave field.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Where are simulation outputs stored?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">sessionParentDir</span></code> argument defines the parent output folder. Each
+solver uses the session infrastructure to store logs and requested
+results.</p>
+<p class="sd-card-text">For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">sessionParentDir</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">'outputs'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Use a separate session directory or case name for parameter studies. Be
+careful with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+<p class="sd-card-text">because existing files for the corresponding session may be replaced.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Why do my plots show results only from the onset of annular flow?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The three-field and four-field plotting functions can restrict
+field-specific results to the annular-flow region. This is appropriate
+because separate film, droplet, base-film, and wave equations apply from
+the onset of annular flow.</p>
+<p class="sd-card-text">Where supported, set the <code class="docutils literal notranslate"><span class="pre">annular</span></code> plotting option to <code class="docutils literal notranslate"><span class="pre">false</span></code> to
+inspect initialization outside that region:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">solver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'display'</span><span class="p">,</span><span class="w"> </span><span class="s">'W'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'annular'</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Interpret pre-annular field values as initialization quantities rather
+than as a complete pre-annular multi-field model.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I plot only part of the channel or selected times?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">By default, <code class="docutils literal notranslate"><span class="pre">plotz</span></code> includes all axial elevations and all stored
+physical time steps. Similarly, <code class="docutils literal notranslate"><span class="pre">plott</span></code> includes all stored physical
+time steps at the selected axial location.</p>
+<p class="sd-card-text">The plotting methods also allow selected axial and time indices to be
+specified. The same general syntax is used by all OpenSTREAM solvers.</p>
+<p class="sd-card-text">To plot only part of the channel, first identify the corresponding axial
+indices and pass them using <code class="docutils literal notranslate"><span class="pre">zIdx</span></code>. For example, the following code
+plots results between elevations of 1 and 4 m:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">zIdx</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="n">solver</span><span class="p">.</span><span class="n">Z</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">solver</span><span class="p">.</span><span class="n">Z</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+
+<span class="n">solver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'display'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">'W'</span><span class="p">,</span><span class="s">'U'</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'zIdx'</span><span class="p">,</span><span class="w"> </span><span class="n">zIdx</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'arrangement'</span><span class="p">,</span><span class="w"> </span><span class="s">'horizontal'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'resize'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">For a transient calculation, the first positional argument of <code class="docutils literal notranslate"><span class="pre">plotz</span></code>
+selects one or more stored time indices. For example, the following code
+plots the first, middle, and final stored states over the selected axial
+range:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">tIdx</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">unique</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">round</span><span class="p">(</span><span class="n">solver</span><span class="p">.</span><span class="n">NTIME</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">solver</span><span class="p">.</span><span class="n">NTIME</span><span class="p">]);</span>
+<span class="n">zIdx</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="n">solver</span><span class="p">.</span><span class="n">Z</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">solver</span><span class="p">.</span><span class="n">Z</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+
+<span class="n">solver</span><span class="p">.</span><span class="n">plotz</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">tIdx</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'display'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">'W'</span><span class="p">,</span><span class="s">'U'</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'zIdx'</span><span class="p">,</span><span class="w"> </span><span class="n">zIdx</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'arrangement'</span><span class="p">,</span><span class="w"> </span><span class="s">'horizontal'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'resize'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">When several time indices are selected, <code class="docutils literal notranslate"><span class="pre">plotz</span></code> generates an animated
+axial plot containing the selected states.</p>
+<p class="sd-card-text">To plot a time history at one axial location, pass the axial index as the
+first argument of <code class="docutils literal notranslate"><span class="pre">plott</span></code> and select the stored time indices using
+<code class="docutils literal notranslate"><span class="pre">tIdx</span></code>. For example, the following code plots only the first half of
+the transient at the axial node closest to 3.5 m:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">zTarget</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mf">3.5</span><span class="p">;</span>
+<span class="p">[</span><span class="o">~</span><span class="p">,</span><span class="w"> </span><span class="n">zIdx</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">solver</span><span class="p">.</span><span class="n">Z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">zTarget</span><span class="p">));</span>
+
+<span class="n">tIdx</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">ceil</span><span class="p">(</span><span class="n">solver</span><span class="p">.</span><span class="n">NTIME</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="n">solver</span><span class="p">.</span><span class="n">plott</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">zIdx</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'display'</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">'W'</span><span class="p">,</span><span class="s">'U'</span><span class="p">},</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'tIdx'</span><span class="p">,</span><span class="w"> </span><span class="n">tIdx</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'arrangement'</span><span class="p">,</span><span class="w"> </span><span class="s">'horizontal'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'resize'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">The same index-selection approach applies to the mixture, two-fluid,
+three-field, and four-field solvers. However, the available <code class="docutils literal notranslate"><span class="pre">display</span></code> values
+depend on the selected solver because each solver stores different
+physical quantities.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I compare several model configurations?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Create one <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> and solver object per model ID, store each object
+separately, and extract the same comparison quantities from every case.</p>
+<p class="sd-card-text">Use distinct session directories to avoid overwriting results. A compact
+MATLAB table is useful for comparing scalar metrics, while solver objects
+can be retained separately for detailed post-processing.</p>
+</div>
+</details></section>
+<section id="physical-scope-and-limitations">
+<h2>Physical scope and limitations<a class="headerlink" href="#physical-scope-and-limitations" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What are the main simplifications in OpenSTREAM, and why are they considered reasonable?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM uses several deliberate simplifications to provide a
+transparent, computationally efficient, and numerically robust environment
+for developing and evaluating one-dimensional two-phase flow models.
+These simplifications define the intended scope of the code and must be
+considered when interpreting its results.</p>
+<p class="sd-card-text">The main simplifications are:</p>
+<ul>
+<li><p class="sd-card-text"><strong>One-dimensional, cross-section-averaged flow.</strong> Flow variables vary
+only along the channel axis. Radial, azimuthal, and other local
+distributions are not resolved explicitly and must instead be
+represented through averaged quantities and closure models.</p>
+<p class="sd-card-text">This approximation is reasonable for straight channels when axial
+transport dominates and detailed multidimensional effects, such as
+crossflow, flow separation, or strongly asymmetric mixing, are not
+essential to the quantity being studied. It also makes OpenSTREAM
+suitable for rapid model development, sensitivity studies, and
+comparison of closure models.</p>
+</li>
+<li><p class="sd-card-text"><strong>Straight channels with constant cross-sectional area.</strong> The current
+geometry represents a straight flow path with constant flow area.
+Multiple wall perimeters and non-uniform wall heating can be defined,
+and local perturbations can be represented through dedicated models,
+but continuous geometric variation is not resolved.</p>
+<p class="sd-card-text">This approximation covers many experimental channels and idealized
+thermal-hydraulic problems, including tubes, annuli, rectangular
+channels, and simplified small rod-bundle representations. It enables
+investigation of axial two-phase flow behavior without introducing
+additional geometric effects.</p>
+</li>
+<li><p class="sd-card-text"><strong>Mixture-based pressure-gradient solution.</strong> The pressure-gradient
+solution obtained from the mixture solver is reused by the two-fluid,
+three-field, and four-field solvers rather than independently solving a
+fully coupled pressure-velocity system in each framework.</p>
+<p class="sd-card-text">This treatment significantly improves numerical stability and provides
+a consistent pressure field for comparisons among the solver
+frameworks. It introduces some inconsistency between the pressure
+solution and the separate field momentum equations, but the available
+OpenSTREAM publications report that this inconsistency is negligible
+for many applications. Its acceptability must nevertheless be assessed
+for each new application.</p>
+</li>
+<li><p class="sd-card-text"><strong>Fluid properties evaluated at the system pressure.</strong> Fluid
+thermophysical properties are currently evaluated using the prescribed
+system pressure rather than the calculated local pressure along the
+channel.</p>
+<p class="sd-card-text">Consequently, an axial pressure decrease does not modify the local
+saturation properties and cannot, by itself, produce flashing.
+OpenSTREAM therefore does not currently represent flashing caused by
+local pressure drop along the channel.</p>
+<p class="sd-card-text">Time-dependent changes in the prescribed system pressure are included
+in the fluid-property evaluation. OpenSTREAM can therefore represent
+flashing caused by a decrease in system pressure, subject to the
+assumptions and capabilities of the selected thermal non-equilibrium
+and phase-change models.</p>
+<p class="sd-card-text">This simplification is considered reasonable for the high-pressure,
+relatively short channel applications targeted by the current
+OpenSTREAM frameworks, when the axial pressure variation is small
+relative to the system pressure. Under these conditions, the resulting
+variation in saturation properties along the channel is generally
+expected to be limited.</p>
+<p class="sd-card-text">The approximation must be reassessed when the channel pressure drop is
+sufficiently large to affect the local saturation temperature,
+saturation enthalpies, phase densities, or phase-change behavior. It is
+not appropriate when pressure-drop-induced flashing is an important
+part of the physical problem.</p>
+</li>
+<li><p class="sd-card-text"><strong>Neglect of surface-tension forces in the conservation equations.</strong>
+Surface tension may be used in closure quantities, but explicit
+surface-tension force contributions are neglected in the governing
+momentum equations.</p>
+<p class="sd-card-text">This simplification is considered reasonable for the high-pressure
+channel-flow conditions targeted by the current implementations, where
+the retained pressure, inertia, gravity, and wall and interfacial
+momentum-transfer terms are generally more important at the
+one-dimensional field scale. It may not be appropriate for
+capillary-dominated flows, very small channels, or problems controlled
+by interface curvature.</p>
+</li>
+<li><p class="sd-card-text"><strong>Neglect of heating caused by friction.</strong> Mechanical energy dissipated
+by wall or interfacial friction is not added explicitly to the fluid
+energy equations.</p>
+<p class="sd-card-text">This contribution is considered small relative to the imposed wall
+heating and phase-change energy transfer for the high-pressure boiling
+applications for which the current models were developed. It should not
+be neglected without assessment in applications involving exceptionally
+large pressure losses or little external heating.</p>
+</li>
+<li><p class="sd-card-text"><strong>Neglect of temporal pressure-gradient contributions.</strong> The current
+formulations omit minor energy or momentum contributions associated
+with the temporal pressure gradient.</p>
+<p class="sd-card-text">This approximation is considered reasonable for the operational
+transients targeted by the current high-pressure boiling
+applications. It is not appropriate for rapid pressure-wave,
+depressurization, water-hammer, choking, or shock-wave problems, which
+are currently outside the intended scope of OpenSTREAM.</p>
+</li>
+<li><p class="sd-card-text"><strong>Neglect of spatial gradients of saturated-fluid enthalpies.</strong> Spatial
+changes in saturated liquid and vapor enthalpies associated with the
+pressure distribution are neglected in the simplified conservation
+equations.</p>
+<p class="sd-card-text">This approximation is considered reasonable for the high-pressure
+conditions and operational transients targeted by the current
+OpenSTREAM frameworks. Its adequacy should be reconsidered for cases
+with large pressure variations or strong depressurization.</p>
+</li>
+<li><p class="sd-card-text"><strong>Simplified flow-regime and interfacial-topology transitions.</strong> The
+current two-fluid solver uses simplified assumptions to identify flow
+regimes and select the corresponding closure models.</p>
+<p class="sd-card-text">This approach provides a practical framework for implementing and
+testing separate-phase conservation equations, but it limits the
+physical realism of complex transients involving repeated or strongly
+evolving changes in interfacial topology. The two-fluid results should
+therefore be interpreted according to the maturity and validation range
+of the selected transition and closure models.</p>
+</li>
+<li><p class="sd-card-text"><strong>Thermal equilibrium in the three-field and four-field solvers.</strong> The
+film, droplet, base-film, disturbance-wave, and vapor fields are assumed
+to share the applicable saturation thermodynamic state. The solvers
+resolve hydrodynamic non-equilibrium among the fields but do not solve
+separate field energy equations for thermal non-equilibrium.</p>
+<p class="sd-card-text">This approximation is reasonable for saturated annular-flow studies in
+which liquid-field mass and momentum transport, entrainment,
+deposition, film depletion, and disturbance-wave behavior are the
+primary phenomena of interest. It is not appropriate when separate
+field temperatures (e.g., post-dryout thermal non-equilibrium) are essential.</p>
+</li>
+<li><p class="sd-card-text"><strong>First-order numerical discretization.</strong> The conservation equations
+are solved using first-order upwind spatial discretization and fully
+implicit backward Euler time integration. Nonlinear source terms and
+field couplings are treated through fixed-point iterations.</p>
+<p class="sd-card-text">These methods are comparatively simple and numerically robust, which is
+useful for an open model-development platform and for obtaining
+steady-state solutions through pseudo-time advancement. Their numerical
+diffusion and first-order accuracy make mesh- and time-step-sensitivity
+studies necessary when spatial gradients, transient timing, or peak
+values are important.</p>
+</li>
+</ul>
+<p class="sd-card-text">These simplifications are reasonable only within the intended application
+domain and for quantities that are not controlled by the neglected
+phenomena. They make the governing equations easier to understand,
+modify, test, and compare while reducing computational cost and improving
+numerical robustness.</p>
+<p class="sd-card-text">A simplification must not be interpreted as universally negligible.
+Before using OpenSTREAM for a new fluid, geometry, flow regime, or
+transient, assess whether the neglected terms and unresolved phenomena
+could materially affect the quantities of interest. Numerical
+convergence, sensitivity studies, conservation checks, and comparison
+with suitable reference data remain necessary.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What are the current practical and technical limitations of OpenSTREAM?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM is under active development. The current implementation is
+intended for one-dimensional, thermally expandable, single-component,
+liquid-vapor boiling flows in straight channels. The thermally expandable
+formulation accounts for changes in fluid properties with the local
+thermodynamic state, but it is not a general compressible-flow
+formulation.</p>
+<p class="sd-card-text">The principal current limitations include:</p>
+<ul>
+<li><p class="sd-card-text"><strong>No general compressible-flow or pressure-wave formulation.</strong>
+OpenSTREAM accounts for thermodynamic density changes associated with
+heating, cooling, system pressure variation, and phase change. This
+thermally expandable treatment is suitable for the intended boiling-flow
+applications, but it is not a fully compressible-flow formulation.</p>
+<p class="sd-card-text">In particular, the current implementation is not intended to resolve
+acoustic-wave propagation, rapid pressure waves, shock waves, expansion
+waves, choked flow, water hammer, or other phenomena for which
+compressible pressure-wave dynamics are essential.</p>
+</li>
+<li><p class="sd-card-text"><strong>No wall condensation model.</strong> OpenSTREAM can represent interfacial
+condensation within the fluid, where supported by the selected solver
+and closure models, but it does not currently calculate condensation
+caused by heat transfer to a cooled wall.</p></li>
+<li><p class="sd-card-text"><strong>No counter-current flow.</strong> The current solution algorithms and
+boundary-condition treatment are intended for co-current flow in a
+single axial direction.</p></li>
+</ul>
+<p class="sd-card-text">In addition, OpenSTREAM does not currently support:</p>
+<ul class="simple">
+<li><p class="sd-card-text">multi-component fluid mixtures;</p></li>
+<li><p class="sd-card-text">non-condensable gases;</p></li>
+<li><p class="sd-card-text">solid-particle flows, including liquid-solid, gas-solid, and
+liquid-gas-solid flows;</p></li>
+<li><p class="sd-card-text">pressure-drop-induced flashing. Fluid properties are evaluated at the
+prescribed system pressure rather than the calculated local pressure;</p></li>
+<li><p class="sd-card-text">wall heat conduction or conjugate heat transfer;</p></li>
+<li><p class="sd-card-text">continuously varying channel area;</p></li>
+<li><p class="sd-card-text">bends, junctions, plena, or connected flow networks;</p></li>
+<li><p class="sd-card-text">crossflow between neighboring channels;</p></li>
+<li><p class="sd-card-text">multidimensional flow resolution;</p></li>
+<li><p class="sd-card-text">general-purpose component models such as pumps, valves, tanks, or heat exchangers;</p></li>
+<li><p class="sd-card-text">thermal non-equilibrium in the three-field and four-field solvers;</p></li>
+<li><p class="sd-card-text">fully coupled pressure-velocity solution in the advanced solvers;</p></li>
+</ul>
+<p class="sd-card-text">Some currently unsupported capabilities may be considered for future development.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can OpenSTREAM simulate flashing caused by a pressure decrease?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM can represent flashing caused by a time-dependent decrease in
+the prescribed system pressure, subject to the assumptions and
+capabilities of the selected phase-change model.</p>
+<p class="sd-card-text">However, OpenSTREAM does not currently represent flashing caused by the
+calculated local pressure drop along the channel. Fluid thermophysical
+properties, including saturation properties, are evaluated using the
+prescribed system pressure rather than the calculated local pressure.
+Therefore, the axial pressure decrease does not locally modify the
+saturation state used by the fluid-property calculations.</p>
+<p class="sd-card-text">This approximation is considered reasonable for the high-pressure,
+relatively short channel applications targeted by the current
+OpenSTREAM frameworks when the axial pressure variation is small relative
+to the system pressure. Under these conditions, the corresponding axial
+variation in saturation properties is expected to remain limited.</p>
+<p class="sd-card-text">The approximation is not suitable when pressure-drop-induced flashing or
+axial variations in saturation properties are important to the physical
+problem.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What geometries can OpenSTREAM represent?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM represents one-dimensional flow in straight channels.
+Cross-sectional geometry is described through averaged quantities such
+as flow area and wall perimeter.</p>
+<p class="sd-card-text">The formulation supports multi-wall channel representations, allowing
+different wall surfaces and heating distributions to be considered.
+Examples may include tubes, annuli, rectangular channels, and simplified
+small rod-bundle representations when the one-dimensional approximation
+is appropriate.</p>
+<p class="sd-card-text">OpenSTREAM does not resolve bends, crossflow, or detailed
+three-dimensional velocity and temperature distributions.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How are multi-wall geometries represented in OpenSTREAM?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM represents a multi-wall geometry as a single one-dimensional
+flow channel bounded by two or more wall surfaces. The channel has one
+common cross-sectional flow area, while the perimeter of each wall is
+specified separately using the <code class="docutils literal notranslate"><span class="pre">PERIM</span></code> geometry input.</p>
+<p class="sd-card-text">For example, an annular channel can be represented by defining separate
+perimeters for the inner and outer walls. Other idealized configurations,
+such as rectangular channels or simplified subchannels, can be represented
+in the same way when the one-dimensional approximation is appropriate.</p>
+<p class="sd-card-text">A simplified annular-channel geometry could, for example, use:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ID       ! Geometry identifier                    &gt; ANNULUS
+LENGTH   ! Channel length [m]                     &gt; ...
+AREA     ! Common cross-sectional flow area [m2] &gt; ...
+PERIM    ! Inner and outer wall perimeters [m]   &gt; ... ...
+END
+</pre></div>
+</div>
+<p class="sd-card-text">The number of walls is determined automatically from the number of
+perimeter values specified in <code class="docutils literal notranslate"><span class="pre">PERIM</span></code>. OpenSTREAM also calculates the
+contribution of each wall to the total channel perimeter.</p>
+<p class="sd-card-text">When several walls are present, the boundary-condition power
+distribution must be consistent with the number of wall perimeters.
+Wall-specific results can be inspected using the wall-selection options
+provided by the applicable solver plotting methods.</p>
+<p class="sd-card-text">Wall-dependent quantities are stored separately for each wall where
+supported by the selected solver. These quantities may include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">imposed wall heat flux;</p></li>
+<li><p class="sd-card-text">liquid-film mass flow rate and velocity;</p></li>
+<li><p class="sd-card-text">film thickness;</p></li>
+<li><p class="sd-card-text">wall boiling or film evaporation;</p></li>
+<li><p class="sd-card-text">wall shear stress;</p></li>
+<li><p class="sd-card-text">film entrainment and droplet deposition;</p></li>
+<li><p class="sd-card-text">base-film and disturbance-wave quantities in the four-field solver.</p></li>
+</ul>
+<p class="sd-card-text">This wall-level formulation allows different walls to have different
+heating conditions. Heated and unheated walls, or walls with different
+power distributions, can therefore be represented within the same
+one-dimensional channel.</p>
+<p class="sd-card-text">The bulk or core flow remains shared by all walls. Depending on the
+selected solver, this includes mixture quantities, vapor quantities, and
+the pressure distribution. Wall-specific fields interact through this
+common bulk-flow solution and the implemented closure models.</p>
+<p class="sd-card-text">Multi-wall treatment does not create separate connected flow channels.
+OpenSTREAM does not currently calculate crossflow between neighboring
+channels, independent flow redistribution among parallel channels, or
+multidimensional transport around the channel cross-section. These
+configurations require a different system or subchannel representation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What units should I use?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM uses SI units unless a specific model or input explicitly
+states otherwise. Common units include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">length in metres;</p></li>
+<li><p class="sd-card-text">time in seconds;</p></li>
+<li><p class="sd-card-text">pressure in pascals;</p></li>
+<li><p class="sd-card-text">temperature in kelvin;</p></li>
+<li><p class="sd-card-text">mass flow rate in kilograms per second;</p></li>
+<li><p class="sd-card-text">velocity in metres per second;</p></li>
+<li><p class="sd-card-text">specific enthalpy in joules per kilogram;</p></li>
+<li><p class="sd-card-text">wall heat flux in watts per square metre.</p></li>
+</ul>
+<p class="sd-card-text">Check comments in the example input files and the relevant property
+documentation before entering a value.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can OpenSTREAM be used for safety or licensing analysis?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">No. <strong>OpenSTREAM must not be used for safety or licensing analysis.</strong></p>
+<p class="sd-card-text">OpenSTREAM is intended for research, education, model development,
+performance evaluation, and validation activities. It is not a licensed
+safety-analysis code and has not been qualified for use in regulatory or
+licensing applications.</p>
+<p class="sd-card-text">Results produced with OpenSTREAM must not be used as the basis for safety
+decisions, licensing submissions, regulatory compliance demonstrations,
+or the operation of safety-related systems.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Which fluids can be simulated with OpenSTREAM?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM is designed for single-component, liquid-vapor fluids whose
+required thermophysical properties are available through CoolProp. The
+fluid is selected using its CoolProp identifier in the <code class="docutils literal notranslate"><span class="pre">FLUID</span></code> model
+input.</p>
+<p class="sd-card-text">The CoolProp interface can be tested in MATLAB before constructing a
+complete simulation:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">CoolPropWrapper</span><span class="p">.</span><span class="n">CoolPropWrapper</span><span class="p">(</span><span class="s">'WATER'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="sd-card-text">CoolProp compatibility alone does not demonstrate that an OpenSTREAM
+calculation is physically applicable or validated. The selected closure
+models must also be appropriate for the fluid and operating conditions.
+Many current models and example cases have been developed or evaluated
+primarily for boiling water and steam.</p>
+<p class="sd-card-text">OpenSTREAM does not currently support multi-component fluid mixtures or
+non-condensable gases. Pseudo-pure fluids, predefined mixtures, and
+incompressible solutions available in CoolProp must not be assumed to be
+compatible without verification of the full property and model
+requirements.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How are fluid properties calculated?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Fluid properties are calculated using CoolProp through
+CoolPropWrapper. The fluid is selected using the <code class="docutils literal notranslate"><span class="pre">FLUID</span></code> model input,
+while the <code class="docutils literal notranslate"><span class="pre">PROPERTIES</span></code> model input defines how the phase properties
+are evaluated.</p>
+<p class="sd-card-text">Two fluid-property options are available:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">SATURATED</span></code>: Phase properties are evaluated at saturated conditions
+using the prescribed system pressure. Saturated liquid properties are
+used for the liquid phase, and saturated vapor properties are used for
+the vapor phase. The properties therefore do not vary with the local
+phase enthalpy.</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">PSYSTEM</span></code>: Phase properties are evaluated using the prescribed
+system pressure and the local phase enthalpy. This allows liquid
+properties to vary between subcooled and saturated-liquid conditions
+and vapor properties to vary between saturated-vapor and superheated
+conditions.</p></li>
+</ul>
+<p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">SATURATED</span></code> is the default option and provides a simple property
+treatment that is appropriate when variations within the subcooled
+liquid and superheated vapor regions are not important. <code class="docutils literal notranslate"><span class="pre">PSYSTEM</span></code> is
+more appropriate when thermal non-equilibrium causes the liquid or vapor
+enthalpy to differ significantly from its saturation value.</p>
+<p class="sd-card-text">The option is selected in the physical-model input file. For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>FLUID        ! CoolProp fluid identifier       &gt; WATER
+PROPERTIES   ! Fluid property assumptions      &gt; PSYSTEM
+</pre></div>
+</div>
+<p class="sd-card-text">For both options, the saturation temperature, saturated liquid and vapor
+enthalpies, latent heat, saturated phase densities, and other saturation
+properties are calculated at the prescribed system pressure.</p>
+<p class="sd-card-text">The current implementation does not evaluate properties using the
+calculated local pressure along the channel. Consequently, selecting
+<code class="docutils literal notranslate"><span class="pre">PSYSTEM</span></code> accounts for variations with local phase enthalpy, but it
+does not enable flashing caused by the local axial pressure drop.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Does a more detailed solver always give a better result?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">No. Greater field resolution introduces additional equations, closure
+models, numerical parameters, and applicability limits. A more detailed
+solver is useful only when its modeled phenomena and validation basis
+match the application.</p>
+<p class="sd-card-text">Select the simplest solver that represents the required physics and
+document the sensitivity to influential assumptions.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">What should I verify before trusting a result?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">At minimum, check:</p>
+<ul class="simple">
+<li><p class="sd-card-text">input values, IDs, units, and warnings;</p></li>
+<li><p class="sd-card-text">point and steady-state convergence;</p></li>
+<li><p class="sd-card-text">mass and energy consistency;</p></li>
+<li><p class="sd-card-text">spatial-mesh sensitivity;</p></li>
+<li><p class="sd-card-text">physical time-step sensitivity for transients;</p></li>
+<li><p class="sd-card-text">sensitivity to influential closure models;</p></li>
+<li><p class="sd-card-text">applicability and validation of the selected models.</p></li>
+</ul>
+</div>
+</details></section>
+<section id="extending-and-contributing">
+<h2>Extending and contributing<a class="headerlink" href="#extending-and-contributing" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I select another closure model?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Closure models are selected in the physical-model input file. Valid
+values are defined by classes in the <code class="docutils literal notranslate"><span class="pre">InputEnums</span></code> package.</p>
+<p class="sd-card-text">Model selections may control, for example:</p>
+<ul class="simple">
+<li><p class="sd-card-text">void fraction;</p></li>
+<li><p class="sd-card-text">wall friction;</p></li>
+<li><p class="sd-card-text">interfacial heat transfer;</p></li>
+<li><p class="sd-card-text">phase or field momentum;</p></li>
+<li><p class="sd-card-text">entrainment and deposition;</p></li>
+<li><p class="sd-card-text">onset of annular flow;</p></li>
+<li><p class="sd-card-text">base-film thickness;</p></li>
+<li><p class="sd-card-text">disturbance-wave frequency.</p></li>
+</ul>
+<p class="sd-card-text">Consult the relevant <code class="docutils literal notranslate"><span class="pre">InputEnums</span></code> class and <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code> property
+before adding an entry. If a selection is not explicitly provided, the
+documented default is used.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I add a new closure model?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Adding a closure model normally requires coordinated changes to:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">the relevant <code class="docutils literal notranslate"><span class="pre">InputEnums</span></code> class;</p></li>
+<li><p class="sd-card-text">any new model properties and defaults in <code class="docutils literal notranslate"><span class="pre">Inputs.Model</span></code>;</p></li>
+<li><p class="sd-card-text">the solver or field method that evaluates the closure;</p></li>
+<li><p class="sd-card-text">model documentation and references;</p></li>
+<li><p class="sd-card-text">input examples;</p></li>
+<li><p class="sd-card-text">verification and regression tests.</p></li>
+</ol>
+<p class="sd-card-text">The implementation should document equations, units, assumptions,
+validity range, and source references. Verify the closure independently
+before using it in validation or engineering analysis.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How should I report a bug?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Use the OpenSTREAM GitHub issue tracker. Before opening an issue:</p>
+<ul class="simple">
+<li><p class="sd-card-text">search for an existing report;</p></li>
+<li><p class="sd-card-text">provide the OpenSTREAM revision;</p></li>
+<li><p class="sd-card-text">provide the MATLAB, Python, and CoolProp versions;</p></li>
+<li><p class="sd-card-text">include the smallest input case that reproduces the problem;</p></li>
+<li><p class="sd-card-text">include the complete error message and stack trace;</p></li>
+<li><p class="sd-card-text">distinguish unexpected code behavior from a model-validity question.</p></li>
+</ul>
+<p class="sd-card-text">Issue tracker:</p>
+<ul class="simple">
+<li><p class="sd-card-text"><a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">https://github.com/OpenSTREAM-solvers/openstream/issues</a></p></li>
+</ul>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How can I request a feature?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Open a GitHub issue describing:</p>
+<ul class="simple">
+<li><p class="sd-card-text">the use case and physical or workflow need;</p></li>
+<li><p class="sd-card-text">the proposed behavior;</p></li>
+<li><p class="sd-card-text">which solver or package is affected;</p></li>
+<li><p class="sd-card-text">any relevant equations, references, or examples;</p></li>
+<li><p class="sd-card-text">how the feature could be verified.</p></li>
+</ul>
+<p class="sd-card-text">Search existing issues first to avoid duplicating an active request.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How can I contribute?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Fork the repository, create a focused branch, implement and test the
+change, and submit a pull request. Follow the coding, testing,
+documentation, and code-of-conduct guidance in the Community section.</p>
+<p class="sd-card-text">Keep changes focused and include documentation and tests when behavior or
+interfaces change.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">How do I contribute to the documentation?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Edit the reStructuredText source files, build the documentation locally
+when possible, and verify both HTML and PDF outputs. Add or update links,
+references, examples, and package documentation as needed.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Where can I get additional help?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Consult, in this order:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">the Quick Start and solver-specific tutorials;</p></li>
+<li><p class="sd-card-text">the theory overview;</p></li>
+<li><p class="sd-card-text">the glossary and notation guide;</p></li>
+<li><p class="sd-card-text">the package reference;</p></li>
+<li><p class="sd-card-text">existing GitHub issues;</p></li>
+<li><p class="sd-card-text">the GitHub issue tracker for a new question or reproducible problem.</p></li>
+</ol>
+<p class="sd-card-text">When requesting help, include enough information for another user to
+reproduce the calculation.</p>
+</div>
+</details></section>
 </section>
 
 
