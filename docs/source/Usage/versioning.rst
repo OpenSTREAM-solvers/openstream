@@ -20,8 +20,8 @@ Examples include:
 
 Principal releases are intended to collect significant code, model,
 interface, testing, and documentation changes. The project aims to publish
-principal releases at an approximately six-month cadence when justified by
-the accumulated changes. Additional releases may be published as needed.
+principal releases when justified by the accumulated changes. Additional
+releases may be published as needed.
 
 Prerelease identifiers
 ----------------------

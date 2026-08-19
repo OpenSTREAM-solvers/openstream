@@ -10,6 +10,7 @@
 
    /Usage/gettingStarted
    /Usage/runSampleScript
+   /Usage/versioning
 
 .. toctree::
    :maxdepth: 3
