@@ -84,7 +84,7 @@ in the tested CI configuration.
 
 The tested software configurations apply to the OpenSTREAM version or
 development revision documented on this site. See
-:doc:`Release numbering and versioning <../Community/versioning>` for the
+:doc:`Release numbering and versioning <../Usage/versioning>` for the
 project versioning convention.
 
 Compatibility policy
