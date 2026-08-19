@@ -338,13 +338,13 @@ Getting started
    compatibility and CoolPropWrapper setup instructions in the installation
    section.
 
-.. dropdown:: Which MATLAB version should I use?
+.. dropdown:: Which MATLAB and Python versions should I use?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   Use a MATLAB release compatible with the OpenSTREAM code version and
-   with a supported Python version. The documentation and tutorials should
-   state the MATLAB release used for their preparation.
+   Use one of the MATLAB/Python combinations listed in the tested
+   compatibility table. Other combinations may work but are not necessarily
+   exercised by the continuous-integration workflow.
 
    When reproducing or reporting a result, record the MATLAB release with:
 
@@ -354,6 +354,13 @@ Getting started
 
    Also record the Python and CoolProp versions when fluid-property behavior
    is relevant.
+
+.. dropdown:: Which CoolProp version should I install?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   The CI-tested environment currently installs CoolProp==8.0.0 and
+   nanobind. However, other CoolProp versions may work.
 
 .. dropdown:: Where can I find working examples?
    :animate: fade-in-slide-down
@@ -1803,6 +1810,63 @@ Physical scope and limitations
    channels, independent flow redistribution among parallel channels, or
    multidimensional transport around the channel cross-section. These
    configurations require a different system or subchannel representation.
+
+.. dropdown:: Can the wall-specific solutions interact with one another?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   Yes, but only indirectly through the common bulk-flow solution.
+
+   In a multi-wall geometry, OpenSTREAM represents all walls as bounding
+   surfaces of the same one-dimensional flow channel. Each wall can have
+   its own perimeter, heating conditions, and wall-specific quantities. In
+   the three-field and four-field solvers, the liquid-film equations are
+   formulated separately for each wall. The four-field solver similarly
+   calculates separate base-film and disturbance-wave quantities for each
+   wall.
+
+   The wall-specific fields do not exchange liquid directly with one
+   another. For example, there is no model that transfers liquid laterally
+   from the film on one wall directly to the film on another wall.
+
+   However, the wall solutions are coupled indirectly through the shared
+   mixture, vapor, and droplet fields. A wall can therefore influence the
+   other walls through mechanisms such as:
+
+   * wall heating and evaporation, which affect the common vapor and
+     mixture solution;
+
+   * film entrainment, which transfers liquid from a wall film to the common
+     entrained-droplet field;
+
+   * droplet deposition, which redistributes liquid from the common droplet
+     field back to the wall films;
+
+   * wall and interfacial momentum exchanges, which contribute to the common
+     flow solution;
+
+   Consequently, changing the heat flux or film behavior on one wall can
+   affect the bulk-flow conditions and thereby modify the conditions
+   experienced by the other walls. This is an indirect interaction through
+   the shared flow, rather than a direct exchange between neighboring wall
+   fields. The multi-wall formulation is specifically intended to represent
+   straight channels with multiple independent wall surfaces and potentially
+   different heating rates.
+
+   In the three-field and four-field formulations, entrainment and
+   deposition provide an important indirect coupling mechanism. Liquid
+   entrained from one wall enters the common droplet population and may
+   subsequently deposit on another wall, depending on the implemented
+   deposition-partition model. The wall equations themselves nevertheless
+   remain wall-specific. The four-field equations additionally include
+   direct exchanges between the base-film and disturbance-wave fields on
+   the same wall, but these are not exchanges between different walls.
+
+   This treatment does not resolve circumferential transport, lateral
+   liquid-film flow, or multidimensional mixing between walls. OpenSTREAM
+   also does not represent separate neighboring channels or crossflow
+   between them. When these effects are important, a multidimensional or
+   subchannel formulation is required.
 
 .. dropdown:: What units should I use?
    :animate: fade-in-slide-down

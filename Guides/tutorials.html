@@ -55,7 +55,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and GitHub</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../Usage/gettingStarted.html#compatibility-policy">Compatibility policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Usage/gettingStarted.html#configure-matlab-and-python">Configure MATLAB and Python</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#verify-the-installation">Verify the installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
@@ -218,12 +223,25 @@
              
   <section id="tutorials">
 <h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading"></a></h1>
-<p>Ready to get hands-on with <strong>OpenSTREAM</strong>? These tutorials walk you through everything from basic functionality to advanced simulation features—step by step.</p>
-<p>Each tutorial is provided as a MATLAB LiveScript in the OpenSTREAM <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder, so you can run and modify them directly. Completed versions are also available below as HTML documents for quick reference.</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial1.html" rel="noreferrer" target="_blank">Tutorial #1: Basic features and core functionality</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial2.html" rel="noreferrer" target="_blank">Tutorial #2: Mixture solver</a></p></li>
-</ul>
+<p>Ready to get hands-on with <strong>OpenSTREAM</strong>? These tutorials walk you through the main solvers, workflows, and numerical capabilities of the code, from basic setup to advanced simulation features.</p>
+<p>Each tutorial is provided as a MATLAB Live Script in the OpenSTREAM <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder, allowing you to execute, modify, and experiment with the examples directly. For convenience, exported HTML versions are also available below.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The tutorials are provided as MATLAB Live Scripts and are intended to be executed interactively within MATLAB. Some tutorials include animations and interactive figures that are displayed in separate popup windows when run from the Live Editor. These interactive features are generally not available in the exported HTML versions.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The models, correlations, numerical settings, and solver options selected throughout the tutorials are chosen for educational and demonstration purposes only. Their use in a tutorial does not imply that they are appropriate for a particular application. Model selection, calibration, and verification should always be performed based on the specific problem being analyzed.</p>
+</div>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="../_static/html/tutorial01_quick_start.html" rel="noreferrer" target="_blank">Quick Start</a></p></li>
+<li><p><a class="reference external" href="../_static/html/tutorial02_mixture.html" rel="noreferrer" target="_blank">Mixture Solver</a></p></li>
+<li><p><a class="reference external" href="../_static/html/tutorial03_twofluid.html" rel="noreferrer" target="_blank">Two-Fluid Solver</a></p></li>
+<li><p><a class="reference external" href="../_static/html/tutorial04_threefield.html" rel="noreferrer" target="_blank">Three-Field Solver</a></p></li>
+<li><p><a class="reference external" href="../_static/html/tutorial05_fourfield.html" rel="noreferrer" target="_blank">Four-Field Solver</a></p></li>
+<li><p><a class="reference external" href="../_static/html/tutorial06_inputfiles.html" rel="noreferrer" target="_blank">Input Files and Reproducible Cases</a></p></li>
+<li><p><a class="reference external" href="../_static/html/tutorial07_convergence.html" rel="noreferrer" target="_blank">Numerical Convergence and Solver Settings</a></p></li>
+</ol>
 </section>
 
 

@@ -55,7 +55,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#prerequisites-and-installation">Prerequisites and installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#install-using-git-and-github">Install using Git and GitHub</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-policy">Compatibility policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configure-matlab-and-python">Configure MATLAB and Python</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#verify-the-installation">Verify the installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#next-steps">Next steps</a></li>
 </ul>
 </li>
@@ -271,41 +276,91 @@ linked above.</p></li>
 </li>
 </ul>
 </section>
-<section id="matlab-python-compatibility">
-<h3>MATLAB-Python compatibility<a class="headerlink" href="#matlab-python-compatibility" title="Link to this heading"></a></h3>
-<p>Before using OpenSTREAM, we need to make sure Python with the appropriate
-version is installed, and MATLAB knows the location of the Python
-executable. The following instructions are from the
-<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a> repo.</p>
-<ol class="arabic simple">
-<li><p>Determine which versions of Python are compatible with your version
-of MATLAB: <a class="reference external" href="https://www.mathworks.com/support/requirements/python-compatibility.html" rel="noreferrer" target="_blank">compatibility
-list</a>.
-The second column, <em>MATLAB Interface MATLAB Engine</em>, shows the
-compatible Python versions.</p></li>
-<li><p>Start MATLAB and verify a compatible python version is installed:</p>
-<ul class="simple">
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">pyenv()</span></code></p>
-<ul>
-<li><p>If the results are empty or an incompatible Python version is
-shown, go to step 3.</p></li>
-<li><p>If the results are satisfactory, continue to step 5.</p></li>
-</ul>
-</li>
-</ul>
+<section id="matlab-and-python-compatibility">
+<h3>MATLAB and Python compatibility<a class="headerlink" href="#matlab-and-python-compatibility" title="Link to this heading"></a></h3>
+<p>OpenSTREAM requires MATLAB. No additional MathWorks toolbox is currently
+required by the core solver frameworks. Fluid properties are calculated
+externally using the Python version of CoolProp through CoolPropWrapper.</p>
+<p>OpenSTREAM is tested with selected MATLAB and Python version combinations
+through its continuous-integration workflow. The configurations currently
+exercised by the continuous-integration workflow are listed below.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">CI-tested MATLAB and Python configurations</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 57.1%" />
+<col style="width: 42.9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>MATLAB release</p></th>
+<th class="head"><p>Python version</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R2024b</p></td>
+<td><p>3.11</p></td>
+</tr>
+<tr class="row-odd"><td><p>R2025b</p></td>
+<td><p>3.12</p></td>
+</tr>
+<tr class="row-even"><td><p>R2026a</p></td>
+<td><p>3.13</p></td>
+</tr>
+</tbody>
+</table>
+<p>These combinations represent configurations tested by the OpenSTREAM
+continuous-integration workflow. Other MATLAB and Python combinations may
+work but are not necessarily tested. Python 3.14 is not currently included
+in the tested CI configuration.</p>
+<p>The tested software configurations apply to the OpenSTREAM version or
+development revision documented on this site. See
+<a class="reference internal" href="../Community/versioning.html"><span class="doc">Release numbering and versioning</span></a> for the
+project versioning convention.</p>
+<section id="compatibility-policy">
+<h4>Compatibility policy<a class="headerlink" href="#compatibility-policy" title="Link to this heading"></a></h4>
+<p>OpenSTREAM distinguishes between tested and untested software
+configurations. A tested configuration is a combination of MATLAB, Python,
+CoolProp, and associated dependencies that is exercised by the OpenSTREAM
+continuous-integration workflow.</p>
+<p>The configurations listed above represent the environments tested for the
+current OpenSTREAM development version or release. Other software
+combinations may work but are not guaranteed and may not be covered by
+automated testing.</p>
+<p>The compatibility information may change as new MATLAB, Python, and
+CoolProp versions become available. Users should consult the compatibility
+information corresponding to the OpenSTREAM version they are using.</p>
+</section>
+<section id="configure-matlab-and-python">
+<h4>Configure MATLAB and Python<a class="headerlink" href="#configure-matlab-and-python" title="Link to this heading"></a></h4>
+<p>Before using OpenSTREAM, verify that a suitable Python version is installed
+and that MATLAB is configured to use the corresponding Python executable.
+The general MATLAB-Python compatibility requirements are available in the
+<a class="reference external" href="https://www.mathworks.com/support/requirements/python-compatibility.html" rel="noreferrer" target="_blank">MathWorks Python compatibility table</a>.
+The <em>MATLAB Interface</em> column identifies the Python versions supported by
+each MATLAB release.</p>
+<p>The following configuration instructions are adapted from the
+<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper repository</a>.</p>
+<ol class="arabic">
+<li><p>Inspect the Python environment currently used by MATLAB:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">pythonEnvironment</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">pyenv</span><span class="p">;</span>
+<span class="nb">disp</span><span class="p">(</span><span class="n">pythonEnvironment</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If no Python environment is configured, or if the configured Python
+version is unsuitable for the installed MATLAB release, continue with
+the Python installation instructions below. Otherwise, proceed to the
+dependency-installation step.</p>
 </li>
 <li><p>Install compatible Python3</p>
 <ul class="simple">
 <li><p><strong>Windows</strong>: Go to
 <a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">python.org</a> to download the
 specific version of Python you need. Follow the setup procedure.</p></li>
-<li><p><strong>Linux</strong>: Chances are, you already have a version of Python
-installed. Verify the version using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If
-Python is not installed, or an incompatible version is installed,
-install an appropriate version using the OS package manager. For
-Debian-based Linux distros (such as Ubuntu), use
-<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3.x</span></code> to install the <em>x</em> version of
-Python3.</p></li>
+<li><p><strong>Linux</strong>: A Python installation may already be available. Verify the
+version using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If Python is not installed, or
+an incompatible version is installed, install an appropriate version
+using the OS package manager. For Debian-based Linux distros (such as
+Ubuntu), use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3.x</span></code> to install the <em>x</em>
+version of Python3.</p></li>
 <li><p><strong>MacOS</strong>: Most recent versions of macOS include Python or can
 install it through Homebrew or the official Python installer.
 Verify the installed version using: <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If a
@@ -321,9 +376,9 @@ to where Python is installed. Here are some typical locations
 depending on your OS:</p>
 <ul>
 <li><p><strong>Windows</strong>:
-<code class="docutils literal notranslate"><span class="pre">C:\Users\Username\AppData\Local\Programs\Python\Python310\python.exe</span></code>,
-for version 3.10.</p></li>
-<li><p><strong>Linux</strong>: <code class="docutils literal notranslate"><span class="pre">/usr/bin/python3.10</span></code>, for version 3.10. Use
+<code class="docutils literal notranslate"><span class="pre">C:\Users\Username\AppData\Local\Programs\Python\Python311\python.exe</span></code>,
+for version 3.11.</p></li>
+<li><p><strong>Linux</strong>: <code class="docutils literal notranslate"><span class="pre">/usr/bin/python3.11</span></code>, for version 3.11. Use
 <code class="docutils literal notranslate"><span class="pre">whereis</span> <span class="pre">python3</span></code> to find possible locations.</p></li>
 <li><p><strong>MacOS</strong>: The Python executable is typically located using:
 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python3</span></code>. Common installation locations include:
@@ -332,21 +387,80 @@ for version 3.10.</p></li>
 </li>
 </ul>
 </li>
-<li><p>Try creating an instance of CoolPropWrapper() in MATLAB:</p>
-<ul class="simple">
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">cp=CoolPropWrapper()</span></code>.</p>
+<li><p>Install the CoolPropWrapper Python dependencies:</p>
 <ul>
-<li><p>If you are using the CoolPropWrapper as MATLAB Package in
-OpenSTREAM, use <code class="docutils literal notranslate"><span class="pre">cp=CoolPropWrapper.CoolPropWrapper()</span></code>.</p></li>
-</ul>
+<li><p>The recommended approach is to install the dependencies from the
+requirements file provided with CoolPropWrapper.</p></li>
+<li><p>Alternatively, install the dependencies used by the current
+continuous-integration environment directly:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install CoolProp==8.0.0 nanobind</span>
+</pre></div>
+</div>
 </li>
-<li><p>If the CoolProp module is not installed, you will be prompted to
-do so automatically. If you prefer to do this manually, in your
-terminal, run <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--user</span> <span class="pre">-U</span> <span class="pre">CoolProp</span></code>,
-replacing <code class="docutils literal notranslate"><span class="pre">python3</span></code> with the specific python path as necessary.</p></li>
 </ul>
 </li>
 </ol>
+<p>The current OpenSTREAM continuous-integration environment installs
+<code class="docutils literal notranslate"><span class="pre">CoolProp==8.0.0</span></code> together with <code class="docutils literal notranslate"><span class="pre">nanobind</span></code>. Other CoolProp versions
+may work but are not necessarily tested. Installing the dependencies from
+the CoolPropWrapper requirements file is recommended to reproduce the
+maintained configuration.</p>
+</section>
+</section>
+<section id="verify-the-installation">
+<h3>Verify the installation<a class="headerlink" href="#verify-the-installation" title="Link to this heading"></a></h3>
+<p>After configuring MATLAB and Python, verify that MATLAB is using the
+intended Python environment and that CoolProp can be accessed through
+CoolPropWrapper.</p>
+<ol class="arabic">
+<li><p>Display the Python environment used by MATLAB:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">pythonEnvironment</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">pyenv</span><span class="p">;</span>
+<span class="nb">disp</span><span class="p">(</span><span class="n">pythonEnvironment</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Confirm that the reported executable and Python version correspond to
+the intended installation. If MATLAB is using a different Python
+environment, configure the required executable using <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> before
+continuing.</p>
+</li>
+<li><p>Verify the required Python packages from a terminal using the same
+Python executable configured in MATLAB:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip show CoolProp</span>
+<span class="go">python -m pip show nanobind</span>
+</pre></div>
+</div>
+<p>The OpenSTREAM continuous-integration environment currently uses
+<code class="docutils literal notranslate"><span class="pre">CoolProp==8.0.0</span></code> together with <code class="docutils literal notranslate"><span class="pre">nanobind</span></code>. Installing the
+dependencies from the CoolPropWrapper requirements file is recommended
+to reproduce the tested environment.</p>
+</li>
+<li><p>Create a CoolPropWrapper object in MATLAB:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">fluidProperties</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">CoolPropWrapper</span><span class="p">.</span><span class="n">CoolPropWrapper</span><span class="p">(</span><span class="s">'WATER'</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Successful construction confirms that MATLAB can access Python,
+import CoolProp, and initialize the requested fluid.</p>
+</li>
+<li><p>Evaluate a representative fluid property:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">saturationTemperature</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">fluidProperties</span><span class="p">.</span><span class="n">temperature</span><span class="p">(</span><span class="s">'P'</span><span class="p">,</span><span class="mf">6.0e6</span><span class="p">,</span><span class="s">'Q'</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="nb">disp</span><span class="p">(</span><span class="n">saturationTemperature</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This call evaluates the saturation temperature of water at a pressure
+of 6 MPa. A finite numerical result confirms that the MATLAB-Python-
+CoolProp interface is functioning.</p>
+</li>
+<li><p>Run Tutorial 1 from the OpenSTREAM <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder. The tutorial
+constructs the input objects, evaluates fluid properties, solves the
+example case with the available solver frameworks, and generates
+representative plots.</p></li>
+</ol>
+<p>If any verification step fails, first confirm that MATLAB is using the
+intended Python executable and that <code class="docutils literal notranslate"><span class="pre">CoolProp</span></code> and <code class="docutils literal notranslate"><span class="pre">nanobind</span></code> are
+installed in that same Python environment.</p>
 </section>
 <section id="next-steps">
 <h3>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h3>

@@ -56,7 +56,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and GitHub</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../Usage/gettingStarted.html#compatibility-policy">Compatibility policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../Usage/gettingStarted.html#configure-matlab-and-python">Configure MATLAB and Python</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#verify-the-installation">Verify the installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
@@ -517,16 +522,22 @@ section.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
-<span class="sd-summary-text">Which MATLAB version should I use?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
-<p class="sd-card-text">Use a MATLAB release compatible with the OpenSTREAM code version and
-with a supported Python version. The documentation and tutorials should
-state the MATLAB release used for their preparation.</p>
+<span class="sd-summary-text">Which MATLAB and Python versions should I use?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Use one of the MATLAB/Python combinations listed in the tested
+compatibility table. Other combinations may work but are not necessarily
+exercised by the continuous-integration workflow.</p>
 <p class="sd-card-text">When reproducing or reporting a result, record the MATLAB release with:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">version</span><span class="p">(</span><span class="s">'-release'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sd-card-text">Also record the Python and CoolProp versions when fluid-property behavior
 is relevant.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Which CoolProp version should I install?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The CI-tested environment currently installs CoolProp==8.0.0 and
+nanobind. However, other CoolProp versions may work.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
@@ -1752,6 +1763,54 @@ OpenSTREAM does not currently calculate crossflow between neighboring
 channels, independent flow redistribution among parallel channels, or
 multidimensional transport around the channel cross-section. These
 configurations require a different system or subchannel representation.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Can the wall-specific solutions interact with one another?</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Yes, but only indirectly through the common bulk-flow solution.</p>
+<p class="sd-card-text">In a multi-wall geometry, OpenSTREAM represents all walls as bounding
+surfaces of the same one-dimensional flow channel. Each wall can have
+its own perimeter, heating conditions, and wall-specific quantities. In
+the three-field and four-field solvers, the liquid-film equations are
+formulated separately for each wall. The four-field solver similarly
+calculates separate base-film and disturbance-wave quantities for each
+wall.</p>
+<p class="sd-card-text">The wall-specific fields do not exchange liquid directly with one
+another. For example, there is no model that transfers liquid laterally
+from the film on one wall directly to the film on another wall.</p>
+<p class="sd-card-text">However, the wall solutions are coupled indirectly through the shared
+mixture, vapor, and droplet fields. A wall can therefore influence the
+other walls through mechanisms such as:</p>
+<ul class="simple">
+<li><p class="sd-card-text">wall heating and evaporation, which affect the common vapor and
+mixture solution;</p></li>
+<li><p class="sd-card-text">film entrainment, which transfers liquid from a wall film to the common
+entrained-droplet field;</p></li>
+<li><p class="sd-card-text">droplet deposition, which redistributes liquid from the common droplet
+field back to the wall films;</p></li>
+<li><p class="sd-card-text">wall and interfacial momentum exchanges, which contribute to the common
+flow solution;</p></li>
+</ul>
+<p class="sd-card-text">Consequently, changing the heat flux or film behavior on one wall can
+affect the bulk-flow conditions and thereby modify the conditions
+experienced by the other walls. This is an indirect interaction through
+the shared flow, rather than a direct exchange between neighboring wall
+fields. The multi-wall formulation is specifically intended to represent
+straight channels with multiple independent wall surfaces and potentially
+different heating rates.</p>
+<p class="sd-card-text">In the three-field and four-field formulations, entrainment and
+deposition provide an important indirect coupling mechanism. Liquid
+entrained from one wall enters the common droplet population and may
+subsequently deposit on another wall, depending on the implemented
+deposition-partition model. The wall equations themselves nevertheless
+remain wall-specific. The four-field equations additionally include
+direct exchanges between the base-film and disturbance-wave fields on
+the same wall, but these are not exchanges between different walls.</p>
+<p class="sd-card-text">This treatment does not resolve circumferential transport, lateral
+liquid-film flow, or multidimensional mixing between walls. OpenSTREAM
+also does not represent separate neighboring channels or crossflow
+between them. When these effects are important, a multidimensional or
+subchannel formulation is required.</p>
 </div>
 </details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
 <summary class="sd-summary-title sd-card-header">
