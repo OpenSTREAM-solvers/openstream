@@ -1,9 +1,22 @@
 Tutorials
 =========
 
-Ready to get hands-on with **OpenSTREAM**? These tutorials walk you through everything from basic functionality to advanced simulation features—step by step.
+Ready to get hands-on with **OpenSTREAM**? These tutorials walk you through the main solvers, workflows, and numerical capabilities of the code, from basic setup to advanced simulation features.
 
-Each tutorial is provided as a MATLAB LiveScript in the OpenSTREAM ``tutorials`` folder, so you can run and modify them directly. Completed versions are also available below as HTML documents for quick reference.
+Each tutorial is provided as a MATLAB Live Script in the OpenSTREAM ``tutorials`` folder, allowing you to execute, modify, and experiment with the examples directly. For convenience, exported HTML versions are also available below.
 
-- `Tutorial #1: Basic features and core functionality <https://openstream-solvers.github.io/openstream/_static/html/tutorial1.html>`_
-- `Tutorial #2: Mixture solver <https://openstream-solvers.github.io/openstream/_static/html/tutorial2.html>`_
+.. note::
+
+   The tutorials are provided as MATLAB Live Scripts and are intended to be executed interactively within MATLAB. Some tutorials include animations and interactive figures that are displayed in separate popup windows when run from the Live Editor. These interactive features are generally not available in the exported HTML versions.
+
+.. warning::
+
+   The models, correlations, numerical settings, and solver options selected throughout the tutorials are chosen for educational and demonstration purposes only. Their use in a tutorial does not imply that they are appropriate for a particular application. Model selection, calibration, and verification should always be performed based on the specific problem being analyzed.
+
+#. `Quick Start <../_static/html/tutorial01_quick_start.html>`_
+#. `Mixture Solver <../_static/html/tutorial02_mixture.html>`_
+#. `Two-Fluid Solver <../_static/html/tutorial03_twofluid.html>`_
+#. `Three-Field Solver <../_static/html/tutorial04_threefield.html>`_
+#. `Four-Field Solver <../_static/html/tutorial05_fourfield.html>`_
+#. `Input Files and Reproducible Cases <../_static/html/tutorial06_inputfiles.html>`_
+#. `Numerical Convergence and Solver Settings <../_static/html/tutorial07_convergence.html>`_

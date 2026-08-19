@@ -50,7 +50,7 @@ classdef Options < Inputs.Input
         UDEQUILMAXITER   (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find droplet equilibrium velocity
         UDEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target drop force tolerance to find droplet equilibrium velocity [N/m^3]
         UFEQUILMAXITER   (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film equilibrium velocity
-        UFEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target drop force tolerance to find film equilibrium velocity [N/m^3]
+        UFEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target film force tolerance to find film equilibrium velocity [N/m^3]
         ENTNUMMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film entrainment number
         ENTNUMTOL        (1,1) double  {mustBeNumeric}                     = 1E-2                  % Target velocity slip tolerance to find film entrainment number [-]
         ERRORWF          (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]

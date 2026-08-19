@@ -8,18 +8,177 @@
       -0.5,
       1.0
     ],
-    "RELAXTCOND": [
+    "RELAXCONDT": [
       0.5,
-      0.5,
-      0.01
+      0.5
     ],
     "MOMENTLIQUID": "FULL",
     "MOMENTGAS": "FULL",
     "MOMENTFILM": "FULL",
+    "MOMENTDROP": "FULL"
+  },
+  {
+    "ID": "TUTORIAL2A",
+    "NNODES": 100,
+    "FLUID": "WATER"
+  },
+  {
+    "ID": "TUTORIAL2B",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "VOID": "SLIP",
+    "SLIP": 2
+  },
+  {
+    "ID": "TUTORIAL2C",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "VOID": "BESTION"
+  },
+  {
+    "ID": "TUTORIAL2D",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "VOID": "BESTION",
+    "THERMALNONEQ": "SAHAZUBER"
+  },
+  {
+    "ID": "TUTORIAL2E",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "VOID": "BESTION",
+    "THERMALNONEQ": "MRM"
+  },
+  {
+    "ID": "TUTORIAL2F",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "VOID": "BESTION",
+    "THERMALNONEQ": "SAHAZUBER",
+    "SPMTM": "BLASIUS",
+    "FRICTION": [
+      0.2,
+      -0.2,
+      0
+    ],
+    "TPFM": "EPRI"
+  },
+  {
+    "ID": "TUTORIAL2G",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "VOID": "BESTION",
+    "THERMALNONEQ": "SAHAZUBER",
+    "KLOC": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "KLOSS": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
+    "TPKM": "HOMOGENEOUS"
+  },
+  {
+    "ID": "TUTORIAL3A",
+    "NNODES": 100,
+    "FLUID": "WATER"
+  },
+  {
+    "ID": "TUTORIAL3B",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "INTNU": "RELAXATION",
+    "RELAXX": [
+      -0.5,
+      1.0
+    ],
+    "RELAXCONDT": [
+      0.5,
+      0.5
+    ],
+    "MOMENTLIQUID": "FULL",
+    "MOMENTGAS": "FULL"
+  },
+  {
+    "ID": "TUTORIAL4A",
+    "NNODES": 100,
+    "FLUID": "WATER"
+  },
+  {
+    "ID": "TUTORIAL4B",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "OAFENTRAINED": "RATIO",
+    "OAFDROPRATIO": 0.3
+  },
+  {
+    "ID": "TUTORIAL4C",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "MOMENTFILM": "EQUILIBRIUM",
+    "MOMENTDROP": "EQUILIBRIUM"
+  },
+  {
+    "ID": "TUTORIAL4D",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "MOMENTFILM": "FULL",
+    "MOMENTDROP": "FULL"
+  },
+  {
+    "ID": "TUTORIAL4E",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "DEPOSITION": "GOVAN",
+    "ENTRAINMENT": "GOVAN"
+  },
+  {
+    "ID": "TUTORIAL4F",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "DEPOSITION": "NONE",
+    "ENTRAINMENT": "NONE"
+  },
+  {
+    "ID": "TUTORIAL5A",
+    "NNODES": 100,
+    "FLUID": "WATER"
+  },
+  {
+    "ID": "TUTORIAL5B",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "OAFFILMSPLIT": "RATIO",
+    "OAFBASERATIO": 0.3
+  },
+  {
+    "ID": "TUTORIAL5C",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "BASEEQTHICK": "YPLUS",
+    "BASEYPLUS": 15
+  },
+  {
+    "ID": "TUTORIAL5D",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "WAVEFREQUENCY": "EQUILIBRIUM"
+  },
+  {
+    "ID": "TUTORIAL5E",
+    "NNODES": 100,
+    "FLUID": "WATER",
+    "MOMENTBASE": "FULLNOP",
+    "MOMENTWAVE": "FULL",
     "MOMENTDROP": "FULL",
     "WAVEBASEINT": "VAPORSHEARDROPMASS",
-    "OAFFILMSPLIT": "RATIO",
-    "OAFBASERATIO": 0.2,
-    "BASEEQTHICK": "YPLUS"
+    "WAVEFREQUENCY": "RELAXATION"
   }
 ]
