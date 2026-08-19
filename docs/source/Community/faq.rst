@@ -338,13 +338,13 @@ Getting started
    compatibility and CoolPropWrapper setup instructions in the installation
    section.
 
-.. dropdown:: Which MATLAB version should I use?
+.. dropdown:: Which MATLAB and Python versions should I use?
    :animate: fade-in-slide-down
    :chevron: right-down
 
-   Use a MATLAB release compatible with the OpenSTREAM code version and
-   with a supported Python version. The documentation and tutorials should
-   state the MATLAB release used for their preparation.
+   Use one of the MATLAB/Python combinations listed in the tested
+   compatibility table. Other combinations may work but are not necessarily
+   exercised by the continuous-integration workflow.
 
    When reproducing or reporting a result, record the MATLAB release with:
 
@@ -354,6 +354,13 @@ Getting started
 
    Also record the Python and CoolProp versions when fluid-property behavior
    is relevant.
+
+.. dropdown:: Which CoolProp version should I install?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   The CI-tested environment currently installs CoolProp==8.0.0 and
+   nanobind. However, other CoolProp versions may work.
 
 .. dropdown:: Where can I find working examples?
    :animate: fade-in-slide-down
