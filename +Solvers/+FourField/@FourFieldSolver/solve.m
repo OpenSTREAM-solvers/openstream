@@ -111,6 +111,7 @@ function solver(solveINIT)
     % Time loop
     for tIdx = 2:length(film)                                              % Loop over time steps
         
+        timestepconverged = true;
         ffSolver.log('Time %5.2f [s]',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
@@ -301,6 +302,7 @@ function solver(solveINIT)
                 
                 elseif itr == options.MAXITER
                 % set SOLVED flag to SOLVEDNOTCONVERGED
+                    timestepconverged = false;
                     ffSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                     break;
                 end
@@ -351,7 +353,7 @@ function solver(solveINIT)
             if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF,timeDWLw < options.SSCONVWF , timeDUw < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
-                if ffSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                if ~timestepconverged
                     ffSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;

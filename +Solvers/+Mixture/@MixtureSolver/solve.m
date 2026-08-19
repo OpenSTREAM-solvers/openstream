@@ -102,6 +102,7 @@ function solver(solveINIT)
     % Time loop
     for tIdx = 2:length(mix)                                               % Loop over time steps
         
+        timestepconverged = true;
         mixSolver.log('Time %5.2f [s]',mix(tIdx).TIME)
 
         % Current time step size
@@ -229,6 +230,7 @@ function solver(solveINIT)
                     break;
                 elseif itr == options.MAXITER
                     % set SOLVED flag to SOLVEDNOTCONVERGED
+                    timestepconverged = false;
                     mixSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                     break;
                 end
@@ -322,7 +324,7 @@ function solver(solveINIT)
             if all([timeDW < options.SSCONVW, timeDP < options.SSCONVP ,timeDH < options.SSCONVH, timeDWv < options.SSCONVW, timeDHv < options.SSCONVH])
                 
                 % Indicate init converged
-                if mixSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                if ~timestepconverged
                     mixSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 mixSolver.STATE = SolverState.INITIALSTEPCONVERGED;

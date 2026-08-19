@@ -104,6 +104,7 @@ function solver(solveINIT)
     % Time loop
     for tIdx = 2:length(liquid)                                            % Loop over time steps
         
+        timestepconverged = true;
         twfSolver.log('Time %5.2f [s]',liquid(tIdx).TIME)
 
         DT = liquid(tIdx).DT;                                              % [s] Current time step size
@@ -225,6 +226,7 @@ function solver(solveINIT)
                     
                 elseif itr == options.MAXITER
                     % set SOLVED flag to SOLVEDNOTCONVERGED
+                    timestepconverged = false;
                     twfSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                     break;
                 end
@@ -265,7 +267,7 @@ function solver(solveINIT)
             if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
                 
                 % Indicate init converged
-                if twfSolver.STATE == SolverState.SOLVEDNOTCONVERGED
+                if ~timestepconverged
                     twfSolver.log('\nWarning: Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
                 end
                 twfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
