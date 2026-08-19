@@ -130,6 +130,25 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     % Assign specified non-empty value to property
                     % Let MATLAB throw errors from parameter validation
                 end
+
+                % Special case: logical value specified as strings "true"
+                % or "false.
+                if islogical(obj.(objPropname)) && isStringScalar(inputField)
+                    % Logicals can be saves/specified as string "true", 
+                    % "false", which are not convertible to logicals. If
+                    % so, update the inputStruct entry.
+                    switch lower(obj.inputStruct.(objPropname))
+                        case "false"
+                            obj.inputStruct.(objPropname) = false;
+                        case "true"
+                            obj.inputStruct.(objPropname) = true;
+                        otherwise
+                            error(sprintf('OpenSTREAM:%s:invalidLogicalValueUsedWarning',objClassName), ...
+                            'String %s given for logical property %s. Aborting.\n', ...
+                            inputField, ...
+                            objPropname);
+                    end
+                end
             else
                 if propIsRequired
                     % A required property was not specified
