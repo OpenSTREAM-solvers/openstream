@@ -14,7 +14,7 @@ This module includes:
 
 ----   
 
-.. automodule:: Solvers.FourField.FourFieldSolver
+.. autoclass:: Solvers.FourField.FourFieldSolver
    :show-inheritance:
    :members:
 

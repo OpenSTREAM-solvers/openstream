@@ -14,7 +14,7 @@ This module includes:
 
 ----
 
-.. automodule:: Solvers.Mixture.MixtureSolver
+.. autoclass:: Solvers.Mixture.MixtureSolver
    :show-inheritance:
    :members:
 
