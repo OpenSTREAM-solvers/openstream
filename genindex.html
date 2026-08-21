@@ -17,8 +17,8 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
       <script src="_static/design-tabs.js?v=f930bc37"></script>
@@ -286,10 +286,10 @@
 </li>
       <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.AI">AI() (Solvers.ThreeField.Drop method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Inputs.html#Inputs.FluidProperties.ALPHAF">ALPHAF (Inputs.FluidProperties attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Inputs.html#Inputs.FluidProperties.ALPHAG">ALPHAG (Inputs.FluidProperties attribute)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.FluidProperties.ALPHAL">ALPHAL() (Inputs.FluidProperties method)</a>
@@ -317,6 +317,8 @@
 </li>
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Options.AXIALINTERP">AXIALINTERP (Inputs.Options attribute)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.axialInterpolate">axialInterpolate() (Solvers.Mixture.MixtureSolver method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -360,6 +362,14 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.BoundaryConditions">BoundaryConditions (class in Inputs)</a>
 </li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.boundaryConditions">boundaryConditions (Solvers.Mixture.MixtureSolver attribute)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.boundaryConditions">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.boundaryConditions">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
+</li>
+      </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.BoundaryConditions.BoundaryConditions">BoundaryConditions() (Inputs.BoundaryConditions method)</a>
 </li>
       <li><a href="Packages/InputEnums.html#InputEnums.BTHTM">BTHTM (class in InputEnums)</a>
@@ -538,8 +548,6 @@
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPK">DPK() (Solvers.Mixture.Mixture method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPPARTS">DPPARTS() (Solvers.Mixture.Mixture method)</a>
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPSUM">DPSUM (Solvers.Mixture.Mixture attribute)</a>
@@ -548,6 +556,8 @@
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DPWALL">DPWALL() (Solvers.Mixture.Mixture method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.DRAG">DRAG() (Solvers.ThreeField.Drop method)</a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.DRAGCOEF">DRAGCOEF() (Solvers.FourField.Wave method)</a>
@@ -558,6 +568,8 @@
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop">(class in Solvers.ThreeField)</a>
 </li>
       </ul></li>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.drop">drop (Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
       <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.Drop">Drop() (Solvers.ThreeField.Drop method)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.DROPDIAM">DROPDIAM (Inputs.Model attribute)</a>
@@ -569,6 +581,8 @@
 </li>
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Model.DROPDRAGCOEF">DROPDRAGCOEF (Inputs.Model attribute)</a>
+</li>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.dropInit">dropInit (Solvers.ThreeField.ThreeFieldSolver attribute)</a>
 </li>
       <li><a href="Guides/glossary.html#term-Droplet-field"><strong>Droplet field</strong></a>
 </li>
@@ -585,11 +599,17 @@
 </li>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DT">(Solvers.Mixture.Mixture attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.DT">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.DT">(Solvers.ThreeField.Drop attribute)</a>
 </li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.DT">(Solvers.ThreeField.Film attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.DT">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.DT">(Solvers.TwoFluid.Liquid attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.DT">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.DT">(Solvers.TwoFluid.Vapor attribute)</a>
 </li>
@@ -602,6 +622,12 @@
 
       <ul>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.DZ">(Solvers.Mixture.Mixture attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.DZ">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.DZ">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.DZ">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -644,14 +670,20 @@
       </ul></li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.EQSTROUHAL">EQSTROUHAL() (Solvers.FourField.Wave method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Inputs.html#Inputs.Model.EQSTROUHALCOEF">EQSTROUHALCOEF (Inputs.Model attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Base.EQTHICK">EQTHICK() (Solvers.FourField.Base method)</a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Film.EQUIL">EQUIL() (Solvers.FourField.Film method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.EQUIL">(Solvers.FourField.FourFieldSolver method)</a>
 </li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.EQUIL">(Solvers.ThreeField.ThreeFieldSolver method)</a>
+</li>
+      </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Options.ERRORFW">ERRORFW (Inputs.Options attribute)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Options.ERRORH">ERRORH (Inputs.Options attribute)</a>
@@ -741,10 +773,16 @@
 </li>
       </ul></li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Wave.film">film (Solvers.FourField.Wave attribute)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.film">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
 </li>
+      </ul></li>
       <li><a href="Guides/glossary.html#term-Film-dryout"><strong>Film dryout</strong></a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Film.Film">Film() (Solvers.FourField.Film method)</a>
+</li>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.filmInit">filmInit (Solvers.ThreeField.ThreeFieldSolver attribute)</a>
 </li>
       <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.FINTCOND">FINTCOND() (Solvers.TwoFluid.Liquid method)</a>
 </li>
@@ -758,18 +796,24 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.FLOWREGIME">(Solvers.TwoFluid.Vapor method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Inputs.html#Inputs.FluidProperties.FLUID">FLUID (Inputs.FluidProperties attribute)</a>
 
       <ul>
         <li><a href="Packages/Inputs.html#Inputs.Model.FLUID">(Inputs.Model attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers.html#Solvers.AbstractFilm.fluid">fluid (Solvers.AbstractFilm attribute)</a>
 
       <ul>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.fluid">(Solvers.Mixture.Mixture attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.fluid">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.fluid">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.fluid">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
       </ul></li>
       <li><a href="Packages/InputEnums.html#InputEnums.FLUIDPROPERTIES">FLUIDPROPERTIES (class in InputEnums)</a>
@@ -782,7 +826,9 @@
 </li>
       <li><a href="Guides/glossary.html#term-Four-field-model"><strong>Four-field model</strong></a>
 </li>
-      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver">FourFieldSolver (in module Solvers.FourField)</a>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver">FourFieldSolver (class in Solvers.FourField)</a>
+</li>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.FourFieldSolver">FourFieldSolver() (Solvers.FourField.FourFieldSolver method)</a>
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.FOURIERCOND">FOURIERCOND() (Solvers.Mixture.Mixture method)</a>
 </li>
@@ -1028,6 +1074,16 @@
       </ul></li>
       <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.Film.initializeBaseAndWave">initializeBaseAndWave() (Solvers.FourField.Film method)</a>
 </li>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.initializeSolver">initializeSolver() (Solvers.FourField.FourFieldSolver method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.initializeSolver">(Solvers.Mixture.MixtureSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.initializeSolver">(Solvers.ThreeField.ThreeFieldSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.initializeSolver">(Solvers.TwoFluid.TwoFluidSolver method)</a>
+</li>
+      </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Input">Input (class in Inputs)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Input.Input">Input() (Inputs.Input method)</a>
@@ -1044,6 +1100,12 @@
         <li><a href="Packages/Solvers.html#Solvers.AbstractSolver.inputSet">(Solvers.AbstractSolver attribute)</a>
 </li>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.inputSet">(Solvers.Mixture.Mixture attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.inputSet">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.inputSet">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.inputSet">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.InputSet.InputSet">InputSet() (Inputs.InputSet method)</a>
@@ -1062,7 +1124,11 @@
       </ul></li>
       <li><a href="Guides/glossary.html#term-Interfacial-area"><strong>Interfacial area</strong></a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Guides/glossary.html#term-Interfacial-transfer"><strong>Interfacial transfer</strong></a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.interpBoundaryConditions">interpBoundaryConditions() (Solvers.Mixture.MixtureSolver method)</a>
 </li>
       <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.INTHFLUX">INTHFLUX() (Solvers.TwoFluid.Liquid method)</a>
 
@@ -1070,8 +1136,6 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.INTHFLUX">(Solvers.TwoFluid.Vapor method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/InputEnums.html#InputEnums.INTLENGTH">INTLENGTH (class in InputEnums)</a>
 
       <ul>
@@ -1211,7 +1275,11 @@
 </li>
       </ul></li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.liquid">liquid (Solvers.Mixture.Mixture attribute)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.liquid">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
+      </ul></li>
       <li><a href="Guides/glossary.html#term-Liquid-film"><strong>Liquid film</strong></a>
 </li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Liquid.Liquid">Liquid() (Solvers.Mixture.Liquid method)</a>
@@ -1222,6 +1290,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.liquidInit">liquidInit (Solvers.TwoFluid.TwoFluidSolver attribute)</a>
+</li>
       <li><a href="Packages/Inputs.html#Inputs.Input.listInputProperties">listInputProperties() (Inputs.Input method)</a>
 </li>
       <li><a href="Packages/InputEnums.html#InputEnums.LOCRELVEL">LOCRELVEL (class in InputEnums)</a>
@@ -1354,12 +1424,20 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.mix">(Solvers.TwoFluid.Vapor attribute)</a>
 </li>
       </ul></li>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.mixSolver">mixSolver (Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.mixSolver">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
+</li>
+      </ul></li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture">Mixture (class in Solvers.Mixture)</a>
 
       <ul>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Mixture">(class in Solvers.TwoFluid)</a>
 </li>
       </ul></li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.mixture">mixture (Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
       <li><a href="Guides/glossary.html#term-Mixture-model"><strong>Mixture model</strong></a>
 </li>
   </ul></td>
@@ -1370,7 +1448,11 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Mixture.Mixture">(Solvers.TwoFluid.Mixture method)</a>
 </li>
       </ul></li>
-      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver">MixtureSolver (in module Solvers.Mixture)</a>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.mixtureInit">mixtureInit (Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver">MixtureSolver (class in Solvers.Mixture)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.MixtureSolver">MixtureSolver() (Solvers.Mixture.MixtureSolver method)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model">Model (class in Inputs)</a>
 </li>
@@ -1523,11 +1605,17 @@
 </li>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.NTIME">(Solvers.Mixture.Mixture attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.NTIME">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.NTIME">(Solvers.ThreeField.Drop attribute)</a>
 </li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.NTIME">(Solvers.ThreeField.Film attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.NTIME">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.NTIME">(Solvers.TwoFluid.Liquid attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.NTIME">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.NTIME">(Solvers.TwoFluid.Vapor attribute)</a>
 </li>
@@ -1553,11 +1641,17 @@
 </li>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.NZ">(Solvers.Mixture.Mixture attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.NZ">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.NZ">(Solvers.ThreeField.Drop attribute)</a>
 </li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.NZ">(Solvers.ThreeField.Film attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.NZ">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.NZ">(Solvers.TwoFluid.Liquid attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.NZ">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.NZ">(Solvers.TwoFluid.Vapor attribute)</a>
 </li>
@@ -1662,12 +1756,42 @@
 </li>
       <li><a href="Packages/Solvers.html#Solvers.SolverPlotter.plotOAF">plotOAF() (Solvers.SolverPlotter method)</a>
 </li>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.plott">plott() (Solvers.FourField.FourFieldSolver method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.plott">(Solvers.Mixture.MixtureSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.plott">(Solvers.ThreeField.ThreeFieldSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.plott">(Solvers.TwoFluid.TwoFluidSolver method)</a>
+</li>
+      </ul></li>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.plotz">plotz() (Solvers.FourField.FourFieldSolver method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.plotz">(Solvers.Mixture.MixtureSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers.html#Solvers.SolverPlotter.plotz">(Solvers.SolverPlotter method)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.plotz">(Solvers.ThreeField.ThreeFieldSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.plotz">(Solvers.TwoFluid.TwoFluidSolver method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="Packages/Solvers.html#Solvers.SolverPlotter.plotz">plotz() (Solvers.SolverPlotter method)</a>
-</li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractField.plotzt">plotzt() (Solvers.AbstractField method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.plotzt">(Solvers.FourField.FourFieldSolver method)</a>
 </li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.plotzt">(Solvers.Mixture.MixtureSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.plotzt">(Solvers.ThreeField.ThreeFieldSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.plotzt">(Solvers.TwoFluid.TwoFluidSolver method)</a>
+</li>
+      </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Model.POSFILM">POSFILM (Inputs.Model attribute)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.BoundaryConditions.POWER">POWER (Inputs.BoundaryConditions attribute)</a>
@@ -1888,6 +2012,16 @@
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.SLIP">SLIP (Inputs.Model attribute)</a>
 </li>
+      <li><a href="Packages/Solvers-FourField.html#Solvers.FourField.FourFieldSolver.solve">solve() (Solvers.FourField.FourFieldSolver method)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.solve">(Solvers.Mixture.MixtureSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.solve">(Solvers.ThreeField.ThreeFieldSolver method)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.solve">(Solvers.TwoFluid.TwoFluidSolver method)</a>
+</li>
+      </ul></li>
       <li><a href="Guides/glossary.html#term-Solver"><strong>Solver</strong></a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.Model.SOLVERDEPENDENTPROPS">SOLVERDEPENDENTPROPS (Inputs.Model attribute)</a>
@@ -1898,12 +2032,12 @@
 </li>
       <li><a href="Packages/Solvers.html#Solvers.SolverPlotter.SolverPlotter">SolverPlotter() (Solvers.SolverPlotter method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers.html#module-Solvers">Solvers (module)</a>
 </li>
       <li><a href="Packages/Solvers-FourField.html#module-Solvers.FourField">Solvers.FourField (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-Mixture.html#module-Solvers.Mixture">Solvers.Mixture (module)</a>
 </li>
       <li><a href="Packages/Solvers-ThreeField.html#module-Solvers.ThreeField">Solvers.ThreeField (module)</a>
@@ -2026,7 +2160,9 @@
 </li>
       <li><a href="Guides/glossary.html#term-Three-field-model"><strong>Three-field model</strong></a>
 </li>
-      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver">ThreeFieldSolver (in module Solvers.ThreeField)</a>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver">ThreeFieldSolver (class in Solvers.ThreeField)</a>
+</li>
+      <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.ThreeFieldSolver">ThreeFieldSolver() (Solvers.ThreeField.ThreeFieldSolver method)</a>
 </li>
       <li><a href="Packages/Solvers.html#Solvers.AbstractField.TIDX">TIDX (Solvers.AbstractField attribute)</a>
 
@@ -2063,11 +2199,17 @@
 </li>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.TIME">(Solvers.Mixture.Mixture attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.TIME">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.TIME">(Solvers.ThreeField.Drop attribute)</a>
 </li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.TIME">(Solvers.ThreeField.Film attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.TIME">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.TIME">(Solvers.TwoFluid.Liquid attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.TIME">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.TIME">(Solvers.TwoFluid.Vapor attribute)</a>
 </li>
@@ -2081,6 +2223,8 @@
 </li>
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Options.TIMEINTERP">TIMEINTERP (Inputs.Options attribute)</a>
+</li>
+      <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.timeInterpolate">timeInterpolate() (Solvers.Mixture.MixtureSolver method)</a>
 </li>
       <li><a href="Packages/Inputs.html#Inputs.BoundaryConditions.TIN">TIN() (Inputs.BoundaryConditions method)</a>
 </li>
@@ -2124,7 +2268,9 @@
 </li>
       <li><a href="Guides/glossary.html#term-Two-phase-flow"><strong>Two-phase flow</strong></a>
 </li>
-      <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver">TwoFluidSolver (in module Solvers.TwoFluid)</a>
+      <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver">TwoFluidSolver (class in Solvers.TwoFluid)</a>
+</li>
+      <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.TwoFluidSolver">TwoFluidSolver() (Solvers.TwoFluid.TwoFluidSolver method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2213,7 +2359,11 @@
 </li>
       </ul></li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.vapor">vapor (Solvers.Mixture.Mixture attribute)</a>
+
+      <ul>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.vapor">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
+      </ul></li>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Vapor.Vapor">Vapor() (Solvers.Mixture.Vapor method)</a>
 
       <ul>
@@ -2228,6 +2378,10 @@
       </ul></li>
       <li><a href="Packages/Inputs.html#Inputs.Model.VAPORFRICCST">VAPORFRICCST (Inputs.Model attribute)</a>
 </li>
+      <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.vaporInit">vaporInit (Solvers.TwoFluid.TwoFluidSolver attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Liquid.VF">VF() (Solvers.Mixture.Liquid method)</a>
 
       <ul>
@@ -2242,8 +2396,6 @@
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.VF">(Solvers.TwoFluid.Vapor method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.VISC">VISC() (Solvers.TwoFluid.Liquid method)</a>
 
       <ul>
@@ -2473,11 +2625,17 @@
 </li>
         <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.Mixture.Z">(Solvers.Mixture.Mixture attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-Mixture.html#Solvers.Mixture.MixtureSolver.Z">(Solvers.Mixture.MixtureSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop.Z">(Solvers.ThreeField.Drop attribute)</a>
 </li>
         <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film.Z">(Solvers.ThreeField.Film attribute)</a>
 </li>
+        <li><a href="Packages/Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver.Z">(Solvers.ThreeField.ThreeFieldSolver attribute)</a>
+</li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid.Z">(Solvers.TwoFluid.Liquid attribute)</a>
+</li>
+        <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.TwoFluidSolver.Z">(Solvers.TwoFluid.TwoFluidSolver attribute)</a>
 </li>
         <li><a href="Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor.Z">(Solvers.TwoFluid.Vapor attribute)</a>
 </li>

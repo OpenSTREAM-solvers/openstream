@@ -18,8 +18,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -237,20 +237,233 @@
 <li><p>Base film, wave and drop field classes: <a class="reference internal" href="#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Wave" title="Solvers.FourField.Wave"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Wave</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Drop" title="Solvers.FourField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Drop</span></code></a></p></li>
 <li><p>Film class: <a class="reference internal" href="#Solvers.FourField.Film" title="Solvers.FourField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Film</span></code></a></p></li>
 <li><p>Four-field primary properties: <a class="reference internal" href="#Solvers.FourField.Base.W" title="Solvers.FourField.Base.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.W</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Base.U" title="Solvers.FourField.Base.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.U</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Base.H" title="Solvers.FourField.Base.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Base.H</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Wave.W" title="Solvers.FourField.Wave.W"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.W</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Wave.U" title="Solvers.FourField.Wave.U"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.U</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Wave.H" title="Solvers.FourField.Wave.H"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Solvers.FourField.Wave.H</span></code></a></p></li>
-<li><p>Key solver class methods: <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.initializeSolver</span></code>, <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.solve()</span></code>, <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.plotz</span></code></p></li>
+<li><p>Key solver class methods: <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.initializeSolver</span></code>, <a class="reference internal" href="#Solvers.FourField.FourFieldSolver.solve" title="Solvers.FourField.FourFieldSolver.solve"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.solve()</span></code></a>, <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.plotz</span></code></p></li>
 <li><p>Field class methods for calculating secondary four-field parameters.</p></li>
 </ul>
 <hr class="docutils" />
-<dl class="mat attribute">
+<dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver">
-<span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">FourFieldSolver</span></span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver" title="Link to this definition"></a></dt>
-<dd><p>alias of <code class="xref mat mat-class docutils literal notranslate"><span class="pre">&#64;FourFieldSolver</span></code></p>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">FourFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.&#64;ThreeFieldSolver.ThreeFieldSolver</span></code></p>
+<p>FOURFIELDSOLVER Solver for initializing, solving, and visualizing four-field flow.</p>
+<p>The FourFieldSolver class extends <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a>
+to handle thermal-hydraulic simulations using a four-field approach.</p>
+<p>Responsibilities:</p>
+<ul class="simple">
+<li><p>Initializes solver parameters from an <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object</p></li>
+<li><p>Constructs <a class="reference internal" href="#Solvers.FourField.Film" title="Solvers.FourField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Film</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Wave" title="Solvers.FourField.Wave"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Wave</span></code></a>, <a class="reference internal" href="#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a>, and <a class="reference internal" href="#Solvers.FourField.Drop" title="Solvers.FourField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Drop</span></code></a> objects for transient and steady-state analysis</p></li>
+<li><p>Provides plotting utilities for spatial and temporal distributions</p></li>
+</ul>
+<p>Key Components:</p>
+<ul class="simple">
+<li><p>Liquid film (base and wave) and drop field construction</p></li>
+<li><p>Field mass/momentum/energy transport modeling</p></li>
+<li><p>Pressure drop gradient obtained from mixture solver</p></li>
+<li><p>Vapor solution obtained from mixture solver</p></li>
+<li><p>Visualization of results across time and axial domains</p></li>
+</ul>
+<div class="members docutils container">
+<dl>
+<dt>Constructor Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.FourFieldSolver">
+<span class="sig-name descname"><span class="pre">FourFieldSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">mixSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.FourFieldSolver" title="Link to this definition"></a></dt>
+<dd><p>FOURFIELDSOLVER Constructor for the <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FourFieldSolver()</span></code> class.</p>
+<p>Creates a new instance of the <code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FourFieldSolver()</span></code> class using the
+provided <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a>. This constructor initializes
+the solver by calling the <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a>
+constructor and then sets up all necessary solver parameters and
+internal data structures via
+<code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver.initializeSolver</span></code></p>
+<p>Input:</p>
+<ul class="simple">
+<li><p>inputSet — An <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> object containing model configuration, geometry, boundary conditions, and solver options.</p></li>
+<li><p>mixSolver — An optional solved <a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> object</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>This constructor assumes <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> is fully validated.</p></li>
+<li><p>A solved mixture-model solution is required for initialization. If a mixture solver is supplied, its solution is reused. If no mixture solver is supplied, one is created and solved automatically.</p></li>
+<li><p>Initialization includes film, wave, base, and droplet objects.</p></li>
+<li><p>Time/space discretization and boundary condition interpolation initialized by <a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> are used</p></li>
+</ul>
+</dd></dl>
+
+</dd>
+<dt>Method Summary</dt><dd><dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.EQUIL">
+<span class="sig-name descname"><span class="pre">EQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">flm</span></em>, <em class="sig-param"><span class="pre">drp</span></em>, <em class="sig-param"><span class="pre">mix</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.EQUIL" title="Link to this definition"></a></dt>
+<dd><p><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EQUIL()</span></code> Find entrained ratio at film/drop equilibrium state [-]</p>
+<p>Iteratively computes the entrained liquid ratio at the onset of annular
+flow by balancing droplet deposition and film entrainment rates.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>ffSolver — <a class="reference internal" href="#Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a> object</p></li>
+<li><p>flm      — Film field object (<a class="reference internal" href="#Solvers.FourField.Film" title="Solvers.FourField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Film</span></code></a>)</p></li>
+<li><p>drp      — Droplet field object (<a class="reference internal" href="#Solvers.FourField.Drop" title="Solvers.FourField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Drop</span></code></a>)</p></li>
+<li><p>mix      — Mixture object (<a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.Mixture" title="Solvers.Mixture.Mixture"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.Mixture</span></code></a>)</p></li>
+<li><p>zIdx     — Axial index for evaluation</p></li>
+</ul>
+<p>Algorithm:</p>
+<ul class="simple">
+<li><p>Starts with an initial guess for droplet mass flow (50% of liquid mass)</p></li>
+<li><p>Updates droplet and film flow rates iteratively</p></li>
+<li><p>Computes difference between deposition and entrainment rates</p></li>
+<li><p>Stops when error &lt; 1e-4 kg/s/m or after 100 iterations</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Enhanced drop deposition is disabled</p></li>
+<li><p>Uses interpolation for improved convergence</p></li>
+<li><p>Falls back to ad-hoc update if interpolation fails</p></li>
+<li><p>Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.initializeSolver">
+<span class="sig-name descname"><span class="pre">initializeSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.initializeSolver" title="Link to this definition"></a></dt>
+<dd><p>INITIALIZESOLVER Initializes solver parameters and constructs film, wave, base, and drop objects.</p>
+<p>Sets up the solver’s internal state using the provided <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a>
+and mixture solver solutions. Includes initialization of data structures for
+transient and steady-state simulations.</p>
+<p>Operations performed:</p>
+<ul class="simple">
+<li><p>Initializes film, wave, and base arrays for each time step</p></li>
+<li><p>Initializes fluid property objects</p></li>
+<li><p>Sets up mixture object</p></li>
+<li><p>Assigns initial conditions for field mass flow rates, velocities, enthalpies</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Assumes uniform axial discretization.</p></li>
+<li><p>Wall heat flux computed from interpolated boundary conditions.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.plott">
+<span class="sig-name descname"><span class="pre">plott</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.plott" title="Link to this definition"></a></dt>
+<dd><p>PLOTT Plots temporal distributions of four-field parameters at a given axial location.</p>
+<p>Generates time-series plots of selected four-field parameters at
+a specified axial index. The method supports multiple display
+modes, wall selections, and plot arrangements.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>ffSolver          — <a class="reference internal" href="#Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a> object containing simulation data</p></li>
+<li><p>zIdx              — Axial index (scalar, positive integer)</p></li>
+<li><p>opt.display       — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘U’, etc.)</p></li>
+<li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
+<li><p>opt.wall          — Wall index(es) to plot</p></li>
+<li><p>opt.tIdx          — Time indices to include in the plot</p></li>
+<li><p>opt.reverseTime   — Logical flag to reverse time axis</p></li>
+<li><p>opt.unitTemp      — Temperature unit: ‘K’ or ‘C’</p></li>
+<li><p>opt.arrangement   — Plot arrangement: ‘flow’, ‘vertical’, or ‘horizontal’</p></li>
+<li><p>opt.resize        — Resize factor for plot scaling</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>If opt.display is set to ‘ALL’, all supported parameters are plotted.</p></li>
+<li><p>The function validates that at least two time indices are provided.</p></li>
+<li><p>Temperature unit conversion is applied if ‘C’ is selected.</p></li>
+<li><p>Each wall is plotted in a separate tile with appropriate legends and axis scaling.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.plotz">
+<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">tIdx</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.plotz" title="Link to this definition"></a></dt>
+<dd><p>PLOTZ Plots spatial (axial) distributions of four-field parameters.</p>
+<p>Generates axial plots of selected four-field parameters at specified
+time indices. The function supports multiple display modes, wall
+selections, and optional animation over time.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>ffSolver          — <a class="reference internal" href="#Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a> object containing simulation data</p></li>
+<li><p>tIdx              — Time index or indices (vector of positive integers)</p></li>
+<li><p>opts.display      — Parameters to display (e.g., ‘HFLUX’, ‘W’, ‘U’, etc.)</p></li>
+<li><p>opts.solveMode    — Solve mode: ‘REAL’ or ‘NULL’</p></li>
+<li><p>opts.wall         — Wall index(es) to plot</p></li>
+<li><p>opts.zIdx         — Axial indices to include in the plot</p></li>
+<li><p>opts.obstructions — Logical flag to display obstruction locations</p></li>
+<li><p>opts.annular      — Logical flag to plot annular two-phase flow parameters only from the onset of annular flow</p></li>
+<li><p>opts.unitTemp     — Temperature unit: ‘K’ or ‘C’</p></li>
+<li><p>opts.arrangement  — Plot arrangement: ‘flow’, ‘vertical’, or ‘horizontal’</p></li>
+<li><p>opts.resize       — Resize factor for plot scaling</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>If multiple time indices are provided, the function creates an animated plot.</p></li>
+<li><p>At least two axial indices must be specified to enable spatial plotting.</p></li>
+<li><p>Temperature unit conversion is applied if ‘C’ is selected.</p></li>
+<li><p>Obstruction locations are plotted if opts.obstructions is true.</p></li>
+<li><p>Each wall is plotted in a separate tile with appropriate legends and axis scaling.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.plotzt">
+<span class="sig-name descname"><span class="pre">plotzt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em>, <em class="sig-param"><span class="pre">opt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.plotzt" title="Link to this definition"></a></dt>
+<dd><p>PLOTZT Plots 2D time/elevation distributions of four-field parameters.</p>
+<p>Generates surface plots of selected four-field related parameters
+over time and axial (elevation) positions. It supports plotting
+for base and wave fields, and can handle both real
+and null (initial) transient data.</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p>ffSolver          — <a class="reference internal" href="#Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a> object containing simulation data</p></li>
+<li><p>opt.display       — Parameter(s) to display (e.g., ‘HFLUX’, ‘U’, etc.)</p></li>
+<li><p>opt.label         — Corresponding labels for display parameters</p></li>
+<li><p>opt.unit          — Units for each parameter</p></li>
+<li><p>opt.field         — Field to plot: ‘film’ or ‘drop’</p></li>
+<li><p>opt.solveMode     — Solve mode: ‘REAL’ or ‘NULL’</p></li>
+<li><p>opt.wall          — Wall index(es) to plot</p></li>
+<li><p>opt.zIdx          — Axial indices (must include at least 2)</p></li>
+<li><p>opt.tIdx          — Time indices (must include at least 2)</p></li>
+<li><p>opt.reverseTime   — Logical flag to reverse time axis</p></li>
+<li><p>opt.shading       — Surface shading style: ‘faceted’, ‘flat’, or ‘interp’</p></li>
+<li><p>opt.view          — View angle for 3D plot [azimuth elevation]</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>If ‘ALL’ is passed to opt.display, all supported parameters are plotted.</p></li>
+<li><p>The function validates that at least two axial and time indices are provided to enable meaningful 2D plotting.</p></li>
+<li><p>Each wall is plotted in a separate figure window with appropriate titles and subplot grouping.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.FourField.FourFieldSolver.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">ffSolver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.FourFieldSolver.solve" title="Link to this definition"></a></dt>
+<dd><p>SOLVE Executes the four-field solver for steady-state and transient simulations.</p>
+<p>Runs the full solution process for the <a class="reference internal" href="#Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a>
+object. It manages initialization, time stepping, axial sweeps, inner
+iterations, convergence checks, and logging.</p>
+<p>Workflow:</p>
+<ul class="simple">
+<li><p>Enables logging and opens persistent log file</p></li>
+<li><p>Validates solver state before execution</p></li>
+<li><p>Runs steady-state initialization (solveINIT = true)</p></li>
+<li><p>If initial step converges, proceeds with transient simulation</p></li>
+<li><p>Handles exceptions and ensures proper log closure</p></li>
+</ul>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
+<li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
+<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Logs progress and outputs to session directory</p></li>
+</ul>
+</dd></dl>
+
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="mat class" id="module-Solvers.FourField">
 <dt class="sig sig-object mat" id="Solvers.FourField.Drop">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><a class="headerlink" href="#Solvers.FourField.Drop" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Drop</span></span><a class="headerlink" href="#Solvers.FourField.Drop" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a></p>
 <p>DROP Class for modeling drop field in four-field solver</p>
 <p>This class encapsulates the physical and numerical properties of the drop field,
@@ -262,7 +475,7 @@ quantities.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Film</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Film" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Film</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Film" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p>
 <p>FILM Class for modeling liquid film in four-field solver</p>
 <p>Represents the physical and numerical properties of the liquid film in a
@@ -283,7 +496,7 @@ the onset of annular flow (OAF) according to model options.</p>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.Film">
 <span class="sig-name descname"><span class="pre">Film</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">inputSet</span></em>, <em class="sig-param"><span class="pre">fluid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Film.Film" title="Link to this definition"></a></dt>
-<dd><p>FILM Creates a Film object</p>
+<dd><p>FILM Creates a <a class="reference internal" href="#Solvers.FourField.Film.Film" title="Solvers.FourField.Film.Film"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Film()</span></code></a> object</p>
 <p>Initializes the film object with input set and fluid properties required
 by the four-field solver.</p>
 <p>Inputs:</p>
@@ -296,19 +509,27 @@ by the four-field solver.</p>
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.DT">
-<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Film.DT" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DT</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Film.DT" title="Link to this definition"></a></dt>
 <dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.options.TSTEP</span></code></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.H">
 <span class="sig-name descname"><span class="pre">H</span></span><a class="headerlink" href="#Solvers.FourField.Film.H" title="Link to this definition"></a></dt>
-<dd><p>(:,:) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]</p>
+<dd><p>) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>,</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.HFLUX">
-<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Film.HFLUX" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Film.HFLUX" title="Link to this definition"></a></dt>
 <dd><p>Film heat flux [W/m^2]</p>
 </dd></dl>
 
@@ -320,61 +541,77 @@ by the four-field solver.</p>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.MEVAP">
-<span class="sig-name descname"><span class="pre">MEVAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1.</span></em><a class="headerlink" href="#Solvers.FourField.Film.MEVAP" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MEVAP</span></span><span class="property"> <span class="pre">=</span> <span class="pre">-1.</span></span><a class="headerlink" href="#Solvers.FourField.Film.MEVAP" title="Link to this definition"></a></dt>
 <dd><p>Evaporation mass flux [kg/s/m^2]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.NTIME">
-<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Film.NTIME" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NTIME</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Film.NTIME" title="Link to this definition"></a></dt>
 <dd><p>Number of time steps [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.NZ">
-<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Film.NZ" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NZ</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Film.NZ" title="Link to this definition"></a></dt>
 <dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.TIDX">
-<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.FourField.Film.TIDX" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIDX</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1</span></span><a class="headerlink" href="#Solvers.FourField.Film.TIDX" title="Link to this definition"></a></dt>
 <dd><p>Time step index [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Film.TIME" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Film.TIME" title="Link to this definition"></a></dt>
 <dd><p>Time series [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.U">
 <span class="sig-name descname"><span class="pre">U</span></span><a class="headerlink" href="#Solvers.FourField.Film.U" title="Link to this definition"></a></dt>
-<dd><p>(:,:) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]</p>
+<dd><p>) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>,</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.W">
 <span class="sig-name descname"><span class="pre">W</span></span><a class="headerlink" href="#Solvers.FourField.Film.W" title="Link to this definition"></a></dt>
-<dd><p>(:,:) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]</p>
+<dd><p>) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>,</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Film.Z" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Film.Z" title="Link to this definition"></a></dt>
 <dd><p>Elevation [m]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.base">
-<span class="sig-name descname"><span class="pre">base</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.FourField.Film.base" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">base</span></span><span class="property"> <span class="pre">=</span> <span class="pre">NaN</span></span><a class="headerlink" href="#Solvers.FourField.Film.base" title="Link to this definition"></a></dt>
 <dd><p><a class="reference internal" href="#Solvers.FourField.Base" title="Solvers.FourField.Base"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Base</span></code></a> object</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.wave">
-<span class="sig-name descname"><span class="pre">wave</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NaN</span></em><a class="headerlink" href="#Solvers.FourField.Film.wave" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">wave</span></span><span class="property"> <span class="pre">=</span> <span class="pre">NaN</span></span><a class="headerlink" href="#Solvers.FourField.Film.wave" title="Link to this definition"></a></dt>
 <dd><p><a class="reference internal" href="#Solvers.FourField.Wave" title="Solvers.FourField.Wave"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.Wave</span></code></a> object</p>
 </dd></dl>
 
@@ -382,7 +619,7 @@ by the four-field solver.</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Film.EQUIL">
 <span class="sig-name descname"><span class="pre">EQUIL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em>, <em class="sig-param"><span class="pre">Wf</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Film.EQUIL" title="Link to this definition"></a></dt>
-<dd><p>EQUIL Equilibrium base/wave split ratio [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Film.EQUIL" title="Solvers.FourField.Film.EQUIL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EQUIL()</span></code></a> Equilibrium base/wave split ratio [-]</p>
 <p>Calculates the equilibrium split ratio of film mass flow between base
 and wave using base equilibrium thickness, base velocity, perimeter,
 and liquid density.</p>
@@ -446,7 +683,7 @@ enthalpies, and sets initial wave frequency using equilibrium correlations.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Wave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Wave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p>
 <p>WAVE Class for modeling liquid waves in four-field solver</p>
 <p>This class represents the physical and numerical properties of the
@@ -461,7 +698,7 @@ fractions, interfacial fractions, and deposition/evaporation fluxes.</p>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.Wave">
 <span class="sig-name descname"><span class="pre">Wave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.Wave" title="Link to this definition"></a></dt>
-<dd><p>WAVE Constructor for Wave class</p>
+<dd><p>WAVE Constructor for <a class="reference internal" href="#Solvers.FourField.Wave.Wave" title="Solvers.FourField.Wave.Wave"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Wave()</span></code></a> class</p>
 <p>Initializes the wave object using properties from an
 existing film object. Copies solver configuration and geometry
 data, and allocates flow property arrays for multiple walls.</p>
@@ -474,25 +711,25 @@ data, and allocates flow property arrays for multiple walls.</p>
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.DT">
-<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Wave.DT" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DT</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Wave.DT" title="Link to this definition"></a></dt>
 <dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.options.TSTEP</span></code></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FREQUENCY">
-<span class="sig-name descname"><span class="pre">FREQUENCY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.FourField.Wave.FREQUENCY" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">FREQUENCY</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1</span></span><a class="headerlink" href="#Solvers.FourField.Wave.FREQUENCY" title="Link to this definition"></a></dt>
 <dd><p>Wave frequency [Hz]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.H">
-<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.FourField.Wave.H" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">H</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1E6</span></span><a class="headerlink" href="#Solvers.FourField.Wave.H" title="Link to this definition"></a></dt>
 <dd><p>Enthalpy [J/kg]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.HFLUX">
-<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Wave.HFLUX" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Wave.HFLUX" title="Link to this definition"></a></dt>
 <dd><p>Film heat flux [W/m^2]</p>
 </dd></dl>
 
@@ -504,43 +741,43 @@ data, and allocates flow property arrays for multiple walls.</p>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.NTIME">
-<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Wave.NTIME" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NTIME</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Wave.NTIME" title="Link to this definition"></a></dt>
 <dd><p>Number of time steps [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.NZ">
-<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Wave.NZ" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NZ</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Wave.NZ" title="Link to this definition"></a></dt>
 <dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.TIDX">
-<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.FourField.Wave.TIDX" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIDX</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1</span></span><a class="headerlink" href="#Solvers.FourField.Wave.TIDX" title="Link to this definition"></a></dt>
 <dd><p>Time step index [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Wave.TIME" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Wave.TIME" title="Link to this definition"></a></dt>
 <dd><p>Time series [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.U">
-<span class="sig-name descname"><span class="pre">U</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Wave.U" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">U</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Wave.U" title="Link to this definition"></a></dt>
 <dd><p>Velocity [m/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.W">
-<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Wave.W" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">W</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Wave.W" title="Link to this definition"></a></dt>
 <dd><p>Mass flow rate [kg/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Wave.Z" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Wave.Z" title="Link to this definition"></a></dt>
 <dd><p>Elevation [m]</p>
 </dd></dl>
 
@@ -554,7 +791,7 @@ data, and allocates flow property arrays for multiple walls.</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.AMPLITUDE">
 <span class="sig-name descname"><span class="pre">AMPLITUDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.AMPLITUDE" title="Link to this definition"></a></dt>
-<dd><p>AMPLITUDE Wave amplitude [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.AMPLITUDE" title="Solvers.FourField.Wave.AMPLITUDE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">AMPLITUDE()</span></code></a> Wave amplitude [m]</p>
 <p>Computes wave amplitude based on mass flow, shape factor, fluid density,
 and frequency. Limited by half the hydraulic diameter.</p>
 <p>Inputs:</p>
@@ -567,7 +804,7 @@ and frequency. Limited by half the hydraulic diameter.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.BETA">
 <span class="sig-name descname"><span class="pre">BETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.BETA" title="Link to this definition"></a></dt>
-<dd><p>BETA Wave film interfacial fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.BETA" title="Solvers.FourField.Wave.BETA"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">BETA()</span></code></a> Wave film interfacial fraction [-]</p>
 <p>Calculates the fraction of the interface occupied by waves.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -579,7 +816,7 @@ and frequency. Limited by half the hydraulic diameter.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.BETAP">
 <span class="sig-name descname"><span class="pre">BETAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.BETAP" title="Link to this definition"></a></dt>
-<dd><p>BETAP Wave film heat flux fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.BETAP" title="Solvers.FourField.Wave.BETAP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">BETAP()</span></code></a> Wave film heat flux fraction [-]</p>
 <p>Determines the fraction of heat flux directed to the waves.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -591,7 +828,7 @@ and frequency. Limited by half the hydraulic diameter.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.DELTAFREQ">
 <span class="sig-name descname"><span class="pre">DELTAFREQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.DELTAFREQ" title="Link to this definition"></a></dt>
-<dd><p>DELTAFREQ Wave frequency source/sink [Hz/m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.DELTAFREQ" title="Solvers.FourField.Wave.DELTAFREQ"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DELTAFREQ()</span></code></a> Wave frequency source/sink [Hz/m]</p>
 <p>Calculates the exchange term for wave frequency relaxation toward
 equilibrium frequency.</p>
 <p>Inputs:</p>
@@ -604,7 +841,7 @@ equilibrium frequency.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.DRAGCOEF">
 <span class="sig-name descname"><span class="pre">DRAGCOEF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.DRAGCOEF" title="Link to this definition"></a></dt>
-<dd><p>DRAGCOEF Wave drag coefficient [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.DRAGCOEF" title="Solvers.FourField.Wave.DRAGCOEF"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">DRAGCOEF()</span></code></a> Wave drag coefficient [-]</p>
 <p>Calculates the drag coefficient for vapor-wave interaction based on
 Reynolds number and <a class="reference internal" href="Inputs.html#Inputs.Model.WAVEDRAGCOEF" title="Inputs.Model.WAVEDRAGCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WAVEDRAGCOEF</span></code></a> model coefficients.</p>
 <p>Inputs:</p>
@@ -617,7 +854,7 @@ Reynolds number and <a class="reference internal" href="Inputs.html#Inputs.Model
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.EPSILON">
 <span class="sig-name descname"><span class="pre">EPSILON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.EPSILON" title="Link to this definition"></a></dt>
-<dd><p>EPSILON Wave mass flow fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.EPSILON" title="Solvers.FourField.Wave.EPSILON"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EPSILON()</span></code></a> Wave mass flow fraction [-]</p>
 <p>Computes the fraction of total film mass flow carried by waves.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -629,7 +866,7 @@ Reynolds number and <a class="reference internal" href="Inputs.html#Inputs.Model
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.EQFREQUENCY">
 <span class="sig-name descname"><span class="pre">EQFREQUENCY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.EQFREQUENCY" title="Link to this definition"></a></dt>
-<dd><p>EQFREQUENCY Equilibrium wave frequency [Hz]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.EQFREQUENCY" title="Solvers.FourField.Wave.EQFREQUENCY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EQFREQUENCY()</span></code></a> Equilibrium wave frequency [Hz]</p>
 <p>Computes the equilibrium wave frequency based on Strouhal number and
 vapor velocity.</p>
 <p>Inputs:</p>
@@ -642,7 +879,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.EQPERIOD">
 <span class="sig-name descname"><span class="pre">EQPERIOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.EQPERIOD" title="Link to this definition"></a></dt>
-<dd><p>EQPERIOD Equilibrium wave period [s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.EQPERIOD" title="Solvers.FourField.Wave.EQPERIOD"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EQPERIOD()</span></code></a> Equilibrium wave period [s]</p>
 <p>Calculates the inverse of equilibrium wave frequency.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -654,7 +891,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.EQSTROUHAL">
 <span class="sig-name descname"><span class="pre">EQSTROUHAL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.EQSTROUHAL" title="Link to this definition"></a></dt>
-<dd><p>EQSTROUHAL Equilibrium Strouhal number [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.EQSTROUHAL" title="Solvers.FourField.Wave.EQSTROUHAL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EQSTROUHAL()</span></code></a> Equilibrium Strouhal number [-]</p>
 <p>Calculates the equilibrium Strouhal number using selected
 <a class="reference internal" href="Inputs.html#Inputs.Model.EQSTROUHAL" title="Inputs.Model.EQSTROUHAL"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.EQSTROUHAL</span></code></a> model.</p>
 <p>Inputs:</p>
@@ -667,7 +904,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.ETA">
 <span class="sig-name descname"><span class="pre">ETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.ETA" title="Link to this definition"></a></dt>
-<dd><p>ETA Wave film deposition fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.ETA" title="Solvers.FourField.Wave.ETA"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">ETA()</span></code></a> Wave film deposition fraction [-]</p>
 <p>Computes the fraction of deposition attributed to waves.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -679,7 +916,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FBASE">
 <span class="sig-name descname"><span class="pre">FBASE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FBASE" title="Link to this definition"></a></dt>
-<dd><p>FBASE Base interfacial force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FBASE" title="Solvers.FourField.Wave.FBASE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FBASE()</span></code></a> Base interfacial force [N/m^2]</p>
 <p>Computes the interfacial force between wave and base film.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -692,7 +929,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FBASEMASS">
 <span class="sig-name descname"><span class="pre">FBASEMASS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FBASEMASS" title="Link to this definition"></a></dt>
-<dd><p>FBASEMASS Wave mass exchange force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FBASEMASS" title="Solvers.FourField.Wave.FBASEMASS"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FBASEMASS()</span></code></a> Wave mass exchange force [N/m^2]</p>
 <p>Calculates the force due to mass exchange between wave and base film.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -705,7 +942,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FDEP">
 <span class="sig-name descname"><span class="pre">FDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FDEP" title="Link to this definition"></a></dt>
-<dd><p>FDEP Droplet interaction force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FDEP" title="Solvers.FourField.Wave.FDEP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FDEP()</span></code></a> Droplet interaction force [N/m^2]</p>
 <p>Calculates the force due to deposition of droplets onto the wave field.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -718,7 +955,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FDRAG">
 <span class="sig-name descname"><span class="pre">FDRAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FDRAG" title="Link to this definition"></a></dt>
-<dd><p>FDRAG Vapor drag force on wave [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FDRAG" title="Solvers.FourField.Wave.FDRAG"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FDRAG()</span></code></a> Vapor drag force on wave [N/m^2]</p>
 <p>Calculates the shear stress due to vapor drag acting on the wave field.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -730,7 +967,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FSHEAR">
 <span class="sig-name descname"><span class="pre">FSHEAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FSHEAR" title="Link to this definition"></a></dt>
-<dd><p>FSHEAR Vapor shear stress [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FSHEAR" title="Solvers.FourField.Wave.FSHEAR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FSHEAR()</span></code></a> Vapor shear stress [N/m^2]</p>
 <p>Computes the shear stress exerted by vapor on the wave field using friction factor.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -742,7 +979,7 @@ vapor velocity.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FTOT">
 <span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FTOT" title="Link to this definition"></a></dt>
-<dd><p>FTOT Total interfacial force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FTOT" title="Solvers.FourField.Wave.FTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FTOT()</span></code></a> Total interfacial force [N/m^2]</p>
 <p>Computes the total interfacial force acting on the wave field, including
 vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <p>Inputs:</p>
@@ -756,7 +993,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FVAPOR">
 <span class="sig-name descname"><span class="pre">FVAPOR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FVAPOR" title="Link to this definition"></a></dt>
-<dd><p>FVAPOR Wave vapor shear stress [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FVAPOR" title="Solvers.FourField.Wave.FVAPOR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FVAPOR()</span></code></a> Wave vapor shear stress [N/m^2]</p>
 <p>Computes the total shear stress exerted by vapor on the wave field.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -768,7 +1005,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.FWALL">
 <span class="sig-name descname"><span class="pre">FWALL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.FWALL" title="Link to this definition"></a></dt>
-<dd><p>FWALL Wave wall shear stress [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.FWALL" title="Solvers.FourField.Wave.FWALL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FWALL()</span></code></a> Wave wall shear stress [N/m^2]</p>
 <p>Placeholder method. Wave does not implement wall shear stress.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -780,7 +1017,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.MBASE">
 <span class="sig-name descname"><span class="pre">MBASE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.MBASE" title="Link to this definition"></a></dt>
-<dd><p>MBASE Mass flux interaction with base film [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.MBASE" title="Solvers.FourField.Wave.MBASE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MBASE()</span></code></a> Mass flux interaction with base film [kg/m^2/s]</p>
 <p>Computes the net mass exchange between wave and base film, including turbulent mixing.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -793,7 +1030,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.MDEP">
 <span class="sig-name descname"><span class="pre">MDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.MDEP" title="Link to this definition"></a></dt>
-<dd><p>MDEP Wave deposition mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.MDEP" title="Solvers.FourField.Wave.MDEP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MDEP()</span></code></a> Wave deposition mass flux [kg/m^2/s]</p>
 <p>Computes the deposition mass flux from waves to droplets.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -806,7 +1043,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.MENT">
 <span class="sig-name descname"><span class="pre">MENT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.MENT" title="Link to this definition"></a></dt>
-<dd><p>MENT Wave entrainment mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.MENT" title="Solvers.FourField.Wave.MENT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MENT()</span></code></a> Wave entrainment mass flux [kg/m^2/s]</p>
 <p>Computes the mass flux associated with entrainment from the wave field.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -818,7 +1055,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.MEVAP">
 <span class="sig-name descname"><span class="pre">MEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.MEVAP" title="Link to this definition"></a></dt>
-<dd><p>MEVAP Wave evaporation mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.MEVAP" title="Solvers.FourField.Wave.MEVAP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MEVAP()</span></code></a> Wave evaporation mass flux [kg/m^2/s]</p>
 <p>Calculates the evaporation mass flux from the wave field based on heat flux fraction.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -830,7 +1067,7 @@ vapor shear, buoyancy, gravity, droplet interaction, and base film forces.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.MTOT">
 <span class="sig-name descname"><span class="pre">MTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.MTOT" title="Link to this definition"></a></dt>
-<dd><p>MTOT Total mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.MTOT" title="Solvers.FourField.Wave.MTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MTOT()</span></code></a> Total mass flux [kg/m^2/s]</p>
 <p>Calculates the total mass flux for the wave field, including evaporation,
 entrainment, deposition, and interactions with base film.</p>
 <p>Inputs:</p>
@@ -844,7 +1081,7 @@ entrainment, deposition, and interactions with base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.MTURB">
 <span class="sig-name descname"><span class="pre">MTURB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.MTURB" title="Link to this definition"></a></dt>
-<dd><p>MTURB Turbulent mass exchange [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.MTURB" title="Solvers.FourField.Wave.MTURB"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MTURB()</span></code></a> Turbulent mass exchange [kg/m^2/s]</p>
 <p>Returns the turbulent mixing mass flux between wave and base film.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -856,7 +1093,7 @@ entrainment, deposition, and interactions with base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.N">
 <span class="sig-name descname"><span class="pre">N</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.N" title="Link to this definition"></a></dt>
-<dd><p>N Wave number density [1/m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.N" title="Solvers.FourField.Wave.N"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">N()</span></code></a> Wave number density [1/m]</p>
 <p>Computes the number of waves per unit length (inverse of wave spacing).</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -868,7 +1105,7 @@ entrainment, deposition, and interactions with base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.PERIOD">
 <span class="sig-name descname"><span class="pre">PERIOD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.PERIOD" title="Link to this definition"></a></dt>
-<dd><p>PERIOD Wave time period [s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.PERIOD" title="Solvers.FourField.Wave.PERIOD"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">PERIOD()</span></code></a> Wave time period [s]</p>
 <p>Calculates the inverse of wave frequency.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -880,7 +1117,7 @@ entrainment, deposition, and interactions with base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.REV">
 <span class="sig-name descname"><span class="pre">REV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.REV" title="Link to this definition"></a></dt>
-<dd><p>REV Vapor Reynolds number (relative to waves) [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.REV" title="Solvers.FourField.Wave.REV"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">REV()</span></code></a> Vapor Reynolds number (relative to waves) [-]</p>
 <p>Computes the Reynolds number for vapor flow interacting with waves.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -892,7 +1129,7 @@ entrainment, deposition, and interactions with base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.SHAPEFACTOR">
 <span class="sig-name descname"><span class="pre">SHAPEFACTOR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.SHAPEFACTOR" title="Link to this definition"></a></dt>
-<dd><p>SHAPEFACTOR Wave shape factor [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.SHAPEFACTOR" title="Solvers.FourField.Wave.SHAPEFACTOR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">SHAPEFACTOR()</span></code></a> Wave shape factor [-]</p>
 <p>Computes the dimensionless shape factor for waves based on Reynolds number
 and <a class="reference internal" href="Inputs.html#Inputs.Model.SHAPEFACTORCOEF" title="Inputs.Model.SHAPEFACTORCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SHAPEFACTORCOEF</span></code></a> model.</p>
 <p>Inputs:</p>
@@ -905,7 +1142,7 @@ and <a class="reference internal" href="Inputs.html#Inputs.Model.SHAPEFACTORCOEF
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.SPACING">
 <span class="sig-name descname"><span class="pre">SPACING</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.SPACING" title="Link to this definition"></a></dt>
-<dd><p>SPACING Wave spacing [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.SPACING" title="Solvers.FourField.Wave.SPACING"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">SPACING()</span></code></a> Wave spacing [m]</p>
 <p>Computes the axial spacing between waves based on velocity and frequency.</p>
 <p>Inputs:</p>
 <ul class="simple">
@@ -917,7 +1154,7 @@ and <a class="reference internal" href="Inputs.html#Inputs.Model.SHAPEFACTORCOEF
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.THICK">
 <span class="sig-name descname"><span class="pre">THICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.THICK" title="Link to this definition"></a></dt>
-<dd><p>THICK Wave thickness [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.THICK" title="Solvers.FourField.Wave.THICK"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">THICK()</span></code></a> Wave thickness [m]</p>
 <p>Computes the wave thickness as the product of amplitude and
 interfacial fraction. This parameter represents the thickness
 that the wave field would have if fully overlayed on top of
@@ -932,7 +1169,7 @@ the base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.WIDTH">
 <span class="sig-name descname"><span class="pre">WIDTH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.WIDTH" title="Link to this definition"></a></dt>
-<dd><p>WIDTH Wave width [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.WIDTH" title="Solvers.FourField.Wave.WIDTH"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">WIDTH()</span></code></a> Wave width [m]</p>
 <p>Calculates wave width as a function of amplitude and shape factor,
 limited by wave spacing.</p>
 <p>Inputs:</p>
@@ -945,7 +1182,7 @@ limited by wave spacing.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Wave.WL">
 <span class="sig-name descname"><span class="pre">WL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wave</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Wave.WL" title="Link to this definition"></a></dt>
-<dd><p>WL Wave mass flow rate per unit perimeter [kg/s/m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Wave.WL" title="Solvers.FourField.Wave.WL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">WL()</span></code></a> Wave mass flow rate per unit perimeter [kg/s/m]</p>
 <p>Calculates the mass flow carried by the wave field at specified
 axial locations.</p>
 <p>Inputs:</p>
@@ -962,7 +1199,7 @@ axial locations.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">Solvers.FourField.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="Solvers.html#Solvers.AbstractFilm" title="Solvers.AbstractFilm"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.AbstractFilm</span></code></a></p>
 <p>BASE Class for modeling liquid base film in four-field solver</p>
 <p>This class represents the physical and numerical properties of the
@@ -977,7 +1214,7 @@ fractions, interfacial fractions, and deposition/evaporation fluxes.</p>
 <dt>Constructor Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.Base">
 <span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">film</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.Base" title="Link to this definition"></a></dt>
-<dd><p>BASE Constructor for Base class</p>
+<dd><p>BASE Constructor for <a class="reference internal" href="#Solvers.FourField.Base.Base" title="Solvers.FourField.Base.Base"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">Base()</span></code></a> class</p>
 <p>Initializes the base film object using properties from an
 existing film object. Copies solver configuration and geometry
 data, and allocates flow property arrays for multiple walls.</p>
@@ -990,19 +1227,19 @@ data, and allocates flow property arrays for multiple walls.</p>
 </dd>
 <dt>Property Summary</dt><dd><dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.DT">
-<span class="sig-name descname"><span class="pre">DT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Base.DT" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DT</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Base.DT" title="Link to this definition"></a></dt>
 <dd><p>Time step size [s] from <code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.options.TSTEP</span></code></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.H">
-<span class="sig-name descname"><span class="pre">H</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1E6</span></em><a class="headerlink" href="#Solvers.FourField.Base.H" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">H</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1E6</span></span><a class="headerlink" href="#Solvers.FourField.Base.H" title="Link to this definition"></a></dt>
 <dd><p>Enthalpy [J/kg]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.HFLUX">
-<span class="sig-name descname"><span class="pre">HFLUX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Base.HFLUX" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">HFLUX</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Base.HFLUX" title="Link to this definition"></a></dt>
 <dd><p>Film heat flux [W/m^2]</p>
 </dd></dl>
 
@@ -1014,43 +1251,43 @@ data, and allocates flow property arrays for multiple walls.</p>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.NTIME">
-<span class="sig-name descname"><span class="pre">NTIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Base.NTIME" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NTIME</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Base.NTIME" title="Link to this definition"></a></dt>
 <dd><p>Number of time steps [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.NZ">
-<span class="sig-name descname"><span class="pre">NZ</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Base.NZ" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NZ</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Base.NZ" title="Link to this definition"></a></dt>
 <dd><p>Number of axial steps [-] from <a class="reference internal" href="Inputs.html#Inputs.Model.NNODES" title="Inputs.Model.NNODES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NNODES</span></code></a></p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.TIDX">
-<span class="sig-name descname"><span class="pre">TIDX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#Solvers.FourField.Base.TIDX" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIDX</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1</span></span><a class="headerlink" href="#Solvers.FourField.Base.TIDX" title="Link to this definition"></a></dt>
 <dd><p>Time step index [-]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.TIME">
-<span class="sig-name descname"><span class="pre">TIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#Solvers.FourField.Base.TIME" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TIME</span></span><span class="property"> <span class="pre">=</span> <span class="pre">0</span></span><a class="headerlink" href="#Solvers.FourField.Base.TIME" title="Link to this definition"></a></dt>
 <dd><p>Time series [s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.U">
-<span class="sig-name descname"><span class="pre">U</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Base.U" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">U</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Base.U" title="Link to this definition"></a></dt>
 <dd><p>Velocity [m/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.W">
-<span class="sig-name descname"><span class="pre">W</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Base.W" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">W</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Base.W" title="Link to this definition"></a></dt>
 <dd><p>Mass flow rate [kg/s]</p>
 </dd></dl>
 
 <dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.</span></em><a class="headerlink" href="#Solvers.FourField.Base.Z" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">Z</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1.</span></span><a class="headerlink" href="#Solvers.FourField.Base.Z" title="Link to this definition"></a></dt>
 <dd><p>Elevation [m]</p>
 </dd></dl>
 
@@ -1058,7 +1295,7 @@ data, and allocates flow property arrays for multiple walls.</p>
 <dt>Method Summary</dt><dd><dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.BETA">
 <span class="sig-name descname"><span class="pre">BETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.BETA" title="Link to this definition"></a></dt>
-<dd><p>BETA Base film interfacial fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.BETA" title="Solvers.FourField.Base.BETA"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">BETA()</span></code></a> Base film interfacial fraction [-]</p>
 <p>Computes the fraction of interfacial area attributed to the
 base film.</p>
 <p>Inputs:</p>
@@ -1071,7 +1308,7 @@ base film.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.BETAP">
 <span class="sig-name descname"><span class="pre">BETAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.BETAP" title="Link to this definition"></a></dt>
-<dd><p>BETAP Base film heat flux fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.BETAP" title="Solvers.FourField.Base.BETAP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">BETAP()</span></code></a> Base film heat flux fraction [-]</p>
 <p>Determines the fraction of heat flux directed to the base film.
 Applies suppression in pre-annular region to enforce target
 base film thickness at onset of annular flow (OAF).</p>
@@ -1089,7 +1326,7 @@ base film thickness at onset of annular flow (OAF).</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.EPSILON">
 <span class="sig-name descname"><span class="pre">EPSILON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.EPSILON" title="Link to this definition"></a></dt>
-<dd><p>EPSILON Base film mass flow fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.EPSILON" title="Solvers.FourField.Base.EPSILON"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EPSILON()</span></code></a> Base film mass flow fraction [-]</p>
 <p>Calculates the fraction of total film mass flow carried by the
 base film at specified axial locations.</p>
 <p>Inputs:</p>
@@ -1102,7 +1339,7 @@ base film at specified axial locations.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.EQTHICK">
 <span class="sig-name descname"><span class="pre">EQTHICK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.EQTHICK" title="Link to this definition"></a></dt>
-<dd><p>EQTHICK Base equilibrium thickness [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.EQTHICK" title="Solvers.FourField.Base.EQTHICK"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">EQTHICK()</span></code></a> Base equilibrium thickness [m]</p>
 <p>Computes the equilibrium thickness of the base film based on
 <a class="reference internal" href="Inputs.html#Inputs.Model.BASEEQTHICK" title="Inputs.Model.BASEEQTHICK"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BASEEQTHICK</span></code></a> model.</p>
 <p>Inputs:</p>
@@ -1115,7 +1352,7 @@ base film at specified axial locations.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.ETA">
 <span class="sig-name descname"><span class="pre">ETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.ETA" title="Link to this definition"></a></dt>
-<dd><p>ETA Base film deposition fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.ETA" title="Solvers.FourField.Base.ETA"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">ETA()</span></code></a> Base film deposition fraction [-]</p>
 <p>Computes the fraction of drop deposition allocated to the base
 film based on mass flow and interfacial fractions.</p>
 <p>Inputs:</p>
@@ -1128,7 +1365,7 @@ film based on mass flow and interfacial fractions.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.FBASEVAPOR">
 <span class="sig-name descname"><span class="pre">FBASEVAPOR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.FBASEVAPOR" title="Link to this definition"></a></dt>
-<dd><p>FBASEVAPOR Vapor shear stress on base film [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.FBASEVAPOR" title="Solvers.FourField.Base.FBASEVAPOR"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FBASEVAPOR()</span></code></a> Vapor shear stress on base film [N/m^2]</p>
 <p>Computes the shear force exerted by the vapor phase on the base film,
 scaled by interfacial fraction.</p>
 <p>Inputs:</p>
@@ -1141,7 +1378,7 @@ scaled by interfacial fraction.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.FDEP">
 <span class="sig-name descname"><span class="pre">FDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.FDEP" title="Link to this definition"></a></dt>
-<dd><p>FDEP Droplet deposition force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.FDEP" title="Solvers.FourField.Base.FDEP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FDEP()</span></code></a> Droplet deposition force [N/m^2]</p>
 <p>Calculates the momentum transfer to the base film from droplet
 deposition, based on velocity difference and deposition flux.</p>
 <p>Inputs:</p>
@@ -1155,7 +1392,7 @@ deposition, based on velocity difference and deposition flux.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.FDRY">
 <span class="sig-name descname"><span class="pre">FDRY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.FDRY" title="Link to this definition"></a></dt>
-<dd><p>FDRY Dry fraction [-]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.FDRY" title="Solvers.FourField.Base.FDRY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FDRY()</span></code></a> Dry fraction [-]</p>
 <p>Computes the fraction of the exposure period during which the base
 film is expected to be dry.</p>
 <p>Inputs:</p>
@@ -1169,7 +1406,7 @@ film is expected to be dry.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.FTOT">
 <span class="sig-name descname"><span class="pre">FTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.FTOT" title="Link to this definition"></a></dt>
-<dd><p>FTOT Total interfacial force on base film [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.FTOT" title="Solvers.FourField.Base.FTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FTOT()</span></code></a> Total interfacial force on base film [N/m^2]</p>
 <p>Aggregates all force contributions acting on the base film, including
 wall shear, wave interaction, vapor shear, buoyancy, gravity, and
 droplet deposition based on <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTBASE" title="Inputs.Model.MOMENTBASE"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTBASE</span></code></a> model.</p>
@@ -1184,7 +1421,7 @@ droplet deposition based on <a class="reference internal" href="Inputs.html#Inpu
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.FWAVE">
 <span class="sig-name descname"><span class="pre">FWAVE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.FWAVE" title="Link to this definition"></a></dt>
-<dd><p>FWAVE Wave interfacial force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.FWAVE" title="Solvers.FourField.Base.FWAVE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FWAVE()</span></code></a> Wave interfacial force [N/m^2]</p>
 <p>Computes the interfacial shear force exerted by the wave field on the
 base film based on <a class="reference internal" href="Inputs.html#Inputs.Model.WAVEBASEINT" title="Inputs.Model.WAVEBASEINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WAVEBASEINT</span></code></a> model.</p>
 <p>Inputs:</p>
@@ -1198,7 +1435,7 @@ base film based on <a class="reference internal" href="Inputs.html#Inputs.Model.
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.FWAVEMASS">
 <span class="sig-name descname"><span class="pre">FWAVEMASS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.FWAVEMASS" title="Link to this definition"></a></dt>
-<dd><p>FWAVEMASS Base-wave mass exchange force [N/m^2]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.FWAVEMASS" title="Solvers.FourField.Base.FWAVEMASS"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">FWAVEMASS()</span></code></a> Base-wave mass exchange force [N/m^2]</p>
 <p>Calculates the momentum exchange force due to mass transfer between
 base and wave films, based on velocity difference and MWAVE flux.</p>
 <p>Inputs:</p>
@@ -1212,7 +1449,7 @@ base and wave films, based on velocity difference and MWAVE flux.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.MDEP">
 <span class="sig-name descname"><span class="pre">MDEP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.MDEP" title="Link to this definition"></a></dt>
-<dd><p>MDEP Base deposition mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.MDEP" title="Solvers.FourField.Base.MDEP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MDEP()</span></code></a> Base deposition mass flux [kg/m^2/s]</p>
 <p>Calculates deposition flux to the base film from drops,
 scaled by deposition fraction.</p>
 <p>Inputs:</p>
@@ -1225,7 +1462,7 @@ scaled by deposition fraction.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.MENT">
 <span class="sig-name descname"><span class="pre">MENT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.MENT" title="Link to this definition"></a></dt>
-<dd><p>MENT Base entrainment mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.MENT" title="Solvers.FourField.Base.MENT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MENT()</span></code></a> Base entrainment mass flux [kg/m^2/s]</p>
 <p>Placeholder for future implementation if needed. Currently
 returns zero entrainment.</p>
 <p>Inputs:</p>
@@ -1238,7 +1475,7 @@ returns zero entrainment.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.MEVAP">
 <span class="sig-name descname"><span class="pre">MEVAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.MEVAP" title="Link to this definition"></a></dt>
-<dd><p>MEVAP Base evaporation mass flux [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.MEVAP" title="Solvers.FourField.Base.MEVAP"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MEVAP()</span></code></a> Base evaporation mass flux [kg/m^2/s]</p>
 <p>Computes evaporation flux from the base film using heat flux
 fraction and parent film evaporation rate.</p>
 <p>Inputs:</p>
@@ -1251,7 +1488,7 @@ fraction and parent film evaporation rate.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.MTOT">
 <span class="sig-name descname"><span class="pre">MTOT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.MTOT" title="Link to this definition"></a></dt>
-<dd><p>MTOT Total mass flux of the base film [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.MTOT" title="Solvers.FourField.Base.MTOT"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MTOT()</span></code></a> Total mass flux of the base film [kg/m^2/s]</p>
 <p>Calculates the total mass flux exchange associated with the base film,
 including evaporation, entrainment, deposition, and wave interaction.</p>
 <p>Inputs:</p>
@@ -1265,7 +1502,7 @@ including evaporation, entrainment, deposition, and wave interaction.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.MTURB">
 <span class="sig-name descname"><span class="pre">MTURB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.MTURB" title="Link to this definition"></a></dt>
-<dd><p>MTURB Turbulent mass exchange [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.MTURB" title="Solvers.FourField.Base.MTURB"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MTURB()</span></code></a> Turbulent mass exchange [kg/m^2/s]</p>
 <p>Estimates turbulent mass exchange between base and wave films
 using wave mixing coefficient <a class="reference internal" href="Inputs.html#Inputs.Model.WAVEMIXCOEF" title="Inputs.Model.WAVEMIXCOEF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WAVEMIXCOEF</span></code></a>.</p>
 <p>Inputs:</p>
@@ -1278,7 +1515,7 @@ using wave mixing coefficient <a class="reference internal" href="Inputs.html#In
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.MWAVE">
 <span class="sig-name descname"><span class="pre">MWAVE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.MWAVE" title="Link to this definition"></a></dt>
-<dd><p>MWAVE Base film mass flux interaction with wave [kg/m^2/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.MWAVE" title="Solvers.FourField.Base.MWAVE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">MWAVE()</span></code></a> Base film mass flux interaction with wave [kg/m^2/s]</p>
 <p>Computes the mass flux exchange between the base film and wave field.
 Includes net exchange term based on relaxation toward equilibrium
 thickness and turbulent mixing contribution.</p>
@@ -1298,7 +1535,7 @@ thickness and turbulent mixing contribution.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.TBASE">
 <span class="sig-name descname"><span class="pre">TBASE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.TBASE" title="Link to this definition"></a></dt>
-<dd><p>TBASE Base film exposure time [s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.TBASE" title="Solvers.FourField.Base.TBASE"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TBASE()</span></code></a> Base film exposure time [s]</p>
 <p>Calculates the time during which the base film is exposed to vapor
 between successive waves, based on wave spacing and relative velocity
 (eq 24 of <span class="bibtex-citation" id="id1">Le Corre [<a class="reference internal" href="../Guides/references.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022a. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:10.1016/j.ijmultiphaseflow.2022.104057.">2022a</a>]</span>).</p>
@@ -1312,7 +1549,7 @@ between successive waves, based on wave spacing and relative velocity
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.TDRY">
 <span class="sig-name descname"><span class="pre">TDRY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.TDRY" title="Link to this definition"></a></dt>
-<dd><p>TDRY Base film dry-out time [s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.TDRY" title="Solvers.FourField.Base.TDRY"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">TDRY()</span></code></a> Base film dry-out time [s]</p>
 <p>Estimates the time of base film dry out under current
 evaporation and deposition conditions. Returns zero if dry-out does
 not occur.</p>
@@ -1327,7 +1564,7 @@ not occur.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.THICKMIN">
 <span class="sig-name descname"><span class="pre">THICKMIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.THICKMIN" title="Link to this definition"></a></dt>
-<dd><p>THICKMIN Minimum base film thickness [m]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.THICKMIN" title="Solvers.FourField.Base.THICKMIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">THICKMIN()</span></code></a> Minimum base film thickness [m]</p>
 <p>Calculates the minimum thickness of the base film at the end of its
 exposure period, based on mass flow rate, liquid density, velocity,
 and channel perimeter (eq. 28 of <span class="bibtex-citation" id="id2">Le Corre [<a class="reference internal" href="../Guides/references.html#id12" title="Jean-Marie Le Corre. Phenomenological model of disturbance waves in annular two-phase flow. International Journal of Multiphase Flow, 151:104057, 2022a. URL: https://www.sciencedirect.com/science/article/pii/S0301932222000696, doi:10.1016/j.ijmultiphaseflow.2022.104057.">2022a</a>]</span>).</p>
@@ -1342,7 +1579,7 @@ and channel perimeter (eq. 28 of <span class="bibtex-citation" id="id2">Le Corr
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.WMIN">
 <span class="sig-name descname"><span class="pre">WMIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.WMIN" title="Link to this definition"></a></dt>
-<dd><p>WMIN Minimum base film mass flow rate [kg/s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.WMIN" title="Solvers.FourField.Base.WMIN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">WMIN()</span></code></a> Minimum base film mass flow rate [kg/s]</p>
 <p>Calculates the minimum mass flow rate of the base film at the end of
 its exposure period (TBASE), accounting for evaporation and deposition.</p>
 <p>Inputs:</p>
@@ -1356,7 +1593,7 @@ its exposure period (TBASE), accounting for evaporation and deposition.</p>
 <dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.FourField.Base.WMINL">
 <span class="sig-name descname"><span class="pre">WMINL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">base</span></em>, <em class="sig-param"><span class="pre">drop</span></em>, <em class="sig-param"><span class="pre">zIdx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.FourField.Base.WMINL" title="Link to this definition"></a></dt>
-<dd><p>WMINL Minimum base film mass flow rate per perimeter [kg/m-s]</p>
+<dd><p><a class="reference internal" href="#Solvers.FourField.Base.WMINL" title="Solvers.FourField.Base.WMINL"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">WMINL()</span></code></a> Minimum base film mass flow rate per perimeter [kg/m-s]</p>
 <p>Computes the minimum base film mass flow rate normalized by channel
 perimeter.</p>
 <p>Inputs:</p>
