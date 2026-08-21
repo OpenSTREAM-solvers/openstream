@@ -1663,8 +1663,8 @@ classdef Mixture < Solvers.AbstractField
             % Notes:
             %
             % - Applies only at nodes flagged by
-            % :attr:`Solvers.Mixture.Mixture.CBT` or
-            % :attr:`Solvers.Mixture.Mixture.MFBT`.
+            %   :attr:`Solvers.Mixture.Mixture.CBT` or
+            %   :attr:`Solvers.Mixture.Mixture.MFBT`.
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 

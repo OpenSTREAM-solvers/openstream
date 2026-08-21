@@ -67,7 +67,7 @@ toc_object_entries = True
 toc_object_entries_show_parents = 'all'
 
 autodoc_default_flags = ['members']
-autosummary_generate = True
+autosummary_generate = False
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

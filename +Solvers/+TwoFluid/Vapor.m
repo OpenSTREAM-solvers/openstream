@@ -763,6 +763,7 @@ classdef Vapor < Solvers.AbstractField
             % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
             % - liquid — :class:`Solvers.TwoFluid.Liquid` object
             % - zIdx   — Axial indices to evaluate (optional)
+            %
             % Notes:
             %
             % - The pressure gradient from the mixture solver is used

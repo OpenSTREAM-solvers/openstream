@@ -24,5 +24,3 @@ This module includes:
    :show-inheritance:
    :members:
 .. :exclude-members: 
-
-----
