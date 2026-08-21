@@ -12,6 +12,7 @@ docs/**/*.fdb_latexmk
 docs/**/*.fls
 docs/**/*.log
 docs/venv*/
+docs/.venv*/
 
 tests/+*/
 
