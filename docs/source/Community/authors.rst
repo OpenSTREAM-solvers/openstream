@@ -16,9 +16,9 @@ Maintainers
 
 These are the primary maintainers of OpenSTREAM, actively supporting development, reviewing contributions, and guiding the project forward:
 
-- `Jason Chan <https://scholar.google.com/citations?user=NFodMKwAAAAJ>`_ (UWM)
-- `Jean-Marie Le Corre <www.linkedin.com/in/lecorrejm>`_ (WSE)
-- `Roman Morse <www.linkedin.com/in/roman-w-morse-1073a0177>`_ (MIT)
+- `Jason Chan <https://www.linkedin.com/in/jasonchan1995>`_ (UWM)
+- `Jean-Marie Le Corre <https://www.linkedin.com/in/lecorrejm>`_ (WSE)
+- `Roman Morse <https://www.linkedin.com/in/roman-w-morse-1073a0177>`_ (MIT)
   
 
 Contributors and users
@@ -26,13 +26,13 @@ Contributors and users
 
 OpenSTREAM is built through the collaborative efforts of many talented individuals. Here are some of the contributors and users who have helped shape the project:
 
-- `Allison Mahvi <www.linkedin.com/in/allison-mahvi-30041164>`_ (UWM)
-- `Cole Dunbar <www.linkedin.com/in/cole-dunbar>`_ (UWM)
-- `Elisabeth Walter <www.linkedin.com/in/elisabeth-walter>`_ (ETHZ)
+- `Allison Mahvi <https://www.linkedin.com/in/allison-mahvi-30041164>`_ (UWM)
+- `Cole Dunbar <https://www.linkedin.com/in/cole-dunbar>`_ (UWM)
+- `Elisabeth Walter <https://www.linkedin.com/in/elisabeth-walter>`_ (ETHZ)
 - Evan Hurlburt (NNL)
 - Haipeng Li (KTH)
-- `Juliana Duarte <www.linkedin.com/in/julianapduarte>`_ (UWM)
-- `Tyler Lee <www.linkedin.com/in/tyler-lee-6072841b4>`_ (UWM)
+- `Juliana Duarte <https://www.linkedin.com/in/julianapduarte>`_ (UWM)
+- `Tyler Lee <https://www.linkedin.com/in/tyler-lee-6072841b4>`_ (UWM)
 
 ..
 
