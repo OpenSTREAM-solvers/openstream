@@ -1,0 +1,2518 @@
+{
+"_schemaVersion":"1.0.0",
+
+"Inputs.Model.writeInputFile":{
+  "inputs": [
+    {
+      "name": "filePathName",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "File pathname"
+    },
+    {
+      "name": "ID",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "integer",
+          "positive",
+          "scalar"
+        ]
+      ],
+      "purpose": "Identifier for the model configuration"
+    },
+    {
+      "name": "NNODES",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "numeric"
+      ],
+      "purpose": ""
+    },
+    {
+      "name": "FLUID",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "CoolProp fluid identifier"
+    },
+    {
+      "name": "PROPERTIES",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.FLUIDPROPERTIES'))"
+      ],
+      "purpose": "Assumption model for fluid properties selected from :class:`InputEnums.FLUIDPROPERTIES`"
+    },
+    {
+      "name": "KLOC",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Elevation of local perturbations [m]"
+    },
+    {
+      "name": "WBOILINGXSUB",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Equilibrium thermodynamic quality at onset of subcooled wall boiling [-]"
+    },
+    {
+      "name": "WBOILINGN",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Wall boiling function exponent [-]"
+    },
+    {
+      "name": "WBOILINGXSAT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Equilibrium thermodynamic quality at onset of saturated wall boiling [-]"
+    },
+    {
+      "name": "OAF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.OAF'))"
+      ],
+      "purpose": "Onset of annular flow model selected from :class:`InputEnums.OAF`"
+    },
+    {
+      "name": "OAFTRANSITION",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,2"
+        ]
+      ],
+      "purpose": "Annular flow transition function parameters (sigmoid width/location wrt OAF) [m]"
+    },
+    {
+      "name": "CBT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.CBT'))"
+      ],
+      "purpose": "Critical Boiling Transition model selected from :class:`InputEnums.CBT`"
+    },
+    {
+      "name": "CBTMULT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Critical boiling Heat flux multiplier function"
+    },
+    {
+      "name": "CBTKEFFECT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,2"
+        ]
+      ],
+      "purpose": "Grid effect coefficients (:math:`1 + C(1) \\exp(C(2) z)`) [-]"
+    },
+    {
+      "name": "CBTELEVATION",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Critical Boiling Transition Elevation [m]"
+    },
+    {
+      "name": "MFBT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MFBT'))"
+      ],
+      "purpose": "Minimum Film Boiling Transition model selected from :class:`InputEnums.MFBT`"
+    },
+    {
+      "name": "DTMFB",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Minimum film boiling temperature from saturation [K]"
+    },
+    {
+      "name": "SPMTM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.SPMTM'))"
+      ],
+      "purpose": "Single-phase wall momentum transfer model selected from :class:`InputEnums.SPMTM`"
+    },
+    {
+      "name": "FRICTION",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,3"
+        ]
+      ],
+      "purpose": "Wall friction coefficients [-]"
+    },
+    {
+      "name": "TPFM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.TPFM'))"
+      ],
+      "purpose": "Two-phase friction multiplier model selected from :class:`InputEnums.TPFM`"
+    },
+    {
+      "name": "KLOSS",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Pressure loss coefficients of local perturbations [-]"
+    },
+    {
+      "name": "TPKM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.TPKM'))"
+      ],
+      "purpose": "Two-phase local loss multiplier model selected from :class:`InputEnums.TPKM`"
+    },
+    {
+      "name": "BTMTM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.BTMTM'))"
+      ],
+      "purpose": "Boiling transition wall momentum transfer model selected from :class:`InputEnums.BTMTM`"
+    },
+    {
+      "name": "SPHTM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.SPHTM'))"
+      ],
+      "purpose": "Single-phase wall heat transfer model selected from :class:`InputEnums.SPHTM`"
+    },
+    {
+      "name": "DITTUSBOELTERCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,3"
+        ]
+      ],
+      "purpose": "Dittus-Boelter coefficients [-]"
+    },
+    {
+      "name": "TPHTM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.TPHTM'))"
+      ],
+      "purpose": "Two-phase wall heat transfer model selected from :class:`InputEnums.TPHTM`"
+    },
+    {
+      "name": "BTHTM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.BTHTM'))"
+      ],
+      "purpose": "Boiling transition wall heat transfer model selected from :class:`InputEnums.BTHTM`"
+    },
+    {
+      "name": "MOECKCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,4"
+        ]
+      ],
+      "purpose": "Groeneveld-Moeck post-boiling transition model coefficients [-]"
+    },
+    {
+      "name": "VOID",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.VOID'))"
+      ],
+      "purpose": "Void fraction model selected from :class:`InputEnums.VOID`"
+    },
+    {
+      "name": "SLIP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Phase velocity ratio [-]"
+    },
+    {
+      "name": "THERMALNONEQ",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.THERMALNONEQ'))"
+      ],
+      "purpose": "Thermal non-equilibrium model selected from :class:`InputEnums.THERMALNONEQ`"
+    },
+    {
+      "name": "THERMALRELAX",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.THERMALRELAX'))"
+      ],
+      "purpose": "Thermal non-equilibrium time relaxation model selected from :class:`InputEnums.THERMALRELAX`"
+    },
+    {
+      "name": "RELAXX",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Interfacial phase change relaxation time thermodynamic quality [-]"
+    },
+    {
+      "name": "RELAXCONDFO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Interfacial condensation Fourier number array  for THERMALRELAX FOURIERX model [-]"
+    },
+    {
+      "name": "RELAXEVAPFO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Interfacial evaporation  Fourier number array  for THERMALRELAX FOURIERX model [-]"
+    },
+    {
+      "name": "RELAXCONDT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Interfacial condensation relaxation time array  for THERMALRELAX TIMEX model [s]"
+    },
+    {
+      "name": "RELAXEVAPT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Interfacial evaporation  relaxation time array  for THERMALRELAX TIMEX model [s]"
+    },
+    {
+      "name": "RELAXCONDCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,4"
+        ]
+      ],
+      "purpose": "Interfacial condensation time relaxation coefficients for THERMALRELAX HOMOGENEOUS model"
+    },
+    {
+      "name": "RELAXEVAPCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,4"
+        ]
+      ],
+      "purpose": "Interfacial evaporation  time relaxation coefficients for THERMALRELAX HOMOGENEOUS model"
+    },
+    {
+      "name": "RELAXCONDFOCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,4"
+        ]
+      ],
+      "purpose": "Interfacial condensation time relaxation coefficients for THERMALRELAX FOURIER model"
+    },
+    {
+      "name": "RELAXEVAPFOCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,6"
+        ]
+      ],
+      "purpose": "Interfacial evaporation  time relaxation coefficients for THERMALRELAX FOURIER model"
+    },
+    {
+      "name": "KTRELAX",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Thermal relaxation time at local perturbations [s]"
+    },
+    {
+      "name": "NEARWALLRATIO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Near-wall mass flow distribution ratio [-]"
+    },
+    {
+      "name": "NEARWALLEQOAF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "logical",
+          "choices={'TRUE','FALSE'}",
+          "scalar"
+        ]
+      ],
+      "purpose": "Near-wall equilibrium at onset of annular two-phase flow"
+    },
+    {
+      "name": "NEARWALLH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.NEARWALLH'))"
+      ],
+      "purpose": "Near-wall equilibrium enthalpy model selected from :class:`InputEnums.NEARWALLH`"
+    },
+    {
+      "name": "NEARWALLHRATIO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Near-wall equilibrium enthalpy ratio [-]"
+    },
+    {
+      "name": "NEARWALLRELAX",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.NEARWALLRELAX'))"
+      ],
+      "purpose": "Near-wall energy transfer time relaxation model selected from :class:`InputEnums.NEARWALLRELAX`"
+    },
+    {
+      "name": "NEARWALLRELAXX",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Near-wall exchange relaxation time thermodynamic quality [-]"
+    },
+    {
+      "name": "NEARWALLRELAXT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Near-wall energy transfer relaxation time array [s]"
+    },
+    {
+      "name": "NEARWALLRELAXCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,3"
+        ]
+      ],
+      "purpose": "Near-wall energy transfer time relaxation coefficients for void option"
+    },
+    {
+      "name": "INTLENGTH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.INTLENGTH'))"
+      ],
+      "purpose": "Interfacial length scale model selected from :class:`InputEnums.INTLENGTH`"
+    },
+    {
+      "name": "INTAREA",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.INTAREA'))"
+      ],
+      "purpose": "Interfacial area model selected from :class:`InputEnums.INTAREA`"
+    },
+    {
+      "name": "INTLENGTHVCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Dispersed gas    constant interfacial length scale [m]"
+    },
+    {
+      "name": "INTLENGTHLCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Dispersed liquid constant interfacial length scale [m]"
+    },
+    {
+      "name": "LOCRELVEL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.LOCRELVEL'))"
+      ],
+      "purpose": "Local relative phase velocity model selected from :class:`InputEnums.LOCRELVEL`"
+    },
+    {
+      "name": "RELVELCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Multiplication factor to the local relative velocity [-]"
+    },
+    {
+      "name": "MOMENTLIQUID",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MOMENTLIQUID'))"
+      ],
+      "purpose": "Liquid momentum conservation model selected from :class:`InputEnums.MOMENTLIQUID`"
+    },
+    {
+      "name": "MOMENTGAS",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MOMENTGAS'))"
+      ],
+      "purpose": "Gas momentum conservation model selected from :class:`InputEnums.MOMENTGAS`"
+    },
+    {
+      "name": "DROPDRAG",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.DROPDRAG'))"
+      ],
+      "purpose": "Drop drag model selected from :class:`InputEnums.DROPDRAG`"
+    },
+    {
+      "name": "DROPDRAGCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Drop constant drag coefficient [-]"
+    },
+    {
+      "name": "BUBBLEDRAG",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.BUBBLEDRAG'))"
+      ],
+      "purpose": "Bubble drag model selected from :class:`InputEnums.BUBBLEDRAG`"
+    },
+    {
+      "name": "BUBBLEDRAGCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Bubble constant drag coefficient [-]"
+    },
+    {
+      "name": "INTNU",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.INTNU'))"
+      ],
+      "purpose": "Interfacial heat transfer model selected from :class:`InputEnums.INTNU`"
+    },
+    {
+      "name": "INTNUVCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Dispersed gas    constant interfacial Nusselt number [-]"
+    },
+    {
+      "name": "INTNULCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Dispersed liquid constant interfacial Nusselt number [-]"
+    },
+    {
+      "name": "RANZMARSHALLVCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,4"
+        ]
+      ],
+      "purpose": "Dispersed gas    Ranz-Marshall coefficients [-]"
+    },
+    {
+      "name": "RANZMARSHALLLCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,4"
+        ]
+      ],
+      "purpose": "Dispersed liquid Ranz-Marshall coefficients [-]"
+    },
+    {
+      "name": "INTTRANSH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.INTTRANSH'))"
+      ],
+      "purpose": "Interfacial enthalpy transfer model selected from :class:`InputEnums.INTTRANSH`"
+    },
+    {
+      "name": "POSFILM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "logical",
+          "choices={'TRUE','FALSE'}",
+          "scalar"
+        ]
+      ],
+      "purpose": "Positive film flow rate/thickness model"
+    },
+    {
+      "name": "OAFENTRAINED",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.OAFENTRAINED'))"
+      ],
+      "purpose": "Entrained drop model at onset of annular flow selected from :class:`InputEnums.OAFENTRAINED`"
+    },
+    {
+      "name": "OAFDROPRATIO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Drop/Liquid mass ratio at onset of annular flow [-]"
+    },
+    {
+      "name": "DEPOSITION",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.DEPOSITION'))"
+      ],
+      "purpose": "Drop deposition model selected from :class:`InputEnums.DEPOSITION`"
+    },
+    {
+      "name": "DEPENHANCEMENT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.DEPENHANCEMENT'))"
+      ],
+      "purpose": "Drop deposition enhancement model due to local perturbations selected from :class:`InputEnums.DEPENHANCEMENT`"
+    },
+    {
+      "name": "KBLOCKRATIO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Blockage ratios of local perturbations [-]"
+    },
+    {
+      "name": "KTUNING",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Drop deposition enhancement tuning coefficients [-]"
+    },
+    {
+      "name": "ENTRAINMENT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.ENTRAINMENT'))"
+      ],
+      "purpose": "Film entrainment model selected from :class:`InputEnums.ENTRAINMENT`"
+    },
+    {
+      "name": "OKAWACOEFS",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Coefficients of Okawa entrainment model [-]"
+    },
+    {
+      "name": "MOMENTFILM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MOMENTFILM'))"
+      ],
+      "purpose": "Film momentum conservation model selected from :class:`InputEnums.MOMENTFILM`"
+    },
+    {
+      "name": "VAPORFRIC",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.VAPORFRIC'))"
+      ],
+      "purpose": "Vapor friction model selected from :class:`InputEnums.VAPORFRIC`"
+    },
+    {
+      "name": "VAPORFRICCST",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Vapor friction constant [-]"
+    },
+    {
+      "name": "THINFILMFRIC",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.THINFILMFRIC'))"
+      ],
+      "purpose": "Thin film wall friction model selected from :class:`InputEnums.THINFILMFRIC`"
+    },
+    {
+      "name": "THINFILMTHICK",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Minimum thin film thickness [m]"
+    },
+    {
+      "name": "MOMENTDROP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MOMENTDROP'))"
+      ],
+      "purpose": "Drop momentum conservation model selected from :class:`InputEnums.MOMENTDROP`"
+    },
+    {
+      "name": "DROPSLIP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Drop/vapor velocity ratio [-]"
+    },
+    {
+      "name": "DROPDIAM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Drop diameter [m]"
+    },
+    {
+      "name": "OAFFILMSPLIT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.OAFFILMSPLIT'))"
+      ],
+      "purpose": "Film mass flow split model at onset of annular flow selected from :class:`InputEnums.OAFFILMSPLIT`"
+    },
+    {
+      "name": "OAFBASERATIO",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Base/Film mass ratio at onset of annular flow [-]"
+    },
+    {
+      "name": "BASEEQTHICK",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.BASEEQTHICK'))"
+      ],
+      "purpose": "Equilibrium base film thickness model selected from :class:`InputEnums.BASEEQTHICK`"
+    },
+    {
+      "name": "BASEEQTHICKCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Equilibrium base film thickness coefficients [-]"
+    },
+    {
+      "name": "BASEYPLUS",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Equilibrium base film y+ value [-]"
+    },
+    {
+      "name": "RELAXTB",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Base film / wave mass exchange relaxation time [s]"
+    },
+    {
+      "name": "WAVEMIXCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Base film / wave turbulent mixing coefficient"
+    },
+    {
+      "name": "WAVEFREQUENCY",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.WAVEFREQUENCY'))"
+      ],
+      "purpose": "Wave number density model selected from :class:`InputEnums.WAVEFREQUENCY`"
+    },
+    {
+      "name": "EQSTROUHAL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.EQSTROUHAL'))"
+      ],
+      "purpose": "Equilibrium wave Strouhal number model selected from :class:`InputEnums.EQSTROUHAL`"
+    },
+    {
+      "name": "EQSTROUHALCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Equilibrium wave Strouhal number coefficients [-]"
+    },
+    {
+      "name": "RELAXTW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Wave number density relaxation time [s]"
+    },
+    {
+      "name": "CSTWAVEFREQ",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Imposed constant wave frequency [Hz]"
+    },
+    {
+      "name": "MOMENTBASE",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MOMENTBASE'))"
+      ],
+      "purpose": "Base film momentum conservation model selected from :class:`InputEnums.MOMENTBASE`"
+    },
+    {
+      "name": "MOMENTWAVE",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MOMENTWAVE'))"
+      ],
+      "purpose": "Wave momentum conservation model selected from :class:`InputEnums.MOMENTWAVE`"
+    },
+    {
+      "name": "WAVEBASEINT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.WAVEBASEINT'))"
+      ],
+      "purpose": "Wave / base film interfacial momentum transfer model selected from :class:`InputEnums.WAVEBASEINT`"
+    },
+    {
+      "name": "SHAPEFACTORCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Wave shape factor coefficients [-]"
+    },
+    {
+      "name": "WAVEDRAGCOEF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,1"
+        ]
+      ],
+      "purpose": "Wave drag coefficient [-]"
+    },
+    {
+      "name": "THINWAVETHICK",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Minimum thin wave thickness [m]"
+    }
+  ]
+},
+"Inputs.Options.writeInputFile":{
+  "inputs": [
+    {
+      "name": "filePathName",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "File pathname"
+    },
+    {
+      "name": "ID",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "integer",
+          "positive",
+          "scalar"
+        ]
+      ],
+      "purpose": "Identifier for the options configuration"
+    },
+    {
+      "name": "AXIALINTERP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Method for interpolating axial power distribution"
+    },
+    {
+      "name": "TIMEINTERP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Method for interpolating time-dependent boundary conditions"
+    },
+    {
+      "name": "TSTEP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Time step size for transient simulations [s]"
+    },
+    {
+      "name": "MAXITER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Maximum number of inner iterations per time step"
+    },
+    {
+      "name": "SSTSTEP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Time step size for steady-state iterations [s]"
+    },
+    {
+      "name": "SSMAXITER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Maximum number of steady-state iterations"
+    },
+    {
+      "name": "MRMTIMEINT",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "choices=string(enumeration('InputEnums.MRMTIMEINT'))"
+      ],
+      "purpose": "Time integration for vapor mass/energy conservation equations"
+    },
+    {
+      "name": "ERRORW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Mass flow rate error target in inner iterations [kg/s]"
+    },
+    {
+      "name": "ERRORP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Pressure error target in inner iterations [Pa]"
+    },
+    {
+      "name": "ERRORH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Enthalpy error target in inner iterations [J/kg]"
+    },
+    {
+      "name": "SSCONVW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Mass flow rate steady-state convergence criterion [kg/s]"
+    },
+    {
+      "name": "SSCONVP",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Pressure steady-state convergence criterion [Pa]"
+    },
+    {
+      "name": "SSCONVH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Enthalpy steady-state convergence criterion [J/kg]"
+    },
+    {
+      "name": "RELAXWM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the mixture mass conservation equation [-]"
+    },
+    {
+      "name": "RELAXPM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the mixture momentum conservation equation [-]"
+    },
+    {
+      "name": "RELAXHM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the mixture energy conservation equation [-]"
+    },
+    {
+      "name": "RELAXWV",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the vapor  mass conservation equation [-]"
+    },
+    {
+      "name": "RELAXHV",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the vapor  energy conservation equation [-]"
+    },
+    {
+      "name": "ERRORU",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Velocity error target in inner iterations [m/s]"
+    },
+    {
+      "name": "SSCONVU",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Velocity steady-state convergence criterion [m/s]"
+    },
+    {
+      "name": "RELAXWL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the liquid mass conservation equation [-]"
+    },
+    {
+      "name": "RELAXUL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the liquid momentum conservation equation [-]"
+    },
+    {
+      "name": "RELAXUV",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the vapor  momentum conservation equation [-]"
+    },
+    {
+      "name": "RELAXHL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the liquid energy conservation equation [-]"
+    },
+    {
+      "name": "OAFEQUILMAXITER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Maximum number of iterations to find equilibrium at onset of annular flow"
+    },
+    {
+      "name": "OAFEQUILTOL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Target film mass flow rate tolerance to find equilibrium at onset of annular flow [kg/s/m]"
+    },
+    {
+      "name": "UDEQUILMAXITER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Maximum number of iterations to find droplet equilibrium velocity"
+    },
+    {
+      "name": "UDEQUILTOL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Target drop force tolerance to find droplet equilibrium velocity [N/m^3]"
+    },
+    {
+      "name": "UFEQUILMAXITER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Maximum number of iterations to find film equilibrium velocity"
+    },
+    {
+      "name": "UFEQUILTOL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Target film force tolerance to find film equilibrium velocity [N/m^3]"
+    },
+    {
+      "name": "ENTNUMMAXITER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "Maximum number of iterations to find film entrainment number"
+    },
+    {
+      "name": "ENTNUMTOL",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Target velocity slip tolerance to find film entrainment number [-]"
+    },
+    {
+      "name": "ERRORWF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Film mass flow rate error target in inner iterations [kg/s/m]"
+    },
+    {
+      "name": "ERRORUF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Film velocity error target in inner iterations [m/s]"
+    },
+    {
+      "name": "ERRORUD",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Drop velocity error target in inner iterations [m/s]"
+    },
+    {
+      "name": "SSCONVWF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Film mass flow rate steady-state convergence criterion [kg/s/m]"
+    },
+    {
+      "name": "SSCONVUF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Film velocity steady-state convergence criterion [m/s]"
+    },
+    {
+      "name": "SSCONVUD",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Drop velocity steady-state convergence criterion [m/s]"
+    },
+    {
+      "name": "RELAXWF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the film mass conservation equation [-]"
+    },
+    {
+      "name": "RELAXUF",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the film momentum conservation equation [-]"
+    },
+    {
+      "name": "RELAXUD",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the drop momentum conservation equation [-]"
+    },
+    {
+      "name": "ERRORFW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Wave frequency error target in inner iterations [Hz]"
+    },
+    {
+      "name": "SSCONVFW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Wave frequency steady-state convergence criterion [Hz]"
+    },
+    {
+      "name": "RELAXWB",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the base mass conservation equation [-]"
+    },
+    {
+      "name": "RELAXUB",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the base momentum conservation equation [-]"
+    },
+    {
+      "name": "RELAXWW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the wave mass conservation equation [-]"
+    },
+    {
+      "name": "RELAXUW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the wave momentum conservation equation [-]"
+    },
+    {
+      "name": "RELAXFW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Relaxation factor for the wave number conservation equation [-]"
+    }
+  ]
+},
+"Inputs.BoundaryConditions.writeInputFile":{
+  "inputs": [
+    {
+      "name": "filePathName",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "File pathname"
+    },
+    {
+      "name": "TIME",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "numeric"
+      ],
+      "purpose": "Simulation time [s]"
+    },
+    {
+      "name": "PRESSURE",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "numeric"
+      ],
+      "purpose": "System pressure [Pa]"
+    },
+    {
+      "name": "HIN",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "numeric"
+      ],
+      "purpose": "Inlet enthalpy [J/kg]"
+    },
+    {
+      "name": "MFLOW",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        "numeric"
+      ],
+      "purpose": "Mass flow rate [kg/s]"
+    },
+    {
+      "name": "POWER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Total power [W]"
+    },
+    {
+      "name": "WMESH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "positive",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Node size distribution [m]"
+    },
+    {
+      "name": "WPOWER",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=:,:"
+        ]
+      ],
+      "purpose": "Relative power distribution(s) [-]"
+    }
+  ]
+},
+"Inputs.Geometry.writeInputFile":{
+  "inputs": [
+    {
+      "name": "filePathName",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char"
+      ],
+      "purpose": "File pathname"
+    },
+    {
+      "name": "ID",
+      "kind": "required",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "integer",
+          "positive",
+          "scalar"
+        ]
+      ],
+      "purpose": "Channel identifier"
+    },
+    {
+      "name": "LENGTH",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Axial length [m]"
+    },
+    {
+      "name": "AREA",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Coolant area [m^2]"
+    },
+    {
+      "name": "PERIM",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,:"
+        ]
+      ],
+      "purpose": "Perimeter(s) of the channel walls [m]"
+    },
+    {
+      "name": "ANGLE",
+      "kind": "namevalue",
+      "type": [
+        [
+          "string",
+          "scalar"
+        ],
+        "char",
+        [
+          "numeric",
+          "size=1,1"
+        ]
+      ],
+      "purpose": "Inclination angle from vertical [deg]"
+    }
+  ]
+}
+}
