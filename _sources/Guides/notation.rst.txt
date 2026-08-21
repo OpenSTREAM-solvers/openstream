@@ -83,7 +83,7 @@ Primary variables
      - Gravitational acceleration.
 
 Phase and field subscripts
--------------------------
+--------------------------
 
 The notation distinguishes between thermodynamic phases and computational fields. A phase is a physical state of matter, such as liquid or vapor. A field is a computationally resolved constituent with its own transported variables.
 

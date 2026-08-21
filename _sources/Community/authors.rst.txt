@@ -7,6 +7,8 @@ This effort is driven by the OpenSTREAM code development team, with active contr
 
 ----
 
+.. _maintainers:
+
 *Maintainers and contributors/users listed alphabetically by first name, last name.*
 
 Maintainers
