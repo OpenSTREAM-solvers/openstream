@@ -22,5 +22,3 @@ Each tutorial is provided as a MATLAB Live Script in the OpenSTREAM ``tutorials`
 .. warning::
 
    The models, correlations, numerical settings, and solver options selected throughout the tutorials are chosen for educational and demonstration purposes only. Their use in a tutorial does not imply that they are appropriate for a particular application. Model selection, calibration, and verification should always be performed based on the specific problem being analyzed.
-
-https://openstream-solvers.github.io/openstream/_static/
