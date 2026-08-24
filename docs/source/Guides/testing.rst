@@ -52,7 +52,7 @@ The OpenSTREAM tests are organized into three categories:
 Unit tests should execute quickly and focus on individual components.
 Integration tests verify selected solver calculations and numerical results.
 
-Running all Ttsts
+Running all tests
 -----------------
 
 The recommended way to execute the complete test suite is:
@@ -70,7 +70,7 @@ The test runner:
 
 A successful run should finish without errors and report all tests as passed.
 
-Running individual test Suites
+Running individual test suites
 ------------------------------
 
 Unit tests:
@@ -117,7 +117,7 @@ Reference results should only be updated when:
 
 Reference results should **not** be updated simply to make failing tests pass.
 
-Adding new Ttsts
+Adding new tests
 ----------------
 
 When introducing new functionality:
@@ -215,7 +215,7 @@ When a test fails:
 #. Verify the expected results manually if needed.
 #. Update reference solutions only if the change is intentional and justified.
 
-Contributor Checklist
+Contributor checklist
 ---------------------
 
 Before submitting a pull request:
