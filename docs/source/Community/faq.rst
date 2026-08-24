@@ -847,6 +847,122 @@ Numerical convergence
    Mesh sensitivity, time-step sensitivity, conservation checks, and
    comparison with appropriate reference data remain necessary.
 
+.. dropdown:: Is OpenSTREAM limited in terms of mesh size or time-step size?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   OpenSTREAM does not impose a hard-coded maximum number of axial nodes,
+   ``NNODES``, or a predefined set of allowable physical time-step values,
+   ``TSTEP``. Within the applicable input requirements, users can select the
+   spatial and temporal discretizations appropriate for their calculations.
+
+   The absence of hard-coded limits does not mean that any mesh or time step
+   is numerically appropriate. Practical limits arise from available memory,
+   computational effort, convergence behavior, numerical accuracy, and the
+   spatial and temporal scales of the modeled problem.
+
+   The axial mesh is defined by ``NNODES`` in the physical-model inputs.
+   Increasing ``NNODES`` improves the spatial resolution of the
+   one-dimensional solution but also increases the number of calculated
+   values, memory use, and computational effort.
+
+   A coarse axial mesh may adequately represent smooth distributions but can
+   smooth localized variations, shift the predicted location of a
+   transition, or fail to capture a local maximum or minimum. Finer meshes
+   may be required near:
+
+   * abrupt changes in wall heat flux;
+
+   * local geometric perturbations or pressure losses;
+
+   * boiling or flow-regime transitions;
+
+   * the onset of annular flow;
+
+   * film dryout or regeneration;
+
+   * other regions containing strong axial gradients.
+
+   The physical time step is defined by ``TSTEP`` in the numerical-option
+   inputs. OpenSTREAM does not impose a hard-coded minimum or maximum
+   physical time-step size. However, ``TSTEP`` must be selected according to
+   the duration and shortest relevant time scale of the physical transient.
+
+   OpenSTREAM uses fully implicit backward Euler time integration, which
+   provides robust time advancement. Robustness or numerical stability does
+   not, however, guarantee temporal accuracy.
+
+   A large physical time step may reproduce the overall transient trend but
+   smooth rapid changes, underestimate or miss peak values, or shift the
+   calculated timing of an event. A smaller time step provides greater
+   temporal resolution but requires more calculated time steps and greater
+   computational effort.
+
+   Important prescribed changes in the boundary conditions should also be
+   represented with sufficient temporal resolution. A time step that is
+   adequate for slowly varying quantities may still be too large for the
+   accurate calculation of peak values, peak timing, or short-duration
+   behavior.
+
+   The physical time step, ``TSTEP``, should not be confused with the
+   steady-state pseudo-time step, ``SSTSTEP``. ``TSTEP`` controls advancement
+   of the physical transient, whereas ``SSTSTEP`` controls the numerical
+   progression from the solver-assigned initialization state toward the
+   steady-state solution.
+
+   A smaller pseudo-time step can make the point iterations easier to
+   converge but may require more pseudo-time steps. A larger pseudo-time step
+   may accelerate progression toward steady state but can make the local
+   nonlinear iterations more difficult or produce less regular convergence.
+
+   Mesh and time-step adequacy should be demonstrated through sensitivity
+   studies. Successive spatial or temporal refinements should produce
+   progressively smaller changes in the quantities of interest. The finest
+   mesh or smallest time step used in a study is a reference solution and
+   should not automatically be treated as exact.
+
+.. dropdown:: Can OpenSTREAM use a non-uniform axial mesh?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   No. The current OpenSTREAM implementation uses a uniform axial mesh.
+
+   The user specifies the total channel length, ``LENGTH``, and the number
+   of axial nodes, ``NNODES``. OpenSTREAM then distributes the nodes
+   uniformly along the channel. The current input interface does not provide
+   an option for specifying individual axial-node locations or variable
+   node lengths.
+
+   Consequently, local mesh refinement cannot currently be applied only in
+   selected regions, such as near:
+
+   * an abrupt change in wall heat flux;
+
+   * a local geometric perturbation or pressure loss;
+
+   * boiling or flow-regime transitions;
+
+   * the onset of annular flow;
+
+   * film dryout or regeneration;
+
+   * another region containing a strong axial gradient.
+
+   When additional spatial resolution is required, ``NNODES`` must be
+   increased for the complete channel. This reduces the uniform axial node
+   spacing but also increases the number of calculated values and the
+   computational effort throughout the domain.
+
+   The absence of a non-uniform mesh option does not necessarily prevent
+   accurate calculations. A uniform mesh can be adequate when the axial
+   behavior is sufficiently smooth or when enough nodes are used to resolve
+   the shortest relevant axial length scale. Mesh adequacy should be
+   assessed through a spatial-sensitivity study.
+
+   Support for user-defined axial-node locations or variable node lengths
+   may be considered in a future development, but it is not currently
+   implemented.
+   
 .. dropdown:: Which numerical options control steady-state convergence?
    :animate: fade-in-slide-down
    :chevron: right-down
@@ -1708,6 +1824,60 @@ Physical scope and limitations
    * fully coupled pressure-velocity solution in the advanced solvers;
 
    Some currently unsupported capabilities may be considered for future development.
+
+.. dropdown:: Is OpenSTREAM a CFD code?
+   :animate: fade-in-slide-down
+   :chevron: right-down
+
+   No. OpenSTREAM is not a Computational Fluid Dynamics (CFD) code in the
+   conventional engineering sense.
+
+   OpenSTREAM solves one-dimensional, cross-section-averaged conservation
+   equations for steady-state and transient two-phase flows. Depending on
+   the selected solver, these equations describe mixture, phase, or field
+   mass, momentum, and energy transport. Physical processes that are not
+   resolved explicitly are represented through closure models.
+
+   In contrast, a conventional CFD code discretizes a multidimensional
+   computational domain and resolves spatial variations of the flow within
+   that domain. OpenSTREAM does not resolve radial, azimuthal, or other
+   multidimensional distributions of velocity, pressure, temperature, void
+   fraction, or phase structure.
+
+   OpenSTREAM also does not explicitly resolve:
+
+   * local velocity and temperature profiles across the channel;
+
+   * multidimensional turbulence structures;
+
+   * flow separation, recirculation, or secondary flow;
+
+   * circumferential transport around the channel;
+
+   * crossflow between neighboring channels;
+
+   * detailed three-dimensional geometrical effects.
+
+   Instead, OpenSTREAM uses cross-section-averaged quantities and closure
+   models for wall friction, interfacial transfer, phase change,
+   entrainment, deposition, and other unresolved processes.
+
+   This one-dimensional formulation is intentional. OpenSTREAM was
+   developed to support the formulation, implementation, assessment, and
+   validation of the types of one-dimensional thermal-hydraulic models used
+   in established system codes and subchannel-analysis codes. Its purpose is
+   to provide an open and transparent environment in which these models can
+   be inspected, modified, compared, and extended.
+
+   The one-dimensional approach also provides a computationally efficient
+   environment for model development, sensitivity studies, and validation.
+   It is particularly suitable for straight-channel problems in which axial
+   transport is the principal behavior of interest and multidimensional
+   effects are not essential to the quantities being studied.
+
+   OpenSTREAM should therefore be described as a **one-dimensional,
+   multi-field, two-phase flow simulation environment**, rather than as a
+   CFD code.
 
 .. dropdown:: Can OpenSTREAM simulate flashing caused by a pressure decrease?
    :animate: fade-in-slide-down
