@@ -115,16 +115,16 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Testing and verification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#test-organization">Test organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-all-ttsts">Running all Ttsts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-individual-test-suites">Running individual test Suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-all-tests">Running all tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-individual-test-suites">Running individual test suites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reference-solutions">Reference solutions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#adding-new-ttsts">Adding new Ttsts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-new-tests">Adding new tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#unit-test-guidelines">Unit test guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#integration-test-guidelines">Integration test guidelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#environment-validation">Environment validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generated-outputs">Generated outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#contributor-checklist">Contributor Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
@@ -293,8 +293,8 @@ as OpenSTREAM evolves.</p>
 <p>Unit tests should execute quickly and focus on individual components.
 Integration tests verify selected solver calculations and numerical results.</p>
 </section>
-<section id="running-all-ttsts">
-<h2>Running all Ttsts<a class="headerlink" href="#running-all-ttsts" title="Link to this heading"></a></h2>
+<section id="running-all-tests">
+<h2>Running all tests<a class="headerlink" href="#running-all-tests" title="Link to this heading"></a></h2>
 <p>The recommended way to execute the complete test suite is:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runOpenSTREAMTests</span><span class="p">;</span>
 </pre></div>
@@ -309,7 +309,7 @@ Integration tests verify selected solver calculations and numerical results.</p>
 <p>A successful run should finish without errors and report all tests as passed.</p>
 </section>
 <section id="running-individual-test-suites">
-<h2>Running individual test Suites<a class="headerlink" href="#running-individual-test-suites" title="Link to this heading"></a></h2>
+<h2>Running individual test suites<a class="headerlink" href="#running-individual-test-suites" title="Link to this heading"></a></h2>
 <p>Unit tests:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">suite</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">testsuite</span><span class="p">(</span><span class="s">'tests/unit'</span><span class="p">);</span>
 <span class="n">runner</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">matlab.unittest.TestRunner</span><span class="p">.</span><span class="n">withTextOutput</span><span class="p">;</span>
@@ -345,8 +345,8 @@ of the verification baseline.</p>
 </ul>
 <p>Reference results should <strong>not</strong> be updated simply to make failing tests pass.</p>
 </section>
-<section id="adding-new-ttsts">
-<h2>Adding new Ttsts<a class="headerlink" href="#adding-new-ttsts" title="Link to this heading"></a></h2>
+<section id="adding-new-tests">
+<h2>Adding new tests<a class="headerlink" href="#adding-new-tests" title="Link to this heading"></a></h2>
 <p>When introducing new functionality:</p>
 <ol class="arabic simple">
 <li><p>Add unit tests whenever possible.</p></li>
@@ -437,7 +437,7 @@ version control.</p>
 </ol>
 </section>
 <section id="contributor-checklist">
-<h2>Contributor Checklist<a class="headerlink" href="#contributor-checklist" title="Link to this heading"></a></h2>
+<h2>Contributor checklist<a class="headerlink" href="#contributor-checklist" title="Link to this heading"></a></h2>
 <p>Before submitting a pull request:</p>
 <ul class="simple">
 <li><p>[ ] All tests pass.</p></li>
