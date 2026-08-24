@@ -151,3 +151,24 @@ MOMENTDROP    ! Droplet momentum model                                     > FUL
 WAVEBASEINT   ! Wave/base-film interfacial momentum model                  > VAPORSHEARDROPMASS
 WAVEFREQUENCY ! Wave-frequency model                                       > RELAXATION
 END
+
+ID            ! Model ID                                                   > TUTORIAL8A
+NNODES        ! Number of axial nodes                                      > 100
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
+END
+
+ID            ! Model ID                                                   > TUTORIAL8B
+NNODES        ! Number of axial nodes                                      > 50
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
+END
+
+ID            ! Model ID                                                   > TUTORIAL8C
+NNODES        ! Number of axial nodes                                      > 25
+FLUID         ! Fluid ID                                                   > WATER
+VOID          ! Void fraction model                                        > BESTION
+THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
+END
