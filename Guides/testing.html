@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Testing and Verification &mdash; OpenSTREAM  documentation</title>
+  <title>Testing and verification &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -113,16 +113,18 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing and Verification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#test-organization">Test Organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-all-tests">Running All Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reference-solutions">Reference Solutions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#adding-new-tests">Adding New Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#unit-test-guidelines">Unit Test Guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integration-test-guidelines">Integration Test Guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#environment-validation">Environment Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#generated-outputs">Generated Outputs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing and verification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#test-organization">Test organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-all-ttsts">Running all Ttsts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-individual-test-suites">Running individual test Suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference-solutions">Reference solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-new-ttsts">Adding new Ttsts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unit-test-guidelines">Unit test guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-test-guidelines">Integration test guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment-validation">Environment validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generated-outputs">Generated outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributor-checklist">Contributor Checklist</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
@@ -229,7 +231,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Testing and Verification</li>
+      <li class="breadcrumb-item active">Testing and verification</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Guides/testing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -240,7 +242,7 @@
            <div itemprop="articleBody">
              
   <section id="testing-and-verification">
-<h1>Testing and Verification<a class="headerlink" href="#testing-and-verification" title="Link to this heading"></a></h1>
+<h1>Testing and verification<a class="headerlink" href="#testing-and-verification" title="Link to this heading"></a></h1>
 <p>OpenSTREAM includes an automated testing framework to support code verification,
 numerical consistency, and software environment compatibility.</p>
 <p>The test suite is intended to:</p>
@@ -268,7 +270,7 @@ that all functionality has been verified or validated.</p>
 as OpenSTREAM evolves.</p>
 </div>
 <section id="test-organization">
-<h2>Test Organization<a class="headerlink" href="#test-organization" title="Link to this heading"></a></h2>
+<h2>Test organization<a class="headerlink" href="#test-organization" title="Link to this heading"></a></h2>
 <p>The OpenSTREAM tests are organized into three categories:</p>
 <table class="docutils align-default">
 <thead>
@@ -291,8 +293,8 @@ as OpenSTREAM evolves.</p>
 <p>Unit tests should execute quickly and focus on individual components.
 Integration tests verify selected solver calculations and numerical results.</p>
 </section>
-<section id="running-all-tests">
-<h2>Running All Tests<a class="headerlink" href="#running-all-tests" title="Link to this heading"></a></h2>
+<section id="running-all-ttsts">
+<h2>Running all Ttsts<a class="headerlink" href="#running-all-ttsts" title="Link to this heading"></a></h2>
 <p>The recommended way to execute the complete test suite is:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runOpenSTREAMTests</span><span class="p">;</span>
 </pre></div>
@@ -304,10 +306,10 @@ Integration tests verify selected solver calculations and numerical results.</p>
 <li><p>Reports test durations.</p></li>
 <li><p>Raises an error if any test fails.</p></li>
 </ul>
-<p>A successful run should finish without errors and report all tests as passed.
-refere
-Running Individual Test Suites
-——————————</p>
+<p>A successful run should finish without errors and report all tests as passed.</p>
+</section>
+<section id="running-individual-test-suites">
+<h2>Running individual test Suites<a class="headerlink" href="#running-individual-test-suites" title="Link to this heading"></a></h2>
 <p>Unit tests:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">suite</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">testsuite</span><span class="p">(</span><span class="s">'tests/unit'</span><span class="p">);</span>
 <span class="n">runner</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">matlab.unittest.TestRunner</span><span class="p">.</span><span class="n">withTextOutput</span><span class="p">;</span>
@@ -328,10 +330,10 @@ Running Individual Test Suites
 </div>
 </section>
 <section id="reference-solutions">
-<h2>Reference Solutions<a class="headerlink" href="#reference-solutions" title="Link to this heading"></a></h2>
+<h2>Reference solutions<a class="headerlink" href="#reference-solutions" title="Link to this heading"></a></h2>
 <p>Integration tests compare generated results against reference solutions.</p>
 <p>Reference data are stored in the integration-test reference directory.
-The reference solutions represent the expected behaviour of the solvers for a
+The reference solutions represent the expected behavior of the solvers for a
 defined set of benchmark cases.</p>
 <p>Reference solutions are version-controlled and should be treated as part
 of the verification baseline.</p>
@@ -339,18 +341,18 @@ of the verification baseline.</p>
 <ul class="simple">
 <li><p>A bug has been fixed.</p></li>
 <li><p>A model formulation has intentionally changed.</p></li>
-<li><p>Numerical behaviour has been intentionally modified.</p></li>
+<li><p>Numerical behavior has been intentionally modified.</p></li>
 </ul>
 <p>Reference results should <strong>not</strong> be updated simply to make failing tests pass.</p>
 </section>
-<section id="adding-new-tests">
-<h2>Adding New Tests<a class="headerlink" href="#adding-new-tests" title="Link to this heading"></a></h2>
+<section id="adding-new-ttsts">
+<h2>Adding new Ttsts<a class="headerlink" href="#adding-new-ttsts" title="Link to this heading"></a></h2>
 <p>When introducing new functionality:</p>
 <ol class="arabic simple">
 <li><p>Add unit tests whenever possible.</p></li>
 <li><p>Add integration tests if the change affects solver results.</p></li>
 <li><p>Verify that all existing tests continue to pass.</p></li>
-<li><p>Update the documentation if user-visible behaviour changes.</p></li>
+<li><p>Update the documentation if user-visible behavior changes.</p></li>
 </ol>
 <p>As a general rule:</p>
 <ul class="simple">
@@ -360,7 +362,7 @@ of the verification baseline.</p>
 </ul>
 </section>
 <section id="unit-test-guidelines">
-<h2>Unit Test Guidelines<a class="headerlink" href="#unit-test-guidelines" title="Link to this heading"></a></h2>
+<h2>Unit test guidelines<a class="headerlink" href="#unit-test-guidelines" title="Link to this heading"></a></h2>
 <p>Unit tests should:</p>
 <ul class="simple">
 <li><p>Focus on a single class or function.</p></li>
@@ -369,10 +371,10 @@ of the verification baseline.</p>
 <li><p>Execute quickly.</p></li>
 <li><p>Be independent of one another.</p></li>
 </ul>
-<p>A good unit test verifies one piece of behaviour and has a clear failure mode.</p>
+<p>A good unit test verifies one piece of behavior and has a clear failure mode.</p>
 </section>
 <section id="integration-test-guidelines">
-<h2>Integration Test Guidelines<a class="headerlink" href="#integration-test-guidelines" title="Link to this heading"></a></h2>
+<h2>Integration test guidelines<a class="headerlink" href="#integration-test-guidelines" title="Link to this heading"></a></h2>
 <p>Integration tests should, where practical:</p>
 <ul class="simple">
 <li><p>Exercise representative solver workflows.</p></li>
@@ -392,7 +394,7 @@ of the verification baseline.</p>
 <p>Not all quantities are currently verified for all solvers.</p>
 </section>
 <section id="environment-validation">
-<h2>Environment Validation<a class="headerlink" href="#environment-validation" title="Link to this heading"></a></h2>
+<h2>Environment validation<a class="headerlink" href="#environment-validation" title="Link to this heading"></a></h2>
 <p>Environment tests verify external software requirements.</p>
 <p>Current checks may include:</p>
 <ul class="simple">
@@ -405,7 +407,7 @@ of the verification baseline.</p>
 simulations.</p>
 </section>
 <section id="generated-outputs">
-<h2>Generated Outputs<a class="headerlink" href="#generated-outputs" title="Link to this heading"></a></h2>
+<h2>Generated outputs<a class="headerlink" href="#generated-outputs" title="Link to this heading"></a></h2>
 <p>Some tests generate temporary files and output directories.</p>
 <p>The test framework automatically removes temporary files when possible.
 Generated outputs should not normally be committed to the repository.</p>
@@ -420,8 +422,30 @@ version control.</p>
 <p>When a test fails:</p>
 <ol class="arabic simple">
 <li><p>Read the diagnostic message carefully.</p></li>
-<li><p>Determine</p></li>
+<li><p>Determine whether the failure is caused by:</p></li>
 </ol>
+<ul class="simple">
+<li><p>A coding error.</p></li>
+<li><p>An intentional model change.</p></li>
+<li><p>A changed reference solution.</p></li>
+<li><p>A software environment problem.</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Re-run the failing test individually.</p></li>
+<li><p>Verify the expected results manually if needed.</p></li>
+<li><p>Update reference solutions only if the change is intentional and justified.</p></li>
+</ol>
+</section>
+<section id="contributor-checklist">
+<h2>Contributor Checklist<a class="headerlink" href="#contributor-checklist" title="Link to this heading"></a></h2>
+<p>Before submitting a pull request:</p>
+<ul class="simple">
+<li><p>[ ] All tests pass.</p></li>
+<li><p>[ ] New functionality includes tests.</p></li>
+<li><p>[ ] Reference solutions have been reviewed if changed.</p></li>
+<li><p>[ ] Documentation has been updated when required.</p></li>
+<li><p>[ ] Generated outputs are not committed.</p></li>
+</ul>
 </section>
 </section>
 

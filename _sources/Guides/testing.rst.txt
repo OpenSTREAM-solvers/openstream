@@ -1,4 +1,4 @@
-Testing and Verification
+Testing and verification
 ========================
 
 OpenSTREAM includes an automated testing framework to support code verification,
@@ -32,7 +32,7 @@ and post-processing functionality.
    Test coverage and verification capabilities will continue to expand
    as OpenSTREAM evolves.
 
-Test Organization
+Test organization
 -----------------
 
 The OpenSTREAM tests are organized into three categories:
@@ -52,7 +52,7 @@ The OpenSTREAM tests are organized into three categories:
 Unit tests should execute quickly and focus on individual components.
 Integration tests verify selected solver calculations and numerical results.
 
-Running All Tests
+Running all Ttsts
 -----------------
 
 The recommended way to execute the complete test suite is:
@@ -69,8 +69,8 @@ The test runner:
 - Raises an error if any test fails.
 
 A successful run should finish without errors and report all tests as passed.
-refere
-Running Individual Test Suites
+
+Running individual test Suites
 ------------------------------
 
 Unit tests:
@@ -97,13 +97,13 @@ Environment validation tests:
    runner = matlab.unittest.TestRunner.withTextOutput;
    results = runner.run(suite);
 
-Reference Solutions
+Reference solutions
 -------------------
 
 Integration tests compare generated results against reference solutions.
 
 Reference data are stored in the integration-test reference directory.
-The reference solutions represent the expected behaviour of the solvers for a
+The reference solutions represent the expected behavior of the solvers for a
 defined set of benchmark cases.
 
 Reference solutions are version-controlled and should be treated as part
@@ -113,11 +113,11 @@ Reference results should only be updated when:
 
 - A bug has been fixed.
 - A model formulation has intentionally changed.
-- Numerical behaviour has been intentionally modified.
+- Numerical behavior has been intentionally modified.
 
 Reference results should **not** be updated simply to make failing tests pass.
 
-Adding New Tests
+Adding new Ttsts
 ----------------
 
 When introducing new functionality:
@@ -125,7 +125,7 @@ When introducing new functionality:
 #. Add unit tests whenever possible.
 #. Add integration tests if the change affects solver results.
 #. Verify that all existing tests continue to pass.
-#. Update the documentation if user-visible behaviour changes.
+#. Update the documentation if user-visible behavior changes.
 
 As a general rule:
 
@@ -133,7 +133,7 @@ As a general rule:
 - New numerical models should have integration tests.
 - New external dependencies should have environment tests.
 
-Unit Test Guidelines
+Unit test guidelines
 --------------------
 
 Unit tests should:
@@ -144,9 +144,9 @@ Unit tests should:
 - Execute quickly.
 - Be independent of one another.
 
-A good unit test verifies one piece of behaviour and has a clear failure mode.
+A good unit test verifies one piece of behavior and has a clear failure mode.
 
-Integration Test Guidelines
+Integration test guidelines
 ---------------------------
 
 Integration tests should, where practical:
@@ -167,7 +167,7 @@ Depending on the solver and test case, integration tests may verify quantities s
 
 Not all quantities are currently verified for all solvers.
 
-Environment Validation
+Environment validation
 ----------------------
 
 Environment tests verify external software requirements.
@@ -182,7 +182,7 @@ Current checks may include:
 Environment tests help identify installation problems before running larger
 simulations.
 
-Generated Outputs
+Generated outputs
 -----------------
 
 Some tests generate temporary files and output directories.
@@ -204,4 +204,24 @@ A test failure does not necessarily indicate a software defect.
 When a test fails:
 
 #. Read the diagnostic message carefully.
-#. Determine 
+#. Determine whether the failure is caused by:
+
+- A coding error.
+- An intentional model change.
+- A changed reference solution.
+- A software environment problem.
+
+#. Re-run the failing test individually.
+#. Verify the expected results manually if needed.
+#. Update reference solutions only if the change is intentional and justified.
+
+Contributor Checklist
+---------------------
+
+Before submitting a pull request:
+
+- [ ] All tests pass.
+- [ ] New functionality includes tests.
+- [ ] Reference solutions have been reviewed if changed.
+- [ ] Documentation has been updated when required.
+- [ ] Generated outputs are not committed.
