@@ -20,6 +20,7 @@
 
    /Guides/theory/index
    /Guides/tutorials
+   /Guides/testing
    /Guides/glossary
    /Guides/notation
    /Guides/references
