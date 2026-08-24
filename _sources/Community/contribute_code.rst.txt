@@ -35,7 +35,7 @@ How to Contribute
 .. 
 
    - Follow the coding standards outlined below.
-   - Add tests for new functionality.
+   - Add or update tests for new functionality.
 
 .. 
 
@@ -59,14 +59,32 @@ Coding Standards
 - **Python**: Follow PEP8 guidelines.
 - **MATLAB**: Use clear variable names, comments, and avoid hard-coded paths.
 - Document all functions with docstrings or comments.
+- Prefer automated tests over manual verification whenever practical.
 - Keep commits atomic and descriptive.
 
 Testing
 -------
 
-- Run existing tests (*coming soon*) before submitting changes.
-- Add new tests for any new functionality.
-- Use ``pytest`` for Python and built-in MATLAB testing frameworks where applicable.
+OpenSTREAM includes automated unit, integration, and environment tests.
+
+Before submitting a pull request, run the complete test suite from MATLAB:
+
+.. code-block:: matlab
+
+   results = runOpenSTREAMTests;
+
+The test runner executes:
+
+- Unit tests in ``tests/unit``
+- Integration tests in ``tests/integration``
+- Environment validation tests in ``tests/environment``
+
+Contributors should:
+
+- Add unit tests for new classes and functions whenever possible.
+- Add integration tests when solver behaviour or numerical results are affected.
+- Update reference solutions only when changes are intentional and justified.
+- Ensure all tests pass before submitting a pull request.
 
 Reporting Issues
 ----------------

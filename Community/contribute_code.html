@@ -113,6 +113,18 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/testing.html">Testing and Verification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#test-organization">Test Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-all-tests">Running All Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#reference-solutions">Reference Solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#adding-new-tests">Adding New Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#unit-test-guidelines">Unit Test Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#integration-test-guidelines">Integration Test Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#environment-validation">Environment Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#generated-outputs">Generated Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/glossary.html">Glossary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#recommended-terminology">Recommended terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#style-notes">Style notes</a></li>
@@ -260,7 +272,7 @@
 <blockquote>
 <div><ul class="simple">
 <li><p>Follow the coding standards outlined below.</p></li>
-<li><p>Add tests for new functionality.</p></li>
+<li><p>Add or update tests for new functionality.</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="5">
@@ -286,15 +298,29 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <li><p><strong>Python</strong>: Follow PEP8 guidelines.</p></li>
 <li><p><strong>MATLAB</strong>: Use clear variable names, comments, and avoid hard-coded paths.</p></li>
 <li><p>Document all functions with docstrings or comments.</p></li>
+<li><p>Prefer automated tests over manual verification whenever practical.</p></li>
 <li><p>Keep commits atomic and descriptive.</p></li>
 </ul>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>OpenSTREAM includes automated unit, integration, and environment tests.</p>
+<p>Before submitting a pull request, run the complete test suite from MATLAB:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runOpenSTREAMTests</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The test runner executes:</p>
 <ul class="simple">
-<li><p>Run existing tests (<em>coming soon</em>) before submitting changes.</p></li>
-<li><p>Add new tests for any new functionality.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">pytest</span></code> for Python and built-in MATLAB testing frameworks where applicable.</p></li>
+<li><p>Unit tests in <code class="docutils literal notranslate"><span class="pre">tests/unit</span></code></p></li>
+<li><p>Integration tests in <code class="docutils literal notranslate"><span class="pre">tests/integration</span></code></p></li>
+<li><p>Environment validation tests in <code class="docutils literal notranslate"><span class="pre">tests/environment</span></code></p></li>
+</ul>
+<p>Contributors should:</p>
+<ul class="simple">
+<li><p>Add unit tests for new classes and functions whenever possible.</p></li>
+<li><p>Add integration tests when solver behaviour or numerical results are affected.</p></li>
+<li><p>Update reference solutions only when changes are intentional and justified.</p></li>
+<li><p>Ensure all tests pass before submitting a pull request.</p></li>
 </ul>
 </section>
 <section id="reporting-issues">

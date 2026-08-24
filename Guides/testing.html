@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guides &mdash; OpenSTREAM  documentation</title>
+  <title>Testing and Verification &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -25,7 +25,9 @@
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="prev" title="Tutorials" href="tutorials.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -73,7 +75,7 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Theory overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="theory/Mixture_Model_Theory.html">Mixture model</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="theory/Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
@@ -111,16 +113,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing and Verification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#test-organization">Test Organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#running-all-tests">Running All Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#reference-solutions">Reference Solutions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#adding-new-tests">Adding New Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#unit-test-guidelines">Unit Test Guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#integration-test-guidelines">Integration Test Guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#environment-validation">Environment Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#generated-outputs">Generated Outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing and Verification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#test-organization">Test Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-all-tests">Running All Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference-solutions">Reference Solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-new-tests">Adding New Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unit-test-guidelines">Unit Test Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-test-guidelines">Integration Test Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment-validation">Environment Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generated-outputs">Generated Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
@@ -227,9 +229,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Guides</li>
+      <li class="breadcrumb-item active">Testing and Verification</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/Guides/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/Guides/testing.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -237,47 +239,199 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="guides">
-<h1>Guides<a class="headerlink" href="#guides" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Theory overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="glossary.html#recommended-terminology">Recommended terminology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="glossary.html#style-notes">Style notes</a></li>
+  <section id="testing-and-verification">
+<h1>Testing and Verification<a class="headerlink" href="#testing-and-verification" title="Link to this heading"></a></h1>
+<p>OpenSTREAM includes an automated testing framework to support code verification,
+numerical consistency, and software environment compatibility.</p>
+<p>The test suite is intended to:</p>
+<ul class="simple">
+<li><p>Detect regressions when modifying existing functionality.</p></li>
+<li><p>Verify representative solver workflows against reference solutions.</p></li>
+<li><p>Confirm that external dependencies are installed correctly.</p></li>
+<li><p>Support reproducible development.</p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="notation.html#general-conventions">General conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notation.html#primary-variables">Primary variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notation.html#phase-and-field-subscripts">Phase and field subscripts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notation.html#source-term-notation">Source-term notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notation.html#closure-model-notation">Closure model notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notation.html#units">Units</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="references.html">Global reference list</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing and Verification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#test-organization">Test Organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#running-all-tests">Running All Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#reference-solutions">Reference Solutions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#adding-new-tests">Adding New Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#unit-test-guidelines">Unit Test Guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#integration-test-guidelines">Integration Test Guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#environment-validation">Environment Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#generated-outputs">Generated Outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-</ul>
+<p>The current test suite focuses primarily on core infrastructure and a
+subset of solver capabilities. Additional tests will be added over time
+to improve coverage of numerical models, closure laws, input processing,
+and post-processing functionality.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>OpenSTREAM’s automated test suite is under active development.</p>
+<p>The current tests verify selected functionality, solver workflows,
+numerical results, and software dependencies, but do not yet provide
+comprehensive coverage of the OpenSTREAM code base or all physical
+models implemented in the framework.</p>
+<p>Passing all tests indicates that the covered functionality behaves as
+expected for the tested cases. It should not be interpreted as proof
+that all functionality has been verified or validated.</p>
+<p>Test coverage and verification capabilities will continue to expand
+as OpenSTREAM evolves.</p>
 </div>
+<section id="test-organization">
+<h2>Test Organization<a class="headerlink" href="#test-organization" title="Link to this heading"></a></h2>
+<p>The OpenSTREAM tests are organized into three categories:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Folder</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tests/unit</span></code></p></td>
+<td><p>Fast tests of individual classes, methods, and utilities.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tests/integration</span></code></p></td>
+<td><p>Verification of selected solver workflows against reference solutions.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tests/environment</span></code></p></td>
+<td><p>Validation of external dependencies and software configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Unit tests should execute quickly and focus on individual components.
+Integration tests verify selected solver calculations and numerical results.</p>
+</section>
+<section id="running-all-tests">
+<h2>Running All Tests<a class="headerlink" href="#running-all-tests" title="Link to this heading"></a></h2>
+<p>The recommended way to execute the complete test suite is:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runOpenSTREAMTests</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The test runner:</p>
+<ul class="simple">
+<li><p>Executes all configured test suites.</p></li>
+<li><p>Displays a summary table of the results.</p></li>
+<li><p>Reports test durations.</p></li>
+<li><p>Raises an error if any test fails.</p></li>
+</ul>
+<p>A successful run should finish without errors and report all tests as passed.
+refere
+Running Individual Test Suites
+——————————</p>
+<p>Unit tests:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">suite</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">testsuite</span><span class="p">(</span><span class="s">'tests/unit'</span><span class="p">);</span>
+<span class="n">runner</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">matlab.unittest.TestRunner</span><span class="p">.</span><span class="n">withTextOutput</span><span class="p">;</span>
+<span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runner</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Integration tests:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">suite</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">testsuite</span><span class="p">(</span><span class="s">'tests/integration'</span><span class="p">);</span>
+<span class="n">runner</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">matlab.unittest.TestRunner</span><span class="p">.</span><span class="n">withTextOutput</span><span class="p">;</span>
+<span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runner</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Environment validation tests:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">suite</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">testsuite</span><span class="p">(</span><span class="s">'tests/environment'</span><span class="p">);</span>
+<span class="n">runner</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">matlab.unittest.TestRunner</span><span class="p">.</span><span class="n">withTextOutput</span><span class="p">;</span>
+<span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runner</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="reference-solutions">
+<h2>Reference Solutions<a class="headerlink" href="#reference-solutions" title="Link to this heading"></a></h2>
+<p>Integration tests compare generated results against reference solutions.</p>
+<p>Reference data are stored in the integration-test reference directory.
+The reference solutions represent the expected behaviour of the solvers for a
+defined set of benchmark cases.</p>
+<p>Reference solutions are version-controlled and should be treated as part
+of the verification baseline.</p>
+<p>Reference results should only be updated when:</p>
+<ul class="simple">
+<li><p>A bug has been fixed.</p></li>
+<li><p>A model formulation has intentionally changed.</p></li>
+<li><p>Numerical behaviour has been intentionally modified.</p></li>
+</ul>
+<p>Reference results should <strong>not</strong> be updated simply to make failing tests pass.</p>
+</section>
+<section id="adding-new-tests">
+<h2>Adding New Tests<a class="headerlink" href="#adding-new-tests" title="Link to this heading"></a></h2>
+<p>When introducing new functionality:</p>
+<ol class="arabic simple">
+<li><p>Add unit tests whenever possible.</p></li>
+<li><p>Add integration tests if the change affects solver results.</p></li>
+<li><p>Verify that all existing tests continue to pass.</p></li>
+<li><p>Update the documentation if user-visible behaviour changes.</p></li>
+</ol>
+<p>As a general rule:</p>
+<ul class="simple">
+<li><p>New classes should have unit tests.</p></li>
+<li><p>New numerical models should have integration tests.</p></li>
+<li><p>New external dependencies should have environment tests.</p></li>
+</ul>
+</section>
+<section id="unit-test-guidelines">
+<h2>Unit Test Guidelines<a class="headerlink" href="#unit-test-guidelines" title="Link to this heading"></a></h2>
+<p>Unit tests should:</p>
+<ul class="simple">
+<li><p>Focus on a single class or function.</p></li>
+<li><p>Use small and deterministic inputs.</p></li>
+<li><p>Avoid unnecessary file I/O.</p></li>
+<li><p>Execute quickly.</p></li>
+<li><p>Be independent of one another.</p></li>
+</ul>
+<p>A good unit test verifies one piece of behaviour and has a clear failure mode.</p>
+</section>
+<section id="integration-test-guidelines">
+<h2>Integration Test Guidelines<a class="headerlink" href="#integration-test-guidelines" title="Link to this heading"></a></h2>
+<p>Integration tests should, where practical:</p>
+<ul class="simple">
+<li><p>Exercise representative solver workflows.</p></li>
+<li><p>Use representative input files.</p></li>
+<li><p>Compare important physical quantities against reference values.</p></li>
+<li><p>Verify numerical consistency between solver versions.</p></li>
+</ul>
+<p>Depending on the solver and test case, integration tests may verify quantities such as:</p>
+<ul class="simple">
+<li><p>Mass flow rates.</p></li>
+<li><p>Phase velocities.</p></li>
+<li><p>Enthalpies.</p></li>
+<li><p>Pressures.</p></li>
+<li><p>Void fractions.</p></li>
+<li><p>Film thicknesses.</p></li>
+</ul>
+<p>Not all quantities are currently verified for all solvers.</p>
+</section>
+<section id="environment-validation">
+<h2>Environment Validation<a class="headerlink" href="#environment-validation" title="Link to this heading"></a></h2>
+<p>Environment tests verify external software requirements.</p>
+<p>Current checks may include:</p>
+<ul class="simple">
+<li><p>MATLAB configuration.</p></li>
+<li><p>Python availability.</p></li>
+<li><p>Python package installation.</p></li>
+<li><p>External library accessibility.</p></li>
+</ul>
+<p>Environment tests help identify installation problems before running larger
+simulations.</p>
+</section>
+<section id="generated-outputs">
+<h2>Generated Outputs<a class="headerlink" href="#generated-outputs" title="Link to this heading"></a></h2>
+<p>Some tests generate temporary files and output directories.</p>
+<p>The test framework automatically removes temporary files when possible.
+Generated outputs should not normally be committed to the repository.</p>
+<p>Reference solutions are stored separately and may be committed when they
+form part of an approved update to the verification baseline.</p>
+<p>Repository <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> rules exclude temporary test outputs from
+version control.</p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p>A test failure does not necessarily indicate a software defect.</p>
+<p>When a test fails:</p>
+<ol class="arabic simple">
+<li><p>Read the diagnostic message carefully.</p></li>
+<li><p>Determine</p></li>
+</ol>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="glossary.html" class="btn btn-neutral float-right" title="Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
