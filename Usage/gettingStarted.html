@@ -53,17 +53,33 @@
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#prerequisites-and-installation">Prerequisites and installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#install-using-git-and-github">Install using Git and GitHub</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#compatibility-policy">Compatibility policy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#configure-matlab-and-python">Configure MATLAB and Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-openstream">Install OpenSTREAM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-using-the-git-command-line-interface">Install using the Git command-line interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-using-github-desktop">Install using GitHub Desktop</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#verify-the-installation">Verify the installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#next-steps">Next steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compatibility-policy">Compatibility policy</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-matlab-and-python">Configure MATLAB and Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inspect-the-configured-python-environment">Inspect the configured Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-a-compatible-python-version">Install a compatible Python version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-the-python-executable-in-matlab">Configure the Python executable in MATLAB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#install-the-python-dependencies">Install the Python dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify-the-installation">Verify the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inspect-the-python-environment">Inspect the Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verify-the-python-packages">Verify the Python packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-coolpropwrapper-object">Create a CoolPropWrapper object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluate-a-representative-fluid-property">Evaluate a representative fluid property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-automated-tests">Run the automated tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-sample-script">Run the sample script</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="runSampleScript.html">Run sample script</a></li>
@@ -268,69 +284,82 @@
              
   <section id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
-<section id="prerequisites-and-installation">
-<h2>Prerequisites and installation<a class="headerlink" href="#prerequisites-and-installation" title="Link to this heading"></a></h2>
-<p><strong>OpenSTREAM</strong> is a MATLAB program for simulating one-dimensional two-phase flows.
-The Python version of
-<a class="reference external" href="http://www.coolprop.org" rel="noreferrer" target="_blank">CoolProp</a> is
-used for calculating the fluid properties.
-<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a> is a
-MATLAB interface that interacts with CoolProp through Python. Both
-OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
-(cloning) of these programs will be our first step.</p>
-<section id="install-using-git-and-github">
-<h3>Install using Git and GitHub<a class="headerlink" href="#install-using-git-and-github" title="Link to this heading"></a></h3>
-<ul>
-<li><p>There are two main ways of interacting with GitHub to use and
-contribute to the OpenSTREAM project: <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/set-up-git" rel="noreferrer" target="_blank">Git Command Line Interface
-(CLI)</a>,
-and the <a class="reference external" href="https://desktop.github.com/" rel="noreferrer" target="_blank">GitHub Desktop</a> program. Use
-the links to set up one of the methods.</p></li>
-<li><p>After installing and setting up your Git mechanism of choice, if you
-chose to use the:</p>
-<ul>
-<li><p><strong>Command line interface</strong></p>
-<ul>
-<li><p>Clone (make a copy of) the repository using:
-<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">git&#64;github.com:OpenSTREAM-solvers/openstream.git</span></code>
-(<a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" rel="noreferrer" target="_blank">SSH
-authentication</a>)</p>
-<p>or</p>
-<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">https://github.com/OpenSTREAM-solvers/openstream.git</span></code>
-(<a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git" rel="noreferrer" target="_blank">HTTPS
-authentication</a>).</p>
-<p>(The <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> flag is needed to clone
-<a class="reference external" href="https://git-scm.com/book/en/v2/Git-Tools-Submodules" rel="noreferrer" target="_blank">submodules</a>,
-such as the
-<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">mfval/CoolPropWrapper</a>,
-in one command.)</p>
-</li>
-<li><p>Then, use <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">openstream</span></code> to enter the newly created
-folder. You should see the newly downloaded files for the
-project.</p></li>
-</ul>
-</li>
-<li><p><strong>GitHub Desktop program</strong></p>
+<p>OpenSTREAM is a MATLAB program for simulating one-dimensional two-phase
+flows. Fluid properties are calculated using the Python version of
+<a class="reference external" href="http://www.coolprop.org" rel="noreferrer" target="_blank">CoolProp</a> through
+<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a>, a MATLAB
+interface to CoolProp.</p>
+<p>This guide explains how to obtain OpenSTREAM, configure MATLAB and Python,
+install the required dependencies, and verify the installation.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Before installing and configuring OpenSTREAM, ensure that the following
+software is available:</p>
 <ul class="simple">
-<li><p>Open the program, login, and <strong>Clone repository</strong>. Everything
-should be cloned automatically. This is part of the setup guide
-linked above.</p></li>
+<li><p>MATLAB.</p></li>
+<li><p>A Python version compatible with the installed MATLAB release.</p></li>
+<li><p>Git or GitHub Desktop.</p></li>
 </ul>
-</li>
+<p>CoolProp and its associated Python dependencies are installed later in
+this guide.</p>
+<p>No additional MathWorks toolbox is currently required by the core
+OpenSTREAM solver frameworks.</p>
+</section>
+<section id="install-openstream">
+<h2>Install OpenSTREAM<a class="headerlink" href="#install-openstream" title="Link to this heading"></a></h2>
+<p>OpenSTREAM is hosted in the
+<a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream" rel="noreferrer" target="_blank">OpenSTREAM GitHub repository</a>.</p>
+<p>There are two principal ways to obtain and maintain a local copy of the
+repository:</p>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/set-up-git" rel="noreferrer" target="_blank">Git command-line interface</a>.</p></li>
+<li><p><a class="reference external" href="https://desktop.github.com/" rel="noreferrer" target="_blank">GitHub Desktop</a>.</p></li>
 </ul>
-</li>
+<section id="install-using-the-git-command-line-interface">
+<h3>Install using the Git command-line interface<a class="headerlink" href="#install-using-the-git-command-line-interface" title="Link to this heading"></a></h3>
+<p>Clone the repository and its submodules using SSH:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>git@github.com:OpenSTREAM-solvers/openstream.git
+</pre></div>
+</div>
+<p>Alternatively, clone the repository using HTTPS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/OpenSTREAM-solvers/openstream.git
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> option also clones the repository submodules,
+including
+<a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper</a>.</p>
+<p>For information about authentication, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" rel="noreferrer" target="_blank">Connecting to GitHub with SSH</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git" rel="noreferrer" target="_blank">Caching GitHub credentials</a>.</p></li>
+<li><p><a class="reference external" href="https://git-scm.com/book/en/v2/Git-Tools-Submodules" rel="noreferrer" target="_blank">Working with Git submodules</a>.</p></li>
 </ul>
+<p>Enter the cloned repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>openstream
+</pre></div>
+</div>
+</section>
+<section id="install-using-github-desktop">
+<h3>Install using GitHub Desktop<a class="headerlink" href="#install-using-github-desktop" title="Link to this heading"></a></h3>
+<p>Open GitHub Desktop, sign in, and select <strong>Clone repository</strong>. Select the
+OpenSTREAM repository and choose the local destination folder.</p>
+<p>After cloning, verify that the <code class="docutils literal notranslate"><span class="pre">CoolPropWrapper</span></code> submodule contains its
+expected files. If the submodule is empty, initialize it from a terminal
+opened in the repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
+</pre></div>
+</div>
+</section>
 </section>
 <section id="matlab-and-python-compatibility">
-<h3>MATLAB and Python compatibility<a class="headerlink" href="#matlab-and-python-compatibility" title="Link to this heading"></a></h3>
+<h2>MATLAB and Python compatibility<a class="headerlink" href="#matlab-and-python-compatibility" title="Link to this heading"></a></h2>
 <p>OpenSTREAM requires MATLAB. No additional MathWorks toolbox is currently
 required by the core solver frameworks. Fluid properties are calculated
 externally using the Python version of CoolProp through CoolPropWrapper.</p>
 <p>OpenSTREAM is tested with selected MATLAB and Python version combinations
-through its continuous-integration workflow. The configurations currently
-exercised by the continuous-integration workflow are listed below.</p>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-number">Table 1 </span><span class="caption-text">CI-tested MATLAB and Python configurations</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+through its continuous-integration workflow.</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">CI-tested MATLAB and Python configurations</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 57.1%" />
 <col style="width: 42.9%" />
@@ -361,7 +390,7 @@ development revision documented on this site. See
 <a class="reference internal" href="versioning.html"><span class="doc">Release numbering and versioning</span></a> for the
 project versioning convention.</p>
 <section id="compatibility-policy">
-<h4>Compatibility policy<a class="headerlink" href="#compatibility-policy" title="Link to this heading"></a></h4>
+<h3>Compatibility policy<a class="headerlink" href="#compatibility-policy" title="Link to this heading"></a></h3>
 <p>OpenSTREAM distinguishes between tested and untested software
 configurations. A tested configuration is a combination of MATLAB, Python,
 CoolProp, and associated dependencies that is exercised by the OpenSTREAM
@@ -370,149 +399,180 @@ continuous-integration workflow.</p>
 current OpenSTREAM development version or release. Other software
 combinations may work but are not guaranteed and may not be covered by
 automated testing.</p>
-<p>The compatibility information may change as new MATLAB, Python, and
-CoolProp versions become available. Users should consult the compatibility
-information corresponding to the OpenSTREAM version they are using.</p>
+<p>Compatibility information may change as new MATLAB, Python, and CoolProp
+versions become available. Consult the compatibility information
+corresponding to the OpenSTREAM version being used.</p>
+</section>
 </section>
 <section id="configure-matlab-and-python">
-<h4>Configure MATLAB and Python<a class="headerlink" href="#configure-matlab-and-python" title="Link to this heading"></a></h4>
+<h2>Configure MATLAB and Python<a class="headerlink" href="#configure-matlab-and-python" title="Link to this heading"></a></h2>
 <p>Before using OpenSTREAM, verify that a suitable Python version is installed
-and that MATLAB is configured to use the corresponding Python executable.
-The general MATLAB-Python compatibility requirements are available in the
+and that MATLAB is configured to use the corresponding Python executable.</p>
+<p>The general compatibility requirements are available in the
 <a class="reference external" href="https://www.mathworks.com/support/requirements/python-compatibility.html" rel="noreferrer" target="_blank">MathWorks Python compatibility table</a>.
-The <em>MATLAB Interface</em> column identifies the Python versions supported by
+The <strong>MATLAB Interface</strong> column identifies the Python versions supported by
 each MATLAB release.</p>
 <p>The following configuration instructions are adapted from the
 <a class="reference external" href="https://github.com/mfval/CoolPropWrapper" rel="noreferrer" target="_blank">CoolPropWrapper repository</a>.</p>
-<ol class="arabic">
-<li><p>Inspect the Python environment currently used by MATLAB:</p>
+<section id="inspect-the-configured-python-environment">
+<h3>Inspect the configured Python environment<a class="headerlink" href="#inspect-the-configured-python-environment" title="Link to this heading"></a></h3>
+<p>In MATLAB, inspect the current Python environment:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">pythonEnvironment</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">pyenv</span><span class="p">;</span>
 <span class="nb">disp</span><span class="p">(</span><span class="n">pythonEnvironment</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If no Python environment is configured, or if the configured Python
-version is unsuitable for the installed MATLAB release, continue with
-the Python installation instructions below. Otherwise, proceed to the
-dependency-installation step.</p>
-</li>
-<li><p>Install compatible Python3</p>
+<p>If no Python environment is configured, or if the configured version is
+not suitable for the installed MATLAB release, install a compatible Python
+version and configure MATLAB to use it.</p>
+</section>
+<section id="install-a-compatible-python-version">
+<h3>Install a compatible Python version<a class="headerlink" href="#install-a-compatible-python-version" title="Link to this heading"></a></h3>
+<p><strong>Windows</strong></p>
+<p>Download the required version from
+<a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">Python.org</a> and follow the
+installation instructions.</p>
+<p><strong>Linux</strong></p>
+<p>Check whether Python is already available:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>--version
+</pre></div>
+</div>
+<p>If necessary, install an appropriate version using the operating-system
+package manager. For example, on a Debian-based distribution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3.x
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">x</span></code> with the required minor version.</p>
+<p><strong>macOS</strong></p>
+<p>Check the available Python version:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>--version
+</pre></div>
+</div>
+<p>If an appropriate version is not available, install one using Homebrew:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>python
+</pre></div>
+</div>
+<p>Alternatively, download the required version from
+<a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">Python.org</a>.</p>
+</section>
+<section id="configure-the-python-executable-in-matlab">
+<h3>Configure the Python executable in MATLAB<a class="headerlink" href="#configure-the-python-executable-in-matlab" title="Link to this heading"></a></h3>
+<p>Configure MATLAB to use the required Python executable:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pyenv</span><span class="p">(</span><span class="s">'Version'</span><span class="p">,</span><span class="s">'&lt;path-to-python-executable&gt;'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;path-to-python-executable&gt;</span></code> with the complete path to the
+Python executable.</p>
+<p>Typical locations include:</p>
 <ul class="simple">
-<li><p><strong>Windows</strong>: Go to
-<a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">python.org</a> to download the
-specific version of Python you need. Follow the setup procedure.</p></li>
-<li><p><strong>Linux</strong>: A Python installation may already be available. Verify the
-version using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If Python is not installed, or
-an incompatible version is installed, install an appropriate version
-using the OS package manager. For Debian-based Linux distros (such as
-Ubuntu), use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3.x</span></code> to install the <em>x</em>
-version of Python3.</p></li>
-<li><p><strong>MacOS</strong>: Most recent versions of macOS include Python or can
-install it through Homebrew or the official Python installer.
-Verify the installed version using: <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">--version</span></code>. If a
-compatible version is not available, install one using Homebrew:
-<code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">python</span></code> or download the appropriate version directly
-from <a class="reference external" href="https://www.python.org/downloads/" rel="noreferrer" target="_blank">python.org</a>.</p></li>
+<li><p><strong>Windows:</strong> <code class="docutils literal notranslate"><span class="pre">C:\Users\Username\AppData\Local\Programs\Python\Python311\python.exe</span></code></p></li>
+<li><p><strong>Linux:</strong> <code class="docutils literal notranslate"><span class="pre">/usr/bin/python3.11</span></code></p></li>
+<li><p><strong>macOS:</strong> <code class="docutils literal notranslate"><span class="pre">/usr/local/bin/python3</span></code> or <code class="docutils literal notranslate"><span class="pre">/opt/homebrew/bin/python3</span></code></p></li>
 </ul>
-</li>
-<li><p>Specify Python installation location in MATLAB:</p>
-<ul class="simple">
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">pyenv('Version',</span> <span class="pre">'pathtopython')</span></code>, where <code class="docutils literal notranslate"><span class="pre">pathtopython</span></code> is the path
-to where Python is installed. Here are some typical locations
-depending on your OS:</p>
-<ul>
-<li><p><strong>Windows</strong>:
-<code class="docutils literal notranslate"><span class="pre">C:\Users\Username\AppData\Local\Programs\Python\Python311\python.exe</span></code>,
-for version 3.11.</p></li>
-<li><p><strong>Linux</strong>: <code class="docutils literal notranslate"><span class="pre">/usr/bin/python3.11</span></code>, for version 3.11. Use
-<code class="docutils literal notranslate"><span class="pre">whereis</span> <span class="pre">python3</span></code> to find possible locations.</p></li>
-<li><p><strong>MacOS</strong>: The Python executable is typically located using:
-<code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python3</span></code>. Common installation locations include:
-<code class="docutils literal notranslate"><span class="pre">/usr/local/bin/python3</span></code> and <code class="docutils literal notranslate"><span class="pre">/opt/homebrew/bin/python3</span></code>.</p></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>Install the CoolPropWrapper Python dependencies:</p>
-<ul>
-<li><p>The recommended approach is to install the dependencies from the
-requirements file provided with CoolPropWrapper.</p></li>
-<li><p>Alternatively, install the dependencies used by the current
+<p>On Linux and macOS, commands such as <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python3</span></code> can help locate the
+executable.</p>
+</section>
+</section>
+<section id="install-the-python-dependencies">
+<h2>Install the Python dependencies<a class="headerlink" href="#install-the-python-dependencies" title="Link to this heading"></a></h2>
+<p>The recommended approach is to install the dependencies from the
+requirements file supplied with CoolPropWrapper.</p>
+<p>Alternatively, install the dependencies used by the current
 continuous-integration environment directly:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install CoolProp==8.0.0 nanobind</span>
 </pre></div>
 </div>
-</li>
-</ul>
-</li>
-</ol>
+<p>In the commands above, <code class="docutils literal notranslate"><span class="pre">python</span></code> must refer to the same Python executable
+configured through <code class="docutils literal notranslate"><span class="pre">pyenv</span></code>. If necessary, replace <code class="docutils literal notranslate"><span class="pre">python</span></code> with the
+complete path to that executable.</p>
 <p>The current OpenSTREAM continuous-integration environment installs
 <code class="docutils literal notranslate"><span class="pre">CoolProp==8.0.0</span></code> together with <code class="docutils literal notranslate"><span class="pre">nanobind</span></code>. Other CoolProp versions
-may work but are not necessarily tested. Installing the dependencies from
-the CoolPropWrapper requirements file is recommended to reproduce the
-maintained configuration.</p>
-</section>
+may work but are not necessarily tested.</p>
+<p>When several Python installations are available, ensure that the
+dependencies are installed using the same Python executable configured in
+MATLAB.</p>
 </section>
 <section id="verify-the-installation">
-<h3>Verify the installation<a class="headerlink" href="#verify-the-installation" title="Link to this heading"></a></h3>
+<h2>Verify the installation<a class="headerlink" href="#verify-the-installation" title="Link to this heading"></a></h2>
 <p>After configuring MATLAB and Python, verify that MATLAB is using the
-intended Python environment and that CoolProp can be accessed through
+intended Python environment and that CoolProp is accessible through
 CoolPropWrapper.</p>
-<ol class="arabic">
-<li><p>Display the Python environment used by MATLAB:</p>
+<section id="inspect-the-python-environment">
+<h3>Inspect the Python environment<a class="headerlink" href="#inspect-the-python-environment" title="Link to this heading"></a></h3>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">pythonEnvironment</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">pyenv</span><span class="p">;</span>
 <span class="nb">disp</span><span class="p">(</span><span class="n">pythonEnvironment</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Confirm that the reported executable and Python version correspond to
-the intended installation. If MATLAB is using a different Python
-environment, configure the required executable using <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> before
-continuing.</p>
-</li>
-<li><p>Verify the required Python packages from a terminal using the same
-Python executable configured in MATLAB:</p>
+<p>Confirm that the reported executable and Python version correspond to the
+intended installation.</p>
+</section>
+<section id="verify-the-python-packages">
+<h3>Verify the Python packages<a class="headerlink" href="#verify-the-python-packages" title="Link to this heading"></a></h3>
+<p>From a terminal, use the same Python executable configured in MATLAB:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip show CoolProp</span>
 <span class="go">python -m pip show nanobind</span>
 </pre></div>
 </div>
-<p>The OpenSTREAM continuous-integration environment currently uses
-<code class="docutils literal notranslate"><span class="pre">CoolProp==8.0.0</span></code> together with <code class="docutils literal notranslate"><span class="pre">nanobind</span></code>. Installing the
-dependencies from the CoolPropWrapper requirements file is recommended
-to reproduce the tested environment.</p>
-</li>
-<li><p>Create a CoolPropWrapper object in MATLAB:</p>
+</section>
+<section id="create-a-coolpropwrapper-object">
+<h3>Create a CoolPropWrapper object<a class="headerlink" href="#create-a-coolpropwrapper-object" title="Link to this heading"></a></h3>
+<p>In MATLAB, create a fluid-property object:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">fluidProperties</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">...</span>
 <span class="w">    </span><span class="n">CoolPropWrapper</span><span class="p">.</span><span class="n">CoolPropWrapper</span><span class="p">(</span><span class="s">'WATER'</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>Successful construction confirms that MATLAB can access Python,
-import CoolProp, and initialize the requested fluid.</p>
-</li>
-<li><p>Evaluate a representative fluid property:</p>
+<p>Successful construction confirms that MATLAB can access Python, import
+CoolProp, and initialize the requested fluid.</p>
+</section>
+<section id="evaluate-a-representative-fluid-property">
+<h3>Evaluate a representative fluid property<a class="headerlink" href="#evaluate-a-representative-fluid-property" title="Link to this heading"></a></h3>
+<p>Evaluate the saturation temperature of water at 6 MPa:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">saturationTemperature</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">...</span>
 <span class="w">    </span><span class="n">fluidProperties</span><span class="p">.</span><span class="n">temperature</span><span class="p">(</span><span class="s">'P'</span><span class="p">,</span><span class="mf">6.0e6</span><span class="p">,</span><span class="s">'Q'</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
 
 <span class="nb">disp</span><span class="p">(</span><span class="n">saturationTemperature</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This call evaluates the saturation temperature of water at a pressure
-of 6 MPa. A finite numerical result confirms that the MATLAB-Python-
-CoolProp interface is functioning.</p>
-</li>
-<li><p>Run Tutorial 1 from the OpenSTREAM <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder. The tutorial
-constructs the input objects, evaluates fluid properties, solves the
-example case with the available solver frameworks, and generates
-representative plots.</p></li>
-</ol>
-<p>If any verification step fails, first confirm that MATLAB is using the
-intended Python executable and that <code class="docutils literal notranslate"><span class="pre">CoolProp</span></code> and <code class="docutils literal notranslate"><span class="pre">nanobind</span></code> are
-installed in that same Python environment.</p>
+<p>A finite numerical result confirms that the MATLAB-Python-CoolProp
+interface is functioning.</p>
+</section>
+<section id="run-the-automated-tests">
+<h3>Run the automated tests<a class="headerlink" href="#run-the-automated-tests" title="Link to this heading"></a></h3>
+<p>From the OpenSTREAM <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder, run the complete automated test
+suite:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">runOpenSTREAMTests</span>
+</pre></div>
+</div>
+<p>The complete suite includes environment, unit, and integration tests. The
+environment tests verify Python availability, package installation, and
+basic CoolProp functionality. The same complete test suite is executed by
+the MATLAB continuous-integration workflow when changes are pushed to the
+repository.</p>
+</section>
+<section id="run-the-sample-script">
+<h3>Run the sample script<a class="headerlink" href="#run-the-sample-script" title="Link to this heading"></a></h3>
+<p>Run the <a class="reference external" href="https://openstream-solvers.github.io/openstream/Usage/runSampleScript.html" rel="noreferrer" target="_blank">sample script</a>
+to perform a complete OpenSTREAM calculation and confirm that the
+installation is functioning correctly.</p>
+<p>The sample calculation uses the mixture solver to simulate boiling
+two-phase flow in a uniformly heated tube followed by an adiabatic
+section. It constructs the required input objects, evaluates the fluid
+properties, solves the case, generates representative axial plots, and
+saves the solver object.</p>
+<p>Run the commands from the OpenSTREAM repository root, as described on the
+sample-script page.</p>
+</section>
 </section>
 <section id="next-steps">
-<h3>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h3>
-<p>Congrats! Hopefully, at this point, you have successfully made a copy of
-this repo and installed the required programs. Next, let’s run the
-sample script to make sure everything is working properly.</p>
-</section>
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>Congratulations! At this point, you should have a local copy of OpenSTREAM
+and a functioning MATLAB, Python, and CoolProp configuration.</p>
+<p>Continue with the <a class="reference external" href="https://openstream-solvers.github.io/openstream/Guides/tutorials.html" rel="noreferrer" target="_blank">OpenSTREAM tutorials</a>,
+beginning with Tutorial 1: Quick Start. Tutorial 1 constructs the input
+objects, runs the example case with the mixture, two-fluid, three-field,
+and four-field solver frameworks, generates representative plots, and
+saves the solver objects.</p>
+<p>You can then continue with the solver-specific and workflow-oriented
+tutorials according to your interests.</p>
 </section>
 </section>
 
