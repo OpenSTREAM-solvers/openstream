@@ -602,7 +602,7 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
             % COMPAREFIELDPROPERTY
             %
             % Compare a selected primary field quantity with the corresponding
-            % approved reference solution.
+            % approved reference solution using a relative tolerance.
             %
             % The requested quantity may be implemented either as:
             %   * a stored or dependent property, such as W or H; or
@@ -638,9 +638,12 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
             %       film.basefilm
             %       film.wave
             %
-            % Field paths that do not apply to a particular solver are skipped.
-            % The test requires at least one applicable field for each solver and
-            % at least one comparison across the complete test.
+            % Field paths that do not apply to a particular solver are skipped. The
+            % calculated and reference values are compared using the regression
+            % tolerance defined in this method.
+            %
+            % The test requires at least one applicable field quantity for each
+            % solver and at least one comparison across the complete test.
 
             % Define the possible field paths across all solver frameworks.
             fieldPaths = [ ...
@@ -653,6 +656,9 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
                 "drop", ...
                 "film.basefilm", ...
                 "film.wave"];
+
+            % Define the regression-comparison tolerance.
+            relativeTolerance = 1e-10;
 
             % Count the total number of property comparisons performed by this
             % test.
@@ -746,12 +752,18 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
                         propertyDescription + " array.");
 
                     % Compare the calculated and approved reference values.
+                    diagnostic = sprintf( ...
+                        '%s: %s %s mismatch using RelTol = %.1e.', ...
+                        char(solverName), ...
+                        char(fieldPath), ...
+                        char(propertyDescription), ...
+                        relativeTolerance);
+
                     testCase.verifyEqual( ...
                         resultValue, ...
                         referenceValue, ...
-                        solverName + ...
-                        ": " + fieldPath + " " + ...
-                        propertyDescription + " mismatch.");
+                        diagnostic, ...
+                        RelTol = relativeTolerance);
 
                     % Record the completed comparison.
                     numberOfVerifiedFields = ...
