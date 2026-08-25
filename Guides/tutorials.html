@@ -112,7 +112,18 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">1. Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mixture-solver-capabilities">2. Mixture Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#two-fluid-solver-capabilities">3. Two-Fluid Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#three-field-solver-capabilities">4. Three-Field Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#four-field-solver-capabilities">5. Four-Field Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-files">6. Input Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-convergence-and-solver-diagnostics">7. Numerical Convergence and Solver Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mesh-and-time-step-sensitivity">8. Mesh and Time-Step Sensitivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-visualization-and-post-processing">9. Advanced Visualization and Post-Processing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing and verification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="testing.html#test-organization">Test organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html#running-all-tests">Running all tests</a></li>
@@ -257,27 +268,117 @@
              
   <section id="tutorials">
 <h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading"></a></h1>
-<p>Ready to get hands-on with <strong>OpenSTREAM</strong>? These tutorials walk you through the main solvers, workflows, and numerical capabilities of the code, from basic setup to advanced simulation features.</p>
-<p>Each tutorial is provided as a MATLAB Live Script in the OpenSTREAM <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder, allowing you to execute, modify, and experiment with the examples directly. For convenience, exported HTML versions are also available below.</p>
+<p>Ready to get hands-on with <strong>OpenSTREAM</strong>? These tutorials introduce the
+principal solver frameworks, input formats, numerical workflows, and
+post-processing capabilities of OpenSTREAM, progressing from a basic
+example to more advanced simulation and analysis tasks.</p>
+<p>Each tutorial is provided as a MATLAB Live Script in the OpenSTREAM
+<code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder. The Live Scripts can be executed, modified, and
+extended directly in MATLAB. Exported HTML versions are also available
+through the links below.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The tutorials are provided as MATLAB Live Scripts and are intended to be executed interactively within MATLAB. Some tutorials include animations and interactive figures that are displayed in separate popup windows when run from the Live Editor. These interactive features are generally not available in the exported HTML versions.</p>
+<p>The tutorials are intended to be executed interactively as MATLAB Live
+Scripts. Some tutorials include animations and interactive figures that
+are displayed in separate pop-up windows when run from the MATLAB Live
+Editor. These interactive features and their controls are generally not
+available in the exported HTML versions.</p>
 </div>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial01_quick_start.html" rel="noreferrer" target="_blank">Quick Start</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial02_mixture.html" rel="noreferrer" target="_blank">Mixture Solver</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial03_twofluid.html" rel="noreferrer" target="_blank">Two-Fluid Solver</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial04_threefield.html" rel="noreferrer" target="_blank">Three-Field Solver</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial05_fourfield.html" rel="noreferrer" target="_blank">Four-Field Solver</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial06_inputfiles.html" rel="noreferrer" target="_blank">Input Files</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial07_convergence.html" rel="noreferrer" target="_blank">Numerical Convergence and Solver Settings</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial08_meshandtimestep.html" rel="noreferrer" target="_blank">Mesh and Time-step Sensitivity</a></p></li>
-<li><p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial09_vizualisation.html" rel="noreferrer" target="_blank">Advanced Visualization and Post-processing</a></p></li>
-</ol>
+<section id="quick-start">
+<h2>1. Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial01_quick_start.html" rel="noreferrer" target="_blank">Open Tutorial 1: Quick Start</a></p>
+<p>Run a provided OpenSTREAM case using the mixture, two-fluid, three-field,
+and four-field solver frameworks. This tutorial introduces input loading,
+solver construction, basic axial plots, inspection of selected results,
+and saving solver objects. It is the recommended starting point for new
+users.</p>
+</section>
+<section id="mixture-solver-capabilities">
+<h2>2. Mixture Solver Capabilities<a class="headerlink" href="#mixture-solver-capabilities" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial02_mixture.html" rel="noreferrer" target="_blank">Open Tutorial 2: Mixture Solver Capabilities</a></p>
+<p>Explore homogeneous and nonhomogeneous mixture formulations, including
+fixed-slip and drift-flux models. The tutorial also introduces empirical
+and relaxation-based thermal-nonequilibrium models, pressure-drop
+components, wall-friction and local-loss options, and a physical transient
+calculation.</p>
+</section>
+<section id="two-fluid-solver-capabilities">
+<h2>3. Two-Fluid Solver Capabilities<a class="headerlink" href="#two-fluid-solver-capabilities" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial03_twofluid.html" rel="noreferrer" target="_blank">Open Tutorial 3: Two-Fluid Solver Capabilities</a></p>
+<p>Construct and run two-fluid calculations with separate liquid and vapor
+fields. Examine phase mass flow rates, velocities, enthalpies,
+temperatures, hydrodynamic and thermal nonequilibrium, interfacial area,
+flow-regime indicators, phase exchange terms, pseudo-time convergence,
+and physical transient behavior.</p>
+</section>
+<section id="three-field-solver-capabilities">
+<h2>4. Three-Field Solver Capabilities<a class="headerlink" href="#three-field-solver-capabilities" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial04_threefield.html" rel="noreferrer" target="_blank">Open Tutorial 4: Three-Field Solver Capabilities</a></p>
+<p>Model annular flow using separate liquid-film and entrained-droplet fields
+together with the mixture-model vapor solution. Compare onset-of-annular-
+flow initialization methods, momentum formulations, entrainment and
+deposition closures, film thickness, mass and momentum exchange terms,
+pseudo-time convergence, and transient behavior.</p>
+</section>
+<section id="four-field-solver-capabilities">
+<h2>5. Four-Field Solver Capabilities<a class="headerlink" href="#four-field-solver-capabilities" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial05_fourfield.html" rel="noreferrer" target="_blank">Open Tutorial 5: Four-Field Solver Capabilities</a></p>
+<p>Extend the three-field formulation by separating the liquid film into
+base-film and disturbance-wave fields. Examine film decomposition, wave
+geometry and frequency, field fractions, onset-of-annular-flow splitting,
+equilibrium and relaxation models, momentum formulations, field exchange
+terms, pseudo-time convergence, and a physical transient calculation.</p>
+</section>
+<section id="input-files">
+<h2>6. Input Files<a class="headerlink" href="#input-files" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial06_inputfiles.html" rel="noreferrer" target="_blank">Open Tutorial 6: Input Files</a></p>
+<p>Learn how OpenSTREAM cases are assembled from physical-model, numerical-
+option, geometry, and boundary-condition inputs. This tutorial demonstrates
+input-set selection, inspection of imported objects, loading equivalent
+model definitions from INP and JSON files, and conversion of native input
+files to JSON.</p>
+</section>
+<section id="numerical-convergence-and-solver-diagnostics">
+<h2>7. Numerical Convergence and Solver Diagnostics<a class="headerlink" href="#numerical-convergence-and-solver-diagnostics" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial07_convergence.html" rel="noreferrer" target="_blank">Open Tutorial 7: Numerical Convergence and Solver Diagnostics</a></p>
+<p>Distinguish local pointwise convergence, pseudo-time convergence, and
+physical-time advancement. Inspect solver states and initialization
+histories, examine the influence of relaxation factors and the pseudo-time
+step, troubleshoot convergence difficulties, and assess whether a
+converged solution is numerically consistent.</p>
+</section>
+<section id="mesh-and-time-step-sensitivity">
+<h2>8. Mesh and Time-Step Sensitivity<a class="headerlink" href="#mesh-and-time-step-sensitivity" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial08_meshandtimestep.html" rel="noreferrer" target="_blank">Open Tutorial 8: Mesh and Time-Step Sensitivity</a></p>
+<p>Evaluate the sensitivity of mixture-solver results to spatial and temporal
+discretization. Compare steady-state solutions calculated with different
+axial meshes and transient responses calculated with different physical
+time steps. The tutorial also discusses local resolution, peak values,
+transition timing, computational effort, and the distinction between a
+sensitivity assessment and a systematic convergence study.</p>
+</section>
+<section id="advanced-visualization-and-post-processing">
+<h2>9. Advanced Visualization and Post-Processing<a class="headerlink" href="#advanced-visualization-and-post-processing" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/tutorial09_visualization.html" rel="noreferrer" target="_blank">Open Tutorial 9: Advanced Visualization and Post-Processing</a></p>
+<p>Apply the principal OpenSTREAM visualization and post-processing
+capabilities to a transient solution. Generate animated axial
+distributions, time histories at selected elevations, and time-elevation
+surfaces. Extract calculated quantities, assemble MATLAB tables, export
+selected results to CSV, and save and reload solver objects for additional
+analysis.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The models, correlations, numerical settings, and solver options selected throughout the tutorials are chosen for educational and demonstration purposes only. Their use in a tutorial does not imply that they are appropriate for a particular application. Model selection, calibration, and verification should always be performed based on the specific problem being analyzed.</p>
+<p>The physical models, closure relations, numerical settings, and solver
+options selected throughout these tutorials are intended for educational
+and demonstration purposes.</p>
+<p>Their use in a tutorial does not imply that they are appropriate,
+recommended, calibrated, verified, or validated for a particular
+application. Before applying OpenSTREAM to a technical study, assess the
+assumptions, applicability range, calibration basis, numerical
+sensitivity, and validation evidence associated with every selected
+model.</p>
 </div>
+</section>
 </section>
 
 
