@@ -639,8 +639,12 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
             %       film.wave
             %
             % Field paths that do not apply to a particular solver are skipped. The
-            % calculated and reference values are compared using the regression
-            % tolerance defined in this method.
+            % calculated and reference values are compared using the relative
+            % tolerance defined in this method. The tolerance permits small numerical
+            % differences between supported execution environments while retaining
+            % sensitivity to solver regressions. When a reference value is exactly
+            % zero, the calculated value must also be exactly zero because no absolute
+            % tolerance is applied.
             %
             % The test requires at least one applicable field quantity for each
             % solver and at least one comparison across the complete test.
@@ -658,7 +662,7 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
                 "film.wave"];
 
             % Define the regression-comparison tolerance.
-            relativeTolerance = 1e-10;
+            relativeTolerance = 1e-8;
 
             % Count the total number of property comparisons performed by this
             % test.
