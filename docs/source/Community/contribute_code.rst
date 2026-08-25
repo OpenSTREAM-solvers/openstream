@@ -1,7 +1,7 @@
 Contribute to the code
 ======================
 
-Contributions to the OpenSTREAM solvers, documentation, tutorials, tests,
+Contributions to the **OpenSTREAM** solvers, documentation, tutorials, tests,
 and examples are welcome. Following the guidelines below helps ensure that
 changes can be reviewed, tested, and integrated efficiently.
 

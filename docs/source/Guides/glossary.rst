@@ -1,7 +1,7 @@
 Glossary
 ========
 
-This glossary defines terminology used throughout the OpenSTREAM documentation. The intent is to make the documentation more consistent and to clarify the distinction between closely related concepts used in one-dimensional, multi-field, two-phase flow modeling.
+This glossary defines terminology used throughout the **OpenSTREAM** documentation. The intent is to make the documentation more consistent and to clarify the distinction between closely related concepts used in one-dimensional, multi-field, two-phase flow modeling.
 
 .. glossary::
    :sorted:
