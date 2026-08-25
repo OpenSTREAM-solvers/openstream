@@ -116,7 +116,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../Guides/testing.html">Testing and verification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#test-organization">Test organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-all-tests">Running all tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-individual-test-suites">Running individual test suites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-individual-test-categories">Running individual test categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#continuous-integration">Continuous integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#reference-solutions">Reference solutions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#adding-new-tests">Adding new tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#unit-test-guidelines">Unit test guidelines</a></li>
@@ -187,12 +188,25 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Contribute to the code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#coding-standards">Coding Standards</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reporting-issues">Reporting Issues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coding-standards">Coding standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#matlab">MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-practices">General practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#testing-contributions">Testing contributions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-solutions">Reference solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generated-outputs">Generated outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-integration">Continuous integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting-issues">Reporting issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of conduct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#communication">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribute_documentation.html">Contribute to the documentation</a><ul>
@@ -243,110 +257,280 @@
              
   <section id="contribute-to-the-code">
 <h1>Contribute to the code<a class="headerlink" href="#contribute-to-the-code" title="Link to this heading"></a></h1>
-<p>We welcome contributions from the community to improve the <strong>OpenSTREAM</strong> solvers, documentation, and examples. Please follow these guidelines to ensure a smooth process.</p>
+<p>Contributions to the OpenSTREAM solvers, documentation, tutorials, tests,
+and examples are welcome. Following the guidelines below helps ensure that
+changes can be reviewed, tested, and integrated efficiently.</p>
 <section id="how-to-contribute">
-<h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p><strong>Fork the Repository</strong></p></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li><p>The OpenSTREAM repository is available at <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream" rel="noreferrer" target="_blank">OpenSTREAM-solvers/openstream</a></p></li>
-<li><p>Click the <strong>Fork</strong> button on GitHub to create your copy.</p></li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="2">
-<li><p><strong>Clone Your Fork</strong></p></li>
-</ol>
+<h2>How to contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p><strong>Fork the repository</strong></p>
+<p>Open the <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream" rel="noreferrer" target="_blank">OpenSTREAM repository</a> and select
+<strong>Fork</strong> to create a copy under your GitHub account.</p>
+</li>
+<li><p><strong>Clone your fork</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;your-username&gt;/openstream.git
 <span class="nb">cd</span><span class="w"> </span>openstream
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
-<li><p><strong>Create a Feature Branch</strong></p></li>
-</ol>
+</li>
+<li><p><strong>Create a development branch</strong></p>
+<p>Create a branch with a concise name describing the intended change:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/my-new-feature
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
-<li><p><strong>Make Your Changes</strong></p></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li><p>Follow the coding standards outlined below.</p></li>
-<li><p>Add or update tests for new functionality.</p></li>
+<p>Other appropriate prefixes may include <code class="docutils literal notranslate"><span class="pre">fix/</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">test/</span></code>.</p>
+</li>
+<li><p><strong>Make your changes</strong></p>
+<ul class="simple">
+<li><p>Follow the coding and documentation standards described below.</p></li>
+<li><p>Add or update tests when functionality or numerical behavior changes.</p></li>
+<li><p>Update user documentation when the change affects visible behavior,
+inputs, outputs, workflows, or examples.</p></li>
+<li><p>Avoid committing generated output files.</p></li>
 </ul>
-</div></blockquote>
-<ol class="arabic simple" start="5">
-<li><p><strong>Commit and Push</strong></p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature: description"</span>
+</li>
+<li><p><strong>Run the automated tests</strong></p>
+<p>From the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder, run:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">runOpenSTREAMTests</span>
+</pre></div>
+</div>
+<p>Confirm that the complete available test suite passes before pushing
+the change.</p>
+</li>
+<li><p><strong>Commit and push the changes</strong></p>
+<p>Use a concise and descriptive commit message:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature: description"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/my-new-feature
 </pre></div>
 </div>
-<ol class="arabic simple" start="6">
-<li><p><strong>Open a Pull Request</strong></p></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li><p>Go to the original repository and submit a PR.</p></li>
-<li><p>Include a clear description of your changes.</p></li>
+<p>Review the staged files before committing to ensure that generated
+outputs, temporary files, and unrelated changes are not included.</p>
+</li>
+<li><p><strong>Open a pull request</strong></p>
+<p>Open a pull request against the original OpenSTREAM repository.</p>
+<p>The pull-request description should:</p>
+<ul class="simple">
+<li><p>Explain the purpose of the change.</p></li>
+<li><p>Summarize the implementation.</p></li>
+<li><p>Identify affected models, solvers, inputs, tests, or documentation.</p></li>
+<li><p>Describe any intentional numerical changes.</p></li>
+<li><p>Explain and justify any changes to approved reference solutions.</p></li>
+<li><p>Reference related issues when applicable.</p></li>
 </ul>
-</div></blockquote>
+</li>
+</ol>
 </section>
 <section id="coding-standards">
-<h2>Coding Standards<a class="headerlink" href="#coding-standards" title="Link to this heading"></a></h2>
+<h2>Coding standards<a class="headerlink" href="#coding-standards" title="Link to this heading"></a></h2>
+<section id="matlab">
+<h3>MATLAB<a class="headerlink" href="#matlab" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><strong>Python</strong>: Follow PEP8 guidelines.</p></li>
-<li><p><strong>MATLAB</strong>: Use clear variable names, comments, and avoid hard-coded paths.</p></li>
-<li><p>Document all functions with docstrings or comments.</p></li>
-<li><p>Prefer automated tests over manual verification whenever practical.</p></li>
-<li><p>Keep commits atomic and descriptive.</p></li>
+<li><p>Use clear and descriptive variable, property, method, and class names.</p></li>
+<li><p>Follow the existing OpenSTREAM package and class organization.</p></li>
+<li><p>Document public classes, properties, functions, and methods.</p></li>
+<li><p>Add comments where they clarify numerical methods, physical assumptions,
+or non-obvious implementation choices.</p></li>
+<li><p>Avoid hard-coded repository paths.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">fullfile</span></code> when constructing file-system paths.</p></li>
+<li><p>Preserve the existing coding style unless a broader refactoring is part
+of the proposed change.</p></li>
+<li><p>Avoid unrelated formatting changes in the same commit as a functional
+modification.</p></li>
 </ul>
+</section>
+<section id="python">
+<h3>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Follow PEP 8 conventions where practical.</p></li>
+<li><p>Document externally visible functions and classes.</p></li>
+<li><p>Keep interactions between MATLAB and Python explicit and reproducible.</p></li>
+<li><p>Update dependency specifications when adding or modifying Python package
+requirements.</p></li>
+</ul>
+</section>
+<section id="general-practices">
+<h3>General practices<a class="headerlink" href="#general-practices" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Keep commits focused and descriptive.</p></li>
+<li><p>Prefer automated tests over manual verification whenever practical.</p></li>
+<li><p>Avoid duplicating existing functionality.</p></li>
+<li><p>Preserve backward compatibility unless an incompatible change is
+intentional, documented, and reviewed.</p></li>
+<li><p>Separate functional changes from large documentation or formatting
+changes when practical.</p></li>
+</ul>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<p>Update the documentation when a contribution changes:</p>
+<ul class="simple">
+<li><p>User-visible functionality.</p></li>
+<li><p>Input parameters or accepted values.</p></li>
+<li><p>Default model or numerical selections.</p></li>
+<li><p>Solver behavior or calculated outputs.</p></li>
+<li><p>Public classes, methods, or properties.</p></li>
+<li><p>Installation or dependency requirements.</p></li>
+<li><p>Tutorials or recommended workflows.</p></li>
+<li><p>File names, links, or repository organization.</p></li>
+</ul>
+<p>Documentation changes should be reviewed in both the generated website and
+PDF documentation when the affected content is included in both formats.</p>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
-<p>OpenSTREAM includes automated unit, integration, and environment tests.</p>
-<p>Before submitting a pull request, run the complete test suite from MATLAB:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">runOpenSTREAMTests</span><span class="p">;</span>
+<p>OpenSTREAM includes automated environment, unit, integration, and
+regression verification. The tests are organized under:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tests/environment/
+tests/unit/
+tests/integration/
 </pre></div>
 </div>
-<p>The test runner executes:</p>
+<p>The complete available test suite can be run from the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">runOpenSTREAMTests</span>
+</pre></div>
+</div>
+<p>The runner recursively discovers the available test classes, displays
+detailed diagnostics, produces a summary table, reports the total
+test-suite execution time, and raises an error if any test fails or does
+not complete.</p>
+<p>After execution, the MATLAB test results and generated summary table are
+available in the workspace as <code class="docutils literal notranslate"><span class="pre">testResults</span></code> and <code class="docutils literal notranslate"><span class="pre">testSummary</span></code>.</p>
+<p>The current test categories include:</p>
 <ul class="simple">
-<li><p>Unit tests in <code class="docutils literal notranslate"><span class="pre">tests/unit</span></code></p></li>
-<li><p>Integration tests in <code class="docutils literal notranslate"><span class="pre">tests/integration</span></code></p></li>
-<li><p>Environment validation tests in <code class="docutils literal notranslate"><span class="pre">tests/environment</span></code></p></li>
+<li><p>Environment tests that verify the MATLAB-Python interface, required
+Python packages, and basic CoolProp functionality.</p></li>
+<li><p>Unit tests that verify focused OpenSTREAM components, currently
+including input handling.</p></li>
+<li><p>Integration tests that construct and solve representative OpenSTREAM
+cases, perform physical-consistency checks, compare selected numerical
+results with approved references, and verify solver persistence.</p></li>
 </ul>
+<p>The automated test suite is under active development and does not yet
+exercise every OpenSTREAM class, method, physical model, numerical option,
+solver path, error condition, or post-processing capability. A successful
+test run confirms that the currently implemented tests passed. It does not
+constitute complete verification or validation of OpenSTREAM.</p>
+<section id="testing-contributions">
+<h3>Testing contributions<a class="headerlink" href="#testing-contributions" title="Link to this heading"></a></h3>
 <p>Contributors should:</p>
 <ul class="simple">
-<li><p>Add unit tests for new classes and functions whenever possible.</p></li>
-<li><p>Add integration tests when solver behaviour or numerical results are affected.</p></li>
-<li><p>Update reference solutions only when changes are intentional and justified.</p></li>
-<li><p>Ensure all tests pass before submitting a pull request.</p></li>
+<li><p>Add focused unit tests for new testable classes, functions, and methods.</p></li>
+<li><p>Add integration tests when a change affects solver workflows, physical
+consistency, or numerical results.</p></li>
+<li><p>Add environment tests when introducing new external dependencies.</p></li>
+<li><p>Verify that all existing tests continue to pass.</p></li>
+<li><p>Review numerical differences from approved references.</p></li>
+<li><p>Update tests when expected behavior changes intentionally.</p></li>
+<li><p>Update the testing documentation when the framework, test organization,
+or execution procedure changes.</p></li>
 </ul>
+</section>
+<section id="reference-solutions">
+<h3>Reference solutions<a class="headerlink" href="#reference-solutions" title="Link to this heading"></a></h3>
+<p>Approved solver-reference objects are stored below:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tests/integration/references/&lt;session-directory&gt;/
+</pre></div>
+</div>
+<p>These files form part of the numerical regression baseline and are
+version-controlled.</p>
+<p>Reference solutions should be updated only when:</p>
+<ul class="simple">
+<li><p>A defect has been corrected.</p></li>
+<li><p>A model formulation has intentionally changed.</p></li>
+<li><p>Numerical behavior has intentionally changed and the new behavior has
+been reviewed.</p></li>
+<li><p>A justified change to the approved test environment changes the
+calculated reference results.</p></li>
+</ul>
+<p>Reference solutions should not be replaced merely to make a failing test
+pass. Before updating a reference, identify and understand the numerical
+differences and document why the new result is correct.</p>
+</section>
+<section id="generated-outputs">
+<h3>Generated outputs<a class="headerlink" href="#generated-outputs" title="Link to this heading"></a></h3>
+<p>Some tests generate temporary files, logs, session directories, CSV files,
+and saved solver objects under category-specific <code class="docutils literal notranslate"><span class="pre">outputs</span></code> directories.</p>
+<p>Generated outputs are excluded from version control and should not
+normally be committed. Approved reference solutions are stored separately
+and should be committed only as part of a justified and reviewed update to
+the regression baseline.</p>
+</section>
+<section id="continuous-integration">
+<h3>Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h3>
+<p>The complete available test suite is executed automatically by the MATLAB
+CI workflow when changes are pushed to the repository.</p>
+<p>After pushing a change:</p>
+<ol class="arabic simple">
+<li><p>Open the corresponding GitHub Actions run.</p></li>
+<li><p>Confirm that the MATLAB CI workflow completes successfully.</p></li>
+<li><p>Review the diagnostic output if a test fails or does not complete.</p></li>
+<li><p>Reproduce failures locally using <code class="docutils literal notranslate"><span class="pre">runOpenSTREAMTests</span></code>.</p></li>
+<li><p>Push a correction only after rerunning the complete local test suite.</p></li>
+</ol>
+<p>The documentation build and MATLAB CI are separate workflows. A successful
+documentation build or GitHub Pages deployment does not indicate that the
+MATLAB tests passed. Review both workflow results independently.</p>
+</section>
 </section>
 <section id="reporting-issues">
-<h2>Reporting Issues<a class="headerlink" href="#reporting-issues" title="Link to this heading"></a></h2>
+<h2>Reporting issues<a class="headerlink" href="#reporting-issues" title="Link to this heading"></a></h2>
+<p>Use the <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">OpenSTREAM issue tracker</a> to report
+defects, request enhancements, or propose changes.</p>
+<p>An issue report should include, where applicable:</p>
 <ul class="simple">
-<li><p>Use the issue <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">tracker</a> on GitHub.</p></li>
-<li><p>Provide:</p>
-<ul>
-<li><p>Steps to reproduce</p></li>
-<li><p>Expected vs actual behavior</p></li>
-<li><p>Screenshots or logs if relevant</p></li>
+<li><p>A clear description of the problem.</p></li>
+<li><p>Steps required to reproduce the behavior.</p></li>
+<li><p>Expected and actual behavior.</p></li>
+<li><p>The relevant OpenSTREAM version or commit.</p></li>
+<li><p>MATLAB and Python versions.</p></li>
+<li><p>Relevant dependency versions.</p></li>
+<li><p>Input files or a minimal reproducible case.</p></li>
+<li><p>Solver output, logs, screenshots, or error messages.</p></li>
+<li><p>Any temporary workaround that has been identified.</p></li>
 </ul>
-</li>
-</ul>
+<p>Before opening a new issue, review existing issues to determine whether
+the topic has already been reported or discussed.</p>
 </section>
 <section id="code-of-conduct">
-<h2>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h2>
-<p>Please be respectful and constructive in all interactions.</p>
+<h2>Code of conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h2>
+<p>Contributors should communicate respectfully and constructively. Technical
+disagreements should focus on the implementation, evidence, assumptions,
+and expected behavior rather than on individuals.</p>
 </section>
 <section id="communication">
 <h2>Communication<a class="headerlink" href="#communication" title="Link to this heading"></a></h2>
+<p>Use <a class="reference external" href="https://github.com/OpenSTREAM-solvers/discussions" rel="noreferrer" target="_blank">GitHub Discussions</a> for general
+questions, ideas, and community discussions.</p>
+<p>For major changes, open an issue before beginning implementation. Early
+discussion is particularly useful for:</p>
 <ul class="simple">
-<li><p>Join discussions in <a class="reference external" href="https://github.com/OpenSTREAM-solvers/discussions" rel="noreferrer" target="_blank">GitHub Discussions</a>.</p></li>
-<li><p>For major changes, open an issue first to discuss your proposal.</p></li>
+<li><p>New solver frameworks.</p></li>
+<li><p>New conservation equations or closure-model families.</p></li>
+<li><p>Changes to established model formulations.</p></li>
+<li><p>Changes to public interfaces or input formats.</p></li>
+<li><p>Changes that affect backward compatibility.</p></li>
+<li><p>Changes that require substantial updates to regression references.</p></li>
+</ul>
+</section>
+<section id="contributor-checklist">
+<h2>Contributor checklist<a class="headerlink" href="#contributor-checklist" title="Link to this heading"></a></h2>
+<p>Before submitting a pull request, confirm that:</p>
+<ul class="simple">
+<li><p>The change is limited to the intended scope.</p></li>
+<li><p>The code follows the existing OpenSTREAM style and organization.</p></li>
+<li><p>New or modified functionality includes appropriate tests.</p></li>
+<li><p>The complete local test suite passes.</p></li>
+<li><p>Numerical differences from approved references have been reviewed.</p></li>
+<li><p>Reference solutions have been updated only when justified.</p></li>
+<li><p>User-visible behavior is documented.</p></li>
+<li><p>Relevant tutorials or examples have been updated.</p></li>
+<li><p>Documentation links and cross-references remain valid.</p></li>
+<li><p>Generated outputs and temporary files are not committed.</p></li>
+<li><p>The MATLAB CI workflow passes after the changes are pushed.</p></li>
+<li><p>Documentation workflows pass when documentation has been modified.</p></li>
 </ul>
 </section>
 </section>
