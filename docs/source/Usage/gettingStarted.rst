@@ -1,68 +1,102 @@
 Getting started
 ===============
 
-Prerequisites and installation
-------------------------------
+OpenSTREAM is a MATLAB program for simulating one-dimensional two-phase
+flows. Fluid properties are calculated using the Python version of
+`CoolProp <http://www.coolprop.org>`_ through
+`CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_, a MATLAB
+interface to CoolProp.
 
-**OpenSTREAM** is a MATLAB program for simulating one-dimensional two-phase flows.
-The Python version of
-`CoolProp <http://www.coolprop.org>`__ is
-used for calculating the fluid properties.
-`CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`__ is a
-MATLAB interface that interacts with CoolProp through Python. Both
-OpenSTREAM and CoolProp are hosted on GitHub. Making a copy
-(cloning) of these programs will be our first step.
+This guide explains how to obtain OpenSTREAM, configure MATLAB and Python,
+install the required dependencies, and verify the installation.
 
-Install using Git and GitHub
+Prerequisites
+-------------
+
+Before installing and configuring OpenSTREAM, ensure that the following
+software is available:
+
+- MATLAB.
+- A Python version compatible with the installed MATLAB release.
+- Git or GitHub Desktop.
+
+CoolProp and its associated Python dependencies are installed later in
+this guide.
+
+No additional MathWorks toolbox is currently required by the core
+OpenSTREAM solver frameworks.
+
+Install OpenSTREAM
+------------------
+
+OpenSTREAM is hosted in the
+`OpenSTREAM GitHub repository
+<https://github.com/OpenSTREAM-solvers/openstream>`_.
+
+There are two principal ways to obtain and maintain a local copy of the
+repository:
+
+- The `Git command-line interface
+  <https://docs.github.com/en/get-started/getting-started-with-git/set-up-git>`_.
+- `GitHub Desktop <https://desktop.github.com/>`_.
+
+Install using the Git command-line interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Clone the repository and its submodules using SSH:
+
+.. code-block:: bash
+
+   git clone --recursive git@github.com:OpenSTREAM-solvers/openstream.git
+
+Alternatively, clone the repository using HTTPS:
+
+.. code-block:: bash
+
+   git clone --recursive https://github.com/OpenSTREAM-solvers/openstream.git
+
+The ``--recursive`` option also clones the repository submodules,
+including
+`CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_.
+
+For information about authentication, see:
+
+- `Connecting to GitHub with SSH
+  <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>`_.
+- `Caching GitHub credentials
+  <https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git>`_.
+- `Working with Git submodules
+  <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_.
+
+Enter the cloned repository:
+
+.. code-block:: bash
+
+   cd openstream
+
+Install using GitHub Desktop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  There are two main ways of interacting with GitHub to use and
-   contribute to the OpenSTREAM project: `Git Command Line Interface
-   (CLI) <https://docs.github.com/en/get-started/getting-started-with-git/set-up-git>`__,
-   and the `GitHub Desktop <https://desktop.github.com/>`__ program. Use
-   the links to set up one of the methods.
+Open GitHub Desktop, sign in, and select **Clone repository**. Select the
+OpenSTREAM repository and choose the local destination folder.
 
--  After installing and setting up your Git mechanism of choice, if you
-   chose to use the:
+After cloning, verify that the ``CoolPropWrapper`` submodule contains its
+expected files. If the submodule is empty, initialize it from a terminal
+opened in the repository root:
 
-   -  **Command line interface**
+.. code-block:: bash
 
-      -  Clone (make a copy of) the repository using:
-         ``git clone --recursive git@github.com:OpenSTREAM-solvers/openstream.git``
-         (`SSH
-         authentication <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>`__)
-
-         or
-
-         ``git clone --recursive https://github.com/OpenSTREAM-solvers/openstream.git``
-         (`HTTPS
-         authentication <https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git>`_).
-         
-         (The ``--recursive`` flag is needed to clone
-         `submodules <https://git-scm.com/book/en/v2/Git-Tools-Submodules>`_,
-         such as the
-         `mfval/CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_,
-         in one command.)
-      -  Then, use ``cd openstream`` to enter the newly created
-         folder. You should see the newly downloaded files for the
-         project.
-
-   -  **GitHub Desktop program**
-
-      -  Open the program, login, and **Clone repository**. Everything
-         should be cloned automatically. This is part of the setup guide
-         linked above.
+   git submodule update --init --recursive
 
 MATLAB and Python compatibility
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 OpenSTREAM requires MATLAB. No additional MathWorks toolbox is currently
 required by the core solver frameworks. Fluid properties are calculated
 externally using the Python version of CoolProp through CoolPropWrapper.
 
 OpenSTREAM is tested with selected MATLAB and Python version combinations
-through its continuous-integration workflow. The configurations currently
-exercised by the continuous-integration workflow are listed below.
+through its continuous-integration workflow.
 
 .. list-table:: CI-tested MATLAB and Python configurations
    :header-rows: 1
@@ -88,7 +122,7 @@ development revision documented on this site. See
 project versioning convention.
 
 Compatibility policy
-^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 OpenSTREAM distinguishes between tested and untested software
 configurations. A tested configuration is a combination of MATLAB, Python,
@@ -100,155 +134,230 @@ current OpenSTREAM development version or release. Other software
 combinations may work but are not guaranteed and may not be covered by
 automated testing.
 
-The compatibility information may change as new MATLAB, Python, and
-CoolProp versions become available. Users should consult the compatibility
-information corresponding to the OpenSTREAM version they are using.
+Compatibility information may change as new MATLAB, Python, and CoolProp
+versions become available. Consult the compatibility information
+corresponding to the OpenSTREAM version being used.
 
 Configure MATLAB and Python
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 Before using OpenSTREAM, verify that a suitable Python version is installed
 and that MATLAB is configured to use the corresponding Python executable.
-The general MATLAB-Python compatibility requirements are available in the
+
+The general compatibility requirements are available in the
 `MathWorks Python compatibility table
 <https://www.mathworks.com/support/requirements/python-compatibility.html>`_.
-The *MATLAB Interface* column identifies the Python versions supported by
+The **MATLAB Interface** column identifies the Python versions supported by
 each MATLAB release.
 
 The following configuration instructions are adapted from the
 `CoolPropWrapper repository
 <https://github.com/mfval/CoolPropWrapper>`_.
 
-1. Inspect the Python environment currently used by MATLAB:
+Inspect the configured Python environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   .. code-block:: matlab
+In MATLAB, inspect the current Python environment:
 
-      pythonEnvironment = pyenv;
-      disp(pythonEnvironment)
+.. code-block:: matlab
 
-   If no Python environment is configured, or if the configured Python
-   version is unsuitable for the installed MATLAB release, continue with
-   the Python installation instructions below. Otherwise, proceed to the
-   dependency-installation step.
+   pythonEnvironment = pyenv;
+   disp(pythonEnvironment)
 
-2. Install compatible Python3
+If no Python environment is configured, or if the configured version is
+not suitable for the installed MATLAB release, install a compatible Python
+version and configure MATLAB to use it.
 
-   -  **Windows**: Go to
-      `python.org <https://www.python.org/downloads/>`__ to download the
-      specific version of Python you need. Follow the setup procedure.
-   -  **Linux**: A Python installation may already be available. Verify the
-      version using ``python3 --version``. If Python is not installed, or
-      an incompatible version is installed, install an appropriate version
-      using the OS package manager. For Debian-based Linux distros (such as
-      Ubuntu), use ``sudo apt-get install python3.x`` to install the *x*
-      version of Python3.
-   -  **MacOS**: Most recent versions of macOS include Python or can
-      install it through Homebrew or the official Python installer.
-      Verify the installed version using: ``python3 --version``. If a
-      compatible version is not available, install one using Homebrew:
-      ``brew install python`` or download the appropriate version directly
-      from `python.org <https://www.python.org/downloads/>`__.
+Install a compatible Python version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-3. Specify Python installation location in MATLAB:
+**Windows**
 
-   -  Run ``pyenv('Version', 'pathtopython')``, where ``pathtopython`` is the path
-      to where Python is installed. Here are some typical locations
-      depending on your OS:
+Download the required version from
+`Python.org <https://www.python.org/downloads/>`_ and follow the
+installation instructions.
 
-      -  **Windows**:
-         ``C:\Users\Username\AppData\Local\Programs\Python\Python311\python.exe``,
-         for version 3.11.
-      -  **Linux**: ``/usr/bin/python3.11``, for version 3.11. Use
-         ``whereis python3`` to find possible locations.
-      -  **MacOS**: The Python executable is typically located using:
-         ``which python3``. Common installation locations include:
-         ``/usr/local/bin/python3`` and ``/opt/homebrew/bin/python3``.
+**Linux**
 
-4. Install the CoolPropWrapper Python dependencies:
+Check whether Python is already available:
 
-   * The recommended approach is to install the dependencies from the
-     requirements file provided with CoolPropWrapper.
+.. code-block:: bash
 
-   * Alternatively, install the dependencies used by the current
-     continuous-integration environment directly:
+   python3 --version
 
-     .. code-block:: console
+If necessary, install an appropriate version using the operating-system
+package manager. For example, on a Debian-based distribution:
 
-        python -m pip install CoolProp==8.0.0 nanobind
+.. code-block:: bash
+
+   sudo apt-get install python3.x
+
+Replace ``x`` with the required minor version.
+
+**macOS**
+
+Check the available Python version:
+
+.. code-block:: bash
+
+   python3 --version
+
+If an appropriate version is not available, install one using Homebrew:
+
+.. code-block:: bash
+
+   brew install python
+
+Alternatively, download the required version from
+`Python.org <https://www.python.org/downloads/>`_.
+
+Configure the Python executable in MATLAB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configure MATLAB to use the required Python executable:
+
+.. code-block:: matlab
+
+   pyenv('Version','<path-to-python-executable>')
+
+Replace ``<path-to-python-executable>`` with the complete path to the
+Python executable.
+
+Typical locations include:
+
+- **Windows:** ``C:\Users\Username\AppData\Local\Programs\Python\Python311\python.exe``
+- **Linux:** ``/usr/bin/python3.11``
+- **macOS:** ``/usr/local/bin/python3`` or ``/opt/homebrew/bin/python3``
+
+On Linux and macOS, commands such as ``which python3`` can help locate the
+executable.
+
+Install the Python dependencies
+-------------------------------
+
+The recommended approach is to install the dependencies from the
+requirements file supplied with CoolPropWrapper.
+
+Alternatively, install the dependencies used by the current
+continuous-integration environment directly:
+
+.. code-block:: console
+
+   python -m pip install CoolProp==8.0.0 nanobind
+
+In the commands above, ``python`` must refer to the same Python executable
+configured through ``pyenv``. If necessary, replace ``python`` with the
+complete path to that executable.
 
 The current OpenSTREAM continuous-integration environment installs
 ``CoolProp==8.0.0`` together with ``nanobind``. Other CoolProp versions
-may work but are not necessarily tested. Installing the dependencies from
-the CoolPropWrapper requirements file is recommended to reproduce the
-maintained configuration.
+may work but are not necessarily tested.
+
+When several Python installations are available, ensure that the
+dependencies are installed using the same Python executable configured in
+MATLAB.
 
 Verify the installation
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 After configuring MATLAB and Python, verify that MATLAB is using the
-intended Python environment and that CoolProp can be accessed through
+intended Python environment and that CoolProp is accessible through
 CoolPropWrapper.
 
-1. Display the Python environment used by MATLAB:
+Inspect the Python environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   .. code-block:: matlab
+.. code-block:: matlab
 
-      pythonEnvironment = pyenv;
-      disp(pythonEnvironment)
+   pythonEnvironment = pyenv;
+   disp(pythonEnvironment)
 
-   Confirm that the reported executable and Python version correspond to
-   the intended installation. If MATLAB is using a different Python
-   environment, configure the required executable using ``pyenv`` before
-   continuing.
+Confirm that the reported executable and Python version correspond to the
+intended installation.
 
-2. Verify the required Python packages from a terminal using the same
-   Python executable configured in MATLAB:
+Verify the Python packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   .. code-block:: console
+From a terminal, use the same Python executable configured in MATLAB:
 
-      python -m pip show CoolProp
-      python -m pip show nanobind
+.. code-block:: console
 
-   The OpenSTREAM continuous-integration environment currently uses
-   ``CoolProp==8.0.0`` together with ``nanobind``. Installing the
-   dependencies from the CoolPropWrapper requirements file is recommended
-   to reproduce the tested environment.
+   python -m pip show CoolProp
+   python -m pip show nanobind
 
-3. Create a CoolPropWrapper object in MATLAB:
+Create a CoolPropWrapper object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   .. code-block:: matlab
+In MATLAB, create a fluid-property object:
 
-      fluidProperties = ...
-          CoolPropWrapper.CoolPropWrapper('WATER');
+.. code-block:: matlab
 
-   Successful construction confirms that MATLAB can access Python,
-   import CoolProp, and initialize the requested fluid.
+   fluidProperties = ...
+       CoolPropWrapper.CoolPropWrapper('WATER');
 
-4. Evaluate a representative fluid property:
+Successful construction confirms that MATLAB can access Python, import
+CoolProp, and initialize the requested fluid.
 
-   .. code-block:: matlab
+Evaluate a representative fluid property
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      saturationTemperature = ...
-          fluidProperties.temperature('P',6.0e6,'Q',0);
+Evaluate the saturation temperature of water at 6 MPa:
 
-      disp(saturationTemperature)
+.. code-block:: matlab
 
-   This call evaluates the saturation temperature of water at a pressure
-   of 6 MPa. A finite numerical result confirms that the MATLAB-Python-
-   CoolProp interface is functioning.
+   saturationTemperature = ...
+       fluidProperties.temperature('P',6.0e6,'Q',0);
 
-5. Run Tutorial 1 from the OpenSTREAM ``tutorials`` folder. The tutorial
-   constructs the input objects, evaluates fluid properties, solves the
-   example case with the available solver frameworks, and generates
-   representative plots.
+   disp(saturationTemperature)
 
-If any verification step fails, first confirm that MATLAB is using the
-intended Python executable and that ``CoolProp`` and ``nanobind`` are
-installed in that same Python environment.
+A finite numerical result confirms that the MATLAB-Python-CoolProp
+interface is functioning.
+
+Run the automated tests
+~~~~~~~~~~~~~~~~~~~~~~~
+
+From the OpenSTREAM ``tests`` folder, run the complete automated test
+suite:
+
+.. code-block:: matlab
+
+   runOpenSTREAMTests
+
+The complete suite includes environment, unit, and integration tests. The
+environment tests verify Python availability, package installation, and
+basic CoolProp functionality. The same complete test suite is executed by
+the MATLAB continuous-integration workflow when changes are pushed to the
+repository.
+
+Run the sample script
+~~~~~~~~~~~~~~~~~~~~~
+
+Run the `sample script
+<https://openstream-solvers.github.io/openstream/Usage/runSampleScript.html>`_
+to perform a complete OpenSTREAM calculation and confirm that the
+installation is functioning correctly.
+
+The sample calculation uses the mixture solver to simulate boiling
+two-phase flow in a uniformly heated tube followed by an adiabatic
+section. It constructs the required input objects, evaluates the fluid
+properties, solves the case, generates representative axial plots, and
+saves the solver object.
+
+Run the commands from the OpenSTREAM repository root, as described on the
+sample-script page.
 
 Next steps
-~~~~~~~~~~
+----------
 
-Congrats! Hopefully, at this point, you have successfully made a copy of
-this repo and installed the required programs. Next, let’s run the
-sample script to make sure everything is working properly.
+Congratulations! At this point, you should have a local copy of OpenSTREAM
+and a functioning MATLAB, Python, and CoolProp configuration.
+
+Continue with the `OpenSTREAM tutorials
+<https://openstream-solvers.github.io/openstream/Guides/tutorials.html>`_,
+beginning with Tutorial 1: Quick Start. Tutorial 1 constructs the input
+objects, runs the example case with the mixture, two-fluid, three-field,
+and four-field solver frameworks, generates representative plots, and
+saves the solver objects.
+
+You can then continue with the solver-specific and workflow-oriented
+tutorials according to your interests.
