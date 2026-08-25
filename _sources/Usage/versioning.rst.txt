@@ -1,7 +1,7 @@
 Release numbering and versioning
 ================================
 
-OpenSTREAM uses a hybrid calendar-based and semantic version-numbering
+**OpenSTREAM** uses a hybrid calendar-based and semantic version-numbering
 scheme. Release identifiers have the following general form:
 
 .. code-block:: text

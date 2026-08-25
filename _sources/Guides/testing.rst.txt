@@ -1,8 +1,8 @@
 Testing and verification
 ========================
 
-OpenSTREAM includes an automated testing framework to support code verification,
-numerical consistency, and software environment compatibility.
+**OpenSTREAM** includes an automated testing framework to support code
+verification, numerical consistency, and software environment compatibility.
 
 The test suite is intended to:
 

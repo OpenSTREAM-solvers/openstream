@@ -1,7 +1,7 @@
 Notation
 ========
 
-This page summarizes the notation conventions used in the OpenSTREAM documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.
+This page summarizes the notation conventions used in the **OpenSTREAM** documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.
 
 General conventions
 -------------------

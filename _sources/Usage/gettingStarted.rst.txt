@@ -1,7 +1,7 @@
 Getting started
 ===============
 
-OpenSTREAM is a MATLAB program for simulating one-dimensional two-phase
+**OpenSTREAM** is a MATLAB program for simulating one-dimensional two-phase
 flows. Fluid properties are calculated using the Python version of
 `CoolProp <http://www.coolprop.org>`_ through
 `CoolPropWrapper <https://github.com/mfval/CoolPropWrapper>`_, a MATLAB
@@ -332,10 +332,9 @@ repository.
 Run the sample script
 ~~~~~~~~~~~~~~~~~~~~~
 
-Run the `sample script
-<https://openstream-solvers.github.io/openstream/Usage/runSampleScript.html>`_
-to perform a complete OpenSTREAM calculation and confirm that the
-installation is functioning correctly.
+Run the :doc:`sample script <../Usage/runSampleScript>` to perform a
+complete OpenSTREAM calculation and confirm that the installation is
+functioning correctly.
 
 The sample calculation uses the mixture solver to simulate boiling
 two-phase flow in a uniformly heated tube followed by an adiabatic
@@ -352,8 +351,7 @@ Next steps
 Congratulations! At this point, you should have a local copy of OpenSTREAM
 and a functioning MATLAB, Python, and CoolProp configuration.
 
-Continue with the `OpenSTREAM tutorials
-<https://openstream-solvers.github.io/openstream/Guides/tutorials.html>`_,
+Continue with the :doc:`OpenSTREAM tutorials <../Guides/tutorials>`,
 beginning with Tutorial 1: Quick Start. Tutorial 1 constructs the input
 objects, runs the example case with the mixture, two-fluid, three-field,
 and four-field solver frameworks, generates representative plots, and
