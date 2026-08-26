@@ -1,20 +1,32 @@
+# MATLAB temporary and autosave files
 *.asv
+*.m~
+*.autosave
 
+# Generated OpenSTREAM solver outputs
 outputs/
 
-sandbox/
-!sandbox/*.md
-!sandbox/*_default.m
-docs/build/**
-docs/make.log
-docs/**/*.aux
-docs/**/*.fdb_latexmk
-docs/**/*.fls
-docs/**/*.log
-docs/venv*/
-docs/.venv*/
+# Local sandbox content
+/sandbox/*
+!/sandbox/*.md
+!/sandbox/*_default.m
 
-tests/+*/
+# Generated Sphinx documentation
+/docs/build/
+/docs/make.log
+/docs/**/*.aux
+/docs/**/*.fdb_latexmk
+/docs/**/*.fls
+/docs/**/*.log
 
-**/.DS_Store
+# Local Python documentation environments
+/docs/venv*/
+/docs/.venv*/
+
+# Generated MATLAB package directories created by tests
+/tests/+*/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
 
