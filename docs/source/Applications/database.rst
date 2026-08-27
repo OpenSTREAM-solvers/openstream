@@ -209,8 +209,8 @@ Typical workflow
 
 A typical application workflow consists of:
 
-#. Constructing a dataset-specific object.
-#. Reading the corresponding XML or JSON source file.
+#. Constructing a dataset-specific object from the corresponding XML or
+   JSON source file.
 #. Selecting one or more experimental cases.
 #. Selecting an OpenSTREAM solver and model configuration.
 #. Generating the corresponding OpenSTREAM input files.
@@ -282,9 +282,6 @@ Dataset implementations and application workflows should therefore be
 verified through documented and reproducible execution of the affected
 cases. Detailed verification requirements are provided in the
 :doc:`contribution guidelines <contributing>`.
-
-Development of an automated testing and regression framework is a planned
-improvement.
 
 Development status
 ------------------
