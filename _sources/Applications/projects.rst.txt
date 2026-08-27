@@ -1,5 +1,5 @@
-projects
-========
+Application projects
+====================
 
 OpenSTREAM-database includes application projects that demonstrate how
 the implemented experimental datasets can be used with OpenSTREAM.

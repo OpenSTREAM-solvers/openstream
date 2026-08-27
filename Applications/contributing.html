@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to OpenSTREAM-database &mdash; OpenSTREAM  documentation</title>
+  <title>Contributing to the database &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -27,8 +27,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Inputs" href="../Packages/Inputs.html" />
-    <link rel="prev" title="Publications" href="publications.html" /> 
+    <link rel="next" title="Application projects" href="projects.html" />
+    <link rel="prev" title="OpenSTREAM-database" href="database.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -176,12 +176,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="database.html">OpenSTREAM-database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="database.html#purpose">Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html#available-datasets">Available datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="database.html#dataset-packages">Dataset packages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="database.html#common-dataset-functionality">Common dataset functionality</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#dataset-source-files">Dataset source files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#units">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#application-projects">Application projects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#requirements">Requirements</a></li>
@@ -196,7 +192,26 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="projects.html">projects</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to the database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#types-of-contributions">Types of contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-organization">Dataset organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-template">Dataset template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#structured-source-files">Structured source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-integrity">Data integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-provenance">Data provenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-class">Dataset class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#openstream-dependency">OpenSTREAM dependency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comparison-and-validation">Comparison and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-and-post-processing">Plotting and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-and-verification">Testing and verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-requirements">Documentation requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submitting-a-contribution">Submitting a contribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="projects.html">Application projects</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="projects.html#available-projects">Available projects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#adamsson">1. Adamsson</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#bennett">2. Bennett</a></li>
@@ -216,22 +231,6 @@
 <li class="toctree-l2"><a class="reference internal" href="publications.html#two-fluid-model">Two-fluid model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications.html#three-field-model">Three-field model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications.html#four-field-model">Four-field model</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to OpenSTREAM-database</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#types-of-contributions">Types of contributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dataset-organization">Dataset organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#source-data">Source data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data-provenance">Data provenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dataset-class">Dataset class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#openstream-dependency">OpenSTREAM dependency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#application-projects">Application projects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#comparison-and-validation">Comparison and validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#plotting-and-post-processing">Plotting and post-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-and-verification">Testing and verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#documentation-requirements">Documentation requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#submitting-a-contribution">Submitting a contribution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 </ul>
@@ -323,7 +322,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Contributing to OpenSTREAM-database</li>
+      <li class="breadcrumb-item active">Contributing to the database</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Applications/contributing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -333,14 +332,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="contributing-to-openstream-database">
-<h1>Contributing to OpenSTREAM-database<a class="headerlink" href="#contributing-to-openstream-database" title="Link to this heading"></a></h1>
-<p>Contributions to <strong>OpenSTREAM-database</strong> are welcome. Contributions may
+  <section id="contributing-to-the-database">
+<h1>Contributing to the database<a class="headerlink" href="#contributing-to-the-database" title="Link to this heading"></a></h1>
+<p>Contributions to OpenSTREAM-database are welcome. Contributions may
 include new publicly available datasets, corrections to existing dataset
 implementations, additional application cases, improved plotting and
 comparison methods, uncertainty information, validation metrics,
 documentation, and project workflows.</p>
-<p>OpenSTREAM-database complements the core <strong>OpenSTREAM</strong> repository.
+<p>OpenSTREAM-database complements the core OpenSTREAM repository.
 Contributions related to solver frameworks, physical models, closure
 models, numerical methods, input handling, or other core functionality
 should normally be made in the OpenSTREAM repository.</p>
@@ -366,7 +365,8 @@ validation workflows belong in OpenSTREAM-database.</p>
 </section>
 <section id="dataset-organization">
 <h2>Dataset organization<a class="headerlink" href="#dataset-organization" title="Link to this heading"></a></h2>
-<p>New datasets should follow the established MATLAB package organization:</p>
+<p>Dataset implementations should follow the established MATLAB package
+organization:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+DatasetName/
 ├── +src/
 │   └── DatasetName.xml
@@ -376,22 +376,87 @@ validation workflows belong in OpenSTREAM-database.</p>
 └── README.md
 </pre></div>
 </div>
+<p>JSON source files can be used instead of, or alongside, XML source files.
+The selected format should preserve the same logical dataset information.</p>
 <p>The package name should identify the dataset clearly and consistently. A
 publication-based dataset name should generally combine the surname of the
 first author and the publication year, following the convention used by
-the existing dataset packages.</p>
-<p>The dataset-specific class should inherit from the common <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>
+the existing packages.</p>
+<p>The dataset-specific class should inherit from the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>
 class and use the shared application interface where practical.</p>
+</section>
+<section id="dataset-template">
+<h2>Dataset template<a class="headerlink" href="#dataset-template" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database includes a template dataset folder that provides the
+starting structure for a new dataset implementation.</p>
+<p>The template contains:</p>
+<ul class="simple">
+<li><p>An empty <code class="docutils literal notranslate"><span class="pre">+src</span></code> folder for dataset source files.</p></li>
+<li><p>A dataset-class folder containing a template MATLAB class that inherits
+from the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p></li>
+<li><p>A template <code class="docutils literal notranslate"><span class="pre">README.md</span></code> containing the expected documentation
+structure.</p></li>
+</ul>
+<p>To start a new dataset implementation:</p>
+<ol class="arabic simple">
+<li><p>Copy the complete template dataset folder.</p></li>
+<li><p>Rename the package folder using the selected dataset name.</p></li>
+<li><p>Rename the class folder and MATLAB class file consistently.</p></li>
+<li><p>Update the class name, constructor, comments, and documentation.</p></li>
+<li><p>Add the XML or JSON source files under <code class="docutils literal notranslate"><span class="pre">+src</span></code>.</p></li>
+<li><p>Complete the dataset-specific properties and methods.</p></li>
+<li><p>Complete the dataset README.</p></li>
+<li><p>Add dataset-specific result plotting where applicable.</p></li>
+<li><p>Verify the implemented dataset and application workflow.</p></li>
+</ol>
+<p>All numerical data added under <code class="docutils literal notranslate"><span class="pre">+src</span></code> must use SI units.</p>
+<p>The template provides the expected structure and documentation
+placeholders. Contributors remain responsible for completing and verifying
+all dataset-specific source data, metadata, methods, assumptions, unit
+conversions, uncertainty information, plotting functionality, and
+application workflows.</p>
+</section>
+<section id="structured-source-files">
+<h2>Structured source files<a class="headerlink" href="#structured-source-files" title="Link to this heading"></a></h2>
+<p>Dataset source files are stored under the package <code class="docutils literal notranslate"><span class="pre">+src</span></code> directory and
+can use XML or JSON.</p>
+<p>Each case can contain:</p>
+<ol class="arabic simple">
+<li><p>OpenSTREAM case-definition information, whose field names follow the
+strict naming convention expected by the generic input-generation
+functionality.</p></li>
+<li><p>Dataset-specific information used by the dataset class, plotting
+methods, and application workflows.</p></li>
+</ol>
+<p>Reserved OpenSTREAM field names are case-sensitive and must use the
+expected spelling. Renaming a reserved field, changing its capitalization,
+or replacing it with a dataset-specific synonym can prevent the
+corresponding information from being transferred to the generated
+OpenSTREAM inputs.</p>
+<p>Dataset-specific fields may be added freely, provided that they:</p>
+<ul class="simple">
+<li><p>Do not conflict with reserved OpenSTREAM field names.</p></li>
+<li><p>Use descriptive and unambiguous names.</p></li>
+<li><p>Are consistent throughout the dataset.</p></li>
+<li><p>Are represented consistently in XML and JSON when both formats exist.</p></li>
+<li><p>Are documented in the dataset README or class implementation.</p></li>
+<li><p>Use clearly documented SI units.</p></li>
+<li><p>Include uncertainty or availability information where relevant.</p></li>
+</ul>
+<p>Scalar quantities should be represented as individual values. Array
+quantities should use repeated XML elements or JSON arrays. Related arrays
+must have compatible lengths and ordering.</p>
+<p>Missing or unavailable information must be distinguishable from a physical
+value of zero and handled explicitly by the dataset class.</p>
 </section>
 <section id="source-data">
 <h2>Source data<a class="headerlink" href="#source-data" title="Link to this heading"></a></h2>
-<p>Dataset source files are stored under the package <code class="docutils literal notranslate"><span class="pre">+src</span></code> directory.</p>
 <p>All numerical data stored in OpenSTREAM-database source files must use SI
 units. This requirement applies even when the original publication reports
 data using another system of units.</p>
 <p>The source-data implementation should preserve the original experimental
 information as faithfully as possible. Any transcription, correction,
-filtering, interpolation, reconstruction, or unit conversion should be
+filtering, interpolation, reconstruction, or unit conversion must be
 documented.</p>
 <p>For every implemented quantity, document:</p>
 <ul class="simple">
@@ -406,6 +471,29 @@ documented.</p>
 </ul>
 <p>Unit conversions should retain sufficient numerical precision for the
 intended application and validation analyses.</p>
+</section>
+<section id="data-integrity">
+<h2>Data integrity<a class="headerlink" href="#data-integrity" title="Link to this heading"></a></h2>
+<p>When creating or modifying a source file, verify that:</p>
+<ul class="simple">
+<li><p>Every case has a unique and stable identifier.</p></li>
+<li><p>Reserved OpenSTREAM fields use the exact expected names.</p></li>
+<li><p>Required fields contain valid values.</p></li>
+<li><p>All numerical values use SI units.</p></li>
+<li><p>Related arrays have compatible lengths and ordering.</p></li>
+<li><p>Axial wall-mesh and wall-power arrays are compatible.</p></li>
+<li><p>Measurement-coordinate and measured-value arrays are compatible.</p></li>
+<li><p>Missing information is distinguishable from a physical zero.</p></li>
+<li><p>XML and JSON representations contain equivalent information when both
+formats are provided.</p></li>
+<li><p>Unit conversions retain sufficient numerical precision.</p></li>
+<li><p>Dataset-specific fields are interpreted consistently by the class and
+plotting methods.</p></li>
+</ul>
+<p>The dataset README or class implementation should identify whether a
+stored quantity is reported directly, converted, digitized, reconstructed,
+derived from other values, or introduced specifically for the OpenSTREAM
+application.</p>
 </section>
 <section id="data-provenance">
 <h2>Data provenance<a class="headerlink" href="#data-provenance" title="Link to this heading"></a></h2>
@@ -437,9 +525,9 @@ published information.</p>
 <h2>Dataset class<a class="headerlink" href="#dataset-class" title="Link to this heading"></a></h2>
 <p>The dataset-specific MATLAB class should:</p>
 <ul class="simple">
-<li><p>Inherit from the common <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p></li>
-<li><p>Load and interpret the corresponding source-data representation.</p></li>
-<li><p>Preserve the common dataset interface where practical.</p></li>
+<li><p>Inherit from the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p></li>
+<li><p>Load and interpret the corresponding XML or JSON source data.</p></li>
+<li><p>Preserve the generic dataset interface where practical.</p></li>
 <li><p>Identify the available experimental cases and quantities.</p></li>
 <li><p>Generate valid OpenSTREAM inputs.</p></li>
 <li><p>Operate consistently using SI units.</p></li>
@@ -450,28 +538,23 @@ published information.</p>
 <li><p>Support reproducible execution across the intended environments.</p></li>
 </ul>
 <p>Functionality common to several datasets should be considered for
-implementation in the common <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class rather than duplicated
+implementation in the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class rather than duplicated
 across dataset-specific classes.</p>
 </section>
 <section id="openstream-dependency">
 <h2>OpenSTREAM dependency<a class="headerlink" href="#openstream-dependency" title="Link to this heading"></a></h2>
 <p>OpenSTREAM is maintained as a separate repository and is not included as a
 Git submodule of OpenSTREAM-database.</p>
-<p>Before running or verifying an OpenSTREAM-database application, ensure
-that both OpenSTREAM and OpenSTREAM-database are available on the MATLAB
-path:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream&gt;'</span><span class="p">)</span>
-<span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream-database&gt;'</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The repositories may be stored in separate locations. The implementation
-should rely on the required OpenSTREAM classes being available on the
-MATLAB path rather than on a fixed relative directory arrangement.</p>
+<p>Dataset implementations and application projects should rely on required
+OpenSTREAM classes being available on the MATLAB path. They should not
+assume a fixed relative directory arrangement between the repositories.</p>
+<p>Installation and MATLAB path instructions are provided on the
+<a class="reference internal" href="database.html"><span class="doc">OpenSTREAM-database</span></a> page.</p>
 </section>
 <section id="application-projects">
 <h2>Application projects<a class="headerlink" href="#application-projects" title="Link to this heading"></a></h2>
-<p>Application projects are stored under the repository <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder.</p>
-<p>A project should provide a reproducible workflow for:</p>
+<p>A contributed application project should provide a reproducible workflow
+for:</p>
 <ol class="arabic simple">
 <li><p>Constructing the dataset-specific object.</p></li>
 <li><p>Selecting one or more experimental cases.</p></li>
@@ -479,14 +562,11 @@ MATLAB path rather than on a fixed relative directory arrangement.</p>
 <li><p>Generating the required OpenSTREAM input files.</p></li>
 <li><p>Running the selected cases.</p></li>
 <li><p>Extracting calculated and measured quantities.</p></li>
-<li><p>Comparing the results.</p></li>
-<li><p>Visualizing and interpreting the comparison.</p></li>
+<li><p>Comparing and visualizing the results.</p></li>
+<li><p>Documenting assumptions, numerical settings, and limitations.</p></li>
 </ol>
 <p>MATLAB Live Scripts are recommended for documented application workflows
 that combine explanatory text, executable code, figures, and results.</p>
-<p>When sufficiently developed and reviewed, Live Script projects may be
-exported to HTML and included on the
-<a class="reference internal" href="projects.html"><span class="doc">application projects</span></a> page.</p>
 <p>Projects should avoid hard-coded local paths and should state the expected
 working directory or path configuration clearly.</p>
 </section>
@@ -540,8 +620,9 @@ functionality where practical.</p>
 using reproducible checks appropriate to the contribution. These checks
 should include, where applicable:</p>
 <ul class="simple">
-<li><p>Confirming that source-data files can be loaded correctly.</p></li>
-<li><p>Confirming that all numerical source data are stored in SI units.</p></li>
+<li><p>Confirming that XML and JSON source files can be loaded correctly.</p></li>
+<li><p>Confirming that reserved OpenSTREAM fields use the required names.</p></li>
+<li><p>Confirming that all numerical source data use SI units.</p></li>
 <li><p>Reviewing unit conversions against the original experimental source.</p></li>
 <li><p>Verifying that the intended experimental cases can be selected.</p></li>
 <li><p>Reviewing the generated OpenSTREAM input files.</p></li>
@@ -555,17 +636,10 @@ affected.</p></li>
 </ul>
 <p>The verification procedure and its results should be described in the
 pull request.</p>
-<p>Automated testing is a planned improvement. Future tests may cover:</p>
-<ul class="simple">
-<li><p>Source-data parsing.</p></li>
-<li><p>Unit conversion.</p></li>
-<li><p>Dataset metadata.</p></li>
-<li><p>Case selection.</p></li>
-<li><p>OpenSTREAM input generation.</p></li>
-<li><p>Dataset-specific plotting and comparison methods.</p></li>
-<li><p>Application workflows.</p></li>
-<li><p>Numerical regression against approved results.</p></li>
-</ul>
+<p>Automated testing is a planned improvement. Future tests may cover source-
+data parsing, unit conversion, metadata, case selection, input generation,
+plotting and comparison methods, application workflows, and numerical
+regression.</p>
 </section>
 <section id="documentation-requirements">
 <h2>Documentation requirements<a class="headerlink" href="#documentation-requirements" title="Link to this heading"></a></h2>
@@ -583,18 +657,12 @@ other data processing.</p></li>
 <li><p>Known limitations, ambiguities, or missing information.</p></li>
 <li><p>Supported OpenSTREAM application workflows.</p></li>
 <li><p>A minimal reproducible usage example.</p></li>
-<li><p>Citation and redistribution requirements.</p></li>
+<li><p>Citation, licensing, attribution, and redistribution requirements.</p></li>
 </ul>
 <p>User-visible changes should also be reflected in the OpenSTREAM
-Applications documentation when they affect:</p>
-<ul class="simple">
-<li><p>The OpenSTREAM-database description.</p></li>
-<li><p>Available datasets.</p></li>
-<li><p>Exported project workflows.</p></li>
-<li><p>Publications.</p></li>
-<li><p>Installation or path requirements.</p></li>
-<li><p>Recommended application procedures.</p></li>
-</ul>
+Applications documentation when they affect the database description,
+available datasets, exported project workflows, publications,
+installation requirements, or recommended application procedures.</p>
 </section>
 <section id="submitting-a-contribution">
 <h2>Submitting a contribution<a class="headerlink" href="#submitting-a-contribution" title="Link to this heading"></a></h2>
@@ -608,6 +676,8 @@ the MATLAB path.</p></li>
 <li><p>Confirm that all numerical source data use SI units.</p></li>
 <li><p>Review unit conversions and retained numerical precision.</p></li>
 <li><p>Verify bibliographic references and dataset provenance.</p></li>
+<li><p>Review applicable licensing, attribution, and redistribution
+conditions.</p></li>
 <li><p>Confirm that generated outputs are not included in the commit.</p></li>
 <li><p>Update the documentation and project exports when required.</p></li>
 <li><p>Describe intentional numerical changes in the pull request.</p></li>
@@ -630,7 +700,10 @@ the MATLAB path.</p></li>
 <p>Before submitting a pull request, confirm that:</p>
 <ul class="simple">
 <li><p>The contribution follows the established dataset package organization.</p></li>
+<li><p>The dataset template was used or the equivalent required structure was
+followed.</p></li>
 <li><p>The original experimental source is identified and cited.</p></li>
+<li><p>Applicable licensing and redistribution conditions have been reviewed.</p></li>
 <li><p>All numerical source data stored under <code class="docutils literal notranslate"><span class="pre">+src</span></code> use SI units.</p></li>
 <li><p>Unit conversions are documented.</p></li>
 <li><p>Measurement uncertainties are included where available.</p></li>
@@ -650,8 +723,8 @@ justified.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="publications.html" class="btn btn-neutral float-left" title="Publications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../Packages/Inputs.html" class="btn btn-neutral float-right" title="Inputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="database.html" class="btn btn-neutral float-left" title="OpenSTREAM-database" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="projects.html" class="btn btn-neutral float-right" title="Application projects" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

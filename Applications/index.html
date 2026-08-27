@@ -174,12 +174,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="database.html">OpenSTREAM-database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="database.html#purpose">Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html#available-datasets">Available datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="database.html#dataset-packages">Dataset packages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="database.html#common-dataset-functionality">Common dataset functionality</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#dataset-source-files">Dataset source files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#units">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#application-projects">Application projects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#requirements">Requirements</a></li>
@@ -194,7 +190,26 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="projects.html">projects</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to the database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-organization">Dataset organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-template">Dataset template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#structured-source-files">Structured source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#data-integrity">Data integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#comparison-and-validation">Comparison and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-and-verification">Testing and verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="projects.html">Application projects</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="projects.html#available-projects">Available projects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#adamsson">1. Adamsson</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#bennett">2. Bennett</a></li>
@@ -214,22 +229,6 @@
 <li class="toctree-l2"><a class="reference internal" href="publications.html#two-fluid-model">Two-fluid model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications.html#three-field-model">Three-field model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications.html#four-field-model">Four-field model</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to OpenSTREAM-database</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of contributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-organization">Dataset organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#comparison-and-validation">Comparison and validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-and-verification">Testing and verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 </ul>
@@ -335,10 +334,13 @@
 <h1>Applications<a class="headerlink" href="#applications" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to OpenSTREAM-database</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to the database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of contributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-organization">Dataset organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-template">Dataset template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#structured-source-files">Structured source files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#data-integrity">Data integrity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
@@ -353,12 +355,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="database.html">OpenSTREAM-database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="database.html#purpose">Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html#available-datasets">Available datasets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="database.html#dataset-packages">Dataset packages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="database.html#common-dataset-functionality">Common dataset functionality</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#dataset-source-files">Dataset source files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#units">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#application-projects">Application projects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#requirements">Requirements</a></li>
@@ -373,7 +371,7 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="projects.html">projects</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="projects.html">Application projects</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="projects.html#available-projects">Available projects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#adamsson">1. Adamsson</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#bennett">2. Bennett</a></li>
