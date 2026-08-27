@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to the database &mdash; OpenSTREAM  documentation</title>
+  <title>Contributing to OpenSTREAM-database &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -192,13 +192,18 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to the database</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to OpenSTREAM-database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#types-of-contributions">Types of contributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-organization">Dataset organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-template">Dataset template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#structured-source-files">Structured source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#naming-convention">Naming convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#source-data">Source data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data-integrity">Data integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-fields">Dataset fields</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mandatory-fields">Mandatory fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-specific-fields">Dataset-specific fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#source-file-requirements">Source-file requirements</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#data-provenance">Data provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-class">Dataset class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#openstream-dependency">OpenSTREAM dependency</a></li>
@@ -322,7 +327,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Contributing to the database</li>
+      <li class="breadcrumb-item active">Contributing to OpenSTREAM-database</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Applications/contributing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -332,8 +337,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="contributing-to-the-database">
-<h1>Contributing to the database<a class="headerlink" href="#contributing-to-the-database" title="Link to this heading"></a></h1>
+  <section id="contributing-to-openstream-database">
+<h1>Contributing to OpenSTREAM-database<a class="headerlink" href="#contributing-to-openstream-database" title="Link to this heading"></a></h1>
 <p>Contributions to OpenSTREAM-database are welcome. Contributions may
 include new publicly available datasets, corrections to existing dataset
 implementations, additional application cases, improved plotting and
@@ -376,128 +381,348 @@ organization:</p>
 └── README.md
 </pre></div>
 </div>
-<p>JSON source files can be used instead of, or alongside, XML source files.
-The selected format should preserve the same logical dataset information.</p>
-<p>The package name should identify the dataset clearly and consistently. A
-publication-based dataset name should generally combine the surname of the
-first author and the publication year, following the convention used by
-the existing packages.</p>
+<p>The package components have the following roles:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">+src</span></code></dt><dd><p>Contains the XML or JSON source-data representation. All numerical data
+stored in these files must use SI units.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;DatasetName</span></code></dt><dd><p>Contains the dataset-specific class and separately implemented methods.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DatasetName.m</span></code></dt><dd><p>Defines the dataset-specific class, which inherits from the generic
+<code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">plotResults.m</span></code></dt><dd><p>Provides dataset-specific plotting and calculated-versus-measured
+comparison functionality.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">README.md</span></code></dt><dd><p>Documents the original experimental source, implemented data, units,
+uncertainty, assumptions, processing, usage, and limitations.</p>
+</dd>
+</dl>
 <p>The dataset-specific class should inherit from the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>
-class and use the shared application interface where practical.</p>
+class and use the shared dataset interface where practical.</p>
 </section>
 <section id="dataset-template">
 <h2>Dataset template<a class="headerlink" href="#dataset-template" title="Link to this heading"></a></h2>
-<p>OpenSTREAM-database includes a template dataset folder that provides the
+<p>OpenSTREAM-database includes a <code class="docutils literal notranslate"><span class="pre">+Template</span></code> folder that provides the
 starting structure for a new dataset implementation.</p>
 <p>The template contains:</p>
 <ul class="simple">
-<li><p>An empty <code class="docutils literal notranslate"><span class="pre">+src</span></code> folder for dataset source files.</p></li>
-<li><p>A dataset-class folder containing a template MATLAB class that inherits
-from the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p></li>
-<li><p>A template <code class="docutils literal notranslate"><span class="pre">README.md</span></code> containing the expected documentation
+<li><p>An empty <code class="docutils literal notranslate"><span class="pre">+src</span></code> folder for the XML or JSON source-data file.</p></li>
+<li><p>An <code class="docutils literal notranslate"><span class="pre">&#64;Template</span></code> class folder.</p></li>
+<li><p>A template <code class="docutils literal notranslate"><span class="pre">Template.m</span></code> class that inherits from the generic
+<code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p></li>
+<li><p>A template <code class="docutils literal notranslate"><span class="pre">plotResults.m</span></code> method.</p></li>
+<li><p>A template <code class="docutils literal notranslate"><span class="pre">README.md</span></code> containing the expected dataset documentation
 structure.</p></li>
 </ul>
-<p>To start a new dataset implementation:</p>
+<p>The template follows this organization:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+Template/
+├── +src/
+├── @Template/
+│   ├── Template.m
+│   └── plotResults.m
+└── README.md
+</pre></div>
+</div>
+<p>To begin implementing a new dataset:</p>
 <ol class="arabic simple">
-<li><p>Copy the complete template dataset folder.</p></li>
-<li><p>Rename the package folder using the selected dataset name.</p></li>
-<li><p>Rename the class folder and MATLAB class file consistently.</p></li>
-<li><p>Update the class name, constructor, comments, and documentation.</p></li>
-<li><p>Add the XML or JSON source files under <code class="docutils literal notranslate"><span class="pre">+src</span></code>.</p></li>
+<li><p>Copy the complete <code class="docutils literal notranslate"><span class="pre">+Template</span></code> folder.</p></li>
+<li><p>Select a valid dataset name following the naming convention described
+below.</p></li>
+<li><p>Rename the package folder, class folder, and MATLAB class file
+consistently.</p></li>
+<li><p>Update the class definition, <code class="docutils literal notranslate"><span class="pre">addPath</span></code> method, comments, and
+documentation.</p></li>
+<li><p>Add the corresponding XML or JSON source-data file under <code class="docutils literal notranslate"><span class="pre">+src</span></code>.</p></li>
+<li><p>Add all mandatory fields to every implemented experimental case.</p></li>
+<li><p>Add and document any required dataset-specific fields.</p></li>
 <li><p>Complete the dataset-specific properties and methods.</p></li>
-<li><p>Complete the dataset README.</p></li>
-<li><p>Add dataset-specific result plotting where applicable.</p></li>
-<li><p>Verify the implemented dataset and application workflow.</p></li>
+<li><p>Complete the dataset README using the template headings.</p></li>
+<li><p>Implement dataset-specific result plotting where applicable.</p></li>
+<li><p>Verify the dataset implementation and associated application workflow.</p></li>
 </ol>
-<p>All numerical data added under <code class="docutils literal notranslate"><span class="pre">+src</span></code> must use SI units.</p>
-<p>The template provides the expected structure and documentation
+<p>The template supplies the expected structure and documentation
 placeholders. Contributors remain responsible for completing and verifying
 all dataset-specific source data, metadata, methods, assumptions, unit
-conversions, uncertainty information, plotting functionality, and
-application workflows.</p>
+conversions, uncertainties, plotting functionality, and application
+workflows.</p>
 </section>
-<section id="structured-source-files">
-<h2>Structured source files<a class="headerlink" href="#structured-source-files" title="Link to this heading"></a></h2>
-<p>Dataset source files are stored under the package <code class="docutils literal notranslate"><span class="pre">+src</span></code> directory and
-can use XML or JSON.</p>
-<p>Each case can contain:</p>
-<ol class="arabic simple">
-<li><p>OpenSTREAM case-definition information, whose field names follow the
-strict naming convention expected by the generic input-generation
-functionality.</p></li>
-<li><p>Dataset-specific information used by the dataset class, plotting
-methods, and application workflows.</p></li>
-</ol>
-<p>Reserved OpenSTREAM field names are case-sensitive and must use the
-expected spelling. Renaming a reserved field, changing its capitalization,
-or replacing it with a dataset-specific synonym can prevent the
-corresponding information from being transferred to the generated
-OpenSTREAM inputs.</p>
-<p>Dataset-specific fields may be added freely, provided that they:</p>
+<section id="naming-convention">
+<h2>Naming convention<a class="headerlink" href="#naming-convention" title="Link to this heading"></a></h2>
+<p>Dataset packages follow a strict naming convention. The package folder,
+class folder, class file, class definition, dataset name, and source-data
+path must use consistent names.</p>
+<p>For a dataset named <code class="docutils literal notranslate"><span class="pre">AuthorYear</span></code>, the expected structure is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+AuthorYear/
+├── +src/
+│   └── AuthorYear.xml
+├── @AuthorYear/
+│   ├── AuthorYear.m
+│   └── plotResults.m
+└── README.md
+</pre></div>
+</div>
+<p>The following names must agree:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 45.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>Required form</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MATLAB package folder</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">+AuthorYear</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>MATLAB class folder</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;AuthorYear</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>MATLAB class file</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AuthorYear.m</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>MATLAB class definition</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">classdef</span> <span class="pre">AuthorYear</span> <span class="pre">&lt;</span> <span class="pre">Dataset</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Dataset name assigned in <code class="docutils literal notranslate"><span class="pre">addPath</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">data.name</span> <span class="pre">=</span> <span class="pre">'AuthorYear'</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Source-data filename</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AuthorYear.xml</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Source-data path</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">+AuthorYear/+src/AuthorYear.xml</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The leading <code class="docutils literal notranslate"><span class="pre">+</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> characters are part of MATLAB package and
+class-folder syntax:</p>
 <ul class="simple">
-<li><p>Do not conflict with reserved OpenSTREAM field names.</p></li>
-<li><p>Use descriptive and unambiguous names.</p></li>
-<li><p>Are consistent throughout the dataset.</p></li>
-<li><p>Are represented consistently in XML and JSON when both formats exist.</p></li>
-<li><p>Are documented in the dataset README or class implementation.</p></li>
-<li><p>Use clearly documented SI units.</p></li>
-<li><p>Include uncertainty or availability information where relevant.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+AuthorYear</span></code> defines the MATLAB package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;AuthorYear</span></code> defines the class folder within that package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AuthorYear.m</span></code> contains the class definition.</p></li>
+<li><p>The class is referenced using the package-qualified name
+<code class="docutils literal notranslate"><span class="pre">AuthorYear.AuthorYear</span></code>.</p></li>
 </ul>
-<p>Scalar quantities should be represented as individual values. Array
-quantities should use repeated XML elements or JSON arrays. Related arrays
-must have compatible lengths and ordering.</p>
-<p>Missing or unavailable information must be distinguishable from a physical
-value of zero and handled explicitly by the dataset class.</p>
+<p>Names and capitalization must be consistent. Do not mix forms such as
+<code class="docutils literal notranslate"><span class="pre">AuthorYear</span></code>, <code class="docutils literal notranslate"><span class="pre">Authoryear</span></code>, and <code class="docutils literal notranslate"><span class="pre">authoryear</span></code>.</p>
+<p>For publication-based datasets, the package name should generally combine
+the surname of the first author and the four-digit publication year,
+following the convention used by the existing dataset packages.</p>
+<p>The dataset name must be a valid MATLAB identifier. Spaces, hyphens,
+punctuation, and other invalid identifier characters must not be used.</p>
+<p>When copying the template, update every occurrence of <code class="docutils literal notranslate"><span class="pre">Template</span></code> in:</p>
+<ol class="arabic simple">
+<li><p>The package-folder name.</p></li>
+<li><p>The class-folder name.</p></li>
+<li><p>The class filename.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">classdef</span></code> declaration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data.name</span></code> in <code class="docutils literal notranslate"><span class="pre">addPath</span></code>.</p></li>
+<li><p>The source-data filename.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data.path</span></code> in <code class="docutils literal notranslate"><span class="pre">addPath</span></code>.</p></li>
+<li><p>Code examples and headings in <code class="docutils literal notranslate"><span class="pre">README.md</span></code>.</p></li>
+<li><p>Project scripts that construct or refer to the dataset class.</p></li>
+</ol>
+<p>For example:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">classdef</span><span class="w"> </span><span class="n">AuthorYear</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Dataset</span>
+<span class="w">    </span><span class="c">% AUTHORYEAR Dataset implementation for Author et al. (Year).</span>
+
+<span class="w">    </span><span class="k">methods</span>
+
+<span class="w">        </span><span class="k">function</span><span class="w"> </span><span class="nf">addPath</span><span class="p">(</span>data<span class="p">)</span>
+<span class="w">            </span><span class="c">% ADDPATH Define the dataset name and source-data file.</span>
+
+<span class="w">            </span><span class="n">data</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'AuthorYear'</span><span class="p">;</span>
+
+<span class="w">            </span><span class="n">data</span><span class="p">.</span><span class="n">path</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="p">[</span><span class="s">'+'</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">name</span><span class="p">],</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="s">'+src'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">                </span><span class="s">'AuthorYear.xml'</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="n">plotResults</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end</span>
+
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>The resulting object is constructed using the package-qualified class
+name:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">AuthorYear</span><span class="p">.</span><span class="n">AuthorYear</span><span class="p">(</span><span class="k">...</span><span class="c">);</span>
+</pre></div>
+</div>
+<p>A mismatch between these names may prevent MATLAB from locating the class
+or may cause the dataset implementation to reference the wrong source-data
+file.</p>
 </section>
 <section id="source-data">
 <h2>Source data<a class="headerlink" href="#source-data" title="Link to this heading"></a></h2>
+<p>Dataset source files are stored under the package <code class="docutils literal notranslate"><span class="pre">+src</span></code> directory.</p>
 <p>All numerical data stored in OpenSTREAM-database source files must use SI
-units. This requirement applies even when the original publication reports
-data using another system of units.</p>
+units. This requirement applies even when the original experimental
+publication reports data using another system of units.</p>
 <p>The source-data implementation should preserve the original experimental
 information as faithfully as possible. Any transcription, correction,
-filtering, interpolation, reconstruction, or unit conversion must be
-documented.</p>
-<p>For every implemented quantity, document:</p>
-<ul class="simple">
-<li><p>The quantity name and physical meaning.</p></li>
-<li><p>The SI unit used in OpenSTREAM-database.</p></li>
-<li><p>The unit reported in the original source.</p></li>
-<li><p>The conversion applied, when applicable.</p></li>
-<li><p>The original table, figure, appendix, or data source.</p></li>
-<li><p>Any ambiguity or interpretation introduced during transcription.</p></li>
-<li><p>The available measurement uncertainty.</p></li>
-<li><p>Any missing or unavailable information.</p></li>
-</ul>
-<p>Unit conversions should retain sufficient numerical precision for the
-intended application and validation analyses.</p>
+digitization, filtering, interpolation, reconstruction, or unit conversion
+must be documented.</p>
+<p>The dataset-specific constructor reads and interprets the corresponding
+XML or JSON source file when the dataset object is created. Reading the
+source file is therefore part of dataset-object construction and is not a
+separate step in the application workflow.</p>
 </section>
-<section id="data-integrity">
-<h2>Data integrity<a class="headerlink" href="#data-integrity" title="Link to this heading"></a></h2>
-<p>When creating or modifying a source file, verify that:</p>
+<section id="dataset-fields">
+<h2>Dataset fields<a class="headerlink" href="#dataset-fields" title="Link to this heading"></a></h2>
+<p>Each experimental case in the XML or JSON source file must define a common
+set of mandatory fields. Additional dataset-specific fields may be added
+when required to represent the available experimental information.</p>
+<section id="mandatory-fields">
+<h3>Mandatory fields<a class="headerlink" href="#mandatory-fields" title="Link to this heading"></a></h3>
+<p>The following fields are required for every implemented experimental case:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 55.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>SI unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TestName</span></code></p></td>
+<td><p>Unique name or identifier of the experimental case.</p></td>
+<td><p>Not applicable</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Fluid</span></code></p></td>
+<td><p>Working-fluid identifier used by OpenSTREAM.</p></td>
+<td><p>Not applicable</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Pressure</span></code></p></td>
+<td><p>System pressure.</p></td>
+<td><p>Pa</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MassFlow</span></code></p></td>
+<td><p>Inlet mass flow rate.</p></td>
+<td><p>kg/s</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InletEnthalpy</span></code></p></td>
+<td><p>Inlet specific enthalpy.</p></td>
+<td><p>J/kg</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Length</span></code></p></td>
+<td><p>Axial length of the modeled channel.</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Area</span></code></p></td>
+<td><p>Channel flow area.</p></td>
+<td><p>m²</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Perimeter</span></code></p></td>
+<td><p>Channel perimeter used by the OpenSTREAM geometry.</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Power</span></code></p></td>
+<td><p>Total applied power.</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code></p></td>
+<td><p>Axial coordinates associated with the wall-power and heat-flux
+distributions.</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">WallPower</span></code></p></td>
+<td><p>Axial wall-power distribution.</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code></p></td>
+<td><p>Axial wall heat-flux distribution.</p></td>
+<td><p>W/m²</p></td>
+</tr>
+</tbody>
+</table>
+<p>Field names are case-sensitive and must be written exactly as shown.</p>
+<p>The mandatory fields must satisfy the following requirements:</p>
 <ul class="simple">
-<li><p>Every case has a unique and stable identifier.</p></li>
-<li><p>Reserved OpenSTREAM fields use the exact expected names.</p></li>
-<li><p>Required fields contain valid values.</p></li>
-<li><p>All numerical values use SI units.</p></li>
-<li><p>Related arrays have compatible lengths and ordering.</p></li>
-<li><p>Axial wall-mesh and wall-power arrays are compatible.</p></li>
-<li><p>Measurement-coordinate and measured-value arrays are compatible.</p></li>
-<li><p>Missing information is distinguishable from a physical zero.</p></li>
-<li><p>XML and JSON representations contain equivalent information when both
-formats are provided.</p></li>
-<li><p>Unit conversions retain sufficient numerical precision.</p></li>
-<li><p>Dataset-specific fields are interpreted consistently by the class and
-plotting methods.</p></li>
+<li><p>Every implemented case must define all mandatory fields.</p></li>
+<li><p>All numerical values must use SI units.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TestName</span></code> must identify each experimental case unambiguously.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fluid</span></code> must use an identifier supported by the OpenSTREAM
+fluid-property interface.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code> must be consistent with the corresponding <code class="docutils literal notranslate"><span class="pre">WallPower</span></code> and
+<code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> distributions.</p></li>
+<li><p>Geometry fields must represent the channel modeled by OpenSTREAM.</p></li>
+<li><p>Boundary-condition fields must represent the intended experimental case.</p></li>
+<li><p>Any conversion, reconstruction, or interpretation used to obtain a
+mandatory field must be documented in the dataset README.</p></li>
 </ul>
-<p>The dataset README or class implementation should identify whether a
-stored quantity is reported directly, converted, digitized, reconstructed,
-derived from other values, or introduced specifically for the OpenSTREAM
-application.</p>
+</section>
+<section id="dataset-specific-fields">
+<h3>Dataset-specific fields<a class="headerlink" href="#dataset-specific-fields" title="Link to this heading"></a></h3>
+<p>Additional fields may be included when required to represent information
+specific to the dataset.</p>
+<p>Dataset-specific fields may describe:</p>
+<ul class="simple">
+<li><p>Measured quantities.</p></li>
+<li><p>Instrument and measurement locations.</p></li>
+<li><p>Experimental uncertainties.</p></li>
+<li><p>Facility or test-section characteristics not represented by the
+mandatory geometry fields.</p></li>
+<li><p>Inlet, outlet, or local experimental conditions.</p></li>
+<li><p>Flow-regime or transition information.</p></li>
+<li><p>Dataset-specific case classifications.</p></li>
+<li><p>Information required for calculated-versus-measured comparisons.</p></li>
+</ul>
+<p>Each dataset-specific field must be documented in the dataset README. The
+documentation should state:</p>
+<ul class="simple">
+<li><p>The exact field name.</p></li>
+<li><p>The physical meaning of the field.</p></li>
+<li><p>Whether the field is required or optional.</p></li>
+<li><p>The SI unit used in OpenSTREAM-database.</p></li>
+<li><p>The unit reported in the original experimental source.</p></li>
+<li><p>The source table, figure, page, appendix, or data file.</p></li>
+<li><p>Any unit conversion or other processing applied.</p></li>
+<li><p>The reported measurement uncertainty, where available.</p></li>
+<li><p>The behavior when the field is absent or unavailable.</p></li>
+</ul>
+<p>Dataset-specific fields must not replace, rename, or change the meaning of
+the mandatory fields.</p>
+<p>When the same physical quantity is used by several dataset
+implementations, a common field name and representation should be used
+where practical.</p>
+</section>
+<section id="source-file-requirements">
+<h3>Source-file requirements<a class="headerlink" href="#source-file-requirements" title="Link to this heading"></a></h3>
+<p>The XML or JSON source representation should use a consistent structure
+across all implemented cases.</p>
+<p>Before completing a dataset implementation, confirm that:</p>
+<ul class="simple">
+<li><p>Every case contains all mandatory fields.</p></li>
+<li><p>Mandatory and dataset-specific field names are used consistently.</p></li>
+<li><p>Numerical fields contain valid SI values.</p></li>
+<li><p>Array dimensions are mutually consistent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code>, <code class="docutils literal notranslate"><span class="pre">WallPower</span></code>, and <code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> describe compatible axial
+distributions.</p></li>
+<li><p>Case identifiers are unique.</p></li>
+<li><p>Missing experimental information is identified explicitly.</p></li>
+<li><p>Undocumented replacement values are not introduced.</p></li>
+<li><p>Derived or reconstructed fields are documented.</p></li>
+<li><p>Unsupported or incomplete cases are identified clearly.</p></li>
+</ul>
+<p>The dataset class should validate the fields required by its implementation
+and report missing, inconsistent, or unsupported data with a clear
+diagnostic.</p>
+</section>
 </section>
 <section id="data-provenance">
 <h2>Data provenance<a class="headerlink" href="#data-provenance" title="Link to this heading"></a></h2>
-<p>Every dataset contribution should identify the authoritative experimental
+<p>Every dataset contribution must identify the authoritative experimental
 source.</p>
 <p>The dataset README should include:</p>
 <ul class="simple">
@@ -511,22 +736,23 @@ source.</p>
 <li><p>The SI units used in OpenSTREAM-database.</p></li>
 <li><p>The reported measurement uncertainties.</p></li>
 <li><p>Known limitations or qualifications of the data.</p></li>
-<li><p>The relationship between the original data and the implemented source
-files.</p></li>
-<li><p>Any licensing, redistribution, or citation requirements.</p></li>
+<li><p>The relationship between the original data and the implemented
+source-data files.</p></li>
+<li><p>Any licensing, redistribution, attribution, or citation requirements.</p></li>
 </ul>
 <p>The original publication remains the authoritative source for the
 experimental configuration, measurements, uncertainties, and
-interpretation. The OpenSTREAM-database implementation should not imply
-greater accuracy, completeness, or certainty than is supported by the
-published information.</p>
+interpretation.</p>
+<p>The OpenSTREAM-database implementation must not imply greater accuracy,
+completeness, or certainty than is supported by the published information.</p>
 </section>
 <section id="dataset-class">
 <h2>Dataset class<a class="headerlink" href="#dataset-class" title="Link to this heading"></a></h2>
 <p>The dataset-specific MATLAB class should:</p>
 <ul class="simple">
 <li><p>Inherit from the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class.</p></li>
-<li><p>Load and interpret the corresponding XML or JSON source data.</p></li>
+<li><p>Read and interpret the corresponding source-data representation during
+object construction.</p></li>
 <li><p>Preserve the generic dataset interface where practical.</p></li>
 <li><p>Identify the available experimental cases and quantities.</p></li>
 <li><p>Generate valid OpenSTREAM inputs.</p></li>
@@ -545,30 +771,34 @@ across dataset-specific classes.</p>
 <h2>OpenSTREAM dependency<a class="headerlink" href="#openstream-dependency" title="Link to this heading"></a></h2>
 <p>OpenSTREAM is maintained as a separate repository and is not included as a
 Git submodule of OpenSTREAM-database.</p>
-<p>Dataset implementations and application projects should rely on required
-OpenSTREAM classes being available on the MATLAB path. They should not
-assume a fixed relative directory arrangement between the repositories.</p>
+<p>Dataset implementations and application projects should rely on the
+required OpenSTREAM classes being available on the MATLAB path. They
+should not assume a fixed relative directory arrangement between the two
+repositories.</p>
 <p>Installation and MATLAB path instructions are provided on the
 <a class="reference internal" href="database.html"><span class="doc">OpenSTREAM-database</span></a> page.</p>
 </section>
 <section id="application-projects">
 <h2>Application projects<a class="headerlink" href="#application-projects" title="Link to this heading"></a></h2>
-<p>A contributed application project should provide a reproducible workflow
-for:</p>
+<p>Application projects are stored under the repository <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder.</p>
+<p>A contributed project should provide a reproducible workflow for:</p>
 <ol class="arabic simple">
-<li><p>Constructing the dataset-specific object.</p></li>
+<li><p>Constructing a dataset-specific object, which reads and interprets the
+corresponding XML or JSON source file.</p></li>
 <li><p>Selecting one or more experimental cases.</p></li>
 <li><p>Selecting an OpenSTREAM solver and model configuration.</p></li>
 <li><p>Generating the required OpenSTREAM input files.</p></li>
 <li><p>Running the selected cases.</p></li>
 <li><p>Extracting calculated and measured quantities.</p></li>
-<li><p>Comparing and visualizing the results.</p></li>
+<li><p>Comparing the results.</p></li>
+<li><p>Visualizing and interpreting the comparison.</p></li>
 <li><p>Documenting assumptions, numerical settings, and limitations.</p></li>
 </ol>
-<p>MATLAB Live Scripts are recommended for documented application workflows
-that combine explanatory text, executable code, figures, and results.</p>
 <p>Projects should avoid hard-coded local paths and should state the expected
 working directory or path configuration clearly.</p>
+<p>MATLAB Live Scripts are recommended when explanatory text, executable
+code, figures, and calculated results form part of the documented
+application workflow.</p>
 </section>
 <section id="comparison-and-validation">
 <h2>Comparison and validation<a class="headerlink" href="#comparison-and-validation" title="Link to this heading"></a></h2>
@@ -604,11 +834,11 @@ solver options.</p></li>
 <li><p>Use SI units.</p></li>
 <li><p>Identify measured and calculated quantities clearly.</p></li>
 <li><p>Include readable axis labels, units, legends, and captions.</p></li>
-<li><p>Distinguish different solvers and model configurations consistently.</p></li>
+<li><p>Distinguish solvers and model configurations consistently.</p></li>
 <li><p>Represent experimental uncertainty when available and relevant.</p></li>
 <li><p>Avoid implying agreement beyond the precision or uncertainty of the
 available data.</p></li>
-<li><p>Support reproducible use from the corresponding project workflow.</p></li>
+<li><p>Support reproducible use from the corresponding application project.</p></li>
 </ul>
 <p>Common plotting or comparison behavior should be implemented in shared
 functionality where practical.</p>
@@ -617,12 +847,11 @@ functionality where practical.</p>
 <h2>Testing and verification<a class="headerlink" href="#testing-and-verification" title="Link to this heading"></a></h2>
 <p>OpenSTREAM-database does not currently include an automated test suite.</p>
 <p>Until automated testing is implemented, contributors should verify changes
-using reproducible checks appropriate to the contribution. These checks
-should include, where applicable:</p>
+using reproducible checks appropriate to the contribution.</p>
+<p>These checks should include, where applicable:</p>
 <ul class="simple">
-<li><p>Confirming that XML and JSON source files can be loaded correctly.</p></li>
-<li><p>Confirming that reserved OpenSTREAM fields use the required names.</p></li>
-<li><p>Confirming that all numerical source data use SI units.</p></li>
+<li><p>Confirming that the source-data files can be loaded correctly.</p></li>
+<li><p>Confirming that all numerical source data are stored in SI units.</p></li>
 <li><p>Reviewing unit conversions against the original experimental source.</p></li>
 <li><p>Verifying that the intended experimental cases can be selected.</p></li>
 <li><p>Reviewing the generated OpenSTREAM input files.</p></li>
@@ -633,13 +862,22 @@ expected.</p></li>
 <li><p>Reviewing generated figures and post-processing results.</p></li>
 <li><p>Confirming that existing application workflows are not adversely
 affected.</p></li>
+<li><p>Comparing results with previous executions, when available.</p></li>
 </ul>
 <p>The verification procedure and its results should be described in the
 pull request.</p>
-<p>Automated testing is a planned improvement. Future tests may cover source-
-data parsing, unit conversion, metadata, case selection, input generation,
-plotting and comparison methods, application workflows, and numerical
-regression.</p>
+<p>Automated testing is a planned improvement. Future tests may cover:</p>
+<ul class="simple">
+<li><p>Source-data parsing.</p></li>
+<li><p>SI-unit conversion.</p></li>
+<li><p>Dataset metadata.</p></li>
+<li><p>Mandatory-field validation.</p></li>
+<li><p>Case selection.</p></li>
+<li><p>OpenSTREAM input generation.</p></li>
+<li><p>Dataset-specific plotting and comparison methods.</p></li>
+<li><p>Application workflows.</p></li>
+<li><p>Numerical regression against approved results.</p></li>
+</ul>
 </section>
 <section id="documentation-requirements">
 <h2>Documentation requirements<a class="headerlink" href="#documentation-requirements" title="Link to this heading"></a></h2>
@@ -649,6 +887,7 @@ regression.</p>
 <li><p>The scope of the implemented data.</p></li>
 <li><p>The experimental facility and relevant geometry.</p></li>
 <li><p>The implemented experimental conditions and measured quantities.</p></li>
+<li><p>The mandatory and dataset-specific fields.</p></li>
 <li><p>The units reported in the original source.</p></li>
 <li><p>The SI units used in OpenSTREAM-database.</p></li>
 <li><p>Any unit conversions, transcription steps, interpolation, filtering, or
@@ -660,9 +899,15 @@ other data processing.</p></li>
 <li><p>Citation, licensing, attribution, and redistribution requirements.</p></li>
 </ul>
 <p>User-visible changes should also be reflected in the OpenSTREAM
-Applications documentation when they affect the database description,
-available datasets, exported project workflows, publications,
-installation requirements, or recommended application procedures.</p>
+Applications documentation when they affect:</p>
+<ul class="simple">
+<li><p>The OpenSTREAM-database description.</p></li>
+<li><p>Available datasets.</p></li>
+<li><p>Exported project workflows.</p></li>
+<li><p>Publications.</p></li>
+<li><p>Installation or path requirements.</p></li>
+<li><p>Recommended application procedures.</p></li>
+</ul>
 </section>
 <section id="submitting-a-contribution">
 <h2>Submitting a contribution<a class="headerlink" href="#submitting-a-contribution" title="Link to this heading"></a></h2>
@@ -671,7 +916,7 @@ installation requirements, or recommended application procedures.</p>
 <li><p>Confirm that OpenSTREAM and OpenSTREAM-database are both available on
 the MATLAB path.</p></li>
 <li><p>Perform the relevant reproducible verification checks.</p></li>
-<li><p>Run the affected project workflows.</p></li>
+<li><p>Run the affected application projects.</p></li>
 <li><p>Review generated OpenSTREAM inputs and calculated results.</p></li>
 <li><p>Confirm that all numerical source data use SI units.</p></li>
 <li><p>Review unit conversions and retained numerical precision.</p></li>
@@ -702,9 +947,15 @@ conditions.</p></li>
 <li><p>The contribution follows the established dataset package organization.</p></li>
 <li><p>The dataset template was used or the equivalent required structure was
 followed.</p></li>
+<li><p>The strict naming convention is followed.</p></li>
 <li><p>The original experimental source is identified and cited.</p></li>
 <li><p>Applicable licensing and redistribution conditions have been reviewed.</p></li>
-<li><p>All numerical source data stored under <code class="docutils literal notranslate"><span class="pre">+src</span></code> use SI units.</p></li>
+<li><p>Every implemented case defines all mandatory dataset fields using the
+exact required names.</p></li>
+<li><p>All mandatory and dataset-specific numerical fields use SI units.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code>, <code class="docutils literal notranslate"><span class="pre">WallPower</span></code>, and <code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> are mutually consistent.</p></li>
+<li><p>Dataset-specific fields are documented in the dataset README.</p></li>
+<li><p>Dataset-specific fields do not replace or rename mandatory fields.</p></li>
 <li><p>Unit conversions are documented.</p></li>
 <li><p>Measurement uncertainties are included where available.</p></li>
 <li><p>Dataset assumptions and processing steps are documented.</p></li>
@@ -713,7 +964,7 @@ followed.</p></li>
 <li><p>Generated OpenSTREAM inputs and calculated results have been reviewed.</p></li>
 <li><p>Any numerical differences from previous results are understood and
 justified.</p></li>
-<li><p>Documentation and project workflows have been updated.</p></li>
+<li><p>Documentation and application projects have been updated.</p></li>
 <li><p>Generated input, result, and output directories are not committed.</p></li>
 </ul>
 </section>

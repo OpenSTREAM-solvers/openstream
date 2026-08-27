@@ -1,5 +1,5 @@
-Contributing to the database
-============================
+Contributing to OpenSTREAM-database
+===================================
 
 Contributions to OpenSTREAM-database are welcome. Contributions may
 include new publicly available datasets, corrections to existing dataset
@@ -49,142 +49,349 @@ organization:
    │   └── plotResults.m
    └── README.md
 
-JSON source files can be used instead of, or alongside, XML source files.
-The selected format should preserve the same logical dataset information.
+The package components have the following roles:
 
-The package name should identify the dataset clearly and consistently. A
-publication-based dataset name should generally combine the surname of the
-first author and the publication year, following the convention used by
-the existing packages.
+``+src``
+   Contains the XML or JSON source-data representation. All numerical data
+   stored in these files must use SI units.
+
+``@DatasetName``
+   Contains the dataset-specific class and separately implemented methods.
+
+``DatasetName.m``
+   Defines the dataset-specific class, which inherits from the generic
+   ``Dataset`` class.
+
+``plotResults.m``
+   Provides dataset-specific plotting and calculated-versus-measured
+   comparison functionality.
+
+``README.md``
+   Documents the original experimental source, implemented data, units,
+   uncertainty, assumptions, processing, usage, and limitations.
 
 The dataset-specific class should inherit from the generic ``Dataset``
-class and use the shared application interface where practical.
+class and use the shared dataset interface where practical.
 
 Dataset template
 ----------------
 
-OpenSTREAM-database includes a template dataset folder that provides the
+OpenSTREAM-database includes a ``+Template`` folder that provides the
 starting structure for a new dataset implementation.
 
 The template contains:
 
-- An empty ``+src`` folder for dataset source files.
-- A dataset-class folder containing a template MATLAB class that inherits
-  from the generic ``Dataset`` class.
-- A template ``README.md`` containing the expected documentation
+- An empty ``+src`` folder for the XML or JSON source-data file.
+- An ``@Template`` class folder.
+- A template ``Template.m`` class that inherits from the generic
+  ``Dataset`` class.
+- A template ``plotResults.m`` method.
+- A template ``README.md`` containing the expected dataset documentation
   structure.
 
-To start a new dataset implementation:
+The template follows this organization:
 
-#. Copy the complete template dataset folder.
-#. Rename the package folder using the selected dataset name.
-#. Rename the class folder and MATLAB class file consistently.
-#. Update the class name, constructor, comments, and documentation.
-#. Add the XML or JSON source files under ``+src``.
+.. code-block:: text
+
+   +Template/
+   ├── +src/
+   ├── @Template/
+   │   ├── Template.m
+   │   └── plotResults.m
+   └── README.md
+
+To begin implementing a new dataset:
+
+#. Copy the complete ``+Template`` folder.
+#. Select a valid dataset name following the naming convention described
+   below.
+#. Rename the package folder, class folder, and MATLAB class file
+   consistently.
+#. Update the class definition, ``addPath`` method, comments, and
+   documentation.
+#. Add the corresponding XML or JSON source-data file under ``+src``.
+#. Add all mandatory fields to every implemented experimental case.
+#. Add and document any required dataset-specific fields.
 #. Complete the dataset-specific properties and methods.
-#. Complete the dataset README.
-#. Add dataset-specific result plotting where applicable.
-#. Verify the implemented dataset and application workflow.
+#. Complete the dataset README using the template headings.
+#. Implement dataset-specific result plotting where applicable.
+#. Verify the dataset implementation and associated application workflow.
 
-All numerical data added under ``+src`` must use SI units.
-
-The template provides the expected structure and documentation
+The template supplies the expected structure and documentation
 placeholders. Contributors remain responsible for completing and verifying
 all dataset-specific source data, metadata, methods, assumptions, unit
-conversions, uncertainty information, plotting functionality, and
-application workflows.
+conversions, uncertainties, plotting functionality, and application
+workflows.
 
-Structured source files
------------------------
+Naming convention
+-----------------
 
-Dataset source files are stored under the package ``+src`` directory and
-can use XML or JSON.
+Dataset packages follow a strict naming convention. The package folder,
+class folder, class file, class definition, dataset name, and source-data
+path must use consistent names.
 
-Each case can contain:
+For a dataset named ``AuthorYear``, the expected structure is:
 
-#. OpenSTREAM case-definition information, whose field names follow the
-   strict naming convention expected by the generic input-generation
-   functionality.
-#. Dataset-specific information used by the dataset class, plotting
-   methods, and application workflows.
+.. code-block:: text
 
-Reserved OpenSTREAM field names are case-sensitive and must use the
-expected spelling. Renaming a reserved field, changing its capitalization,
-or replacing it with a dataset-specific synonym can prevent the
-corresponding information from being transferred to the generated
-OpenSTREAM inputs.
+   +AuthorYear/
+   ├── +src/
+   │   └── AuthorYear.xml
+   ├── @AuthorYear/
+   │   ├── AuthorYear.m
+   │   └── plotResults.m
+   └── README.md
 
-Dataset-specific fields may be added freely, provided that they:
+The following names must agree:
 
-- Do not conflict with reserved OpenSTREAM field names.
-- Use descriptive and unambiguous names.
-- Are consistent throughout the dataset.
-- Are represented consistently in XML and JSON when both formats exist.
-- Are documented in the dataset README or class implementation.
-- Use clearly documented SI units.
-- Include uncertainty or availability information where relevant.
+.. list-table::
+   :header-rows: 1
+   :widths: 45 55
 
-Scalar quantities should be represented as individual values. Array
-quantities should use repeated XML elements or JSON arrays. Related arrays
-must have compatible lengths and ordering.
+   * - Element
+     - Required form
+   * - MATLAB package folder
+     - ``+AuthorYear``
+   * - MATLAB class folder
+     - ``@AuthorYear``
+   * - MATLAB class file
+     - ``AuthorYear.m``
+   * - MATLAB class definition
+     - ``classdef AuthorYear < Dataset``
+   * - Dataset name assigned in ``addPath``
+     - ``data.name = 'AuthorYear'``
+   * - Source-data filename
+     - ``AuthorYear.xml``
+   * - Source-data path
+     - ``+AuthorYear/+src/AuthorYear.xml``
 
-Missing or unavailable information must be distinguishable from a physical
-value of zero and handled explicitly by the dataset class.
+The leading ``+`` and ``@`` characters are part of MATLAB package and
+class-folder syntax:
+
+- ``+AuthorYear`` defines the MATLAB package.
+- ``@AuthorYear`` defines the class folder within that package.
+- ``AuthorYear.m`` contains the class definition.
+- The class is referenced using the package-qualified name
+  ``AuthorYear.AuthorYear``.
+
+Names and capitalization must be consistent. Do not mix forms such as
+``AuthorYear``, ``Authoryear``, and ``authoryear``.
+
+For publication-based datasets, the package name should generally combine
+the surname of the first author and the four-digit publication year,
+following the convention used by the existing dataset packages.
+
+The dataset name must be a valid MATLAB identifier. Spaces, hyphens,
+punctuation, and other invalid identifier characters must not be used.
+
+When copying the template, update every occurrence of ``Template`` in:
+
+#. The package-folder name.
+#. The class-folder name.
+#. The class filename.
+#. The ``classdef`` declaration.
+#. ``data.name`` in ``addPath``.
+#. The source-data filename.
+#. ``data.path`` in ``addPath``.
+#. Code examples and headings in ``README.md``.
+#. Project scripts that construct or refer to the dataset class.
+
+For example:
+
+.. code-block:: matlab
+
+   classdef AuthorYear < Dataset
+       % AUTHORYEAR Dataset implementation for Author et al. (Year).
+
+       methods
+
+           function addPath(data)
+               % ADDPATH Define the dataset name and source-data file.
+
+               data.name = 'AuthorYear';
+
+               data.path = fullfile( ...
+                   ['+' data.name], ...
+                   '+src', ...
+                   'AuthorYear.xml');
+
+           end
+
+           plotResults(data)
+
+       end
+
+   end
+
+The resulting object is constructed using the package-qualified class
+name:
+
+.. code-block:: matlab
+
+   dataset = AuthorYear.AuthorYear(...);
+
+A mismatch between these names may prevent MATLAB from locating the class
+or may cause the dataset implementation to reference the wrong source-data
+file.
 
 Source data
 -----------
 
+Dataset source files are stored under the package ``+src`` directory.
+
 All numerical data stored in OpenSTREAM-database source files must use SI
-units. This requirement applies even when the original publication reports
-data using another system of units.
+units. This requirement applies even when the original experimental
+publication reports data using another system of units.
 
 The source-data implementation should preserve the original experimental
 information as faithfully as possible. Any transcription, correction,
-filtering, interpolation, reconstruction, or unit conversion must be
-documented.
+digitization, filtering, interpolation, reconstruction, or unit conversion
+must be documented.
 
-For every implemented quantity, document:
+The dataset-specific constructor reads and interprets the corresponding
+XML or JSON source file when the dataset object is created. Reading the
+source file is therefore part of dataset-object construction and is not a
+separate step in the application workflow.
 
-- The quantity name and physical meaning.
-- The SI unit used in OpenSTREAM-database.
-- The unit reported in the original source.
-- The conversion applied, when applicable.
-- The original table, figure, appendix, or data source.
-- Any ambiguity or interpretation introduced during transcription.
-- The available measurement uncertainty.
-- Any missing or unavailable information.
-
-Unit conversions should retain sufficient numerical precision for the
-intended application and validation analyses.
-
-Data integrity
+Dataset fields
 --------------
 
-When creating or modifying a source file, verify that:
+Each experimental case in the XML or JSON source file must define a common
+set of mandatory fields. Additional dataset-specific fields may be added
+when required to represent the available experimental information.
 
-- Every case has a unique and stable identifier.
-- Reserved OpenSTREAM fields use the exact expected names.
-- Required fields contain valid values.
-- All numerical values use SI units.
-- Related arrays have compatible lengths and ordering.
-- Axial wall-mesh and wall-power arrays are compatible.
-- Measurement-coordinate and measured-value arrays are compatible.
-- Missing information is distinguishable from a physical zero.
-- XML and JSON representations contain equivalent information when both
-  formats are provided.
-- Unit conversions retain sufficient numerical precision.
-- Dataset-specific fields are interpreted consistently by the class and
-  plotting methods.
+Mandatory fields
+~~~~~~~~~~~~~~~~
 
-The dataset README or class implementation should identify whether a
-stored quantity is reported directly, converted, digitized, reconstructed,
-derived from other values, or introduced specifically for the OpenSTREAM
-application.
+The following fields are required for every implemented experimental case:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 55 20
+
+   * - Field
+     - Description
+     - SI unit
+   * - ``TestName``
+     - Unique name or identifier of the experimental case.
+     - Not applicable
+   * - ``Fluid``
+     - Working-fluid identifier used by OpenSTREAM.
+     - Not applicable
+   * - ``Pressure``
+     - System pressure.
+     - Pa
+   * - ``MassFlow``
+     - Inlet mass flow rate.
+     - kg/s
+   * - ``InletEnthalpy``
+     - Inlet specific enthalpy.
+     - J/kg
+   * - ``Length``
+     - Axial length of the modeled channel.
+     - m
+   * - ``Area``
+     - Channel flow area.
+     - m²
+   * - ``Perimeter``
+     - Channel perimeter used by the OpenSTREAM geometry.
+     - m
+   * - ``Power``
+     - Total applied power.
+     - W
+   * - ``WallMesh``
+     - Axial coordinates associated with the wall-power and heat-flux
+       distributions.
+     - m
+   * - ``WallPower``
+     - Axial wall-power distribution.
+     - W
+   * - ``HeatFlux``
+     - Axial wall heat-flux distribution.
+     - W/m²
+
+Field names are case-sensitive and must be written exactly as shown.
+
+The mandatory fields must satisfy the following requirements:
+
+- Every implemented case must define all mandatory fields.
+- All numerical values must use SI units.
+- ``TestName`` must identify each experimental case unambiguously.
+- ``Fluid`` must use an identifier supported by the OpenSTREAM
+  fluid-property interface.
+- ``WallMesh`` must be consistent with the corresponding ``WallPower`` and
+  ``HeatFlux`` distributions.
+- Geometry fields must represent the channel modeled by OpenSTREAM.
+- Boundary-condition fields must represent the intended experimental case.
+- Any conversion, reconstruction, or interpretation used to obtain a
+  mandatory field must be documented in the dataset README.
+
+Dataset-specific fields
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Additional fields may be included when required to represent information
+specific to the dataset.
+
+Dataset-specific fields may describe:
+
+- Measured quantities.
+- Instrument and measurement locations.
+- Experimental uncertainties.
+- Facility or test-section characteristics not represented by the
+  mandatory geometry fields.
+- Inlet, outlet, or local experimental conditions.
+- Flow-regime or transition information.
+- Dataset-specific case classifications.
+- Information required for calculated-versus-measured comparisons.
+
+Each dataset-specific field must be documented in the dataset README. The
+documentation should state:
+
+- The exact field name.
+- The physical meaning of the field.
+- Whether the field is required or optional.
+- The SI unit used in OpenSTREAM-database.
+- The unit reported in the original experimental source.
+- The source table, figure, page, appendix, or data file.
+- Any unit conversion or other processing applied.
+- The reported measurement uncertainty, where available.
+- The behavior when the field is absent or unavailable.
+
+Dataset-specific fields must not replace, rename, or change the meaning of
+the mandatory fields.
+
+When the same physical quantity is used by several dataset
+implementations, a common field name and representation should be used
+where practical.
+
+Source-file requirements
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The XML or JSON source representation should use a consistent structure
+across all implemented cases.
+
+Before completing a dataset implementation, confirm that:
+
+- Every case contains all mandatory fields.
+- Mandatory and dataset-specific field names are used consistently.
+- Numerical fields contain valid SI values.
+- Array dimensions are mutually consistent.
+- ``WallMesh``, ``WallPower``, and ``HeatFlux`` describe compatible axial
+  distributions.
+- Case identifiers are unique.
+- Missing experimental information is identified explicitly.
+- Undocumented replacement values are not introduced.
+- Derived or reconstructed fields are documented.
+- Unsupported or incomplete cases are identified clearly.
+
+The dataset class should validate the fields required by its implementation
+and report missing, inconsistent, or unsupported data with a clear
+diagnostic.
 
 Data provenance
 ---------------
 
-Every dataset contribution should identify the authoritative experimental
+Every dataset contribution must identify the authoritative experimental
 source.
 
 The dataset README should include:
@@ -199,15 +406,16 @@ The dataset README should include:
 - The SI units used in OpenSTREAM-database.
 - The reported measurement uncertainties.
 - Known limitations or qualifications of the data.
-- The relationship between the original data and the implemented source
-  files.
-- Any licensing, redistribution, or citation requirements.
+- The relationship between the original data and the implemented
+  source-data files.
+- Any licensing, redistribution, attribution, or citation requirements.
 
 The original publication remains the authoritative source for the
 experimental configuration, measurements, uncertainties, and
-interpretation. The OpenSTREAM-database implementation should not imply
-greater accuracy, completeness, or certainty than is supported by the
-published information.
+interpretation.
+
+The OpenSTREAM-database implementation must not imply greater accuracy,
+completeness, or certainty than is supported by the published information.
 
 Dataset class
 -------------
@@ -215,7 +423,8 @@ Dataset class
 The dataset-specific MATLAB class should:
 
 - Inherit from the generic ``Dataset`` class.
-- Load and interpret the corresponding XML or JSON source data.
+- Read and interpret the corresponding source-data representation during
+  object construction.
 - Preserve the generic dataset interface where practical.
 - Identify the available experimental cases and quantities.
 - Generate valid OpenSTREAM inputs.
@@ -236,9 +445,10 @@ OpenSTREAM dependency
 OpenSTREAM is maintained as a separate repository and is not included as a
 Git submodule of OpenSTREAM-database.
 
-Dataset implementations and application projects should rely on required
-OpenSTREAM classes being available on the MATLAB path. They should not
-assume a fixed relative directory arrangement between the repositories.
+Dataset implementations and application projects should rely on the
+required OpenSTREAM classes being available on the MATLAB path. They
+should not assume a fixed relative directory arrangement between the two
+repositories.
 
 Installation and MATLAB path instructions are provided on the
 :doc:`OpenSTREAM-database <database>` page.
@@ -246,23 +456,27 @@ Installation and MATLAB path instructions are provided on the
 Application projects
 --------------------
 
-A contributed application project should provide a reproducible workflow
-for:
+Application projects are stored under the repository ``projects`` folder.
 
-#. Constructing the dataset-specific object.
+A contributed project should provide a reproducible workflow for:
+
+#. Constructing a dataset-specific object, which reads and interprets the
+   corresponding XML or JSON source file.
 #. Selecting one or more experimental cases.
 #. Selecting an OpenSTREAM solver and model configuration.
 #. Generating the required OpenSTREAM input files.
 #. Running the selected cases.
 #. Extracting calculated and measured quantities.
-#. Comparing and visualizing the results.
+#. Comparing the results.
+#. Visualizing and interpreting the comparison.
 #. Documenting assumptions, numerical settings, and limitations.
-
-MATLAB Live Scripts are recommended for documented application workflows
-that combine explanatory text, executable code, figures, and results.
 
 Projects should avoid hard-coded local paths and should state the expected
 working directory or path configuration clearly.
+
+MATLAB Live Scripts are recommended when explanatory text, executable
+code, figures, and calculated results form part of the documented
+application workflow.
 
 Comparison and validation
 -------------------------
@@ -300,11 +514,11 @@ Dataset-specific plotting methods should:
 - Use SI units.
 - Identify measured and calculated quantities clearly.
 - Include readable axis labels, units, legends, and captions.
-- Distinguish different solvers and model configurations consistently.
+- Distinguish solvers and model configurations consistently.
 - Represent experimental uncertainty when available and relevant.
 - Avoid implying agreement beyond the precision or uncertainty of the
   available data.
-- Support reproducible use from the corresponding project workflow.
+- Support reproducible use from the corresponding application project.
 
 Common plotting or comparison behavior should be implemented in shared
 functionality where practical.
@@ -315,12 +529,12 @@ Testing and verification
 OpenSTREAM-database does not currently include an automated test suite.
 
 Until automated testing is implemented, contributors should verify changes
-using reproducible checks appropriate to the contribution. These checks
-should include, where applicable:
+using reproducible checks appropriate to the contribution.
 
-- Confirming that XML and JSON source files can be loaded correctly.
-- Confirming that reserved OpenSTREAM fields use the required names.
-- Confirming that all numerical source data use SI units.
+These checks should include, where applicable:
+
+- Confirming that the source-data files can be loaded correctly.
+- Confirming that all numerical source data are stored in SI units.
 - Reviewing unit conversions against the original experimental source.
 - Verifying that the intended experimental cases can be selected.
 - Reviewing the generated OpenSTREAM input files.
@@ -331,14 +545,22 @@ should include, where applicable:
 - Reviewing generated figures and post-processing results.
 - Confirming that existing application workflows are not adversely
   affected.
+- Comparing results with previous executions, when available.
 
 The verification procedure and its results should be described in the
 pull request.
 
-Automated testing is a planned improvement. Future tests may cover source-
-data parsing, unit conversion, metadata, case selection, input generation,
-plotting and comparison methods, application workflows, and numerical
-regression.
+Automated testing is a planned improvement. Future tests may cover:
+
+- Source-data parsing.
+- SI-unit conversion.
+- Dataset metadata.
+- Mandatory-field validation.
+- Case selection.
+- OpenSTREAM input generation.
+- Dataset-specific plotting and comparison methods.
+- Application workflows.
+- Numerical regression against approved results.
 
 Documentation requirements
 --------------------------
@@ -349,6 +571,7 @@ Each new dataset contribution should include a package README describing:
 - The scope of the implemented data.
 - The experimental facility and relevant geometry.
 - The implemented experimental conditions and measured quantities.
+- The mandatory and dataset-specific fields.
 - The units reported in the original source.
 - The SI units used in OpenSTREAM-database.
 - Any unit conversions, transcription steps, interpolation, filtering, or
@@ -360,9 +583,14 @@ Each new dataset contribution should include a package README describing:
 - Citation, licensing, attribution, and redistribution requirements.
 
 User-visible changes should also be reflected in the OpenSTREAM
-Applications documentation when they affect the database description,
-available datasets, exported project workflows, publications,
-installation requirements, or recommended application procedures.
+Applications documentation when they affect:
+
+- The OpenSTREAM-database description.
+- Available datasets.
+- Exported project workflows.
+- Publications.
+- Installation or path requirements.
+- Recommended application procedures.
 
 Submitting a contribution
 -------------------------
@@ -372,7 +600,7 @@ Before submitting a contribution:
 #. Confirm that OpenSTREAM and OpenSTREAM-database are both available on
    the MATLAB path.
 #. Perform the relevant reproducible verification checks.
-#. Run the affected project workflows.
+#. Run the affected application projects.
 #. Review generated OpenSTREAM inputs and calculated results.
 #. Confirm that all numerical source data use SI units.
 #. Review unit conversions and retained numerical precision.
@@ -403,9 +631,15 @@ Before submitting a pull request, confirm that:
 - The contribution follows the established dataset package organization.
 - The dataset template was used or the equivalent required structure was
   followed.
+- The strict naming convention is followed.
 - The original experimental source is identified and cited.
 - Applicable licensing and redistribution conditions have been reviewed.
-- All numerical source data stored under ``+src`` use SI units.
+- Every implemented case defines all mandatory dataset fields using the
+  exact required names.
+- All mandatory and dataset-specific numerical fields use SI units.
+- ``WallMesh``, ``WallPower``, and ``HeatFlux`` are mutually consistent.
+- Dataset-specific fields are documented in the dataset README.
+- Dataset-specific fields do not replace or rename mandatory fields.
 - Unit conversions are documented.
 - Measurement uncertainties are included where available.
 - Dataset assumptions and processing steps are documented.
@@ -414,5 +648,5 @@ Before submitting a pull request, confirm that:
 - Generated OpenSTREAM inputs and calculated results have been reviewed.
 - Any numerical differences from previous results are understood and
   justified.
-- Documentation and project workflows have been updated.
+- Documentation and application projects have been updated.
 - Generated input, result, and output directories are not committed.

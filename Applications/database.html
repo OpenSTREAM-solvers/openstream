@@ -27,7 +27,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributing to the database" href="contributing.html" />
+    <link rel="next" title="Contributing to OpenSTREAM-database" href="contributing.html" />
     <link rel="prev" title="Global reference list" href="../Guides/references.html" /> 
 </head>
 
@@ -192,13 +192,18 @@
 <li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to the database</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to OpenSTREAM-database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of contributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-organization">Dataset organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-template">Dataset template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#structured-source-files">Structured source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#naming-convention">Naming convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#data-integrity">Data integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-fields">Dataset fields</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#mandatory-fields">Mandatory fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#dataset-specific-fields">Dataset-specific fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#source-file-requirements">Source-file requirements</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
@@ -505,8 +510,8 @@ OpenSTREAM-database working copies.</p>
 <h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading"></a></h2>
 <p>A typical application workflow consists of:</p>
 <ol class="arabic simple">
-<li><p>Constructing a dataset-specific object.</p></li>
-<li><p>Reading the corresponding XML or JSON source file.</p></li>
+<li><p>Constructing a dataset-specific object from the corresponding XML or
+JSON source file.</p></li>
 <li><p>Selecting one or more experimental cases.</p></li>
 <li><p>Selecting an OpenSTREAM solver and model configuration.</p></li>
 <li><p>Generating the corresponding OpenSTREAM input files.</p></li>
@@ -570,8 +575,6 @@ not be interpreted as general validation outside the conditions examined.</p>
 verified through documented and reproducible execution of the affected
 cases. Detailed verification requirements are provided in the
 <a class="reference internal" href="contributing.html"><span class="doc">contribution guidelines</span></a>.</p>
-<p>Development of an automated testing and regression framework is a planned
-improvement.</p>
 </section>
 <section id="development-status">
 <h2>Development status<a class="headerlink" href="#development-status" title="Link to this heading"></a></h2>
@@ -597,7 +600,7 @@ welcome.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../Guides/references.html" class="btn btn-neutral float-left" title="Global reference list" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to the database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to OpenSTREAM-database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
