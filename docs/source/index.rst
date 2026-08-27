@@ -32,9 +32,9 @@
    :caption: Applications
 
    /Applications/database
+   /Applications/contributing
    /Applications/projects
    /Applications/publications
-   /Applications/contributing
 
 .. toctree::
    :maxdepth: 5
