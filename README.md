@@ -1,4 +1,6 @@
-https://img.shields.io/github/license/OpenSTREAM-solvers/openstream](LICENSE) [![Documentation](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml/badge.svg)](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Documentation](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml/badge.svg)](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml)
+[![MATLAB Tests](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/ci.yml/badge.svg?branch=main)](httpslows/ci.yml)
 
 # OpenSTREAM
 
