@@ -14,7 +14,7 @@ This module includes:
 
 ----   
 
-.. autoclass:: Solvers.TwoFluid.TwoFluidSolver
+.. automodule:: Solvers.TwoFluid.TwoFluidSolver
    :show-inheritance:
    :members:
 
@@ -24,3 +24,5 @@ This module includes:
    :show-inheritance:
    :members:
 .. :exclude-members: 
+
+----

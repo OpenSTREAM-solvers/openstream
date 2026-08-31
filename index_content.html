@@ -11,7 +11,6 @@
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/sphinx-new-tab-link.css?v=d87cb1ac" />
-      <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=8d0270a2" />
 
   
@@ -19,11 +18,10 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
-      <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -52,42 +50,15 @@
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Usage/gettingStarted.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#install-openstream">Install OpenSTREAM</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#install-using-the-git-command-line-interface">Install using the Git command-line interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#install-using-github-desktop">Install using GitHub Desktop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#install-using-git-and-github">Install using Git and GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#compatibility-policy">Compatibility policy</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#configure-matlab-and-python">Configure MATLAB and Python</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#inspect-the-configured-python-environment">Inspect the configured Python environment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#install-a-compatible-python-version">Install a compatible Python version</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#configure-the-python-executable-in-matlab">Configure the Python executable in MATLAB</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#install-the-python-dependencies">Install the Python dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#verify-the-installation">Verify the installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#inspect-the-python-environment">Inspect the Python environment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#verify-the-python-packages">Verify the Python packages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#create-a-coolpropwrapper-object">Create a CoolPropWrapper object</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#evaluate-a-representative-fluid-property">Evaluate a representative fluid property</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#run-the-automated-tests">Run the automated tests</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Usage/gettingStarted.html#run-the-sample-script">Run the sample script</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Usage/runSampleScript.html">Run sample script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Usage/versioning.html">Release numbering and versioning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Usage/versioning.html#prerelease-identifiers">Prerelease identifiers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/versioning.html#release-documentation">Release documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Usage/versioning.html#development-and-released-versions">Development and released versions</a></li>
-</ul>
-</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
@@ -127,33 +98,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Guides/tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#quick-start">1. Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#mixture-solver-capabilities">2. Mixture Solver Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#two-fluid-solver-capabilities">3. Two-Fluid Solver Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#three-field-solver-capabilities">4. Three-Field Solver Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#four-field-solver-capabilities">5. Four-Field Solver Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#input-files">6. Input Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#numerical-convergence-and-solver-diagnostics">7. Numerical Convergence and Solver Diagnostics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#mesh-and-time-step-sensitivity">8. Mesh and Time-Step Sensitivity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/tutorials.html#advanced-visualization-and-post-processing">9. Advanced Visualization and Post-Processing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Guides/testing.html">Testing and verification</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#test-organization">Test organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#running-all-tests">Running all tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#running-individual-test-categories">Running individual test categories</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#continuous-integration">Continuous integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#reference-solutions">Reference solutions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#adding-new-tests">Adding new tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#unit-test-guidelines">Unit test guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#integration-test-guidelines">Integration test guidelines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#environment-validation">Environment validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#generated-outputs">Generated outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Guides/testing.html#contributor-checklist">Contributor checklist</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="Guides/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Guides/glossary.html">Glossary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Guides/glossary.html#recommended-terminology">Recommended terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Guides/glossary.html#style-notes">Style notes</a></li>
@@ -172,62 +117,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Applications/database.html">OpenSTREAM-database</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#purpose">Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#repository-organization">Repository organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#dataset-source-files">Dataset source files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#units">Units</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#application-projects">Application projects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#matlab-setup">MATLAB setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#typical-workflow">Typical workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#generated-files">Generated files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#data-provenance-and-citation">Data provenance and citation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#validation-and-interpretation">Validation and interpretation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#testing-and-verification">Testing and verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#development-status">Development status</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/database.html#contributing">Contributing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Applications/contributing.html">Contributing to OpenSTREAM-database</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#types-of-contributions">Types of contributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#dataset-organization">Dataset organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#dataset-template">Dataset template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#naming-convention">Naming convention</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#source-data">Source data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#dataset-fields">Dataset fields</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Applications/contributing.html#mandatory-fields">Mandatory fields</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/contributing.html#dataset-specific-fields">Dataset-specific fields</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/contributing.html#source-file-requirements">Source-file requirements</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#data-provenance">Data provenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#dataset-class">Dataset class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#application-projects">Application projects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#comparison-and-validation">Comparison and validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#testing-and-verification">Testing and verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#documentation-requirements">Documentation requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/contributing.html#contributor-checklist">Contributor checklist</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Applications/projects.html">Application projects</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Applications/projects.html#available-projects">Available projects</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Applications/projects.html#adamsson">1. Adamsson</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/projects.html#bennett">2. Bennett</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/projects.html#groeneveld">3. Groeneveld</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/projects.html#nureth21">4. NURETH21</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/projects.html#sawai">5. Sawai</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Applications/projects.html#wurtz">6. Wurtz</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/projects.html#html-exports">HTML exports</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Applications/projects.html#project-status">Project status</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="Applications/database.html">OpenSTREAM-database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Applications/projects.html">Projects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Applications/publications.html">Publications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Applications/publications.html#overviews">Overviews</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Applications/publications.html#mixture-model">Mixture model</a></li>
@@ -256,37 +147,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Community/faq.html">OpenSTREAM FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#getting-started">Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#running-simulations">Running simulations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#choosing-a-solver">Choosing a solver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#numerical-convergence">Numerical convergence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#results-and-post-processing">Results and post-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#physical-scope-and-limitations">Physical scope and limitations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/faq.html#extending-and-contributing">Extending and contributing</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="Community/faq.html">OpenSTREAM FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Community/contribute_code.html">Contribute to the code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#how-to-contribute">How to contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#coding-standards">Coding standards</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#matlab">MATLAB</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#python">Python</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#general-practices">General practices</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#documentation">Documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#testing">Testing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#testing-contributions">Testing contributions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#reference-solutions">Reference solutions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#generated-outputs">Generated outputs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Community/contribute_code.html#continuous-integration">Continuous integration</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#reporting-issues">Reporting issues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#code-of-conduct">Code of conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#coding-standards">Coding Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#code-of-conduct">Code of Conduct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#communication">Communication</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Community/contribute_code.html#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Community/contribute_documentation.html">Contribute to the documentation</a><ul>
@@ -305,7 +174,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Community/authors.html">Authors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Community/authors.html#id1">Maintainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Community/authors.html#maintainers">Maintainers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Community/authors.html#contributors-and-users">Contributors and users</a></li>
 </ul>
 </li>

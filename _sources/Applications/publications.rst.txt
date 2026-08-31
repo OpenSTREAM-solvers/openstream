@@ -24,7 +24,7 @@ Mixture model
 ----
 
 Two-fluid model
----------------
+--------------
 
 .. bibliography::
    :list: enumerated
@@ -33,7 +33,7 @@ Two-fluid model
 ----
 
 Three-field model
------------------
+----------------
 
 .. bibliography::
    :list: enumerated
@@ -42,7 +42,7 @@ Three-field model
 ----
 
 Four-field model
-----------------
+---------------
 
 .. bibliography::
    :list: enumerated

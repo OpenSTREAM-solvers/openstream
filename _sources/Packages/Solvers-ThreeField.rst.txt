@@ -13,7 +13,7 @@ This module includes:
 
 ----   
 
-.. autoclass:: Solvers.ThreeField.ThreeFieldSolver
+.. automodule:: Solvers.ThreeField.ThreeFieldSolver
    :show-inheritance:
    :members:
 
@@ -23,3 +23,5 @@ This module includes:
    :show-inheritance:
    :members:
 .. :exclude-members: 
+
+----
