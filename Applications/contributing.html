@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to OpenSTREAM-database &mdash; OpenSTREAM  documentation</title>
+  <title>Contributing to the database &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -192,7 +192,7 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to OpenSTREAM-database</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to the database</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#types-of-contributions">Types of contributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-organization">Dataset organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-template">Dataset template</a></li>
@@ -327,7 +327,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Contributing to OpenSTREAM-database</li>
+      <li class="breadcrumb-item active">Contributing to the database</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Applications/contributing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -337,8 +337,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="contributing-to-openstream-database">
-<h1>Contributing to OpenSTREAM-database<a class="headerlink" href="#contributing-to-openstream-database" title="Link to this heading"></a></h1>
+  <section id="contributing-to-the-database">
+<h1>Contributing to the database<a class="headerlink" href="#contributing-to-the-database" title="Link to this heading"></a></h1>
 <p>Contributions to OpenSTREAM-database are welcome. Contributions may
 include new publicly available datasets, corrections to existing dataset
 implementations, additional application cases, improved plotting and
@@ -595,54 +595,46 @@ when required to represent the available experimental information.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TestName</span></code></p></td>
-<td><p>Unique name or identifier of the experimental case.</p></td>
-<td><p>Not applicable</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Fluid</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Fluid</span></code></p></td>
 <td><p>Working-fluid identifier used by OpenSTREAM.</p></td>
 <td><p>Not applicable</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Pressure</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Pressure</span></code></p></td>
 <td><p>System pressure.</p></td>
 <td><p>Pa</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MassFlow</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MassFlow</span></code></p></td>
 <td><p>Inlet mass flow rate.</p></td>
 <td><p>kg/s</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InletEnthalpy</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InletEnthalpy</span></code></p></td>
 <td><p>Inlet specific enthalpy.</p></td>
 <td><p>J/kg</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Length</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Length</span></code></p></td>
 <td><p>Axial length of the modeled channel.</p></td>
 <td><p>m</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Area</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Area</span></code></p></td>
 <td><p>Channel flow area.</p></td>
 <td><p>m²</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Perimeter</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Perimeter</span></code></p></td>
 <td><p>Channel perimeter used by the OpenSTREAM geometry.</p></td>
 <td><p>m</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Power</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Power</span></code></p></td>
 <td><p>Total applied power.</p></td>
 <td><p>W</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code></p></td>
 <td><p>Axial coordinates associated with the wall-power and heat-flux
 distributions.</p></td>
 <td><p>m</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">WallPower</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WallPower</span></code></p></td>
 <td><p>Axial wall-power distribution.</p></td>
 <td><p>W</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code></p></td>
-<td><p>Axial wall heat-flux distribution.</p></td>
-<td><p>W/m²</p></td>
 </tr>
 </tbody>
 </table>
@@ -651,11 +643,10 @@ distributions.</p></td>
 <ul class="simple">
 <li><p>Every implemented case must define all mandatory fields.</p></li>
 <li><p>All numerical values must use SI units.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TestName</span></code> must identify each experimental case unambiguously.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Fluid</span></code> must use an identifier supported by the OpenSTREAM
 fluid-property interface.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code> must be consistent with the corresponding <code class="docutils literal notranslate"><span class="pre">WallPower</span></code> and
-<code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> distributions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code> must be consistent with the corresponding <code class="docutils literal notranslate"><span class="pre">WallPower</span></code>
+distribution.</p></li>
 <li><p>Geometry fields must represent the channel modeled by OpenSTREAM.</p></li>
 <li><p>Boundary-condition fields must represent the intended experimental case.</p></li>
 <li><p>Any conversion, reconstruction, or interpretation used to obtain a
@@ -707,8 +698,7 @@ across all implemented cases.</p>
 <li><p>Mandatory and dataset-specific field names are used consistently.</p></li>
 <li><p>Numerical fields contain valid SI values.</p></li>
 <li><p>Array dimensions are mutually consistent.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code>, <code class="docutils literal notranslate"><span class="pre">WallPower</span></code>, and <code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> describe compatible axial
-distributions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code> and <code class="docutils literal notranslate"><span class="pre">WallPower</span></code> describe compatible axial distributions.</p></li>
 <li><p>Case identifiers are unique.</p></li>
 <li><p>Missing experimental information is identified explicitly.</p></li>
 <li><p>Undocumented replacement values are not introduced.</p></li>
@@ -953,7 +943,7 @@ followed.</p></li>
 <li><p>Every implemented case defines all mandatory dataset fields using the
 exact required names.</p></li>
 <li><p>All mandatory and dataset-specific numerical fields use SI units.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code>, <code class="docutils literal notranslate"><span class="pre">WallPower</span></code>, and <code class="docutils literal notranslate"><span class="pre">HeatFlux</span></code> are mutually consistent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WallMesh</span></code> and <code class="docutils literal notranslate"><span class="pre">WallPower</span></code> are mutually consistent.</p></li>
 <li><p>Dataset-specific fields are documented in the dataset README.</p></li>
 <li><p>Dataset-specific fields do not replace or rename mandatory fields.</p></li>
 <li><p>Unit conversions are documented.</p></li>

@@ -1,5 +1,5 @@
-Contributing to OpenSTREAM-database
-===================================
+Contributing to the database
+============================
 
 Contributions to OpenSTREAM-database are welcome. Contributions may
 include new publicly available datasets, corrections to existing dataset
@@ -272,9 +272,6 @@ The following fields are required for every implemented experimental case:
    * - Field
      - Description
      - SI unit
-   * - ``TestName``
-     - Unique name or identifier of the experimental case.
-     - Not applicable
    * - ``Fluid``
      - Working-fluid identifier used by OpenSTREAM.
      - Not applicable
@@ -306,9 +303,6 @@ The following fields are required for every implemented experimental case:
    * - ``WallPower``
      - Axial wall-power distribution.
      - W
-   * - ``HeatFlux``
-     - Axial wall heat-flux distribution.
-     - W/m²
 
 Field names are case-sensitive and must be written exactly as shown.
 
@@ -316,11 +310,10 @@ The mandatory fields must satisfy the following requirements:
 
 - Every implemented case must define all mandatory fields.
 - All numerical values must use SI units.
-- ``TestName`` must identify each experimental case unambiguously.
 - ``Fluid`` must use an identifier supported by the OpenSTREAM
   fluid-property interface.
-- ``WallMesh`` must be consistent with the corresponding ``WallPower`` and
-  ``HeatFlux`` distributions.
+- ``WallMesh`` must be consistent with the corresponding ``WallPower``
+  distribution.
 - Geometry fields must represent the channel modeled by OpenSTREAM.
 - Boundary-condition fields must represent the intended experimental case.
 - Any conversion, reconstruction, or interpretation used to obtain a
@@ -376,8 +369,7 @@ Before completing a dataset implementation, confirm that:
 - Mandatory and dataset-specific field names are used consistently.
 - Numerical fields contain valid SI values.
 - Array dimensions are mutually consistent.
-- ``WallMesh``, ``WallPower``, and ``HeatFlux`` describe compatible axial
-  distributions.
+- ``WallMesh`` and ``WallPower`` describe compatible axial distributions.
 - Case identifiers are unique.
 - Missing experimental information is identified explicitly.
 - Undocumented replacement values are not introduced.
@@ -637,7 +629,7 @@ Before submitting a pull request, confirm that:
 - Every implemented case defines all mandatory dataset fields using the
   exact required names.
 - All mandatory and dataset-specific numerical fields use SI units.
-- ``WallMesh``, ``WallPower``, and ``HeatFlux`` are mutually consistent.
+- ``WallMesh`` and ``WallPower`` are mutually consistent.
 - Dataset-specific fields are documented in the dataset README.
 - Dataset-specific fields do not replace or rename mandatory fields.
 - Unit conversions are documented.
