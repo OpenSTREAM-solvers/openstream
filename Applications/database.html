@@ -11,6 +11,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/sphinx-new-tab-link.css?v=d87cb1ac" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
@@ -18,14 +19,15 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Projects" href="projects.html" />
+    <link rel="next" title="Contributing to OpenSTREAM-database" href="contributing.html" />
     <link rel="prev" title="Global reference list" href="../Guides/references.html" /> 
 </head>
 
@@ -52,15 +54,42 @@
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and GitHub</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#install-openstream">Install OpenSTREAM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-the-git-command-line-interface">Install using the Git command-line interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-github-desktop">Install using GitHub Desktop</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#compatibility-policy">Compatibility policy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#configure-matlab-and-python">Configure MATLAB and Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#inspect-the-configured-python-environment">Inspect the configured Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-a-compatible-python-version">Install a compatible Python version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#configure-the-python-executable-in-matlab">Configure the Python executable in MATLAB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#install-the-python-dependencies">Install the Python dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#verify-the-installation">Verify the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#inspect-the-python-environment">Inspect the Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#verify-the-python-packages">Verify the Python packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#create-a-coolpropwrapper-object">Create a CoolPropWrapper object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#evaluate-a-representative-fluid-property">Evaluate a representative fluid property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#run-the-automated-tests">Run the automated tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#run-the-sample-script">Run the sample script</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/versioning.html">Release numbering and versioning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#prerelease-identifiers">Prerelease identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#release-documentation">Release documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#development-and-released-versions">Development and released versions</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
@@ -100,7 +129,33 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#quick-start">1. Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#mixture-solver-capabilities">2. Mixture Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#two-fluid-solver-capabilities">3. Two-Fluid Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#three-field-solver-capabilities">4. Three-Field Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#four-field-solver-capabilities">5. Four-Field Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#input-files">6. Input Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#numerical-convergence-and-solver-diagnostics">7. Numerical Convergence and Solver Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#mesh-and-time-step-sensitivity">8. Mesh and Time-Step Sensitivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#advanced-visualization-and-post-processing">9. Advanced Visualization and Post-Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/testing.html">Testing and verification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#test-organization">Test organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-all-tests">Running all tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-individual-test-categories">Running individual test categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#reference-solutions">Reference solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#adding-new-tests">Adding new tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#unit-test-guidelines">Unit test guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#integration-test-guidelines">Integration test guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#environment-validation">Environment validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#generated-outputs">Generated outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/glossary.html">Glossary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#recommended-terminology">Recommended terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#style-notes">Style notes</a></li>
@@ -119,8 +174,62 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM-database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="projects.html">Projects</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenSTREAM-database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#repository-organization">Repository organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-source-files">Dataset source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matlab-setup">MATLAB setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typical-workflow">Typical workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generated-files">Generated files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-provenance-and-citation">Data provenance and citation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validation-and-interpretation">Validation and interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-and-verification">Testing and verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-status">Development status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to OpenSTREAM-database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-organization">Dataset organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-template">Dataset template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#naming-convention">Naming convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-fields">Dataset fields</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#mandatory-fields">Mandatory fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#dataset-specific-fields">Dataset-specific fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#source-file-requirements">Source-file requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#comparison-and-validation">Comparison and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-and-verification">Testing and verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="projects.html">Application projects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="projects.html#available-projects">Available projects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#adamsson">1. Adamsson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#bennett">2. Bennett</a></li>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#groeneveld">3. Groeneveld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#nureth21">4. NURETH21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#sawai">5. Sawai</a></li>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#wurtz">6. Wurtz</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="projects.html#html-exports">HTML exports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="projects.html#project-status">Project status</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="publications.html#overviews">Overviews</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications.html#mixture-model">Mixture model</a></li>
@@ -149,15 +258,37 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#running-simulations">Running simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#choosing-a-solver">Choosing a solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#numerical-convergence">Numerical convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#results-and-post-processing">Results and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#physical-scope-and-limitations">Physical scope and limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#extending-and-contributing">Extending and contributing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#coding-standards">Coding Standards</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#testing">Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#reporting-issues">Reporting Issues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#coding-standards">Coding standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#matlab">MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#general-practices">General practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#testing-contributions">Testing contributions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#reference-solutions">Reference solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#generated-outputs">Generated outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#continuous-integration">Continuous integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#reporting-issues">Reporting issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#code-of-conduct">Code of conduct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#communication">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
@@ -176,7 +307,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#maintainers">Maintainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#id1">Maintainers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors-and-users">Contributors and users</a></li>
 </ul>
 </li>
@@ -208,8 +339,260 @@
              
   <section id="openstream-database">
 <h1>OpenSTREAM-database<a class="headerlink" href="#openstream-database" title="Link to this heading"></a></h1>
-<p>OpenSTREAM-database provides an application and validation environment for OpenSTREAM, enabling users to easily run and evaluate any solver using publicly available datasets.</p>
-<p><em>Coming soon.</em></p>
+<p>OpenSTREAM-database provides an application and validation environment for
+<strong>OpenSTREAM</strong>, enabling users to configure, run, and evaluate OpenSTREAM
+solvers using publicly available experimental datasets.</p>
+<p>OpenSTREAM-database complements the core OpenSTREAM repository:</p>
+<ul class="simple">
+<li><p><strong>OpenSTREAM</strong> provides the solver frameworks, physical and closure
+models, numerical methods, input handling, visualization capabilities,
+tutorials, documentation, and core automated tests.</p></li>
+<li><p><strong>OpenSTREAM-database</strong> provides dataset implementations, application
+workflows, calculated-versus-measured comparisons, and an environment
+for model assessment and validation.</p></li>
+</ul>
+<p>The two repositories are maintained separately. OpenSTREAM is not included
+as a Git submodule of OpenSTREAM-database. A compatible OpenSTREAM working
+copy must be installed independently and made available on the MATLAB path.</p>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database supports:</p>
+<ul class="simple">
+<li><p>Application of OpenSTREAM solvers to experimental cases.</p></li>
+<li><p>Reproducible generation of OpenSTREAM input files from dataset
+definitions.</p></li>
+<li><p>Execution of individual cases or selected groups of cases.</p></li>
+<li><p>Comparison of calculated and measured quantities.</p></li>
+<li><p>Development and assessment of physical and closure models.</p></li>
+<li><p>Numerical sensitivity and uncertainty studies.</p></li>
+<li><p>Documentation of dataset provenance, assumptions, and processing.</p></li>
+<li><p>Application- and validation-oriented research and solver development.</p></li>
+</ul>
+<p>Separating the application datasets from the core solver repository allows
+OpenSTREAM and OpenSTREAM-database to evolve independently while retaining
+a common application interface.</p>
+</section>
+<section id="repository-organization">
+<h2>Repository organization<a class="headerlink" href="#repository-organization" title="Link to this heading"></a></h2>
+<p>The principal repository structure is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>openstream-database/
+├── +DatasetName/
+├── @Dataset/
+├── projects/
+├── README.md
+└── functionSignatures.json
+</pre></div>
+</div>
+<p>Each dataset is implemented as a MATLAB package that generally contains:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+DatasetName/
+├── +src/
+├── @DatasetName/
+│   ├── DatasetName.m
+│   └── plotResults.m
+└── README.md
+</pre></div>
+</div>
+<p>The package components have the following roles:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">+src</span></code></dt><dd><p>Contains the structured experimental data and the information required
+to define OpenSTREAM cases. XML and JSON source files are supported.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;DatasetName</span></code></dt><dd><p>Contains the dataset-specific class and associated methods.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">plotResults.m</span></code></dt><dd><p>Provides dataset-specific visualization and
+calculated-versus-measured comparison functionality.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">README.md</span></code></dt><dd><p>Documents the original experimental source, implemented data, units,
+uncertainties, assumptions, and supported workflows.</p>
+</dd>
+</dl>
+<p>The generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class provides functionality shared by the
+individual dataset implementations, including source-data handling,
+OpenSTREAM input generation, and case execution.</p>
+</section>
+<section id="dataset-source-files">
+<h2>Dataset source files<a class="headerlink" href="#dataset-source-files" title="Link to this heading"></a></h2>
+<p>Experimental cases and associated information are stored in structured XML
+or JSON files under each dataset package’s <code class="docutils literal notranslate"><span class="pre">+src</span></code> directory.</p>
+<p>Each case can contain two categories of information:</p>
+<ol class="arabic simple">
+<li><p><strong>OpenSTREAM case-definition information</strong>, whose field names follow a
+strict naming convention so that the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> functionality
+can identify the boundary conditions and other information passed to
+OpenSTREAM.</p></li>
+<li><p><strong>Dataset-specific information</strong>, whose field names and contents can be
+defined according to the needs of the dataset implementation.</p></li>
+</ol>
+<p>Dataset-specific information can include experimental measurements,
+metadata, classifications, uncertainties, derived quantities, and other
+information used by the dataset class or application workflows. For
+example, a dataset-specific <code class="docutils literal notranslate"><span class="pre">plotResults</span></code> method can use these fields to
+construct calculated-versus-measured comparisons.</p>
+<p>The reserved OpenSTREAM field names are case-sensitive and must use the
+spelling expected by the input-generation implementation. Other fields can
+be added freely, provided that they do not conflict with the reserved
+names and are interpreted consistently by the corresponding dataset class.</p>
+<p>XML and JSON are alternative representations of the same logical dataset
+information. Dataset classes should expose equivalent information
+regardless of the source-file format.</p>
+<p>Scalar quantities are stored as individual values. Array quantities are
+represented by repeated XML elements or JSON arrays. Related arrays should
+have compatible lengths and ordering.</p>
+<p>Detailed source-file conventions should be documented in the corresponding
+dataset README and class implementation.</p>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
+<p>OpenSTREAM uses SI units for all inputs, calculated quantities, and stored
+results.</p>
+<p>OpenSTREAM-database follows the same convention. All numerical data stored
+in dataset source files under the <code class="docutils literal notranslate"><span class="pre">+src</span></code> directories are expressed in SI
+units, including data converted from other unit systems used in the
+original experimental sources.</p>
+<p>The original publications should be consulted for the reported quantities,
+measurement definitions, original units, and experimental uncertainties.
+Any conversion to SI units should be documented in the corresponding
+dataset README or implementation.</p>
+</section>
+<section id="application-projects">
+<h2>Application projects<a class="headerlink" href="#application-projects" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder contains MATLAB scripts and Live Scripts that
+demonstrate dataset-specific application and validation workflows.</p>
+<p>A typical project selects experimental cases, generates the corresponding
+OpenSTREAM inputs, runs selected solver and model configurations, extracts
+calculated quantities, and compares the results with experimental
+measurements.</p>
+<p>As Live Script projects are developed, reviewed, and documented, exported
+HTML versions may be included in the OpenSTREAM Applications documentation.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database requires:</p>
+<ul class="simple">
+<li><p>A compatible MATLAB installation.</p></li>
+<li><p>A working OpenSTREAM installation.</p></li>
+<li><p>The Python and CoolProp environment required by OpenSTREAM.</p></li>
+<li><p>Access to the OpenSTREAM-database repository.</p></li>
+</ul>
+<p>OpenSTREAM is maintained as a separate repository and must be installed
+independently. Consult the
+<a class="reference external" href="https://openstream-solvers.github.io/openstream/Usage/gettingStarted.html" rel="noreferrer" target="_blank">OpenSTREAM installation guide</a>
+for the current MATLAB, Python, CoolProp, and installation requirements.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>Clone OpenSTREAM and OpenSTREAM-database as separate repositories.</p>
+<p>A convenient local organization is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/
+├── openstream/
+└── openstream-database/
+</pre></div>
+</div>
+<p>The repositories do not need to share the same parent directory, provided
+that both repository roots are available on the MATLAB path.</p>
+</section>
+<section id="matlab-setup">
+<h2>MATLAB setup<a class="headerlink" href="#matlab-setup" title="Link to this heading"></a></h2>
+<p>Add both repository roots to the MATLAB path:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream&gt;'</span><span class="p">)</span>
+<span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream-database&gt;'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Verify that MATLAB can locate functionality from both repositories:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Inputs</span><span class="p">.</span><span class="n">InputSet</span>
+<span class="nb">which</span><span class="w"> </span><span class="n">Dataset</span>
+</pre></div>
+</div>
+<p>The returned paths should refer to the intended OpenSTREAM and
+OpenSTREAM-database working copies.</p>
+</section>
+<section id="typical-workflow">
+<h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading"></a></h2>
+<p>A typical application workflow consists of:</p>
+<ol class="arabic simple">
+<li><p>Constructing a dataset-specific object from the corresponding XML or
+JSON source file.</p></li>
+<li><p>Selecting one or more experimental cases.</p></li>
+<li><p>Selecting an OpenSTREAM solver and model configuration.</p></li>
+<li><p>Generating the corresponding OpenSTREAM input files.</p></li>
+<li><p>Running the selected calculations.</p></li>
+<li><p>Extracting calculated quantities.</p></li>
+<li><p>Comparing calculated and measured results.</p></li>
+<li><p>Visualizing and evaluating the comparison.</p></li>
+</ol>
+<p>The exact workflow depends on the selected dataset. Consult the
+corresponding dataset README and project file before running an
+application.</p>
+</section>
+<section id="generated-files">
+<h2>Generated files<a class="headerlink" href="#generated-files" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database may generate package directories and output folders
+containing OpenSTREAM input files, solver results, logs, saved solver
+objects, processed comparisons, figures, and other post-processing
+outputs.</p>
+<p>Generated artifacts are excluded from version control through the
+repository <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> rules. Source-data files, MATLAB classes, project
+source files, and documentation remain version-controlled.</p>
+</section>
+<section id="data-provenance-and-citation">
+<h2>Data provenance and citation<a class="headerlink" href="#data-provenance-and-citation" title="Link to this heading"></a></h2>
+<p>The datasets implemented in OpenSTREAM-database are derived from publicly
+available experimental sources.</p>
+<p>When using a dataset:</p>
+<ul class="simple">
+<li><p>Consult and cite the original experimental publication.</p></li>
+<li><p>Review the experimental conditions, measurement definitions, original
+units, and reported uncertainties.</p></li>
+<li><p>Review any conversion, transcription, processing, interpolation,
+filtering, reconstruction, or assumptions introduced by the
+implementation.</p></li>
+<li><p>Cite OpenSTREAM and OpenSTREAM-database as appropriate.</p></li>
+</ul>
+<p>Use of an OpenSTREAM-database implementation does not replace citation of
+the original experimental source.</p>
+</section>
+<section id="validation-and-interpretation">
+<h2>Validation and interpretation<a class="headerlink" href="#validation-and-interpretation" title="Link to this heading"></a></h2>
+<p>Inclusion of a dataset or application does not imply that every
+OpenSTREAM solver, model combination, or calculated quantity has been
+comprehensively verified or validated against that dataset.</p>
+<p>Users remain responsible for evaluating:</p>
+<ul class="simple">
+<li><p>The applicability and quality of the experimental data.</p></li>
+<li><p>The assumptions and validity ranges of the selected models.</p></li>
+<li><p>Numerical convergence and discretization sensitivity.</p></li>
+<li><p>Experimental, model, parameter, and numerical uncertainty.</p></li>
+<li><p>The suitability of the selected comparison quantities and metrics.</p></li>
+<li><p>The interpretation of calculated-versus-measured differences.</p></li>
+</ul>
+<p>A favorable comparison for one case, quantity, or model selection should
+not be interpreted as general validation outside the conditions examined.</p>
+</section>
+<section id="testing-and-verification">
+<h2>Testing and verification<a class="headerlink" href="#testing-and-verification" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database does not currently include an automated test suite.</p>
+<p>Dataset implementations and application workflows should therefore be
+verified through documented and reproducible execution of the affected
+cases. Detailed verification requirements are provided in the
+<a class="reference internal" href="contributing.html"><span class="doc">contribution guidelines</span></a>.</p>
+</section>
+<section id="development-status">
+<h2>Development status<a class="headerlink" href="#development-status" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database and its application workflows are under active
+development. Dataset implementations, source-file formats, application
+projects, comparison methods, documentation, and verification capabilities
+may continue to evolve.</p>
+<p>Users should review the dataset-specific documentation and repository
+history when reproducing earlier calculations.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>Contributions of new datasets, corrections, application workflows,
+documentation, comparison methods, and verification capabilities are
+welcome.</p>
+<p>Before contributing, review the
+<a class="reference internal" href="contributing.html"><span class="doc">OpenSTREAM-database contribution guidelines</span></a>.</p>
+</section>
 </section>
 
 
@@ -217,7 +600,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../Guides/references.html" class="btn btn-neutral float-left" title="Global reference list" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="projects.html" class="btn btn-neutral float-right" title="Projects" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to OpenSTREAM-database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

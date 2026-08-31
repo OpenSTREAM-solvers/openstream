@@ -11,6 +11,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/sphinx-new-tab-link.css?v=d87cb1ac" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=8d0270a2" />
 
   
@@ -18,11 +19,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -53,15 +55,42 @@
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/gettingStarted.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites-and-installation">Prerequisites and installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-git-and-github">Install using Git and GitHub</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-python-compatibility">MATLAB-Python compatibility</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#install-openstream">Install OpenSTREAM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-the-git-command-line-interface">Install using the Git command-line interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-using-github-desktop">Install using GitHub Desktop</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#matlab-and-python-compatibility">MATLAB and Python compatibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#compatibility-policy">Compatibility policy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#configure-matlab-and-python">Configure MATLAB and Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#inspect-the-configured-python-environment">Inspect the configured Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#install-a-compatible-python-version">Install a compatible Python version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#configure-the-python-executable-in-matlab">Configure the Python executable in MATLAB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#install-the-python-dependencies">Install the Python dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#verify-the-installation">Verify the installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#inspect-the-python-environment">Inspect the Python environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#verify-the-python-packages">Verify the Python packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#create-a-coolpropwrapper-object">Create a CoolPropWrapper object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#evaluate-a-representative-fluid-property">Evaluate a representative fluid property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#run-the-automated-tests">Run the automated tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Usage/gettingStarted.html#run-the-sample-script">Run the sample script</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Usage/versioning.html">Release numbering and versioning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#prerelease-identifiers">Prerelease identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#release-documentation">Release documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#development-and-released-versions">Development and released versions</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
@@ -101,7 +130,33 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#quick-start">1. Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#mixture-solver-capabilities">2. Mixture Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#two-fluid-solver-capabilities">3. Two-Fluid Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#three-field-solver-capabilities">4. Three-Field Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#four-field-solver-capabilities">5. Four-Field Solver Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#input-files">6. Input Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#numerical-convergence-and-solver-diagnostics">7. Numerical Convergence and Solver Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#mesh-and-time-step-sensitivity">8. Mesh and Time-Step Sensitivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#advanced-visualization-and-post-processing">9. Advanced Visualization and Post-Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/testing.html">Testing and verification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#test-organization">Test organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-all-tests">Running all tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#running-individual-test-categories">Running individual test categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#reference-solutions">Reference solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#adding-new-tests">Adding new tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#unit-test-guidelines">Unit test guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#integration-test-guidelines">Integration test guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#environment-validation">Environment validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#generated-outputs">Generated outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/testing.html#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/glossary.html">Glossary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#recommended-terminology">Recommended terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/glossary.html#style-notes">Style notes</a></li>
@@ -120,8 +175,62 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/database.html">OpenSTREAM-database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#purpose">Purpose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#repository-organization">Repository organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#dataset-source-files">Dataset source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#matlab-setup">MATLAB setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#typical-workflow">Typical workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#generated-files">Generated files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#data-provenance-and-citation">Data provenance and citation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#validation-and-interpretation">Validation and interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#testing-and-verification">Testing and verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#development-status">Development status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/database.html#contributing">Contributing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/contributing.html">Contributing to OpenSTREAM-database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#types-of-contributions">Types of contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#dataset-organization">Dataset organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#dataset-template">Dataset template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#naming-convention">Naming convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#dataset-fields">Dataset fields</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/contributing.html#mandatory-fields">Mandatory fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/contributing.html#dataset-specific-fields">Dataset-specific fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/contributing.html#source-file-requirements">Source-file requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#data-provenance">Data provenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#dataset-class">Dataset class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#comparison-and-validation">Comparison and validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#testing-and-verification">Testing and verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#documentation-requirements">Documentation requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/contributing.html#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Application projects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#available-projects">Available projects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/projects.html#adamsson">1. Adamsson</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/projects.html#bennett">2. Bennett</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/projects.html#groeneveld">3. Groeneveld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/projects.html#nureth21">4. NURETH21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/projects.html#sawai">5. Sawai</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Applications/projects.html#wurtz">6. Wurtz</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#html-exports">HTML exports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#project-status">Project status</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#overviews">Overviews</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Applications/publications.html#mixture-model">Mixture model</a></li>
@@ -150,15 +259,37 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Community/faq.html">OpenSTREAM FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#running-simulations">Running simulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#choosing-a-solver">Choosing a solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#numerical-convergence">Numerical convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#results-and-post-processing">Results and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#physical-scope-and-limitations">Physical scope and limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/faq.html#extending-and-contributing">Extending and contributing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/support.html">Support</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_code.html">Contribute to the code</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to Contribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#coding-standards">Coding Standards</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#testing">Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#reporting-issues">Reporting Issues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#coding-standards">Coding standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#matlab">MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#general-practices">General practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#testing-contributions">Testing contributions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#reference-solutions">Reference solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#generated-outputs">Generated outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_code.html#continuous-integration">Continuous integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#reporting-issues">Reporting issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#code-of-conduct">Code of conduct</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#communication">Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_code.html#contributor-checklist">Contributor checklist</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
@@ -177,7 +308,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#maintainers">Maintainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#id1">Maintainers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/authors.html#contributors-and-users">Contributors and users</a></li>
 </ul>
 </li>
@@ -214,7 +345,7 @@
 <hr class="docutils" />
 <dl class="mat class" id="module-InputEnums">
 <dt class="sig sig-object mat" id="InputEnums.BTMTM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BTMTM</span></span><a class="headerlink" href="#InputEnums.BTMTM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BTMTM</span></span><a class="headerlink" href="#InputEnums.BTMTM" title="Link to this definition"></a></dt>
 <dd><p>BTMTM Enumeration of post-boiling transition wall momentum transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.BTMTM" title="Inputs.Model.BTMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTMTM</span></code></a> models for
 calculating the post-boiling transition wall momentum transfer, used by the
@@ -228,7 +359,7 @@ mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.EQSTROUHAL">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">EQSTROUHAL</span></span><a class="headerlink" href="#InputEnums.EQSTROUHAL" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">EQSTROUHAL</span></span><a class="headerlink" href="#InputEnums.EQSTROUHAL" title="Link to this definition"></a></dt>
 <dd><p>EQSTROUHAL Enumeration of wave equilibrium Strouhal number models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.EQSTROUHAL" title="Inputs.Model.EQSTROUHAL"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.EQSTROUHAL</span></code></a>
 models for calculating the wave equilibrium Strouhal number, used by
@@ -245,7 +376,7 @@ the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.INTAREA">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTAREA</span></span><a class="headerlink" href="#InputEnums.INTAREA" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTAREA</span></span><a class="headerlink" href="#InputEnums.INTAREA" title="Link to this definition"></a></dt>
 <dd><p>INTAREA Enumeration of volumetric interfacial area calculation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.INTAREA" title="Inputs.Model.INTAREA"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTAREA</span></code></a> models
 for calculating the volumetric interfacial area, used by the two-fluid
@@ -258,7 +389,7 @@ solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.FLUIDPROPERTIES">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">FLUIDPROPERTIES</span></span><a class="headerlink" href="#InputEnums.FLUIDPROPERTIES" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">FLUIDPROPERTIES</span></span><a class="headerlink" href="#InputEnums.FLUIDPROPERTIES" title="Link to this definition"></a></dt>
 <dd><p>FLUIDPROPERTIES Enumeration of fluid property calculation assumptions</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.PROPERTIES" title="Inputs.Model.PROPERTIES"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.PROPERTIES</span></code></a>
 assumptions to calculate fluid properties, applicable to all solvers.</p>
@@ -271,7 +402,7 @@ assumptions to calculate fluid properties, applicable to all solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.WAVEBASEINT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">WAVEBASEINT</span></span><a class="headerlink" href="#InputEnums.WAVEBASEINT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">WAVEBASEINT</span></span><a class="headerlink" href="#InputEnums.WAVEBASEINT" title="Link to this definition"></a></dt>
 <dd><p>WAVEBASEINT Enumeration of wave to base film interfacial momentum transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.WAVEBASEINT" title="Inputs.Model.WAVEBASEINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WAVEBASEINT</span></code></a> models
 for calculating the interfacial momentum transfer between wave and base
@@ -285,7 +416,7 @@ film regions, used by the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.SPMTM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SPMTM</span></span><a class="headerlink" href="#InputEnums.SPMTM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SPMTM</span></span><a class="headerlink" href="#InputEnums.SPMTM" title="Link to this definition"></a></dt>
 <dd><p>SPMTM Enumeration of single-phase wall momentum transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.SPMTM" title="Inputs.Model.SPMTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPMTM</span></code></a> models for
 calculating the single-phase wall momentum transfer (liquid or gas), used
@@ -298,7 +429,7 @@ by the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MFBT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MFBT</span></span><a class="headerlink" href="#InputEnums.MFBT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MFBT</span></span><a class="headerlink" href="#InputEnums.MFBT" title="Link to this definition"></a></dt>
 <dd><p>MFBT Enumeration of Minimum Film Boiling Transition (MFBT) models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MFBT" title="Inputs.Model.MFBT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MFBT</span></code></a> models for
 evaluating the Minimum Film Boiling Transition, used by the mixture
@@ -312,7 +443,7 @@ solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.NEARWALLH">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">NEARWALLH</span></span><a class="headerlink" href="#InputEnums.NEARWALLH" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">NEARWALLH</span></span><a class="headerlink" href="#InputEnums.NEARWALLH" title="Link to this definition"></a></dt>
 <dd><p>NEARWALLH Enumeration of near-wall equilibrium enthalpy models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.NEARWALLH" title="Inputs.Model.NEARWALLH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NEARWALLH</span></code></a>
 models for setting the near-wall enthalpy to mixture enthalpy ratio,
@@ -326,7 +457,7 @@ used by the mixture solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.INTTRANSH">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTTRANSH</span></span><a class="headerlink" href="#InputEnums.INTTRANSH" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTTRANSH</span></span><a class="headerlink" href="#InputEnums.INTTRANSH" title="Link to this definition"></a></dt>
 <dd><p>INTTRANSH Enumeration of interfacial enthalpy transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.INTTRANSH" title="Inputs.Model.INTTRANSH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTTRANSH</span></code></a> models
 for calculating the phase enthalpy associated with interfacial mass
@@ -340,7 +471,7 @@ transfer, used by the mixture and two-fluid solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.DEPOSITION">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DEPOSITION</span></span><a class="headerlink" href="#InputEnums.DEPOSITION" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DEPOSITION</span></span><a class="headerlink" href="#InputEnums.DEPOSITION" title="Link to this definition"></a></dt>
 <dd><p>DEPOSITION Enumeration of droplet deposition models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.DEPOSITION" title="Inputs.Model.DEPOSITION"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DEPOSITION</span></code></a> models
 for calculating the droplet deposition mass flux, used by the three-field
@@ -358,7 +489,7 @@ and deposition mass flux to ensure consistency.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.NEARWALLRELAX">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">NEARWALLRELAX</span></span><a class="headerlink" href="#InputEnums.NEARWALLRELAX" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">NEARWALLRELAX</span></span><a class="headerlink" href="#InputEnums.NEARWALLRELAX" title="Link to this definition"></a></dt>
 <dd><p>NEARWALLRELAX Enumeration of near-wall energy transfer time relaxation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.NEARWALLRELAX" title="Inputs.Model.NEARWALLRELAX"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.NEARWALLRELAX</span></code></a>
 models for calculating the near-wall energy transfer time relaxation,
@@ -373,7 +504,7 @@ used in mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.OAFENTRAINED">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAFENTRAINED</span></span><a class="headerlink" href="#InputEnums.OAFENTRAINED" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAFENTRAINED</span></span><a class="headerlink" href="#InputEnums.OAFENTRAINED" title="Link to this definition"></a></dt>
 <dd><p>OAFENTRAINED Enumeration of entrained drop models at onset of annular flow</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.OAFENTRAINED" title="Inputs.Model.OAFENTRAINED"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.OAFENTRAINED</span></code></a>
 models for splitting the droplet and film mass flow rates at the onset
@@ -387,7 +518,7 @@ of annular flow, used by the three-field and four-field solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.BTHTM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BTHTM</span></span><a class="headerlink" href="#InputEnums.BTHTM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BTHTM</span></span><a class="headerlink" href="#InputEnums.BTHTM" title="Link to this definition"></a></dt>
 <dd><p>BTHTM Enumeration of post-boiling transition wall heat transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.BTHTM" title="Inputs.Model.BTHTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BTHTM</span></code></a> models for
 calculating the post-boiling transition wall heat transfer, used by the
@@ -405,7 +536,7 @@ mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.WAVEFREQUENCY">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">WAVEFREQUENCY</span></span><a class="headerlink" href="#InputEnums.WAVEFREQUENCY" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">WAVEFREQUENCY</span></span><a class="headerlink" href="#InputEnums.WAVEFREQUENCY" title="Link to this definition"></a></dt>
 <dd><p>WAVEFREQUENCY Enumeration of wave number density transport models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.WAVEFREQUENCY" title="Inputs.Model.WAVEFREQUENCY"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.WAVEFREQUENCY</span></code></a>
 models for solving the wave number density (or wave frequency) transport
@@ -419,7 +550,7 @@ equation, used in the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.THINFILMFRIC">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THINFILMFRIC</span></span><a class="headerlink" href="#InputEnums.THINFILMFRIC" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THINFILMFRIC</span></span><a class="headerlink" href="#InputEnums.THINFILMFRIC" title="Link to this definition"></a></dt>
 <dd><p>THINFILMFRIC Enumeration of thin film friction models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.THINFILMFRIC" title="Inputs.Model.THINFILMFRIC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THINFILMFRIC</span></code></a>
 models for calculating wall friction under thin film conditions, used
@@ -433,7 +564,7 @@ by the three-field and four-field solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.TPFM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPFM</span></span><a class="headerlink" href="#InputEnums.TPFM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPFM</span></span><a class="headerlink" href="#InputEnums.TPFM" title="Link to this definition"></a></dt>
 <dd><p>TPFM Enumeration of two-phase wall friction multiplier models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.TPFM" title="Inputs.Model.TPFM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TPFM</span></code></a> models for
 calculating the two-phase wall friction multiplier used by the mixture
@@ -448,7 +579,7 @@ solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTWAVE">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTWAVE</span></span><a class="headerlink" href="#InputEnums.MOMENTWAVE" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTWAVE</span></span><a class="headerlink" href="#InputEnums.MOMENTWAVE" title="Link to this definition"></a></dt>
 <dd><p>MOMENTWAVE Enumeration of film momentum conservation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTWAVE" title="Inputs.Model.MOMENTWAVE"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTWAVE</span></code></a> models
 for solving the momentum conservation equation for the wave field, used
@@ -463,7 +594,7 @@ to compute wave velocity in the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.TPHTM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPHTM</span></span><a class="headerlink" href="#InputEnums.TPHTM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPHTM</span></span><a class="headerlink" href="#InputEnums.TPHTM" title="Link to this definition"></a></dt>
 <dd><p>TPHTM Enumeration of two-phase wall heat transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.TPHTM" title="Inputs.Model.TPHTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TPHTM</span></code></a> models for
 calculating the two-phase wall heat transfer, used by the mixture solver.</p>
@@ -475,7 +606,7 @@ calculating the two-phase wall heat transfer, used by the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTDROP">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTDROP</span></span><a class="headerlink" href="#InputEnums.MOMENTDROP" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTDROP</span></span><a class="headerlink" href="#InputEnums.MOMENTDROP" title="Link to this definition"></a></dt>
 <dd><p>MOMENTDROP Enumeration of droplet momentum conservation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTDROP" title="Inputs.Model.MOMENTDROP"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTDROP</span></code></a>
 models for solving the droplet momentum conservation equation, used to
@@ -492,7 +623,7 @@ compute droplet velocity in the three-field and four-field solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.BUBBLEDRAG">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BUBBLEDRAG</span></span><a class="headerlink" href="#InputEnums.BUBBLEDRAG" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BUBBLEDRAG</span></span><a class="headerlink" href="#InputEnums.BUBBLEDRAG" title="Link to this definition"></a></dt>
 <dd><p>BUBBLEDRAG Enumeration of bubble drag coefficient models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.BUBBLEDRAG" title="Inputs.Model.BUBBLEDRAG"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BUBBLEDRAG</span></code></a> models
 for calculating the bubble drag coefficient, used by the two-fluid
@@ -508,7 +639,7 @@ solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTBASE">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTBASE</span></span><a class="headerlink" href="#InputEnums.MOMENTBASE" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTBASE</span></span><a class="headerlink" href="#InputEnums.MOMENTBASE" title="Link to this definition"></a></dt>
 <dd><p>MOMENTBASE Enumeration of base film momentum conservation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTBASE" title="Inputs.Model.MOMENTBASE"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTBASE</span></code></a> models
 for solving the base film momentum conservation equation, used to
@@ -525,7 +656,7 @@ compute the base film velocity in the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.INTLENGTH">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTLENGTH</span></span><a class="headerlink" href="#InputEnums.INTLENGTH" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTLENGTH</span></span><a class="headerlink" href="#InputEnums.INTLENGTH" title="Link to this definition"></a></dt>
 <dd><p>INTLENGTH Enumeration of interfacial length scale models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.INTLENGTH" title="Inputs.Model.INTLENGTH"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTLENGTH</span></code></a>
 models for calculating the interfacial length scale, used by the
@@ -538,7 +669,7 @@ two-fluid solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.SPHTM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SPHTM</span></span><a class="headerlink" href="#InputEnums.SPHTM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">SPHTM</span></span><a class="headerlink" href="#InputEnums.SPHTM" title="Link to this definition"></a></dt>
 <dd><p>SPHTM Enumeration of single-phase wall heat transfer models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.SPHTM" title="Inputs.Model.SPHTM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.SPHTM</span></code></a> models for
 calculating the single-phase wall heat transfer (liquid or gas), used
@@ -554,7 +685,7 @@ by the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.DEPENHANCEMENT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DEPENHANCEMENT</span></span><a class="headerlink" href="#InputEnums.DEPENHANCEMENT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DEPENHANCEMENT</span></span><a class="headerlink" href="#InputEnums.DEPENHANCEMENT" title="Link to this definition"></a></dt>
 <dd><p>DEPENHANCEMENT Enumeration of droplet deposition enhancement models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.DEPENHANCEMENT" title="Inputs.Model.DEPENHANCEMENT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DEPENHANCEMENT</span></code></a>
 models for calculating local droplet deposition enhancement, used by
@@ -568,7 +699,7 @@ the three-field and four-field solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.BASEEQTHICK">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BASEEQTHICK</span></span><a class="headerlink" href="#InputEnums.BASEEQTHICK" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">BASEEQTHICK</span></span><a class="headerlink" href="#InputEnums.BASEEQTHICK" title="Link to this definition"></a></dt>
 <dd><p>BASEEQTHICK Enumeration of base film equilibrium thickness models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.BASEEQTHICK" title="Inputs.Model.BASEEQTHICK"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.BASEEQTHICK</span></code></a>
 models for calculating the equilibrium base film thickness, used by
@@ -584,7 +715,7 @@ the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.DROPDRAG">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DROPDRAG</span></span><a class="headerlink" href="#InputEnums.DROPDRAG" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">DROPDRAG</span></span><a class="headerlink" href="#InputEnums.DROPDRAG" title="Link to this definition"></a></dt>
 <dd><p>DROPDRAG Enumeration of droplet drop drag coefficient models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.DROPDRAG" title="Inputs.Model.DROPDRAG"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.DROPDRAG</span></code></a> models
 for calculating the droplet drag coefficient, used by the two-fluid
@@ -600,7 +731,7 @@ solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.CBT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">CBT</span></span><a class="headerlink" href="#InputEnums.CBT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">CBT</span></span><a class="headerlink" href="#InputEnums.CBT" title="Link to this definition"></a></dt>
 <dd><p>CBT Enumeration of Critical Boiling Transition (CBT) models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.CBT" title="Inputs.Model.CBT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.CBT</span></code></a> models for
 evaluating the Critical Boiling Transition, used by the mixture solver.</p>
@@ -615,7 +746,7 @@ evaluating the Critical Boiling Transition, used by the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.ENTRAINMENT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">ENTRAINMENT</span></span><a class="headerlink" href="#InputEnums.ENTRAINMENT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">ENTRAINMENT</span></span><a class="headerlink" href="#InputEnums.ENTRAINMENT" title="Link to this definition"></a></dt>
 <dd><p>ENTRAINMENT Enumeration of droplet entrainment models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.ENTRAINMENT" title="Inputs.Model.ENTRAINMENT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.ENTRAINMENT</span></code></a> models
 for calculating the droplet entrainment mass flux, used by the three-field
@@ -636,7 +767,7 @@ and deposition mass flux to ensure consistency.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.TPKM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPKM</span></span><a class="headerlink" href="#InputEnums.TPKM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">TPKM</span></span><a class="headerlink" href="#InputEnums.TPKM" title="Link to this definition"></a></dt>
 <dd><p>TPKM Enumeration of two-phase local loss multiplier models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.TPKM" title="Inputs.Model.TPKM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.TPKM</span></code></a>  models for
 calculating the two-phase local loss multiplier used by the mixture model</p>
@@ -650,7 +781,7 @@ calculating the two-phase local loss multiplier used by the mixture model</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.OAF">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAF</span></span><a class="headerlink" href="#InputEnums.OAF" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAF</span></span><a class="headerlink" href="#InputEnums.OAF" title="Link to this definition"></a></dt>
 <dd><p>OAF Enumeration of onset of annular flow models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.OAF" title="Inputs.Model.OAF"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.OAF</span></code></a> models for
 predicting the onset of annular flow, used by the three-field and
@@ -665,7 +796,7 @@ four-field solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.VOID">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VOID</span></span><a class="headerlink" href="#InputEnums.VOID" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VOID</span></span><a class="headerlink" href="#InputEnums.VOID" title="Link to this definition"></a></dt>
 <dd><p>VOID Enumeration of void fraction models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.VOID" title="Inputs.Model.VOID"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.VOID</span></code></a> models to
 calculate the void fraction in the mixture solver.</p>
@@ -680,7 +811,7 @@ calculate the void fraction in the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.OAFFILMSPLIT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><a class="headerlink" href="#InputEnums.OAFFILMSPLIT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">OAFFILMSPLIT</span></span><a class="headerlink" href="#InputEnums.OAFFILMSPLIT" title="Link to this definition"></a></dt>
 <dd><p>OAFFILMSPLIT Enumeration of film mass flow ratio models at onset of annular flow</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.OAFFILMSPLIT" title="Inputs.Model.OAFFILMSPLIT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.OAFFILMSPLIT</span></code></a>
 models for splitting the base film and wave mass flow rates at the
@@ -694,7 +825,7 @@ onset of annular flow, used by the four-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTFILM">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTFILM</span></span><a class="headerlink" href="#InputEnums.MOMENTFILM" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTFILM</span></span><a class="headerlink" href="#InputEnums.MOMENTFILM" title="Link to this definition"></a></dt>
 <dd><p>MOMENTFILM Enumeration of film momentum conservation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTFILM" title="Inputs.Model.MOMENTFILM"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTFILM</span></code></a> models
 for solving the momentum conservation equation for the liquid film,
@@ -710,7 +841,7 @@ used to compute film velocity in the three-field solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MRMTIMEINT">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MRMTIMEINT</span></span><a class="headerlink" href="#InputEnums.MRMTIMEINT" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MRMTIMEINT</span></span><a class="headerlink" href="#InputEnums.MRMTIMEINT" title="Link to this definition"></a></dt>
 <dd><p>MRMTIMEINT Enumeration of time integration options for the MRM vapor mass/energy conservation equations</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Options.MRMTIMEINT" title="Inputs.Options.MRMTIMEINT"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Options.MRMTIMEINT</span></code></a> options
 for solving the vapor mass and energy conservation equations when using
@@ -724,7 +855,7 @@ the MRM model in the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.LOCRELVEL">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">LOCRELVEL</span></span><a class="headerlink" href="#InputEnums.LOCRELVEL" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">LOCRELVEL</span></span><a class="headerlink" href="#InputEnums.LOCRELVEL" title="Link to this definition"></a></dt>
 <dd><p>LOCRELVEL Enumeration of local relative velocity models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.LOCRELVEL" title="Inputs.Model.LOCRELVEL"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.LOCRELVEL</span></code></a> models
 for calculating the local relative velocity between liquid and vapor
@@ -740,7 +871,7 @@ phases, used by the two-fluid solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.VAPORFRIC">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VAPORFRIC</span></span><a class="headerlink" href="#InputEnums.VAPORFRIC" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">VAPORFRIC</span></span><a class="headerlink" href="#InputEnums.VAPORFRIC" title="Link to this definition"></a></dt>
 <dd><p>VAPORFRIC Enumeration of vapor to film interfacial friction models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.VAPORFRIC" title="Inputs.Model.VAPORFRIC"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.VAPORFRIC</span></code></a> models
 for calculating the vapor-to-film interfacial friction coefficient used
@@ -756,7 +887,7 @@ by the three-field and four-field solvers.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.THERMALRELAX">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THERMALRELAX</span></span><a class="headerlink" href="#InputEnums.THERMALRELAX" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THERMALRELAX</span></span><a class="headerlink" href="#InputEnums.THERMALRELAX" title="Link to this definition"></a></dt>
 <dd><p>THERMALRELAX Enumeration of MRM time relaxation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALRELAX" title="Inputs.Model.THERMALRELAX"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALRELAX</span></code></a>
 models for calculating relaxation times in the MRM model, used when
@@ -773,7 +904,7 @@ models for calculating relaxation times in the MRM model, used when
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.THERMALNONEQ">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THERMALNONEQ</span></span><a class="headerlink" href="#InputEnums.THERMALNONEQ" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">THERMALNONEQ</span></span><a class="headerlink" href="#InputEnums.THERMALNONEQ" title="Link to this definition"></a></dt>
 <dd><p>THERMALNONEQ Enumeration of thermal non-equilibrium models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.THERMALNONEQ" title="Inputs.Model.THERMALNONEQ"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.THERMALNONEQ</span></code></a>
 models for calculating phase thermal non-equilibrium effects, used by
@@ -789,7 +920,7 @@ the mixture solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.INTNU">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTNU</span></span><a class="headerlink" href="#InputEnums.INTNU" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">INTNU</span></span><a class="headerlink" href="#InputEnums.INTNU" title="Link to this definition"></a></dt>
 <dd><p>INTNU Enumeration of interfacial Nusselt number models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.INTNU" title="Inputs.Model.INTNU"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.INTNU</span></code></a> models
 for calculating the interfacial Nusselt number, used by the two-fluid
@@ -804,7 +935,7 @@ solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTLIQUID">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTLIQUID</span></span><a class="headerlink" href="#InputEnums.MOMENTLIQUID" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTLIQUID</span></span><a class="headerlink" href="#InputEnums.MOMENTLIQUID" title="Link to this definition"></a></dt>
 <dd><p>MOMENTLIQUID Enumeration of liquid momentum conservation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTLIQUID" title="Inputs.Model.MOMENTLIQUID"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTLIQUID</span></code></a>
 models for solving the momentum conservation equation for the liquid
@@ -819,7 +950,7 @@ phase, used to compute liquid velocity in the two-fluid solver.</p>
 
 <dl class="mat class">
 <dt class="sig sig-object mat" id="InputEnums.MOMENTGAS">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTGAS</span></span><a class="headerlink" href="#InputEnums.MOMENTGAS" title="Link to this definition"></a></dt>
+<span class="property"><span class="pre">class</span> </span><span class="sig-prename descclassname"><span class="pre">InputEnums.</span></span><span class="sig-name descname"><span class="pre">MOMENTGAS</span></span><a class="headerlink" href="#InputEnums.MOMENTGAS" title="Link to this definition"></a></dt>
 <dd><p>MOMENTGAS Enumeration of gas momentum conservation models</p>
 <p>This class defines the available <a class="reference internal" href="Inputs.html#Inputs.Model.MOMENTGAS" title="Inputs.Model.MOMENTGAS"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">Inputs.Model.MOMENTGAS</span></code></a> models
 for solving the momentum conservation equation for the gas phase, used
