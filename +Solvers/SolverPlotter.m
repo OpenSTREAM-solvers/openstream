@@ -10,8 +10,7 @@ classdef SolverPlotter < handle
         FontSize                    {mustBePositive, isnumeric}               = 13            % Font size of text in plots
         Title                       {isstring}                                = ""            % Title of the figure
         WallIdx                     {mustBePositive, mustBeInteger}           = 1             % Wall index for multi-wall simulations
-        Zs                   (:,1)  {isnumeric}                               = []            % Axial positions [m]
-        Ts                   (:,1)  {isnumeric}                               = []            % Time series [s]
+        Xs                   (:,1)  {isnumeric}                               = []            % X-axis values Time [s] or axial positions [m]
         Grid                        {mustBeMember(Grid,{'on','off','minor'})} = 'on'          % Grid display option
         currentAhIdx         (1,1)  {isnumeric}                               = NaN           % Index of current active axes
 
@@ -586,7 +585,7 @@ classdef SolverPlotter < handle
 
         end
 
-        function plotz(plotters, YData, fieldName, opts)
+        function plot(plotters, YData, fieldName, opts)
             %PLOTZ Method to plot spatial or temporal data (YData) on the current axes
 
             arguments
@@ -594,16 +593,16 @@ classdef SolverPlotter < handle
                 YData
                 fieldName           = 'WAVE'
                 opts.DisplayName    = fieldName
-                opts.subset         = 1:length(plotters(1).Zs)
+                opts.subset         = 1:length(plotters(1).Xs)
                 opts.plotOptions    = {}
                 opts.XData          = []
                 opts.yyaxis
                 opts.axisHandle     = plotters.gca()
             end
 
-            % Check if Zs are set
-            isZSet = all(not(cellfun(@isempty,{plotters.Zs})));
-            if ~isZSet, error('OpenSTREAM:SolverPlotter:SetZarrays','PLOTZ: Not all Z arrays are set'); end
+            % Check if Xs are set
+            isXSet = all(not(cellfun(@isempty,{plotters.Xs})));
+            if ~isXSet, error('OpenSTREAM:SolverPlotter:SetXarrays','PLOT: Not all X arrays are set'); end
 
             % Determine plot style and color from fieldName
             plotStyles = Solvers.SolverPlotter.fieldName2plotStyle(fieldName);
@@ -626,8 +625,8 @@ classdef SolverPlotter < handle
                 % Custom and standard XData
                 % Provided non-empty XData, set xlim if non is already set
                 % in axes userdata.
-                % Otherwise, use plotter Zs as XData, and set xlim to the
-                % range of Zs.
+                % Otherwise, use plotter Xs as XData, and set xlim to the
+                % range of Xs.
                 if isfield(opts, 'XData') && ~isempty(opts.XData)
                     XData = opts.XData;
                     % Determine xlim
@@ -637,7 +636,7 @@ classdef SolverPlotter < handle
                         xlim(ah, [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))]);
                     end
                 else
-                    XData = plotter.Zs(opts.subset);
+                    XData = plotter.Xs(opts.subset);
                     xlim(ah, XData([1 end]));
                 end
 
@@ -772,7 +771,7 @@ classdef SolverPlotter < handle
             if isscalar(oafZ)
                 oafZ = repmat(oafZ, 1, 2);
             end
-            plotters.plotz('ylim', 'OAF', ...
+            plotters.plot('ylim', 'OAF', ...
                 'XData',oafZ, ...
                 'plotOptions', {'handleVisibility','off'});
         end
@@ -798,7 +797,7 @@ classdef SolverPlotter < handle
                 xdata = [klocZ(i) klocZ(i)];
                
                 % Plot vertical lines
-                plotters.plotz(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
+                plotters.plot(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
                     'XData', xdata, 'subset', 1:numel(xdata), ...
                     'plotOptions', {'handleVisibility', 'off'});
             end
@@ -861,13 +860,13 @@ classdef SolverPlotter < handle
             end
         end
 
-        function setZs(plotters, Zs)
-            %SETZS Method to assign the parameter(space or time) on the plotter x-axis
+        function setXs(plotters, Xs)
+            %SETXS Method to assign the parameter(space or time) on the plotter x-axis
 
             % Loop through plotters
             for idx = 1:length(plotters)
                 plotter = plotters(idx);
-                plotter.Zs = Zs;
+                plotter.Xs = Xs;
             end
         end
 
