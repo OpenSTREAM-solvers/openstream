@@ -311,7 +311,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     "isAnimation", true, ...
                     "animationSeries", [liqs.TIME]);
             end
-            plotter.setZs(z);
+            plotter.setXs(z);
 
             function tf = displayVariable(memberList)
                 tf = any(ismember(memberList, upper(opts.display)));
@@ -332,13 +332,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    plotter.plotz(  bcHFLUX{idx}                 ,'bc'         ,'DisplayName','Boundary Condition');
-                    plotter.plotz(mix.HFLUX(opts.zIdx,:)         ,'Mixture'                                       );
-                    plotter.plotz(liq.HFLUX(opts.zIdx)           ,'Liquid'                                        );
-                    plotter.plotz(vap.HFLUX(opts.zIdx)           ,'Vapor'                                         );
-                    plotter.plotz(vap.HFLUXWALEVAP(liq,opts.zIdx),'Evaporation','DisplayName','Wall evaporation'  );
+                    plotter.plot(  bcHFLUX{idx}                 ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plot(mix.HFLUX(opts.zIdx,:)         ,'Mixture'                                       );
+                    plotter.plot(liq.HFLUX(opts.zIdx)           ,'Liquid'                                        );
+                    plotter.plot(vap.HFLUX(opts.zIdx)           ,'Vapor'                                         );
+                    plotter.plot(vap.HFLUXWALEVAP(liq,opts.zIdx),'Evaporation','DisplayName','Wall evaporation'  );
                     if ~strcmp(model.CBT,'NONE')
-                        plotter.plotz(mix.CHF(opts.zIdx)         ,'CHF'                                           );
+                        plotter.plot(mix.CHF(opts.zIdx)         ,'CHF'                                           );
                     end
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
@@ -353,9 +353,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Phase mass flow rates', ...
                         'xlabel',       'Axial position [m]', ...
                         'ylabel',    'Mass flow rate [kg/s]');
-                    plotter.plotz(mix.W(opts.zIdx) ,'Mixture');
-                    plotter.plotz(liq.W(opts.zIdx) ,'Liquid' );
-                    plotter.plotz(vap.W(opts.zIdx) ,'Vapor'  );
+                    plotter.plot(mix.W(opts.zIdx) ,'Mixture');
+                    plotter.plot(liq.W(opts.zIdx) ,'Liquid' );
+                    plotter.plot(vap.W(opts.zIdx) ,'Vapor'  );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -369,9 +369,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle',   'Phase velocities', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,     'Velocity [m/s]');
-                    plotter.plotz(mix.U(opts.zIdx) ,'Mixture');
-                    plotter.plotz(liq.U(opts.zIdx) ,'Liquid' );
-                    plotter.plotz(vap.U(opts.zIdx) ,'Vapor'  );
+                    plotter.plot(mix.U(opts.zIdx) ,'Mixture');
+                    plotter.plot(liq.U(opts.zIdx) ,'Liquid' );
+                    plotter.plot(vap.U(opts.zIdx) ,'Vapor'  );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -386,11 +386,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,    'Enthalpy [J/kg]');
 
-                    plotter.plotz(mix.H(opts.zIdx) ,'Mixture');
-                    plotter.plotz(liq.H(opts.zIdx) ,'Liquid' );
-                    plotter.plotz(vap.H(opts.zIdx) ,'Vapor'  );
-                    plotter.plotz(repmat(fld(idx).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                    plotter.plotz(repmat(fld(idx).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
+                    plotter.plot(mix.H(opts.zIdx) ,'Mixture');
+                    plotter.plot(liq.H(opts.zIdx) ,'Liquid' );
+                    plotter.plot(vap.H(opts.zIdx) ,'Vapor'  );
+                    plotter.plot(repmat(fld(idx).HF,twfSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plot(repmat(fld(idx).HG,twfSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -404,9 +404,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Void fractions and qualities', ...
                         'xlabel'   ,           'Axial position [m]', ...
                         'ylabel'   ,  'Quality / Void fraction [-]');
-                    plotter.plotz(mix.XEQ(opts.zIdx)   ,'Equil'       ,'DisplayName','Equilibrium quality')
-                    plotter.plotz(vap.X(opts.zIdx)     ,'Vapor'       ,'DisplayName','Vapor mass quality' )
-                    plotter.plotz(vap.VF(liq,opts.zIdx),'VoidFraction','DisplayName','Void fraction'      )
+                    plotter.plot(mix.XEQ(opts.zIdx)   ,'Equil'       ,'DisplayName','Equilibrium quality')
+                    plotter.plot(vap.X(opts.zIdx)     ,'Vapor'       ,'DisplayName','Vapor mass quality' )
+                    plotter.plot(vap.VF(liq,opts.zIdx),'VoidFraction','DisplayName','Void fraction'      )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -421,9 +421,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'xlabel'   ,              'Axial position [m]', ...
                         'ylabel'   , ['Temperature [' opts.unitTemp ']']);
 
-                    plotter.plotz(liq.T(opts.zIdx)+dTemp,'Liquid');
-                    plotter.plotz(vap.T(opts.zIdx)+dTemp, 'Vapor');
-                    plotter.plotz(repmat(fld(idx).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.plot(liq.T(opts.zIdx)+dTemp,'Liquid');
+                    plotter.plot(vap.T(opts.zIdx)+dTemp, 'Vapor');
+                    plotter.plot(repmat(fld(idx).TSAT,twfSolver.NZ,1)+dTemp,'Saturation');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -437,10 +437,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Vapor mass exchanges', ...
                         'xlabel',      'Axial position [m]', ...
                         'ylabel',  'Mass exchange [kg/s/m]');
-                    plotter.plotz(vap.MWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plotz(vap.MINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                    plotter.plotz(vap.MINTCOND(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                    plotter.plotz(vap.MTOT(liq,opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(vap.MWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plot(vap.MINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plot(vap.MINTCOND(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plot(vap.MTOT(liq,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -450,10 +450,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Liquid mass exchanges', ...
                         'xlabel',       'Axial position [m]', ...
                         'ylabel',   'Mass exchange [kg/s/m]');
-                    plotter.plotz(liq.MWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plotz(liq.MINTEVAP(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                    plotter.plotz(liq.MINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                    plotter.plotz(liq.MTOT(vap,opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(liq.MWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plot(liq.MINTEVAP(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plot(liq.MINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plot(liq.MTOT(vap,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -476,13 +476,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Vapor momentum exchanges', ...
                         'xlabel',          'Axial position [m]', ...
                         'ylabel',          'Shear stress [N/m]');
-                    plotter.plotz(vap.FWALL(liq,opts.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'             );
-                    plotter.plotz(vap.FDRAG(liq,opts.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'      );
-                    plotter.plotz(vap.FBUOY(liq,opts.zIdx)   ,'Buoyancy'                                               );
-                    plotter.plotz(vap.FGRAV(liq,opts.zIdx)   ,'Gravity'                                                );
-                    plotter.plotz(vap.FWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'       );
-                    plotter.plotz(vap.FINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation');
-                    plotter.plotz(vap.FTOT(liq,opts.zIdx)    ,'Total'                                                  );
+                    plotter.plot(vap.FWALL(liq,opts.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'             );
+                    plotter.plot(vap.FDRAG(liq,opts.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'      );
+                    plotter.plot(vap.FBUOY(liq,opts.zIdx)   ,'Buoyancy'                                               );
+                    plotter.plot(vap.FGRAV(liq,opts.zIdx)   ,'Gravity'                                                );
+                    plotter.plot(vap.FWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'       );
+                    plotter.plot(vap.FINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation');
+                    plotter.plot(vap.FTOT(liq,opts.zIdx)    ,'Total'                                                  );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -492,12 +492,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Liquid momentum exchanges', ...
                         'xlabel',           'Axial position [m]', ...
                         'ylabel',           'Shear stress [N/m]');
-                    plotter.plotz(liq.FWALL(vap,opts.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'              );
-                    plotter.plotz(liq.FDRAG(vap,opts.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'       );
-                    plotter.plotz(liq.FBUOY(vap,opts.zIdx)   ,'Buoyancy'                                                );
-                    plotter.plotz(liq.FGRAV(vap,opts.zIdx)   ,'Gravity'                                                 );
-                    plotter.plotz(liq.FINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                    plotter.plotz(liq.FTOT(vap,opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(liq.FWALL(vap,opts.zIdx)   ,'Wall'           ,'DisplayName','Wall shear'              );
+                    plotter.plot(liq.FDRAG(vap,opts.zIdx)   ,'Interfacial'    ,'DisplayName','Interfacial shear'       );
+                    plotter.plot(liq.FBUOY(vap,opts.zIdx)   ,'Buoyancy'                                                );
+                    plotter.plot(liq.FGRAV(vap,opts.zIdx)   ,'Gravity'                                                 );
+                    plotter.plot(liq.FINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plot(liq.FTOT(vap,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -520,11 +520,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Vapor energy exchanges', ...
                         'xlabel',        'Axial position [m]', ...
                         'ylabel',     'Energy transfer [W/m]');
-                    plotter.plotz(vap.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
-                    plotter.plotz(vap.HWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plotz(vap.HINTEVAP(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
-                    plotter.plotz(vap.HINTCOND(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
-                    plotter.plotz(vap.HTOT(liq,opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(vap.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
+                    plotter.plot(vap.HWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plot(vap.HINTEVAP(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
+                    plotter.plot(vap.HINTCOND(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
+                    plotter.plot(vap.HTOT(liq,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -534,11 +534,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Liquid energy exchanges', ...
                         'xlabel',         'Axial position [m]', ...
                         'ylabel',      'Energy transfer [W/m]');
-                    plotter.plotz(liq.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
-                    plotter.plotz(liq.HWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plotz(liq.HINTEVAP(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
-                    plotter.plotz(liq.HINTCOND(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
-                    plotter.plotz(liq.HTOT(vap,opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(liq.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
+                    plotter.plot(liq.HWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plot(liq.HINTEVAP(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
+                    plotter.plot(liq.HINTCOND(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
+                    plotter.plot(liq.HTOT(vap,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -561,7 +561,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'tileTitle', 'Volumetric interfacial area', ...
                         'xlabel'   ,          'Axial position [m]', ...
                         'ylabel'   ,    'Interfacial area [m^-^1]');
-                    plotter.plotz(liq.INTAREA(vap,opts.zIdx),'Interfacial')
+                    plotter.plot(liq.INTAREA(vap,opts.zIdx),'Interfacial')
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
                         plotter.plotK(klocZ);
@@ -573,7 +573,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     plotter.addTile( ...
                         'tileTitle', 'Two-phase flow regimes', ...
                         'xlabel'   ,     'Axial position [m]');
-                    plotter.plotz(liq.FLOWREGIME(opts.zIdx),'Interfacial')
+                    plotter.plot(liq.FLOWREGIME(opts.zIdx),'Interfacial')
                     labels = strrep(cellstr(unique(liq.FLOWREGIME)),'_',' ');
                     plotter.ylabels(labels);
                     plotter.ylim([0 length(labels)+1]);
@@ -667,7 +667,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             plotter = Solvers.SolverPlotter( ...
                 sprintf('Time distributions of two-fluid parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
                 opt.wall,'arrangement',opt.arrangement);
-            plotter.setZs(time);
+            plotter.setXs(time);
 
             % Wall heat flux
             if any(ismember({'HFLUX','ALL'},opt.display))
@@ -675,13 +675,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle',         'Wall heat flux', ...
                     'xlabel'   ,               'Time [s]', ...
                     'ylabel'   , 'Wall heat flux [W/m^2]');
-                plotter.plotz(             bcHFLUX                          ,'bc'         ,'DisplayName','Boundary Condition');
-                plotter.plotz(liq.transient('mix.HFLUX'   ,    'zIdx',zIdx)','Mixture'                                       );
-                plotter.plotz(liq.transient('HFLUX'       ,    'zIdx',zIdx)','Liquid'                                        );
-                plotter.plotz(vap.transient('HFLUX'       ,    'zIdx',zIdx)','Vapor'                                         );
-                plotter.plotz(vap.transient('HFLUXWALEVAP',liq,'zIdx',zIdx)','Evaporation','DisplayName','Wall evaporation'  );
+                plotter.plot(             bcHFLUX                          ,'bc'         ,'DisplayName','Boundary Condition');
+                plotter.plot(liq.transient('mix.HFLUX'   ,    'zIdx',zIdx)','Mixture'                                       );
+                plotter.plot(liq.transient('HFLUX'       ,    'zIdx',zIdx)','Liquid'                                        );
+                plotter.plot(vap.transient('HFLUX'       ,    'zIdx',zIdx)','Vapor'                                         );
+                plotter.plot(vap.transient('HFLUXWALEVAP',liq,'zIdx',zIdx)','Evaporation','DisplayName','Wall evaporation'  );
                 if ~strcmp(model.CBT,'NONE')
-                    plotter.plotz(liq.transient('mix.CHF'     ,    'zIdx',zIdx)','CHF'                                           );
+                    plotter.plot(liq.transient('mix.CHF'     ,    'zIdx',zIdx)','CHF'                                           );
                 end
                 plotter.legend('show', 'Location', 'best');
             end
@@ -692,9 +692,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Phase mass flow rates', ...
                     'xlabel',                 'Time [s]', ...
                     'ylabel',    'Mass flow rate [kg/s]');
-                plotter.plotz(liq.transient('mix.W','zIdx',zIdx)','Mixture');
-                plotter.plotz(liq.transient('W'    ,'zIdx',zIdx)','Liquid' );
-                plotter.plotz(vap.transient('W'    ,'zIdx',zIdx)','Vapor'  );
+                plotter.plot(liq.transient('mix.W','zIdx',zIdx)','Mixture');
+                plotter.plot(liq.transient('W'    ,'zIdx',zIdx)','Liquid' );
+                plotter.plot(vap.transient('W'    ,'zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -704,9 +704,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle',   'Phase velocities', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,     'Velocity [m/s]');
-                plotter.plotz(liq.transient('mix.U','zIdx',zIdx)','Mixture');
-                plotter.plotz(liq.transient('U'    ,'zIdx',zIdx)','Liquid' );
-                plotter.plotz(vap.transient('U'    ,'zIdx',zIdx)','Vapor'  );
+                plotter.plot(liq.transient('mix.U','zIdx',zIdx)','Mixture');
+                plotter.plot(liq.transient('U'    ,'zIdx',zIdx)','Liquid' );
+                plotter.plot(vap.transient('U'    ,'zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -716,11 +716,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle',   'Phase enthalpies', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,    'Enthalpy [J/kg]');
-                plotter.plotz(liq.transient('mix.H','zIdx',zIdx)','Mixture'                           );
-                plotter.plotz(liq.transient('H'    ,'zIdx',zIdx)','Liquid'                            );
-                plotter.plotz(vap.transient('H'    ,'zIdx',zIdx)','Vapor'                             );
-                plotter.plotz(fld.transient('HF')'               ,'SatLiq' ,'DisplayName','Sat liquid');
-                plotter.plotz(fld.transient('HG')'               ,'SatVap' ,'DisplayName','Sat vapor' );
+                plotter.plot(liq.transient('mix.H','zIdx',zIdx)','Mixture'                           );
+                plotter.plot(liq.transient('H'    ,'zIdx',zIdx)','Liquid'                            );
+                plotter.plot(vap.transient('H'    ,'zIdx',zIdx)','Vapor'                             );
+                plotter.plot(fld.transient('HF')'               ,'SatLiq' ,'DisplayName','Sat liquid');
+                plotter.plot(fld.transient('HG')'               ,'SatVap' ,'DisplayName','Sat vapor' );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -730,9 +730,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Void fractions and qualities', ...
                     'xlabel'   ,                     'Time [s]', ...
                     'ylabel'   ,  'Quality / Void fraction [-]');
-                plotter.plotz(liq.transient('mix.XEQ',    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
-                plotter.plotz(vap.transient('X'      ,    'zIdx',zIdx)','Vapor'       ,'DisplayName','Vapor mass quality' );
-                plotter.plotz(vap.transient('VF'     ,liq,'zIdx',zIdx)','VoidFraction','DisplayName','Void fraction'      );
+                plotter.plot(liq.transient('mix.XEQ',    'zIdx',zIdx)','Equil'       ,'DisplayName','Equilibrium quality');
+                plotter.plot(vap.transient('X'      ,    'zIdx',zIdx)','Vapor'       ,'DisplayName','Vapor mass quality' );
+                plotter.plot(vap.transient('VF'     ,liq,'zIdx',zIdx)','VoidFraction','DisplayName','Void fraction'      );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -742,9 +742,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle',              'Phase temperatures', ...
                     'xlabel'   ,                        'Time [s]', ...
                     'ylabel'   , ['Temperature [' opt.unitTemp ']']);
-                plotter.plotz(liq.transient('T','zIdx',zIdx)'+dTemp,'Liquid'    );
-                plotter.plotz(vap.transient('T','zIdx',zIdx)'+dTemp,'Vapor'     );
-                plotter.plotz(fld.transient('TSAT')'         +dTemp,'Saturation');
+                plotter.plot(liq.transient('T','zIdx',zIdx)'+dTemp,'Liquid'    );
+                plotter.plot(vap.transient('T','zIdx',zIdx)'+dTemp,'Vapor'     );
+                plotter.plot(fld.transient('TSAT')'         +dTemp,'Saturation');
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -754,10 +754,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Vapor mass exchanges', ...
                     'xlabel',                'Time [s]', ...
                     'ylabel',  'Mass exchange [kg/s/m]');
-                plotter.plotz(vap.transient('MWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(vap.transient('MINTEVAP',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(vap.transient('MINTCOND',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(vap.transient('MTOT'    ,liq,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(vap.transient('MWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
+                plotter.plot(vap.transient('MINTEVAP',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
+                plotter.plot(vap.transient('MINTCOND',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
+                plotter.plot(vap.transient('MTOT'    ,liq,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -766,10 +766,10 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Liquid mass exchanges', ...
                     'xlabel',                 'Time [s]', ...
                     'ylabel',   'Mass exchange [kg/s/m]');
-                plotter.plotz(liq.transient('MWALEVAP',vap,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(liq.transient('MINTEVAP',vap,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(liq.transient('MINTCOND',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(liq.transient('MTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(liq.transient('MWALEVAP',vap,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
+                plotter.plot(liq.transient('MINTEVAP',vap,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
+                plotter.plot(liq.transient('MINTCOND',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
+                plotter.plot(liq.transient('MTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -787,13 +787,13 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Vapor momentum exchanges', ...
                     'xlabel',                    'Time [s]', ...
                     'ylabel',          'Shear stress [N/m]');
-                plotter.plotz(vap.transient('FWALL'   ,liq,'zIdx',zIdx)','Wall'           ,'DisplayName','Wall shear'             );
-                plotter.plotz(vap.transient('FDRAG'   ,liq,'zIdx',zIdx)','Interfacial'    ,'DisplayName','Interfacial shear'      );
-                plotter.plotz(vap.transient('FBUOY'   ,liq,'zIdx',zIdx)','Buoyancy'                                               );
-                plotter.plotz(vap.transient('FGRAV'   ,liq,'zIdx',zIdx)','Gravity'                                                );
-                plotter.plotz(vap.transient('FWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'       );
-                plotter.plotz(vap.transient('FINTEVAP',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation');
-                plotter.plotz(vap.transient('FTOT'    ,liq,'zIdx',zIdx)','Total'                                                  );
+                plotter.plot(vap.transient('FWALL'   ,liq,'zIdx',zIdx)','Wall'           ,'DisplayName','Wall shear'             );
+                plotter.plot(vap.transient('FDRAG'   ,liq,'zIdx',zIdx)','Interfacial'    ,'DisplayName','Interfacial shear'      );
+                plotter.plot(vap.transient('FBUOY'   ,liq,'zIdx',zIdx)','Buoyancy'                                               );
+                plotter.plot(vap.transient('FGRAV'   ,liq,'zIdx',zIdx)','Gravity'                                                );
+                plotter.plot(vap.transient('FWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'       );
+                plotter.plot(vap.transient('FINTEVAP',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation');
+                plotter.plot(vap.transient('FTOT'    ,liq,'zIdx',zIdx)','Total'                                                  );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -802,12 +802,12 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Liquid momentum exchanges', ...
                     'xlabel',                     'Time [s]', ...
                     'ylabel',           'Shear stress [N/m]');
-                plotter.plotz(liq.transient('FWALL'   ,vap,'zIdx',zIdx)','Wall'           ,'DisplayName','Wall shear'              );
-                plotter.plotz(liq.transient('FDRAG'   ,vap,'zIdx',zIdx)','Interfacial'    ,'DisplayName','Interfacial shear'       );
-                plotter.plotz(liq.transient('FBUOY'   ,vap,'zIdx',zIdx)','Buoyancy'                                                );
-                plotter.plotz(liq.transient('FGRAV'   ,vap,'zIdx',zIdx)','Gravity'                                                 );
-                plotter.plotz(liq.transient('FINTCOND',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(liq.transient('FTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(liq.transient('FWALL'   ,vap,'zIdx',zIdx)','Wall'           ,'DisplayName','Wall shear'              );
+                plotter.plot(liq.transient('FDRAG'   ,vap,'zIdx',zIdx)','Interfacial'    ,'DisplayName','Interfacial shear'       );
+                plotter.plot(liq.transient('FBUOY'   ,vap,'zIdx',zIdx)','Buoyancy'                                                );
+                plotter.plot(liq.transient('FGRAV'   ,vap,'zIdx',zIdx)','Gravity'                                                 );
+                plotter.plot(liq.transient('FINTCOND',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
+                plotter.plot(liq.transient('FTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -825,11 +825,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Vapor energy exchanges', ...
                     'xlabel',                  'Time [s]', ...
                     'ylabel',     'Energy transfer [W/m]');
-                plotter.plotz(vap.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
-                plotter.plotz(vap.transient('HWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(vap.transient('HINTEVAP',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
-                plotter.plotz(vap.transient('HINTCOND',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
-                plotter.plotz(vap.transient('HTOT'    ,liq,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(vap.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
+                plotter.plot(vap.transient('HWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
+                plotter.plot(vap.transient('HINTEVAP',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
+                plotter.plot(vap.transient('HINTCOND',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
+                plotter.plot(vap.transient('HTOT'    ,liq,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -838,11 +838,11 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Liquid energy exchanges', ...
                     'xlabel',                   'Time [s]', ...
                     'ylabel',      'Energy transfer [W/m]');
-                plotter.plotz(liq.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
-                plotter.plotz(liq.transient('HWALEVAP',vap,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(liq.transient('HINTEVAP',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
-                plotter.plotz(liq.transient('HINTCOND',vap,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
-                plotter.plotz(liq.transient('HTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(liq.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
+                plotter.plot(liq.transient('HWALEVAP',vap,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
+                plotter.plot(liq.transient('HINTEVAP',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
+                plotter.plot(liq.transient('HINTCOND',vap,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
+                plotter.plot(liq.transient('HTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -860,7 +860,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'tileTitle', 'Volumetric interfacial area', ...
                     'xlabel'   ,                    'Time [s]', ...
                     'ylabel'   ,    'Interfacial area [m^-^1]');
-                plotter.plotz(liq.transient('INTAREA',vap,'zIdx',zIdx)','Interfacial');
+                plotter.plot(liq.transient('INTAREA',vap,'zIdx',zIdx)','Interfacial');
             end
 
             % Two-phase flow regimes
@@ -868,7 +868,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 plotter.newTile( ...
                     'tileTitle', 'Two-phase flow regimes', ...
                     'xlabel'   ,     'Axial position [m]');
-                plotter.plotz(liq.transient('FLOWID','zIdx',zIdx)','Interfacial')
+                plotter.plot(liq.transient('FLOWID','zIdx',zIdx)','Interfacial')
                 labels = arrayfun(@(x) unique(x.FLOWREGIME),liq,'uni',0);
                 labels = strrep(cellstr(unique([labels{:}])),'_',' ');
                 plotter.ylabels(labels);

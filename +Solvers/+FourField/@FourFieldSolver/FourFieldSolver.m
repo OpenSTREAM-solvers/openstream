@@ -418,7 +418,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     "isAnimation", true, ...
                     "animationSeries", [flms.TIME]);
             end
-            plotter.setZs(z);
+            plotter.setXs(z);
 
             function tf = displayVariable(memberList)
                 tf = any(ismember(memberList,upper(opts.display)));
@@ -449,8 +449,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    plotter.plotz(  bcHFLUX{idx}        ,'bc'  ,'DisplayName','Boundary Condition');
-                    plotter.plotz(flm.HFLUX(opts.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
+                    plotter.plot(  bcHFLUX{idx}        ,'bc'  ,'DisplayName','Boundary Condition');
+                    plotter.plot(flm.HFLUX(opts.zIdx,:),'Film','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -465,13 +465,13 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Field mass flow rates', ...
                         'xlabel'   ,    'Axial position [m]', ...
                         'ylabel'   , 'Mass flow rate [kg/s]');
-                    plotter.plotz(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                              );
-                    plotter.plotz(drp.W(opts.zIdx)                            ,'Drop'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.W(opts.zIdx)                            ,'Film'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.W(opts.zIdx,:)                     ,'Wave'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.W(opts.zIdx,:)                     ,'Base'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.WMIN(drp,opts.zIdx)                 ,'Base min','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(mix.vapor.W(opts.zIdx)                      ,'Vapor'                               );
+                    plotter.plot(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                              );
+                    plotter.plot(drp.W(opts.zIdx)                            ,'Drop'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.W(opts.zIdx)                            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.W(opts.zIdx,:)                     ,'Wave'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.W(opts.zIdx,:)                     ,'Base'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.WMIN(drp,opts.zIdx)                 ,'Base min','XData',zaf,'subset',zafIdx);
+                    plotter.plot(mix.vapor.W(opts.zIdx)                      ,'Vapor'                               );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -486,10 +486,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Film mass flow rates per unit perimeter', ...
                         'xlabel'   ,                      'Axial position [m]', ...
                         'ylabel'   ,            'Film mass flow rate [kg/s/m]');
-                    plotter.plotz(flm.WL(opts.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.WL(opts.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.WL(opts.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.WMINL(drp,opts.zIdx),'Base min','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.WL(opts.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.WL(opts.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.WL(opts.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.WMINL(drp,opts.zIdx),'Base min','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location',  'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -504,9 +504,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',               'Reynolds numbers', ...
                         'xlabel'   ,             'Axial position [m]', ...
                         'ylabel'   , {'Vapor Re [-]', 'Liquid Re [-]'});
-                    plotter.plotz(mix.vapor.RE(opts.zIdx),'Vapor','yyaxis', 'left');
-                    plotter.plotz(flm.wave.RE(opts.zIdx) , 'Wave','yyaxis','right','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.RE(opts.zIdx) , 'Base','yyaxis','right','XData',zaf,'subset',zafIdx);
+                    plotter.plot(mix.vapor.RE(opts.zIdx),'Vapor','yyaxis', 'left');
+                    plotter.plot(flm.wave.RE(opts.zIdx) , 'Wave','yyaxis','right','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.RE(opts.zIdx) , 'Base','yyaxis','right','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -521,11 +521,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',     'Field velocities', ...
                         'xlabel'   ,   'Axial position [m]', ...
                         'ylabel'   , 'Field velocity [m/s]');
-                    plotter.plotz(drp.U(opts.zIdx)       ,'Drop' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.U(opts.zIdx)       ,'Film' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.U(opts.zIdx,:),'Wave' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.U(opts.zIdx,:),'Base' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(mix.vapor.U(opts.zIdx) ,'Vapor'                            );
+                    plotter.plot(drp.U(opts.zIdx)       ,'Drop' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.U(opts.zIdx)       ,'Film' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.U(opts.zIdx,:),'Wave' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.U(opts.zIdx,:),'Base' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(mix.vapor.U(opts.zIdx) ,'Vapor'                            );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -540,12 +540,12 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',   'Film thicknesses', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   , 'Film thickness [m]');
-                    plotter.plotz(flm.THICK(opts.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.THICK(opts.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.AMPLITUDE(opts.zIdx)   ,'Wave Amp','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.THICK(opts.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.EQTHICK(opts.zIdx)     ,'Base Eq' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.THICKMIN(drp,opts.zIdx),'Base Min','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.THICK(opts.zIdx)            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.THICK(opts.zIdx)       ,'Wave'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.AMPLITUDE(opts.zIdx)   ,'Wave Amp','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.THICK(opts.zIdx)       ,'Base'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.EQTHICK(opts.zIdx)     ,'Base Eq' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.THICKMIN(drp,opts.zIdx),'Base Min','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -561,8 +561,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',   'Wave frequencies', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,     'Frequency [Hz]');
-                    plotter.plotz(flm.wave.FREQUENCY(opts.zIdx,:),'Wave'   ,'DisplayName','Non-equilibrium','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.EQFREQUENCY(opts.zIdx),'Wave Eq','DisplayName',    'Equilibrium','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FREQUENCY(opts.zIdx,:),'Wave'   ,'DisplayName','Non-equilibrium','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.EQFREQUENCY(opts.zIdx),'Wave Eq','DisplayName',    'Equilibrium','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -577,8 +577,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',  'Wave axial lengths', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,   'Axial length [m]');
-                    plotter.plotz(flm.wave.SPACING(opts.zIdx),'Spacing','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.WIDTH(opts.zIdx)  ,  'Width','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.SPACING(opts.zIdx),'Spacing','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.WIDTH(opts.zIdx)  ,  'Width','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -593,11 +593,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Base film/Film ratios', ...
                         'xlabel'   ,    'Axial position [m]', ...
                         'ylabel'   ,          'Fraction [-]');
-                    plotter.plotz(flm.base.EPSILON(opts.zIdx) ,'Vapor','DisplayName',        'Mass','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.BETA(opts.zIdx)    ,'Interfacial'                       ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.BETAP(opts.zIdx)   ,'Evaporation'                       ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.ETA(opts.zIdx)     ,'Deposition'                        ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FDRY(drp,opts.zIdx),'Base','DisplayName','Base dry time','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.EPSILON(opts.zIdx) ,'Vapor','DisplayName',        'Mass','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.BETA(opts.zIdx)    ,'Interfacial'                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.BETAP(opts.zIdx)   ,'Evaporation'                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.ETA(opts.zIdx)     ,'Deposition'                        ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FDRY(drp,opts.zIdx),'Base','DisplayName','Base dry time','XData',zaf,'subset',zafIdx);
                     plotter.legend("show", 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.ylim([0 1]);
@@ -613,11 +613,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle',   'Wave/Film ratios', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,       'Fraction [-]');
-                    plotter.plotz(flm.wave.EPSILON(opts.zIdx)    ,'Vapor'      ,'DisplayName', 'Mass','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.BETA(opts.zIdx)       ,'Interfacial'                      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.BETAP(opts.zIdx)      ,'Evaporation'                      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.ETA(opts.zIdx)        ,'Deposition'                       ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.SHAPEFACTOR(opts.zIdx),'Wave'       ,'DisplayName','Shape','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.EPSILON(opts.zIdx)    ,'Vapor'      ,'DisplayName', 'Mass','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.BETA(opts.zIdx)       ,'Interfacial'                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.BETAP(opts.zIdx)      ,'Evaporation'                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.ETA(opts.zIdx)        ,'Deposition'                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.SHAPEFACTOR(opts.zIdx),'Wave'       ,'DisplayName','Shape','XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.ylim([0 1]);
@@ -633,11 +633,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Base film mass exchanges', ...
                         'xlabel'   ,      'Axial position [m]', ...
                         'ylabel'   ,    'Mass flux [kg/s/m^2]');
-                    plotter.plotz(flm.base.MDEP(drp,opts.zIdx) , 'Deposition','DisplayName','Drop deposition'      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.MENT(opts.zIdx)     ,'Entrainment','DisplayName','Base film entrainment','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.MEVAP(opts.zIdx)    ,'Evaporation','DisplayName','Base film evaporation','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.MWAVE(drp,opts.zIdx),'Wave'       ,'DisplayName','Exchange from wave'   ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.MTOT(drp,opts.zIdx) ,'Total'                                            ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.MDEP(drp,opts.zIdx) , 'Deposition','DisplayName','Drop deposition'      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.MENT(opts.zIdx)     ,'Entrainment','DisplayName','Base film entrainment','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.MEVAP(opts.zIdx)    ,'Evaporation','DisplayName','Base film evaporation','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.MWAVE(drp,opts.zIdx),'Wave'       ,'DisplayName','Exchange from wave'   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.MTOT(drp,opts.zIdx) ,'Total'                                            ,'XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -646,11 +646,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         "tileTitle",  'Wave mass exchanges', ...
                         'xlabel'   ,   'Axial position [m]', ...
                         'ylabel'   , 'Mass flux [kg/s/m^2]');
-                    plotter.plotz(flm.wave.MDEP(drp,opts.zIdx) ,'Deposition' ,'DisplayName','Drop deposition'   ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.MENT(opts.zIdx)     ,'Entrainment','DisplayName','Wave entrainment'  ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.MEVAP(opts.zIdx)    ,'Evaporation','DisplayName','Wave evaporation'  ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.MBASE(drp,opts.zIdx),'Wave'       ,'DisplayName','Exchange from base','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.MTOT(drp,opts.zIdx) ,'Total'                                         ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.MDEP(drp,opts.zIdx) ,'Deposition' ,'DisplayName','Drop deposition'   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.MENT(opts.zIdx)     ,'Entrainment','DisplayName','Wave entrainment'  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.MEVAP(opts.zIdx)    ,'Evaporation','DisplayName','Wave evaporation'  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.MBASE(drp,opts.zIdx),'Wave'       ,'DisplayName','Exchange from base','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.MTOT(drp,opts.zIdx) ,'Total'                                         ,'XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -672,14 +672,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Base momentum exchanges', ...
                         'xlabel'   ,      'Axial position [m]', ...
                         'ylabel'   ,    'Shear stress [N/m^2]');
-                    plotter.plotz(flm.base.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FWALL()       ,'Wall'                                      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FBASEVAPOR()  ,'Vapor'                                     ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FWAVE(drp)    ,'Wave'                                      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FWAVEMASS(drp),'WaveMass'  ,'DisplayName',      'Wave mass','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.base.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FWALL()       ,'Wall'                                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FBASEVAPOR()  ,'Vapor'                                     ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FWAVE(drp)    ,'Wave'                                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FWAVEMASS(drp),'WaveMass'  ,'DisplayName',      'Wave mass','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.base.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -688,14 +688,14 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Wave momentum exchanges', ...
                         'xlabel'   ,      'Axial position [m]', ...
                         'ylabel'   ,    'Shear stress [N/m^2]');
-                    plotter.plotz(flm.wave.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FSHEAR()      ,'Vapor'     ,'DisplayName','Vapor shear'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FDRAG()       ,'VaporDrag' ,'DisplayName','Vapor drag'     ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FBASE(drp)    ,'Wave'      ,'DisplayName','Base'           ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FBASEMASS(drp),'WaveMass'  ,'DisplayName','Base mass'      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(flm.wave.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FDEP(drp)     ,'Deposition','DisplayName','Drop deposition','XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FSHEAR()      ,'Vapor'     ,'DisplayName','Vapor shear'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FDRAG()       ,'VaporDrag' ,'DisplayName','Vapor drag'     ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FBASE(drp)    ,'Wave'      ,'DisplayName','Base'           ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FBASEMASS(drp),'WaveMass'  ,'DisplayName','Base mass'      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FBUOY()       ,'Buoyancy'                                  ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FGRAV()       ,'Gravity'                                   ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.wave.FTOT(drp)     ,'Total'                                     ,'XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -716,11 +716,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'tileTitle', 'Drop momentum exchanges', ...
                         'xlabel'   ,      'Axial position [m]', ...
                         'ylabel'   ,    'Shear stress [N/m^3]');
-                    plotter.plotz(drp.FENT(flm),'Entrainment', 'DisplayName', 'Film entrainment','XData',zaf,'subset',zafIdx);
-                    plotter.plotz(drp.FDRAG()  ,'Vapor'                                         ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(drp.FBUOY()  ,'Buoyancy'                                      ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(drp.FGRAV()  ,'Gravity'                                       ,'XData',zaf,'subset',zafIdx);
-                    plotter.plotz(drp.FTOT(flm),'Total'                                         ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(drp.FENT(flm),'Entrainment', 'DisplayName', 'Film entrainment','XData',zaf,'subset',zafIdx);
+                    plotter.plot(drp.FDRAG()  ,'Vapor'                                         ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(drp.FBUOY()  ,'Buoyancy'                                      ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(drp.FGRAV()  ,'Gravity'                                       ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(drp.FTOT(flm),'Total'                                         ,'XData',zaf,'subset',zafIdx);
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     plotter.plotOAF(oafZ);
@@ -812,7 +812,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotter = Solvers.SolverPlotter( ...
                 sprintf('Time distributions of four-field parameters at %0.3f [m] - %s', z(zIdx), solveMode), ...
                 opt.wall, 'arrangement', opt.arrangement);
-            plotter.setZs(time);
+            plotter.setXs(time);
 
             % Wall heat flux
             if any(ismember({'HFLUX','ALL'},opt.display))
@@ -820,8 +820,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',         'Wall heat flux', ...
                     'xlabel'   ,               'Time [s]', ...
                     'ylabel'   , 'Wall heat flux [W/m^2]');
-                plotter.plotz(             bcHFLUX               ,'bc'  ,'DisplayName','Boundary Condition');
-                plotter.plotz(flm.transient('HFLUX','zIdx',zIdx)','Film'                                   );
+                plotter.plot(             bcHFLUX               ,'bc'  ,'DisplayName','Boundary Condition');
+                plotter.plot(flm.transient('HFLUX','zIdx',zIdx)','Film'                                   );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -832,13 +832,13 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'xlabel'   ,              'Time [s]', ...
                     'ylabel'   , 'Mass flow rate [kg/s]');
                 liquidW = sum([drp.transient('W','zIdx',zIdx)' flm.transient('W','zIdx',zIdx)'],2);
-                plotter.plotz(               liquidW                      ,'Liquid'  );
-                plotter.plotz(drp.transient(      'W'       ,'zIdx',zIdx)','Drop'    );
-                plotter.plotz(flm.transient(      'W'       ,'zIdx',zIdx)','Film'    );
-                plotter.plotz(flm.transient( 'wave.W'       ,'zIdx',zIdx)','Wave'    );
-                plotter.plotz(flm.transient( 'base.W'       ,'zIdx',zIdx)','Base'    );
-                plotter.plotz(flm.transient( 'base.WMIN',drp,'zIdx',zIdx)','Base min');
-                plotter.plotz(mix.transient('vapor.W'       ,'zIdx',zIdx)','Vapor'   );
+                plotter.plot(               liquidW                      ,'Liquid'  );
+                plotter.plot(drp.transient(      'W'       ,'zIdx',zIdx)','Drop'    );
+                plotter.plot(flm.transient(      'W'       ,'zIdx',zIdx)','Film'    );
+                plotter.plot(flm.transient( 'wave.W'       ,'zIdx',zIdx)','Wave'    );
+                plotter.plot(flm.transient( 'base.W'       ,'zIdx',zIdx)','Base'    );
+                plotter.plot(flm.transient( 'base.WMIN',drp,'zIdx',zIdx)','Base min');
+                plotter.plot(mix.transient('vapor.W'       ,'zIdx',zIdx)','Vapor'   );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -848,10 +848,10 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle', 'Film mass flow rates per unit perimeter', ...
                     'xlabel'   ,                                'Time [s]', ...
                     'ylabel'   ,            'Film mass flow rate [kg/s/m]');
-                plotter.plotz(flm.transient(     'WL'       ,'zIdx',zIdx)','Film'    );
-                plotter.plotz(flm.transient('wave.WL'       ,'zIdx',zIdx)','Wave'    );
-                plotter.plotz(flm.transient('base.WL'       ,'zIdx',zIdx)','Base'    );
-                plotter.plotz(flm.transient('base.WMINL',drp,'zIdx',zIdx)','Base min');
+                plotter.plot(flm.transient(     'WL'       ,'zIdx',zIdx)','Film'    );
+                plotter.plot(flm.transient('wave.WL'       ,'zIdx',zIdx)','Wave'    );
+                plotter.plot(flm.transient('base.WL'       ,'zIdx',zIdx)','Base'    );
+                plotter.plot(flm.transient('base.WMINL',drp,'zIdx',zIdx)','Base min');
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -861,9 +861,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',               'Reynolds numbers', ...
                     'xlabel'   ,                       'Time [s]', ...
                     'ylabel'   , {'Vapor Re [-]', 'Liquid Re [-]'});
-                plotter.plotz(mix.transient('vapor.RE','zIdx',zIdx)','Vapor','yyaxis','left' );
-                plotter.plotz(flm.transient( 'wave.RE','zIdx',zIdx)','Wave' ,'yyaxis','right');
-                plotter.plotz(flm.transient( 'base.RE','zIdx',zIdx)','Base' ,'yyaxis','right');
+                plotter.plot(mix.transient('vapor.RE','zIdx',zIdx)','Vapor','yyaxis','left' );
+                plotter.plot(flm.transient( 'wave.RE','zIdx',zIdx)','Wave' ,'yyaxis','right');
+                plotter.plot(flm.transient( 'base.RE','zIdx',zIdx)','Base' ,'yyaxis','right');
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -873,11 +873,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',     'Field velocities', ...
                     'xlabel'   ,             'Time [s]', ...
                     'ylabel'   , 'Field velocity [m/s]');
-                plotter.plotz(drp.transient(      'U','zIdx',zIdx)','Drop' );
-                plotter.plotz(flm.transient(      'U','zIdx',zIdx)','Film' );
-                plotter.plotz(flm.transient( 'wave.U','zIdx',zIdx)','Wave' );
-                plotter.plotz(flm.transient( 'base.U','zIdx',zIdx)','Base' );
-                plotter.plotz(mix.transient('vapor.U','zIdx',zIdx)','Vapor');
+                plotter.plot(drp.transient(      'U','zIdx',zIdx)','Drop' );
+                plotter.plot(flm.transient(      'U','zIdx',zIdx)','Film' );
+                plotter.plot(flm.transient( 'wave.U','zIdx',zIdx)','Wave' );
+                plotter.plot(flm.transient( 'base.U','zIdx',zIdx)','Base' );
+                plotter.plot(mix.transient('vapor.U','zIdx',zIdx)','Vapor');
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -887,12 +887,12 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',   'Film thicknesses', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   , 'Film thickness [m]');
-                plotter.plotz(flm.transient(     'THICK'       ,'zIdx',zIdx)','Film'    );
-                plotter.plotz(flm.transient('wave.THICK'       ,'zIdx',zIdx)','Wave'    );
-                plotter.plotz(flm.transient('wave.AMPLITUDE'   ,'zIdx',zIdx)','Wave Amp');
-                plotter.plotz(flm.transient('base.THICK'       ,'zIdx',zIdx)','Base'    );
-                plotter.plotz(flm.transient('base.EQTHICK'     ,'zIdx',zIdx)','Base Eq' );
-                plotter.plotz(flm.transient('base.THICKMIN',drp,'zIdx',zIdx)','Base Min');
+                plotter.plot(flm.transient(     'THICK'       ,'zIdx',zIdx)','Film'    );
+                plotter.plot(flm.transient('wave.THICK'       ,'zIdx',zIdx)','Wave'    );
+                plotter.plot(flm.transient('wave.AMPLITUDE'   ,'zIdx',zIdx)','Wave Amp');
+                plotter.plot(flm.transient('base.THICK'       ,'zIdx',zIdx)','Base'    );
+                plotter.plot(flm.transient('base.EQTHICK'     ,'zIdx',zIdx)','Base Eq' );
+                plotter.plot(flm.transient('base.THICKMIN',drp,'zIdx',zIdx)','Base Min');
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -902,8 +902,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',   'Wave frequencies', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   ,     'Frequency [Hz]');
-                plotter.plotz(flm.transient('wave.FREQUENCY'  ,'zIdx',zIdx)','Wave'   ,'DisplayName','Non-equilibrium');
-                plotter.plotz(flm.transient('wave.EQFREQUENCY','zIdx',zIdx)','Wave Eq','DisplayName',    'Equilibrium');
+                plotter.plot(flm.transient('wave.FREQUENCY'  ,'zIdx',zIdx)','Wave'   ,'DisplayName','Non-equilibrium');
+                plotter.plot(flm.transient('wave.EQFREQUENCY','zIdx',zIdx)','Wave Eq','DisplayName',    'Equilibrium');
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -913,8 +913,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',  'Wave axial lengths', ...
                     'xlabel'   ,  'Axial position [m]', ...
                     'ylabel'   ,            'Time [s]');
-                plotter.plotz(flm.transient('wave.SPACING','zIdx',zIdx)','Spacing');
-                plotter.plotz(flm.transient('wave.WIDTH'  ,'zIdx',zIdx)','Width'  );
+                plotter.plot(flm.transient('wave.SPACING','zIdx',zIdx)','Spacing');
+                plotter.plot(flm.transient('wave.WIDTH'  ,'zIdx',zIdx)','Width'  );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -924,11 +924,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle',  'Base film/Film ratios', ...
                     'xlabel'   ,               'Time [s]', ...
                     'ylabel'   ,           'Fraction [-]');
-                plotter.plotz(flm.transient('base.EPSILON'    ,'zIdx',zIdx)','Vapor'      ,'DisplayName','Mass'         );
-                plotter.plotz(flm.transient('base.BETA'       ,'zIdx',zIdx)','Interfacial'                              );
-                plotter.plotz(flm.transient('base.BETAP'      ,'zIdx',zIdx)','Evaporation'                              );
-                plotter.plotz(flm.transient('base.ETA'        ,'zIdx',zIdx)','Deposition'                               );
-                plotter.plotz(flm.transient('base.FDRY'   ,drp,'zIdx',zIdx)','Base'       ,'DisplayName','Base dry time');
+                plotter.plot(flm.transient('base.EPSILON'    ,'zIdx',zIdx)','Vapor'      ,'DisplayName','Mass'         );
+                plotter.plot(flm.transient('base.BETA'       ,'zIdx',zIdx)','Interfacial'                              );
+                plotter.plot(flm.transient('base.BETAP'      ,'zIdx',zIdx)','Evaporation'                              );
+                plotter.plot(flm.transient('base.ETA'        ,'zIdx',zIdx)','Deposition'                               );
+                plotter.plot(flm.transient('base.FDRY'   ,drp,'zIdx',zIdx)','Base'       ,'DisplayName','Base dry time');
                 plotter.legend('show', 'Location', 'best');
                 plotter.ylim([0 1]);
             end
@@ -939,11 +939,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle', 'Wave/Film ratios', ...
                     'xlabel'   ,         'Time [s]', ...
                     'ylabel'   ,     'Fraction [-]');
-                plotter.plotz(flm.transient('wave.EPSILON'    ,'zIdx',zIdx)','Vapor'      ,'DisplayName','Mass' );
-                plotter.plotz(flm.transient('wave.BETA'       ,'zIdx',zIdx)','Interfacial'                      );
-                plotter.plotz(flm.transient('wave.BETAP'      ,'zIdx',zIdx)','Evaporation'                      );
-                plotter.plotz(flm.transient('wave.ETA'        ,'zIdx',zIdx)','Deposition'                       );
-                plotter.plotz(flm.transient('wave.SHAPEFACTOR','zIdx',zIdx)','Wave'       ,'DisplayName','Shape');
+                plotter.plot(flm.transient('wave.EPSILON'    ,'zIdx',zIdx)','Vapor'      ,'DisplayName','Mass' );
+                plotter.plot(flm.transient('wave.BETA'       ,'zIdx',zIdx)','Interfacial'                      );
+                plotter.plot(flm.transient('wave.BETAP'      ,'zIdx',zIdx)','Evaporation'                      );
+                plotter.plot(flm.transient('wave.ETA'        ,'zIdx',zIdx)','Deposition'                       );
+                plotter.plot(flm.transient('wave.SHAPEFACTOR','zIdx',zIdx)','Wave'       ,'DisplayName','Shape');
                 plotter.legend('show', 'Location', 'best');
                 plotter.ylim([0 1]);
             end
@@ -954,22 +954,22 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle', 'Base film mass exchanges', ...
                     'xlabel'   ,                 'Time [s]', ...
                     'ylabel'   ,    'Mass flux [kg/s/m^2]');
-                plotter.plotz(flm.transient('base.MDEP' ,drp,'zIdx',zIdx)','Deposition' ,'DisplayName','Drop deposition'      );
-                plotter.plotz(flm.transient('base.MENT'     ,'zIdx',zIdx)','Entrainment','DisplayName','Base film entrainment');
-                plotter.plotz(flm.transient('base.MEVAP'    ,'zIdx',zIdx)','Evaporation','DisplayName','Base film evaporation');
-                plotter.plotz(flm.transient('base.MWAVE',drp,'zIdx',zIdx)','Wave'       ,'DisplayName','Exchange from wave'   );
-                plotter.plotz(flm.transient('base.MTOT' ,drp,'zIdx',zIdx)','Total'                                            );
+                plotter.plot(flm.transient('base.MDEP' ,drp,'zIdx',zIdx)','Deposition' ,'DisplayName','Drop deposition'      );
+                plotter.plot(flm.transient('base.MENT'     ,'zIdx',zIdx)','Entrainment','DisplayName','Base film entrainment');
+                plotter.plot(flm.transient('base.MEVAP'    ,'zIdx',zIdx)','Evaporation','DisplayName','Base film evaporation');
+                plotter.plot(flm.transient('base.MWAVE',drp,'zIdx',zIdx)','Wave'       ,'DisplayName','Exchange from wave'   );
+                plotter.plot(flm.transient('base.MTOT' ,drp,'zIdx',zIdx)','Total'                                            );
                 plotter.legend('show', 'Location', 'best');
 
                 ah_wave = plotter.newTile( ...
                     'tileTitle',  'Wave mass exchanges', ...
                     'xlabel'   ,             'Time [s]', ...
                     'ylabel'   , 'Mass flux [kg/s/m^2]');
-                plotter.plotz(flm.transient('wave.MDEP' ,drp,'zIdx',zIdx)','Deposition' ,'DisplayName','Drop deposition'   );
-                plotter.plotz(flm.transient('wave.MENT'     ,'zIdx',zIdx)','Entrainment','DisplayName','Wave entrainment'  );
-                plotter.plotz(flm.transient('wave.MEVAP'    ,'zIdx',zIdx)','Evaporation','DisplayName','Wave evaporation'  );
-                plotter.plotz(flm.transient('wave.MBASE',drp,'zIdx',zIdx)','Wave'       ,'DisplayName','Exchange from base');
-                plotter.plotz(flm.transient('wave.MTOT' ,drp,'zIdx',zIdx)','Total'                                         );
+                plotter.plot(flm.transient('wave.MDEP' ,drp,'zIdx',zIdx)','Deposition' ,'DisplayName','Drop deposition'   );
+                plotter.plot(flm.transient('wave.MENT'     ,'zIdx',zIdx)','Entrainment','DisplayName','Wave entrainment'  );
+                plotter.plot(flm.transient('wave.MEVAP'    ,'zIdx',zIdx)','Evaporation','DisplayName','Wave evaporation'  );
+                plotter.plot(flm.transient('wave.MBASE',drp,'zIdx',zIdx)','Wave'       ,'DisplayName','Exchange from base');
+                plotter.plot(flm.transient('wave.MTOT' ,drp,'zIdx',zIdx)','Total'                                         );
                 plotter.legend('show', 'Location', 'best');
 
                 % Link exchange axes
@@ -985,28 +985,28 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle', 'Base momentum exchanges', ...
                     'xlabel'   ,                'Time [s]', ...
                     'ylabel'   ,    'Shear stress [N/m^2]');
-                plotter.plotz(flm.transient('base.FDEP'     ,drp,'zIdx',zIdx)','Deposition','DisplayName','Drop deposition');
-                plotter.plotz(flm.transient('base.FWALL'        ,'zIdx',zIdx)','Wall'                                      );
-                plotter.plotz(flm.transient('base.FBASEVAPOR'   ,'zIdx',zIdx)','Vapor'                                     );
-                plotter.plotz(flm.transient('base.FWAVE'    ,drp,'zIdx',zIdx)','Wave'                                      );
-                plotter.plotz(flm.transient('base.FWAVEMASS',drp,'zIdx',zIdx)','WaveMass','DisplayName'  ,'Wave mass'      );
-                plotter.plotz(flm.transient('base.FBUOY'        ,'zIdx',zIdx)','Buoyancy'                                  );
-                plotter.plotz(flm.transient('base.FGRAV'        ,'zIdx',zIdx)','Gravity'                                   );
-                plotter.plotz(flm.transient('base.FTOT'     ,drp,'zIdx',zIdx)','Total'                                     );
+                plotter.plot(flm.transient('base.FDEP'     ,drp,'zIdx',zIdx)','Deposition','DisplayName','Drop deposition');
+                plotter.plot(flm.transient('base.FWALL'        ,'zIdx',zIdx)','Wall'                                      );
+                plotter.plot(flm.transient('base.FBASEVAPOR'   ,'zIdx',zIdx)','Vapor'                                     );
+                plotter.plot(flm.transient('base.FWAVE'    ,drp,'zIdx',zIdx)','Wave'                                      );
+                plotter.plot(flm.transient('base.FWAVEMASS',drp,'zIdx',zIdx)','WaveMass','DisplayName'  ,'Wave mass'      );
+                plotter.plot(flm.transient('base.FBUOY'        ,'zIdx',zIdx)','Buoyancy'                                  );
+                plotter.plot(flm.transient('base.FGRAV'        ,'zIdx',zIdx)','Gravity'                                   );
+                plotter.plot(flm.transient('base.FTOT'     ,drp,'zIdx',zIdx)','Total'                                     );
                 plotter.legend('show', 'Location', 'best')
 
                 ah_wave = plotter.newTile( ...
                     'tileTitle', 'Wave momentum exchanges', ...
                     'xlabel'   ,                'Time [s]', ...
                     'ylabel'   ,    'Shear stress [N/m^2]');
-                plotter.plotz(flm.transient('wave.FDEP'     ,drp,'zIdx',zIdx)','Deposition','DisplayName','Drop deposition');
-                plotter.plotz(flm.transient('wave.FSHEAR'       ,'zIdx',zIdx)','Vapor'     ,'DisplayName','Vapor shear'    );
-                plotter.plotz(flm.transient('wave.FDRAG'        ,'zIdx',zIdx)','VaporDrag' ,'DisplayName','Vapor drag'     );
-                plotter.plotz(flm.transient('wave.FBASE'    ,drp,'zIdx',zIdx)','Wave'      ,'DisplayName','Base'           );
-                plotter.plotz(flm.transient('wave.FBASEMASS',drp,'zIdx',zIdx)','WaveMass'  ,'DisplayName','Base mass'      );
-                plotter.plotz(flm.transient('wave.FBUOY'        ,'zIdx',zIdx)','Buoyancy'                                  );
-                plotter.plotz(flm.transient('wave.FGRAV'        ,'zIdx',zIdx)','Gravity'                                   );
-                plotter.plotz(flm.transient('wave.FTOT'     ,drp,'zIdx',zIdx)','Total'                                     );
+                plotter.plot(flm.transient('wave.FDEP'     ,drp,'zIdx',zIdx)','Deposition','DisplayName','Drop deposition');
+                plotter.plot(flm.transient('wave.FSHEAR'       ,'zIdx',zIdx)','Vapor'     ,'DisplayName','Vapor shear'    );
+                plotter.plot(flm.transient('wave.FDRAG'        ,'zIdx',zIdx)','VaporDrag' ,'DisplayName','Vapor drag'     );
+                plotter.plot(flm.transient('wave.FBASE'    ,drp,'zIdx',zIdx)','Wave'      ,'DisplayName','Base'           );
+                plotter.plot(flm.transient('wave.FBASEMASS',drp,'zIdx',zIdx)','WaveMass'  ,'DisplayName','Base mass'      );
+                plotter.plot(flm.transient('wave.FBUOY'        ,'zIdx',zIdx)','Buoyancy'                                  );
+                plotter.plot(flm.transient('wave.FGRAV'        ,'zIdx',zIdx)','Gravity'                                   );
+                plotter.plot(flm.transient('wave.FTOT'     ,drp,'zIdx',zIdx)','Total'                                     );
                 plotter.legend('show', 'Location', 'best');
 
                 % Link exchange axes
@@ -1021,11 +1021,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     'tileTitle', 'Drop momentum exchanges', ...
                     'xlabel'   ,                'Time [s]', ...
                     'ylabel'   ,    'Shear stress [N/m^3]');
-                plotter.plotz(drp.transient('FENT' ,flm,'zIdx',zIdx)','Entrainment','DisplayName','Film entrainment');
-                plotter.plotz(drp.transient('FDRAG'    ,'zIdx',zIdx)','Vapor'                                       );
-                plotter.plotz(drp.transient('FBUOY'    ,'zIdx',zIdx)','Buoyancy'                                    );
-                plotter.plotz(drp.transient('FGRAV'    ,'zIdx',zIdx)','Gravity'                                     );
-                plotter.plotz(drp.transient('FTOT' ,flm,'zIdx',zIdx)','Total'                                       );
+                plotter.plot(drp.transient('FENT' ,flm,'zIdx',zIdx)','Entrainment','DisplayName','Film entrainment');
+                plotter.plot(drp.transient('FDRAG'    ,'zIdx',zIdx)','Vapor'                                       );
+                plotter.plot(drp.transient('FBUOY'    ,'zIdx',zIdx)','Buoyancy'                                    );
+                plotter.plot(drp.transient('FGRAV'    ,'zIdx',zIdx)','Gravity'                                     );
+                plotter.plot(drp.transient('FTOT' ,flm,'zIdx',zIdx)','Total'                                       );
                 plotter.legend('show', 'Location', 'best');
             end
 
