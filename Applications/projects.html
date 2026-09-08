@@ -217,18 +217,8 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Application projects</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#available-projects">Available projects</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#adamsson">1. Adamsson</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bennett">2. Bennett</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#groeneveld">3. Groeneveld</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#nureth21">4. NURETH21</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">4. NURETH21</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sawai">5. Sawai</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#wurtz">6. Wurtz</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#html-exports">HTML exports</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#project-status">Project status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nureth21">NURETH21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nuthos15-mrm">NUTHOS15_MRM</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a><ul>
@@ -340,112 +330,54 @@
              
   <section id="application-projects">
 <h1>Application projects<a class="headerlink" href="#application-projects" title="Link to this heading"></a></h1>
-<p>OpenSTREAM-database includes application projects that demonstrate how
-the implemented experimental datasets can be used with OpenSTREAM.</p>
+<p>OpenSTREAM-database includes MATLAB Live Script projects that accompany
+OpenSTREAM publications and document their principal computational
+workflows.</p>
 <p>The project source files are located in the OpenSTREAM-database
 <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/
-├── Adamsson.m
-├── Bennett.mlx
-├── Groeneveld.m
-├── NURETH21.m
-├── Sawai.m
-└── Wurtz.m
+├── NURETH21.mlx
+└── NUTHOS15_MRM.mlx
 </pre></div>
 </div>
-<p>The projects are provided as MATLAB scripts or Live Scripts. As the
-projects are developed, reviewed, and documented, Live Script projects
-may be exported to HTML and made available from this page.</p>
-<p>Before running a project, install OpenSTREAM and OpenSTREAM-database
-separately and make both repository roots available on the MATLAB path.
-Further information is provided on the
+<p>Each Live Script combines explanatory text, model selections, executable
+OpenSTREAM calculations, figures, convergence information, and
+interpretation.</p>
+<p>The MATLAB Live Scripts are the authoritative executable versions of the
+projects. Completed executions may also be provided as static HTML exports
+that include the calculated output and figures and can be viewed without
+MATLAB.</p>
+<p>Before running a project:</p>
+<ul class="simple">
+<li><p>Install OpenSTREAM and OpenSTREAM-database separately and make both
+repository roots available on the MATLAB path.</p></li>
+<li><p>Review the associated dataset documentation and original publications.</p></li>
+<li><p>Review the selected cases, generated inputs, model selections, and
+numerical settings.</p></li>
+<li><p>Confirm that the calculations converge as documented.</p></li>
+<li><p>Record the OpenSTREAM and OpenSTREAM-database versions or commits used.</p></li>
+</ul>
+<p>Further installation and configuration information is provided on the
 <a class="reference internal" href="database.html"><span class="doc">OpenSTREAM-database</span></a> page.</p>
-<section id="available-projects">
-<h2>Available projects<a class="headerlink" href="#available-projects" title="Link to this heading"></a></h2>
-<section id="adamsson">
-<h3>1. Adamsson<a class="headerlink" href="#adamsson" title="Link to this heading"></a></h3>
-<p>The Adamsson project uses the dataset implementation provided by the
-<code class="docutils literal notranslate"><span class="pre">Adamsson2006</span></code> package.</p>
-<p>The project source is available as a MATLAB script:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/Adamsson.m
-</pre></div>
-</div>
-<p>The corresponding dataset package contains:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+Adamsson2006/
-├── +src/
-│   └── Adamsson2006.xml
-├── @Adamsson2006/
-│   ├── Adamsson2006.m
-│   └── plotResults.m
-└── README.md
-</pre></div>
-</div>
-<p>Consult the dataset README for information about the experimental source,
-implemented data, and available application cases.</p>
-</section>
-<section id="bennett">
-<h3>2. Bennett<a class="headerlink" href="#bennett" title="Link to this heading"></a></h3>
-<p>The Bennett project uses the dataset implementation provided by the
-<code class="docutils literal notranslate"><span class="pre">Bennett1967</span></code> package.</p>
-<p>The project source is available as a MATLAB Live Script:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/Bennett.mlx
-</pre></div>
-</div>
-<p>The corresponding dataset package contains:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+Bennett1967/
-├── +src/
-│   └── Bennett1967.xml
-├── @Bennett1967/
-│   ├── Bennett1967.m
-│   └── plotResults.m
-└── README.md
-</pre></div>
-</div>
-<p>An exported HTML version will be added to this section when the Live Script
-has been sufficiently developed, reviewed, and documented.</p>
-<p>Consult the dataset README for information about the experimental source,
-implemented data, and available application cases.</p>
-</section>
-<section id="groeneveld">
-<h3>3. Groeneveld<a class="headerlink" href="#groeneveld" title="Link to this heading"></a></h3>
-<p>The Groeneveld project uses the dataset implementation provided by the
-<code class="docutils literal notranslate"><span class="pre">Groeneveld2019</span></code> package.</p>
-<p>The project source is available as a MATLAB script:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/Groeneveld.m
-</pre></div>
-</div>
-<p>The corresponding dataset package contains:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+Groeneveld2019/
-├── +src/
-│   ├── Blind.xml
-│   └── Groeneveld2019.xml
-├── @Groeneveld2019/
-│   ├── Groeneveld2019.m
-│   └── plotResults.m
-└── README.md
-</pre></div>
-</div>
-<p>Consult the dataset README for information about the experimental source,
-the purpose of the available source-data files, implemented data, and
-available application cases.</p>
-</section>
+<p>OpenSTREAM-database does not currently include an automated test suite.
+Project workflows are therefore verified through reproducible execution
+and documented review.</p>
 <section id="nureth21">
-<h3>4. NURETH21<a class="headerlink" href="#nureth21" title="Link to this heading"></a></h3>
-<p>The NURETH21 project is available as a MATLAB script:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/NURETH21.m
+<h2>NURETH21<a class="headerlink" href="#nureth21" title="Link to this heading"></a></h2>
+<p>The NURETH21 project is provided as a MATLAB Live Script:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/NURETH21.mlx
 </pre></div>
 </div>
-<p>The detailed scope of this project, including its relationship with the
-implemented dataset packages, should be described when the project is
-reviewed and documented.</p>
-</section>
-<section id="id1">
-<h3>4. NURETH21<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>The NURETH21 project is provided as a MATLAB Live Script:</p>
-<p>The Live Script is a reproducible computational companion to the NURETH-21
-publication <span class="bibtex-citation" id="id2">[]</span>. It combines explanatory text,
-model selections, executable OpenSTREAM calculations,figures, convergence
-information, and interpretation in a single interactive document.</p>
+<p>The Live Script is a reproducible computational companion to the
+NURETH-21 publication:</p>
+<div class="docutils container" id="id1">
+<div role="list" class="citation-list">
+<div class="citation" id="id4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>LCCW+5a<span class="fn-bracket">]</span></span>
+<p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. OpenSTREAM: an open-source platform for two-phase flow modeling and simulation. In <em>Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21)</em>. Busan, Korea, August 31–September 5 2025a. URL: <a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf" rel="noreferrer" target="_blank">https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf</a>.</p>
+</div>
+</div>
+</div>
 <p>The workflow reproduces the principal OpenSTREAM calculations presented in
 the paper:</p>
 <ul class="simple">
@@ -453,88 +385,29 @@ the paper:</p>
 four-field solver frameworks.</p></li>
 <li><p>Figure 6: validation of fully developed base-film and disturbance-wave
 properties using the <code class="docutils literal notranslate"><span class="pre">Wurtz1978</span></code> dataset.</p></li>
-<li><p>Figure 7: validation of developing disturbance-wave behaviors</p></li>
+<li><p>Figure 7: validation of developing disturbance-wave behavior using the
+<code class="docutils literal notranslate"><span class="pre">Sawai1989</span></code> dataset.</p></li>
 </ul>
-<p>A completed execution of the Live Script, including the calculated output
-and figures, is available as an HTML export:</p>
+<p>The demonstration case also illustrates the lightweight
+OpenSTREAM-database workflow. The case is defined using a one-row MATLAB
+table and passed directly to lightweight <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> objects, without
+requiring an XML or JSON source file.</p>
+<p>A completed execution of the workflow is available as an HTML export:</p>
 <p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html" rel="noreferrer" target="_blank">Open the NURETH21 companion workflow</a></p>
-<p>The MATLAB Live Script remains the authoritative executable version. The
-HTML export provides a static record of the completed calculations and
-does not require MATLAB to view.</p>
 </section>
-<section id="sawai">
-<h3>5. Sawai<a class="headerlink" href="#sawai" title="Link to this heading"></a></h3>
-<p>The Sawai project uses the dataset implementation provided by the
-<code class="docutils literal notranslate"><span class="pre">Sawai1989</span></code> package.</p>
-<p>The project source is available as a MATLAB script:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/Sawai.m
+<section id="nuthos15-mrm">
+<h2>NUTHOS15_MRM<a class="headerlink" href="#nuthos15-mrm" title="Link to this heading"></a></h2>
+<p>The NUTHOS15_MRM project is provided as a MATLAB Live Script:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/NUTHOS15_MRM.mlx
 </pre></div>
 </div>
-<p>The corresponding dataset package contains:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+Sawai1989/
-├── +src/
-│   └── Sawai1989.xml
-├── @Sawai1989/
-│   ├── Sawai1989.m
-│   └── plotResults.m
-└── README.md
-</pre></div>
-</div>
-<p>Consult the dataset README for information about the experimental source,
-implemented data, and available application cases.</p>
-</section>
-<section id="wurtz">
-<h3>6. Wurtz<a class="headerlink" href="#wurtz" title="Link to this heading"></a></h3>
-<p>The Wurtz project uses the dataset implementation provided by the
-<code class="docutils literal notranslate"><span class="pre">Wurtz1978</span></code> package.</p>
-<p>The project source is available as a MATLAB script:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/Wurtz.m
-</pre></div>
-</div>
-<p>The corresponding dataset package contains:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+Wurtz1978/
-├── +src/
-│   ├── Wurtz1978.xml
-│   └── Wurtz1978HL.xml
-├── @Wurtz1978/
-│   ├── Wurtz1978.m
-│   └── plotResults.m
-└── README.md
-</pre></div>
-</div>
-<p>Consult the dataset README for information about the experimental source,
-the purpose of the available source-data files, implemented data, and
-available application cases.</p>
-</section>
-</section>
-<section id="html-exports">
-<h2>HTML exports<a class="headerlink" href="#html-exports" title="Link to this heading"></a></h2>
-<p>MATLAB Live Script projects may be exported to HTML after the workflows
-have been developed and reviewed.</p>
-<p>An exported HTML project provides a static representation of the Live
-Script, including its explanatory text, code, calculated output, and
-figures. Interactive figures, animations, controls, and other Live Editor
-features may not be preserved in the exported version.</p>
-<p>The MATLAB source files in OpenSTREAM-database remain the authoritative
-executable versions of the projects.</p>
-</section>
-<section id="project-status">
-<h2>Project status<a class="headerlink" href="#project-status" title="Link to this heading"></a></h2>
-<p>The application projects are under development. Their current levels of
-documentation, completeness, and verification may differ.</p>
-<p>Before using a project for application or validation work:</p>
-<ul class="simple">
-<li><p>Review the corresponding dataset README.</p></li>
-<li><p>Consult the original experimental publication.</p></li>
-<li><p>Inspect the selected cases and generated OpenSTREAM inputs.</p></li>
-<li><p>Review the solver and model configuration.</p></li>
-<li><p>Verify that the project runs in the documented environment.</p></li>
-<li><p>Review calculated and experimental quantities before interpreting the
-comparison.</p></li>
-</ul>
-<p>OpenSTREAM-database does not currently include an automated test suite.
-Project workflows should therefore be verified through reproducible
-execution and documented review.</p>
+<p>The Live Script will provide a reproducible computational companion to the
+corresponding NUTHOS-15 publication. It will document the OpenSTREAM
+calculations used to apply and evaluate the MRM model, including the model
+selections, numerical settings, figures, convergence information, and
+interpretation of the results.</p>
+<p>The completed workflow and its HTML export will be linked from this page
+after they have been reviewed.</p>
 </section>
 </section>
 
