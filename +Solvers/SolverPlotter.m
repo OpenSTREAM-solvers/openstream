@@ -788,8 +788,8 @@ classdef SolverPlotter < handle
             yl = plotters.ylim;
 
             % Prepare X and Y data for vertical lines with NaN separators
-            xdata = reshape([klocZ; klocZ; nan(size(klocZ))], 1, [])';
-            ydata = repmat([yl, nan(length(plotters),1)], 1, numel(klocZ))';
+            %xdata = reshape([klocZ; klocZ; nan(size(klocZ))], 1, [])';
+            %ydata = repmat([yl, nan(length(plotters),1)], 1, numel(klocZ))';
             ydata='ylim';
 
             for i=1:length(klocZ)
