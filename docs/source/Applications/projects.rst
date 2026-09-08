@@ -1,8 +1,9 @@
 Application projects
 ====================
 
-OpenSTREAM-database includes application projects that demonstrate how
-the implemented experimental datasets can be used with OpenSTREAM.
+OpenSTREAM-database includes MATLAB Live Script projects that accompany
+OpenSTREAM publications and document their principal computational
+workflows.
 
 The project source files are located in the OpenSTREAM-database
 ``projects`` folder:
@@ -10,137 +11,51 @@ The project source files are located in the OpenSTREAM-database
 .. code-block:: text
 
    projects/
-   ├── Adamsson.m
-   ├── Bennett.mlx
-   ├── Groeneveld.m
-   ├── NURETH21.m
-   ├── Sawai.m
-   └── Wurtz.m
+   ├── NURETH21.mlx
+   └── NUTHOS15_MRM.mlx
 
-The projects are provided as MATLAB scripts or Live Scripts. As the
-projects are developed, reviewed, and documented, Live Script projects
-may be exported to HTML and made available from this page.
+Each Live Script combines explanatory text, model selections, executable
+OpenSTREAM calculations, figures, convergence information, and
+interpretation.
 
-Before running a project, install OpenSTREAM and OpenSTREAM-database
-separately and make both repository roots available on the MATLAB path.
-Further information is provided on the
+The MATLAB Live Scripts are the authoritative executable versions of the
+projects. Completed executions may also be provided as static HTML exports
+that include the calculated output and figures and can be viewed without
+MATLAB.
+
+Before running a project:
+
+- Install OpenSTREAM and OpenSTREAM-database separately and make both
+  repository roots available on the MATLAB path.
+- Review the associated dataset documentation and original publications.
+- Review the selected cases, generated inputs, model selections, and
+  numerical settings.
+- Confirm that the calculations converge as documented.
+- Record the OpenSTREAM and OpenSTREAM-database versions or commits used.
+
+Further installation and configuration information is provided on the
 :doc:`OpenSTREAM-database <database>` page.
 
-Available projects
-------------------
+OpenSTREAM-database does not currently include an automated test suite.
+Project workflows are therefore verified through reproducible execution
+and documented review.
 
-1. Adamsson
-~~~~~~~~~~~
-
-The Adamsson project uses the dataset implementation provided by the
-``Adamsson2006`` package.
-
-The project source is available as a MATLAB script:
-
-.. code-block:: text
-
-   projects/Adamsson.m
-
-The corresponding dataset package contains:
-
-.. code-block:: text
-
-   +Adamsson2006/
-   ├── +src/
-   │   └── Adamsson2006.xml
-   ├── @Adamsson2006/
-   │   ├── Adamsson2006.m
-   │   └── plotResults.m
-   └── README.md
-
-Consult the dataset README for information about the experimental source,
-implemented data, and available application cases.
-
-2. Bennett
-~~~~~~~~~~
-
-The Bennett project uses the dataset implementation provided by the
-``Bennett1967`` package.
-
-The project source is available as a MATLAB Live Script:
-
-.. code-block:: text
-
-   projects/Bennett.mlx
-
-The corresponding dataset package contains:
-
-.. code-block:: text
-
-   +Bennett1967/
-   ├── +src/
-   │   └── Bennett1967.xml
-   ├── @Bennett1967/
-   │   ├── Bennett1967.m
-   │   └── plotResults.m
-   └── README.md
-
-An exported HTML version will be added to this section when the Live Script
-has been sufficiently developed, reviewed, and documented.
-
-Consult the dataset README for information about the experimental source,
-implemented data, and available application cases.
-
-3. Groeneveld
-~~~~~~~~~~~~~
-
-The Groeneveld project uses the dataset implementation provided by the
-``Groeneveld2019`` package.
-
-The project source is available as a MATLAB script:
-
-.. code-block:: text
-
-   projects/Groeneveld.m
-
-The corresponding dataset package contains:
-
-.. code-block:: text
-
-   +Groeneveld2019/
-   ├── +src/
-   │   ├── Blind.xml
-   │   └── Groeneveld2019.xml
-   ├── @Groeneveld2019/
-   │   ├── Groeneveld2019.m
-   │   └── plotResults.m
-   └── README.md
-
-Consult the dataset README for information about the experimental source,
-the purpose of the available source-data files, implemented data, and
-available application cases.
-
-4. NURETH21
-~~~~~~~~~~~
-
-The NURETH21 project is available as a MATLAB script:
-
-.. code-block:: text
-
-   projects/NURETH21.m
-
-The detailed scope of this project, including its relationship with the
-implemented dataset packages, should be described when the project is
-reviewed and documented.
-
-4. NURETH21
-~~~~~~~~~~~
+NURETH21
+--------
 
 The NURETH21 project is provided as a MATLAB Live Script:
 
-.. cod~~block:: text
+.. code-block:: text
 
    projects/NURETH21.mlx
 
-The Live Script is a reproducible computational companion to the NURETH-21
-publication :cite:p:`Lecorre2025OpenSTREAM`. It combines explanatory text,
-model selections, executable OpenSTREAM calculations,figures, convergence
-information, and interpretation in a single interactive document.
+The Live Script is a reproducible computational companion to the
+NURETH-21 publication:
+
+.. bibliography::
+   :filter: False
+
+   LeCorre2025OpenSTREAM
 
 The workflow reproduces the principal OpenSTREAM calculations presented in
 the paper:
@@ -149,104 +64,33 @@ the paper:
   four-field solver frameworks.
 - Figure 6: validation of fully developed base-film and disturbance-wave
   properties using the ``Wurtz1978`` dataset.
-- Figure 7: validation of developing disturbance-wave behaviors
+- Figure 7: validation of developing disturbance-wave behavior using the
+  ``Sawai1989`` dataset.
 
-A completed execution of the Live Script, including the calculated output
-and figures, is available as an HTML export:
+The demonstration case also illustrates the lightweight
+OpenSTREAM-database workflow. The case is defined using a one-row MATLAB
+table and passed directly to lightweight ``Dataset`` objects, without
+requiring an XML or JSON source file.
+
+A completed execution of the workflow is available as an HTML export:
 
 `Open the NURETH21 companion workflow
 <https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html>`_
 
-The MATLAB Live Script remains the authoritative executable version. The
-HTML export provides a static record of the completed calculations and
-does not require MATLAB to view.
-
-5. Sawai
-~~~~~~~~
-
-The Sawai project uses the dataset implementation provided by the
-``Sawai1989`` package.
-
-The project source is available as a MATLAB script:
-
-.. code-block:: text
-
-   projects/Sawai.m
-
-The corresponding dataset package contains:
-
-.. code-block:: text
-
-   +Sawai1989/
-   ├── +src/
-   │   └── Sawai1989.xml
-   ├── @Sawai1989/
-   │   ├── Sawai1989.m
-   │   └── plotResults.m
-   └── README.md
-
-Consult the dataset README for information about the experimental source,
-implemented data, and available application cases.
-
-6. Wurtz
-~~~~~~~~
-
-The Wurtz project uses the dataset implementation provided by the
-``Wurtz1978`` package.
-
-The project source is available as a MATLAB script:
-
-.. code-block:: text
-
-   projects/Wurtz.m
-
-The corresponding dataset package contains:
-
-.. code-block:: text
-
-   +Wurtz1978/
-   ├── +src/
-   │   ├── Wurtz1978.xml
-   │   └── Wurtz1978HL.xml
-   ├── @Wurtz1978/
-   │   ├── Wurtz1978.m
-   │   └── plotResults.m
-   └── README.md
-
-Consult the dataset README for information about the experimental source,
-the purpose of the available source-data files, implemented data, and
-available application cases.
-
-HTML exports
+NUTHOS15_MRM
 ------------
 
-MATLAB Live Script projects may be exported to HTML after the workflows
-have been developed and reviewed.
+The NUTHOS15_MRM project is provided as a MATLAB Live Script:
 
-An exported HTML project provides a static representation of the Live
-Script, including its explanatory text, code, calculated output, and
-figures. Interactive figures, animations, controls, and other Live Editor
-features may not be preserved in the exported version.
+.. code-block:: text
 
-The MATLAB source files in OpenSTREAM-database remain the authoritative
-executable versions of the projects.
+   projects/NUTHOS15_MRM.mlx
 
-Project status
---------------
+The Live Script will provide a reproducible computational companion to the
+corresponding NUTHOS-15 publication. It will document the OpenSTREAM
+calculations used to apply and evaluate the MRM model, including the model
+selections, numerical settings, figures, convergence information, and
+interpretation of the results.
 
-The application projects are under development. Their current levels of
-documentation, completeness, and verification may differ.
-
-Before using a project for application or validation work:
-
-- Review the corresponding dataset README.
-- Consult the original experimental publication.
-- Inspect the selected cases and generated OpenSTREAM inputs.
-- Review the solver and model configuration.
-- Verify that the project runs in the documented environment.
-- Review calculated and experimental quantities before interpreting the
-  comparison.
-
-OpenSTREAM-database does not currently include an automated test suite.
-Project workflows should therefore be verified through reproducible
-execution and documented review.
+The completed workflow and its HTML export will be linked from this page
+after they have been reviewed.
