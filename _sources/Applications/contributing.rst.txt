@@ -174,13 +174,25 @@ class-folder syntax:
 - The class is referenced using the package-qualified name
   ``AuthorYear.AuthorYear``.
 
-Names and capitalization must be consistent. Do not mix forms such as
-``AuthorYear``, ``Authoryear``, and ``authoryear``.
-
 For publication-based datasets, the package name should generally combine
 the surname of the first author and the four-digit publication year,
 following the convention used by the existing dataset packages.
 
+If this combination is already used by another package, add a concise
+qualifier that unambiguously identifies the publication. Prefer the second
+author's surname or a short title keyword, for example
+``AuthorCoauthor2020`` or ``Author2020CHF``.
+
+The suffixes ``a``, ``b``, and so forth may be used when closely related
+publications are conventionally cited as ``Author2020a``,
+``Author2020b``, and so forth. The assignment of these suffixes must be
+documented and remain stable.
+
+The capitalization of author names and title keywords must be used
+consistently throughout the package name, class name, source filename, and
+documentation. Forexample, do not mix ``Author2020``, ``author2020``, and
+``AUTHOR2020``.
+ 
 The dataset name must be a valid MATLAB identifier. Spaces, hyphens,
 punctuation, and other invalid identifier characters must not be used.
 
@@ -343,7 +355,7 @@ documentation should state:
 - The exact field name.
 - The physical meaning of the field.
 - Whether the field is required or optional.
-- The SI unit used in OpenSTREAM-database.
+- Confirmation that all numerical data use SI units.
 - The unit reported in the original experimental source.
 - The source table, figure, page, appendix, or data file.
 - Any unit conversion or other processing applied.
@@ -395,7 +407,7 @@ The dataset README should include:
 - The measured and prescribed quantities.
 - The range of experimental conditions.
 - The units reported in the original source.
-- The SI units used in OpenSTREAM-database.
+- Confirmation that all numerical data use SI units.
 - The reported measurement uncertainties.
 - Known limitations or qualifications of the data.
 - The relationship between the original data and the implemented
@@ -565,7 +577,7 @@ Each new dataset contribution should include a package README describing:
 - The implemented experimental conditions and measured quantities.
 - The mandatory and dataset-specific fields.
 - The units reported in the original source.
-- The SI units used in OpenSTREAM-database.
+- Confirmation that all numerical data use SI units.
 - Any unit conversions, transcription steps, interpolation, filtering, or
   other data processing.
 - The reported measurement uncertainties, where available.

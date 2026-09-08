@@ -128,6 +128,39 @@ The detailed scope of this project, including its relationship with the
 implemented dataset packages, should be described when the project is
 reviewed and documented.
 
+4. NURETH21
+~~~~~~~~~~~
+
+The NURETH21 project is provided as a MATLAB Live Script:
+
+.. cod~~block:: text
+
+   projects/NURETH21.mlx
+
+The Live Script is a reproducible computational companion to the NURETH-21
+publication :cite:p:`Lecorre2025OpenSTREAM`. It combines explanatory text,
+model selections, executable OpenSTREAM calculations,figures, convergence
+information, and interpretation in a single interactive document.
+
+The workflow reproduces the principal OpenSTREAM calculations presented in
+the paper:
+
+- Figures 3 and 4: comparison of the mixture, two-fluid, three-field, and
+  four-field solver frameworks.
+- Figure 6: validation of fully developed base-film and disturbance-wave
+  properties using the ``Wurtz1978`` dataset.
+- Figure 7: validation of developing disturbance-wave behaviors
+
+A completed execution of the Live Script, including the calculated output
+and figures, is available as an HTML export:
+
+`Open the NURETH21 companion workflow
+<https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html>`_
+
+The MATLAB Live Script remains the authoritative executable version. The
+HTML export provides a static record of the completed calculations and
+does not require MATLAB to view.
+
 5. Sawai
 ~~~~~~~~
 

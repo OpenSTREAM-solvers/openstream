@@ -222,6 +222,7 @@
 <li class="toctree-l3"><a class="reference internal" href="projects.html#bennett">2. Bennett</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#groeneveld">3. Groeneveld</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#nureth21">4. NURETH21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="projects.html#id1">4. NURETH21</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#sawai">5. Sawai</a></li>
 <li class="toctree-l3"><a class="reference internal" href="projects.html#wurtz">6. Wurtz</a></li>
 </ul>
@@ -506,11 +507,21 @@ class-folder syntax:</p>
 <li><p>The class is referenced using the package-qualified name
 <code class="docutils literal notranslate"><span class="pre">AuthorYear.AuthorYear</span></code>.</p></li>
 </ul>
-<p>Names and capitalization must be consistent. Do not mix forms such as
-<code class="docutils literal notranslate"><span class="pre">AuthorYear</span></code>, <code class="docutils literal notranslate"><span class="pre">Authoryear</span></code>, and <code class="docutils literal notranslate"><span class="pre">authoryear</span></code>.</p>
 <p>For publication-based datasets, the package name should generally combine
 the surname of the first author and the four-digit publication year,
 following the convention used by the existing dataset packages.</p>
+<p>If this combination is already used by another package, add a concise
+qualifier that unambiguously identifies the publication. Prefer the second
+author’s surname or a short title keyword, for example
+<code class="docutils literal notranslate"><span class="pre">AuthorCoauthor2020</span></code> or <code class="docutils literal notranslate"><span class="pre">Author2020CHF</span></code>.</p>
+<p>The suffixes <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, and so forth may be used when closely related
+publications are conventionally cited as <code class="docutils literal notranslate"><span class="pre">Author2020a</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Author2020b</span></code>, and so forth. The assignment of these suffixes must be
+documented and remain stable.</p>
+<p>The capitalization of author names and title keywords must be used
+consistently throughout the package name, class name, source filename, and
+documentation. Forexample, do not mix <code class="docutils literal notranslate"><span class="pre">Author2020</span></code>, <code class="docutils literal notranslate"><span class="pre">author2020</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">AUTHOR2020</span></code>.</p>
 <p>The dataset name must be a valid MATLAB identifier. Spaces, hyphens,
 punctuation, and other invalid identifier characters must not be used.</p>
 <p>When copying the template, update every occurrence of <code class="docutils literal notranslate"><span class="pre">Template</span></code> in:</p>
@@ -675,7 +686,7 @@ documentation should state:</p>
 <li><p>The exact field name.</p></li>
 <li><p>The physical meaning of the field.</p></li>
 <li><p>Whether the field is required or optional.</p></li>
-<li><p>The SI unit used in OpenSTREAM-database.</p></li>
+<li><p>Confirmation that all numerical data use SI units.</p></li>
 <li><p>The unit reported in the original experimental source.</p></li>
 <li><p>The source table, figure, page, appendix, or data file.</p></li>
 <li><p>Any unit conversion or other processing applied.</p></li>
@@ -723,7 +734,7 @@ source.</p>
 <li><p>The measured and prescribed quantities.</p></li>
 <li><p>The range of experimental conditions.</p></li>
 <li><p>The units reported in the original source.</p></li>
-<li><p>The SI units used in OpenSTREAM-database.</p></li>
+<li><p>Confirmation that all numerical data use SI units.</p></li>
 <li><p>The reported measurement uncertainties.</p></li>
 <li><p>Known limitations or qualifications of the data.</p></li>
 <li><p>The relationship between the original data and the implemented
@@ -879,7 +890,7 @@ pull request.</p>
 <li><p>The implemented experimental conditions and measured quantities.</p></li>
 <li><p>The mandatory and dataset-specific fields.</p></li>
 <li><p>The units reported in the original source.</p></li>
-<li><p>The SI units used in OpenSTREAM-database.</p></li>
+<li><p>Confirmation that all numerical data use SI units.</p></li>
 <li><p>Any unit conversions, transcription steps, interpolation, filtering, or
 other data processing.</p></li>
 <li><p>The reported measurement uncertainties, where available.</p></li>
