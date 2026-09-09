@@ -8,7 +8,7 @@
    :hidden:
    :caption: Usage
 
-   /Udage/scope_and_limitations
+   /Usage/scope_and_limitations
    /Usage/gettingStarted
    /Usage/runSampleScript
    /Usage/versioning
