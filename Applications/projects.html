@@ -178,7 +178,9 @@
 <li class="toctree-l2"><a class="reference internal" href="database.html#purpose">Purpose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#repository-organization">Repository organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#dataset-source-files">Dataset source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#lightweight-in-memory-datasets">Lightweight in-memory datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html#data-preparation-and-provenance">Data preparation and provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#application-projects">Application projects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="database.html#installation">Installation</a></li>
@@ -198,6 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-template">Dataset template</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#naming-convention">Naming convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#lightweight-datasets">Lightweight datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-fields">Dataset fields</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#mandatory-fields">Mandatory fields</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#dataset-specific-fields">Dataset-specific fields</a></li>
@@ -207,11 +210,15 @@
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#publication-companion-workflows">Publication companion workflows</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#comparison-and-validation">Comparison and validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-and-verification">Testing and verification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#commit-messages">Commit messages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#contributor-checklist">Contributor checklist</a></li>
 </ul>
@@ -331,8 +338,8 @@
   <section id="application-projects">
 <h1>Application projects<a class="headerlink" href="#application-projects" title="Link to this heading"></a></h1>
 <p>OpenSTREAM-database includes MATLAB Live Script projects that accompany
-OpenSTREAM publications and document their principal computational
-workflows.</p>
+OpenSTREAM publications and illustrate the principal computational
+workflows and selected results presented in those publications.</p>
 <p>The project source files are located in the OpenSTREAM-database
 <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/
@@ -341,27 +348,38 @@ workflows.</p>
 </pre></div>
 </div>
 <p>Each Live Script combines explanatory text, model selections, executable
-OpenSTREAM calculations, figures, convergence information, and
-interpretation.</p>
+OpenSTREAM calculations, convergence information, figures, and
+interpretation. The objective is to provide a transparent and reproducible
+workflow for the selected calculations and results presented in the
+corresponding publication.</p>
+<p>The companion workflows do not represent the complete research activities
+supporting the publications. Model development and qualification generally
+involve additional experimental cases, closure-model evaluations,
+sensitivity studies, numerical investigations, and intermediate analyses
+that are not included in the published figures or companion Live Scripts.</p>
 <p>The MATLAB Live Scripts are the authoritative executable versions of the
-projects. Completed executions may also be provided as static HTML exports
-that include the calculated output and figures and can be viewed without
-MATLAB.</p>
-<p>Before running a project:</p>
+published companion workflows. Completed executions may also be provided
+as static HTML exports containing the calculated output and figures. The
+HTML exports can be viewed without MATLAB, although interactive Live
+Editor features may not be preserved.</p>
+<p>Before running or extending a project:</p>
 <ul class="simple">
 <li><p>Install OpenSTREAM and OpenSTREAM-database separately and make both
 repository roots available on the MATLAB path.</p></li>
-<li><p>Review the associated dataset documentation and original publications.</p></li>
-<li><p>Review the selected cases, generated inputs, model selections, and
-numerical settings.</p></li>
+<li><p>Review the corresponding publication and associated dataset
+documentation.</p></li>
+<li><p>Review the selected experimental cases and generated OpenSTREAM inputs.</p></li>
+<li><p>Review the physical-model and numerical-option selections.</p></li>
 <li><p>Confirm that the calculations converge as documented.</p></li>
+<li><p>Distinguish direct experimental measurements from derived quantities.</p></li>
 <li><p>Record the OpenSTREAM and OpenSTREAM-database versions or commits used.</p></li>
 </ul>
 <p>Further installation and configuration information is provided on the
 <a class="reference internal" href="database.html"><span class="doc">OpenSTREAM-database</span></a> page.</p>
 <p>OpenSTREAM-database does not currently include an automated test suite.
-Project workflows are therefore verified through reproducible execution
-and documented review.</p>
+Project workflows are therefore verified through reproducible execution,
+review of convergence, and documented comparison of calculated and
+experimental quantities.</p>
 <section id="nureth21">
 <h2>NURETH21<a class="headerlink" href="#nureth21" title="Link to this heading"></a></h2>
 <p>The NURETH21 project is provided as a MATLAB Live Script:</p>
@@ -378,8 +396,8 @@ NURETH-21 publication:</p>
 </div>
 </div>
 </div>
-<p>The workflow reproduces the principal OpenSTREAM calculations presented in
-the paper:</p>
+<p>The workflow reproduces selected OpenSTREAM calculations and results
+presented in the paper:</p>
 <ul class="simple">
 <li><p>Figures 3 and 4: comparison of the mixture, two-fluid, three-field, and
 four-field solver frameworks.</p></li>
@@ -389,11 +407,23 @@ properties using the <code class="docutils literal notranslate"><span class="pre
 <code class="docutils literal notranslate"><span class="pre">Sawai1989</span></code> dataset.</p></li>
 </ul>
 <p>The demonstration case also illustrates the lightweight
-OpenSTREAM-database workflow. The case is defined using a one-row MATLAB
-table and passed directly to lightweight <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> objects, without
-requiring an XML or JSON source file.</p>
+OpenSTREAM-database workflow. The geometry, boundary conditions, and
+heating conditions are defined in a one-row MATLAB table and passed
+directly to lightweight <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> objects. No XML or JSON source-data
+file is required.</p>
+<p>The validation calculations use the dataset packages to select
+experimental cases, generate OpenSTREAM inputs, run the FourField solver,
+check convergence, and compare calculated and measured annular-flow
+properties.</p>
+<p>The Live Script focuses on the calculations required to illustrate the
+figures and conclusions presented in the publication. It does not include
+all cases, model-development activities, closure-model evaluations,
+sensitivity studies, or numerical investigations performed during the
+underlying research.</p>
+<p>Figure 5 is not reproduced because the TRACE reference results required
+for that comparison are not included in the companion workflow.</p>
 <p>A completed execution of the workflow is available as an HTML export:</p>
-<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html" rel="noreferrer" target="_blank">Open the NURETH21 companion workflow</a></p>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html" rel="noreferrer" target="_blank">Open the completed NURETH21 companion workflow</a></p>
 </section>
 <section id="nuthos15-mrm">
 <h2>NUTHOS15_MRM<a class="headerlink" href="#nuthos15-mrm" title="Link to this heading"></a></h2>
@@ -401,13 +431,24 @@ requiring an XML or JSON source file.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/NUTHOS15_MRM.mlx
 </pre></div>
 </div>
-<p>The Live Script will provide a reproducible computational companion to the
-corresponding NUTHOS-15 publication. It will document the OpenSTREAM
-calculations used to apply and evaluate the MRM model, including the model
-selections, numerical settings, figures, convergence information, and
-interpretation of the results.</p>
-<p>The completed workflow and its HTML export will be linked from this page
-after they have been reviewed.</p>
+<p>The Live Script is intended to provide a reproducible computational
+companion to the corresponding NUTHOS-15 publication. It will document the
+selected OpenSTREAM calculations and results used to illustrate the
+application and evaluation of the MRM model, including:</p>
+<ul class="simple">
+<li><p>the selected experimental cases;</p></li>
+<li><p>the physical-model and numerical-option selections;</p></li>
+<li><p>the executable OpenSTREAM calculations;</p></li>
+<li><p>convergence information;</p></li>
+<li><p>calculated-versus-measured comparisons;</p></li>
+<li><p>interpretation of the principal results.</p></li>
+</ul>
+<p>The companion workflow will focus on the calculations and figures
+presented in the publication. It will not constitute a complete record of
+the model-development process, sensitivity studies, closure-model
+evaluations, or additional cases considered during the research.</p>
+<p>The workflow and its HTML export will be linked from this page after the
+project has been completed and reviewed.</p>
 </section>
 </section>
 

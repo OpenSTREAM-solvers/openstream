@@ -178,7 +178,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#purpose">Purpose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#repository-organization">Repository organization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-source-files">Dataset source files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lightweight-in-memory-datasets">Lightweight in-memory datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#units">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-preparation-and-provenance">Data preparation and provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#application-projects">Application projects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
@@ -198,6 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-template">Dataset template</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#naming-convention">Naming convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#source-data">Source data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#lightweight-datasets">Lightweight datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-fields">Dataset fields</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#mandatory-fields">Mandatory fields</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contributing.html#dataset-specific-fields">Dataset-specific fields</a></li>
@@ -207,11 +210,15 @@
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#data-provenance">Data provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#dataset-class">Dataset class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#openstream-dependency">OpenSTREAM dependency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#application-projects">Application projects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#publication-companion-workflows">Publication companion workflows</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#comparison-and-validation">Comparison and validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#plotting-and-post-processing">Plotting and post-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#testing-and-verification">Testing and verification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation-requirements">Documentation requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#commit-messages">Commit messages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#submitting-a-contribution">Submitting a contribution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#contributor-checklist">Contributor checklist</a></li>
 </ul>
@@ -339,8 +346,8 @@ solvers using publicly available experimental datasets.</p>
 models, numerical methods, input handling, visualization capabilities,
 tutorials, documentation, and core automated tests.</p></li>
 <li><p><strong>OpenSTREAM-database</strong> provides dataset implementations, application
-workflows, calculated-versus-measured comparisons, and an environment
-for model assessment and validation.</p></li>
+workflows, calculated-versus-measured comparisons, publication companion
+workflows, and an environment for model assessment and validation.</p></li>
 </ul>
 <p>The two repositories are maintained separately. OpenSTREAM is not included
 as a Git submodule of OpenSTREAM-database. A compatible OpenSTREAM working
@@ -357,9 +364,11 @@ definitions.</p></li>
 <li><p>Development and assessment of physical and closure models.</p></li>
 <li><p>Numerical sensitivity and uncertainty studies.</p></li>
 <li><p>Documentation of dataset provenance, assumptions, and processing.</p></li>
+<li><p>Publication companion workflows illustrating selected calculations,
+figures, and results.</p></li>
 <li><p>Application- and validation-oriented research and solver development.</p></li>
 </ul>
-<p>Separating the application datasets from the core solver repository allows
+<p>Separating application datasets from the core solver repository allows
 OpenSTREAM and OpenSTREAM-database to evolve independently while retaining
 a common application interface.</p>
 </section>
@@ -368,8 +377,11 @@ a common application interface.</p>
 <p>The principal repository structure is:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>openstream-database/
 ├── +DatasetName/
+├── +Template/
 ├── @Dataset/
 ├── projects/
+├── sandbox/
+├── LICENSE
 ├── README.md
 └── functionSignatures.json
 </pre></div>
@@ -377,16 +389,19 @@ a common application interface.</p>
 <p>Each dataset is implemented as a MATLAB package that generally contains:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+DatasetName/
 ├── +src/
+│   └── DatasetName.xml
 ├── @DatasetName/
 │   ├── DatasetName.m
 │   └── plotResults.m
 └── README.md
 </pre></div>
 </div>
+<p>Additional dataset-specific methods may be provided when required, for
+example for post-processing or trend analysis.</p>
 <p>The package components have the following roles:</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">+src</span></code></dt><dd><p>Contains the structured experimental data and the information required
-to define OpenSTREAM cases. XML and JSON source files are supported.</p>
+to define OpenSTREAM cases.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">&#64;DatasetName</span></code></dt><dd><p>Contains the dataset-specific class and associated methods.</p>
 </dd>
@@ -394,23 +409,39 @@ to define OpenSTREAM cases. XML and JSON source files are supported.</p>
 calculated-versus-measured comparison functionality.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">README.md</span></code></dt><dd><p>Documents the original experimental source, implemented data, units,
-uncertainties, assumptions, and supported workflows.</p>
+uncertainties, assumptions, processing methods, supported workflows,
+and known limitations.</p>
 </dd>
 </dl>
 <p>The generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class provides functionality shared by the
 individual dataset implementations, including source-data handling,
-OpenSTREAM input generation, and case execution.</p>
+case selection, OpenSTREAM input generation, case execution, convergence
+review, and result storage.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">+Template</span></code> package provides the recommended starting structure for
+new dataset contributions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder contains publication companion workflows and other
+reviewed application projects.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sandbox</span></code> folder provides a local workspace for exploratory
+OpenSTREAM-database calculations. Temporary sandbox scripts, generated
+inputs, results, logs, figures, and saved objects are not maintained as
+repository content.</p>
 </section>
 <section id="dataset-source-files">
 <h2>Dataset source files<a class="headerlink" href="#dataset-source-files" title="Link to this heading"></a></h2>
-<p>Experimental cases and associated information are stored in structured XML
-or JSON files under each dataset package’s <code class="docutils literal notranslate"><span class="pre">+src</span></code> directory.</p>
+<p>Experimental cases and associated information are normally stored in a
+structured XML or JSON file under the dataset package’s <code class="docutils literal notranslate"><span class="pre">+src</span></code>
+directory.</p>
+<p>XML and JSON are supported source formats. A dataset package should
+normally maintain only one authoritative machine-readable source file.
+If equivalent XML and JSON representations are both retained, the dataset
+README must identify the authoritative source, explain how the alternative
+representation is generated, and describe how consistency is verified.</p>
 <p>Each case can contain two categories of information:</p>
 <ol class="arabic simple">
 <li><p><strong>OpenSTREAM case-definition information</strong>, whose field names follow a
 strict naming convention so that the generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> functionality
-can identify the boundary conditions and other information passed to
-OpenSTREAM.</p></li>
+can identify geometry, boundary conditions, wall heating, and other
+information passed to OpenSTREAM.</p></li>
 <li><p><strong>Dataset-specific information</strong>, whose field names and contents can be
 defined according to the needs of the dataset implementation.</p></li>
 </ol>
@@ -421,40 +452,119 @@ example, a dataset-specific <code class="docutils literal notranslate"><span cla
 construct calculated-versus-measured comparisons.</p>
 <p>The reserved OpenSTREAM field names are case-sensitive and must use the
 spelling expected by the input-generation implementation. Other fields can
-be added freely, provided that they do not conflict with the reserved
-names and are interpreted consistently by the corresponding dataset class.</p>
-<p>XML and JSON are alternative representations of the same logical dataset
-information. Dataset classes should expose equivalent information
-regardless of the source-file format.</p>
+be added freely, provided that they do not conflict with reserved names
+and are interpreted consistently by the corresponding dataset class.</p>
 <p>Scalar quantities are stored as individual values. Array quantities are
-represented by repeated XML elements or JSON arrays. Related arrays should
-have compatible lengths and ordering.</p>
+represented by repeated XML elements or JSON arrays. Related arrays must
+have compatible lengths, ordering, and physical meaning.</p>
+<p>Missing numerical measurements must be represented consistently and must
+not be interpreted as zero. The convention used for a dataset should be
+documented in its README and handled explicitly by dataset-specific
+methods.</p>
 <p>Detailed source-file conventions should be documented in the corresponding
 dataset README and class implementation.</p>
+</section>
+<section id="lightweight-in-memory-datasets">
+<h2>Lightweight in-memory datasets<a class="headerlink" href="#lightweight-in-memory-datasets" title="Link to this heading"></a></h2>
+<p>OpenSTREAM-database can also be used without an XML or JSON source-data
+file.</p>
+<p>A case can be defined directly using a one-row MATLAB table and passed to
+a lightweight <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> object:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Dataset</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'isLightWeight'</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'lightWeightEntryData'</span><span class="p">,</span><span class="n">entryData</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This in-memory workflow is useful for:</p>
+<ul class="simple">
+<li><p>publication demonstration cases;</p></li>
+<li><p>concise examples and tutorials;</p></li>
+<li><p>exploratory calculations;</p></li>
+<li><p>user-defined cases that do not require a maintained dataset package;</p></li>
+<li><p>comparisons of multiple OpenSTREAM solver frameworks using a common
+case definition.</p></li>
+</ul>
+<p>The table must contain the geometry, boundary-condition, wall-heating, and
+fluid fields required by the selected OpenSTREAM workflow. Numerical values
+must follow the same SI-unit conventions as file-based datasets.</p>
+<p>A lightweight case is not a substitute for a maintained dataset package
+when experimental provenance, uncertainty, repeated case selection, or
+long-term reuse must be documented.</p>
 </section>
 <section id="units">
 <h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
 <p>OpenSTREAM uses SI units for all inputs, calculated quantities, and stored
 results.</p>
 <p>OpenSTREAM-database follows the same convention. All numerical data stored
-in dataset source files under the <code class="docutils literal notranslate"><span class="pre">+src</span></code> directories are expressed in SI
-units, including data converted from other unit systems used in the
-original experimental sources.</p>
+in dataset source files or supplied through lightweight in-memory records
+must use SI units. Absolute temperatures are expressed in kelvin.</p>
+<p>Data converted from other unit systems must be checked and documented.
+Units may be stated explicitly for individual fields or established through
+a clear dataset-wide convention. Units must be stated whenever clarification
+is useful, particularly for quantities whose representation could otherwise
+be ambiguous.</p>
+<p>For example, a field called <code class="docutils literal notranslate"><span class="pre">InletSubcooling</span></code> may represent an enthalpy
+difference in J/kg rather than a temperature difference. Such conventions
+must be stated explicitly in the dataset README.</p>
 <p>The original publications should be consulted for the reported quantities,
-measurement definitions, original units, and experimental uncertainties.
-Any conversion to SI units should be documented in the corresponding
-dataset README or implementation.</p>
+measurement definitions, original units, and experimental uncertainties.</p>
+</section>
+<section id="data-preparation-and-provenance">
+<h2>Data preparation and provenance<a class="headerlink" href="#data-preparation-and-provenance" title="Link to this heading"></a></h2>
+<p>Dataset values may be obtained from publication tables, supplementary data,
+public data repositories, or digitized figures.</p>
+<p>The dataset README must document the preparation method, including, as
+applicable:</p>
+<ul class="simple">
+<li><p>manual transcription from tables;</p></li>
+<li><p>character recognition from scanned reports;</p></li>
+<li><p>figure digitization;</p></li>
+<li><p>unit conversion;</p></li>
+<li><p>interpolation or reconstruction;</p></li>
+<li><p>corrections applied after review;</p></li>
+<li><p>derived quantities added for OpenSTREAM input generation;</p></li>
+<li><p>sanity checks and consistency checks.</p></li>
+</ul>
+<p>Relevant checks can include geometry consistency, mass-flow and mass-flux
+consistency, power reconstruction, energy balances, array-length checks,
+unit checks, and comparison of related experimental cases.</p>
+<p>The original publication or public data source remains authoritative.
+Machine-readable dataset implementations can contain transcription,
+recognition, digitization, conversion, or processing errors even after
+review.</p>
+<p>Direct measurements must be distinguished from quantities derived during
+source-data preparation, calculation, or post-processing.</p>
 </section>
 <section id="application-projects">
 <h2>Application projects<a class="headerlink" href="#application-projects" title="Link to this heading"></a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder contains MATLAB scripts and Live Scripts that
-demonstrate dataset-specific application and validation workflows.</p>
-<p>A typical project selects experimental cases, generates the corresponding
-OpenSTREAM inputs, runs selected solver and model configurations, extracts
-calculated quantities, and compares the results with experimental
-measurements.</p>
-<p>As Live Script projects are developed, reviewed, and documented, exported
-HTML versions may be included in the OpenSTREAM Applications documentation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">projects</span></code> folder contains reviewed MATLAB Live Scripts that accompany
+OpenSTREAM publications and illustrate selected computational workflows,
+figures, and results presented in those publications.</p>
+<p>A companion Live Script can include:</p>
+<ul class="simple">
+<li><p>explanatory text;</p></li>
+<li><p>selected experimental cases;</p></li>
+<li><p>physical-model and numerical-option selections;</p></li>
+<li><p>executable OpenSTREAM calculations;</p></li>
+<li><p>convergence information;</p></li>
+<li><p>calculated-versus-measured comparisons;</p></li>
+<li><p>figures and post-processing;</p></li>
+<li><p>interpretation of the selected results.</p></li>
+</ul>
+<p>The companion workflows do not represent complete records of the research
+activities supporting the publications. Research and model-development
+activities generally include additional experimental cases, closure-model
+evaluations, sensitivity studies, uncertainty analyses, numerical
+investigations, intermediate results, and unsuccessful model variants that
+are not included in the published figures or companion workflows.</p>
+<p>The MATLAB Live Scripts are the authoritative executable versions of the
+publication companion workflows. Completed executions may also be exported
+as static HTML documents containing explanatory text, code, calculated
+output, and figures. HTML exports can be viewed without MATLAB, although
+interactive Live Editor features may not be preserved.</p>
+<p>Further information about the available projects is provided on the
+<a class="reference internal" href="projects.html"><span class="doc">application projects</span></a> page.</p>
 </section>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
@@ -499,31 +609,48 @@ OpenSTREAM-database working copies.</p>
 </section>
 <section id="typical-workflow">
 <h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading"></a></h2>
-<p>A typical application workflow consists of:</p>
+<p>A typical file-based dataset workflow consists of:</p>
 <ol class="arabic simple">
-<li><p>Constructing a dataset-specific object from the corresponding XML or
-JSON source file.</p></li>
+<li><p>Constructing a dataset-specific object from its source-data file.</p></li>
 <li><p>Selecting one or more experimental cases.</p></li>
+<li><p>Initializing the corresponding OpenSTREAM inputs.</p></li>
 <li><p>Selecting an OpenSTREAM solver and model configuration.</p></li>
-<li><p>Generating the corresponding OpenSTREAM input files.</p></li>
+<li><p>Generating the OpenSTREAM input files.</p></li>
 <li><p>Running the selected calculations.</p></li>
+<li><p>Reviewing solver convergence.</p></li>
 <li><p>Extracting calculated quantities.</p></li>
 <li><p>Comparing calculated and measured results.</p></li>
-<li><p>Visualizing and evaluating the comparison.</p></li>
+<li><p>Visualizing and interpreting the comparison.</p></li>
 </ol>
-<p>The exact workflow depends on the selected dataset. Consult the
-corresponding dataset README and project file before running an
+<p>A lightweight workflow instead constructs a generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> object
+from an in-memory MATLAB table and then follows the same input-generation,
+execution, convergence-review, and post-processing sequence.</p>
+<p>The exact workflow depends on the selected dataset and solver. Consult the
+dataset README and any corresponding project file before running an
 application.</p>
 </section>
 <section id="generated-files">
 <h2>Generated files<a class="headerlink" href="#generated-files" title="Link to this heading"></a></h2>
-<p>OpenSTREAM-database may generate package directories and output folders
-containing OpenSTREAM input files, solver results, logs, saved solver
-objects, processed comparisons, figures, and other post-processing
-outputs.</p>
+<p>OpenSTREAM-database may generate input packages and output folders
+containing:</p>
+<ul class="simple">
+<li><p>OpenSTREAM input files;</p></li>
+<li><p>solver session files;</p></li>
+<li><p>solver results;</p></li>
+<li><p>convergence logs;</p></li>
+<li><p>saved solver objects;</p></li>
+<li><p>processed comparisons;</p></li>
+<li><p>figures;</p></li>
+<li><p>other post-processing outputs.</p></li>
+</ul>
 <p>Generated artifacts are excluded from version control through the
-repository <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> rules. Source-data files, MATLAB classes, project
-source files, and documentation remain version-controlled.</p>
+repository <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> rules. Source-data files, MATLAB classes, reviewed
+project source files, templates, and documentation remain
+version-controlled.</p>
+<p>Generated files should not be used as the only record of a calculation.
+Reproducible work should retain the source dataset, model and numerical
+configuration, software version or commit, and workflow required to
+regenerate the results.</p>
 </section>
 <section id="data-provenance-and-citation">
 <h2>Data provenance and citation<a class="headerlink" href="#data-provenance-and-citation" title="Link to this heading"></a></h2>
@@ -531,56 +658,85 @@ source files, and documentation remain version-controlled.</p>
 available experimental sources.</p>
 <p>When using a dataset:</p>
 <ul class="simple">
-<li><p>Consult and cite the original experimental publication.</p></li>
+<li><p>Consult and cite the original experimental publication or public data
+source.</p></li>
 <li><p>Review the experimental conditions, measurement definitions, original
 units, and reported uncertainties.</p></li>
-<li><p>Review any conversion, transcription, processing, interpolation,
-filtering, reconstruction, or assumptions introduced by the
-implementation.</p></li>
+<li><p>Review any conversion, transcription, character recognition,
+digitization, processing, interpolation, filtering, reconstruction, or
+assumptions introduced by the implementation.</p></li>
+<li><p>Distinguish direct measurements from derived or calculated quantities.</p></li>
+<li><p>Identify the OpenSTREAM and OpenSTREAM-database versions or commits used.</p></li>
 <li><p>Cite OpenSTREAM and OpenSTREAM-database as appropriate.</p></li>
 </ul>
 <p>Use of an OpenSTREAM-database implementation does not replace citation of
 the original experimental source.</p>
+<p>Licensing of OpenSTREAM-database software and documentation does not
+supersede rights, licenses, attribution requirements, or redistribution
+conditions associated with the original publications and experimental
+data.</p>
 </section>
 <section id="validation-and-interpretation">
 <h2>Validation and interpretation<a class="headerlink" href="#validation-and-interpretation" title="Link to this heading"></a></h2>
-<p>Inclusion of a dataset or application does not imply that every
-OpenSTREAM solver, model combination, or calculated quantity has been
-comprehensively verified or validated against that dataset.</p>
+<p>Inclusion of a dataset, comparison method, or application workflow does not
+imply that every OpenSTREAM solver, closure model, model combination, or
+calculated quantity has been comprehensively verified or validated against
+that dataset.</p>
 <p>Users remain responsible for evaluating:</p>
 <ul class="simple">
 <li><p>The applicability and quality of the experimental data.</p></li>
 <li><p>The assumptions and validity ranges of the selected models.</p></li>
+<li><p>The effects of dataset processing and derived quantities.</p></li>
 <li><p>Numerical convergence and discretization sensitivity.</p></li>
+<li><p>Sensitivity to closure-model and numerical-option selections.</p></li>
 <li><p>Experimental, model, parameter, and numerical uncertainty.</p></li>
 <li><p>The suitability of the selected comparison quantities and metrics.</p></li>
 <li><p>The interpretation of calculated-versus-measured differences.</p></li>
 </ul>
-<p>A favorable comparison for one case, quantity, or model selection should
-not be interpreted as general validation outside the conditions examined.</p>
+<p>A favorable comparison for one case, quantity, dataset, or model selection
+must not be interpreted as general validation outside the conditions
+examined.</p>
 </section>
 <section id="testing-and-verification">
 <h2>Testing and verification<a class="headerlink" href="#testing-and-verification" title="Link to this heading"></a></h2>
-<p>OpenSTREAM-database does not currently include an automated test suite.</p>
+<p>OpenSTREAM-database does not currently include a repository-wide automated
+test suite.</p>
 <p>Dataset implementations and application workflows should therefore be
 verified through documented and reproducible execution of the affected
-cases. Detailed verification requirements are provided in the
+cases. Verification should include, as applicable:</p>
+<ul class="simple">
+<li><p>successful loading of the source-data records;</p></li>
+<li><p>review of source-data provenance and processing;</p></li>
+<li><p>consistency checks on geometry, boundary conditions, units, and power;</p></li>
+<li><p>review of generated OpenSTREAM inputs;</p></li>
+<li><p>confirmation of solver convergence;</p></li>
+<li><p>comparison of calculated and experimental quantities;</p></li>
+<li><p>confirmation that missing measurements are not interpreted as zeros;</p></li>
+<li><p>confirmation that derived quantities are identified as derived;</p></li>
+<li><p>sensitivity to relevant physical models and numerical settings.</p></li>
+</ul>
+<p>Detailed review and contribution requirements are provided in the
 <a class="reference internal" href="contributing.html"><span class="doc">contribution guidelines</span></a>.</p>
 </section>
 <section id="development-status">
 <h2>Development status<a class="headerlink" href="#development-status" title="Link to this heading"></a></h2>
 <p>OpenSTREAM-database and its application workflows are under active
-development. Dataset implementations, source-file formats, application
-projects, comparison methods, documentation, and verification capabilities
-may continue to evolve.</p>
-<p>Users should review the dataset-specific documentation and repository
-history when reproducing earlier calculations.</p>
+development. Dataset implementations, source-file formats, project
+workflows, comparison methods, documentation, and verification
+capabilities may continue to evolve.</p>
+<p>Users reproducing earlier calculations should review:</p>
+<ul class="simple">
+<li><p>the dataset-specific README;</p></li>
+<li><p>the corresponding publication companion, when available;</p></li>
+<li><p>the OpenSTREAM and OpenSTREAM-database repository histories;</p></li>
+<li><p>the versions or commits used for the original calculation.</p></li>
+</ul>
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
-<p>Contributions of new datasets, corrections, application workflows,
-documentation, comparison methods, and verification capabilities are
-welcome.</p>
+<p>Contributions of new datasets, source-data corrections, application
+workflows, publication companions, documentation, comparison methods, and
+verification capabilities are welcome.</p>
 <p>Before contributing, review the
 <a class="reference internal" href="contributing.html"><span class="doc">OpenSTREAM-database contribution guidelines</span></a>.</p>
 </section>
