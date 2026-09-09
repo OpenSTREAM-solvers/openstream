@@ -58,6 +58,10 @@ configurations. The applicability of a calculation depends on the selected
 closure models, their validity ranges, the numerical settings, and the
 conditions under consideration.
 
+For a broader discussion of geometric, physical, numerical, and validation
+limitations, see :doc:`Intended scope and limitations
+<../scope_and_limitations>`.
+
 Detailed theory pages
 ---------------------
 
