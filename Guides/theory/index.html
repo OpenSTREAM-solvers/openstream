@@ -94,7 +94,7 @@
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Theory overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#solver-capability-overview">Solver capability overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solver-capabilities">Solver capabilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#detailed-theory-pages">Detailed theory pages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Mixture_Model_Theory.html">Mixture model</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Mixture_Model_Theory.html#governing-equations">Governing equations</a></li>
@@ -352,8 +352,8 @@ liquid films, entrained droplets, and disturbance waves.</p>
 interest, and assumptions acceptable for the intended application.
 Detailed equations, derivations, assumptions, and implementation notes are
 provided on the individual theory pages linked below.</p>
-<section id="solver-capability-overview">
-<h2>Solver capability overview<a class="headerlink" href="#solver-capability-overview" title="Link to this heading"></a></h2>
+<section id="solver-capabilities">
+<h2>Solver capabilities<a class="headerlink" href="#solver-capabilities" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 16.0%" />
@@ -375,7 +375,7 @@ provided on the individual theory pages linked below.</p>
 <td><p>Mixture, with liquid and vapor properties</p></td>
 <td><p>Thermal equilibrium or nonequilibrium</p></td>
 <td><p>Steady-state and transient</p></td>
-<td><p>Initialization, system-level boiling, and post-CHF calculations</p></td>
+<td><p>Initialization, system-level boiling, CHF, and post-CHF calculations</p></td>
 </tr>
 <tr class="row-odd"><td><p>Two-fluid</p></td>
 <td><p>Separate liquid and vapor fields</p></td>
@@ -414,7 +414,8 @@ conditions under consideration.</p>
 relevant simplifications.</p></li>
 <li><p><strong>Assumptions:</strong> Represent the flow using a single mixture field, with
 optional hydrodynamic and thermal nonequilibrium models.</p></li>
-<li><p><strong>Equations:</strong> Conserve mixture mass, momentum, and energy.</p></li>
+<li><p><strong>Equations:</strong> Conserve mixture mass, momentum, and energy.
+Optionally (MRM), conserve vapor mass and energy.</p></li>
 </ul>
 </dd>
 <dt><a class="reference internal" href="TwoFluid_Model_Theory.html"><span class="doc">Two-fluid model</span></a></dt><dd><ul class="simple">
@@ -444,9 +445,6 @@ thermal-equilibrium conditions up to liquid-film dryout.</p></li>
 disturbance waves, and entrained droplets together with the
 mixture-model vapor solution and a disturbance-wave number-density
 transport equation.</p></li>
-<li><p><strong>Nonequilibrium behavior:</strong> Represent the spatial and temporal
-development of disturbance-wave properties without assuming immediate
-local hydrodynamic equilibrium.</p></li>
 </ul>
 </dd>
 </dl>
@@ -454,7 +452,6 @@ local hydrodynamic equilibrium.</p></li>
 implemented assumptions, closure relations, and references.</p>
 <div class="toctree-wrapper compound">
 </div>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a></p>
 </section>
 </section>
 
