@@ -15,8 +15,8 @@ interest, and assumptions acceptable for the intended application.
 Detailed equations, derivations, assumptions, and implementation notes are
 provided on the individual theory pages linked below.
 
-Solver capability overview
---------------------------
+Solver capabilities
+-------------------
 
 .. list-table::
    :header-rows: 1
@@ -31,7 +31,7 @@ Solver capability overview
      - Mixture, with liquid and vapor properties
      - Thermal equilibrium or nonequilibrium
      - Steady-state and transient
-     - Initialization, system-level boiling, and post-CHF calculations
+     - Initialization, system-level boiling, CHF, and post-CHF calculations
    * - Two-fluid
      - Separate liquid and vapor fields
      - Thermal equilibrium or nonequilibrium
@@ -67,6 +67,7 @@ Detailed theory pages
    * **Assumptions:** Represent the flow using a single mixture field, with
      optional hydrodynamic and thermal nonequilibrium models.
    * **Equations:** Conserve mixture mass, momentum, and energy.
+     Optionally (MRM), conserve vapor mass and energy.
 
 :doc:`Two-fluid model <TwoFluid_Model_Theory>`
    * **Purpose:** Resolve hydrodynamic and thermal nonequilibrium between
@@ -93,9 +94,6 @@ Detailed theory pages
      disturbance waves, and entrained droplets together with the
      mixture-model vapor solution and a disturbance-wave number-density
      transport equation.
-   * **Nonequilibrium behavior:** Represent the spatial and temporal
-     development of disturbance-wave properties without assuming immediate
-     local hydrodynamic equilibrium.
 
 Select one of the theory pages above for the detailed formulation,
 implemented assumptions, closure relations, and references.
@@ -108,4 +106,3 @@ implemented assumptions, closure relations, and references.
    TwoFluid_Model_Theory
    ThreeField_Model_Theory
    FourField_Model_Theory
-``
