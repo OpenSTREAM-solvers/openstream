@@ -27,10 +27,10 @@ How to contribute
 
    .. code-block:: bash
 
-      git checkout -b feature/my-new-feature
+      git checkout -b feat/my-new-feature
 
-   Other appropriate prefixes may include ``fix/``, ``docs/``, and
-   ``test/``.
+   Other appropriate prefixes may include ``fix/``, ``docs/``,
+   ``test/``, and ``refactor/``.
 
 #. **Make your changes**
 
@@ -53,16 +53,30 @@ How to contribute
 
 #. **Commit and push the changes**
 
-   Use a concise and descriptive commit message:
+   Review the staged files before committing to ensure that generated
+   outputs, temporary files, and unrelated changes are not included:
 
    .. code-block:: bash
 
-      git add .
-      git commit -m "Add feature: description"
+      git status
+      git diff --cached
+
+   Commit messages must follow the
+   `OpenSTREAM commit message style guide
+   <https://github.com/OpenSTREAM-solvers/openstream/wiki>`_.
+
+   Organize the changes into focused commits. For example:
+
+   .. code-block:: bash
+
+      git add <files>
+      git commit -m "feat(scope): describe the change"
       git push origin feature/my-new-feature
 
-   Review the staged files before committing to ensure that generated
-   outputs, temporary files, and unrelated changes are not included.
+   Avoid using ``git add .`` without first reviewing all modified and
+   untracked files. Separate functional changes from formatting,
+   documentation, test-reference, and unrelated maintenance changes where
+   practical.
 
 #. **Open a pull request**
 
@@ -72,6 +86,7 @@ How to contribute
 
    - Explain the purpose of the change.
    - Summarize the implementation.
+   - Summarize the focused commits included in the pull request.
    - Identify affected models, solvers, inputs, tests, or documentation.
    - Describe any intentional numerical changes.
    - Explain and justify any changes to approved reference solutions.
@@ -108,12 +123,18 @@ General practices
 ~~~~~~~~~~~~~~~~~
 
 - Keep commits focused and descriptive.
+- Follow the
+  `OpenSTREAM commit message style guide
+  <https://github.com/OpenSTREAM-solvers/openstream/wiki>`_.
 - Prefer automated tests over manual verification whenever practical.
 - Avoid duplicating existing functionality.
 - Preserve backward compatibility unless an incompatible change is
   intentional, documented, and reviewed.
-- Separate functional changes from large documentation or formatting
-  changes when practical.
+- Separate functional, documentation, test-reference, formatting, and
+  repository-maintenance changes where practical.
+- Review staged and untracked files before every commit.
+- Do not commit generated outputs, temporary files, local sandbox scripts,
+  MATLAB autosave files, or obsolete copies.
 
 Documentation
 -------------
@@ -296,6 +317,10 @@ Before submitting a pull request, confirm that:
 
 - The change is limited to the intended scope.
 - The code follows the existing OpenSTREAM style and organization.
+- Changes are organized into focused commits.
+- Commit messages follow the `OpenSTREAM commit message style guide
+<https://github.com/OpenSTREAM-solvers/openstream/wiki>`_.
+- Staged and untracked files have been reviewed before committing.
 - New or modified functionality includes appropriate tests.
 - The complete local test suite passes.
 - Numerical differences from approved references have been reviewed.
