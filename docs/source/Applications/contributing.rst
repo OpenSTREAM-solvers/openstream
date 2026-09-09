@@ -628,6 +628,11 @@ MATLAB Live Scripts are recommended when explanatory text, executable
 code, figures, calculated results, convergence information, and
 interpretation form part of the documented application workflow.
 
+Projects intended to support publications or technical reports should
+follow the reproducibility guidance provided in the
+:doc:`OpenSTREAM scope and limitations
+<../Guides/scope_and_limitations>` page.
+
 Publication companion workflows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
