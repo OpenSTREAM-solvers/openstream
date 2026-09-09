@@ -385,4 +385,4 @@ For additional guidance, consult:
 - The testing documentation.
 - The contribution guidelines.
 - The :doc:`OpenSTREAM-database <../Applications/database>` documentation.
-- The :doc:`release numbering and versioning <versioning>` page.
+- The :doc:`release numbering and versioning <../Usage/versioning>` page.

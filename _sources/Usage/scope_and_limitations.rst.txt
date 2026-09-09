@@ -41,7 +41,7 @@ additional closure relations, initialization requirements, numerical
 couplings, and sources of uncertainty.
 
 A summary of the current solver capabilities is provided in the
-:doc:`theory overview <theory/index>`. Detailed assumptions, governing
+:doc:`theory overview <../Guides/theory/index>`. Detailed assumptions, governing
 equations, and references are provided on the individual solver theory
 pages.
 
@@ -522,13 +522,12 @@ Further information
 
 For additional details, consult:
 
-- The :doc:`theory overview <theory/index>`.
+- The :doc:`theory overview <../Guides/theory/index>`.
 - The individual solver theory pages.
-- The :doc:`tutorials <../tutorials/index>`.
-- The numerical convergence tutorial.
+- The :doc:`tutorials <../Guides/tutorials>`.
 - The OpenSTREAM package reference.
 - The :doc:`OpenSTREAM-database <../Applications/database>` documentation.
-- The available publications and publication companion workflows.
+- The available publications and :doc:`publication companion workflows <../Applications/projects>`.
 
 The detailed formulation and documented assumptions of the selected solver
 and closure models take precedence over this high-level summary.
