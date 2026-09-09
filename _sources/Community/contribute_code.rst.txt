@@ -153,6 +153,10 @@ Update the documentation when a contribution changes:
 Documentation changes should be reviewed in both the generated website and
 PDF documentation when the affected content is included in both formats.
 
+Changes that affect reported numerical results should preserve the
+information required by the
+:doc:`reproducibility checklist <../Guides/scope_and_limitations>`.
+
 Testing
 -------
 

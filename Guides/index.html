@@ -83,9 +83,22 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/runSampleScript.html">Run sample script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Usage/versioning.html">Release numbering and versioning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#release-identifiers">Release identifiers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#prerelease-identifiers">Prerelease identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#stable-and-development-versions">Stable and development versions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#release-documentation">Release documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#development-and-released-versions">Development and released versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#compatibility-status">Compatibility status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#tested-configurations">Tested configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#inspecting-the-active-environment">Inspecting the active environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#openstream-database-compatibility">OpenSTREAM-database compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#saved-objects-and-persisted-results">Saved objects and persisted results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#deprecation">Deprecation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#reproducibility">Reproducibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#citing-a-release">Citing a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#migration-between-versions">Migration between versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Usage/versioning.html#development-and-release-responsibilities">Development and release responsibilities</a></li>
 </ul>
 </li>
 </ul>
@@ -141,6 +154,41 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials.html#numerical-convergence-and-solver-diagnostics">7. Numerical Convergence and Solver Diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials.html#mesh-and-time-step-sensitivity">8. Mesh and Time-Step Sensitivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials.html#advanced-visualization-and-post-processing">9. Advanced Visualization and Post-Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generated_files.html">Generated files and session directories</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#input-files">Input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#session-directories">Session directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#overwriting-an-existing-session">Overwriting an existing session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#saving-solver-objects">Saving solver objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#openstream-database-outputs">OpenSTREAM-database outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#sandbox-calculations">Sandbox calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#test-outputs">Test outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#version-control-policy">Version-control policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#moving-or-deleting-generated-files">Moving or deleting generated files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#recommended-workflow">Recommended workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#unexpected-output-location">Unexpected output location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#existing-session-was-removed">Existing session was removed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#existing-session-cannot-be-replaced">Existing session cannot be replaced</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#output-should-not-be-committed">Output should not be committed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#further-information">Further information</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#initial-diagnostic-checklist">Initial diagnostic checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#matlab-cannot-locate-openstream">MATLAB cannot locate OpenSTREAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#matlab-cannot-locate-openstream-database">MATLAB cannot locate OpenSTREAM-database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#python-cannot-be-loaded">Python cannot be loaded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#coolprop-cannot-be-imported">CoolProp cannot be imported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#environment-tests-fail">Environment tests fail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#an-input-file-cannot-be-read">An input file cannot be read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#an-input-identifier-cannot-be-found">An input identifier cannot be found</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#openstream-reports-inconsistent-or-missing-inputs">OpenSTREAM reports inconsistent or missing inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#a-session-directory-already-exists">A session directory already exists</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing and verification</a><ul>
@@ -292,18 +340,50 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#setup-sublime-text-as-text-editor">Setup Sublime Text as text editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#set-up-sublime-text-as-a-text-editor">Set up Sublime Text as a text editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#configure-python-and-sphinx">Configure Python and Sphinx</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#setup-python">Setup Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#set-up-python">Set up Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#create-a-virtual-environment">Create a virtual environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#activate-the-environment">Activate the environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#install-sphinx-and-dependencies">Install Sphinx and dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#start-writing">Start writing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#full-build">Full build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#writing-guidelines">Writing guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#units">Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#code-examples">Code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#links">Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#headings">Headings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#lists-and-directives">Lists and directives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#cross-references-and-navigation">Cross-references and navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#citations-and-bibliographies">Citations and bibliographies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#images-and-figures">Images and figures</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#full-html-build">Full HTML build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#pdf-build">PDF build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#warnings">Warnings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#documentation-maintenance-checklist">Documentation-maintenance checklist</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#source-review">Source review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#technical-accuracy">Technical accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#code-and-command-review">Code and command review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#structure-and-navigation">Structure and navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#links-and-citations">Links and citations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#figures-and-tables">Figures and tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#html-review">HTML review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#pdf-review">PDF review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#build-diagnostics">Build diagnostics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#final-repository-review">Final repository review</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#submitting-documentation-changes">Submitting documentation changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#reporting-documentation-issues">Reporting documentation issues</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
@@ -346,6 +426,28 @@
 <li class="toctree-l2"><a class="reference internal" href="theory/index.html#detailed-theory-pages">Detailed theory pages</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="generated_files.html">Generated files and session directories</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#input-files">Input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#session-directories">Session directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#overwriting-an-existing-session">Overwriting an existing session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#saving-solver-objects">Saving solver objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#openstream-database-outputs">OpenSTREAM-database outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#sandbox-calculations">Sandbox calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#test-outputs">Test outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#version-control-policy">Version-control policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#moving-or-deleting-generated-files">Moving or deleting generated files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#recommended-workflow">Recommended workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#unexpected-output-location">Unexpected output location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#existing-session-was-removed">Existing session was removed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#existing-session-cannot-be-replaced">Existing session cannot be replaced</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated_files.html#output-should-not-be-committed">Output should not be committed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="generated_files.html#further-information">Further information</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="glossary.html#recommended-terminology">Recommended terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="glossary.html#style-notes">Style notes</a></li>
@@ -374,6 +476,19 @@
 <li class="toctree-l2"><a class="reference internal" href="testing.html#generated-outputs">Generated outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html#contributor-checklist">Contributor checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#initial-diagnostic-checklist">Initial diagnostic checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#matlab-cannot-locate-openstream">MATLAB cannot locate OpenSTREAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#matlab-cannot-locate-openstream-database">MATLAB cannot locate OpenSTREAM-database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#python-cannot-be-loaded">Python cannot be loaded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#coolprop-cannot-be-imported">CoolProp cannot be imported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#environment-tests-fail">Environment tests fail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#an-input-file-cannot-be-read">An input file cannot be read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#an-input-identifier-cannot-be-found">An input identifier cannot be found</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#openstream-reports-inconsistent-or-missing-inputs">OpenSTREAM reports inconsistent or missing inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#a-session-directory-already-exists">A session directory already exists</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>

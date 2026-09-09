@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Run sample script &mdash; OpenSTREAM  documentation</title>
+  <title>Intended scope and limitations &mdash; OpenSTREAM  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -26,9 +26,7 @@
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Release numbering and versioning" href="versioning.html" />
-    <link rel="prev" title="Getting started" href="gettingStarted.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,7 +50,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Usage</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gettingStarted.html#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gettingStarted.html#install-openstream">Install OpenSTREAM</a><ul>
@@ -83,7 +81,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gettingStarted.html#next-steps">Next steps</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Run sample script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runSampleScript.html">Run sample script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="versioning.html">Release numbering and versioning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="versioning.html#release-identifiers">Release identifiers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="versioning.html#prerelease-identifiers">Prerelease identifiers</a></li>
@@ -409,9 +407,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Run sample script</li>
+      <li class="breadcrumb-item active">Intended scope and limitations</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/Usage/runSampleScript.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/Usage/scope_and_limitations.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -419,59 +417,496 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="run-sample-script">
-<h1>Run sample script<a class="headerlink" href="#run-sample-script" title="Link to this heading"></a></h1>
-<p>After installation, you’re all set to launch your first simulation!</p>
-<p>As a first exercise, open MATLAB and run the commands listed below from within the <code class="docutils literal notranslate"><span class="pre">openstream</span></code> folder, which will simulate an example of boiling two-phase flow in a uniformly heated tube followed by an adiabatic region. The <strong>OpenSTREAM</strong> mixture model will be used, which defaults to the Homogeneous Equilibrium Model (HEM) when the physical models are not modified by the user.</p>
-<p>This is the quickest and easiest way to start exploring what OpenSTREAM can do, and to confirm everything is working smoothly under the hood.</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Clear existing variables from workspace</span>
-<span class="nb">clearvars</span>
-
-<span class="c">% Import the necessary classes for inputs and solvers</span>
-<span class="nb">import</span><span class="w"> </span><span class="n">Inputs</span><span class="o">.*</span>
-<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="o">.*</span>
-<span class="nb">import</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="o">.*</span>
-
-<span class="c">% Turn off warnings during input setup</span>
-<span class="nb">warning</span><span class="w"> </span><span class="n">off</span>
-<span class="c">% Create the input set using paths to model, options, geometry, and boundary condition files</span>
-<span class="n">inputSet</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">InputSet</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">modelFilePath</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/models.inp'</span><span class="p">,</span><span class="w">  </span><span class="n">modelID</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">optionsFilePath</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/options.inp'</span><span class="p">,</span><span class="w"> </span><span class="n">optionsID</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">'DEFAULT'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">geometryFilePath</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/geom.inp'</span><span class="p">,</span><span class="w">    </span><span class="n">geometryID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'TUTORIAL1'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">bcFilePath</span><span class="w">            </span><span class="p">=</span><span class="w"> </span><span class="s">'./inputs/tutorial1.inp'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">sessionParentDir</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="nb">pwd</span><span class="p">,</span><span class="s">'outputs'</span><span class="p">),</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">overwriteSessionFiles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">            </span><span class="n">LOGMODE</span><span class="w">               </span><span class="p">=</span><span class="w"> </span><span class="s">'BOTH'</span><span class="p">);</span>
-
-<span class="c">% Create a mixture solver object</span>
-<span class="n">mixSolver</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">MixtureSolver</span><span class="p">(</span><span class="n">inputSet</span><span class="p">);</span>
-
-<span class="c">% Solve</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
-
-<span class="c">% Default axial plots</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">plotz</span><span class="p">();</span>
-
-<span class="c">% Save results</span>
-<span class="n">mixSolver</span><span class="p">.</span><span class="n">save</span><span class="p">();</span>
-</pre></div>
-</div>
-<figure class="align-default" id="id1">
-<img alt="../_images/sample_mix_plotz.png" src="../_images/sample_mix_plotz.png" />
-<figcaption>
-<p><span class="caption-number">Figure 1 </span><span class="caption-text">Sample figure of axial distributions of mixture parameters.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
-</figcaption>
-</figure>
+  <section id="intended-scope-and-limitations">
+<h1>Intended scope and limitations<a class="headerlink" href="#intended-scope-and-limitations" title="Link to this heading"></a></h1>
+<p><strong>OpenSTREAM</strong> is an open-source computational environment for the
+development, assessment, and application of one-dimensional two-phase-flow
+models.</p>
+<p>The software is primarily intended to support:</p>
+<ul class="simple">
+<li><p>Fundamental model development.</p></li>
+<li><p>Implementation and assessment of closure relations.</p></li>
+<li><p>Comparison of alternative two-phase-flow formulations.</p></li>
+<li><p>Verification of numerical implementations.</p></li>
+<li><p>Validation against experimental data.</p></li>
+<li><p>Numerical sensitivity and uncertainty studies.</p></li>
+<li><p>Reproducible research and publication companion workflows.</p></li>
+<li><p>Education and collaboration in thermal-hydraulics and two-phase-flow
+modeling.</p></li>
+</ul>
+<p>OpenSTREAM provides a flexible research environment rather than a single
+fixed modeling methodology. The validity and accuracy of a calculation
+depend on the selected solver framework, closure models, numerical
+options, input data, and conditions under consideration.</p>
+<section id="simulation-frameworks">
+<h2>Simulation frameworks<a class="headerlink" href="#simulation-frameworks" title="Link to this heading"></a></h2>
+<p>OpenSTREAM includes four solver frameworks with increasing levels of
+physical resolution:</p>
+<ul class="simple">
+<li><p>A mixture solver.</p></li>
+<li><p>A two-fluid solver.</p></li>
+<li><p>A three-field solver for annular two-phase flow.</p></li>
+<li><p>A four-field solver that separately represents the base film and
+disturbance waves.</p></li>
+</ul>
+<p>The frameworks are intended for different modeling objectives. A more
+detailed formulation does not necessarily provide a more accurate result
+for every application. Increasing the number of fields also introduces
+additional closure relations, initialization requirements, numerical
+couplings, and sources of uncertainty.</p>
+<p>A summary of the current solver capabilities is provided in the
+<span class="xref std std-doc">theory overview</span>. Detailed assumptions, governing
+equations, and references are provided on the individual solver theory
+pages.</p>
+</section>
+<section id="dimensional-scope">
+<h2>Dimensional scope<a class="headerlink" href="#dimensional-scope" title="Link to this heading"></a></h2>
+<p>OpenSTREAM solves one-dimensional conservation equations along the
+principal flow direction.</p>
+<p>The one-dimensional formulation assumes that relevant cross-sectional
+behavior can be represented using averaged quantities or closure
+relations. Radial, azimuthal, and local three-dimensional effects are not
+resolved directly.</p>
+<p>The formulation is therefore most appropriate when:</p>
+<ul class="simple">
+<li><p>Axial transport is dominant.</p></li>
+<li><p>Cross-sectional quantities can be represented using averaged values.</p></li>
+<li><p>Local geometric effects can be represented through effective geometry,
+loss coefficients, or closure models.</p></li>
+<li><p>Three-dimensional flow structures are not the principal quantities of
+interest.</p></li>
+</ul>
+<p>OpenSTREAM does not directly resolve:</p>
+<ul class="simple">
+<li><p>Cross-sectional velocity or void-fraction distributions.</p></li>
+<li><p>Local turbulent structures.</p></li>
+<li><p>Three-dimensional mixing between parallel channels.</p></li>
+<li><p>Detailed spacer-grid or obstruction flow fields.</p></li>
+<li><p>Local recirculation or flow separation.</p></li>
+<li><p>Multidimensional interface geometry.</p></li>
+<li><p>Computational-fluid-dynamics-scale phenomena.</p></li>
+</ul>
+<p>The absence of these resolved effects does not necessarily prevent an
+OpenSTREAM calculation, but their influence must be represented through
+appropriate inputs, effective parameters, or closure relations.</p>
+</section>
+<section id="geometric-scope">
+<h2>Geometric scope<a class="headerlink" href="#geometric-scope" title="Link to this heading"></a></h2>
+<p>The current solver frameworks are designed for straight channels with one
+or more wall surfaces.</p>
+<p>Supported representations can include:</p>
+<ul class="simple">
+<li><p>Circular tubes.</p></li>
+<li><p>Annuli.</p></li>
+<li><p>Rectangular channels.</p></li>
+<li><p>Simplified rod-bundle geometries.</p></li>
+<li><p>Multi-wall channels with different wall-heating conditions.</p></li>
+<li><p>Uniformly or nonuniformly heated channels.</p></li>
+</ul>
+<p>The separate specification of flow area, wetted or heated perimeter, wall
+mesh, and wall-power distribution allows the representation of several
+cross-sectional shapes within the one-dimensional formulation.</p>
+<p>The current geometry representation does not directly model:</p>
+<ul class="simple">
+<li><p>Arbitrary three-dimensional flow paths.</p></li>
+<li><p>Branches, junctions, plena, or interconnected system networks.</p></li>
+<li><p>Detailed spacer-grid geometry.</p></li>
+<li><p>Local changes in cross-sectional shape that require multidimensional
+resolution.</p></li>
+<li><p>Crossflow between subchannels.</p></li>
+<li><p>Complex components whose behavior cannot be represented through
+one-dimensional geometry and closure relations.</p></li>
+</ul>
+<p>Users must determine whether an effective one-dimensional representation
+is adequate for the intended application.</p>
+</section>
+<section id="fluid-and-flow-scope">
+<h2>Fluid and flow scope<a class="headerlink" href="#fluid-and-flow-scope" title="Link to this heading"></a></h2>
+<p>The current OpenSTREAM frameworks are primarily intended for
+single-component, thermally expandable, two-phase flows.</p>
+<p>The available models have mainly been developed and demonstrated for
+co-current boiling flows under conditions relevant to thermal-hydraulic
+experiments and water-cooled reactor applications.</p>
+<p>Applicability to other fluids or operating conditions depends on:</p>
+<ul class="simple">
+<li><p>Availability and validity of the required thermophysical properties.</p></li>
+<li><p>Applicability of the selected closure relations.</p></li>
+<li><p>Compatibility of the flow regime with the selected solver framework.</p></li>
+<li><p>Numerical behavior under the investigated conditions.</p></li>
+</ul>
+<p>A thermophysical-property calculation may be available for a fluid even
+when the selected closure relations have not been assessed for that fluid.
+Property availability must therefore not be interpreted as evidence that
+the complete model configuration is applicable.</p>
+</section>
+<section id="flow-regimes">
+<h2>Flow regimes<a class="headerlink" href="#flow-regimes" title="Link to this heading"></a></h2>
+<p>The mixture and two-fluid frameworks provide general representations of
+single-phase and two-phase transport under their respective assumptions.</p>
+<p>The three-field and four-field frameworks are intended specifically for
+annular two-phase flow. Their separate liquid-film and droplet equations
+are initialized at the predicted onset of annular flow using the upstream
+mixture solution.</p>
+<p>Results from the annular-flow frameworks depend on the modeling of:</p>
+<ul class="simple">
+<li><p>Onset of annular flow.</p></li>
+<li><p>Initial division of liquid between film and droplets.</p></li>
+<li><p>Film entrainment.</p></li>
+<li><p>Droplet deposition.</p></li>
+<li><p>Wall boiling and film evaporation.</p></li>
+<li><p>Field momentum transfer.</p></li>
+<li><p>Liquid-film dryout.</p></li>
+<li><p>Disturbance-wave development in the four-field framework.</p></li>
+</ul>
+<p>The annular-flow formulations should not be assumed to apply outside the
+flow regimes and conditions supported by their selected closure models.</p>
+</section>
+<section id="thermal-treatment">
+<h2>Thermal treatment<a class="headerlink" href="#thermal-treatment" title="Link to this heading"></a></h2>
+<p>The mixture and two-fluid frameworks include thermal-equilibrium and
+thermal-nonequilibrium capabilities, depending on the selected models.</p>
+<p>The current three-field and four-field annular-flow formulations generally
+assume thermal equilibrium while resolving hydrodynamic nonequilibrium
+between the represented flow fields.</p>
+<p>In the four-field framework, the base film and disturbance waves have
+separate transport behavior. The model can represent nonequilibrium
+development of disturbance-wave properties, including wave amplitude,
+velocity, and frequency. This hydrodynamic nonequilibrium should not be
+confused with thermal nonequilibrium between phases.</p>
+<p>The thermal assumptions of the selected solver and closure models must be
+reviewed before interpreting calculated temperatures, phase change, or
+post-CHF behavior.</p>
+</section>
+<section id="closure-model-dependence">
+<h2>Closure-model dependence<a class="headerlink" href="#closure-model-dependence" title="Link to this heading"></a></h2>
+<p>OpenSTREAM separates the conservation-equation frameworks from the
+physical and closure models used to complete them.</p>
+<p>Calculated results can depend strongly on the selected models for:</p>
+<ul class="simple">
+<li><p>Void fraction and phase slip.</p></li>
+<li><p>Wall and interfacial friction.</p></li>
+<li><p>Wall heat transfer.</p></li>
+<li><p>Thermal nonequilibrium.</p></li>
+<li><p>Interfacial phase change.</p></li>
+<li><p>Onset of annular flow.</p></li>
+<li><p>Film entrainment.</p></li>
+<li><p>Droplet deposition.</p></li>
+<li><p>Film and wave momentum transfer.</p></li>
+<li><p>Base-film equilibrium thickness.</p></li>
+<li><p>Disturbance-wave frequency.</p></li>
+<li><p>Critical boiling transition and film dryout.</p></li>
+</ul>
+<p>The availability of a closure model in the software does not imply that
+the model has been comprehensively validated for every fluid, geometry,
+pressure, mass flux, flow regime, or heating condition.</p>
+<p>Users must review:</p>
+<ul class="simple">
+<li><p>The theoretical basis of each selected model.</p></li>
+<li><p>The conditions for which the model was developed.</p></li>
+<li><p>The available validation evidence.</p></li>
+<li><p>Any empirical coefficients or nondefault parameters.</p></li>
+<li><p>Sensitivity of the results to alternative model selections.</p></li>
+</ul>
+<p>A favorable result obtained using one model combination must not be
+interpreted as general validation of the solver framework or of other
+model combinations.</p>
+</section>
+<section id="numerical-formulation">
+<h2>Numerical formulation<a class="headerlink" href="#numerical-formulation" title="Link to this heading"></a></h2>
+<p>The current governing equations are discretized using a one-dimensional
+finite-volume formulation.</p>
+<p>The standard numerical implementation uses:</p>
+<ul class="simple">
+<li><p>First-order upwind treatment of axial advection.</p></li>
+<li><p>Fully implicit backward-Euler time integration.</p></li>
+<li><p>Fixed-point iterations for nonlinear closures and field coupling.</p></li>
+<li><p>Pseudo-time advancement to obtain steady-state solutions.</p></li>
+<li><p>Physical-time advancement for transient calculations.</p></li>
+</ul>
+<p>These methods are designed to provide a robust and transparent baseline
+for model development and application. They also introduce limitations.</p>
+<p>First-order spatial and temporal discretizations can introduce numerical
+diffusion and can reduce the resolution of sharp gradients or rapidly
+varying behavior. Results may depend on:</p>
+<ul class="simple">
+<li><p>Axial mesh resolution.</p></li>
+<li><p>Physical or pseudo-time-step selection.</p></li>
+<li><p>Point-iteration tolerances.</p></li>
+<li><p>Temporal convergence criteria.</p></li>
+<li><p>Under-relaxation factors.</p></li>
+<li><p>Interpolation options.</p></li>
+<li><p>Initialization and field-transition procedures.</p></li>
+</ul>
+<p>A converged nonlinear or temporal solution is not necessarily independent
+of the mesh, time step, or numerical options.</p>
+</section>
+<section id="numerical-sensitivity">
+<h2>Numerical sensitivity<a class="headerlink" href="#numerical-sensitivity" title="Link to this heading"></a></h2>
+<p>Calculations used for quantitative conclusions should include numerical
+sensitivity studies appropriate to the application.</p>
+<p>Relevant studies can include:</p>
+<ul class="simple">
+<li><p>Axial mesh refinement.</p></li>
+<li><p>Physical time-step refinement.</p></li>
+<li><p>Pseudo-time-step sensitivity.</p></li>
+<li><p>Point-iteration tolerance sensitivity.</p></li>
+<li><p>Temporal convergence tolerance sensitivity.</p></li>
+<li><p>Under-relaxation sensitivity.</p></li>
+<li><p>Sensitivity to field initialization.</p></li>
+<li><p>Sensitivity to the location of modeled flow-regime transitions.</p></li>
+<li><p>Comparison of available interpolation or discretization options.</p></li>
+</ul>
+<p>A calculation should not be considered numerically verified solely because
+the solver reports a converged state.</p>
+</section>
+<section id="convergence">
+<h2>Convergence<a class="headerlink" href="#convergence" title="Link to this heading"></a></h2>
+<p>OpenSTREAM distinguishes between:</p>
+<ul class="simple">
+<li><p>Pointwise convergence of coupled variables at a location and time step.</p></li>
+<li><p>Pseudo-time convergence toward a steady-state solution.</p></li>
+<li><p>Physical-time advancement in a transient calculation.</p></li>
+</ul>
+<p>Convergence difficulties can occur near:</p>
+<ul class="simple">
+<li><p>Onset of boiling.</p></li>
+<li><p>Onset of annular flow.</p></li>
+<li><p>Field initialization.</p></li>
+<li><p>Film dryout or rewetting.</p></li>
+<li><p>Sharp changes in wall heating.</p></li>
+<li><p>Strong interfacial-transfer regions.</p></li>
+<li><p>Discontinuities in geometry or local-loss definitions.</p></li>
+</ul>
+<p>Under-relaxation, smaller pseudo-time steps, mesh refinement, or improved
+initialization can assist convergence. Such numerical adjustments should
+be documented and shown not to alter the intended converged physical
+solution materially.</p>
+<p>A calculation that does not meet the selected convergence criteria should
+not be presented as a converged OpenSTREAM result.</p>
+</section>
+<section id="steady-state-and-transient-calculations">
+<h2>Steady-state and transient calculations<a class="headerlink" href="#steady-state-and-transient-calculations" title="Link to this heading"></a></h2>
+<p>The OpenSTREAM solver frameworks support steady-state and transient
+calculations.</p>
+<p>Steady-state solutions are generally obtained through pseudo-time
+advancement. The pseudo-time history is a numerical procedure for reaching
+a steady solution and should not be interpreted as physical transient
+behavior.</p>
+<p>Transient calculations use physical time and require appropriate initial
+conditions, time-step selection, and time-dependent boundary conditions.</p>
+<p>The availability of transient execution does not imply that every closure
+model has been validated for transient applications. Models based on
+steady-state or local-equilibrium assumptions require particular care when
+used in rapidly changing conditions.</p>
+</section>
+<section id="validation-status">
+<h2>Validation status<a class="headerlink" href="#validation-status" title="Link to this heading"></a></h2>
+<p>OpenSTREAM includes models and solver frameworks that have been compared
+with selected experimental datasets and reference calculations.</p>
+<p>Validation is necessarily limited to the investigated:</p>
+<ul class="simple">
+<li><p>Fluids.</p></li>
+<li><p>Geometries.</p></li>
+<li><p>Flow regimes.</p></li>
+<li><p>Pressures.</p></li>
+<li><p>Mass fluxes.</p></li>
+<li><p>Thermal conditions.</p></li>
+<li><p>Boundary conditions.</p></li>
+<li><p>Measured quantities.</p></li>
+<li><p>Solver and closure-model configurations.</p></li>
+</ul>
+<p>Inclusion of a comparison in a publication, tutorial, dataset package, or
+application project does not constitute comprehensive validation outside
+the examined conditions.</p>
+<p>The OpenSTREAM-database repository provides dataset implementations and
+calculated-versus-measured workflows for model assessment. Dataset-specific
+documentation should be reviewed for provenance, measurement uncertainty,
+processing methods, supported comparisons, and known limitations.</p>
+<p>Publication companion workflows reproduce or illustrate selected
+calculations and figures from the corresponding publications. The
+companions do not represent complete records of the underlying research
+programmes. Additional cases, sensitivity studies, closure-model
+development, uncertainty analyses, and intermediate investigations may
+have been performed but are not necessarily included.</p>
+</section>
+<section id="verification-and-testing">
+<h2>Verification and testing<a class="headerlink" href="#verification-and-testing" title="Link to this heading"></a></h2>
+<p>OpenSTREAM includes automated environment, unit, integration, and
+regression tests.</p>
+<p>The tests provide evidence that the implemented and tested functionality
+behaves as expected in the tested software environments. The automated
+test suite does not currently exercise every:</p>
+<ul class="simple">
+<li><p>Class or method.</p></li>
+<li><p>Solver path.</p></li>
+<li><p>Closure-model combination.</p></li>
+<li><p>Input option.</p></li>
+<li><p>Error condition.</p></li>
+<li><p>Transient application.</p></li>
+<li><p>Post-processing capability.</p></li>
+</ul>
+<p>Passing the available tests does not constitute complete verification or
+validation of OpenSTREAM.</p>
+<p>Contributors and users remain responsible for performing verification
+appropriate to their changes and applications.</p>
+</section>
+<section id="uncertainty">
+<h2>Uncertainty<a class="headerlink" href="#uncertainty" title="Link to this heading"></a></h2>
+<p>OpenSTREAM calculations can be affected by several categories of
+uncertainty:</p>
+<ul class="simple">
+<li><p>Experimental uncertainty.</p></li>
+<li><p>Source-data transcription or digitization uncertainty.</p></li>
+<li><p>Thermophysical-property uncertainty.</p></li>
+<li><p>Closure-model uncertainty.</p></li>
+<li><p>Model-parameter uncertainty.</p></li>
+<li><p>Numerical uncertainty.</p></li>
+<li><p>Boundary-condition uncertainty.</p></li>
+<li><p>Geometric simplification.</p></li>
+<li><p>Measurement-to-calculation alignment.</p></li>
+</ul>
+<p>Calculated-versus-measured agreement should be interpreted in relation to
+the relevant uncertainties. Small numerical differences do not necessarily
+indicate meaningful model differences, while apparent agreement does not
+necessarily demonstrate that the underlying physical mechanisms are
+represented correctly.</p>
+</section>
+<section id="open-research-software">
+<h2>Open research software<a class="headerlink" href="#open-research-software" title="Link to this heading"></a></h2>
+<p>OpenSTREAM is developed as an open and extensible research platform. The
+source code is available for inspection, modification, testing, and
+extension.</p>
+<p>The open implementation improves transparency but does not remove the need
+for engineering judgment, verification, validation, peer review, or
+documentation.</p>
+<p>Users who modify solver equations, closure models, default parameters,
+numerical methods, or reference solutions should:</p>
+<ul class="simple">
+<li><p>Document the changes.</p></li>
+<li><p>Add or update relevant tests.</p></li>
+<li><p>Review numerical differences.</p></li>
+<li><p>Reassess applicable validation evidence.</p></li>
+<li><p>Record the software version or commit used.</p></li>
+<li><p>Avoid presenting modified results as results from an unmodified
+OpenSTREAM release.</p></li>
+</ul>
+</section>
+<section id="intended-use">
+<h2>Intended use<a class="headerlink" href="#intended-use" title="Link to this heading"></a></h2>
+<p>OpenSTREAM is well suited to:</p>
+<ul class="simple">
+<li><p>Fundamental thermal-hydraulic model development.</p></li>
+<li><p>Closure-model implementation and comparison.</p></li>
+<li><p>One-dimensional solver development.</p></li>
+<li><p>Experimental-data assessment.</p></li>
+<li><p>Reproducible calculation workflows.</p></li>
+<li><p>Sensitivity and uncertainty studies.</p></li>
+<li><p>Educational demonstrations.</p></li>
+<li><p>Research collaboration.</p></li>
+<li><p>Development of models for later integration into more comprehensive
+simulation tools.</p></li>
+</ul>
+<p>OpenSTREAM should be used with particular caution when:</p>
+<ul class="simple">
+<li><p>Three-dimensional effects dominate the phenomenon.</p></li>
+<li><p>The geometry cannot be represented adequately as a straight channel.</p></li>
+<li><p>Crossflow or network behavior is important.</p></li>
+<li><p>The selected closure relations are applied outside their documented
+ranges.</p></li>
+<li><p>Experimental validation is unavailable for the conditions of interest.</p></li>
+<li><p>Numerical sensitivity has not been assessed.</p></li>
+<li><p>Results are strongly dependent on uncertain or nondefault parameters.</p></li>
+</ul>
+</section>
+<section id="reproducibility-of-reported-results">
+<h2>Reproducibility of reported results<a class="headerlink" href="#reproducibility-of-reported-results" title="Link to this heading"></a></h2>
+<p>Calculations reported in publications, technical reports, presentations,
+or other research outputs should retain sufficient information to
+reproduce the reported results.</p>
+<p>The reproducibility record should identify, as applicable:</p>
+<ul class="simple">
+<li><p>The OpenSTREAM version, release, or commit.</p></li>
+<li><p>The OpenSTREAM-database version, release, or commit, when used.</p></li>
+<li><p>The MATLAB version.</p></li>
+<li><p>The Python and CoolProp versions.</p></li>
+<li><p>The selected OpenSTREAM solver framework.</p></li>
+<li><p>The input files, input identifiers, dataset records, or lightweight
+in-memory case definition.</p></li>
+<li><p>The selected physical and closure models.</p></li>
+<li><p>All nondefault model parameters.</p></li>
+<li><p>The selected numerical options.</p></li>
+<li><p>The axial mesh and physical or pseudo-time-step settings.</p></li>
+<li><p>The pointwise and temporal convergence criteria.</p></li>
+<li><p>The final convergence status.</p></li>
+<li><p>Any under-relaxation or initialization settings introduced to obtain
+convergence.</p></li>
+<li><p>The scripts or Live Scripts used to perform the calculations and
+generate the reported figures.</p></li>
+<li><p>Any filtering, interpolation, smoothing, averaging, or other
+post-processing applied.</p></li>
+<li><p>The distinction between directly measured, derived, and calculated
+quantities.</p></li>
+<li><p>Any experimental cases, sensitivity studies, or intermediate analyses
+intentionally omitted from the published companion workflow.</p></li>
+</ul>
+<p>Where practical, reported results should be accompanied by an executable
+script or MATLAB Live Script. The workflow should generate the reported
+quantities and figures from the documented inputs rather than relying only
+on stored output files.</p>
+<p>A publication companion workflow may focus on the calculations and figures
+selected for publication. It should not be presented as a complete record
+of the underlying research activities, which may include additional test
+cases, closure-model development, sensitivity studies, uncertainty
+analyses, numerical investigations, and intermediate results.</p>
+<p>Generated solver outputs alone are not sufficient for reproducibility.
+The retained record must include the software versions, inputs, model
+selections, numerical settings, convergence information, and
+post-processing procedure needed to regenerate the results.</p>
+</section>
+<section id="user-responsibilities">
+<h2>User responsibilities<a class="headerlink" href="#user-responsibilities" title="Link to this heading"></a></h2>
+<p>Users are responsible for:</p>
+<ul class="simple">
+<li><p>Selecting an appropriate solver framework.</p></li>
+<li><p>Selecting physically applicable closure models.</p></li>
+<li><p>Reviewing assumptions and validity ranges.</p></li>
+<li><p>Defining consistent geometry and boundary conditions.</p></li>
+<li><p>Confirming unit consistency.</p></li>
+<li><p>Reviewing generated inputs.</p></li>
+<li><p>Confirming numerical convergence.</p></li>
+<li><p>Performing appropriate mesh and time-step sensitivity studies.</p></li>
+<li><p>Evaluating experimental, model, parameter, and numerical uncertainty.</p></li>
+<li><p>Reviewing available validation evidence.</p></li>
+<li><p>Recording the software version or commit used.</p></li>
+<li><p>Documenting nondefault models, parameters, and numerical settings.</p></li>
+<li><p>Interpreting results within the limits of the selected formulation.</p></li>
+</ul>
+<p>For research and publication work, users should retain sufficient
+information to reproduce the calculation, including inputs, model
+selections, numerical options, software versions, convergence status, and
+post-processing procedures.</p>
+</section>
+<section id="further-information">
+<h2>Further information<a class="headerlink" href="#further-information" title="Link to this heading"></a></h2>
+<p>For additional details, consult:</p>
+<ul class="simple">
+<li><p>The <span class="xref std std-doc">theory overview</span>.</p></li>
+<li><p>The individual solver theory pages.</p></li>
+<li><p>The <span class="xref std std-doc">tutorials</span>.</p></li>
+<li><p>The numerical convergence tutorial.</p></li>
+<li><p>The OpenSTREAM package reference.</p></li>
+<li><p>The <a class="reference internal" href="../Applications/database.html"><span class="doc">OpenSTREAM-database</span></a> documentation.</p></li>
+<li><p>The available publications and publication companion workflows.</p></li>
+</ul>
+<p>The detailed formulation and documented assumptions of the selected solver
+and closure models take precedence over this high-level summary.</p>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gettingStarted.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="versioning.html" class="btn btn-neutral float-right" title="Release numbering and versioning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

@@ -85,9 +85,22 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="runSampleScript.html">Run sample script</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release numbering and versioning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-identifiers">Release identifiers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#prerelease-identifiers">Prerelease identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stable-and-development-versions">Stable and development versions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#release-documentation">Release documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#development-and-released-versions">Development and released versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compatibility-status">Compatibility status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tested-configurations">Tested configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspecting-the-active-environment">Inspecting the active environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#openstream-database-compatibility">OpenSTREAM-database compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#saved-objects-and-persisted-results">Saved objects and persisted results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deprecation">Deprecation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citing-a-release">Citing a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#migration-between-versions">Migration between versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-and-release-responsibilities">Development and release responsibilities</a></li>
 </ul>
 </li>
 </ul>
@@ -143,6 +156,41 @@
 <li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#numerical-convergence-and-solver-diagnostics">7. Numerical Convergence and Solver Diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#mesh-and-time-step-sensitivity">8. Mesh and Time-Step Sensitivity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Guides/tutorials.html#advanced-visualization-and-post-processing">9. Advanced Visualization and Post-Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/generated_files.html">Generated files and session directories</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#input-files">Input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#session-directories">Session directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#overwriting-an-existing-session">Overwriting an existing session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#saving-solver-objects">Saving solver objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#openstream-database-outputs">OpenSTREAM-database outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#sandbox-calculations">Sandbox calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#test-outputs">Test outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#version-control-policy">Version-control policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#moving-or-deleting-generated-files">Moving or deleting generated files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#recommended-workflow">Recommended workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/generated_files.html#unexpected-output-location">Unexpected output location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/generated_files.html#existing-session-was-removed">Existing session was removed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/generated_files.html#existing-session-cannot-be-replaced">Existing session cannot be replaced</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Guides/generated_files.html#output-should-not-be-committed">Output should not be committed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/generated_files.html#further-information">Further information</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Guides/troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#initial-diagnostic-checklist">Initial diagnostic checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#matlab-cannot-locate-openstream">MATLAB cannot locate OpenSTREAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#matlab-cannot-locate-openstream-database">MATLAB cannot locate OpenSTREAM-database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#python-cannot-be-loaded">Python cannot be loaded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#coolprop-cannot-be-imported">CoolProp cannot be imported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#environment-tests-fail">Environment tests fail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#an-input-file-cannot-be-read">An input file cannot be read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#an-input-identifier-cannot-be-found">An input identifier cannot be found</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#openstream-reports-inconsistent-or-missing-inputs">OpenSTREAM reports inconsistent or missing inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Guides/troubleshooting.html#a-session-directory-already-exists">A session directory already exists</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Guides/testing.html">Testing and verification</a><ul>
@@ -294,18 +342,50 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/contribute_documentation.html">Contribute to the documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#setup-sublime-text-as-text-editor">Setup Sublime Text as text editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#set-up-sublime-text-as-a-text-editor">Set up Sublime Text as a text editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#configure-python-and-sphinx">Configure Python and Sphinx</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#setup-python">Setup Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#set-up-python">Set up Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#create-a-virtual-environment">Create a virtual environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#activate-the-environment">Activate the environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#install-sphinx-and-dependencies">Install Sphinx and dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#start-writing">Start writing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#full-build">Full build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#writing-guidelines">Writing guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#units">Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#code-examples">Code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#links">Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#headings">Headings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#lists-and-directives">Lists and directives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#cross-references-and-navigation">Cross-references and navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#citations-and-bibliographies">Citations and bibliographies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#images-and-figures">Images and figures</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#build-the-documentation">Build the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#quick-preview">Quick preview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#full-html-build">Full HTML build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#pdf-build">PDF build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#warnings">Warnings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#documentation-maintenance-checklist">Documentation-maintenance checklist</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#source-review">Source review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#technical-accuracy">Technical accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#code-and-command-review">Code and command review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#structure-and-navigation">Structure and navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#links-and-citations">Links and citations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#figures-and-tables">Figures and tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#html-review">HTML review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#pdf-review">PDF review</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#build-diagnostics">Build diagnostics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Community/contribute_documentation.html#final-repository-review">Final repository review</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#submitting-documentation-changes">Submitting documentation changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#continuous-integration">Continuous integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#reporting-documentation-issues">Reporting documentation issues</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
@@ -341,7 +421,7 @@
              
   <section id="release-numbering-and-versioning">
 <h1>Release numbering and versioning<a class="headerlink" href="#release-numbering-and-versioning" title="Link to this heading"></a></h1>
-<p><strong>OpenSTREAM</strong> uses a hybrid calendar-based and semantic version-numbering
+<p>OpenSTREAM uses a hybrid calendar-based and semantic version-numbering
 scheme. Release identifiers have the following general form:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>vYYYY.N
 </pre></div>
@@ -350,49 +430,409 @@ scheme. Release identifiers have the following general form:</p>
 successive release within that year.</p>
 <p>Examples include:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">v2026.0</span></code>: the first principal OpenSTREAM release associated with 2026;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">v2026.1</span></code>: a subsequent OpenSTREAM update released in 2026;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">v2026.1-alpha</span></code>: a prerelease associated with the planned
+<li><p><code class="docutils literal notranslate"><span class="pre">v2026.0</span></code>: the first principal OpenSTREAM release associated with
+2026.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v2026.1</span></code>: a subsequent OpenSTREAM release published in 2026.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v2026.1-alpha</span></code>: an alpha prerelease associated with the planned
 <code class="docutils literal notranslate"><span class="pre">v2026.1</span></code> release.</p></li>
 </ul>
-<p>Principal releases are intended to collect significant code, model,
-interface, testing, and documentation changes. The project aims to publish
-principal releases when justified by the accumulated changes. Additional
-releases may be published as needed.</p>
+<p>Principal releases collect reviewed code, model, interface, testing, and
+documentation changes. Releases are published when justified by the
+accumulated changes rather than according to a fixed schedule.</p>
+<section id="release-identifiers">
+<h2>Release identifiers<a class="headerlink" href="#release-identifiers" title="Link to this heading"></a></h2>
+<p>The release-year component identifies when a version is published. It does
+not indicate the validity range of the implemented physical models or the
+software environment required to run the release.</p>
+<p>The successive-release component is incremented when an additional release
+is published within the same year.</p>
+<p>The version number does not by itself distinguish among feature,
+correction, documentation, or compatibility releases. The nature and scope
+of a release are described in its release notes.</p>
+</section>
 <section id="prerelease-identifiers">
 <h2>Prerelease identifiers<a class="headerlink" href="#prerelease-identifiers" title="Link to this heading"></a></h2>
-<p>A suffix may be added when a release is made available before its final
-publication. For example:</p>
+<p>A suffix may be added when a version is made available before its final
+release. For example:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>v2026.1-alpha
 </pre></div>
 </div>
-<p>identifies an alpha prerelease associated with <code class="docutils literal notranslate"><span class="pre">v2026.1</span></code>.</p>
-<p>Prerelease versions may contain incomplete, experimental, or insufficiently
-validated features. They should not be interpreted as stable releases.</p>
+<p>identifies an alpha prerelease associated with the planned <code class="docutils literal notranslate"><span class="pre">v2026.1</span></code>
+release.</p>
+<p>Prerelease identifiers may include:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">alpha</span></code></dt><dd><p>Identifies an early prerelease that may contain incomplete,
+experimental, or insufficiently tested functionality.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">beta</span></code></dt><dd><p>Identifies a prerelease whose principal functionality is available but
+may still require broader testing and correction.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rc</span></code></dt><dd><p>Identifies a release candidate intended for final verification before
+publication of the corresponding stable release.</p>
+</dd>
+</dl>
+<p>A numerical suffix may be added when several prereleases of the same type
+are published:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>v2026.1-alpha.1
+v2026.1-beta.1
+v2026.1-rc.1
+</pre></div>
+</div>
+<p>Prerelease versions must not be interpreted as stable releases. Their
+interfaces, defaults, numerical behavior, documentation, and reference
+solutions may change before the corresponding final release.</p>
+</section>
+<section id="stable-and-development-versions">
+<h2>Stable and development versions<a class="headerlink" href="#stable-and-development-versions" title="Link to this heading"></a></h2>
+<p>A tagged release without a prerelease suffix is considered a stable
+OpenSTREAM release.</p>
+<p>The development branch may contain changes that are not available in the
+latest stable release. These changes may include:</p>
+<ul class="simple">
+<li><p>New or modified solver capabilities.</p></li>
+<li><p>New physical and closure models.</p></li>
+<li><p>Changes to input parameters or accepted values.</p></li>
+<li><p>Changes to default models or numerical options.</p></li>
+<li><p>Corrections affecting calculated results.</p></li>
+<li><p>Changes to saved-object formats.</p></li>
+<li><p>Updated tests and numerical reference solutions.</p></li>
+<li><p>Documentation for functionality not available in the latest release.</p></li>
+</ul>
+<p>Users working from a development branch should record the complete Git
+commit identifier rather than referring only to the branch name. A branch
+name can refer to different source revisions over time, whereas a commit
+identifier identifies a specific repository state.</p>
+<p>The active source revision can be obtained using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD
+</pre></div>
+</div>
+<p>A concise source description can be obtained using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>describe<span class="w"> </span>--tags<span class="w"> </span>--always<span class="w"> </span>--dirty
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">dirty</span></code> suffix indicates that the working tree contains local changes
+that are not included in the identified commit. Results obtained from a
+modified working tree should be reported accordingly.</p>
 </section>
 <section id="release-documentation">
 <h2>Release documentation<a class="headerlink" href="#release-documentation" title="Link to this heading"></a></h2>
 <p>Each released OpenSTREAM version should be accompanied by release notes
 summarizing, as applicable:</p>
 <ul class="simple">
-<li><p>new solver and physical-model capabilities;</p></li>
-<li><p>corrections to existing implementations;</p></li>
-<li><p>changes to input parameters or default values;</p></li>
-<li><p>numerical-method changes;</p></li>
-<li><p>documentation and tutorial updates;</p></li>
-<li><p>tested MATLAB, Python, and CoolProp configurations;</p></li>
-<li><p>known limitations;</p></li>
-<li><p>migration information for existing input files or user-developed models.</p></li>
+<li><p>New solver and physical-model capabilities.</p></li>
+<li><p>Corrections to existing implementations.</p></li>
+<li><p>Changes to governing equations or closure relations.</p></li>
+<li><p>Changes to input parameters or accepted values.</p></li>
+<li><p>Changes to default physical models or numerical options.</p></li>
+<li><p>Numerical-method changes.</p></li>
+<li><p>Changes affecting calculated results.</p></li>
+<li><p>Changes to saved solver objects or persisted results.</p></li>
+<li><p>Added or modified automated tests.</p></li>
+<li><p>Changes to approved numerical reference solutions.</p></li>
+<li><p>Documentation and tutorial updates.</p></li>
+<li><p>Tested MATLAB, Python, and CoolProp configurations.</p></li>
+<li><p>Known limitations and unresolved issues.</p></li>
+<li><p>Migration information for existing input files or user-developed
+models.</p></li>
+<li><p>Compatibility considerations for OpenSTREAM-database.</p></li>
+</ul>
+<p>A correction that changes numerical results should be identified
+explicitly. The release notes should distinguish intentional physical or
+numerical changes from differences caused only by formatting,
+documentation, or repository maintenance.</p>
+</section>
+<section id="compatibility-status">
+<h2>Compatibility status<a class="headerlink" href="#compatibility-status" title="Link to this heading"></a></h2>
+<p>OpenSTREAM depends on MATLAB and, for thermophysical properties, a
+compatible Python and CoolProp environment.</p>
+<p>Compatibility information should distinguish among:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Tested</span></code></dt><dd><p>The configuration is exercised by automated continuous integration or
+by a documented release-verification procedure.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">Supported</span></code></dt><dd><p>The configuration is expected to be usable and is within the intended
+support range, although every combination of functionality may not be
+exercised automatically.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">Untested</span></code></dt><dd><p>The configuration has not been included in the documented verification
+process. It may work, but compatibility has not been established.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">Incompatible</span></code></dt><dd><p>The configuration is known not to satisfy the OpenSTREAM requirements
+or to produce a documented compatibility failure.</p>
+</dd>
+</dl>
+<p>Absence from the tested configuration matrix should be interpreted as
+untested rather than automatically incompatible.</p>
+</section>
+<section id="tested-configurations">
+<h2>Tested configurations<a class="headerlink" href="#tested-configurations" title="Link to this heading"></a></h2>
+<p>Each release should identify the MATLAB, Python, and CoolProp
+configurations included in its verification process.</p>
+<p>The compatibility table should be maintained with the released
+documentation using the following structure:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18.0%" />
+<col style="width: 18.0%" />
+<col style="width: 18.0%" />
+<col style="width: 18.0%" />
+<col style="width: 28.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>OpenSTREAM version</p></th>
+<th class="head"><p>MATLAB</p></th>
+<th class="head"><p>Python</p></th>
+<th class="head"><p>CoolProp</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Current release</p></td>
+<td><p>See release notes</p></td>
+<td><p>See release notes</p></td>
+<td><p>See release notes</p></td>
+<td><p>Tested configurations are listed with the release</p></td>
+</tr>
+</tbody>
+</table>
+<p>The release notes and continuous-integration configuration are the
+authoritative sources for the combinations tested for a particular
+release.</p>
+<p>A successful test result for one MATLAB, Python, and CoolProp combination
+does not establish compatibility for every possible combination of those
+components.</p>
+</section>
+<section id="inspecting-the-active-environment">
+<h2>Inspecting the active environment<a class="headerlink" href="#inspecting-the-active-environment" title="Link to this heading"></a></h2>
+<p>Users should record the software environment used for calculations that
+support publications, technical reports, validation studies, or numerical
+reference solutions.</p>
+<p>The MATLAB version can be displayed using:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">version</span>
+</pre></div>
+</div>
+<p>The complete MATLAB product information can be displayed using:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">ver</span>
+</pre></div>
+</div>
+<p>The Python environment selected by MATLAB can be inspected using:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pyenv</span>
+</pre></div>
+</div>
+<p>The Python version can be displayed using:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="p">.</span><span class="n">sys</span><span class="p">.</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>The active CoolProp version can be displayed using:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">get_global_param_string</span><span class="p">(</span><span class="s">'version'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The reported environment should include, as applicable:</p>
+<ul class="simple">
+<li><p>OpenSTREAM release or Git commit.</p></li>
+<li><p>MATLAB release.</p></li>
+<li><p>Python version.</p></li>
+<li><p>CoolProp version.</p></li>
+<li><p>Operating system.</p></li>
+<li><p>OpenSTREAM-database release or Git commit.</p></li>
+<li><p>Local modifications affecting the calculation.</p></li>
 </ul>
 </section>
-<section id="development-and-released-versions">
-<h2>Development and released versions<a class="headerlink" href="#development-and-released-versions" title="Link to this heading"></a></h2>
-<p>The development version may contain changes that are not available in the
-latest released version. Users should verify that the documentation,
-tutorials, and source code correspond to the same OpenSTREAM version or
-source revision.</p>
-<p>When citing, distributing, or reproducing an OpenSTREAM calculation, record
-the release identifier or source revision used for the calculation.</p>
+<section id="continuous-integration">
+<h2>Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h2>
+<p>OpenSTREAM uses continuous integration to exercise selected software
+environments and run the available automated test suite.</p>
+<p>The continuous-integration configuration provides evidence for the tested
+combinations associated with the corresponding source revision. It does
+not demonstrate compatibility with configurations that are not included in
+the workflow.</p>
+<p>The automated tests also do not exercise every:</p>
+<ul class="simple">
+<li><p>Solver path.</p></li>
+<li><p>Physical or closure model.</p></li>
+<li><p>Input combination.</p></li>
+<li><p>Transient application.</p></li>
+<li><p>Error condition.</p></li>
+<li><p>Post-processing capability.</p></li>
+<li><p>MATLAB, Python, and CoolProp combination.</p></li>
+</ul>
+<p>A successful continuous-integration run therefore confirms that the
+implemented tests passed in the tested environments. It does not constitute
+complete verification or validation of OpenSTREAM.</p>
+</section>
+<section id="openstream-database-compatibility">
+<h2>OpenSTREAM-database compatibility<a class="headerlink" href="#openstream-database-compatibility" title="Link to this heading"></a></h2>
+<p>OpenSTREAM and OpenSTREAM-database are maintained as separate repositories.</p>
+<p>An OpenSTREAM-database calculation should use an OpenSTREAM version
+compatible with the dataset classes, project workflows, input fields, and
+solver interfaces used by the calculation.</p>
+<p>Publication and validation workflows should record both repository
+versions or commits:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>OpenSTREAM:          &lt;release or commit&gt;
+OpenSTREAM-database: &lt;release or commit&gt;
+</pre></div>
+</div>
+<p>A project that runs with the current development versions of both
+repositories may not run unchanged with an earlier release if public
+interfaces, input options, result structures, or model identifiers have
+changed.</p>
+<p>When compatibility between specific releases is important, the compatible
+OpenSTREAM and OpenSTREAM-database versions should be identified in the
+project documentation or release notes.</p>
+</section>
+<section id="saved-objects-and-persisted-results">
+<h2>Saved objects and persisted results<a class="headerlink" href="#saved-objects-and-persisted-results" title="Link to this heading"></a></h2>
+<p>Saved solver objects and persisted result structures can depend on the
+OpenSTREAM, MATLAB, Python, and CoolProp versions used to create them.</p>
+<p>Changes to any of the following can affect compatibility:</p>
+<ul class="simple">
+<li><p>MATLAB class definitions.</p></li>
+<li><p>Property names and access rules.</p></li>
+<li><p>Enumeration values.</p></li>
+<li><p>Result-object organization.</p></li>
+<li><p>Input-object organization.</p></li>
+<li><p>Python object references.</p></li>
+<li><p>CoolProp interfaces.</p></li>
+<li><p>Serialization behavior.</p></li>
+</ul>
+<p>Saved objects should not be treated as the only reproducibility record for
+a calculation.</p>
+<p>For long-term reproducibility, retain:</p>
+<ul class="simple">
+<li><p>The original input files or dataset records.</p></li>
+<li><p>The solver and model selections.</p></li>
+<li><p>Nondefault model parameters.</p></li>
+<li><p>Numerical options.</p></li>
+<li><p>The OpenSTREAM version or commit.</p></li>
+<li><p>The OpenSTREAM-database version or commit, when applicable.</p></li>
+<li><p>The MATLAB, Python, and CoolProp versions.</p></li>
+<li><p>The script or Live Script required to regenerate the result.</p></li>
+</ul>
+<p>When loading objects created with an earlier version, review the resulting
+warnings and verify that the object structure and calculated quantities
+remain consistent with the current implementation.</p>
+</section>
+<section id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Link to this heading"></a></h2>
+<p>OpenSTREAM aims to preserve existing user workflows where practical.
+However, backward compatibility is not guaranteed for every development or
+prerelease revision.</p>
+<p>An incompatible change may be necessary when:</p>
+<ul class="simple">
+<li><p>Correcting an erroneous implementation.</p></li>
+<li><p>Improving an established public interface.</p></li>
+<li><p>Replacing an ambiguous input convention.</p></li>
+<li><p>Changing a model formulation.</p></li>
+<li><p>Updating a dependency interface.</p></li>
+<li><p>Restructuring saved results or solver objects.</p></li>
+<li><p>Removing obsolete functionality.</p></li>
+</ul>
+<p>Incompatible changes should be documented in the release notes together
+with migration guidance where practical.</p>
+</section>
+<section id="deprecation">
+<h2>Deprecation<a class="headerlink" href="#deprecation" title="Link to this heading"></a></h2>
+<p>Functionality intended for removal should, where practical, be deprecated
+before being removed from a stable release.</p>
+<p>A deprecation notice should identify:</p>
+<ul class="simple">
+<li><p>The deprecated functionality.</p></li>
+<li><p>The recommended replacement.</p></li>
+<li><p>Any required migration steps.</p></li>
+<li><p>The release in which the deprecation is introduced.</p></li>
+<li><p>The planned removal release, when known.</p></li>
+</ul>
+<p>Users should update deprecated workflows before relying on a later
+OpenSTREAM release.</p>
+</section>
+<section id="reproducibility">
+<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading"></a></h2>
+<p>When citing, distributing, or reproducing an OpenSTREAM calculation,
+record the release identifier or complete source revision used for the
+calculation.</p>
+<p>For reported numerical results, also record:</p>
+<ul class="simple">
+<li><p>The OpenSTREAM-database version or commit, when used.</p></li>
+<li><p>The MATLAB version.</p></li>
+<li><p>The Python version.</p></li>
+<li><p>The CoolProp version.</p></li>
+<li><p>The selected solver framework.</p></li>
+<li><p>The input files, identifiers, dataset records, or in-memory case
+definition.</p></li>
+<li><p>The selected physical and closure models.</p></li>
+<li><p>Nondefault model parameters.</p></li>
+<li><p>Numerical options.</p></li>
+<li><p>Mesh and time-step settings.</p></li>
+<li><p>Convergence criteria and final convergence status.</p></li>
+<li><p>Post-processing procedures.</p></li>
+<li><p>Any local source modifications.</p></li>
+</ul>
+<p>A release identifier is preferable when the calculation uses an unmodified
+stable release. A complete Git commit should be reported when the
+calculation uses a development revision or a commit that is not associated
+with a release.</p>
+<p>The wider reproducibility requirements for reported calculations are
+described in the <span class="xref std std-doc">Intended scope and limitations</span> page.</p>
+</section>
+<section id="citing-a-release">
+<h2>Citing a release<a class="headerlink" href="#citing-a-release" title="Link to this heading"></a></h2>
+<p>A publication should cite the relevant OpenSTREAM publication and identify
+the software release or source revision used.</p>
+<p>A release-based statement can use the following form:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculations were performed using OpenSTREAM vYYYY.N.
+</pre></div>
+</div>
+<p>A development-revision statement can use:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calculations were performed using OpenSTREAM commit &lt;commit-id&gt;.
+</pre></div>
+</div>
+<p>When OpenSTREAM-database is used, identify its release or commit
+separately.</p>
+<p>The repository release archive or assigned persistent identifier should be
+used when available so that the cited software version remains findable.</p>
+</section>
+<section id="migration-between-versions">
+<h2>Migration between versions<a class="headerlink" href="#migration-between-versions" title="Link to this heading"></a></h2>
+<p>Before reproducing an earlier calculation using a newer OpenSTREAM
+version:</p>
+<ol class="arabic simple">
+<li><p>Review the release notes for every intervening release.</p></li>
+<li><p>Identify changes to inputs, defaults, models, numerical methods, and
+result structures.</p></li>
+<li><p>Confirm that the original physical-model configuration remains
+available.</p></li>
+<li><p>Regenerate the OpenSTREAM inputs from the authoritative source.</p></li>
+<li><p>Run the calculation using the documented numerical settings.</p></li>
+<li><p>Confirm convergence.</p></li>
+<li><p>Compare the new and original calculated results.</p></li>
+<li><p>Investigate and document any numerical differences.</p></li>
+</ol>
+<p>Updating a calculation to a newer software version creates a new
+computational result. Agreement with the earlier result should be checked
+rather than assumed.</p>
+</section>
+<section id="development-and-release-responsibilities">
+<h2>Development and release responsibilities<a class="headerlink" href="#development-and-release-responsibilities" title="Link to this heading"></a></h2>
+<p>Before publishing a release, maintainers should:</p>
+<ul class="simple">
+<li><p>Confirm that the intended source revision is identified by the release
+tag.</p></li>
+<li><p>Run the complete available automated test suite.</p></li>
+<li><p>Review continuous-integration results.</p></li>
+<li><p>Build and review the HTML documentation.</p></li>
+<li><p>Build and review the PDF documentation.</p></li>
+<li><p>Confirm that documentation corresponds to the released source.</p></li>
+<li><p>Review dependency and compatibility information.</p></li>
+<li><p>Review changes to approved numerical reference solutions.</p></li>
+<li><p>Prepare release notes.</p></li>
+<li><p>Document known limitations and migration requirements.</p></li>
+<li><p>Confirm that generated outputs and temporary files are not included.</p></li>
+<li><p>Confirm that the release archive contains the required licensing and
+citation information.</p></li>
+</ul>
+<p>Users should rely on the released documentation corresponding to the
+selected version rather than assuming that the current online
+documentation describes an earlier release.</p>
 </section>
 </section>
 

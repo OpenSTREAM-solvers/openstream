@@ -47,6 +47,9 @@ Before running or extending a project:
 Further installation and configuration information is provided on the
 :doc:`OpenSTREAM-database <database>` page.
 
+For calculations used in publications or technical reports, follow the
+:doc:`reproducibility guidance <../Guides/scope_and_limitations>`.
+
 OpenSTREAM-database does not currently include an automated test suite.
 Project workflows are therefore verified through reproducible execution,
 review of convergence, and documented comparison of calculated and
