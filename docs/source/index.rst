@@ -8,6 +8,7 @@
    :hidden:
    :caption: Usage
 
+   /Udage/scope_and_limitations
    /Usage/gettingStarted
    /Usage/runSampleScript
    /Usage/versioning
@@ -20,6 +21,8 @@
 
    /Guides/theory/index
    /Guides/tutorials
+   /Guides/generated_files
+   /Guides/troubleshooting
    /Guides/testing
    /Guides/glossary
    /Guides/notation
