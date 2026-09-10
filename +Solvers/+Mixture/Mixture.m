@@ -482,7 +482,7 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function h = HM(mix, zIdx)
-            %H Static enthalpy [J/kg]
+            %HM Static enthalpy [J/kg]
             %
             % Computes the mass-centered mean mixture enthalpy.
             %
@@ -665,7 +665,7 @@ classdef Mixture < Solvers.AbstractField
             %
             % Supported models
             %
-            % - BLASIUS: Blasius model (:math:`f = C(1) Re^{C(2)}`) using user-defined :attr:`Inputs.Model.FRICTION` coefficients
+            % - BLASIUS: Blasius model (:math:`f = C(1) Re^{C(2)} + C(3)`) using user-defined :attr:`Inputs.Model.FRICTION` coefficients
 
             if nargin < 2, zIdx = (1:mix(1).NZ).'; end
 
