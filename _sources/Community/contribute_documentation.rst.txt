@@ -726,6 +726,6 @@ For additional guidance, consult:
 - The `reStructuredText primer
   <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_.
 - The :doc:`code contribution guide <contribute_code>`.
-- The :doc:`troubleshooting guide <../Guide/troubleshooting>`.
+- The :doc:`troubleshooting guide <../Guides/troubleshooting>`.
 - The `OpenSTREAM repository
   <https://github.com/OpenSTREAM-solvers/openstream>`_.
