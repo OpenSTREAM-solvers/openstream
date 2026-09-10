@@ -203,16 +203,15 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#initial-diagnostic-checklist">Initial diagnostic checklist</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#matlab-cannot-locate-openstream">MATLAB cannot locate OpenSTREAM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#matlab-cannot-locate-openstream-database">MATLAB cannot locate OpenSTREAM-database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#python-cannot-be-loaded">Python cannot be loaded</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#coolprop-cannot-be-imported">CoolProp cannot be imported</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#environment-tests-fail">Environment tests fail</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#an-input-file-cannot-be-read">An input file cannot be read</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#an-input-identifier-cannot-be-found">An input identifier cannot be found</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#openstream-reports-inconsistent-or-missing-inputs">OpenSTREAM reports inconsistent or missing inputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#a-session-directory-already-exists">A session directory already exists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#start-here">Start here</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-and-environment">Installation and environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inputs-and-generated-files">Inputs and generated files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solver-execution-and-convergence">Solver execution and convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-post-processing">Results and post-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-and-documentation">Testing and documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#git-and-repository-files">Git and repository files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting-unresolved-problems">Reporting unresolved problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#further-information">Further information</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="testing.html">Testing and verification</a><ul>
@@ -408,6 +407,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#submitting-documentation-changes">Submitting documentation changes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#continuous-integration">Continuous integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#reporting-documentation-issues">Reporting documentation issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Community/contribute_documentation.html#further-information">Further information</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Community/authors.html">Authors</a><ul>
@@ -446,36 +446,28 @@
 <p>This page provides initial diagnostic guidance for common OpenSTREAM setup,
 execution, convergence, output, plotting, testing, and documentation
 problems.</p>
-<p>OpenSTREAM calculations depend on several interacting components:</p>
-<ul class="simple">
-<li><p>The OpenSTREAM source revision.</p></li>
-<li><p>MATLAB and its active search path.</p></li>
-<li><p>The MATLAB-Python interface.</p></li>
-<li><p>Python and CoolProp.</p></li>
-<li><p>OpenSTREAM input files and selected identifiers.</p></li>
-<li><p>The selected solver framework and physical models.</p></li>
-<li><p>Numerical settings and convergence criteria.</p></li>
-<li><p>Session-directory and file-system permissions.</p></li>
-</ul>
-<p>When investigating a problem, record the relevant error message, software
+<p>When investigating a problem, record the complete error message, software
 versions, input selections, solver state, and steps required to reproduce
 the behavior.</p>
-<section id="initial-diagnostic-checklist">
-<h2>Initial diagnostic checklist<a class="headerlink" href="#initial-diagnostic-checklist" title="Link to this heading"></a></h2>
-<p>Before changing physical models or numerical settings:</p>
+<section id="start-here">
+<h2>Start here<a class="headerlink" href="#start-here" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Initial diagnostic checklist</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Before changing physical models or numerical settings:</p>
 <ol class="arabic simple">
-<li><p>Confirm the current MATLAB working directory.</p></li>
-<li><p>Confirm that MATLAB locates the intended OpenSTREAM installation.</p></li>
-<li><p>Confirm that the expected Python environment is active.</p></li>
-<li><p>Confirm that CoolProp can be imported.</p></li>
-<li><p>Confirm that all input files and identifiers are correct.</p></li>
-<li><p>Review the complete error message and calculation log.</p></li>
-<li><p>Confirm that generated files are written to the intended location.</p></li>
-<li><p>Check whether the problem is reproducible using an unmodified tutorial
+<li><p class="sd-card-text">Confirm the current MATLAB working directory.</p></li>
+<li><p class="sd-card-text">Confirm that MATLAB locates the intended OpenSTREAM installation.</p></li>
+<li><p class="sd-card-text">Confirm that the expected Python environment is active.</p></li>
+<li><p class="sd-card-text">Confirm that CoolProp can be imported.</p></li>
+<li><p class="sd-card-text">Confirm that all input files and identifiers are correct.</p></li>
+<li><p class="sd-card-text">Review the complete error message and calculation log.</p></li>
+<li><p class="sd-card-text">Confirm that generated files are written to the intended location.</p></li>
+<li><p class="sd-card-text">Check whether the problem is reproducible using an unmodified tutorial
 or sample case.</p></li>
-<li><p>Record the OpenSTREAM version, release, or Git commit.</p></li>
+<li><p class="sd-card-text">Record the OpenSTREAM version, release, or Git commit.</p></li>
 </ol>
-<p>Useful commands include:</p>
+<p class="sd-card-text">Useful commands include:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pwd</span>
 <span class="nb">path</span>
 <span class="nb">which</span><span class="w"> </span><span class="n">Inputs</span><span class="p">.</span><span class="n">InputSet</span>
@@ -486,206 +478,528 @@ or sample case.</p></li>
 <span class="n">py</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">get_global_param_string</span><span class="p">(</span><span class="s">'version'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>When using a development revision, record the Git commit:</p>
+<p class="sd-card-text">When using a development revision, record the Git commit:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD
 git<span class="w"> </span>describe<span class="w"> </span>--tags<span class="w"> </span>--always<span class="w"> </span>--dirty
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">dirty</span></code> suffix indicates that the working tree contains local changes
-that are not part of the identified commit.</p>
-</section>
-<section id="matlab-cannot-locate-openstream">
-<h2>MATLAB cannot locate OpenSTREAM<a class="headerlink" href="#matlab-cannot-locate-openstream" title="Link to this heading"></a></h2>
-<p>Typical symptoms include:</p>
-<ul class="simple">
-<li><p>MATLAB reports an undefined package, class, function, or variable.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code> cannot be found.</p></li>
-<li><p>A solver class cannot be constructed.</p></li>
-<li><p>MATLAB resolves a class from an unintended repository copy.</p></li>
-</ul>
-<p>Add the OpenSTREAM repository root to the MATLAB path:</p>
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">dirty</span></code> suffix indicates that the working tree contains local
+changes that are not part of the identified commit.</p>
+</div>
+</details></section>
+<section id="installation-and-environment">
+<h2>Installation and environment<a class="headerlink" href="#installation-and-environment" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">MATLAB cannot locate OpenSTREAM</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Add the OpenSTREAM repository root to the MATLAB path:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream&gt;'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then verify the resolved location:</p>
+<p class="sd-card-text">Verify the resolved location:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Inputs</span><span class="p">.</span><span class="n">InputSet</span>
 <span class="nb">which</span><span class="w"> </span><span class="n">Solvers</span><span class="p">.</span><span class="n">Mixture</span><span class="p">.</span><span class="n">MixtureSolver</span>
 </pre></div>
 </div>
-<p>The returned paths should refer to the intended OpenSTREAM working copy.</p>
-<p>If an unexpected copy is found:</p>
-<ol class="arabic simple">
-<li><p>Inspect the MATLAB search path.</p></li>
-<li><p>Remove obsolete or duplicate repository paths.</p></li>
-<li><p>Add the intended repository root.</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">rehash</span></code> if recently added or renamed files are not detected.</p></li>
-<li><p>Restart MATLAB if cached class definitions remain inconsistent with the
-source files.</p></li>
-</ol>
-<p>Multiple OpenSTREAM copies on the MATLAB path can produce confusing
-behavior when classes from different revisions are loaded together.</p>
-</section>
-<section id="matlab-cannot-locate-openstream-database">
-<h2>MATLAB cannot locate OpenSTREAM-database<a class="headerlink" href="#matlab-cannot-locate-openstream-database" title="Link to this heading"></a></h2>
-<p>OpenSTREAM-database is maintained as a separate repository. Both
-repository roots must be available on the MATLAB path.</p>
+<p class="sd-card-text">The returned paths should refer to the intended OpenSTREAM working copy.
+If another copy is found, remove obsolete repository paths, add the
+intended root, run <code class="docutils literal notranslate"><span class="pre">rehash</span></code>, and restart MATLAB if cached class
+definitions remain.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">MATLAB cannot locate OpenSTREAM-database</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">OpenSTREAM-database is maintained separately. Add both repository roots:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream&gt;'</span><span class="p">)</span>
 <span class="nb">addpath</span><span class="p">(</span><span class="s">'&lt;path-to-openstream-database&gt;'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Verify the generic dataset class:</p>
+<p class="sd-card-text">Verify the generic and dataset-specific classes:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Dataset</span>
+<span class="nb">which</span><span class="w"> </span><span class="n">Wurtz1978</span><span class="p">.</span><span class="n">Wurtz1978</span>
 </pre></div>
 </div>
-<p>Verify a dataset-specific class using its package-qualified name:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">which</span><span class="w"> </span><span class="n">Wurtz1978</span><span class="p">.</span><span class="n">Wurtz1978</span>
-</pre></div>
-</div>
-<p>The returned locations should refer to the intended
-OpenSTREAM-database working copy.</p>
-<p>A dataset package should locate its authoritative source file using
+<p class="sd-card-text">A dataset package should locate its source file using
 <code class="docutils literal notranslate"><span class="pre">getSourceFilePath</span></code> rather than relying on the current MATLAB working
 directory.</p>
-</section>
-<section id="python-cannot-be-loaded">
-<h2>Python cannot be loaded<a class="headerlink" href="#python-cannot-be-loaded" title="Link to this heading"></a></h2>
-<p>Inspect the Python environment selected by MATLAB:</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Python cannot be loaded</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Inspect the Python environment selected by MATLAB:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pyenv</span>
+<span class="n">py</span><span class="p">.</span><span class="n">sys</span><span class="p">.</span><span class="n">version</span>
 </pre></div>
 </div>
-<p>Display the active Python version:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="p">.</span><span class="n">sys</span><span class="p">.</span><span class="n">version</span>
-</pre></div>
+<p class="sd-card-text">If the selected environment is incorrect, review the installation
+guidance and MATLAB documentation for <code class="docutils literal notranslate"><span class="pre">pyenv</span></code>. Restart MATLAB after
+changing the Python environment.</p>
 </div>
-<p>If the selected Python environment is not the intended environment, review
-the OpenSTREAM installation instructions and the MATLAB documentation for
-configuring <code class="docutils literal notranslate"><span class="pre">pyenv</span></code>.</p>
-<p>After changing the Python environment, MATLAB may need to be restarted
-before the new environment is used consistently.</p>
-<p>Record both the Python executable and version when reporting an
-environment problem.</p>
-</section>
-<section id="coolprop-cannot-be-imported">
-<h2>CoolProp cannot be imported<a class="headerlink" href="#coolprop-cannot-be-imported" title="Link to this heading"></a></h2>
-<p>Test whether MATLAB can import CoolProp:</p>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">CoolProp cannot be imported</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Test the import and display the version:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="p">.</span><span class="n">importlib</span><span class="p">.</span><span class="n">import_module</span><span class="p">(</span><span class="s">'CoolProp'</span><span class="p">);</span>
+<span class="n">py</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">get_global_param_string</span><span class="p">(</span><span class="s">'version'</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Display the active CoolProp version:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">CoolProp</span><span class="p">.</span><span class="n">get_global_param_string</span><span class="p">(</span><span class="s">'version'</span><span class="p">)</span>
-</pre></div>
+<p class="sd-card-text">If the import fails, confirm that CoolProp is installed in the Python
+environment selected by MATLAB, restart MATLAB, and run the OpenSTREAM
+environment tests.</p>
 </div>
-<p>If the import fails:</p>
-<ul class="simple">
-<li><p>Confirm that CoolProp is installed in the Python environment selected by
-MATLAB.</p></li>
-<li><p>Confirm that the installation uses a Python version compatible with the
-selected OpenSTREAM environment.</p></li>
-<li><p>Confirm that MATLAB is not connected to another Python environment.</p></li>
-<li><p>Restart MATLAB after changing the Python installation.</p></li>
-<li><p>Run the OpenSTREAM environment tests.</p></li>
-</ul>
-<p>A working Python installation does not by itself confirm that CoolProp is
-installed in the same environment.</p>
-</section>
-<section id="environment-tests-fail">
-<h2>Environment tests fail<a class="headerlink" href="#environment-tests-fail" title="Link to this heading"></a></h2>
-<p>Run the complete available test suite from the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder:</p>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Environment tests fail</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Run the complete available test suite from the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">runOpenSTREAMTests</span>
 </pre></div>
 </div>
-<p>If an environment test fails:</p>
-<ol class="arabic simple">
-<li><p>Review the reported MATLAB, Python, and CoolProp versions.</p></li>
-<li><p>Confirm that MATLAB uses the intended Python executable.</p></li>
-<li><p>Test the failing dependency directly.</p></li>
-<li><p>Compare the active environment with the configurations documented for
-the selected OpenSTREAM release.</p></li>
-<li><p>Review the continuous-integration configuration for tested
-combinations.</p></li>
-</ol>
-<p>A configuration that is not included in the tested environment matrix
-should be treated as untested rather than automatically incompatible.</p>
-</section>
-<section id="an-input-file-cannot-be-read">
-<h2>An input file cannot be read<a class="headerlink" href="#an-input-file-cannot-be-read" title="Link to this heading"></a></h2>
-<p>Confirm that the complete file path exists:</p>
+<p class="sd-card-text">Review the reported MATLAB, Python, and CoolProp versions. Compare the
+active environment with the configurations documented for the selected
+OpenSTREAM release. A configuration absent from the tested matrix should
+be treated as untested rather than automatically incompatible.</p>
+</div>
+</details></section>
+<section id="inputs-and-generated-files">
+<h2>Inputs and generated files<a class="headerlink" href="#inputs-and-generated-files" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">An input file cannot be read</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm that the complete paths exist:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">isfile</span><span class="p">(</span><span class="n">modelFilePath</span><span class="p">)</span>
 <span class="nb">isfile</span><span class="p">(</span><span class="n">optionsFilePath</span><span class="p">)</span>
 <span class="nb">isfile</span><span class="p">(</span><span class="n">geometryFilePath</span><span class="p">)</span>
 <span class="nb">isfile</span><span class="p">(</span><span class="n">bcFilePath</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Avoid relying on the current working directory. Construct paths using
-<code class="docutils literal notranslate"><span class="pre">fullfile</span></code> and known repository or project roots:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">modelFilePath</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">fullfile</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
-<span class="w">    </span><span class="n">openstreamPath</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">    </span><span class="s">'inputs'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
-<span class="w">    </span><span class="s">'models.inp'</span><span class="p">);</span>
-</pre></div>
+<p class="sd-card-text">Review:</p>
+<ul class="simple">
+<li><p class="sd-card-text">File spelling and capitalization.</p></li>
+<li><p class="sd-card-text">File extensions.</p></li>
+<li><p class="sd-card-text">Access permissions.</p></li>
+<li><p class="sd-card-text">Network-drive availability.</p></li>
+<li><p class="sd-card-text">Whether the file is empty or incomplete.</p></li>
+<li><p class="sd-card-text">Whether the file belongs to the intended source revision.</p></li>
+</ul>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">fullfile</span></code> and explicit repository or project roots instead of
+relying on the current working directory.</p>
 </div>
-<p>Review:</p>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">An input identifier cannot be found</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm that each selected identifier exists in its corresponding file:</p>
 <ul class="simple">
-<li><p>File spelling and capitalization.</p></li>
-<li><p>File extensions.</p></li>
-<li><p>Access permissions.</p></li>
-<li><p>Network-drive availability.</p></li>
-<li><p>Whether the file is empty or incomplete.</p></li>
-<li><p>Whether the path refers to a file from another branch or repository
-copy.</p></li>
+<li><p class="sd-card-text">Model file and model identifier.</p></li>
+<li><p class="sd-card-text">Numerical-option file and option identifier.</p></li>
+<li><p class="sd-card-text">Geometry file and geometry identifier.</p></li>
+<li><p class="sd-card-text">Boundary-condition file and case identifier.</p></li>
 </ul>
-<p>If the file was generated by another workflow, review that workflow for
-errors before modifying the OpenSTREAM reader.</p>
-</section>
-<section id="an-input-identifier-cannot-be-found">
-<h2>An input identifier cannot be found<a class="headerlink" href="#an-input-identifier-cannot-be-found" title="Link to this heading"></a></h2>
-<p>OpenSTREAM input files can contain several named input sets. Confirm that
-the selected identifier exists in the corresponding file.</p>
-<p>Review each file and identifier independently:</p>
-<ul class="simple">
-<li><p>Model file and model identifier.</p></li>
-<li><p>Numerical-option file and option identifier.</p></li>
-<li><p>Geometry file and geometry identifier.</p></li>
-<li><p>Boundary-condition file and case identifier.</p></li>
-</ul>
-<p>An identifier from one file revision may not exist in another revision.
-Confirm that the source code, documentation, tutorials, and input files
+<p class="sd-card-text">Confirm that source code, documentation, tutorials, and input files
 belong to compatible OpenSTREAM revisions.</p>
-</section>
-<section id="openstream-reports-inconsistent-or-missing-inputs">
-<h2>OpenSTREAM reports inconsistent or missing inputs<a class="headerlink" href="#openstream-reports-inconsistent-or-missing-inputs" title="Link to this heading"></a></h2>
-<p>Review the generated or maintained input files before changing the solver.</p>
-<p>Confirm that:</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">OpenSTREAM reports inconsistent or missing inputs</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Review the generated or maintained inputs before changing the solver.
+Confirm that:</p>
 <ul class="simple">
-<li><p>Required geometry quantities are present.</p></li>
-<li><p>Boundary conditions use SI units.</p></li>
-<li><p>Absolute temperatures use kelvin.</p></li>
-<li><p>Wall meshes and wall-power distributions have compatible lengths.</p></li>
-<li><p>The sum of the wall-mesh intervals is consistent with the modeled
-length.</p></li>
-<li><p>Selected models are valid identifiers.</p></li>
-<li><p>Numerical options contain valid values.</p></li>
-<li><p>Multi-wall inputs contain consistent information for each wall.</p></li>
+<li><p class="sd-card-text">Required geometry quantities are present.</p></li>
+<li><p class="sd-card-text">Boundary conditions use SI units.</p></li>
+<li><p class="sd-card-text">Absolute temperatures use kelvin.</p></li>
+<li><p class="sd-card-text">Wall meshes and wall-power distributions have compatible lengths.</p></li>
+<li><p class="sd-card-text">The wall-mesh intervals are consistent with the modeled length.</p></li>
+<li><p class="sd-card-text">Selected models are valid identifiers.</p></li>
+<li><p class="sd-card-text">Numerical options contain valid values.</p></li>
+<li><p class="sd-card-text">Multi-wall inputs contain consistent information for each wall.</p></li>
 </ul>
-<p>When using OpenSTREAM-database, also review the selected dataset record and
-the generated input files.</p>
-<p>A source-data implementation can load successfully while still containing
-a physically inconsistent geometry, power, unit conversion, or boundary
-condition.</p>
-</section>
-<section id="a-session-directory-already-exists">
-<h2>A session directory already exists<a class="headerlink" href="#a-session-directory-already-exists" title="Link to this heading"></a></h2>
-<p>An existing session can prevent a new calculation from using the same
-location.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">overwriteSessionFiles</span></code> setting controls whether existing session
+<p class="sd-card-text">When using OpenSTREAM-database, also review the selected dataset record
+and the generated input files.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">A session directory already exists</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The <code class="docutils literal notranslate"><span class="pre">overwriteSessionFiles</span></code> setting controls whether existing session
 files can be replaced:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">inputSetOpts</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">...</span>
 <span class="w">    </span><span class="s">'overwriteSessionFiles'</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
 <span class="w">    </span><span class="s">'LOGMODE'</span><span class="p">,</span><span class="s">'BOTH'</span><span class="p">};</span>
 </pre></div>
 </div>
-<p>Use overwriting only when the existing output can be replaced safely.</p>
-<p>If previous results must be retained:</p>
+<p class="sd-card-text">Use overwriting only when existing output can be replaced safely. If
+previous results must be retained:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Select a different session location.</p></li>
+<li><p class="sd-card-text">Use a different session identifier.</p></li>
+<li><p class="sd-card-text">Archive the existing session before rerunning.</p></li>
+<li><p class="sd-card-text">Confirm that another MATLAB process is not using the directory.</p></li>
+</ul>
+<p class="sd-card-text">For details, see the <a class="reference internal" href="generated_files.html"><span class="doc">generated-files guide</span></a>.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">OpenSTREAM reports that a directory was removed</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">When <code class="docutils literal notranslate"><span class="pre">overwriteSessionFiles</span></code> is enabled, OpenSTREAM can remove an
+existing session directory before creating the new session. This
+confirms replacement of previous output and does not by itself indicate
+solver failure.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Generated files appear in an unexpected folder</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Inspect:</p>
+<ul class="simple">
+<li><p class="sd-card-text">The current working directory.</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">sessionParentDir</span></code>.</p></li>
+<li><p class="sd-card-text">Paths supplied to <code class="docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code>.</p></li>
+<li><p class="sd-card-text">Paths generated by OpenSTREAM-database.</p></li>
+<li><p class="sd-card-text">Any use of relative paths.</p></li>
+</ul>
+<p class="sd-card-text">Use explicit paths built with <code class="docutils literal notranslate"><span class="pre">fullfile</span></code>.</p>
+<p class="sd-card-text">Lightweight OpenSTREAM-database workflows should define an appropriate
+location for generated inputs and results so output is not created
+unexpectedly in the repository root.</p>
+</div>
+</details></section>
+<section id="solver-execution-and-convergence">
+<h2>Solver execution and convergence<a class="headerlink" href="#solver-execution-and-convergence" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The mixture solver does not converge</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Determine whether the difficulty concerns point iterations, pseudo-time
+convergence, a physical transient, thermophysical properties, an input
+discontinuity, or a model selection.</p>
+<p class="sd-card-text">Identify the controlling axial location and variable, and whether the
+error decreases, oscillates, or diverges. Possible diagnostic studies
+include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Reducing the pseudo-time step.</p></li>
+<li><p class="sd-card-text">Refining the axial mesh.</p></li>
+<li><p class="sd-card-text">Applying targeted under-relaxation.</p></li>
+<li><p class="sd-card-text">Reviewing thermophysical-property states.</p></li>
+<li><p class="sd-card-text">Simplifying the model configuration.</p></li>
+<li><p class="sd-card-text">Comparing with a converged tutorial case.</p></li>
+<li><p class="sd-card-text">Reviewing boundary conditions and units.</p></li>
+</ul>
+<p class="sd-card-text">Increasing the maximum iteration count is useful only when the residual
+is decreasing consistently.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The annular-flow solver fails at its first active node</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The ThreeField and FourField equations are initialized at the modeled
+onset of annular flow using the upstream mixture solution. Difficulties
+can be associated with onset prediction, initial field fractions and
+velocities, small field mass flow rates, strong transfer terms, or an
+abrupt transition between formulations.</p>
+<p class="sd-card-text">Identify the variable controlling the iterations before changing
+settings. Apply under-relaxation only to the affected field. For
+example, base-film velocity under-relaxation is controlled by
+<code class="docutils literal notranslate"><span class="pre">RELAXUB</span></code> in the FourField workflow.</p>
+<p class="sd-card-text">Changes to initial field fractions alter the physical initialization
+and should be treated as sensitivity studies, not solely numerical
+corrections.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The solution converges only with extreme relaxation</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Very small relaxation factors can make updates appear converged.</p>
+<ul class="simple">
+<li><p class="sd-card-text">Inspect actual residuals and variable changes.</p></li>
+<li><p class="sd-card-text">Compare with less restrictive relaxation.</p></li>
+<li><p class="sd-card-text">Tighten convergence criteria where appropriate.</p></li>
+<li><p class="sd-card-text">Verify conservation and physical consistency.</p></li>
+<li><p class="sd-card-text">Review mesh and time-step sensitivity.</p></li>
+</ul>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The calculated solution contains NaN or Inf</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Identify the first location and variable where the invalid value
+appears. Review:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Thermophysical-property calls.</p></li>
+<li><p class="sd-card-text">Division by zero or very small quantities.</p></li>
+<li><p class="sd-card-text">Missing input or experimental values.</p></li>
+<li><p class="sd-card-text">Invalid interpolation ranges.</p></li>
+<li><p class="sd-card-text">Negative or nonphysical state quantities.</p></li>
+<li><p class="sd-card-text">Field initialization near a flow-regime transition.</p></li>
+<li><p class="sd-card-text">Geometry and power inputs.</p></li>
+<li><p class="sd-card-text">The log output preceding the first invalid value.</p></li>
+</ul>
+<p class="sd-card-text">Do not replace invalid values silently. Missing OpenSTREAM-database
+values must not be interpreted as zero unless zero is the reported
+value.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The steady-state result changes with pseudo-time settings</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm that each calculation reaches the stated convergence criteria.
+Then:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Compare conservation residuals.</p></li>
+<li><p class="sd-card-text">Compare final axial distributions.</p></li>
+<li><p class="sd-card-text">Reduce the pseudo-time step.</p></li>
+<li><p class="sd-card-text">Tighten convergence criteria.</p></li>
+<li><p class="sd-card-text">Refine the axial mesh.</p></li>
+<li><p class="sd-card-text">Review transition and initialization behavior.</p></li>
+</ul>
+<p class="sd-card-text">Document settings required for reported results.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">A transient result changes with the time step</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Perform a physical-time-step sensitivity study. Compare:</p>
+<ul class="simple">
+<li><p class="sd-card-text">The timing of principal events.</p></li>
+<li><p class="sd-card-text">Peak and minimum quantities.</p></li>
+<li><p class="sd-card-text">Integrated quantities.</p></li>
+<li><p class="sd-card-text">Conservation behavior.</p></li>
+<li><p class="sd-card-text">Spatial distributions at equivalent physical times.</p></li>
+</ul>
+<p class="sd-card-text">Numerical stability does not imply time-step independence.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">A result differs from a tutorial or reference</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm that the calculations use the same:</p>
+<ul class="simple">
+<li><p class="sd-card-text">OpenSTREAM and OpenSTREAM-database release or commit.</p></li>
+<li><p class="sd-card-text">MATLAB, Python, and CoolProp versions.</p></li>
+<li><p class="sd-card-text">Inputs and identifiers.</p></li>
+<li><p class="sd-card-text">Solver and model selections.</p></li>
+<li><p class="sd-card-text">Nondefault parameters and numerical options.</p></li>
+<li><p class="sd-card-text">Mesh, time step, and convergence criteria.</p></li>
+<li><p class="sd-card-text">Post-processing procedure.</p></li>
+</ul>
+<p class="sd-card-text">Review release notes and understand the difference before replacing a
+numerical reference.</p>
+</div>
+</details></section>
+<section id="results-and-post-processing">
+<h2>Results and post-processing<a class="headerlink" href="#results-and-post-processing" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">A saved solver object cannot be loaded</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Review:</p>
+<ul class="simple">
+<li><p class="sd-card-text">The OpenSTREAM revision that created the object.</p></li>
+<li><p class="sd-card-text">The current OpenSTREAM revision.</p></li>
+<li><p class="sd-card-text">MATLAB version differences.</p></li>
+<li><p class="sd-card-text">Renamed or removed properties.</p></li>
+<li><p class="sd-card-text">Enumeration changes.</p></li>
+<li><p class="sd-card-text">Python or CoolProp object references.</p></li>
+<li><p class="sd-card-text">Changes to result structures.</p></li>
+</ul>
+<p class="sd-card-text">Where possible, regenerate the calculation from the original inputs and
+documented workflow. Saved objects should not be the only
+reproducibility record.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Plots are empty or incomplete</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm that:</p>
+<ul class="simple">
+<li><p class="sd-card-text">The calculation completed.</p></li>
+<li><p class="sd-card-text">The requested result fields exist.</p></li>
+<li><p class="sd-card-text">The requested axial or time indices are valid.</p></li>
+<li><p class="sd-card-text">The plotting method supports the selected solver.</p></li>
+<li><p class="sd-card-text">The selected variables contain finite values.</p></li>
+<li><p class="sd-card-text">The relevant field is active over the plotted domain.</p></li>
+<li><p class="sd-card-text">Filtering has not removed all result points.</p></li>
+</ul>
+<p class="sd-card-text">Annular-flow fields may be active only downstream of the modeled onset
+of annular flow.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Measured and calculated data do not align</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Review:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Coordinate definitions.</p></li>
+<li><p class="sd-card-text">Measurement elevations.</p></li>
+<li><p class="sd-card-text">Cell-center versus boundary locations.</p></li>
+<li><p class="sd-card-text">Axial interpolation.</p></li>
+<li><p class="sd-card-text">Time alignment.</p></li>
+<li><p class="sd-card-text">Units.</p></li>
+<li><p class="sd-card-text">Whether the measurement is local, averaged, or integrated.</p></li>
+<li><p class="sd-card-text">Whether the experimental quantity is measured directly or derived.</p></li>
+<li><p class="sd-card-text">Whether the calculated quantity has the same physical definition.</p></li>
+</ul>
+<p class="sd-card-text">Document all alignment and processing. Do not modify source data solely
+to improve visual agreement.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Interactive figures are missing from exported documentation</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Live Script HTML and PDF exports may not preserve all interactive Live
+Editor behavior. The <code class="docutils literal notranslate"><span class="pre">.mlx</span></code> file remains the authoritative executable
+version; static exports retain supported text, code, output, and
+figures.</p>
+</div>
+</details></section>
+<section id="testing-and-documentation">
+<h2>Testing and documentation<a class="headerlink" href="#testing-and-documentation" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The automated tests fail</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Run:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">runOpenSTREAMTests</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Review:</p>
+<ul class="simple">
+<li><p class="sd-card-text">The first failing test.</p></li>
+<li><p class="sd-card-text">The complete diagnostic output.</p></li>
+<li><p class="sd-card-text">The active MATLAB, Python, and CoolProp versions.</p></li>
+<li><p class="sd-card-text">Local source modifications.</p></li>
+<li><p class="sd-card-text">Changes to input files.</p></li>
+<li><p class="sd-card-text">Differences from approved numerical references.</p></li>
+<li><p class="sd-card-text">Convergence status.</p></li>
+<li><p class="sd-card-text">Generated output and session locations.</p></li>
+</ul>
+<p class="sd-card-text">Do not update a numerical reference solely to make a test pass.
+Determine whether the difference results from a corrected defect,
+intentional model or numerical change, environment difference,
+regression, insufficient convergence, or changed default.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Tests pass locally but fail in continuous integration</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Compare:</p>
+<ul class="simple">
+<li><p class="sd-card-text">MATLAB release.</p></li>
+<li><p class="sd-card-text">Python and CoolProp versions.</p></li>
+<li><p class="sd-card-text">Operating system and environment variables.</p></li>
+<li><p class="sd-card-text">File-path assumptions and case sensitivity.</p></li>
+<li><p class="sd-card-text">Availability of generated or local files.</p></li>
+<li><p class="sd-card-text">Repository cleanliness.</p></li>
+</ul>
+<p class="sd-card-text">Continuous integration starts from a clean checkout. Local tests can
+depend unintentionally on ignored files, generated output, local
+dependencies, absolute paths, cached classes, or files from another
+repository.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The documentation build fails</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Review the first Sphinx warning or error. Common causes include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">Invalid reStructuredText indentation.</p></li>
+<li><p class="sd-card-text">Missing blank lines before or after directives.</p></li>
+<li><p class="sd-card-text">Incorrect heading underlines.</p></li>
+<li><p class="sd-card-text">Invalid <code class="docutils literal notranslate"><span class="pre">toctree</span></code> entries.</p></li>
+<li><p class="sd-card-text">Broken internal cross-references.</p></li>
+<li><p class="sd-card-text">Missing files or BibTeX entries.</p></li>
+<li><p class="sd-card-text">Duplicate labels.</p></li>
+<li><p class="sd-card-text">Copied HTML markup.</p></li>
+<li><p class="sd-card-text">Malformed tables.</p></li>
+</ul>
+<p class="sd-card-text">Use standard reStructuredText links:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>`OpenSTREAM repository
+<span class="nt">&lt;https://github.com/OpenSTREAM-solvers/openstream&gt;</span>`_
+</pre></div>
+</div>
+<p class="sd-card-text">Do not paste interface-generated <code class="docutils literal notranslate"><span class="pre">&lt;a</span> <span class="pre">href=...&gt;</span></code> elements into RST
+files.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">A citation does not render</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm that <code class="docutils literal notranslate"><span class="pre">sphinxcontrib-bibtex</span></code> is enabled, the correct BibTeX
+file is listed in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>, the citation key exists, and a
+bibliography directive is available.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="na">:cite:p:</span><span class="nv">`CitationKey`</span>
+
+<span class="p">..</span> <span class="ow">bibliography</span><span class="p">::</span>
+   <span class="nc">:filter:</span> False
+
+   CitationKey
+</pre></div>
+</div>
+</div>
+</details></section>
+<section id="git-and-repository-files">
+<h2>Git and repository files<a class="headerlink" href="#git-and-repository-files" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">An expected file is missing after switching Git branches</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Git does not preserve an empty directory unless it contains a tracked
+file, such as <code class="docutils literal notranslate"><span class="pre">README.md</span></code> or <code class="docutils literal notranslate"><span class="pre">.gitkeep</span></code>.</p>
+<p class="sd-card-text">Inspect local files before switching:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
+git<span class="w"> </span>status<span class="w"> </span>--ignored<span class="w"> </span>--short
+</pre></div>
+</div>
+<p class="sd-card-text">Stash tracked and untracked files with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>stash<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>-m<span class="w"> </span><span class="s2">"temporary work before branch switch"</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Include ignored sandbox files with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>stash<span class="w"> </span>push<span class="w"> </span>-a<span class="w"> </span>-m<span class="w"> </span><span class="s2">"temporary work before branch switch"</span>
+</pre></div>
+</div>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">stash</span> <span class="pre">apply</span></code> and verify restoration before
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">stash</span> <span class="pre">drop</span></code>.</p>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">A file appears remotely but is not tracked locally</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Confirm the current branch and update remote references:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>branch<span class="w"> </span>--show-current
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+git<span class="w"> </span>status<span class="w"> </span>-sb
+</pre></div>
+</div>
+<p class="sd-card-text">Inspect local and remote trees:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>ls-tree<span class="w"> </span>-r<span class="w"> </span>HEAD<span class="w"> </span>--name-only
+git<span class="w"> </span>ls-tree<span class="w"> </span>-r<span class="w"> </span>origin/&lt;branch&gt;<span class="w"> </span>--name-only
+</pre></div>
+</div>
+<p class="sd-card-text">If a file should remain locally but no longer be tracked, use
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rm</span> <span class="pre">--cached</span> <span class="pre">&lt;path&gt;</span></code>, add the path to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>, and commit
+the index change. <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> does not stop tracking a committed
+file.</p>
+</div>
+</details></section>
+<section id="reporting-unresolved-problems">
+<h2>Reporting unresolved problems<a class="headerlink" href="#reporting-unresolved-problems" title="Link to this heading"></a></h2>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-fade-in-slide-down">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Preparing an issue report</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">If the problem remains unresolved, include:</p>
+<ul class="simple">
+<li><p class="sd-card-text">A concise problem description.</p></li>
+<li><p class="sd-card-text">Expected and actual behavior.</p></li>
+<li><p class="sd-card-text">Reproduction steps.</p></li>
+<li><p class="sd-card-text">OpenSTREAM and OpenSTREAM-database revisions.</p></li>
+<li><p class="sd-card-text">MATLAB, Python, and CoolProp versions.</p></li>
+<li><p class="sd-card-text">Operating system and solver framework.</p></li>
+<li><p class="sd-card-text">Inputs or a minimal reproducible case.</p></li>
+<li><p class="sd-card-text">Nondefault models and numerical options.</p></li>
+<li><p class="sd-card-text">Final solver state and relevant log excerpts.</p></li>
+<li><p class="sd-card-text">Local source modifications.</p></li>
+<li><p class="sd-card-text">Troubleshooting steps already attempted.</p></li>
+</ul>
+<p class="sd-card-text">Remove proprietary, confidential, or restricted information before
+attaching files to a public issue.</p>
+<p class="sd-card-text">Report reproducible defects through the
+<a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">OpenSTREAM issue tracker</a>.</p>
+</div>
+</details></section>
+<section id="further-information">
+<h2>Further information<a class="headerlink" href="#further-information" title="Link to this heading"></a></h2>
+<p>For more detailed guidance, consult:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../Usage/gettingStarted.html"><span class="doc">getting-started guide</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="generated_files.html"><span class="doc">generated-files guide</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="../Usage/versioning.html"><span class="doc">release numbering and versioning guide</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="../Usage/scope_and_limitations.html"><span class="doc">intended scope and limitations</span></a>.</p></li>
+<li><p>The numerical convergence tutorial.</p></li>
+<li><p>The <a class="reference internal" href="testing.html"><span class="doc">testing</span></a> documentation.</p></li>
+<li><p>The <a class="reference internal" href="../Community/faq.html"><span class="doc">OpenSTREAM FAQ</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="../Community/support.html"><span class="doc">support page</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="../Applications/database.html"><span class="doc">OpenSTREAM-database</span></a> documentation.</p></li>
+</ul>
 </section>
 </section>
 

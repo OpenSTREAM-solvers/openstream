@@ -711,4 +711,21 @@ A documentation issue should include, where applicable:
 - A description of the problem.
 - The expected correction or clarification.
 - The relevant OpenSTREAM version or commit.
-- A screenshot or copied
+- A screenshot or copied warning, when useful.
+- Information needed to reproduce a build failure.
+
+Before opening a new issue, review existing issues to determine whether the
+topic has already been reported.
+
+Further information
+-------------------
+
+For additional guidance, consult:
+
+- The `Sphinx documentation <https://www.sphinx-doc.org/>`_.
+- The `reStructuredText primer
+  <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_.
+- The :doc:`code contribution guide <contribute_code>`.
+- The :doc:`troubleshooting guide <../Guide/troubleshooting>`.
+- The `OpenSTREAM repository
+  <https://github.com/OpenSTREAM-solvers/openstream>`_.
