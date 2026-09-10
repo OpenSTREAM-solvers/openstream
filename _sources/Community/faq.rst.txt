@@ -408,11 +408,11 @@ Running simulations
           overwriteSessionFiles = true, ...
           LOGMODE                = 'BOTH');
 
-      % Create and solve the three-field solver.
+      % Create and solve the mixture solver.
       mixSolver = MixtureSolver(inputSet);
       mixSolver.solve();
 
-      % Generate defaults axial distribution plots
+      % Generate default axial distribution plots
       mixSolver.plotz();
 
 .. dropdown:: How are OpenSTREAM inputs organized?

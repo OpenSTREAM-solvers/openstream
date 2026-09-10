@@ -466,7 +466,7 @@
 <h2>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading"></a></h2>
 <p>The conservation equations are formulated at the wall level, indexed by <span class="math notranslate nohighlight">\(n\)</span>, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.</p>
 <p><strong>1. Mass conservation</strong></p>
-<p>Film: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_{all}^n (D - E^n - \Gamma_{wb}^n)\)</span></p>
+<p>Film: <span class="math notranslate nohighlight">\(\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_{wall}^n (D - E^n - \Gamma_{wb}^n)\)</span></p>
 <p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(W_f^n\)</span> is the liquid film mass flow rate for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
@@ -490,11 +490,11 @@
 <li><p><span class="math notranslate nohighlight">\(A_d\)</span>, <span class="math notranslate nohighlight">\(V_d\)</span> are the drop interfacial area and volume (based on surface averaging)</p></li>
 </ul>
 <p><strong>3. Energy conservation</strong></p>
-<p>Under thermal equilibrium: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{w}^n}{h_{vs} - h_{ls}}\)</span></p>
+<p>Under thermal equilibrium: <span class="math notranslate nohighlight">\(\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{wall}^n}{h_{vs} - h_{ls}}\)</span></p>
 <p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(h_{vs}\)</span>, <span class="math notranslate nohighlight">\(h_{ls}\)</span> are the saturated vapor and liquid specific enthalpies</p></li>
-<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{w}^n\)</span> is the wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\({q^{\prime\prime}}_{wall}^n\)</span> is the wall heat flux for wall index <span class="math notranslate nohighlight">\(n\)</span></p></li>
 </ul>
 </section>
 <section id="closure-models">
@@ -507,7 +507,7 @@
 <li><p>Film entrainement mass flux: <span class="math notranslate nohighlight">\(E\)</span></p></li>
 <li><p>Vapor/film interfacial shear stress: <span class="math notranslate nohighlight">\(\tau_{v,f}^n\)</span></p></li>
 <li><p>Vapor/drop interfacial shear stress: <span class="math notranslate nohighlight">\(\tau_{v,d}^n\)</span></p></li>
-<li><p>Wall shear stress on the liquid film: <span class="math notranslate nohighlight">\(\tau_{w,f}^n\)</span></p></li>
+<li><p>Wall shear stress on the liquid film: <span class="math notranslate nohighlight">\(\tau_{wall,f}^n\)</span></p></li>
 <li><p>Drop interfacial area and volume: <span class="math notranslate nohighlight">\(A_d\)</span>, <span class="math notranslate nohighlight">\(V_d\)</span></p></li>
 </ul>
 <p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure models are implemented in <a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Film" title="Solvers.ThreeField.Film"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Film</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-ThreeField.html#Solvers.ThreeField.Drop" title="Solvers.ThreeField.Drop"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.Drop</span></code></a>, which the users can modify to suit specific simulation needs.</p>

@@ -45,9 +45,9 @@ where:
 
 **2. Momentum conservation**
 
-Base Film: :math:`\rho_{ls} \delta_b^n (\frac{\partial u_b^n}{\partial t} + u_b^n \frac{\partial u_b^n}{\partial z}) = D_b (u_d - u_b^n) + \Psi_w^n (u_w^n - u_b^n) - \delta_b^n (\frac{\partial p}{\partial z} + g \rho_{ls}) + \beta_b^n \tau_{v,b}^n + (1 - \beta_b^n) \tau_{w,b}^n - \tau_{wall,b}^n`
+Base Film: :math:`\rho_{ls} \delta_b^n (\frac{\partial u_b^n}{\partial t} + u_b^n \frac{\partial u_b^n}{\partial z}) = D_b (u_d - u_b^n) + \Psi_w^n (u_w^n - u_b^n) - \delta_b^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \beta_b^n \tau_{v,b}^n + (1 - \beta_b^n) \tau_{w,b}^n - \tau_{wall,b}^n`
 
-Disturbance Waves: :math:`\rho_{ls} \delta_w^n (\frac{\partial u_w^n}{\partial t} + u_w^n \frac{\partial u_w^n}{\partial z}) = D_w (u_d - u_w^n) + \Psi_b^n (u_b^n - u_w^n) - \delta_w^n (\frac{\partial p}{\partial z} + g \rho_{ls}) + (1 - \beta_b^n) (\tau_{v,w}^n - \tau_{w,b}^n)`
+Disturbance Waves: :math:`\rho_{ls} \delta_w^n (\frac{\partial u_w^n}{\partial t} + u_w^n \frac{\partial u_w^n}{\partial z}) = D_w (u_d - u_w^n) + \Psi_b^n (u_b^n - u_w^n) - \delta_w^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + (1 - \beta_b^n) (\tau_{v,w}^n - \tau_{w,b}^n)`
 
 where
 
