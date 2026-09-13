@@ -116,22 +116,56 @@ The NUTHOS15_MRM project is provided as a MATLAB Live Script:
 
    projects/NUTHOS15_MRM.mlx
 
-The Live Script is intended to provide a reproducible computational
-companion to the corresponding NUTHOS-15 publication. It will document the
-selected OpenSTREAM calculations and results used to illustrate the
-application and evaluation of the MRM model, including:
+The Live Script is a reproducible computational companion to the
+NUTHOS-15 publication:
 
-- the selected experimental cases;
-- the physical-model and numerical-option selections;
-- the executable OpenSTREAM calculations;
-- convergence information;
-- calculated-versus-measured comparisons;
-- interpretation of the principal results.
+.. bibliography::
+   :filter: False
 
-The companion workflow will focus on the calculations and figures
-presented in the publication. It will not constitute a complete record of
-the model-development process, sensitivity studies, closure-model
-evaluations, or additional cases considered during the research.
+   LeCorre2026MRM
 
-The workflow and its HTML export will be linked from this page after the
-project has been completed and reviewed.
+The workflow reproduces OpenSTREAM calculations and results presented in
+the paper:
+
+- Figures 1 and 2: detailed Mixture Relaxation Model results for two
+  subcooled-boiling cases from the ``Bartolomey`` dataset.
+- Figure 3: comparison of the Mixture Relaxation Model with the thermal-
+  equilibrium and frozen limits for the selected subcooled-boiling cases.
+- Figures 4 and 5: detailed Mixture Relaxation Model results for two
+  post-boiling-transition cases from the ``Becker1983`` dataset.
+- Figure 6: comparison of the Mixture Relaxation Model with the thermal-
+  equilibrium and frozen limits for the selected post-boiling-transition
+  cases.
+
+The subcooled-boiling calculations use measured void-fraction data from
+the ``Bartolomey`` dataset to assess the relaxation-based representation
+of vapor generation, condensation, and thermal nonequilibrium.
+
+The post-boiling-transition calculations use measured wall-temperature
+data and boiling-transition elevations from the ``Becker1983`` dataset to
+assess the relaxation-based representation of vapor superheating,
+interfacial exchange, and post-transition wall heat transfer.
+
+For both applications, the Mixture Relaxation Model is compared with two
+limiting thermal treatments:
+
+- the thermal-equilibrium limit, in which the phases remain at the same
+  temperature;
+- the frozen limit, in which interfacial thermal relaxation is strongly
+  suppressed.
+
+The effective vapor and liquid characteristic lengths used by the
+relaxation models are calibrated model parameters. They represent lumped
+interfacial exchange scales and should not be interpreted as direct
+measurements of bubble or droplet diameters.
+
+The Live Script focuses on the calculations required to illustrate the
+figures and conclusions presented in the publication. It does not include
+all cases, model-development activities, parameter evaluations,
+sensitivity studies, or numerical investigations performed during the
+underlying research.
+
+A completed execution of the workflow is available as an HTML export:
+
+`Open the completed NUTHOS15_MRM companion workflow
+<https://openstream-solvers.github.io/openstream/_static/html/project_NUTHOS15_MRM.html>`_

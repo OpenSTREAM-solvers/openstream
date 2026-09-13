@@ -539,24 +539,55 @@ for that comparison are not included in the companion workflow.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/NUTHOS15_MRM.mlx
 </pre></div>
 </div>
-<p>The Live Script is intended to provide a reproducible computational
-companion to the corresponding NUTHOS-15 publication. It will document the
-selected OpenSTREAM calculations and results used to illustrate the
-application and evaluation of the MRM model, including:</p>
+<p>The Live Script is a reproducible computational companion to the
+NUTHOS-15 publication:</p>
+<div class="docutils container" id="id42">
+<div role="list" class="citation-list">
+<div class="citation" id="id43" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>LCFA26<span class="fn-bracket">]</span></span>
+<p>Jean-Marie Le Corre, Fabrice Francois, and Henryk Anglart. A mixture relaxation model for thermal non-equilibrium in convective flow boiling. In <em>Proceedings of the 15th International Topical Meeting on Nuclear Reactor Thermal-Hydraulic, Operation and Safety (NUTHOS-15)</em>. Kashiwa-no-ha, Japan, September 2026. URL: <a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2026MRM.pdf" rel="noreferrer" target="_blank">https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2026MRM.pdf</a>.</p>
+</div>
+</div>
+</div>
+<p>The workflow reproduces OpenSTREAM calculations and results presented in
+the paper:</p>
 <ul class="simple">
-<li><p>the selected experimental cases;</p></li>
-<li><p>the physical-model and numerical-option selections;</p></li>
-<li><p>the executable OpenSTREAM calculations;</p></li>
-<li><p>convergence information;</p></li>
-<li><p>calculated-versus-measured comparisons;</p></li>
-<li><p>interpretation of the principal results.</p></li>
+<li><p>Figures 1 and 2: detailed Mixture Relaxation Model results for two
+subcooled-boiling cases from the <code class="docutils literal notranslate"><span class="pre">Bartolomey</span></code> dataset.</p></li>
+<li><p>Figure 3: comparison of the Mixture Relaxation Model with the thermal-
+equilibrium and frozen limits for the selected subcooled-boiling cases.</p></li>
+<li><p>Figures 4 and 5: detailed Mixture Relaxation Model results for two
+post-boiling-transition cases from the <code class="docutils literal notranslate"><span class="pre">Becker1983</span></code> dataset.</p></li>
+<li><p>Figure 6: comparison of the Mixture Relaxation Model with the thermal-
+equilibrium and frozen limits for the selected post-boiling-transition
+cases.</p></li>
 </ul>
-<p>The companion workflow will focus on the calculations and figures
-presented in the publication. It will not constitute a complete record of
-the model-development process, sensitivity studies, closure-model
-evaluations, or additional cases considered during the research.</p>
-<p>The workflow and its HTML export will be linked from this page after the
-project has been completed and reviewed.</p>
+<p>The subcooled-boiling calculations use measured void-fraction data from
+the <code class="docutils literal notranslate"><span class="pre">Bartolomey</span></code> dataset to assess the relaxation-based representation
+of vapor generation, condensation, and thermal nonequilibrium.</p>
+<p>The post-boiling-transition calculations use measured wall-temperature
+data and boiling-transition elevations from the <code class="docutils literal notranslate"><span class="pre">Becker1983</span></code> dataset to
+assess the relaxation-based representation of vapor superheating,
+interfacial exchange, and post-transition wall heat transfer.</p>
+<p>For both applications, the Mixture Relaxation Model is compared with two
+limiting thermal treatments:</p>
+<ul class="simple">
+<li><p>the thermal-equilibrium limit, in which the phases remain at the same
+temperature;</p></li>
+<li><p>the frozen limit, in which interfacial thermal relaxation is strongly
+suppressed.</p></li>
+</ul>
+<p>The effective vapor and liquid characteristic lengths used by the
+relaxation models are calibrated model parameters. They represent lumped
+interfacial exchange scales and should not be interpreted as direct
+measurements of bubble or droplet diameters.</p>
+<p>The Live Script focuses on the calculations required to illustrate the
+figures and conclusions presented in the publication. It does not include
+all cases, model-development activities, parameter evaluations,
+sensitivity studies, or numerical investigations performed during the
+underlying research.</p>
+<p>A completed execution of the workflow is available as an HTML export:</p>
+<p><a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/html/project_NUTHOS15_MRM.html" rel="noreferrer" target="_blank">Open the completed NUTHOS15_MRM companion workflow</a></p>
 </section>
 </section>
 
