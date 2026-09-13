@@ -239,12 +239,6 @@ classdef SolverIntegrationTest < matlab.unittest.TestCase
             %
             % Verify that the first stored physical state satisfies the prescribed
             % inlet boundary conditions without modification.
-
-            % Assume the mixture-solver case.
-            % testCase.assumeEqual( ...
-            %     class(testCase.solver), ...
-            %     'Solvers.Mixture.MixtureSolver', ...
-            %     "this test is only for the MixtureSolver case.")
             
             if ~isa(testCase.solver, "Solvers.Mixture.MixtureSolver")
                 % Retrieve the calculated mixture solver.
