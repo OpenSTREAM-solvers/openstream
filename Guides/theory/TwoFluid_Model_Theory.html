@@ -298,8 +298,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Applications/projects.html">Application projects</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../Applications/projects.html#nureth21">NURETH21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../Applications/projects.html#nuthos15-mrm">NUTHOS15_MRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Applications/projects.html#nureth-21">NURETH-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Applications/projects.html#nuthos-15-mrm">NUTHOS-15 MRM</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Applications/publications.html">Publications</a><ul>
@@ -499,7 +499,7 @@
 <li><p>Wall heat transfer models</p></li>
 </ul>
 <p>These relations depend on the local flow regime, which is determined by an additional flow regime identification model.</p>
-<p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure models are implemented in <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a>, which the users can modify to suit specific simulation needs.</p>
+<p>The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in <a class="reference internal" href="../../Packages/InputEnums.html#module-InputEnums" title="InputEnums"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">InputEnums</span></code></a>. If not explicitly specified by the user, default models are applied as defined in <a class="reference internal" href="../../Packages/Inputs.html#Inputs.Model" title="Inputs.Model"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.Model</span></code></a>. All closure models are implemented in <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Liquid" title="Solvers.TwoFluid.Liquid"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Liquid</span></code></a> and <a class="reference internal" href="../../Packages/Solvers-TwoFluid.html#Solvers.TwoFluid.Vapor" title="Solvers.TwoFluid.Vapor"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.TwoFluid.Vapor</span></code></a>, which users can modify to suit specific simulation needs.</p>
 <p>In addition, the thermodynamic properties for each phase are computed using <a class="reference external" href="https://coolprop.org/" rel="noreferrer" target="_blank">CoolProp</a>, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.</p>
 </section>
 <section id="features-and-assumptions">
@@ -515,7 +515,7 @@
 </section>
 <section id="role-in-openstream">
 <h2>Role in OpenSTREAM<a class="headerlink" href="#role-in-openstream" title="Link to this heading"></a></h2>
-<p>The two-fluid model is the legacy framework for simulating non-equilibrium two-phase flows. It is validated against system codes like TRACE and supports both steady-state and transient simulations.</p>
+<p>The two-fluid model is representative of legacy frameworks for simulating two-phase flows using separate liquid and vapor fields. It supports the investigation of hydrodynamic and thermal non-equilibrium. Selected calculations have been compared with reference solutions and established thermal-hydraulic codes.</p>
 </section>
 <hr class="docutils" />
 <section id="implementation-notes">

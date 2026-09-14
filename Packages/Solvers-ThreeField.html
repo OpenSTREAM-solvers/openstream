@@ -297,8 +297,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Application projects</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nureth21">NURETH21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nuthos15-mrm">NUTHOS15_MRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nureth-21">NURETH-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nuthos-15-mrm">NUTHOS-15 MRM</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a><ul>
@@ -444,7 +444,7 @@
              
   <section id="three-field-solver">
 <h1>Three-field solver<a class="headerlink" href="#three-field-solver" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Solvers.ThreeField" title="Solvers.ThreeField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.ThreeField</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating annular two-phase flows using a three-field approach. In this method, the two liquid fields (film and droplets) are treated separately, each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module. This framework enables explicit modeling of interactions between the film and droplet liquid fields, slip velocities, and hydrodynamic non-equilibrium effects, making it well-suited for applications involving annular boiling two-phase flow regimes where field separation and interfacial dynamics are significant.</p>
+<p>The <a class="reference internal" href="#module-Solvers.ThreeField" title="Solvers.ThreeField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.ThreeField</span></code></a> module in <strong>OpenSTREAM</strong> provides classes and tools for simulating annular two-phase flows using a three-field approach. In this method, the two liquid fields (film and droplets) are treated separately, each governed by its own set of conservation equations for mass and momentum, while the current formulation assumes thermal equilibrium. The vapor phase is solved using the <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module. This framework enables explicit modeling of interactions between the film and droplet liquid fields, slip velocities, and hydrodynamic non-equilibrium effects, making it well-suited for applications involving annular boiling two-phase flow regimes where field separation and interfacial dynamics are significant.</p>
 <p>This module includes:</p>
 <ul class="simple">
 <li><p>Solver class for three-field-based flow simulations: <a class="reference internal" href="#Solvers.ThreeField.ThreeFieldSolver" title="Solvers.ThreeField.ThreeFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.ThreeField.ThreeFieldSolver</span></code></a></p></li>
@@ -495,7 +495,7 @@ parameters and internal data structures via
 <p>Notes:</p>
 <ul class="simple">
 <li><p>This constructor assumes <a class="reference internal" href="Inputs.html#Inputs.InputSet" title="Inputs.InputSet"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Inputs.InputSet</span></code></a> is fully validated.</p></li>
-<li><p>A solved mixture-model solution is required for initialization. If a solved mixture solver is supplied, its solution is reused. If unsolved of if no mixture solver is supplied, one is created and solved automatically.</p></li>
+<li><p>A solved mixture-model solution is required for initialization. If a solved mixture solver is supplied, its solution is reused. If unsolved, or if no mixture solver is supplied, one is created and solved automatically.</p></li>
 <li><p>Solver initialization includes liquid and vapor objects setup.</p></li>
 <li><p>Time/space discretization and boundary condition interpolation initialized by <a class="reference internal" href="Solvers-Mixture.html#Solvers.Mixture.MixtureSolver" title="Solvers.Mixture.MixtureSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.Mixture.MixtureSolver</span></code></a> are used</p></li>
 </ul>
@@ -749,7 +749,7 @@ iterations, convergence checks, and logging.</p>
 <ul class="simple">
 <li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
 <li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
-<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Supports hydrodynamic non-equilibrium modeling</p></li>
 <li><p>Logs progress and outputs to session directory</p></li>
 </ul>
 </dd></dl>

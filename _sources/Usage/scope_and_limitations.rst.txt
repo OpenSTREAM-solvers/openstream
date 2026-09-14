@@ -163,17 +163,17 @@ Thermal treatment
 -----------------
 
 The mixture and two-fluid frameworks include thermal-equilibrium and
-thermal-nonequilibrium capabilities, depending on the selected models.
+thermal-non-equilibrium capabilities, depending on the selected models.
 
 The current three-field and four-field annular-flow formulations generally
-assume thermal equilibrium while resolving hydrodynamic nonequilibrium
+assume thermal equilibrium while resolving hydrodynamic non-equilibrium
 between the represented flow fields.
 
 In the four-field framework, the base film and disturbance waves have
-separate transport behavior. The model can represent nonequilibrium
+separate transport behavior. The model can represent non-equilibrium
 development of disturbance-wave properties, including wave amplitude,
-velocity, and frequency. This hydrodynamic nonequilibrium should not be
-confused with thermal nonequilibrium between phases.
+velocity, and frequency. This hydrodynamic non-equilibrium should not be
+confused with thermal non-equilibrium between phases.
 
 The thermal assumptions of the selected solver and closure models must be
 reviewed before interpreting calculated temperatures, phase change, or
@@ -190,7 +190,7 @@ Calculated results can depend strongly on the selected models for:
 - Void fraction and phase slip.
 - Wall and interfacial friction.
 - Wall heat transfer.
-- Thermal nonequilibrium.
+- Thermal non-equilibrium.
 - Interfacial phase change.
 - Onset of annular flow.
 - Film entrainment.

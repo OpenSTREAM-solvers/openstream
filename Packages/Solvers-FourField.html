@@ -297,8 +297,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Applications/projects.html">Application projects</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nureth21">NURETH21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nuthos15-mrm">NUTHOS15_MRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nureth-21">NURETH-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Applications/projects.html#nuthos-15-mrm">NUTHOS-15 MRM</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Applications/publications.html">Publications</a><ul>
@@ -444,7 +444,7 @@
              
   <section id="four-field-solver">
 <h1>Four-field solver<a class="headerlink" href="#four-field-solver" title="Link to this heading"></a></h1>
-<p>The <a class="reference internal" href="#module-Solvers.FourField" title="Solvers.FourField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.FourField</span></code></a> module in <strong>OpenSTREAM</strong> provides tools and classes for simulating annular two-phase flows using a four-field approach. In this method, the liquid phase is represented by three distinct fields (base film, disturbance waves, and droplets), each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module. This framework enables detailed modeling of liquid film structures, interfacial interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it particularly suitable for annular boiling two-phase flow regimes where field separation and wave dynamics play a significant role.</p>
+<p>The <a class="reference internal" href="#module-Solvers.FourField" title="Solvers.FourField"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.FourField</span></code></a> module in <strong>OpenSTREAM</strong> provides tools and classes for simulating annular two-phase flows using a four-field approach. In this method, the liquid phase is represented by three distinct fields (base film, disturbance waves, and droplets), each governed by its own set of conservation equations for mass and momentum, while the current formulation assumes thermal equilibrium. This is completed by a transport equation for the disturbance-wave number density. The vapor phase is solved using the <a class="reference internal" href="Solvers-Mixture.html#module-Solvers.Mixture" title="Solvers.Mixture"><code class="xref mat mat-mod docutils literal notranslate"><span class="pre">Solvers.Mixture</span></code></a> module. This framework enables detailed modeling of liquid film structures, interfacial interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it particularly suitable for annular boiling two-phase flow regimes where field separation and wave dynamics play a significant role.</p>
 <p>This module includes:</p>
 <ul class="simple">
 <li><p>Solver class for four-field-based flow simulations: <a class="reference internal" href="#Solvers.FourField.FourFieldSolver" title="Solvers.FourField.FourFieldSolver"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">Solvers.FourField.FourFieldSolver</span></code></a></p></li>
@@ -664,7 +664,7 @@ iterations, convergence checks, and logging.</p>
 <ul class="simple">
 <li><p>Uses internal <cite>solver</cite> function to handle both steady-state and transient modes</p></li>
 <li><p>Applies relaxation factors for phase flows, velocities, and enthalpies</p></li>
-<li><p>Supports thermal non-equilibrium modeling</p></li>
+<li><p>Supports hydrodynamic non-equilibrium modeling</p></li>
 <li><p>Logs progress and outputs to session directory</p></li>
 </ul>
 </dd></dl>

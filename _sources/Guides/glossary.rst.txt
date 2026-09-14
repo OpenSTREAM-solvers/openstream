@@ -146,7 +146,7 @@ For consistency across the documentation, the following preferred terms are reco
      - closure law, correlation, constitutive law, unless a specific distinction is intended
    * - thermal non-equilibrium
      - Different temperatures or energy balances among phases or fields
-     - thermal disequilibrium, nonequilibrium thermal effects
+     - thermal disequilibrium, non-equilibrium thermal effects
    * - hydrodynamic non-equilibrium
      - Different velocities or momentum balances among phases or fields
      - velocity slip, unless specifically referring to relative velocity

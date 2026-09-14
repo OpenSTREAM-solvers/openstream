@@ -29,12 +29,12 @@ Solver capabilities
      - Principal applications
    * - Mixture
      - Mixture, with liquid and vapor properties
-     - Thermal equilibrium or nonequilibrium
+     - Thermal equilibrium or non-equilibrium
      - Steady-state and transient
      - Initialization, system-level boiling, CHF, and post-CHF calculations
    * - Two-fluid
      - Separate liquid and vapor fields
-     - Thermal equilibrium or nonequilibrium
+     - Thermal equilibrium or non-equilibrium
      - Steady-state and transient
      - Separate-phase transport and interfacial exchange
    * - Three-field
@@ -69,12 +69,12 @@ Detailed theory pages
    * **Purpose:** Provide initialization and robust predictions under
      relevant simplifications.
    * **Assumptions:** Represent the flow using a single mixture field, with
-     optional hydrodynamic and thermal nonequilibrium models.
+     optional hydrodynamic and thermal non-equilibrium models.
    * **Equations:** Conserve mixture mass, momentum, and energy.
      Optionally (MRM), conserve vapor mass and energy.
 
 :doc:`Two-fluid model <TwoFluid_Model_Theory>`
-   * **Purpose:** Resolve hydrodynamic and thermal nonequilibrium between
+   * **Purpose:** Resolve hydrodynamic and thermal non-equilibrium between
      the liquid and vapor phases.
    * **Assumptions:** Represent the liquid and vapor as separate fields
      coupled through interfacial exchange models.

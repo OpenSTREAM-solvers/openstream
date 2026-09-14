@@ -41,7 +41,7 @@ users.
 
 Explore homogeneous and nonhomogeneous mixture formulations, including
 fixed-slip and drift-flux models. The tutorial also introduces empirical
-and relaxation-based thermal-nonequilibrium models, pressure-drop
+and relaxation-based thermal-non-equilibrium models, pressure-drop
 components, wall-friction and local-loss options, and a physical transient
 calculation.
 
@@ -54,7 +54,7 @@ calculation.
 
 Construct and run two-fluid calculations with separate liquid and vapor
 fields. Examine phase mass flow rates, velocities, enthalpies,
-temperatures, hydrodynamic and thermal nonequilibrium, interfacial area,
+temperatures, hydrodynamic and thermal non-equilibrium, interfacial area,
 flow-regime indicators, phase exchange terms, pseudo-time convergence,
 and physical transient behavior.
 

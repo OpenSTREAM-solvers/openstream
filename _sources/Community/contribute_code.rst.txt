@@ -323,7 +323,7 @@ Before submitting a pull request, confirm that:
 - The code follows the existing OpenSTREAM style and organization.
 - Changes are organized into focused commits.
 - Commit messages follow the `OpenSTREAM commit message style guide
-<https://github.com/OpenSTREAM-solvers/openstream/wiki>`_.
+  <https://github.com/OpenSTREAM-solvers/openstream/wiki>`_.
 - Staged and untracked files have been reviewed before committing.
 - New or modified functionality includes appropriate tests.
 - The complete local test suite passes.
