@@ -47,8 +47,8 @@ Before running or extending a project:
 Further installation and configuration information is provided on the
 :doc:`OpenSTREAM-database <database>` page.
 
-NURETH21
---------
+NURETH-21
+---------
 
 The ``NURETH21.mlx`` Live Script is a reproducible computational companion
 to the NURETH-21 OpenSTREAM publication :cite:p:`LeCorre2025OpenSTREAM`.
@@ -64,12 +64,12 @@ The workflow reproduces selected calculations and results from the paper:
 <https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html>`_
 
 
-NUTHOS15_MRM
-------------
+NUTHOS-15 MRM
+-------------
 
 The ``NUTHOS15_MRM.mlx`` Live Script is a reproducible computational
-companion to the NUTHOS-15 Mixture Relaxation Model publication
-:cite:p:`LeCorre2026MRM`.
+companion to the NUTHOS-15 publication introducing the Mixture Relaxation
+Model :cite:p:`LeCorre2026MRM`.
 
 The workflow reproduces selected calculations and results from the paper:
 

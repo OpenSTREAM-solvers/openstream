@@ -163,10 +163,10 @@ classdef Log < handle
 
         function diaryOn(obj)
             %DIARYON Turn on diary logging if applicable
-            %
-            %   TODO: re-evaluate if using the diary is needed. What does
-            %   the diary do that the log doesn't? If we find a use case,
-            %   describe it here.
+
+            % TODO: re-evaluate if using the diary is needed. What does
+            % the diary do that the log doesn't? If we find a use case,
+            % describe it here.
 
             if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
                     obj.LOGMODE == Session.LogMode.BOTH) && ~obj.diaryIsOn

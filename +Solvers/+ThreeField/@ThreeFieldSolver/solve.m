@@ -17,7 +17,7 @@ function solve(tfSolver)
 %
 % - Uses internal `solver` function to handle both steady-state and transient modes
 % - Applies relaxation factors for phase flows, velocities, and enthalpies
-% - Supports thermal non-equilibrium modeling
+% - Supports hydrodynamic non-equilibrium modeling
 % - Logs progress and outputs to session directory
 
 arguments

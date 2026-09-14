@@ -1,7 +1,7 @@
 Four-field solver
 =================
 
-The :mod:`Solvers.FourField` module in **OpenSTREAM** provides tools and classes for simulating annular two-phase flows using a four-field approach. In this method, the liquid phase is represented by three distinct fields (base film, disturbance waves, and droplets), each governed by its own set of conservation equations for mass, momentum, and energy. The vapor phase is solved using the :mod:`Solvers.Mixture` module. This framework enables detailed modeling of liquid film structures, interfacial interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it particularly suitable for annular boiling two-phase flow regimes where field separation and wave dynamics play a significant role.
+The :mod:`Solvers.FourField` module in **OpenSTREAM** provides tools and classes for simulating annular two-phase flows using a four-field approach. In this method, the liquid phase is represented by three distinct fields (base film, disturbance waves, and droplets), each governed by its own set of conservation equations for mass and momentum, while the current formulation assumes thermal equilibrium. This is completed by a transport equation for the disturbance-wave number density. The vapor phase is solved using the :mod:`Solvers.Mixture` module. This framework enables detailed modeling of liquid film structures, interfacial interactions, slip velocities, and hydrodynamic non-equilibrium effects, making it particularly suitable for annular boiling two-phase flow regimes where field separation and wave dynamics play a significant role.
 
 This module includes:
 

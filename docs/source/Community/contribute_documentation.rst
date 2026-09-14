@@ -210,7 +210,7 @@ In particular, distinguish between:
 - Direct experimental measurements, derived quantities, and calculated
   quantities.
 - Boiling transition, critical heat flux, dryout, and film depletion.
-- Thermal nonequilibrium and hydrodynamic nonequilibrium.
+- Thermal non-equilibrium and hydrodynamic non-equilibrium.
 
 Use lowercase descriptive forms when discussing physical formulations and
 code-style names when referring to specific software interfaces.
