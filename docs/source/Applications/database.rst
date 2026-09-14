@@ -241,35 +241,15 @@ source-data preparation, calculation, or post-processing.
 Application projects
 --------------------
 
-The ``projects`` folder contains reviewed MATLAB Live Scripts that accompany
-OpenSTREAM publications and illustrate selected computational workflows,
-figures, and results presented in those publications.
+The ``projects`` folder contains reviewed MATLAB Live Scripts that
+reproduce or illustrate selected calculations and results from OpenSTREAM
+publications.
 
-A companion Live Script can include:
+The Live Scripts are the authoritative executable versions. Completed
+executions may also be provided as static HTML exports for viewing without
+MATLAB.
 
-- explanatory text;
-- selected experimental cases;
-- physical-model and numerical-option selections;
-- executable OpenSTREAM calculations;
-- convergence information;
-- calculated-versus-measured comparisons;
-- figures and post-processing;
-- interpretation of the selected results.
-
-The companion workflows do not represent complete records of the research
-activities supporting the publications. Research and model-development
-activities generally include additional experimental cases, closure-model
-evaluations, sensitivity studies, uncertainty analyses, numerical
-investigations, intermediate results, and unsuccessful model variants that
-are not included in the published figures or companion workflows.
-
-The MATLAB Live Scripts are the authoritative executable versions of the
-publication companion workflows. Completed executions may also be exported
-as static HTML documents containing explanatory text, code, calculated
-output, and figures. HTML exports can be viewed without MATLAB, although
-interactive Live Editor features may not be preserved.
-
-Further information about the available projects is provided on the
+Available workflows and their scope are described on the
 :doc:`application projects <projects>` page.
 
 Requirements

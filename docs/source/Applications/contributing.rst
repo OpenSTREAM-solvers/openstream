@@ -636,30 +636,21 @@ follow the reproducibility guidance provided in the
 Publication companion workflows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A publication companion Live Script should reproduce or illustrate
-selected calculations, figures, and results presented in the corresponding
-publication.
+A publication companion should reproduce or illustrate selected
+calculations, figures, and results from the corresponding publication.
 
-The companion workflow must not be described as a complete record of the
-research programme. Research activities generally include additional test
-cases, closure-model development, sensitivity studies, uncertainty
-analysis, numerical investigations, intermediate results, and unsuccessful
-model variants that are not included in the published figures.
-
-The project documentation should identify:
+The project documentation must identify:
 
 - The corresponding publication.
 - The figures or results reproduced.
-- The experimental datasets used.
-- Important nondefault physical and numerical settings.
-- Calculations or comparisons from the publication that are not
-  reproduced.
-- The limitations of the companion workflow.
+- The datasets used.
+- Important nondefault model and numerical settings.
+- Relevant calculations or comparisons that are not reproduced.
+- The principal limitations of the companion workflow.
 
-The MATLAB Live Script is the authoritative executable version. A
-completed execution may also be exported to HTML for viewing without
-MATLAB. Interactive Live Editor features may not be preserved in the HTML
-export.
+The companion must not be presented as a complete record of the underlying
+research. Follow the structure and scope described on the
+:doc:`application projects <projects>` page.
 
 Comparison and validation
 -------------------------

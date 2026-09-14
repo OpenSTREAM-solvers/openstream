@@ -2,7 +2,7 @@ Application projects
 ====================
 
 OpenSTREAM-database includes MATLAB Live Script projects that accompany
-OpenSTREAM publications and illustrate the principal computational
+selected OpenSTREAM publications and illustrate the principal computational
 workflows and selected results presented in those publications.
 
 The project source files are located in the OpenSTREAM-database
