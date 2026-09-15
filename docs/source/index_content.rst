@@ -17,7 +17,8 @@ OpenSTREAM supports steady-state and transient simulations of
 single-component two-phase flows in straight channels. Applications include
 wall boiling, thermal and hydrodynamic non-equilibrium, annular-flow
 modeling, liquid-film transport, entrainment and deposition, disturbance
-waves, boiling transition, dryout, and post-CHF heat transfer.
+waves, boiling transition, Critical Heat Flux (CHF), and post-CHF heat
+transfer.
 
 The software is designed primarily for transparent model development,
 verification, validation, numerical investigation, education, and
@@ -89,18 +90,24 @@ structure, application interface, and documented workflows.
 Get started
 -----------
 
-A good first path through the documentation is:
+New users can begin by:
 
-#. Follow the :doc:`installation and configuration guide
+#. Following the :doc:`installation and configuration guide
    <Usage/gettingStarted>`.
-#. Run the :doc:`sample calculation <Usage/runSampleScript>`.
-#. Explore the :doc:`OpenSTREAM tutorials <Guides/tutorials>`.
-#. Review the :doc:`testing and verification guide <Guides/testing>`.
-#. Consult the :doc:`intended scope and limitations
-   <Usage/scope_and_limitations>` before starting a new application.
+#. Running the :doc:`sample calculation <Usage/runSampleScript>`.
+#. Exploring the :doc:`OpenSTREAM tutorials <Guides/tutorials>` and
+   :doc:`theory overview <Guides/theory>`.
+#. Consulting the :doc:`OpenSTREAM FAQ <Community/faq>` for guidance on
+   solver selection, common workflows, and frequently encountered
+   questions.
+#. Reviewing the :doc:`intended scope and limitations
+   <Usage/scope_and_limitations>` before applying OpenSTREAM to a new
+   problem.
 
 Links
 -----
+
+OpenSTREAM and OpenSTREAM-database are developed openly on GitHub:
 
 - **Source code:** `OpenSTREAM-solvers/openstream
   <https://github.com/OpenSTREAM-solvers/openstream>`_
