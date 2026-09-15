@@ -458,6 +458,9 @@ workflows, and an environment for model assessment and validation.</p></li>
 <p>The two repositories are maintained separately. OpenSTREAM is not included
 as a Git submodule of OpenSTREAM-database. A compatible OpenSTREAM working
 copy must be installed independently and made available on the MATLAB path.</p>
+<p>The OpenSTREAM-database source code, dataset packages, project workflows,
+and contribution history are available in the
+<a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream-database" rel="noreferrer" target="_blank">OpenSTREAM-database repository</a>.</p>
 <section id="purpose">
 <h2>Purpose<a class="headerlink" href="#purpose" title="Link to this heading"></a></h2>
 <p>OpenSTREAM-database supports:</p>
@@ -670,10 +673,8 @@ for the current MATLAB, Python, CoolProp, and installation requirements.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>Clone OpenSTREAM and OpenSTREAM-database as separate repositories.</p>
-<p>A convenient local organization is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>projects/
-├── openstream/
-└── openstream-database/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/OpenSTREAM-solvers/openstream.git
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OpenSTREAM-solvers/openstream-database.git
 </pre></div>
 </div>
 <p>The repositories do not need to share the same parent directory, provided

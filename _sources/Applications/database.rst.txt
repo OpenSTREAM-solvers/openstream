@@ -19,6 +19,11 @@ The two repositories are maintained separately. OpenSTREAM is not included
 as a Git submodule of OpenSTREAM-database. A compatible OpenSTREAM working
 copy must be installed independently and made available on the MATLAB path.
 
+The OpenSTREAM-database source code, dataset packages, project workflows,
+and contribution history are available in the
+`OpenSTREAM-database repository
+<https://github.com/OpenSTREAM-solvers/openstream-database>`_.
+
 Purpose
 -------
 
@@ -273,13 +278,10 @@ Installation
 
 Clone OpenSTREAM and OpenSTREAM-database as separate repositories.
 
-A convenient local organization is:
+.. code-block:: bash
 
-.. code-block:: text
-
-   projects/
-   ├── openstream/
-   └── openstream-database/
+   git clone --recursive https://github.com/OpenSTREAM-solvers/openstream.git
+   git clone https://github.com/OpenSTREAM-solvers/openstream-database.git
 
 The repositories do not need to share the same parent directory, provided
 that both repository roots are available on the MATLAB path.

@@ -32,6 +32,7 @@ OpenSTREAM is built through the collaborative efforts of many talented individua
 - Evan Hurlburt (NNL)
 - `Fabrice Francois  <https://www.linkedin.com/in/fabrice-francois-5a330423>`_ (CEA)
 - Haipeng Li (KTH)
+- `Henryk Anglart <https://www.linkedin.com/in/henryk-anglart-32389422>`_ (KTH)
 - `Juliana Duarte <https://www.linkedin.com/in/julianapduarte>`_ (UWM)
 - `Tyler Lee <https://www.linkedin.com/in/tyler-lee-6072841b4>`_ (UWM)
 

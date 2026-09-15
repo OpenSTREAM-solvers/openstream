@@ -441,42 +441,115 @@
              
   <section id="welcome">
 <h1>Welcome<a class="headerlink" href="#welcome" title="Link to this heading"></a></h1>
-<p>OpenSTREAM (<strong>Open</strong> <strong>S</strong>olvers for <strong>T</strong>wo-phase flow <strong>R</strong>esearch, <strong>E</strong>ngineering <strong>A</strong>nalysis and <strong>M</strong>odeling) is an open-source, object-oriented computational environment designed for simulating one-dimensional, multi-field, two-phase flows in straight geometries (<span class="bibtex-citation" id="id1">Le Corre <em>et al.</em> [<a class="reference internal" href="Guides/references.html#id4" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. OpenSTREAM: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025a. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">2025a</a>]</span>) (<span class="bibtex-citation" id="id2">Le Corre <em>et al.</em> [<a class="reference internal" href="Guides/references.html#id6" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. OpenSTREAM: a new open-source platform for two-phase flow model development. In Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025). Toulouse, France, May 12–16 2025b. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025ICMF.pdf.">2025b</a>]</span>). It supports phenomena such as wall boiling, phase interactions and non-equilibrium effects, making it a relevant tool for researchers working in thermal-hydraulics and two-phase flow systems.</p>
-<section id="what-s-inside">
-<h2>What’s inside?<a class="headerlink" href="#what-s-inside" title="Link to this heading"></a></h2>
-<p>OpenSTREAM offers a suite of solver frameworks tailored to different modeling needs:</p>
+<p>OpenSTREAM (<strong>Open</strong> <strong>S</strong>olvers for <strong>T</strong>wo-phase flow <strong>R</strong>esearch,
+<strong>E</strong>ngineering <strong>A</strong>nalysis and <strong>M</strong>odeling) is an open-source,
+object-oriented environment for developing, exploring, and evaluating
+one-dimensional, multi-field, two-phase-flow models
+<span class="bibtex-citation" id="id1">[<a class="reference internal" href="Guides/references.html#id4" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. OpenSTREAM: an open-source platform for two-phase flow modeling and simulation. In Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21). Busan, Korea, August 31–September 5 2025a. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf.">Le Corre <em>et al.</em>, 2025a</a>, <a class="reference internal" href="Guides/references.html#id6" title="Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. OpenSTREAM: a new open-source platform for two-phase flow model development. In Proceedings of the 12th International Conference on Multiphase Flow (ICMF 2025). Toulouse, France, May 12–16 2025b. URL: https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025ICMF.pdf.">Le Corre <em>et al.</em>, 2025b</a>]</span>.</p>
+<p>Whether you are developing, investigating, or validating a closure model,
+comparing solver formulations, or learning how two-phase-flow models are
+implemented, OpenSTREAM provides accessible solver frameworks that can be
+inspected, modified, tested, and extended.</p>
+<p>OpenSTREAM supports steady-state and transient simulations of
+single-component two-phase flows in straight channels. Applications include
+wall boiling, thermal and hydrodynamic non-equilibrium, annular-flow
+modeling, liquid-film transport, entrainment and deposition, disturbance
+waves, boiling transition, dryout, and post-CHF heat transfer.</p>
+<p>The software is designed primarily for transparent model development,
+verification, validation, numerical investigation, education, and
+reproducible research. The validity of a calculation depends on the
+selected solver, closure models, numerical options, geometry, and operating
+conditions.</p>
+<section id="explore-the-solver-frameworks">
+<h2>Explore the solver frameworks<a class="headerlink" href="#explore-the-solver-frameworks" title="Link to this heading"></a></h2>
+<p>OpenSTREAM provides four complementary solver frameworks:</p>
 <ul class="simple">
-<li><p>A <strong>mixture solver</strong> – with thermal non-equilibrium capabilities</p></li>
-<li><p>A generic <strong>two-fluid solver</strong> – for separate-phase modeling</p></li>
-<li><p>A <strong>three-field solver</strong> – for annular two-phase flow</p></li>
-<li><p>An advanced <strong>four-field solver</strong> – for annular two-phase flow explicitly capturing disturbance waves</p></li>
+<li><p>A <strong>mixture solver</strong> for robust initialization and mixture-based
+calculations, with optional hydrodynamic and thermal non-equilibrium
+models.</p></li>
+<li><p>A <strong>two-fluid solver</strong> with separate liquid and vapor mass, momentum, and
+energy equations.</p></li>
+<li><p>A <strong>three-field solver</strong> for annular flow, representing vapor, liquid
+film, and entrained droplets under the current thermal-equilibrium
+formulation.</p></li>
+<li><p>A <strong>four-field solver</strong> for annular flow, separately representing the
+base film, disturbance waves, entrained droplets, and vapor under the
+current thermal-equilibrium formulation.</p></li>
 </ul>
-<p>These solvers are designed to simulate single-component, thermally expandable, steady-state and transient boiling two-phase flows in straight multi-wall channels, which may be uniformly or non-uniformly heated. The implementation relies on a set of reasonable simplifying assumptions to ensure computational efficiency and stability. Each solver includes a set of baseline closure models, which can be customized by modifying the corresponding class methods in the source code.</p>
+<p>The frameworks support straight multi-wall channels with uniform or
+nonuniform heating. Their modular, object-oriented implementation allows
+users and developers to examine and modify the governing equations,
+closure models, numerical methods, and post-processing workflows.</p>
+<p>A more detailed framework is not necessarily more accurate for every
+application. Each additional field introduces further closure relations,
+initialization requirements, numerical couplings, and uncertainties.
+Review the <a class="reference internal" href="Usage/scope_and_limitations.html"><span class="doc">intended scope and limitations</span></a> before applying OpenSTREAM to a new problem.</p>
 </section>
 <section id="why-openstream">
 <h2>Why OpenSTREAM?<a class="headerlink" href="#why-openstream" title="Link to this heading"></a></h2>
-<p>OpenSTREAM is built to support open, transparent research and to lower the barrier to entry for developing and validating fundamental models in two-phase flow simulations. Its goal is to make advanced thermal-hydraulic modeling more accessible to engineers, scientists, and students alike. Whether you’re conducting research or learning the fundamentals, OpenSTREAM provides a collaborative and extensible environment for model development, performance evaluation, and cross-institutional validation, advancing the state of the art in thermal-hydraulic simulation.</p>
+<p>Many established two-phase-flow formulations are thoroughly described in
+the literature but implemented only in large or restricted computational
+codes. OpenSTREAM provides a focused and transparent environment in which
+fundamental models can be studied independently, compared systematically,
+and developed collaboratively.</p>
+<p>OpenSTREAM can help researchers, engineers, developers, and students:</p>
+<ul class="simple">
+<li><p>Develop and assess physical and closure models.</p></li>
+<li><p>Compare alternative two-phase-flow formulations.</p></li>
+<li><p>Investigate numerical methods and solver behavior.</p></li>
+<li><p>Evaluate calculations against experimental data.</p></li>
+<li><p>Perform sensitivity and uncertainty studies.</p></li>
+<li><p>Build reproducible computational workflows.</p></li>
+<li><p>Share model implementations and results across institutions.</p></li>
+</ul>
+</section>
+<section id="openstream-database">
+<h2>OpenSTREAM-database<a class="headerlink" href="#openstream-database" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream-database" rel="noreferrer" target="_blank">OpenSTREAM-database</a> complements
+the core solver repository with publicly available experimental datasets,
+application and validation workflows, calculated-versus-measured
+comparisons, and publication companion projects.</p>
+<p>OpenSTREAM and OpenSTREAM-database are maintained as separate repositories
+and must be installed independently. See the
+<a class="reference internal" href="Applications/database.html"><span class="doc">OpenSTREAM-database</span></a> page for its dataset
+structure, application interface, and documented workflows.</p>
+</section>
+<section id="get-started">
+<h2>Get started<a class="headerlink" href="#get-started" title="Link to this heading"></a></h2>
+<p>A good first path through the documentation is:</p>
+<ol class="arabic simple">
+<li><p>Follow the <a class="reference internal" href="Usage/gettingStarted.html"><span class="doc">installation and configuration guide</span></a>.</p></li>
+<li><p>Run the <a class="reference internal" href="Usage/runSampleScript.html"><span class="doc">sample calculation</span></a>.</p></li>
+<li><p>Explore the <a class="reference internal" href="Guides/tutorials.html"><span class="doc">OpenSTREAM tutorials</span></a>.</p></li>
+<li><p>Review the <a class="reference internal" href="Guides/testing.html"><span class="doc">testing and verification guide</span></a>.</p></li>
+<li><p>Consult the <a class="reference internal" href="Usage/scope_and_limitations.html"><span class="doc">intended scope and limitations</span></a> before starting a new application.</p></li>
+</ol>
 </section>
 <section id="links">
 <h2>Links<a class="headerlink" href="#links" title="Link to this heading"></a></h2>
-<p>OpenSTREAM is developed openly on GitHub:</p>
 <ul class="simple">
 <li><p><strong>Source code:</strong> <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream" rel="noreferrer" target="_blank">OpenSTREAM-solvers/openstream</a></p></li>
-<li><p><strong>Report an issue:</strong> <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">Issue tracker</a></p></li>
+<li><p><strong>Application and validation database:</strong>
+<a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream-database" rel="noreferrer" target="_blank">OpenSTREAM-solvers/openstream-database</a></p></li>
+<li><p><strong>Report a problem or request a feature:</strong> <a class="reference external" href="https://github.com/OpenSTREAM-solvers/openstream/issues" rel="noreferrer" target="_blank">OpenSTREAM issue tracker</a></p></li>
 <li><p><strong>Contribute:</strong> see the <a class="reference internal" href="Community/index.html"><span class="doc">Community</span></a> section</p></li>
 </ul>
 </section>
 <section id="about-this-documentation">
 <h2>About this documentation<a class="headerlink" href="#about-this-documentation" title="Link to this heading"></a></h2>
-<p>This guide will walk you through:</p>
+<p>This documentation includes:</p>
 <ul class="simple">
-<li><p>Installation and setup instructions</p></li>
-<li><p>The design philosophy behind OpenSTREAM</p></li>
-<li><p>How to run simulations and interpret results</p></li>
-<li><p>Example applications and use cases</p></li>
-<li><p>How to contribute</p></li>
+<li><p>Installation and environment-configuration guidance.</p></li>
+<li><p>Solver-framework and theory descriptions.</p></li>
+<li><p>Tutorials and sample calculations.</p></li>
+<li><p>Input, output, and numerical-workflow guidance.</p></li>
+<li><p>Testing, troubleshooting, and versioning information.</p></li>
+<li><p>OpenSTREAM-database and publication companion documentation.</p></li>
+<li><p>Generated class, property, and method references.</p></li>
+<li><p>Contribution and development guidance.</p></li>
 </ul>
-<p>Looking for a printable version? You can download the full documentation here: <a class="reference external" href="./files/OpenSTREAM.pdf" rel="noreferrer" target="_blank">OpenSTREAM.pdf</a></p>
+<p>Prefer a printable format? Download the
+<a class="reference external" href="files/OpenSTREAM.pdf" rel="noreferrer" target="_blank">OpenSTREAM documentation PDF</a>.</p>
 <hr class="docutils" />
 <ol class="arabic simple" id="id3" start="1">
 <li id="id6"><p>Jean-Marie Le Corre, Jason Chan, Elisabeth Walter, Evan T. Hurlburt, and Roman W. Morse. OpenSTREAM: an open-source platform for two-phase flow modeling and simulation. In <em>Proceedings of the 21st International Topical Meeting on Nuclear Reactor Thermal Hydraulics (NURETH-21)</em>. Busan, Korea, August 31–September 5 2025a. URL: <a class="reference external" href="https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf" rel="noreferrer" target="_blank">https://openstream-solvers.github.io/openstream/_static/publications/LeCorre2025OpenSTREAM.pdf</a>.</p></li>
