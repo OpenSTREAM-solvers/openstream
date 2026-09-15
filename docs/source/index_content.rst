@@ -2,52 +2,137 @@
 Welcome
 =======
 
-OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch, **E**\ngineering **A**\nalysis and **M**\odeling) is an open-source, object-oriented computational environment designed for simulating one-dimensional, multi-field, two-phase flows in straight geometries (:cite:t:`LeCorre2025OpenSTREAM`) (:cite:t:`LeCorre2025ICMF`). It supports phenomena such as wall boiling, phase interactions and non-equilibrium effects, making it a relevant tool for researchers working in thermal-hydraulics and two-phase flow systems. 
+OpenSTREAM (**Open** **S**\olvers for **T**\wo-phase flow **R**\esearch,
+**E**\ngineering **A**\nalysis and **M**\odeling) is an open-source,
+object-oriented environment for developing, exploring, and evaluating
+one-dimensional, multi-field, two-phase-flow models
+:cite:p:`LeCorre2025OpenSTREAM,LeCorre2025ICMF`.
 
-What's inside?
---------------
+Whether you are developing, investigating, or validating a closure model,
+comparing solver formulations, or learning how two-phase-flow models are
+implemented, OpenSTREAM provides accessible solver frameworks that can be
+inspected, modified, tested, and extended.
 
-OpenSTREAM offers a suite of solver frameworks tailored to different modeling needs:
+OpenSTREAM supports steady-state and transient simulations of
+single-component two-phase flows in straight channels. Applications include
+wall boiling, thermal and hydrodynamic non-equilibrium, annular-flow
+modeling, liquid-film transport, entrainment and deposition, disturbance
+waves, boiling transition, dryout, and post-CHF heat transfer.
 
-- A **mixture solver** – with thermal non-equilibrium capabilities
-- A generic **two-fluid solver** – for separate-phase modeling
-- A **three-field solver** – for annular two-phase flow
-- An advanced **four-field solver** – for annular two-phase flow explicitly capturing disturbance waves
+The software is designed primarily for transparent model development,
+verification, validation, numerical investigation, education, and
+reproducible research. The validity of a calculation depends on the
+selected solver, closure models, numerical options, geometry, and operating
+conditions.
 
-These solvers are designed to simulate single-component, thermally expandable, steady-state and transient boiling two-phase flows in straight multi-wall channels, which may be uniformly or non-uniformly heated. The implementation relies on a set of reasonable simplifying assumptions to ensure computational efficiency and stability. Each solver includes a set of baseline closure models, which can be customized by modifying the corresponding class methods in the source code.
+Explore the solver frameworks
+-----------------------------
+
+OpenSTREAM provides four complementary solver frameworks:
+
+- A **mixture solver** for robust initialization and mixture-based
+  calculations, with optional hydrodynamic and thermal non-equilibrium
+  models.
+- A **two-fluid solver** with separate liquid and vapor mass, momentum, and
+  energy equations.
+- A **three-field solver** for annular flow, representing vapor, liquid
+  film, and entrained droplets under the current thermal-equilibrium
+  formulation.
+- A **four-field solver** for annular flow, separately representing the
+  base film, disturbance waves, entrained droplets, and vapor under the
+  current thermal-equilibrium formulation.
+
+The frameworks support straight multi-wall channels with uniform or
+nonuniform heating. Their modular, object-oriented implementation allows
+users and developers to examine and modify the governing equations,
+closure models, numerical methods, and post-processing workflows.
+
+A more detailed framework is not necessarily more accurate for every
+application. Each additional field introduces further closure relations,
+initialization requirements, numerical couplings, and uncertainties.
+Review the :doc:`intended scope and limitations
+<Usage/scope_and_limitations>` before applying OpenSTREAM to a new problem.
 
 Why OpenSTREAM?
 ---------------
 
-OpenSTREAM is built to support open, transparent research and to lower the barrier to entry for developing and validating fundamental models in two-phase flow simulations. Its goal is to make advanced thermal-hydraulic modeling more accessible to engineers, scientists, and students alike. Whether you're conducting research or learning the fundamentals, OpenSTREAM provides a collaborative and extensible environment for model development, performance evaluation, and cross-institutional validation, advancing the state of the art in thermal-hydraulic simulation.
+Many established two-phase-flow formulations are thoroughly described in
+the literature but implemented only in large or restricted computational
+codes. OpenSTREAM provides a focused and transparent environment in which
+fundamental models can be studied independently, compared systematically,
+and developed collaboratively.
+
+OpenSTREAM can help researchers, engineers, developers, and students:
+
+- Develop and assess physical and closure models.
+- Compare alternative two-phase-flow formulations.
+- Investigate numerical methods and solver behavior.
+- Evaluate calculations against experimental data.
+- Perform sensitivity and uncertainty studies.
+- Build reproducible computational workflows.
+- Share model implementations and results across institutions.
+
+OpenSTREAM-database
+-------------------
+
+`OpenSTREAM-database
+<https://github.com/OpenSTREAM-solvers/openstream-database>`_ complements
+the core solver repository with publicly available experimental datasets,
+application and validation workflows, calculated-versus-measured
+comparisons, and publication companion projects.
+
+OpenSTREAM and OpenSTREAM-database are maintained as separate repositories
+and must be installed independently. See the
+:doc:`OpenSTREAM-database <Applications/database>` page for its dataset
+structure, application interface, and documented workflows.
+
+Get started
+-----------
+
+A good first path through the documentation is:
+
+#. Follow the :doc:`installation and configuration guide
+   <Usage/gettingStarted>`.
+#. Run the :doc:`sample calculation <Usage/runSampleScript>`.
+#. Explore the :doc:`OpenSTREAM tutorials <Guides/tutorials>`.
+#. Review the :doc:`testing and verification guide <Guides/testing>`.
+#. Consult the :doc:`intended scope and limitations
+   <Usage/scope_and_limitations>` before starting a new application.
 
 Links
 -----
- 
-OpenSTREAM is developed openly on GitHub:
 
-- **Source code:** `OpenSTREAM-solvers/openstream <https://github.com/OpenSTREAM-solvers/openstream>`_
-- **Report an issue:** `Issue tracker <https://github.com/OpenSTREAM-solvers/openstream/issues>`_
-- **Contribute:** see the :doc:`Community </Community/index>` section
+- **Source code:** `OpenSTREAM-solvers/openstream
+  <https://github.com/OpenSTREAM-solvers/openstream>`_
+- **Application and validation database:**
+  `OpenSTREAM-solvers/openstream-database
+  <https://github.com/OpenSTREAM-solvers/openstream-database>`_
+- **Report a problem or request a feature:** `OpenSTREAM issue tracker
+  <https://github.com/OpenSTREAM-solvers/openstream/issues>`_
+- **Contribute:** see the :doc:`Community <Community/index>` section
 
 About this documentation
 ------------------------
 
-This guide will walk you through:
+This documentation includes:
 
-- Installation and setup instructions
-- The design philosophy behind OpenSTREAM
-- How to run simulations and interpret results
-- Example applications and use cases
-- How to contribute
+- Installation and environment-configuration guidance.
+- Solver-framework and theory descriptions.
+- Tutorials and sample calculations.
+- Input, output, and numerical-workflow guidance.
+- Testing, troubleshooting, and versioning information.
+- OpenSTREAM-database and publication companion documentation.
+- Generated class, property, and method references.
+- Contribution and development guidance.
 
 .. only:: html
 
-   Looking for a printable version? You can download the full documentation here: `OpenSTREAM.pdf <./files/OpenSTREAM.pdf>`_
+   Prefer a printable format? Download the
+   `OpenSTREAM documentation PDF <files/OpenSTREAM.pdf>`_.
 
 
 ----
 
-.. bibliography:: 
+.. bibliography::
    :list: enumerated
    :filter: docname in docnames
