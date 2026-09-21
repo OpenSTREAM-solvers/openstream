@@ -697,25 +697,141 @@ OpenSTREAM-database working copies.</p>
 </section>
 <section id="typical-workflow">
 <h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading"></a></h2>
-<p>A typical file-based dataset workflow consists of:</p>
-<ol class="arabic simple">
-<li><p>Constructing a dataset-specific object from its source-data file.</p></li>
-<li><p>Selecting one or more experimental cases.</p></li>
-<li><p>Initializing the corresponding OpenSTREAM inputs.</p></li>
-<li><p>Selecting an OpenSTREAM solver and model configuration.</p></li>
-<li><p>Generating the OpenSTREAM input files.</p></li>
-<li><p>Running the selected calculations.</p></li>
-<li><p>Reviewing solver convergence.</p></li>
-<li><p>Extracting calculated quantities.</p></li>
-<li><p>Comparing calculated and measured results.</p></li>
-<li><p>Visualizing and interpreting the comparison.</p></li>
+<p>A typical OpenSTREAM-database workflow consists of the following steps:</p>
+<ol class="arabic">
+<li><p><strong>Construct the dataset object.</strong></p>
+<p>Construct the dataset-specific object using its package-qualified class
+name. Calling the constructor without a case identifier loads the
+available dataset records:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">alldata</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Wurtz1978</span><span class="p">.</span><span class="n">Wurtz1978</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Other dataset packages follow the same pattern:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">alldata</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Sawai1989</span><span class="p">.</span><span class="n">Sawai1989</span><span class="p">();</span>
+<span class="n">alldata</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Bartolomey</span><span class="p">.</span><span class="n">Bartolomey</span><span class="p">();</span>
+<span class="n">alldata</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Becker1983</span><span class="p">.</span><span class="n">Becker1983</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Review the dataset-specific README and constructor documentation before
+selecting and running cases.</p>
+</li>
+<li><p><strong>Review and select the cases.</strong></p>
+<p>Inspect the available records through the dataset table:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">alldata</span><span class="p">.</span><span class="n">dataset</span>
+</pre></div>
+</div>
+<p>Select the records required for the intended application. Dataset fields
+such as <code class="docutils literal notranslate"><span class="pre">TestID</span></code> can be used to locate particular cases:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">selectedTestIDs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="mi">101</span><span class="w"> </span><span class="mi">102</span><span class="p">];</span>
+<span class="n">selectedIndexes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="nb">ismember</span><span class="p">(</span><span class="n">alldata</span><span class="p">.</span><span class="n">dataset</span><span class="p">.</span><span class="n">TestID</span><span class="o">'</span><span class="p">,</span><span class="n">selectedTestIDs</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Construct the selected dataset objects:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">caseIndex</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="nb">numel</span><span class="p">(</span><span class="n">selectedIndexes</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data</span><span class="p">(</span><span class="n">caseIndex</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Wurtz1978</span><span class="p">.</span><span class="n">Wurtz1978</span><span class="p">(</span><span class="n">selectedIndexes</span><span class="p">(</span><span class="n">caseIndex</span><span class="p">));</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Review the geometry, boundary conditions, measured quantities, units,
+uncertainties, and derived information before running the calculations.</p>
+</li>
+<li><p><strong>Initialize the model and numerical options.</strong></p>
+<p>Obtain the default input-option structure associated with the dataset
+workflow:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">opts</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">alldata</span><span class="p">.</span><span class="n">inputOptions</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The returned structure contains the initial physical-model selections
+under <code class="docutils literal notranslate"><span class="pre">opts.model</span></code> and numerical settings under <code class="docutils literal notranslate"><span class="pre">opts.options</span></code>.</p>
+</li>
+<li><p><strong>Modify models and numerical options as required.</strong></p>
+<p>Change only the selections needed for the intended calculation:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">opts</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">VOID</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'BESTION'</span><span class="p">;</span>
+<span class="n">opts</span><span class="p">.</span><span class="n">options</span><span class="p">.</span><span class="n">AXIALINTERP</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">'NEXT'</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Nondefault selections and calibrated coefficients should be documented
+with the calculation. If the same option structure is modified
+progressively, earlier selections remain active until explicitly
+replaced.</p>
+</li>
+<li><p><strong>Generate the OpenSTREAM input files.</strong></p>
+<p>Generate the model, numerical-option, geometry, and boundary-condition
+inputs required by OpenSTREAM:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">mixture</span><span class="p">.</span><span class="n">makeInputFiles</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">inputOptions</span><span class="p">=</span><span class="n">opts</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="n">ioDirectory</span><span class="p">=</span><span class="s">"NURETH21/Mixture"</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">inputOptions</span></code> argument specifies the options controlling input-file
+generation. The <code class="docutils literal notranslate"><span class="pre">ioDirectory</span></code> argument defines the working directory for
+the case. OpenSTREAM input files are generated in this directory, and
+simulation outputs are written there during execution. The path may be
+specified as either an absolute or a relative path.</p>
+<p>When managing multiple datasets, solver frameworks, or case groups, a
+dedicated <code class="docutils literal notranslate"><span class="pre">ioDirectory</span></code> for each case helps keep inputs and outputs
+organized and separated.</p>
+</li>
+<li><p><strong>Run the selected solver.</strong></p>
+<p>Execute the calculation using the required OpenSTREAM solver framework:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">runCase</span><span class="p">(</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'Mixture'</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'inputSetOpts'</span><span class="p">,</span><span class="n">inputSetOpts</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">    </span><span class="s">'saveResultsToFile'</span><span class="p">,</span><span class="n">saveResultsToFile</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The first argument specifies the OpenSTREAM solver framework to run.
+In this example, <code class="docutils literal notranslate"><span class="pre">'Mixture'</span></code> selects the Mixture solver. Other solver
+frameworks supported by the dataset can be selected by providing the
+corresponding framework name.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">inputSetOpts</span></code> argument specifies options used when preparing and
+executing the case. For example, these options can control whether
+existing session files are overwritten and how solver log messages are
+handled:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">inputSetOpts</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">...</span>
+<span class="w">   </span><span class="s">'overwriteSessionFiles'</span><span class="p">,</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="k">...</span>
+<span class="w">   </span><span class="s">'LOGMODE'</span><span class="p">,</span><span class="s">'BOTH'</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">saveResultsToFile</span></code> argument controls whether the computed results
+are written to files in the case <code class="docutils literal notranslate"><span class="pre">ioDirectory</span></code> in addition to being
+returned to MATLAB. When set to <code class="docutils literal notranslate"><span class="pre">false</span></code>, results are only returned to
+the MATLAB workspace:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">saveResultsToFile</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Check convergence.</strong></p>
+<p>Confirm that the selected calculations reached the expected solver
+state:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">checkConvergence</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Convergence should be reviewed before calculated quantities are compared
+with experimental measurements or used in subsequent analyses.</p>
+</li>
+<li><p><strong>Post-process and compare the results.</strong></p>
+<p>Use the dataset-specific plotting or post-processing methods to compare
+calculated and measured quantities:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">plotResults</span><span class="p">(</span><span class="k">...</span><span class="c">);</span>
+</pre></div>
+</div>
+<p>The comparison should identify the measured quantity, corresponding
+calculated quantity, units, case conditions, model configuration, and
+any interpolation, filtering, or derived quantities.</p>
+</li>
+<li><p><strong>Record the reproducibility information.</strong></p>
+<p>Retain the selected dataset records, nondefault model parameters,
+numerical options, solver framework, output location, and the
+OpenSTREAM and OpenSTREAM-database versions or commits used.</p>
+</li>
 </ol>
-<p>A lightweight workflow instead constructs a generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> object
-from an in-memory MATLAB table and then follows the same input-generation,
-execution, convergence-review, and post-processing sequence.</p>
-<p>The exact workflow depends on the selected dataset and solver. Consult the
-dataset README and any corresponding project file before running an
-application.</p>
+<p>A lightweight workflow starts by constructing a generic <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> object
+from an in-memory MATLAB table. It then follows the same option-selection,
+input-generation, execution, convergence-review, and post-processing
+sequence.</p>
+<p>Examples of these workflows are provided in the MATLAB Live Scripts
+described on the <a class="reference internal" href="projects.html"><span class="doc">application projects</span></a> page.</p>
 </section>
 <section id="generated-files">
 <h2>Generated files<a class="headerlink" href="#generated-files" title="Link to this heading"></a></h2>

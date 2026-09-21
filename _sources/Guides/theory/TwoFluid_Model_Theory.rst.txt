@@ -80,7 +80,7 @@ Features and assumptions
 - Supports uniform and non-uniform wall heat flux distribution
 - Captures phase-specific velocities and temperatures
 - Includes interfacial mass, momentum, and energy exchange
-- Supports wall boiling and condensation
+- Supports wall boiling
 - Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 
 Role in OpenSTREAM
