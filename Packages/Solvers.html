@@ -718,21 +718,15 @@ It also includes UI controls for animation playback and export.</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Ts">
-<span class="sig-name descname"><span class="pre">Ts</span></span><span class="property"> <span class="pre">=</span> <span class="pre">[]</span></span><a class="headerlink" href="#Solvers.SolverPlotter.Ts" title="Link to this definition"></a></dt>
-<dd><p>Time series [s]</p>
-</dd></dl>
-
-<dl class="mat attribute">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.WallIdx">
 <span class="sig-name descname"><span class="pre">WallIdx</span></span><span class="property"> <span class="pre">=</span> <span class="pre">1</span></span><a class="headerlink" href="#Solvers.SolverPlotter.WallIdx" title="Link to this definition"></a></dt>
 <dd><p>Wall index for multi-wall simulations</p>
 </dd></dl>
 
 <dl class="mat attribute">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Zs">
-<span class="sig-name descname"><span class="pre">Zs</span></span><span class="property"> <span class="pre">=</span> <span class="pre">[]</span></span><a class="headerlink" href="#Solvers.SolverPlotter.Zs" title="Link to this definition"></a></dt>
-<dd><p>Axial positions [m]</p>
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.Xs">
+<span class="sig-name descname"><span class="pre">Xs</span></span><span class="property"> <span class="pre">=</span> <span class="pre">[]</span></span><a class="headerlink" href="#Solvers.SolverPlotter.Xs" title="Link to this definition"></a></dt>
+<dd><p>X-axis values Time [s] or axial positions [m]</p>
 </dd></dl>
 
 <dl class="mat attribute">
@@ -786,6 +780,12 @@ plotter.legend(‘Axes’,ah,’off’)</p>
 </dd></dl>
 
 <dl class="mat method">
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">YData</span></em>, <em class="sig-param"><span class="pre">fieldName</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plot" title="Link to this definition"></a></dt>
+<dd><p>PLOTZ Method to <a class="reference internal" href="#Solvers.SolverPlotter.plot" title="Solvers.SolverPlotter.plot"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">plot()</span></code></a> spatial or temporal data (YData) on the current axes</p>
+</dd></dl>
+
+<dl class="mat method">
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotK">
 <span class="sig-name descname"><span class="pre">plotK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">klocZ</span></em>, <em class="sig-param"><span class="pre">ah</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotK" title="Link to this definition"></a></dt>
 <dd><p>PLOTK Method to plot obstruction elevation indicators</p>
@@ -795,12 +795,6 @@ plotter.legend(‘Axes’,ah,’off’)</p>
 <dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotOAF">
 <span class="sig-name descname"><span class="pre">plotOAF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">oafZ</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotOAF" title="Link to this definition"></a></dt>
 <dd><p>PLOTOAF Method to plot onset of annular flow boundary indicator</p>
-</dd></dl>
-
-<dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.plotz">
-<span class="sig-name descname"><span class="pre">plotz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">YData</span></em>, <em class="sig-param"><span class="pre">fieldName</span></em>, <em class="sig-param"><span class="pre">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.plotz" title="Link to this definition"></a></dt>
-<dd><p>PLOTZ Method to plot spatial or temporal data (YData) on the current axes</p>
 </dd></dl>
 
 <dl class="mat method">
@@ -817,9 +811,9 @@ Keeps top-left fixed and goes full-screen if size exceeds screen resolution.</p>
 </dd></dl>
 
 <dl class="mat method">
-<dt class="sig sig-object mat" id="Solvers.SolverPlotter.setZs">
-<span class="sig-name descname"><span class="pre">setZs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">Zs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.setZs" title="Link to this definition"></a></dt>
-<dd><p>SETZS Method to assign the parameter(space or time) on the plotter x-axis</p>
+<dt class="sig sig-object mat" id="Solvers.SolverPlotter.setXs">
+<span class="sig-name descname"><span class="pre">setXs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">plotters</span></em>, <em class="sig-param"><span class="pre">Xs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Solvers.SolverPlotter.setXs" title="Link to this definition"></a></dt>
+<dd><p>SETXS Method to assign the parameter(space or time) on the plotter x-axis</p>
 </dd></dl>
 
 <dl class="mat method">
