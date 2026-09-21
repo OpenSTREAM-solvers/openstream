@@ -309,26 +309,177 @@ OpenSTREAM-database working copies.
 Typical workflow
 ----------------
 
-A typical file-based dataset workflow consists of:
+A typical OpenSTREAM-database workflow consists of the following steps:
 
-#. Constructing a dataset-specific object from its source-data file.
-#. Selecting one or more experimental cases.
-#. Initializing the corresponding OpenSTREAM inputs.
-#. Selecting an OpenSTREAM solver and model configuration.
-#. Generating the OpenSTREAM input files.
-#. Running the selected calculations.
-#. Reviewing solver convergence.
-#. Extracting calculated quantities.
-#. Comparing calculated and measured results.
-#. Visualizing and interpreting the comparison.
+#. **Construct the dataset object.**
 
-A lightweight workflow instead constructs a generic ``Dataset`` object
-from an in-memory MATLAB table and then follows the same input-generation,
-execution, convergence-review, and post-processing sequence.
+   Construct the dataset-specific object using its package-qualified class
+   name. Calling the constructor without a case identifier loads the
+   available dataset records:
 
-The exact workflow depends on the selected dataset and solver. Consult the
-dataset README and any corresponding project file before running an
-application.
+   .. code-block:: matlab
+
+      alldata = Wurtz1978.Wurtz1978();
+
+   Other dataset packages follow the same pattern:
+
+   .. code-block:: matlab
+
+      alldata = Sawai1989.Sawai1989();
+      alldata = Bartolomey.Bartolomey();
+      alldata = Becker1983.Becker1983();
+
+   Review the dataset-specific README and constructor documentation before
+   selecting and running cases.
+
+#. **Review and select the cases.**
+
+   Inspect the available records through the dataset table:
+
+   .. code-block:: matlab
+
+      alldata.dataset
+
+   Select the records required for the intended application. Dataset fields
+   such as ``TestID`` can be used to locate particular cases:
+
+   .. code-block:: matlab
+
+      selectedTestIDs = [101 102];
+      selectedIndexes = find(ismember(alldata.dataset.TestID',selectedTestIDs));
+
+   Construct the selected dataset objects:
+
+   .. code-block:: matlab
+
+      for caseIndex = 1:numel(selectedIndexes)
+          data(caseIndex) = Wurtz1978.Wurtz1978(selectedIndexes(caseIndex));
+      end
+
+   Review the geometry, boundary conditions, measured quantities, units,
+   uncertainties, and derived information before running the calculations.
+
+#. **Initialize the model and numerical options.**
+
+   Obtain the default input-option structure associated with the dataset
+   workflow:
+
+   .. code-block:: matlab
+
+      opts = alldata.inputOptions();
+
+   The returned structure contains the initial physical-model selections
+   under ``opts.model`` and numerical settings under ``opts.options``.
+
+#. **Modify models and numerical options as required.**
+
+   Change only the selections needed for the intended calculation:
+
+   .. code-block:: matlab
+
+      opts.model.VOID = 'BESTION';
+      opts.options.AXIALINTERP = 'NEXT';
+
+   Nondefault selections and calibrated coefficients should be documented
+   with the calculation. If the same option structure is modified
+   progressively, earlier selections remain active until explicitly
+   replaced.
+
+#. **Generate the OpenSTREAM input files.**
+
+   Generate the model, numerical-option, geometry, and boundary-condition
+   inputs required by OpenSTREAM:
+
+   .. code-block:: matlab
+
+      mixture.makeInputFiles( ...
+          inputOptions=opts, ...
+          ioDirectory="NURETH21/Mixture");
+
+   The ``inputOptions`` argument specifies the options controlling input-file
+   generation. The ``ioDirectory`` argument defines the working directory for
+   the case. OpenSTREAM input files are generated in this directory, and
+   simulation outputs are written there during execution. The path may be
+   specified as either an absolute or a relative path.
+
+   When managing multiple datasets, solver frameworks, or case groups, a
+   dedicated ``ioDirectory`` for each case helps keep inputs and outputs
+   organized and separated.
+
+#. **Run the selected solver.**
+
+   Execute the calculation using the required OpenSTREAM solver framework:
+
+   .. code-block:: matlab
+
+      data.runCase( ...
+          'Mixture', ...
+          'inputSetOpts',inputSetOpts, ...
+          'saveResultsToFile',saveResultsToFile);
+
+   The first argument specifies the OpenSTREAM solver framework to run.
+   In this example, ``'Mixture'`` selects the Mixture solver. Other solver
+   frameworks supported by the dataset can be selected by providing the
+   corresponding framework name.
+
+   The ``inputSetOpts`` argument specifies options used when preparing and
+   executing the case. For example, these options can control whether
+   existing session files are overwritten and how solver log messages are
+   handled:
+
+   .. code-block:: matlab
+
+      inputSetOpts = { ...
+         'overwriteSessionFiles',true, ...
+         'LOGMODE','BOTH'};
+
+   The ``saveResultsToFile`` argument controls whether the computed results
+   are written to files in the case ``ioDirectory`` in addition to being
+   returned to MATLAB. When set to ``false``, results are only returned to
+   the MATLAB workspace:
+
+   .. code-block:: matlab
+
+      saveResultsToFile = false;
+
+#. **Check convergence.**
+
+   Confirm that the selected calculations reached the expected solver
+   state:
+
+   .. code-block:: matlab
+
+      data.checkConvergence();
+
+   Convergence should be reviewed before calculated quantities are compared
+   with experimental measurements or used in subsequent analyses.
+
+#. **Post-process and compare the results.**
+
+   Use the dataset-specific plotting or post-processing methods to compare
+   calculated and measured quantities:
+
+   .. code-block:: matlab
+
+      data.plotResults(...);
+
+   The comparison should identify the measured quantity, corresponding
+   calculated quantity, units, case conditions, model configuration, and
+   any interpolation, filtering, or derived quantities.
+
+#. **Record the reproducibility information.**
+
+   Retain the selected dataset records, nondefault model parameters,
+   numerical options, solver framework, output location, and the
+   OpenSTREAM and OpenSTREAM-database versions or commits used.
+
+A lightweight workflow starts by constructing a generic ``Dataset`` object
+from an in-memory MATLAB table. It then follows the same option-selection,
+input-generation, execution, convergence-review, and post-processing
+sequence.
+
+Examples of these workflows are provided in the MATLAB Live Scripts
+described on the :doc:`application projects <projects>` page.
 
 Generated files
 ---------------
