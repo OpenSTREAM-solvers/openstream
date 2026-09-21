@@ -81,7 +81,7 @@ where:
 where:
 
 - :math:`h_v` is the vapor specific enthalpy
-- :math:`{q^{\prime\prime}}_{wall,v}^n` is the wall heat flux vapor for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{wall,v}^n` is the wall heat flux transferred to the vapor for wall index :math:`n`
 
 **3. Time relaxation approximation**
 
@@ -105,7 +105,7 @@ To complete the conservation equations, several closure models are required:
 - Wall heat transfer models
 - Relaxation time for the interfacial mass transfer (required for the MRM model only): :math:`t_{Relax}`
 
-For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure models are implemented in :class:`Solvers.Mixture.Mixture`, which the users can modify to suit specific simulation needs.
+For each simulation, the selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All relevant closure models are implemented in :class:`Solvers.Mixture.Mixture`, which users can modify to suit specific simulation needs.
 
 In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 

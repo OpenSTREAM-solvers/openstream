@@ -13,7 +13,6 @@ classdef Model < Inputs.Input
                                                                            = 100                             % Number of axial nodes used in the simulation
         FLUID            (1,1) string  {mustBeTextScalar}                  = 'WATER'                         % CoolProp fluid identifier
         PROPERTIES       (1,1) InputEnums.FLUIDPROPERTIES                  = 'SATURATED'                     % Assumption model for fluid properties selected from :class:`InputEnums.FLUIDPROPERTIES`
-        ANGLE            (1,1) double  {mustBeNumeric}                     = 0                               % Flow axis angle from vertical [deg]
         KLOC             (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Elevation of local perturbations [m]
 
         % Two-phase flow regime and wall heat transfer transitions
@@ -113,7 +112,7 @@ classdef Model < Inputs.Input
         KBLOCKRATIO      (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Blockage ratios of local perturbations [-]
         KTUNING          (1,:) double  {mustBeNumeric,mustBeNonempty}      = [0 0]                           % Drop deposition enhancement tuning coefficients [-]
         ENTRAINMENT      (1,1) InputEnums.ENTRAINMENT                      = 'OKAWA2003'                     % Film entrainment model selected from :class:`InputEnums.ENTRAINMENT`
-        OKAWACOEFS       (1,:) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1]           % Coefficients of Okawa entrainment model [-]
+        OKAWACOEFS       (1,4) double  {mustBeNumeric}                     = [320 0.111 4.79E-4 1]           % Coefficients of Okawa entrainment model [-]
 
         MOMENTFILM       (1,1) InputEnums.MOMENTFILM                       = 'ALGEBRAIC'                     % Film momentum conservation model selected from :class:`InputEnums.MOMENTFILM`
         VAPORFRIC        (1,1) InputEnums.VAPORFRIC                        = 'SOLVER_DEPENDENT'              % Vapor friction model selected from :class:`InputEnums.VAPORFRIC`
@@ -131,22 +130,22 @@ classdef Model < Inputs.Input
         OAFBASERATIO     (1,1) double  {mustBeInRange(OAFBASERATIO,0,1)}   = 0.5                             % Base/Film mass ratio at onset of annular flow [-]
 
         BASEEQTHICK      (1,1) InputEnums.BASEEQTHICK                      = 'RISO'                          % Equilibrium base film thickness model selected from :class:`InputEnums.BASEEQTHICK`
-        BASEEQTHICKCOEF  (:,1) double  {mustBeNumeric}                     = [5.37E-5 -0.64 1.21]            % Equilibrium base film thickness coefficients [-]
+        BASEEQTHICKCOEF  (1,3) double  {mustBeNumeric}                     = [5.37E-5 -0.64 1.21]            % Equilibrium base film thickness coefficients [-]
         BASEYPLUS        (1,1) double  {mustBePositive}                    = 15                              % Equilibrium base film y+ value [-]
-        RELAXTB          (:,1) double  {mustBeNonnegative}                 = 0.2                             % Base film / wave mass exchange relaxation time [s]
+        RELAXTB          (1,1) double  {mustBeNonnegative}                 = 0.2                             % Base film / wave mass exchange relaxation time [s]
 
         WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 2                               % Base film / wave turbulent mixing coefficient
         WAVEFREQUENCY    (1,1) InputEnums.WAVEFREQUENCY                    = 'RELAXATION'                    % Wave number density model selected from :class:`InputEnums.WAVEFREQUENCY`
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'                          % Equilibrium wave Strouhal number model selected from :class:`InputEnums.EQSTROUHAL`
-        EQSTROUHALCOEF   (:,1) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]             % Equilibrium wave Strouhal number coefficients [-]
-        RELAXTW          (:,1) double  {mustBeNonnegative}                 = 0.2                             % Wave number density relaxation time [s]
-        CSTWAVEFREQ      (:,1) double  {mustBePositive}                    = 100                             % Imposed constant wave frequency [Hz]
+        EQSTROUHALCOEF   (1,3) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]             % Equilibrium wave Strouhal number coefficients [-]
+        RELAXTW          (1,1) double  {mustBeNonnegative}                 = 0.2                             % Wave number density relaxation time [s]
+        CSTWAVEFREQ      (1,1) double  {mustBePositive}                    = 100                             % Imposed constant wave frequency [Hz]
 
         MOMENTBASE       (1,1) InputEnums.MOMENTBASE                       = 'FULLNOP'                       % Base film momentum conservation model selected from :class:`InputEnums.MOMENTBASE`
         MOMENTWAVE       (1,1) InputEnums.MOMENTWAVE                       = 'FULL'                          % Wave momentum conservation model selected from :class:`InputEnums.MOMENTWAVE`
         WAVEBASEINT      (1,1) InputEnums.WAVEBASEINT                      = 'VAPORSHEAR'                    % Wave / base film interfacial momentum transfer model selected from :class:`InputEnums.WAVEBASEINT`
-        SHAPEFACTORCOEF  (:,1) double  {mustBeNumeric}                     = [1.325E5 2 1 0]                 % Wave shape factor coefficients [-]
-        WAVEDRAGCOEF     (:,1) double  {mustBeNumeric}                     = [0.02 1.350E5 0.437]            % Wave drag coefficient [-]
+        SHAPEFACTORCOEF  (1,4) double  {mustBeNumeric}                     = [1.325E5 2 1 0]                 % Wave shape factor coefficients [-]
+        WAVEDRAGCOEF     (1,3) double  {mustBeNumeric}                     = [0.02 1.350E5 0.437]            % Wave drag coefficient [-]
         THINWAVETHICK    (1,1) double  {mustBePositive}                    = 1E-5                            % Minimum thin wave thickness [m]
 
     end
@@ -240,10 +239,11 @@ classdef Model < Inputs.Input
             if ~isempty(defaultValueFieldNames)
                 defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
                 if nargout == 0
-                    warning('Model:defaultValueUsedWarning', ...
-                        sprintf('%s\n',defaultValueWarningString));
+                    warning('OpenSTREAM:Model:defaultValueUsedWarning', ...
+                        '%s\n', ...
+                        defaultValueWarningString);
                 else
-                    w = struct('warnID', 'Model:defaultValueUsedWarning', ...
+                    w = struct('warnID', 'OpenSTREAM:Model:defaultValueUsedWarning', ...
                         'msg', defaultValueWarningString);
                     if isempty(obj.warnings)
                         obj.warnings = w;

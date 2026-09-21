@@ -1,7 +1,7 @@
 Glossary
 ========
 
-This glossary defines terminology used throughout the OpenSTREAM documentation. The intent is to make the documentation more consistent and to clarify the distinction between closely related concepts used in one-dimensional, multi-field, two-phase flow modeling.
+This glossary defines terminology used throughout the **OpenSTREAM** documentation. The intent is to make the documentation more consistent and to clarify the distinction between closely related concepts used in one-dimensional, multi-field, two-phase flow modeling.
 
 .. glossary::
    :sorted:
@@ -146,7 +146,7 @@ For consistency across the documentation, the following preferred terms are reco
      - closure law, correlation, constitutive law, unless a specific distinction is intended
    * - thermal non-equilibrium
      - Different temperatures or energy balances among phases or fields
-     - thermal disequilibrium, nonequilibrium thermal effects
+     - thermal disequilibrium, non-equilibrium thermal effects
    * - hydrodynamic non-equilibrium
      - Different velocities or momentum balances among phases or fields
      - velocity slip, unless specifically referring to relative velocity

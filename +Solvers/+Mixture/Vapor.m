@@ -200,7 +200,7 @@ classdef Vapor < Solvers.AbstractPhase
         end
 
         function hfluxwalevap = HFLUXWALEVAP(vapor, zIdx)
-            %HFLUX Wall evaporation heat flux [W/m^2]
+            %HFLUXWALEVAP Wall evaporation heat flux [W/m^2]
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
 

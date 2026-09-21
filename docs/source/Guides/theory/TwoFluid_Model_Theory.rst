@@ -69,7 +69,7 @@ To complete the conservation equations, several closure models are required:
 
 These relations depend on the local flow regime, which is determined by an additional flow regime identification model. 
 
-The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.TwoFluid.Liquid` and :class:`Solvers.TwoFluid.Vapor`, which the users can modify to suit specific simulation needs.
+The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.TwoFluid.Liquid` and :class:`Solvers.TwoFluid.Vapor`, which users can modify to suit specific simulation needs.
 
 In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 
@@ -80,13 +80,13 @@ Features and assumptions
 - Supports uniform and non-uniform wall heat flux distribution
 - Captures phase-specific velocities and temperatures
 - Includes interfacial mass, momentum, and energy exchange
-- Supports wall boiling and condensation
+- Supports wall boiling
 - Neglects minor contributions such as frictional heating and temporal pressure gradient contributions
 
 Role in OpenSTREAM
 ------------------
 
-The two-fluid model is the legacy framework for simulating non-equilibrium two-phase flows. It is validated against system codes like TRACE and supports both steady-state and transient simulations.
+The two-fluid model is representative of legacy frameworks for simulating two-phase flows using separate liquid and vapor fields. It supports the investigation of hydrodynamic and thermal non-equilibrium. Selected calculations have been compared with reference solutions and established thermal-hydraulic codes.
 
 ----
 

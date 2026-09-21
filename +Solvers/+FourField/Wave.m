@@ -292,7 +292,7 @@ classdef Wave < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            error('Wave does not implement wall shear stress');
+            error('OpenSTREAM:FourFieldSolver:NoWallShearStress','FWALL: Wave does not implement wall shear stress');
         end
 
         function Fbase = FBASE(wave,drop,zIdx)

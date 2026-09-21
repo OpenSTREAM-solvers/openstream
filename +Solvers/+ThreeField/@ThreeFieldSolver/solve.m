@@ -17,7 +17,7 @@ function solve(tfSolver)
 %
 % - Uses internal `solver` function to handle both steady-state and transient modes
 % - Applies relaxation factors for phase flows, velocities, and enthalpies
-% - Supports thermal non-equilibrium modeling
+% - Supports hydrodynamic non-equilibrium modeling
 % - Logs progress and outputs to session directory
 
 arguments
@@ -33,7 +33,7 @@ tfSolver.inputSet.session.log.diaryOn();
 tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if tfSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
+    error('OpenSTREAM:ThreeFieldSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
 else
     tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
 
@@ -106,6 +106,7 @@ function solver(solveINIT)
     % Time loop
     for tIdx = 2:length(film)                                              % Loop over time steps
         
+        timestepconverged = true;
         tfSolver.log('Time %5.2f [s]',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
@@ -215,6 +216,7 @@ function solver(solveINIT)
                 
                 elseif itr == options.MAXITER
                 % set SOLVED flag to SOLVEDNOTCONVERGED
+                    timestepconverged = false;
                     tfSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                     break;
                 end
@@ -246,6 +248,9 @@ function solver(solveINIT)
             if all([timeDWL < options.SSCONVWF, timeDUf < options.SSCONVUF, timeDUd < options.SSCONVUD] )
 
                 % Indicate init converged
+                if ~timestepconverged
+                    tfSolver.warning('Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                end
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
                 tfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)

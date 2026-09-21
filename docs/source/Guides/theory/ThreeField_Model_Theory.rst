@@ -31,7 +31,7 @@ The conservation equations are formulated at the wall level, indexed by :math:`n
 
 **1. Mass conservation**
 
-Film: :math:`\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_{all}^n (D - E^n - \Gamma_{wb}^n)`
+Film: :math:`\frac{\partial}{\partial t}(\frac{W_f^n}{u_f^n}) + \frac{\partial W_f^n}{\partial z} = \Pi_{wall}^n (D - E^n - \Gamma_{wb}^n)`
 
 where:
 
@@ -61,12 +61,12 @@ where:
 
 **3. Energy conservation**
 
-Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{w}^n}{h_{vs} - h_{ls}}`
+Under thermal equilibrium: :math:`\Gamma_{wb}^n = \frac{{q^{\prime\prime}}_{wall}^n}{h_{vs} - h_{ls}}`
 
 where:
 
 - :math:`h_{vs}`, :math:`h_{ls}` are the saturated vapor and liquid specific enthalpies
-- :math:`{q^{\prime\prime}}_{w}^n` is the wall heat flux for wall index :math:`n`
+- :math:`{q^{\prime\prime}}_{wall}^n` is the wall heat flux for wall index :math:`n`
 
 Closure models
 --------------
@@ -76,13 +76,13 @@ To complete the conservation equations, several closure models are required:
 - Onset of annular two-phase flow
 - Film/drop mass flow rate split at onset of annular two-phase flow
 - Drop deposition mass flux: :math:`D`
-- Film entrainement mass flux: :math:`E`
+- Film entrainment mass flux: :math:`E`
 - Vapor/film interfacial shear stress: :math:`\tau_{v,f}^n`
 - Vapor/drop interfacial shear stress: :math:`\tau_{v,d}^n`
-- Wall shear stress on the liquid film: :math:`\tau_{w,f}^n`
+- Wall shear stress on the liquid film: :math:`\tau_{wall,f}^n`
 - Drop interfacial area and volume: :math:`A_d`, :math:`V_d`
 
-The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.ThreeField.Film` and :class:`Solvers.ThreeField.Drop`, which the users can modify to suit specific simulation needs.
+The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.ThreeField.Film` and :class:`Solvers.ThreeField.Drop`, which users can modify to suit specific simulation needs.
 
 In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 

@@ -45,6 +45,14 @@ classdef Options < Inputs.Input
 
         % Three-field solver options
 
+        OAFEQUILMAXITER  (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find equilibrium at onset of annular flow
+        OAFEQUILTOL      (1,1) double  {mustBeNumeric}                     = 1E-4                  % Target film mass flow rate tolerance to find equilibrium at onset of annular flow [kg/s/m]
+        UDEQUILMAXITER   (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find droplet equilibrium velocity
+        UDEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target drop force tolerance to find droplet equilibrium velocity [N/m^3]
+        UFEQUILMAXITER   (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film equilibrium velocity
+        UFEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target film force tolerance to find film equilibrium velocity [N/m^3]
+        ENTNUMMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film entrainment number
+        ENTNUMTOL        (1,1) double  {mustBeNumeric}                     = 1E-2                  % Target velocity slip tolerance to find film entrainment number [-]
         ERRORWF          (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
         ERRORUF          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Film velocity error target in inner iterations [m/s]
         ERRORUD          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Drop velocity error target in inner iterations [m/s]

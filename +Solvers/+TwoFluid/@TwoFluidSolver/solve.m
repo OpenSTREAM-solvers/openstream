@@ -33,7 +33,7 @@ twfSolver.inputSet.session.log.diaryOn();
 twfSolver.inputSet.session.log.openLog('keepLogOpen', true);
 
 if twfSolver.STATE ~= SolverState.UNSOLVED
-    error('This solver needs to be reinitialized before solving.');
+    error('OpenSTREAM:TwoFluidSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
 else
     twfSolver.log('\n\n-------------------------------------------- Two-fluid solver run initiated --------------------------------------------\n')
 
@@ -104,6 +104,7 @@ function solver(solveINIT)
     % Time loop
     for tIdx = 2:length(liquid)                                            % Loop over time steps
         
+        timestepconverged = true;
         twfSolver.log('Time %5.2f [s]',liquid(tIdx).TIME)
 
         DT = liquid(tIdx).DT;                                              % [s] Current time step size
@@ -225,6 +226,7 @@ function solver(solveINIT)
                     
                 elseif itr == options.MAXITER
                     % set SOLVED flag to SOLVEDNOTCONVERGED
+                    timestepconverged = false;
                     twfSolver.STATE = SolverState.SOLVEDNOTCONVERGED;
                     break;
                 end
@@ -265,6 +267,9 @@ function solver(solveINIT)
             if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
                 
                 % Indicate init converged
+                if ~timestepconverged
+                    twfSolver.warning('Temporal convergence reached, but point convergence criteria was not reached in the final pseudo-time step');
+                end
                 twfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
                 
                 twfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
@@ -286,7 +291,7 @@ function solver(solveINIT)
                 
             % otherwise, not converged
             else
-                twfSolver.STATE = "INITIALSTEPNOTCONVERGED";
+                twfSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
                 twfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence

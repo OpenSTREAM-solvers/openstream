@@ -70,7 +70,6 @@ classdef Session < handle
             arguments
                 session                 Session.Session
                 LOGMODE        (1,1)    Session.LogMode  = Session.LogMode.LOGTOCONSOLEONLY
-                % LogMode
                 opts.LOGFID    (1,1)    int32            = -1
             end
 
@@ -94,18 +93,23 @@ classdef Session < handle
             % closes open files and diaries if necessary, and creates the directory.
 
             % Check if session directory is legal and/or exists
+            % If the folder exists, close any open files in the folder and
+            % try to remove the folder all together.
             if ~Session.isLegalPath(obj.directory)
                 throw( ...
                     MException( ...
-                    'LogError:IllegalSessionDirectoryError', ...
+                    'OpenSTREAM:Session:IllegalSessionDirectoryError', ...
                     'Session directory %s is not a legal path', obj.directory ...
                     ) ...
                     );
             elseif isfolder(obj.directory)
+
+                % If overwriteFiles is false, throw error about the session
+                % directory existing. Otherwise, try to delete it.
                 if ~obj.overwriteFiles
                     throw( ...
                         MException( ...
-                        'LogError:ExistingSessionDirectoryError', ...
+                        'OpenSTREAM:Session:ExistingSessionDirectoryError', ...
                         'Session directory %s already exists.', obj.directory ...
                         ) ...
                         );
@@ -116,6 +120,9 @@ classdef Session < handle
                     else
                         openFileIDs = openedFiles();
                     end
+                    % Close any file that is in the session directory
+                    %   TODO: Why is this neccessary? Closing files in this
+                    %   manner may interfere with parallel sessions.
                     for fid = openFileIDs
                         % Retrieve file directory
                         floc = fopen(fid);

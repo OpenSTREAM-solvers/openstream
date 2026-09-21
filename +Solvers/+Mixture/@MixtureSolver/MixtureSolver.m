@@ -138,7 +138,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % Setup DP structure
             % Grav:     [Pa] Gravitational pressure drop
             % Wall:     [Pa] Wall friction pressure drop
-            % Acc_z:    [pa] Spatial acceleration pressure drop
+            % Acc_z:    [Pa] Spatial acceleration pressure drop
             % Acc_t:    [Pa] Temporal acceleration pressure drop
             % Acc_s:    [Pa] Slip-induced temporal acceleration pressure drop
             % K:        [Pa] Local pressure drop
@@ -480,7 +480,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     "animationSeries", [mixs.TIME]);
             end
 
-            plotter.setZs(z);
+            plotter.setXs(z);
 
             function tf = displayVariable(memberList)
                 tf = any(ismember(memberList,upper(opts.display)));
@@ -499,18 +499,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle',         'Wall heat flux', ...
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Wall heat flux [W/m^2]');
-                    plotter.plotz(  bcHFLUX{idx}        ,'bc'         ,'DisplayName','Boundary Condition');
-                    plotter.plotz(mix.HFLUX(opts.zIdx,:),'Mixture'                                       );
+                    plotter.plot(  bcHFLUX{idx}        ,'bc'         ,'DisplayName','Boundary Condition');
+                    plotter.plot(mix.HFLUX(opts.zIdx,:),'Mixture'                                       );
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM
-                        plotter.plotz(mix.liquid.HFLUX(opts.zIdx)        ,'Liquid'                                              );
-                        plotter.plotz(mix.vapor.HFLUX(opts.zIdx)         ,'Vapor'                                               );
-                        plotter.plotz(mix.vapor.HFLUXWALEVAP(opts.zIdx)  ,'Evaporation','DisplayName','Wall evaporation'        );
+                        plotter.plot(mix.liquid.HFLUX(opts.zIdx)        ,'Liquid'                                              );
+                        plotter.plot(mix.vapor.HFLUX(opts.zIdx)         ,'Vapor'                                               );
+                        plotter.plot(mix.vapor.HFLUXWALEVAP(opts.zIdx)  ,'Evaporation','DisplayName','Wall evaporation'        );
                     end
                     if opts.nearWall
-                        plotter.plotz(mix.NEARWALL.HFLUX(opts.zIdx,:)    ,'NearWall','DisplayName','Near-wall heat flux to bulk');
+                        plotter.plot(mix.NEARWALL.HFLUX(opts.zIdx,:)    ,'NearWall','DisplayName','Near-wall heat flux to bulk');
                     end
                     if model.CBT ~= InputEnums.CBT.NONE
-                        plotter.plotz(mix.CHF(opts.zIdx)               ,'CHF'                                                   );
+                        plotter.plot(mix.CHF(opts.zIdx)               ,'CHF'                                                   );
                     end
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
@@ -530,11 +530,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'xlabel'   ,    'Axial position [m]', ...
                         'ylabel'   , 'Mass flow rate [kg/s]');
 
-                    plotter.plotz(mix.W(opts.zIdx)       ,'Mixture');
-                    plotter.plotz(mix.liquid.W(opts.zIdx),'Liquid' );
-                    plotter.plotz(mix.vapor.W(opts.zIdx) ,'Vapor'  );
+                    plotter.plot(mix.W(opts.zIdx)       ,'Mixture');
+                    plotter.plot(mix.liquid.W(opts.zIdx),'Liquid' );
+                    plotter.plot(mix.vapor.W(opts.zIdx) ,'Vapor'  );
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM && geom.NWALL > 1
-                        plotter.plotz(mix.MRM.WV(opts.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
+                        plotter.plot(mix.MRM.WV(opts.zIdx,:) ,'WallVapor','DisplayName','Vapor (wall level)');
                     end
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                     ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
@@ -552,12 +552,12 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle',     'Pressure drops', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   , 'Pressure drop [Pa]');
-                    plotter.plotz(mix.DPSUM.Grav(opts.zIdx) ,'Gravitational'                     )
-                    plotter.plotz(mix.DPSUM.Wall(opts.zIdx) ,'Wall'                              )
-                    plotter.plotz(mix.DPSUM.Acc_z(opts.zIdx),'Z'           ,'DisplayName','Acc Z')
-                    plotter.plotz(mix.DPSUM.Acc_t(opts.zIdx)+mix.DPSUM.Acc_s(opts.zIdx),'T'           ,'DisplayName','Acc t')
-                    plotter.plotz(mix.DPSUM.K(opts.zIdx)    ,'Local'                             )
-                    plotter.plotz(mix.DPSUM.Tot(opts.zIdx)  ,'Total'                             )
+                    plotter.plot(mix.DPSUM.Grav(opts.zIdx) ,'Gravitational'                     )
+                    plotter.plot(mix.DPSUM.Wall(opts.zIdx) ,'Wall'                              )
+                    plotter.plot(mix.DPSUM.Acc_z(opts.zIdx),'Z'           ,'DisplayName','Acc Z')
+                    plotter.plot(mix.DPSUM.Acc_t(opts.zIdx)+mix.DPSUM.Acc_s(opts.zIdx),'T'           ,'DisplayName','Acc t')
+                    plotter.plot(mix.DPSUM.K(opts.zIdx)    ,'Local'                             )
+                    plotter.plot(mix.DPSUM.Tot(opts.zIdx)  ,'Total'                             )
                     plotter.legend('show', "Location", 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -571,9 +571,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle',         'Velocities', ...
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,     'Velocity [m/s]');
-                    plotter.plotz(mix.U(opts.zIdx)       ,'Mixture')
-                    plotter.plotz(mix.liquid.U(opts.zIdx),'Liquid' )
-                    plotter.plotz(mix.vapor.U(opts.zIdx) ,'Vapor'  )
+                    plotter.plot(mix.U(opts.zIdx)       ,'Mixture')
+                    plotter.plot(mix.liquid.U(opts.zIdx),'Liquid' )
+                    plotter.plot(mix.vapor.U(opts.zIdx) ,'Vapor'  )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -587,9 +587,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle','Hydrodynamic accelerations', ...
                         'xlabel'   ,        'Axial position [m]', ...
                         'ylabel'   ,      'Acceleration [m/s^2]');
-                    plotter.plotz(mix.MDER.U_z(opts.zIdx),'Z','DisplayName','Convective')
-                    plotter.plotz(mix.MDER.U_t(opts.zIdx),'T','DisplayName','Local'     )
-                    plotter.plotz(mix.MDER.U(opts.zIdx)  ,'Mixture'                     )
+                    plotter.plot(mix.MDER.U_z(opts.zIdx),'Z','DisplayName','Convective')
+                    plotter.plot(mix.MDER.U_t(opts.zIdx),'T','DisplayName','Local'     )
+                    plotter.plot(mix.MDER.U(opts.zIdx)  ,'Mixture'                     )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -604,18 +604,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'xlabel'   , 'Axial position [m]', ...
                         'ylabel'   ,    'Enthalpy [J/kg]');
 
-                    plotter.plotz(mix.H(opts.zIdx)       ,'Mixture');
-                    plotter.plotz(mix.liquid.H(opts.zIdx),'Liquid' );
-                    plotter.plotz(mix.vapor.H(opts.zIdx) ,'Vapor'  );
+                    plotter.plot(mix.H(opts.zIdx)       ,'Mixture');
+                    plotter.plot(mix.liquid.H(opts.zIdx),'Liquid' );
+                    plotter.plot(mix.vapor.H(opts.zIdx) ,'Vapor'  );
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM && geom.NWALL > 1
-                        plotter.plotz(mix.MRM.HV(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor (wall level)');
+                        plotter.plot(mix.MRM.HV(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor (wall level)');
                     end
                     if opts.nearWall
-                        plotter.plotz(mix.NEARWALL.H(opts.zIdx,:)     ,'NearWall' ,'DisplayName','Near-wall'         );
-                        plotter.plotz(mix.NEARWALL.HBULK(opts.zIdx,:) ,'Bulk'     ,'DisplayName','Bulk'              );
+                        plotter.plot(mix.NEARWALL.H(opts.zIdx,:)     ,'NearWall' ,'DisplayName','Near-wall'         );
+                        plotter.plot(mix.NEARWALL.HBULK(opts.zIdx,:) ,'Bulk'     ,'DisplayName','Bulk'              );
                     end
-                    plotter.plotz(repmat(fld(idx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
-                    plotter.plotz(repmat(fld(idx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
+                    plotter.plot(repmat(fld(idx).HF,mixSolver.NZ,1),'SatLiq','DisplayName','Sat liquid');
+                    plotter.plot(repmat(fld(idx).HG,mixSolver.NZ,1),'SatVap','DisplayName','Sat vapor' );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -632,9 +632,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle',         'Rates of change of enthalpy', ...
                         'xlabel'   ,                  'Axial position [m]', ...
                         'ylabel'   , 'Rate of change of enthalpy [J/kg/s]');
-                    plotter.plotz(mix.MDER.H_z(opts.zIdx),'Z','DisplayName','Convective')
-                    plotter.plotz(mix.MDER.H_t(opts.zIdx),'T','DisplayName',     'Local')
-                    plotter.plotz(mix.MDER.H(opts.zIdx)  ,'Mixture'                     )
+                    plotter.plot(mix.MDER.H_z(opts.zIdx),'Z','DisplayName','Convective')
+                    plotter.plot(mix.MDER.H_t(opts.zIdx),'T','DisplayName',     'Local')
+                    plotter.plot(mix.MDER.H(opts.zIdx)  ,'Mixture'                     )
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     if opts.obstructions
@@ -648,15 +648,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'tileTitle', 'Void fraction and qualities', ...
                         'xlabel'   ,          'Axial position [m]', ...
                         'ylabel'   , 'Quality / Void fraction [-]');
-                    plotter.plotz(mix.XEQ(opts.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
-                    plotter.plotz(mix.X(opts.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
+                    plotter.plot(mix.XEQ(opts.zIdx),'Equil'       ,'DisplayName','Equilibrium quality')
+                    plotter.plot(mix.X(opts.zIdx)  ,'Vapor'       ,'DisplayName','Vapor mass quality' )
                     if model.THERMALNONEQ == InputEnums.THERMALNONEQ.MRM && geom.NWALL > 1
-                        plotter.plotz(mix.MRM.X(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
+                        plotter.plot(mix.MRM.X(opts.zIdx,:)         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
                     end
-                    plotter.plotz(mix.VF(opts.zIdx) ,'VoidFraction','DisplayName','Void fraction'      );
+                    plotter.plot(mix.VF(opts.zIdx) ,'VoidFraction','DisplayName','Void fraction'      );
                     if opts.nearWall
-                        plotter.plotz(mix.NEARWALL.XEQ(opts.zIdx,:)  ,'NearWall' ,'DisplayName','Near-wall equilibrium quality'  );
-                        plotter.plotz(mix.NEARWALL.XBULK(opts.zIdx,:),'Bulk'     ,'DisplayName','Bulk equilibrium quality'       );
+                        plotter.plot(mix.NEARWALL.XEQ(opts.zIdx,:)  ,'NearWall' ,'DisplayName','Near-wall equilibrium quality'  );
+                        plotter.plot(mix.NEARWALL.XBULK(opts.zIdx,:),'Bulk'     ,'DisplayName','Bulk equilibrium quality'       );
                     end
                     plotter.legend('show', "Location", 'best');
                     plotter.xlim([min(z) max(z)]);
@@ -675,11 +675,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'xlabel'   ,              'Axial position [m]', ...
                         'ylabel'   , ['Temperature [' opts.unitTemp ']']);
 
-                    plotter.plotz(mix.T(opts.zIdx)       +dTemp,'Mixture');
-                    plotter.plotz(mix.liquid.T(opts.zIdx)+dTemp,'Liquid' );
-                    plotter.plotz(mix.vapor.T(opts.zIdx) +dTemp,'Vapor'  );
-                    plotter.plotz(mix.TWALL(opts.zIdx)   +dTemp,'Wall'   );
-                    plotter.plotz(repmat(fld(idx).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
+                    plotter.plot(mix.T(opts.zIdx)       +dTemp,'Mixture');
+                    plotter.plot(mix.liquid.T(opts.zIdx)+dTemp,'Liquid' );
+                    plotter.plot(mix.vapor.T(opts.zIdx) +dTemp,'Vapor'  );
+                    plotter.plot(mix.TWALL(opts.zIdx)   +dTemp,'Wall'   );
+                    plotter.plot(repmat(fld(idx).TSAT,mixSolver.NZ,1)+dTemp,'Saturation');
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -697,10 +697,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   , 'Mass exchange [kg/s/m]');
 
-                    plotter.plotz(mix.MWALEVAP(opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plotz(mix.MINTEVAP(opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                    plotter.plotz(mix.MINTCOND(opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                    plotter.plotz(mix.MTOT(opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(mix.MWALEVAP(opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plot(mix.MINTEVAP(opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plot(mix.MINTCOND(opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plot(mix.MTOT(opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -717,11 +717,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'xlabel'   ,     'Axial position [m]', ...
                         'ylabel'   ,  'Energy exchange [W/m]');
 
-                    plotter.plotz(mix.HWALHEAT(opts.zIdx),'Wall'           ,'DisplayName','Wall heat rate'          );
-                    plotter.plotz(mix.HWALEVAP(opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plotz(mix.HINTEVAP(opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
-                    plotter.plotz(mix.HINTCOND(opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
-                    plotter.plotz(mix.HTOT(opts.zIdx)    ,'Total'                                                   );
+                    plotter.plot(mix.HWALHEAT(opts.zIdx),'Wall'           ,'DisplayName','Wall heat rate'          );
+                    plotter.plot(mix.HWALEVAP(opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
+                    plotter.plot(mix.HINTEVAP(opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plot(mix.HINTCOND(opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
+                    plotter.plot(mix.HTOT(opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
                     ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -738,11 +738,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                         'xlabel'   ,  'Axial position [m]', ...
                         'ylabel'   , 'Relaxation time [s]');
                     if ismember('MRM', model.THERMALNONEQ)
-                        plotter.plotz(mix.MRM.TEVAP(opts.zIdx,:)      ,'InterfacialEvap','DisplayName','Interfacial evaporation'  )
-                        plotter.plotz(mix.MRM.TCOND(opts.zIdx,:)      ,'InterfacialCond','DisplayName','Interfacial condensation' )
+                        plotter.plot(mix.MRM.TEVAP(opts.zIdx,:)      ,'InterfacialEvap','DisplayName','Interfacial evaporation'  )
+                        plotter.plot(mix.MRM.TCOND(opts.zIdx,:)      ,'InterfacialCond','DisplayName','Interfacial condensation' )
                     end
                     if opts.nearWall
-                        plotter.plotz(mix.NEARWALL.TRELAX(opts.zIdx,:),'NearWall'       ,'DisplayName','Near-wall energy transfer')
+                        plotter.plot(mix.NEARWALL.TRELAX(opts.zIdx,:),'NearWall'       ,'DisplayName','Near-wall energy transfer')
                     end
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
@@ -850,7 +850,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter = Solvers.SolverPlotter( ...
                 sprintf('Time distributions of mixture parameters at %0.3f [m] %s', z(zIdx), solveMode), ...
                 opt.wall,'arrangement',opt.arrangement);
-            plotter.setZs(time);
+            plotter.setXs(time);
 
             % Wall heat flux
             if any(ismember({'HFLUX','ALL'},opt.display))
@@ -858,18 +858,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',         'Wall heat flux', ...
                     'xlabel'   ,               'Time [s]', ...
                     'ylabel'   , 'Wall heat flux [W/m^2]');
-                plotter.plotz(             bcHFLUX               ,'bc'     ,'DisplayName','Boundary Condition');
-                plotter.plotz(mix.transient('HFLUX','zIdx',zIdx)','Mixture'                                   );
+                plotter.plot(             bcHFLUX               ,'bc'     ,'DisplayName','Boundary Condition');
+                plotter.plot(mix.transient('HFLUX','zIdx',zIdx)','Mixture'                                   );
                 if ismember('MRM',model.THERMALNONEQ)
-                    plotter.plotz(mix.transient('liquid.HFLUX'       ,'zIdx',zIdx)','Liquid'                                                );
-                    plotter.plotz(mix.transient( 'vapor.HFLUX'       ,'zIdx',zIdx)','Vapor'                                                 );
-                    plotter.plotz(mix.transient( 'vapor.HFLUXWALEVAP','zIdx',zIdx)','Evaporation','DisplayName','Wall evaporation'          );
+                    plotter.plot(mix.transient('liquid.HFLUX'       ,'zIdx',zIdx)','Liquid'                                                );
+                    plotter.plot(mix.transient( 'vapor.HFLUX'       ,'zIdx',zIdx)','Vapor'                                                 );
+                    plotter.plot(mix.transient( 'vapor.HFLUXWALEVAP','zIdx',zIdx)','Evaporation','DisplayName','Wall evaporation'          );
                 end
                 if opt.nearWall
-                    plotter.plotz(mix.transient('NEARWALL.HFLUX','zIdx',zIdx)'     ,'NearWall'  ,'DisplayName','Near-wall heat flux to bulk');
+                    plotter.plot(mix.transient('NEARWALL.HFLUX','zIdx',zIdx)'     ,'NearWall'  ,'DisplayName','Near-wall heat flux to bulk');
                 end
                 if ~strcmp(model.CBT,'NONE')
-                    plotter.plotz(mix.transient('CHF'                ,'zIdx',zIdx)','CHF'                                                   );
+                    plotter.plot(mix.transient('CHF'                ,'zIdx',zIdx)','CHF'                                                   );
                 end
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -883,11 +883,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',       'Mass flow rates', ...
                     'xlabel'   ,              'Time [s]', ...
                     'ylabel'   , 'Mass flow rate [kg/s]');
-                plotter.plotz(mix.transient(       'W','zIdx',zIdx)','Mixture');
-                plotter.plotz(mix.transient('liquid.W','zIdx',zIdx)','Liquid' );
-                plotter.plotz(mix.transient( 'vapor.W','zIdx',zIdx)','Vapor'  );
+                plotter.plot(mix.transient(       'W','zIdx',zIdx)','Mixture');
+                plotter.plot(mix.transient('liquid.W','zIdx',zIdx)','Liquid' );
+                plotter.plot(mix.transient( 'vapor.W','zIdx',zIdx)','Vapor'  );
                 if all([ismember('MRM',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('MRM.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor (wall level)' );
+                    plotter.plot(mix.transient('MRM.WV','zIdx',zIdx)','WallVapor','DisplayName','Vapor (wall level)' );
                 end
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -901,12 +901,12 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',     'Pressure drops', ...
                     'xlabel'   ,           'Time [s]', ...
                     'ylabel'   , 'Pressure drop [Pa]');
-                plotter.plotz(mix.transient('DPSUM.Grav' ,'zIdx',zIdx)','Gravitational'          );
-                plotter.plotz(mix.transient('DPSUM.Wall' ,'zIdx',zIdx)','Wall'                   );
-                plotter.plotz(mix.transient('DPSUM.Acc_z','zIdx',zIdx)','Z','DisplayName','Acc Z');
-                plotter.plotz(mix.transient('DPSUM.Acc_t','zIdx',zIdx)'+mix.transient('DPSUM.Acc_s','zIdx',zIdx)','T','DisplayName','Acc t');
-                plotter.plotz(mix.transient('DPSUM.K'    ,'zIdx',zIdx)','Local'                  );
-                plotter.plotz(mix.transient('DPSUM.Tot'  ,'zIdx',zIdx)','Total'                  );
+                plotter.plot(mix.transient('DPSUM.Grav' ,'zIdx',zIdx)','Gravitational'          );
+                plotter.plot(mix.transient('DPSUM.Wall' ,'zIdx',zIdx)','Wall'                   );
+                plotter.plot(mix.transient('DPSUM.Acc_z','zIdx',zIdx)','Z','DisplayName','Acc Z');
+                plotter.plot(mix.transient('DPSUM.Acc_t','zIdx',zIdx)'+mix.transient('DPSUM.Acc_s','zIdx',zIdx)','T','DisplayName','Acc t');
+                plotter.plot(mix.transient('DPSUM.K'    ,'zIdx',zIdx)','Local'                  );
+                plotter.plot(mix.transient('DPSUM.Tot'  ,'zIdx',zIdx)','Total'                  );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -916,9 +916,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',     'Velocities', ...
                     'xlabel'   ,       'Time [s]', ...
                     'ylabel'   , 'Velocity [m/s]');
-                plotter.plotz(mix.transient(       'U','zIdx',zIdx)','Mixture');
-                plotter.plotz(mix.transient('liquid.U','zIdx',zIdx)','Liquid' );
-                plotter.plotz(mix.transient( 'vapor.U','zIdx',zIdx)','Vapor'  );
+                plotter.plot(mix.transient(       'U','zIdx',zIdx)','Mixture');
+                plotter.plot(mix.transient('liquid.U','zIdx',zIdx)','Liquid' );
+                plotter.plot(mix.transient( 'vapor.U','zIdx',zIdx)','Vapor'  );
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -928,9 +928,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle','Hydrodynamic accelerations', ...
                     'xlabel'   ,                  'Time [s]', ...
                     'ylabel'   ,      'Acceleration [m/s^2]');
-                plotter.plotz(mix.transient('MDER.U_z','zIdx',zIdx)','Z','DisplayName','Convective' )
-                plotter.plotz(mix.transient('MDER.U_t','zIdx',zIdx)','T','DisplayName','Local'      )
-                plotter.plotz(mix.transient('MDER.U'  ,'zIdx',zIdx)','Mixture'                      )
+                plotter.plot(mix.transient('MDER.U_z','zIdx',zIdx)','Z','DisplayName','Convective' )
+                plotter.plot(mix.transient('MDER.U_t','zIdx',zIdx)','T','DisplayName','Local'      )
+                plotter.plot(mix.transient('MDER.U'  ,'zIdx',zIdx)','Mixture'                      )
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -940,18 +940,18 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',      'Enthalpies', ...
                     'xlabel'   ,        'Time [s]', ...
                     'ylabel'   , 'Enthalpy [J/kg]');
-                plotter.plotz(mix.transient('H','zIdx',zIdx)','Mixture');
-                plotter.plotz(mix.transient('liquid.H','zIdx',zIdx)','Liquid'                           );
-                plotter.plotz(mix.transient( 'vapor.H','zIdx',zIdx)','Vapor'                            );
+                plotter.plot(mix.transient('H','zIdx',zIdx)','Mixture');
+                plotter.plot(mix.transient('liquid.H','zIdx',zIdx)','Liquid'                           );
+                plotter.plot(mix.transient( 'vapor.H','zIdx',zIdx)','Vapor'                            );
                 if all([ismember('MRM',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('MRM.HV','zIdx',zIdx)'        ,'WallVapor','DisplayName','Vapor (wall level)' );
+                    plotter.plot(mix.transient('MRM.HV','zIdx',zIdx)'        ,'WallVapor','DisplayName','Vapor (wall level)' );
                 end
                 if opt.nearWall
-                    plotter.plotz(mix.transient('NEARWALL.H'    ,'zIdx',zIdx)','NearWall' ,'DisplayName','Near-wall'          );
-                    plotter.plotz(mix.transient('NEARWALL.HBULK','zIdx',zIdx)','Bulk'     ,'DisplayName','Bulk'               );
+                    plotter.plot(mix.transient('NEARWALL.H'    ,'zIdx',zIdx)','NearWall' ,'DisplayName','Near-wall'          );
+                    plotter.plot(mix.transient('NEARWALL.HBULK','zIdx',zIdx)','Bulk'     ,'DisplayName','Bulk'               );
                 end
-                plotter.plotz(fld.transient('HF')'                  ,'SatLiq','DisplayName','Sat liquid');
-                plotter.plotz(fld.transient('HG')'                  ,'SatVap','DisplayName','Sat vapor' );
+                plotter.plot(fld.transient('HF')'                  ,'SatLiq','DisplayName','Sat liquid');
+                plotter.plot(fld.transient('HG')'                  ,'SatVap','DisplayName','Sat vapor' );
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
@@ -964,9 +964,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',         'Rates of change of enthalpy', ...
                     'xlabel'   ,                            'Time [s]', ...
                     'ylabel'   , 'Rate of change of enthalpy [J/kg/s]');
-                plotter.plotz(mix.transient('MDER.H_z','zIdx',zIdx)','Z','DisplayName','Convective')
-                plotter.plotz(mix.transient('MDER.H_t','zIdx',zIdx)','T','DisplayName','Local'     )
-                plotter.plotz(mix.transient('MDER.H'  ,'zIdx',zIdx)','Mixture'                     )
+                plotter.plot(mix.transient('MDER.H_z','zIdx',zIdx)','Z','DisplayName','Convective')
+                plotter.plot(mix.transient('MDER.H_t','zIdx',zIdx)','T','DisplayName','Local'     )
+                plotter.plot(mix.transient('MDER.H'  ,'zIdx',zIdx)','Mixture'                     )
                 plotter.legend('show', 'Location', 'best');
             end
 
@@ -976,15 +976,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle', 'Void fraction and qualities', ...
                     'xlabel'   ,                    'Time [s]', ...
                     'ylabel'   , 'Quality / Void fraction [-]');
-                plotter.plotz(mix.transient('XEQ','zIdx',zIdx)','Equil','DisplayName','Equilibrium quality');
-                plotter.plotz(mix.transient('X'  ,'zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
+                plotter.plot(mix.transient('XEQ','zIdx',zIdx)','Equil','DisplayName','Equilibrium quality');
+                plotter.plot(mix.transient('X'  ,'zIdx',zIdx)','Vapor','DisplayName','Vapor mass quality' );
                 if all([ismember('MRM',model.THERMALNONEQ) geom.NWALL > 1])
-                    plotter.plotz(mix.transient('MRM.X','zIdx',zIdx)'         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
+                    plotter.plot(mix.transient('MRM.X','zIdx',zIdx)'         ,'WallVapor','DisplayName','Vapor mass quality (wall level)');
                 end
-                plotter.plotz(mix.transient('VF' ,'zIdx',zIdx)','VF'   ,'DisplayName','Void faction'       );
+                plotter.plot(mix.transient('VF' ,'zIdx',zIdx)','VF'   ,'DisplayName','Void faction'       );
                 if opt.nearWall
-                    plotter.plotz(mix.transient('NEARWALL.XEQ'  ,'zIdx',zIdx)','NearWall','DisplayName','Near-wall equilibrium quality'   );
-                    plotter.plotz(mix.transient('NEARWALL.XBULK','zIdx',zIdx)','Bulk'    ,'DisplayName','Bulk equilibrium quality'        );
+                    plotter.plot(mix.transient('NEARWALL.XEQ'  ,'zIdx',zIdx)','NearWall','DisplayName','Near-wall equilibrium quality'   );
+                    plotter.plot(mix.transient('NEARWALL.XBULK','zIdx',zIdx)','Bulk'    ,'DisplayName','Bulk equilibrium quality'        );
                 end
                 plotter.legend("show", "Location", 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
@@ -998,11 +998,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'tileTitle',                    'Temperatures', ...
                     'xlabel'   ,                        'Time [s]', ...
                     'ylabel'   , ['Temperature [' opt.unitTemp ']']);
-                plotter.plotz(mix.transient('T','zIdx',zIdx)'       +dTemp,'Mixture'   );
-                plotter.plotz(mix.transient('liquid.T','zIdx',zIdx)'+dTemp,'Liquid'    );
-                plotter.plotz(mix.transient('vapor.T','zIdx',zIdx)' +dTemp,'Vapor'     );
-                plotter.plotz(mix.transient('TWALL','zIdx',zIdx)'   +dTemp,'Wall'      );
-                plotter.plotz(fld.transient('TSAT')'                +dTemp,'Saturation');
+                plotter.plot(mix.transient('T','zIdx',zIdx)'       +dTemp,'Mixture'   );
+                plotter.plot(mix.transient('liquid.T','zIdx',zIdx)'+dTemp,'Liquid'    );
+                plotter.plot(mix.transient('vapor.T','zIdx',zIdx)' +dTemp,'Vapor'     );
+                plotter.plot(mix.transient('TWALL','zIdx',zIdx)'   +dTemp,'Wall'      );
+                plotter.plot(fld.transient('TSAT')'                +dTemp,'Saturation');
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;
                 ymax = max(arrayfun(@(x) max(x.YLim),plotter.gca))+1E-6;
@@ -1016,10 +1016,10 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'xlabel'   ,               'Time [s]', ...
                     'ylabel'   , 'Mass exchange [kg/s/m]');
 
-                plotter.plotz(mix.transient('MWALEVAP','zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(mix.transient('MINTEVAP','zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(mix.transient('MINTCOND','zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(mix.transient('MTOT'    ,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(mix.transient('MWALEVAP','zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
+                plotter.plot(mix.transient('MINTEVAP','zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
+                plotter.plot(mix.transient('MINTCOND','zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
+                plotter.plot(mix.transient('MTOT'    ,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -1032,11 +1032,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'xlabel'   ,               'Time [m]', ...
                     'ylabel'   ,  'Energy exchange [W/m]');
 
-                plotter.plotz(mix.transient('HWALHEAT','zIdx',zIdx)','Wall'           ,'DisplayName','Wall heat rate'          );
-                plotter.plotz(mix.transient('HWALEVAP','zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plotz(mix.transient('HINTEVAP','zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
-                plotter.plotz(mix.transient('HINTCOND','zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
-                plotter.plotz(mix.transient('HTOT'    ,'zIdx',zIdx)','Total'                                                   );
+                plotter.plot(mix.transient('HWALHEAT','zIdx',zIdx)','Wall'           ,'DisplayName','Wall heat rate'          );
+                plotter.plot(mix.transient('HWALEVAP','zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
+                plotter.plot(mix.transient('HINTEVAP','zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
+                plotter.plot(mix.transient('HINTCOND','zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
+                plotter.plot(mix.transient('HTOT'    ,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
                 plotter.ylim([-ymax ymax]);
@@ -1049,11 +1049,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     'xlabel'   ,                 'Time [s]', ...
                     'ylabel'   ,      'Relaxation time [s]');
                 if ismember('MRM',model.THERMALNONEQ)
-                    plotter.plotz(mix.transient('MRM.TEVAP','zIdx',zIdx)'      ,'InterfacialEvap','DisplayName','Interfacial evaporation  ')
-                    plotter.plotz(mix.transient('MRM.TCOND','zIdx',zIdx)'      ,'InterfacialCond','DisplayName','Interfacial condensation ')
+                    plotter.plot(mix.transient('MRM.TEVAP','zIdx',zIdx)'      ,'InterfacialEvap','DisplayName','Interfacial evaporation  ')
+                    plotter.plot(mix.transient('MRM.TCOND','zIdx',zIdx)'      ,'InterfacialCond','DisplayName','Interfacial condensation ')
                 end
                 if opt.nearWall
-                    plotter.plotz(mix.transient('NEARWALL.TRELAX','zIdx',zIdx)','NearWall'       ,'DisplayName','Near-wall energy transfer')
+                    plotter.plot(mix.transient('NEARWALL.TRELAX','zIdx',zIdx)','NearWall'       ,'DisplayName','Near-wall energy transfer')
                 end
                 plotter.legend('show', 'Location', 'best');
                 ymin = min(arrayfun(@(x) min(x.YLim),plotter.gca))-1E-6;

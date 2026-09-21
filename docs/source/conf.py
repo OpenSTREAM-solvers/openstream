@@ -25,7 +25,8 @@ extensions = [
     'sphinx_copybutton',
     'sphinxcontrib.bibtex', 
     'sphinx_new_tab_link',
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.autosectionlabel',
+    'sphinx_design'
 ]
 
 autosectionlabel_prefix_document = True
@@ -66,7 +67,7 @@ toc_object_entries = True
 toc_object_entries_show_parents = 'all'
 
 autodoc_default_flags = ['members']
-autosummary_generate = True
+autosummary_generate = False
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

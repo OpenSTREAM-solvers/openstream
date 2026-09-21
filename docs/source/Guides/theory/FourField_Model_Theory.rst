@@ -45,9 +45,9 @@ where:
 
 **2. Momentum conservation**
 
-Base Film: :math:`\rho_{ls} \delta_b^n (\frac{\partial u_b^n}{\partial t} + u_b^n \frac{\partial u_b^n}{\partial z}) = D_b (u_d - u_b^n) + \Psi_w^n (u_w^n - u_b^n) - \delta_b^n (\frac{\partial p}{\partial z} + g \rho_{ls}) + \beta_b^n \tau_{v,b}^n + (1 - \beta_b^n) \tau_{w,b}^n - \tau_{wall,b}^n`
+Base Film: :math:`\rho_{ls} \delta_b^n (\frac{\partial u_b^n}{\partial t} + u_b^n \frac{\partial u_b^n}{\partial z}) = D_b (u_d - u_b^n) + \Psi_w^n (u_w^n - u_b^n) - \delta_b^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + \beta_b^n \tau_{v,b}^n + (1 - \beta_b^n) \tau_{w,b}^n - \tau_{wall,b}^n`
 
-Disturbance Waves: :math:`\rho_{ls} \delta_w^n (\frac{\partial u_w^n}{\partial t} + u_w^n \frac{\partial u_w^n}{\partial z}) = D_w (u_d - u_w^n) + \Psi_b^n (u_b^n - u_w^n) - \delta_w^n (\frac{\partial p}{\partial z} + g \rho_{ls}) + (1 - \beta_b^n) (\tau_{v,w}^n - \tau_{w,b}^n)`
+Disturbance Waves: :math:`\rho_{ls} \delta_w^n (\frac{\partial u_w^n}{\partial t} + u_w^n \frac{\partial u_w^n}{\partial z}) = D_w (u_d - u_w^n) + \Psi_b^n (u_b^n - u_w^n) - \delta_w^n (\frac{\partial p}{\partial z} + \cos\theta g \rho_{ls}) + (1 - \beta_b^n) (\tau_{v,w}^n - \tau_{w,b}^n)`
 
 where
 
@@ -97,7 +97,7 @@ To complete the conservation equations, several closure models are required:
 - Equilibrium wave number density: :math:`N_w^{eq,n}`
 - Relaxation time associated with wave formation, merging, and dissipation: :math:`t_w^{Relax}`
 
-The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.FourField.Wave` and :class:`Solvers.FourField.Base`, which the users can modify to suit specific simulation needs.
+The selected closure models are defined in the OpenSTREAM model file, chosen from the available options listed in :mod:`InputEnums`. If not explicitly specified by the user, default models are applied as defined in :class:`Inputs.Model`. All closure models are implemented in :class:`Solvers.FourField.Wave` and :class:`Solvers.FourField.Base`, which users can modify to suit specific simulation needs.
 
 In addition, the thermodynamic properties for each phase are computed using `CoolProp <https://coolprop.org/>`_, an open-source thermophysical property library that provides accurate equations of state and transport properties for a wide range of fluids.
 

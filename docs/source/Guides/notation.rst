@@ -1,7 +1,7 @@
 Notation
 ========
 
-This page summarizes the notation conventions used in the OpenSTREAM documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.
+This page summarizes the notation conventions used in the **OpenSTREAM** documentation. The theory pages, solver descriptions, closure model documentation, and implementation notes are kept consistent across the mixture, two-fluid, three-field, and four-field formulations.
 
 General conventions
 -------------------
@@ -83,7 +83,7 @@ Primary variables
      - Gravitational acceleration.
 
 Phase and field subscripts
--------------------------
+--------------------------
 
 The notation distinguishes between thermodynamic phases and computational fields. A phase is a physical state of matter, such as liquid or vapor. A field is a computationally resolved constituent with its own transported variables.
 
@@ -97,7 +97,7 @@ The notation distinguishes between thermodynamic phases and computational fields
    * - :math:`l`
      - liquid phase
      - Used for liquid phase.
-   * - :math:`g`
+   * - :math:`v`
      - vapor phase
      - Used consistently for vapor or gas.
    * - :math:`f`
