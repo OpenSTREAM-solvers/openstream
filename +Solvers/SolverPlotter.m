@@ -73,7 +73,8 @@ classdef SolverPlotter < handle
                 if opts.isAnimation
                     plotters(idx).fh.UserData = struct("NameFormat", plotters(idx).animationTitleFormat, ...
                         "NameSeries", plotters(idx).animationSeries, ...
-                        "isPlaying", false);
+                        "isPlaying", false, ...
+                        "loop", false);
                 end
 
                 % Add UI if is an animated series
@@ -105,26 +106,34 @@ classdef SolverPlotter < handle
                         String=char(9658), ...   % play; pause: char([124 32 124])
                         UserData=struct('originalSymbol', char(9658)), ...
                         Position=[150,20,30,20], ...
-                        Callback={@playAnimationCallback, false});
+                        Callback=@playAnimationCallback);
 
                     loopButton = uicontrol(plotters(idx).fh, ...
                         Style="togglebutton", ...
-                        String=char(11156), ...
-                        UserData=struct('originalSymbol', char(11156)), ...
-                        Position=[190,20,30,20], ...
-                        Callback={@playAnimationCallback, true});
+                        String="Play Once", ...
+                        UserData=struct('originalSymbol', "Play Once"), ...
+                        Position=[190,20,60,20], ...
+                        Callback=@loopButtonCallback);
+
+                    if numel(opts.animationSeries) > 1
+                        defaultFPS = 1/diff(opts.animationSeries(1:2));
+                    else
+                        defaultFPS = 10;
+                    end
 
                     fpsEdit = uicontrol(plotters(idx).fh, ...
                         Style="edit", ...
                         Tag='fpsEdit', ...
-                        String=num2str(1/diff(opts.animationSeries(1:2))), ...
-                        Position=[230, 20, 30, 20] ...
+                        String=num2str(defaultFPS), ...
+                        UserData = defaultFPS, ...
+                        Position=[260, 20, 30, 20], ...
+                        Callback=@fpsEditCallback...
                         );
 
                     fpsText = uicontrol(plotters(idx).fh, ...
                         Style="text", ...
                         String="fps", ...
-                        Position=[265, 20, 30, 20], ...
+                        Position=[295, 20, 30, 20], ...
                         HorizontalAlignment="left", ...
                         FontSize = 10 ...
                         );
@@ -156,6 +165,25 @@ classdef SolverPlotter < handle
 
                 % Update
                 drawnow limitrate;
+            end
+
+            function fpsEditCallback(src, ~)
+                %FPSEDITCALLBACK Validates fps value
+                
+                % Retrieve new value, convert to double and round to
+                % nearest integer
+                newVal = round(str2double(src.String));
+
+                % If rounded new value is less than 1, set new value to 1
+                if newVal < 1
+                    newVal = 1;
+                elseif isnan(newVal)
+                    newVal = src.UserData;
+                end
+
+                % Set fps to new value
+                src.String = num2str(newVal, '%.0f');
+
             end
 
             function animationCallback(src, ~)
@@ -197,17 +225,17 @@ classdef SolverPlotter < handle
 
                         % Continue to next lh if at last YData
                         if isnan(currentIndex)
-                            if src.Style == "edit"
+                            if contains(src.Style, "edit")
                                 src.String = string(lastIndex);
                             end
                             continue;
                         elseif currentIndex > length(lh.UserData.Data)
-                            if src.Style == "edit"
+                            if contains(src.Style, "edit")
                                 src.String = string(1);
                             end
                             currentIndex = 1;
                         elseif  currentIndex < 1
-                            if src.Style == "edit"
+                            if contains(src.Style, "edit")
                                 src.String = string(length(lh.UserData.Data));
                             end
                             currentIndex = length(lh.UserData.Data);
@@ -248,13 +276,34 @@ classdef SolverPlotter < handle
                 end
             end
 
-            function playAnimationCallback(src, ~, loop)
+            function loopButtonCallback(src, ~)
+                %LOOPBUTTONCALLBACK Method to toggle figure loop userdata
+
+                % Get figure handle
+                fh = src.Parent;
+
+                % Toggle loop
+                if isfield(fh.UserData, 'loop') && fh.UserData.loop
+                    fh.UserData.loop = false;
+                    src.String = "Play Once";  % Play symbol
+                    return;
+                else
+                    fh.UserData.loop = true;
+                    src.String = "Loop";  % Pause symbol
+                end
+            end
+
+            function playAnimationCallback(src, ~)
                 %PLAYANIMATIONCALLBACK Method to handle play/pause animation loop with optional looping
 
                 % Get figure and layout
                 fh = src.Parent;
                 tlh = findobj(fh, 'type', 'tiledlayout');
                 ahs = findobj(tlh, 'type', 'axes');
+
+                % First play to track if we are at the end because we are
+                % restarting or simply end of series.
+                firstPlay = true;
 
                 % Toggle play/pause state
                 if isfield(fh.UserData, 'isPlaying') && fh.UserData.isPlaying
@@ -290,7 +339,9 @@ classdef SolverPlotter < handle
 
                             % Loop or stop
                             if currentIndex > length(lh.UserData.Data)
-                                if loop
+                                if isfield(fh.UserData, 'loop') && fh.UserData.loop
+                                    currentIndex = 1;
+                                elseif firstPlay
                                     currentIndex = 1;
                                 else
                                     currentIndex = lastIndex;
@@ -312,6 +363,9 @@ classdef SolverPlotter < handle
                             lh.UserData.currentIndex = currentIndex;
                         end
                     end
+
+                    % Set firstPlay to false
+                    firstPlay = false;
 
                     % Update figure title and counter if available
                     if isfield(fh.UserData, 'NameFormat') && isfield(fh.UserData, 'NameSeries')
@@ -372,7 +426,16 @@ classdef SolverPlotter < handle
                     defaultName = 'animation.avi';
                 end
 
-                [filename, pathname] = uiputfile({defaultExt, 'Video Files'}, 'Save animation as ...', fullfile(pwd, defaultName));
+                % Ask user for save name and location
+                [filename, pathname] = uiputfile( ...
+                                        {defaultExt, 'Video Files'}, ...
+                                        'Save animation as ...', ...
+                                        fullfile(pwd, defaultName) ...
+                                        );
+                % Detect if user canceled the operation
+                if isnumeric(filename) && filename == 0 && isnumeric(pathname) && pathname == 0
+                    return;
+                end
                 filepath = fullfile(pathname, filename);
 
                 % Add correction file extension if missing
