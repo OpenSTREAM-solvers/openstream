@@ -799,7 +799,7 @@ classdef SolverPlotter < handle
                     % opts.DisplayName exists
                     
                     % Existing Line handles (OAF, plotK can be hidden, so findall)
-                    if opts.DisplayName == "OBSTRUCTION"
+                    if startsWith(opts.DisplayName, "OBSTRUCTION")
                         lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName, 'XData', XData);
                     else
                         lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
@@ -925,12 +925,7 @@ classdef SolverPlotter < handle
             % Ensure klocZ is a row vector
             klocZ = klocZ(:)';
 
-            % Get current Y-axis limits
-            yl = plotters.ylim;
-
-            % Prepare X and Y data for vertical lines with NaN separators
-            %xdata = reshape([klocZ; klocZ; nan(size(klocZ))], 1, [])';
-            %ydata = repmat([yl, nan(length(plotters),1)], 1, numel(klocZ))';
+            % Use ylim as Y-axis data
             ydata='ylim';
 
             for i=1:length(klocZ)
@@ -938,7 +933,7 @@ classdef SolverPlotter < handle
                 xdata = [klocZ(i) klocZ(i)];
                
                 % Plot vertical lines
-                plotters.plot(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
+                plotters.plot(ydata, sprintf('OBSTRUCTION_%d',i), 'axisHandle', ah, ...
                     'XData', xdata, 'subset', 1:numel(xdata), ...
                     'plotOptions', {'handleVisibility', 'off'});
             end
