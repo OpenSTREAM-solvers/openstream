@@ -238,9 +238,6 @@ classdef SolverPlotter < handle
                     lhs(i).Location = "none";
                 end
 
-                % Update
-                drawnow limitrate;
-
             end
 
             function fpsEditCallback(src, ~)
@@ -597,7 +594,7 @@ classdef SolverPlotter < handle
                 opts.xlabel = ""
                 opts.ylabel = ""
             end
-
+            
             % Loop through each plotter
             for plotterIdx = 1:length(plotters)
 
@@ -678,7 +675,7 @@ classdef SolverPlotter < handle
                 grid(new_ah(idx), plotter.Grid);
 
                 % Keep track of axes xLim and yLim
-                new_ah(idx).UserData = struct('xlim', [], 'ylim', [], 'vertLineHandles', []);
+                new_ah(idx).UserData = struct('xlim', [], 'ylim', [], 'vertLineHandles', matlab.graphics.chart.primitive.Line.empty);
 
                 % Create listener for ylim change on axes
                 addlistener(new_ah(idx), "YLim", "PostSet", @YLimChangedCallback);
@@ -689,38 +686,27 @@ classdef SolverPlotter < handle
             % When set, lines with HandleVisibility set to off (i.e. simple
             % vertical lines) will have their YData updated to match the
             % new ylim range.
-            function YLimChangedCallback(src, event)
-                
-                %fprintf("ylim callback triggered\n");
+            function YLimChangedCallback(~, event)
 
                 % Retrieve new ylim of axes
                 new_ylim = ylim(event.AffectedObject);
 
                 % Find all simple vertical lines
-                %hidden_lhs = findall(event.AffectedObject,'type', 'line','HandleVisibility','off');
                 hidden_lhs = event.AffectedObject.UserData.vertLineHandles;
 
                 % Adjust each line
-                for i=1:length(hidden_lhs)
+                for lineIdx=1:length(hidden_lhs)
+
+                    hidden_lh = hidden_lhs(lineIdx);
                     
                     % If the YData for the line is truly a simple value
                     % pair, adjust the YData as well as the time series in
                     % LineHandle.UserData.Data(j).yData, at time step j.
-                    if numel(hidden_lhs(i).YData) == 2
-                        hidden_lhs(i).YData = new_ylim;
-                        for j=1:length(hidden_lhs(i).UserData.Data)
-                            hidden_lhs(i).UserData.Data(j).yData = new_ylim;
-                        end
-
-                    % If the simple lines are plotted with NaN delimiters,
-                    % the YData will be updated at the approp. indices.
-                    % This is kept for now if we continue to use this
-                    % method of defining the lines.
-                    % TODO: decide if this is still needed
-                    elseif numel(hidden_lhs(i).YData) == 6
-                        hidden_lhs(i).YData(1:2) = new_ylim;
-                        hidden_lhs(i).YData(4:5) = new_ylim;
+                    if numel(hidden_lh.YData) == 2
+                        hidden_lh.YData = new_ylim;
+                        [hidden_lh.UserData.Data.yData] = deal(new_ylim);
                     end
+
                 end
             end
 
@@ -772,17 +758,20 @@ classdef SolverPlotter < handle
                     XData = opts.XData;
                     % Determine xlim
                     if isempty(ah.UserData.xlim)
-                        xlim(ah, 'auto');
+                        ah.UserData.xlim = xlim(ah, 'auto');
                     else
-                        xlim(ah, [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))]);
+                        ah.UserData.xlim = [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))];
+                        if xlim(ah) ~= ah.UserData.xlim
+                            xlim(ah, ah.UserData.xlim);
+                        end
                     end
                 else
                     XData = plotter.Xs(opts.subset);
-                    xlim(ah, XData([1 end]));
+                    ah.UserData.xlim = XData([1 end]);
+                    if xlim(ah) ~= ah.UserData.xlim
+                        xlim(ah, ah.UserData.xlim);
+                    end
                 end
-
-                % Save ah.UserData.xlim
-                ah.UserData.xlim = xlim(ah);
 
                 % Dual axis
                 if isfield(opts, 'yyaxis')
@@ -798,15 +787,15 @@ classdef SolverPlotter < handle
                     % Check if lh with DisplayName that match
                     % opts.DisplayName exists
                     
-                    % Existing Line handles (OAF, plotK can be hidden, so findall)
+                    % Existing Line handle
                     if startsWith(opts.DisplayName, "OBSTRUCTION")
-                        lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName, 'XData', XData);
+                        lh = findobj(ah.UserData.vertLineHandles, 'DisplayName', opts.DisplayName, 'XData', XData);
                     else
-                        lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
+                        lh = findobj(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
                     end
 
-
-                    % Check if there are any lines at all
+                    % Check if any existing lines match the findall
+                    % criteria
                     if ~isempty(lh)
 
                         % Set flag
@@ -821,8 +810,12 @@ classdef SolverPlotter < handle
                         % Otherwise, the vector is for the current WallIdx.
                         %
                         if (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                            YData = ylim(ah);
-                            %YData = [NaN NaN];
+                            %YData = ylim(ah);
+                            if ~isempty(ah.UserData.ylim)
+                                YData = ah.UserData.ylim;
+                            else
+                                YData = ylim(ah);
+                            end
                         elseif isvector(YData)
                             YData = YData(opts.subset);
                         else
@@ -851,15 +844,24 @@ classdef SolverPlotter < handle
 
                     % Custom plot by YData
                     if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                        drawnow limitrate;
-                        YData= ylim(ah);
+                        % Given 'ylim' literal as YData, use axes ylim as
+                        % YData, and add this vertical line handle to the ah
+                        % UserData struct
+                        if ~isempty(ah.UserData.ylim)
+                            YData = ah.UserData.ylim;
+                        else
+                            drawnow limitrate
+                            YData = ylim(ah);
+                        end
                         lh = plot(ah, XData, YData, 'DisplayName', opts.DisplayName, opts.plotOptions{:});
-                        ah.UserData.vertLineHandles = [ah.UserData.vertLineHandles lh];
+                        ah.UserData.vertLineHandles(end+1) = lh;
 
                     elseif isvector(YData)
+                        % A vector YData means there is only one wall
                         lh = plot(ah, XData, YData(opts.subset), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
                     
                     else
+                        % A matrix YData means there are multiple walls
                         lh = plot(ah, XData, YData(opts.subset, plotter.WallIdx), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
                     end
 
