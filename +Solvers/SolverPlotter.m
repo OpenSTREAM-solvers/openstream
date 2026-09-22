@@ -22,6 +22,7 @@ classdef SolverPlotter < handle
         th                   (1,1)  matlab.graphics.layout.TiledChartLayout                   % Tiled layout handle
         ahs                         matlab.graphics.axis.Axes                                 % Array of axes handles
         isAnimation          (1,1)  logical                                   = false         % Flag indicating if animation is enabled
+        uipanel              (1,1)  matlab.ui.container.Panel                                 % UI Panel handle for animation UI
         animationTitleFormat (1,1)  string                                    = ""            % Format string for animation title
         animationSeries      (:,1)  {isnumeric}                               = 1             % Series of time steps or frames for animation
 
@@ -64,8 +65,41 @@ classdef SolverPlotter < handle
 
                 plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
                 plotters(idx).fh = figure("Name", plotters(idx).Title, SizeChangedFcn=@figureSizeChangeCallback);
+                
+                % Create a wrapper tiledlayout if isAnimation
+                if opts.isAnimation
+                    
+                    % Create wrapper uipanel
+                    %wrapperth = tiledlayout(plotters(idx).fh, 4,1, "TileSpacing","tight", "Padding","tight");
+                    wrapperpanelh = uipanel(plotters(idx).fh, ...
+                                            'BorderType', 'none', ...
+                                            'Tag', 'plot');
+                    
+                    % Create plot tiledlayout and assign to class property
+                    %plotters(idx).th = tiledlayout(wrapperth, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                    plotters(idx).th = tiledlayout(wrapperpanelh, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                    % plotters(idx).th.Layout.Tile=1;
+                    % plotters(idx).th.Layout.TileSpan=[3,1];
+                    
+                    % Create hidden axes in ui tile
+                    % uiah = nexttile(wrapperth, [1 1]);
+                    % uiah.Visible = 'off';
+                    % drawnow;
 
-                plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                    % Create uipanel in this tile
+                    % uiph = uipanel(plotters(idx).fh);
+                    uiph = uipanel(plotters(idx).fh, ...
+                                        'BorderType', 'none', ...
+                                        'Tag', 'ui');
+                    % uiph.Units = 'normalized';
+                    % uiph.UserData.uiah = uiah;
+                    % uiph.Position = uiah.Position;
+                    % uiph.BorderType = 'none';
+                    plotters(idx).uipanel = uiph;
+
+                else
+                    plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                end
                 plotters(idx).th.Title.String = plotters(idx).Title;
                 plotters(idx).th.Title.FontSize = 15;
 
@@ -79,41 +113,51 @@ classdef SolverPlotter < handle
 
                 % Add UI if is an animated series
                 if opts.isAnimation
-                    rewindButton = uicontrol(plotters(idx).fh, ...
+                    rewindButton = uicontrol(plotters(idx).uipanel, ...
                         Style="pushbutton", ...
                         String="<", ...
                         Units="pixels", ...
-                        Position=[20,20,30,20], ...
+                        Position=[20,10,30,20], ...
                         Callback=@animationCallback);
 
-                    advanceButton = uicontrol(plotters(idx).fh, ...
+                    advanceButton = uicontrol(plotters(idx).uipanel, ...
                         Style="pushbutton", ...
                         String=">", ...
                         Units="pixels", ...
-                        Position=[110,20,30,20], ...
+                        Position=[110,10,30,20], ...
                         Callback=@animationCallback);
 
-                    counter = uicontrol(plotters(idx).fh, ...
+                    counter = uicontrol(plotters(idx).uipanel, ...
                         Style="edit", ...
                         Tag='animationCounter', ...
                         Units="pixels", ...
-                        Position=[60,20,40,20], ...
+                        Position=[60,10,40,20], ...
                         Callback= @animationCallback, ...
                         String = 1);
 
-                    playButton = uicontrol(plotters(idx).fh, ...
+                    playButton = uicontrol(plotters(idx).uipanel, ...
                         Style="togglebutton", ...
                         String=char(9658), ...   % play; pause: char([124 32 124])
                         UserData=struct('originalSymbol', char(9658)), ...
-                        Position=[150,20,30,20], ...
+                        Position=[150,10,30,20], ...
                         Callback=@playAnimationCallback);
 
-                    loopButton = uicontrol(plotters(idx).fh, ...
+                    loopButton = uicontrol(plotters(idx).uipanel, ...
                         Style="togglebutton", ...
                         String="Play Once", ...
                         UserData=struct('originalSymbol', "Play Once"), ...
-                        Position=[190,20,60,20], ...
+                        Position=[190,10,60,20], ...
                         Callback=@loopButtonCallback);
+                    
+                    % Adjust loopButton width using String extent
+                    drawnow
+                    loopStringPadding = 5;
+                    loopStringWidth = loopButton.Extent(3);
+                    loopMinWidth = 2*loopStringPadding + loopStringWidth;
+                    if loopButton.Position(3) < loopMinWidth
+                        loopButton.Position(3) = loopMinWidth;
+                    end
+                    loopButton_rightPosition = loopButton.Position(1) + loopButton.Position(3);
 
                     if numel(opts.animationSeries) > 1
                         defaultFPS = 1/diff(opts.animationSeries(1:2));
@@ -121,19 +165,20 @@ classdef SolverPlotter < handle
                         defaultFPS = 10;
                     end
 
-                    fpsEdit = uicontrol(plotters(idx).fh, ...
+                    fpsEdit = uicontrol(plotters(idx).uipanel, ...
                         Style="edit", ...
                         Tag='fpsEdit', ...
                         String=num2str(defaultFPS), ...
                         UserData = defaultFPS, ...
-                        Position=[260, 20, 30, 20], ...
+                        Position=[loopButton_rightPosition + 10, 10, 30, 20], ...
                         Callback=@fpsEditCallback...
                         );
+                    fpsEdit_rightPosition = fpsEdit.Position(1) + fpsEdit.Position(3);
 
-                    fpsText = uicontrol(plotters(idx).fh, ...
+                    fpsText = uicontrol(plotters(idx).uipanel, ...
                         Style="text", ...
                         String="fps", ...
-                        Position=[295, 20, 30, 20], ...
+                        Position=[fpsEdit_rightPosition + 5, 10, 30, 20], ...
                         HorizontalAlignment="left", ...
                         FontSize = 10 ...
                         );
@@ -147,6 +192,36 @@ classdef SolverPlotter < handle
 
             function figureSizeChangeCallback(src, ~)
 
+                % find plot and ui panels
+                plotpanelh = src.findobj('Type', 'uipanel', 'Tag', 'plot');
+                uipanelh = src.findobj('Type', 'uipanel', 'Tag', 'ui');
+
+                if ~isempty(plotpanelh) && ~isempty(uipanelh)
+
+                    % Figure width and height
+                    figUnitOriginal = src.Units;
+    
+                    % set Figure unit to px
+                    src.Units = 'pixel';
+                    
+                    % Get width and height
+                    figW = src.Position(3);
+                    figH = src.Position(4);
+
+                    % Place ui panel at 1, 1, figW, 40px
+                    uipanelh.Units = 'pixel';
+                    uipanelh.Position = [1, 1, figW, 40];
+
+                    % Place plot panel at 1, 41, figW, figH - 40
+                    plotpanelh.Units = 'pixel';
+                    plotpanelh.Position = [1, 41, figW, figH-40];
+
+                    % Restore figure units and draw
+                    src.Units = figUnitOriginal;
+                    drawnow;
+
+                end
+
                 % Find legends
                 lhs = src.findobj("Type", "legend");
 
@@ -156,7 +231,7 @@ classdef SolverPlotter < handle
                 end
 
                 % Update
-                drawnow limitrate;
+                drawnow;
 
                 % Set back to none
                 for i=1:length(lhs)
@@ -165,6 +240,7 @@ classdef SolverPlotter < handle
 
                 % Update
                 drawnow limitrate;
+
             end
 
             function fpsEditCallback(src, ~)
@@ -190,7 +266,7 @@ classdef SolverPlotter < handle
                 % ANIMATIONCALLBACK Method to handle animation control callbacks (rewind, advance, edit)
 
                 % retrieve figure and axes handles
-                fh = src.Parent;
+                fh = ancestor(src, 'figure');
                 tlh = findobj(fh, 'type', 'tiledlayout');
                 ahs = findobj(tlh, 'type', 'axes');
 
@@ -274,13 +350,14 @@ classdef SolverPlotter < handle
                         tlh.Title.FontSize = 15;
                     end
                 end
+
             end
 
             function loopButtonCallback(src, ~)
                 %LOOPBUTTONCALLBACK Method to toggle figure loop userdata
 
                 % Get figure handle
-                fh = src.Parent;
+                fh = ancestor(src, 'figure');
 
                 % Toggle loop
                 if isfield(fh.UserData, 'loop') && fh.UserData.loop
@@ -291,13 +368,14 @@ classdef SolverPlotter < handle
                     fh.UserData.loop = true;
                     src.String = "Loop";  % Pause symbol
                 end
+
             end
 
             function playAnimationCallback(src, ~)
                 %PLAYANIMATIONCALLBACK Method to handle play/pause animation loop with optional looping
 
                 % Get figure and layout
-                fh = src.Parent;
+                fh = ancestor(src, 'figure');
                 tlh = findobj(fh, 'type', 'tiledlayout');
                 ahs = findobj(tlh, 'type', 'axes');
 
