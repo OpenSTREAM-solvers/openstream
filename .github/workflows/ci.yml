@@ -92,7 +92,7 @@ jobs:
         uses: matlab-actions/run-tests@v3
         with:
           output-detail: verbose
-          #source-folder: ./openstream
+          source-folder: ./openstream
 
       # Upload artifacts
       - name: Upload MATLAB test output
@@ -101,5 +101,5 @@ jobs:
         with:
           name: matlab-output-${{ matrix.matlab }}
           path: |
-            tests/**/outputs/**
+            ./openstream/tests/**/outputs/**
           if-no-files-found: warn
