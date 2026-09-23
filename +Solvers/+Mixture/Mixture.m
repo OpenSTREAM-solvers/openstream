@@ -2087,6 +2087,7 @@ classdef Mixture < Solvers.AbstractField
             % Notes:
             %
             % - If no node satisfies the condition, the most upstream node (1) is returned
+            % - If multiple nodes satisfy the condition, the most downstream matching node is returned
 
             % Use saved value if it has been calculated already
             if ~isempty(mix.oafidx_const)
