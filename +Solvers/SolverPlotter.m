@@ -70,32 +70,21 @@ classdef SolverPlotter < handle
                 if opts.isAnimation
                     
                     % Create wrapper uipanel
-                    %wrapperth = tiledlayout(plotters(idx).fh, 4,1, "TileSpacing","tight", "Padding","tight");
                     wrapperpanelh = uipanel(plotters(idx).fh, ...
                                             'BorderType', 'none', ...
                                             'Tag', 'plot');
                     
                     % Create plot tiledlayout and assign to class property
-                    %plotters(idx).th = tiledlayout(wrapperth, opts.arrangement,"TileSpacing","loose","Padding","loose");
                     plotters(idx).th = tiledlayout(wrapperpanelh, opts.arrangement,"TileSpacing","loose","Padding","loose");
-                    % plotters(idx).th.Layout.Tile=1;
-                    % plotters(idx).th.Layout.TileSpan=[3,1];
-                    
-                    % Create hidden axes in ui tile
-                    % uiah = nexttile(wrapperth, [1 1]);
-                    % uiah.Visible = 'off';
-                    % drawnow;
 
                     % Create uipanel in this tile
-                    % uiph = uipanel(plotters(idx).fh);
-                    uiph = uipanel(plotters(idx).fh, ...
+                    uipanelh = uipanel(plotters(idx).fh, ...
                                         'BorderType', 'none', ...
                                         'Tag', 'ui');
-                    % uiph.Units = 'normalized';
-                    % uiph.UserData.uiah = uiah;
-                    % uiph.Position = uiah.Position;
-                    % uiph.BorderType = 'none';
-                    plotters(idx).uipanel = uiph;
+                    plotters(idx).uipanel = uipanelh;
+
+                    % Position the panels
+                    figureUIPanelResize(plotters(idx).fh, wrapperpanelh, uipanelh)
 
                 else
                     plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
@@ -190,36 +179,42 @@ classdef SolverPlotter < handle
                 end
             end
 
+            function figureUIPanelResize(fig, plotpanelh, uipanelh)
+                %FIGUREUIPANELRESIZE Helper function to resize animation
+                %uipanels
+                
+                % Figure width and height
+                figUnitOriginal = fig.Units;
+
+                % set Figure unit to px
+                fig.Units = 'pixel';
+                
+                % Get width and height
+                figW = fig.Position(3);
+                figH = fig.Position(4);
+
+                % Place ui panel at 1, 1, figW, 40px
+                uipanelh.Units = 'pixel';
+                uipanelh.Position = [1, 1, figW, 40];
+
+                % Place plot panel at 1, 41, figW, figH - 40
+                plotpanelh.Units = 'pixel';
+                plotpanelh.Position = [1, 41, figW, figH-40];
+
+                % Restore figure units and draw
+                fig.Units = figUnitOriginal;
+                drawnow;
+            end
+
             function figureSizeChangeCallback(src, ~)
 
                 % find plot and ui panels
                 plotpanelh = src.findobj('Type', 'uipanel', 'Tag', 'plot');
                 uipanelh = src.findobj('Type', 'uipanel', 'Tag', 'ui');
 
+                % Reposition ui panels
                 if ~isempty(plotpanelh) && ~isempty(uipanelh)
-
-                    % Figure width and height
-                    figUnitOriginal = src.Units;
-    
-                    % set Figure unit to px
-                    src.Units = 'pixel';
-                    
-                    % Get width and height
-                    figW = src.Position(3);
-                    figH = src.Position(4);
-
-                    % Place ui panel at 1, 1, figW, 40px
-                    uipanelh.Units = 'pixel';
-                    uipanelh.Position = [1, 1, figW, 40];
-
-                    % Place plot panel at 1, 41, figW, figH - 40
-                    plotpanelh.Units = 'pixel';
-                    plotpanelh.Position = [1, 41, figW, figH-40];
-
-                    % Restore figure units and draw
-                    src.Units = figUnitOriginal;
-                    drawnow;
-
+                    figureUIPanelResize(src, plotpanelh, uipanelh);
                 end
 
                 % Find legends
@@ -483,11 +478,10 @@ classdef SolverPlotter < handle
             function animationSaveCallback(src, ~)
                 %ANIMATIONSAVECALLBACK Method to save animation as video file with UI toggle and frame rate control
 
-                fh = src.Parent.Parent;
-                idx = find(arrayfun(@(p) isequal(p.fh, fh), plotters));
+                fh = ancestor(src, 'figure');
 
                 % Check if fps is positive
-                fpsEdit = findobj(plotters(idx).fh, 'Tag', 'fpsEdit');
+                fpsEdit = findobj(fh, 'Tag', 'fpsEdit');
                 assert(str2double(fpsEdit.String) > 0 , "Desired fps must be positive.");
 
                 % Pick file to save
@@ -758,7 +752,8 @@ classdef SolverPlotter < handle
                     XData = opts.XData;
                     % Determine xlim
                     if isempty(ah.UserData.xlim)
-                        ah.UserData.xlim = xlim(ah, 'auto');
+                        xlim(ah, 'auto');
+                        ah.UserData.xlim = xlim(ah);
                     else
                         ah.UserData.xlim = [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))];
                         if xlim(ah) ~= ah.UserData.xlim
@@ -790,6 +785,8 @@ classdef SolverPlotter < handle
                     % Existing Line handle
                     if startsWith(opts.DisplayName, "OBSTRUCTION")
                         lh = findobj(ah.UserData.vertLineHandles, 'DisplayName', opts.DisplayName, 'XData', XData);
+                    elseif startsWith(opts.DisplayName, "OAF")
+                        lh = findobj(ah.UserData.vertLineHandles, 'DisplayName', opts.DisplayName);
                     else
                         lh = findobj(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
                     end
