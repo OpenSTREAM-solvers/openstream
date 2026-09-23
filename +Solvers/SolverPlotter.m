@@ -22,6 +22,7 @@ classdef SolverPlotter < handle
         th                   (1,1)  matlab.graphics.layout.TiledChartLayout                   % Tiled layout handle
         ahs                         matlab.graphics.axis.Axes                                 % Array of axes handles
         isAnimation          (1,1)  logical                                   = false         % Flag indicating if animation is enabled
+        uipanel              (1,1)  matlab.ui.container.Panel                                 % UI Panel handle for animation UI
         animationTitleFormat (1,1)  string                                    = ""            % Format string for animation title
         animationSeries      (:,1)  {isnumeric}                               = 1             % Series of time steps or frames for animation
 
@@ -51,92 +52,173 @@ classdef SolverPlotter < handle
             % Create plotter objects
             plotters(length(WallIdxs)) = Solvers.SolverPlotter();
             for idx = 1:length(plotters)
+                
+                % Current plotter
+                plotter = plotters(idx);
 
-                plotters(idx).WallIdx = WallIdxs(idx);
+                plotter.WallIdx = WallIdxs(idx);
 
                 % Check if is an animated series
                 if opts.isAnimation
-                    plotters(idx).isAnimation = true;
-                    plotters(idx).animationSeries = opts.animationSeries;
-                    plotters(idx).animationTitleFormat = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
+                    plotter.isAnimation = true;
+                    plotter.animationSeries = opts.animationSeries;
+                    plotter.animationTitleFormat = sprintf('%s - Wall %u', titles(idx), plotter.WallIdx);
                     titles(idx) = sprintf(titles(idx), opts.animationSeries(1));
                 end
 
-                plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
-                plotters(idx).fh = figure("Name", plotters(idx).Title, SizeChangedFcn=@figureSizeChangeCallback);
+                plotter.Title = sprintf('%s - Wall %u', titles(idx), plotter.WallIdx);
+                plotter.fh = figure("Name", plotter.Title, SizeChangedFcn=@figureSizeChangeCallback);
+                
+                % Create a wrapper tiledlayout if isAnimation
+                if opts.isAnimation
+                    
+                    % Create wrapper uipanel
+                    wrapperpanelh = uipanel(plotter.fh, ...
+                                            'BorderType', 'none', ...
+                                            'Tag', 'plot');
+                    
+                    % Create plot tiledlayout and assign to class property
+                    plotter.th = tiledlayout(wrapperpanelh, opts.arrangement,"TileSpacing","loose","Padding","loose");
 
-                plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
-                plotters(idx).th.Title.String = plotters(idx).Title;
-                plotters(idx).th.Title.FontSize = 15;
+                    % Create uipanel in this tile
+                    uipanelh = uipanel(plotter.fh, ...
+                                        'BorderType', 'none', ...
+                                        'Tag', 'ui');
+                    plotter.uipanel = uipanelh;
+
+                    % Position the panels
+                    figureUIPanelResize(plotter.fh, wrapperpanelh, uipanelh)
+
+                else
+                    plotter.th = tiledlayout(plotter.fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                end
+                plotter.th.Title.String = plotter.Title;
+                plotter.th.Title.FontSize = 15;
 
                 % Store animation title data in fh
                 if opts.isAnimation
-                    plotters(idx).fh.UserData = struct("NameFormat", plotters(idx).animationTitleFormat, ...
-                        "NameSeries", plotters(idx).animationSeries, ...
-                        "isPlaying", false);
+                    plotter.fh.UserData = struct("NameFormat", plotter.animationTitleFormat, ...
+                        "NameSeries", plotter.animationSeries, ...
+                        "isPlaying", false, ...
+                        "loop", false);
                 end
 
                 % Add UI if is an animated series
                 if opts.isAnimation
-                    rewindButton = uicontrol(plotters(idx).fh, ...
+                    rewindButton = uicontrol(plotter.uipanel, ...
                         Style="pushbutton", ...
                         String="<", ...
                         Units="pixels", ...
-                        Position=[20,20,30,20], ...
+                        Position=[20,10,30,20], ...
                         Callback=@animationCallback);
 
-                    advanceButton = uicontrol(plotters(idx).fh, ...
+                    advanceButton = uicontrol(plotter.uipanel, ...
                         Style="pushbutton", ...
                         String=">", ...
                         Units="pixels", ...
-                        Position=[110,20,30,20], ...
+                        Position=[110,10,30,20], ...
                         Callback=@animationCallback);
 
-                    counter = uicontrol(plotters(idx).fh, ...
+                    counter = uicontrol(plotter.uipanel, ...
                         Style="edit", ...
                         Tag='animationCounter', ...
                         Units="pixels", ...
-                        Position=[60,20,40,20], ...
+                        Position=[60,10,40,20], ...
                         Callback= @animationCallback, ...
                         String = 1);
 
-                    playButton = uicontrol(plotters(idx).fh, ...
+                    playButton = uicontrol(plotter.uipanel, ...
                         Style="togglebutton", ...
                         String=char(9658), ...   % play; pause: char([124 32 124])
                         UserData=struct('originalSymbol', char(9658)), ...
-                        Position=[150,20,30,20], ...
-                        Callback={@playAnimationCallback, false});
+                        Position=[150,10,30,20], ...
+                        Callback=@playAnimationCallback);
 
-                    loopButton = uicontrol(plotters(idx).fh, ...
+                    loopButton = uicontrol(plotter.uipanel, ...
                         Style="togglebutton", ...
-                        String=char(11156), ...
-                        UserData=struct('originalSymbol', char(11156)), ...
-                        Position=[190,20,30,20], ...
-                        Callback={@playAnimationCallback, true});
+                        String="Play Once", ...
+                        UserData=struct('originalSymbol', "Play Once"), ...
+                        Position=[190,10,60,20], ...
+                        Callback=@loopButtonCallback);
+                    
+                    % Adjust loopButton width using String extent
+                    drawnow
+                    loopStringPadding = 5;
+                    loopStringWidth = loopButton.Extent(3);
+                    loopMinWidth = 2*loopStringPadding + loopStringWidth;
+                    if loopButton.Position(3) < loopMinWidth
+                        loopButton.Position(3) = loopMinWidth;
+                    end
+                    loopButton_rightPosition = loopButton.Position(1) + loopButton.Position(3);
 
-                    fpsEdit = uicontrol(plotters(idx).fh, ...
+                    if numel(opts.animationSeries) > 1
+                        defaultFPS = 1/diff(opts.animationSeries(1:2));
+                    else
+                        defaultFPS = 10;
+                    end
+
+                    fpsEdit = uicontrol(plotter.uipanel, ...
                         Style="edit", ...
                         Tag='fpsEdit', ...
-                        String=num2str(1/diff(opts.animationSeries(1:2))), ...
-                        Position=[230, 20, 30, 20] ...
+                        String=num2str(defaultFPS), ...
+                        UserData = defaultFPS, ...
+                        Position=[loopButton_rightPosition + 10, 10, 30, 20], ...
+                        Callback=@fpsEditCallback...
                         );
+                    fpsEdit_rightPosition = fpsEdit.Position(1) + fpsEdit.Position(3);
 
-                    fpsText = uicontrol(plotters(idx).fh, ...
+                    fpsText = uicontrol(plotter.uipanel, ...
                         Style="text", ...
                         String="fps", ...
-                        Position=[265, 20, 30, 20], ...
+                        Position=[fpsEdit_rightPosition + 5, 10, 30, 20], ...
                         HorizontalAlignment="left", ...
                         FontSize = 10 ...
                         );
 
-                    animationMenu = uimenu(plotters(idx).fh, 'Text', 'Animation');
+                    animationMenu = uimenu(plotter.fh, 'Text', 'Animation');
                     animationMenu_save = uimenu(animationMenu, 'Text', 'Save', 'MenuSelectedFcn', @animationSaveCallback);
                     animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls in Video', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
 
                 end
             end
 
+            function figureUIPanelResize(fig, plotpanelh, uipanelh)
+                %FIGUREUIPANELRESIZE Helper function to resize animation
+                %uipanels
+                
+                % Figure width and height
+                figUnitOriginal = fig.Units;
+
+                % set Figure unit to px
+                fig.Units = 'pixel';
+                
+                % Get width and height
+                figW = fig.Position(3);
+                figH = fig.Position(4);
+
+                % Place ui panel at 1, 1, figW, 40px
+                uipanelh.Units = 'pixel';
+                uipanelh.Position = [1, 1, figW, 40];
+
+                % Place plot panel at 1, 41, figW, figH - 40
+                plotpanelh.Units = 'pixel';
+                plotpanelh.Position = [1, 41, figW, figH-40];
+
+                % Restore figure units and draw
+                fig.Units = figUnitOriginal;
+                drawnow;
+            end
+
             function figureSizeChangeCallback(src, ~)
+
+                % find plot and ui panels
+                plotpanelh_ = src.findobj('Type', 'uipanel', 'Tag', 'plot');
+                uipanelh_ = src.findobj('Type', 'uipanel', 'Tag', 'ui');
+
+                % Reposition ui panels
+                if ~isempty(plotpanelh_) && ~isempty(uipanelh_)
+                    figureUIPanelResize(src, plotpanelh_, uipanelh_);
+                end
 
                 % Find legends
                 lhs = src.findobj("Type", "legend");
@@ -147,22 +229,39 @@ classdef SolverPlotter < handle
                 end
 
                 % Update
-                drawnow limitrate;
+                drawnow;
 
                 % Set back to none
                 for i=1:length(lhs)
                     lhs(i).Location = "none";
                 end
 
-                % Update
-                drawnow limitrate;
+            end
+
+            function fpsEditCallback(src, ~)
+                %FPSEDITCALLBACK Validates fps value
+                
+                % Retrieve new value, convert to double and round to
+                % nearest integer
+                newVal = round(str2double(src.String));
+
+                % If rounded new value is less than 1, set new value to 1
+                if newVal < 1
+                    newVal = 1;
+                elseif isnan(newVal)
+                    newVal = src.UserData;
+                end
+
+                % Set fps to new value
+                src.String = num2str(newVal, '%.0f');
+
             end
 
             function animationCallback(src, ~)
                 % ANIMATIONCALLBACK Method to handle animation control callbacks (rewind, advance, edit)
 
                 % retrieve figure and axes handles
-                fh = src.Parent;
+                fh = ancestor(src, 'figure');
                 tlh = findobj(fh, 'type', 'tiledlayout');
                 ahs = findobj(tlh, 'type', 'axes');
 
@@ -197,17 +296,17 @@ classdef SolverPlotter < handle
 
                         % Continue to next lh if at last YData
                         if isnan(currentIndex)
-                            if src.Style == "edit"
+                            if contains(src.Style, "edit")
                                 src.String = string(lastIndex);
                             end
                             continue;
                         elseif currentIndex > length(lh.UserData.Data)
-                            if src.Style == "edit"
+                            if contains(src.Style, "edit")
                                 src.String = string(1);
                             end
                             currentIndex = 1;
                         elseif  currentIndex < 1
-                            if src.Style == "edit"
+                            if contains(src.Style, "edit")
                                 src.String = string(length(lh.UserData.Data));
                             end
                             currentIndex = length(lh.UserData.Data);
@@ -246,15 +345,38 @@ classdef SolverPlotter < handle
                         tlh.Title.FontSize = 15;
                     end
                 end
+
             end
 
-            function playAnimationCallback(src, ~, loop)
+            function loopButtonCallback(src, ~)
+                %LOOPBUTTONCALLBACK Method to toggle figure loop userdata
+
+                % Get figure handle
+                fh = ancestor(src, 'figure');
+
+                % Toggle loop
+                if isfield(fh.UserData, 'loop') && fh.UserData.loop
+                    fh.UserData.loop = false;
+                    src.String = "Play Once";  % Play symbol
+                    return;
+                else
+                    fh.UserData.loop = true;
+                    src.String = "Loop";  % Pause symbol
+                end
+
+            end
+
+            function playAnimationCallback(src, ~)
                 %PLAYANIMATIONCALLBACK Method to handle play/pause animation loop with optional looping
 
                 % Get figure and layout
-                fh = src.Parent;
+                fh = ancestor(src, 'figure');
                 tlh = findobj(fh, 'type', 'tiledlayout');
                 ahs = findobj(tlh, 'type', 'axes');
+
+                % First play to track if we are at the end because we are
+                % restarting or simply end of series.
+                firstPlay = true;
 
                 % Toggle play/pause state
                 if isfield(fh.UserData, 'isPlaying') && fh.UserData.isPlaying
@@ -290,7 +412,9 @@ classdef SolverPlotter < handle
 
                             % Loop or stop
                             if currentIndex > length(lh.UserData.Data)
-                                if loop
+                                if isfield(fh.UserData, 'loop') && fh.UserData.loop
+                                    currentIndex = 1;
+                                elseif firstPlay
                                     currentIndex = 1;
                                 else
                                     currentIndex = lastIndex;
@@ -312,6 +436,9 @@ classdef SolverPlotter < handle
                             lh.UserData.currentIndex = currentIndex;
                         end
                     end
+
+                    % Set firstPlay to false
+                    firstPlay = false;
 
                     % Update figure title and counter if available
                     if isfield(fh.UserData, 'NameFormat') && isfield(fh.UserData, 'NameSeries')
@@ -354,11 +481,10 @@ classdef SolverPlotter < handle
             function animationSaveCallback(src, ~)
                 %ANIMATIONSAVECALLBACK Method to save animation as video file with UI toggle and frame rate control
 
-                fh = src.Parent.Parent;
-                idx = find(arrayfun(@(p) isequal(p.fh, fh), plotters));
+                fh = ancestor(src, 'figure');
 
                 % Check if fps is positive
-                fpsEdit = findobj(plotters(idx).fh, 'Tag', 'fpsEdit');
+                fpsEdit = findobj(fh, 'Tag', 'fpsEdit');
                 assert(str2double(fpsEdit.String) > 0 , "Desired fps must be positive.");
 
                 % Pick file to save
@@ -372,7 +498,16 @@ classdef SolverPlotter < handle
                     defaultName = 'animation.avi';
                 end
 
-                [filename, pathname] = uiputfile({defaultExt, 'Video Files'}, 'Save animation as ...', fullfile(pwd, defaultName));
+                % Ask user for save name and location
+                [filename, pathname] = uiputfile( ...
+                                        {defaultExt, 'Video Files'}, ...
+                                        'Save animation as ...', ...
+                                        fullfile(pwd, defaultName) ...
+                                        );
+                % Detect if user canceled the operation
+                if isnumeric(filename) && filename == 0 && isnumeric(pathname) && pathname == 0
+                    return;
+                end
                 filepath = fullfile(pathname, filename);
 
                 % Add correction file extension if missing
@@ -401,10 +536,10 @@ classdef SolverPlotter < handle
                 vid.Quality = 100;
 
                 % Number of frames
-                numFrames = length(plotters(idx).ahs(1).Children(end).UserData.Data);
+                numFrames = length(plotter.ahs(1).Children(end).UserData.Data);
 
                 % Collection of uicontrols
-                fh_uicontrols = findall(plotters(idx).fh, 'type', 'uicontrol');
+                fh_uicontrols = findall(fh, 'type', 'uicontrol');
                 % Hide uicontrols
                 uimenu_showUIControls = findobj(src.Parent, 'text', 'Show UI Controls in Video');
                 if ~uimenu_showUIControls.Checked
@@ -415,7 +550,7 @@ classdef SolverPlotter < handle
 
                 % Open video
                 open(vid);
-                counter = findobj(plotters(idx).fh, 'Tag', 'animationCounter');
+                counter = findobj(fh, 'Tag', 'animationCounter');
 
                 try
                     % Loop through frames
@@ -456,7 +591,7 @@ classdef SolverPlotter < handle
                 opts.xlabel = ""
                 opts.ylabel = ""
             end
-
+            
             % Loop through each plotter
             for plotterIdx = 1:length(plotters)
 
@@ -537,7 +672,7 @@ classdef SolverPlotter < handle
                 grid(new_ah(idx), plotter.Grid);
 
                 % Keep track of axes xLim and yLim
-                new_ah(idx).UserData = struct('xlim', [], 'ylim', [], 'vertLineHandles', []);
+                new_ah(idx).UserData = struct('xlim', [], 'ylim', [], 'vertLineHandles', matlab.graphics.chart.primitive.Line.empty);
 
                 % Create listener for ylim change on axes
                 addlistener(new_ah(idx), "YLim", "PostSet", @YLimChangedCallback);
@@ -548,38 +683,27 @@ classdef SolverPlotter < handle
             % When set, lines with HandleVisibility set to off (i.e. simple
             % vertical lines) will have their YData updated to match the
             % new ylim range.
-            function YLimChangedCallback(src, event)
-                
-                %fprintf("ylim callback triggered\n");
+            function YLimChangedCallback(~, event)
 
                 % Retrieve new ylim of axes
                 new_ylim = ylim(event.AffectedObject);
 
                 % Find all simple vertical lines
-                %hidden_lhs = findall(event.AffectedObject,'type', 'line','HandleVisibility','off');
                 hidden_lhs = event.AffectedObject.UserData.vertLineHandles;
 
                 % Adjust each line
-                for i=1:length(hidden_lhs)
+                for lineIdx=1:length(hidden_lhs)
+
+                    hidden_lh = hidden_lhs(lineIdx);
                     
                     % If the YData for the line is truly a simple value
                     % pair, adjust the YData as well as the time series in
                     % LineHandle.UserData.Data(j).yData, at time step j.
-                    if numel(hidden_lhs(i).YData) == 2
-                        hidden_lhs(i).YData = new_ylim;
-                        for j=1:length(hidden_lhs(i).UserData.Data)
-                            hidden_lhs(i).UserData.Data(j).yData = new_ylim;
-                        end
-
-                    % If the simple lines are plotted with NaN delimiters,
-                    % the YData will be updated at the approp. indices.
-                    % This is kept for now if we continue to use this
-                    % method of defining the lines.
-                    % TODO: decide if this is still needed
-                    elseif numel(hidden_lhs(i).YData) == 6
-                        hidden_lhs(i).YData(1:2) = new_ylim;
-                        hidden_lhs(i).YData(4:5) = new_ylim;
+                    if numel(hidden_lh.YData) == 2
+                        hidden_lh.YData = new_ylim;
+                        [hidden_lh.UserData.Data.yData] = deal(new_ylim);
                     end
+
                 end
             end
 
@@ -632,16 +756,20 @@ classdef SolverPlotter < handle
                     % Determine xlim
                     if isempty(ah.UserData.xlim)
                         xlim(ah, 'auto');
+                        ah.UserData.xlim = xlim(ah);
                     else
-                        xlim(ah, [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))]);
+                        ah.UserData.xlim = [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))];
+                        if xlim(ah) ~= ah.UserData.xlim
+                            xlim(ah, ah.UserData.xlim);
+                        end
                     end
                 else
                     XData = plotter.Xs(opts.subset);
-                    xlim(ah, XData([1 end]));
+                    ah.UserData.xlim = XData([1 end]);
+                    if xlim(ah) ~= ah.UserData.xlim
+                        xlim(ah, ah.UserData.xlim);
+                    end
                 end
-
-                % Save ah.UserData.xlim
-                ah.UserData.xlim = xlim(ah);
 
                 % Dual axis
                 if isfield(opts, 'yyaxis')
@@ -657,15 +785,17 @@ classdef SolverPlotter < handle
                     % Check if lh with DisplayName that match
                     % opts.DisplayName exists
                     
-                    % Existing Line handles (OAF, plotK can be hidden, so findall)
-                    if opts.DisplayName == "OBSTRUCTION"
-                        lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName, 'XData', XData);
+                    % Existing Line handle
+                    if startsWith(opts.DisplayName, "OBSTRUCTION")
+                        lh = findobj(ah.UserData.vertLineHandles, 'DisplayName', opts.DisplayName, 'XData', XData);
+                    elseif startsWith(opts.DisplayName, "OAF")
+                        lh = findobj(ah.UserData.vertLineHandles, 'DisplayName', opts.DisplayName);
                     else
-                        lh = findall(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
+                        lh = findobj(ah, 'type', 'line', 'DisplayName', opts.DisplayName);
                     end
 
-
-                    % Check if there are any lines at all
+                    % Check if any existing lines match the findall
+                    % criteria
                     if ~isempty(lh)
 
                         % Set flag
@@ -680,8 +810,12 @@ classdef SolverPlotter < handle
                         % Otherwise, the vector is for the current WallIdx.
                         %
                         if (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                            YData = ylim(ah);
-                            %YData = [NaN NaN];
+                            %YData = ylim(ah);
+                            if ~isempty(ah.UserData.ylim)
+                                YData = ah.UserData.ylim;
+                            else
+                                YData = ylim(ah);
+                            end
                         elseif isvector(YData)
                             YData = YData(opts.subset);
                         else
@@ -710,15 +844,27 @@ classdef SolverPlotter < handle
 
                     % Custom plot by YData
                     if  (isstring(YData) || ischar(YData)) && strcmpi(YData, "ylim")
-                        drawnow limitrate;
-                        YData= ylim(ah);
+                        % Given 'ylim' literal as YData, use axes ylim as
+                        % YData, and add this vertical line handle to the ah
+                        % UserData struct
+                        if ~isempty(ah.UserData.ylim)
+                            YData = ah.UserData.ylim;
+                        else
+                            drawnow limitrate
+                            YData = ylim(ah);
+                        end
                         lh = plot(ah, XData, YData, 'DisplayName', opts.DisplayName, opts.plotOptions{:});
-                        ah.UserData.vertLineHandles = [ah.UserData.vertLineHandles lh];
+
+                        % Add DisplayName to line datatip
+                        lh.DataTipTemplate.DataTipRows(end+1) = dataTipTextRow("Name", repmat(string(fieldName),2,1));
+                        ah.UserData.vertLineHandles(end+1) = lh;
 
                     elseif isvector(YData)
+                        % A vector YData means there is only one wall
                         lh = plot(ah, XData, YData(opts.subset), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
                     
                     else
+                        % A matrix YData means there are multiple walls
                         lh = plot(ah, XData, YData(opts.subset, plotter.WallIdx), 'DisplayName', opts.DisplayName, opts.plotOptions{:});
                     end
 
@@ -784,12 +930,7 @@ classdef SolverPlotter < handle
             % Ensure klocZ is a row vector
             klocZ = klocZ(:)';
 
-            % Get current Y-axis limits
-            yl = plotters.ylim;
-
-            % Prepare X and Y data for vertical lines with NaN separators
-            %xdata = reshape([klocZ; klocZ; nan(size(klocZ))], 1, [])';
-            %ydata = repmat([yl, nan(length(plotters),1)], 1, numel(klocZ))';
+            % Use ylim as Y-axis data
             ydata='ylim';
 
             for i=1:length(klocZ)
@@ -797,7 +938,7 @@ classdef SolverPlotter < handle
                 xdata = [klocZ(i) klocZ(i)];
                
                 % Plot vertical lines
-                plotters.plot(ydata, 'OBSTRUCTION', 'axisHandle', ah, ...
+                plotters.plot(ydata, 'OBSTRUCTION', 'displayName', sprintf('OBSTRUCTION_%d',i), 'axisHandle', ah, ...
                     'XData', xdata, 'subset', 1:numel(xdata), ...
                     'plotOptions', {'handleVisibility', 'off'});
             end

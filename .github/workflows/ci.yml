@@ -14,8 +14,8 @@ on:
 jobs:
 
   tests:
-    #runs-on: ubuntu-latest
-    runs-on: [self-hosted, linux, x64, matlab]
+    runs-on: ubuntu-latest
+    #runs-on: [self-hosted, linux, x64, matlab]
 
     strategy:
       # Try to run all the tests
@@ -66,26 +66,28 @@ jobs:
           pip install -r ./openstream/+CoolPropWrapper/requirements.txt
 
       # Sets up MATLAB on a GitHub-hosted runner
-      #- name: Set up MATLAB
-      #  uses: matlab-actions/setup-matlab@v3
-
-      - name: Select MATLAB version
-        run: |
-          echo "/opt/MATLAB/${{ matrix.matlab }}/bin" >> "$GITHUB_PATH"
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v3
+        with:
+          release: ${{ matrix.matlab }}
           
-      - name: Query MATLAB version
-        run: |
-          echo "MATLAB:"
-          which matlab
-          matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot); fprintf('Current working directory: %s\n', pwd);"
-
-          echo
-          echo "Python:"
-          which python
-          python --version
-          python -m pip show nanobind
+      #- name: Select MATLAB version
+      #  run: |
+      #    echo "/opt/MATLAB/${{ matrix.matlab }}/bin" >> "$GITHUB_PATH"
           
-      # Runs a set of commands using the runners shell
+      #- name: Query MATLAB version
+      #  run: |
+      #    echo "MATLAB:"
+      #    which matlab
+      #    matlab -batch "fprintf('Version: %s\n', version); fprintf('Root: %s\n', matlabroot); fprintf('Current working directory: %s\n', pwd);"
+
+      #    echo
+      #    echo "Python:"
+      #    which python
+      #    python --version
+      #    python -m pip show nanobind
+          
+      # Runs tests
       - name: Run all tests
         uses: matlab-actions/run-tests@v3
         with:
