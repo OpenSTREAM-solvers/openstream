@@ -52,71 +52,74 @@ classdef SolverPlotter < handle
             % Create plotter objects
             plotters(length(WallIdxs)) = Solvers.SolverPlotter();
             for idx = 1:length(plotters)
+                
+                % Current plotter
+                plotter = plotters(idx);
 
-                plotters(idx).WallIdx = WallIdxs(idx);
+                plotter.WallIdx = WallIdxs(idx);
 
                 % Check if is an animated series
                 if opts.isAnimation
-                    plotters(idx).isAnimation = true;
-                    plotters(idx).animationSeries = opts.animationSeries;
-                    plotters(idx).animationTitleFormat = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
+                    plotter.isAnimation = true;
+                    plotter.animationSeries = opts.animationSeries;
+                    plotter.animationTitleFormat = sprintf('%s - Wall %u', titles(idx), plotter.WallIdx);
                     titles(idx) = sprintf(titles(idx), opts.animationSeries(1));
                 end
 
-                plotters(idx).Title = sprintf('%s - Wall %u', titles(idx), plotters(idx).WallIdx);
-                plotters(idx).fh = figure("Name", plotters(idx).Title, SizeChangedFcn=@figureSizeChangeCallback);
+                plotter.Title = sprintf('%s - Wall %u', titles(idx), plotter.WallIdx);
+                plotter.fh = figure("Name", plotter.Title, SizeChangedFcn=@figureSizeChangeCallback);
                 
                 % Create a wrapper tiledlayout if isAnimation
                 if opts.isAnimation
                     
                     % Create wrapper uipanel
-                    wrapperpanelh = uipanel(plotters(idx).fh, ...
+                    wrapperpanelh = uipanel(plotter.fh, ...
                                             'BorderType', 'none', ...
                                             'Tag', 'plot');
                     
                     % Create plot tiledlayout and assign to class property
-                    plotters(idx).th = tiledlayout(wrapperpanelh, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                    plotter.th = tiledlayout(wrapperpanelh, opts.arrangement,"TileSpacing","loose","Padding","loose");
 
                     % Create uipanel in this tile
-                    uipanelh = uipanel(plotters(idx).fh, ...
+                    uipanelh = uipanel(plotter.fh, ...
                                         'BorderType', 'none', ...
                                         'Tag', 'ui');
-                    plotters(idx).uipanel = uipanelh;
+                    plotter.uipanel = uipanelh;
 
                     % Position the panels
-                    figureUIPanelResize(plotters(idx).fh, wrapperpanelh, uipanelh)
+                    figureUIPanelResize(plotter.fh, wrapperpanelh, uipanelh)
 
                 else
-                    plotters(idx).th = tiledlayout(plotters(idx).fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
+                    plotter.th = tiledlayout(plotter.fh, opts.arrangement,"TileSpacing","loose","Padding","loose");
                 end
-                plotters(idx).th.Title.String = plotters(idx).Title;
-                plotters(idx).th.Title.FontSize = 15;
+                plotter.th.Title.String = plotter.Title;
+                plotter.th.Title.FontSize = 15;
 
                 % Store animation title data in fh
                 if opts.isAnimation
-                    plotters(idx).fh.UserData = struct("NameFormat", plotters(idx).animationTitleFormat, ...
-                        "NameSeries", plotters(idx).animationSeries, ...
+                    plotter.fh.UserData = struct("NameFormat", plotter.animationTitleFormat, ...
+                        "NameSeries", plotter.animationSeries, ...
                         "isPlaying", false, ...
                         "loop", false);
                 end
 
                 % Add UI if is an animated series
                 if opts.isAnimation
-                    rewindButton = uicontrol(plotters(idx).uipanel, ...
+                    rewindButton = uicontrol(plotter.uipanel, ...
                         Style="pushbutton", ...
                         String="<", ...
                         Units="pixels", ...
                         Position=[20,10,30,20], ...
                         Callback=@animationCallback);
 
-                    advanceButton = uicontrol(plotters(idx).uipanel, ...
+                    advanceButton = uicontrol(plotter.uipanel, ...
                         Style="pushbutton", ...
                         String=">", ...
                         Units="pixels", ...
                         Position=[110,10,30,20], ...
                         Callback=@animationCallback);
 
-                    counter = uicontrol(plotters(idx).uipanel, ...
+                    counter = uicontrol(plotter.uipanel, ...
                         Style="edit", ...
                         Tag='animationCounter', ...
                         Units="pixels", ...
@@ -124,14 +127,14 @@ classdef SolverPlotter < handle
                         Callback= @animationCallback, ...
                         String = 1);
 
-                    playButton = uicontrol(plotters(idx).uipanel, ...
+                    playButton = uicontrol(plotter.uipanel, ...
                         Style="togglebutton", ...
                         String=char(9658), ...   % play; pause: char([124 32 124])
                         UserData=struct('originalSymbol', char(9658)), ...
                         Position=[150,10,30,20], ...
                         Callback=@playAnimationCallback);
 
-                    loopButton = uicontrol(plotters(idx).uipanel, ...
+                    loopButton = uicontrol(plotter.uipanel, ...
                         Style="togglebutton", ...
                         String="Play Once", ...
                         UserData=struct('originalSymbol', "Play Once"), ...
@@ -154,7 +157,7 @@ classdef SolverPlotter < handle
                         defaultFPS = 10;
                     end
 
-                    fpsEdit = uicontrol(plotters(idx).uipanel, ...
+                    fpsEdit = uicontrol(plotter.uipanel, ...
                         Style="edit", ...
                         Tag='fpsEdit', ...
                         String=num2str(defaultFPS), ...
@@ -164,7 +167,7 @@ classdef SolverPlotter < handle
                         );
                     fpsEdit_rightPosition = fpsEdit.Position(1) + fpsEdit.Position(3);
 
-                    fpsText = uicontrol(plotters(idx).uipanel, ...
+                    fpsText = uicontrol(plotter.uipanel, ...
                         Style="text", ...
                         String="fps", ...
                         Position=[fpsEdit_rightPosition + 5, 10, 30, 20], ...
@@ -172,7 +175,7 @@ classdef SolverPlotter < handle
                         FontSize = 10 ...
                         );
 
-                    animationMenu = uimenu(plotters(idx).fh, 'Text', 'Animation');
+                    animationMenu = uimenu(plotter.fh, 'Text', 'Animation');
                     animationMenu_save = uimenu(animationMenu, 'Text', 'Save', 'MenuSelectedFcn', @animationSaveCallback);
                     animationMenu_showUIControls = uimenu(animationMenu, 'Text', 'Show UI Controls in Video', 'MenuSelectedFcn', @(src,~) set(src,'Checked', ~src.Checked));
 
@@ -209,12 +212,12 @@ classdef SolverPlotter < handle
             function figureSizeChangeCallback(src, ~)
 
                 % find plot and ui panels
-                plotpanelh = src.findobj('Type', 'uipanel', 'Tag', 'plot');
-                uipanelh = src.findobj('Type', 'uipanel', 'Tag', 'ui');
+                plotpanelh_ = src.findobj('Type', 'uipanel', 'Tag', 'plot');
+                uipanelh_ = src.findobj('Type', 'uipanel', 'Tag', 'ui');
 
                 % Reposition ui panels
-                if ~isempty(plotpanelh) && ~isempty(uipanelh)
-                    figureUIPanelResize(src, plotpanelh, uipanelh);
+                if ~isempty(plotpanelh_) && ~isempty(uipanelh_)
+                    figureUIPanelResize(src, plotpanelh_, uipanelh_);
                 end
 
                 % Find legends
@@ -533,10 +536,10 @@ classdef SolverPlotter < handle
                 vid.Quality = 100;
 
                 % Number of frames
-                numFrames = length(plotters(idx).ahs(1).Children(end).UserData.Data);
+                numFrames = length(plotter.ahs(1).Children(end).UserData.Data);
 
                 % Collection of uicontrols
-                fh_uicontrols = findall(plotters(idx).fh, 'type', 'uicontrol');
+                fh_uicontrols = findall(fh, 'type', 'uicontrol');
                 % Hide uicontrols
                 uimenu_showUIControls = findobj(src.Parent, 'text', 'Show UI Controls in Video');
                 if ~uimenu_showUIControls.Checked
@@ -547,7 +550,7 @@ classdef SolverPlotter < handle
 
                 % Open video
                 open(vid);
-                counter = findobj(plotters(idx).fh, 'Tag', 'animationCounter');
+                counter = findobj(fh, 'Tag', 'animationCounter');
 
                 try
                     % Loop through frames
@@ -932,7 +935,7 @@ classdef SolverPlotter < handle
                 xdata = [klocZ(i) klocZ(i)];
                
                 % Plot vertical lines
-                plotters.plot(ydata, sprintf('OBSTRUCTION_%d',i), 'axisHandle', ah, ...
+                plotters.plot(ydata, 'OBSTRUCTION', 'displayName', sprintf('OBSTRUCTION_%d',i), 'axisHandle', ah, ...
                     'XData', xdata, 'subset', 1:numel(xdata), ...
                     'plotOptions', {'handleVisibility', 'off'});
             end
