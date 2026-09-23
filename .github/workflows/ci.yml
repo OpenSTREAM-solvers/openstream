@@ -6,6 +6,9 @@ on:
       - matlab-ci
       - lecorre
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
