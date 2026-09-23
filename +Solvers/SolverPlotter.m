@@ -854,6 +854,9 @@ classdef SolverPlotter < handle
                             YData = ylim(ah);
                         end
                         lh = plot(ah, XData, YData, 'DisplayName', opts.DisplayName, opts.plotOptions{:});
+
+                        % Add DisplayName to line datatip
+                        lh.DataTipTemplate.DataTipRows(end+1) = dataTipTextRow("Name", repmat(string(fieldName),2,1));
                         ah.UserData.vertLineHandles(end+1) = lh;
 
                     elseif isvector(YData)
