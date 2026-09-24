@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - matlab-ci
-      - lecorre
       - main
   pull_request:
     branches:
@@ -70,6 +69,7 @@ jobs:
         uses: matlab-actions/setup-matlab@v3
         with:
           release: ${{ matrix.matlab }}
+          cache: true
           
       #- name: Select MATLAB version
       #  run: |
