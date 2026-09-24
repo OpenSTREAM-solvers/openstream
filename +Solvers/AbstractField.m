@@ -25,6 +25,12 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
 
     end
 
+    properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
+
+        inputSet                   {isa(inputSet,'Inputs.InputSet')}                              % :class:`Inputs.InputSet` object
+
+    end
+
     properties (SetAccess = protected, Hidden)
 
         flowProperties (:,:) cell = {'W','U','H','ITR'}                    % Flow properties used for copying
@@ -155,6 +161,26 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             %storage, and use it.
             fn = obj.memoizedFunctions(methodStr);
             out = fn(varargin{:});
+        end
+
+        function log(obj, varargin)
+            %LOG Log messages to the createdBySolver session log
+
+            if isempty(obj.inputSet)
+                disp(varargin{:})
+            else
+                obj.inputSet.session.log.log(varargin{:});
+            end
+        end
+
+        function warning(obj, varargin)
+            %LOG Log warning messages to the createdBySolver session log
+
+            if isempty(obj.inputSet)
+                warning(varargin{:})
+            else
+                obj.inputSet.session.log.warning(varargin{:});
+            end
         end
 
         function out = struct(obj)

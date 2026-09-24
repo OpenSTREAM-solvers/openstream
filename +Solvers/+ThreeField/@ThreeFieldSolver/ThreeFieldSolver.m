@@ -183,7 +183,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX);           % [W/m^2] Film evaporation heat flux
 
                 % Film evaporation (thermal equilibrium assumption)
-                flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
+                flm.mevap = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
 
                 % Entrained ratio at onset of annular flow
                 switch model.OAFENTRAINED
@@ -205,7 +205,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 % ... or transient mass gradient in drop field
                 drp.W = drp.W+mix.W-mix.W(mix.OAFIDX);                                            % [kg/s]
                 flm.W(1,1:geom.NWALL) = (mix.liquid.W(1)-drp.W(1)).*geom.PERIM./sum(geom.PERIM);  % [kg/s] Distribute film at inlet uniformly on all walls
-                flm.W = flm.W(1,:)+cumsum(flm.MEVAP).*geom.PERIM.*tfSolver.DZ;                    % [kg/s] Apply simple mass conservation
+                flm.W = flm.W(1,:)+cumsum(flm.mevap).*geom.PERIM.*tfSolver.DZ;                    % [kg/s] Apply simple mass conservation
 
                 % Limit film flow rate minimum to 0
                 flm.W = max(0,flm.W);
@@ -619,6 +619,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             if opts.resize > 0
                 plotter.resizeFigure(opts.resize);
             end
+            
+            plotter.legend('AllTiles',true, 'Reposition', true);
         end
 
         function plotter = plott(tfSolver, zIdx, opt)

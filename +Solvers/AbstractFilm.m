@@ -8,11 +8,14 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
 
         DZ           (1,1) double  {mustBeNumeric}                         =0      % Axial step size [m]
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}               % :class:`Inputs.InputSet` object containing geometry, model, and boundary conditions
+        %inputSet                   {isa(inputSet,'Inputs.InputSet')}              % :class:`Inputs.InputSet` object containing geometry, model, and boundary conditions
         fluid                      {isa(fluid,'Inputs.FluidProperties')}           % :class:`Inputs.FluidProperties` object containing fluid thermophysical properties
         mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % :class:`Solvers.Mixture.Mixture` object of the mixture solver
     end
 
+    properties (Access={?Solvers.AbstractField,?Solvers.AbstractSolver})
+        mevap        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.    % Evaporation mass flux   [kg/s/m^2]
+    end
 
     methods
 
@@ -121,12 +124,20 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             ment = -absfilm.mix.AFDISTR(0,ment,zIdx);                      % [kg/m^2/s] Entrainment mass flux, in annular flow region only
         end
 
+        function Mevap = MEVAP(absfilm, zIdx)
+            %MEVAP Evaporation mass flux   [kg/s/m^2]
+
+            if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
+
+            Mevap = absfilm.mevap(zIdx, :);
+        end
+
         function Mtot = MTOT(absfilm,drop,zIdx)
             %MTOT Total film mass transfer [kg/m^2/s]
 
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
 
-            Mtot  = absfilm.MEVAP(zIdx,:)+absfilm.MENT(zIdx)+drop.MDEP(zIdx);
+            Mtot = absfilm.MEVAP(zIdx)+absfilm.MENT(zIdx)+drop.MDEP(zIdx);
         end
 
         function Cw = CW(absfilm,zIdx)

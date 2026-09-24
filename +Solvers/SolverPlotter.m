@@ -1019,11 +1019,13 @@ classdef SolverPlotter < handle
             %   plotter.legend('Tile',2,'Location','best')
             %   plotter.legend('AllTiles',true,'Location','south')
             %   plotter.legend('Axes',ah,'off')
+            %   plotter.legend('AllTiles, true, 'Reposition', true)
 
             % Parse targeting options
             tileIdx    = [];
             targetAxes = [];
             allTiles   = false;
+            reposition = false;
 
             i = 1;
             while i <= numel(varargin)
@@ -1036,6 +1038,9 @@ classdef SolverPlotter < handle
                         varargin(i:i+1) = [];
                     case "alltiles"
                         allTiles = varargin{i+1};
+                        varargin(i:i+1) = [];
+                    case "reposition"
+                        reposition = varargin{i+1};
                         varargin(i:i+1) = [];
                     otherwise
                         i = i + 1;
@@ -1061,10 +1066,22 @@ classdef SolverPlotter < handle
 
                 % Apply legend to each selected axes
                 for ax = reshape(axesList,1,[])
-                    lgd = legend(ax, varargin{:});
+                    if reposition
+                        lgd = legend(ax);
+                        if lgd.Location == "none"
+                            lgd = legend(ax, Location='best');
+                        end
+                    else
+                        lgd = legend(ax, varargin{:});
+                    end
                     lgd.AutoUpdate = "off";
                     lgds(end+1) = lgd;
                 end
+            end
+
+            % Drawnow if reposition
+            if reposition
+                drawnow
             end
         end
 
@@ -1130,7 +1147,7 @@ classdef SolverPlotter < handle
 
             end
         end
-
+        
     end
 
     methods (Static)

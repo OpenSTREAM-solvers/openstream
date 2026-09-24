@@ -180,7 +180,7 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            mevap = base.BETAP(zIdx) .* base.film.MEVAP(zIdx,:);
+            mevap = base.BETAP(zIdx) .* base.film.MEVAP(zIdx);
         end
 
         function mdep = MDEP(base,drop,zIdx)

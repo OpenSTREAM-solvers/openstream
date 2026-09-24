@@ -206,7 +206,7 @@ classdef Wave < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:wave(1).NZ).'; end
 
-            mevap = wave.BETAP(zIdx) .* wave.film.MEVAP(zIdx,:);
+            mevap = wave.BETAP(zIdx) .* wave.film.MEVAP(zIdx);
         end
 
         function mdep = MDEP(wave,drop,zIdx)

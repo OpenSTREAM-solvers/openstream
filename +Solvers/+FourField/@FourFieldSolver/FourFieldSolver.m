@@ -173,7 +173,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 flm.HFLUX = mix.AFDISTR(evapFn.*avgHFLUX,HFLUX);           % [W/m^2] Film evaporation heat flux
 
                 % Film evaporation (thermal equilibrium assumption)
-                flm.MEVAP = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
+                flm.mevap = -flm.HFLUX./(fluid.HG-fluid.HF);               % [kg/m^2/s] Evaporation mass flux
 
                 % Initialize base and wave
                 flm.initializeBaseAndWave();
@@ -734,6 +734,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 plotter.resizeFigure(opts.resize);
             end
 
+            plotter.legend('AllTiles',true, 'Reposition', true);
         end
 
         function plotter = plott(ffSolver, zIdx, opt)
