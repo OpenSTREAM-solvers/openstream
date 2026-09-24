@@ -269,9 +269,9 @@ OpenSTREAM-database requires:
 
 OpenSTREAM is maintained as a separate repository and must be installed
 independently. Consult the
-`OpenSTREAM installation guide
-<https://openstream-solvers.github.io/openstream/Usage/gettingStarted.html>`_
-for the current MATLAB, Python, CoolProp, and installation requirements.
+:doc:`OpenSTREAM installation guide
+<Usage/gettingStarted>` for the current MATLAB, Python, CoolProp, and
+installation requirements.
 
 Installation
 ------------
