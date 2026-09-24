@@ -51,7 +51,7 @@ jobs:
           repository: OpenSTREAM-solvers/openstream-database
           token:  ${{ secrets.ORG_REPO_TOKEN }}
           path: ./openstream-database
-          ref: lecorre
+          ref: main
       
       - name: Setup Python
         uses: actions/setup-python@v7
