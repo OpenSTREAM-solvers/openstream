@@ -20,5 +20,10 @@ build:
     python: "3.13"
   jobs:
     post_build:
-      - mkdir -p $READTHEDOCS_OUTPUT/html/files
-      - cp $READTHEDOCS_OUTPUT/pdf/openstream.pdf $READTHEDOCS_OUTPUT/html/files/OpenSTREAM.pdf
+      - |
+        PDF_FILE_SRC="$READTHEDOCS_OUTPUT/pdf/openstream.pdf"
+        PDF_FILE_DST="$READTHEDOCS_OUTPUT/html/files/OpenSTREAM.pdf"
+        if [ -f  "$PDF_FILE_SRC" ]; then
+          mkdir -p $READTHEDOCS_OUTPUT/html/files
+          cp "$PDF_FILE_SRC" "$PDF_FILE_DST"
+        fi
