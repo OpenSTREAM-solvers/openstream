@@ -61,7 +61,7 @@ The workflow reproduces selected calculations and results from the paper:
 - Figure 7: developing disturbance-wave validation using ``Sawai1989``.
 
 `Open the completed NURETH21 companion workflow
-<https://openstream-solvers.github.io/openstream/_static/html/project_NURETH21.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/project_NURETH21.html>`_
 
 
 NUTHOS-15 MRM
@@ -80,7 +80,7 @@ The workflow reproduces selected calculations and results from the paper:
   ``Becker1983`` post-boiling-transition cases.
 
 `Open the completed NUTHOS15_MRM companion workflow
-<https://openstream-solvers.github.io/openstream/_static/html/project_NUTHOS15_MRM.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/project_NUTHOS15_MRM.html>`_
 
 ----
 

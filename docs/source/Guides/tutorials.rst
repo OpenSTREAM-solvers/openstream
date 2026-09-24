@@ -24,7 +24,7 @@ through the links below.
 --------------
 
 `Open Tutorial 1: Quick Start
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial01_quick_start.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial01_quick_start.html>`_
 
 Run a provided OpenSTREAM case using the mixture, two-fluid, three-field,
 and four-field solver frameworks. This tutorial introduces input loading,
@@ -37,7 +37,7 @@ users.
 ------------------------------
 
 `Open Tutorial 2: Mixture Solver Capabilities
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial02_mixture.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial02_mixture.html>`_
 
 Explore homogeneous and nonhomogeneous mixture formulations, including
 fixed-slip and drift-flux models. The tutorial also introduces empirical
@@ -50,7 +50,7 @@ calculation.
 --------------------------------
 
 `Open Tutorial 3: Two-Fluid Solver Capabilities
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial03_twofluid.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial03_twofluid.html>`_
 
 Construct and run two-fluid calculations with separate liquid and vapor
 fields. Examine phase mass flow rates, velocities, enthalpies,
@@ -63,7 +63,7 @@ and physical transient behavior.
 ----------------------------------
 
 `Open Tutorial 4: Three-Field Solver Capabilities
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial04_threefield.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial04_threefield.html>`_
 
 Model annular flow using separate liquid-film and entrained-droplet fields
 together with the mixture-model vapor solution. Compare onset-of-annular-
@@ -76,7 +76,7 @@ pseudo-time convergence, and transient behavior.
 ---------------------------------
 
 `Open Tutorial 5: Four-Field Solver Capabilities
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial05_fourfield.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial05_fourfield.html>`_
 
 Extend the three-field formulation by separating the liquid film into
 base-film and disturbance-wave fields. Examine film decomposition, wave
@@ -89,7 +89,7 @@ terms, pseudo-time convergence, and a physical transient calculation.
 --------------
 
 `Open Tutorial 6: Input Files
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial06_inputfiles.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial06_inputfiles.html>`_
 
 Learn how OpenSTREAM cases are assembled from physical-model, numerical-
 option, geometry, and boundary-condition inputs. This tutorial demonstrates
@@ -102,7 +102,7 @@ files to JSON.
 -----------------------------------------------
 
 `Open Tutorial 7: Numerical Convergence and Solver Diagnostics
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial07_convergence.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial07_convergence.html>`_
 
 Distinguish local pointwise convergence, pseudo-time convergence, and
 physical-time advancement. Inspect solver states and initialization
@@ -115,7 +115,7 @@ converged solution is numerically consistent.
 ---------------------------------
 
 `Open Tutorial 8: Mesh and Time-Step Sensitivity
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial08_meshandtimestep.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial08_meshandtimestep.html>`_
 
 Evaluate the sensitivity of mixture-solver results to spatial and temporal
 discretization. Compare steady-state solutions calculated with different
@@ -129,7 +129,7 @@ sensitivity assessment and a systematic convergence study.
 ---------------------------------------------
 
 `Open Tutorial 9: Advanced Visualization and Post-Processing
-<https://openstream-solvers.github.io/openstream/_static/html/tutorial09_visualization.html>`_
+<https://openstream.readthedocs.io/en/latest/_static/html/tutorial09_visualization.html>`_
 
 Apply the principal OpenSTREAM visualization and post-processing
 capabilities to a transient solution. Generate animated axial
