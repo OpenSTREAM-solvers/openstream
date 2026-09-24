@@ -1,6 +1,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Documentation](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml/badge.svg)](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/publishDocs.yml)
 [![MATLAB Tests](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/OpenSTREAM-solvers/openstream/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/603149222.svg)](https://zenodo.org/badge/latestdoi/603149222)
 
 # OpenSTREAM
 
