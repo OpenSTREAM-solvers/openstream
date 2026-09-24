@@ -21,4 +21,4 @@ build:
   jobs:
     post_build:
       - mkdir -p $READTHEDOCS_OUTPUT/html/files
-      - cp $READTHEDOCS_OUTPUT/pdf/OpenSTREAM.pdf $READTHEDOCS_OUTPUT/html/files/OpenSTREAM.pdf
+      - cp $READTHEDOCS_OUTPUT/pdf/openstream.pdf $READTHEDOCS_OUTPUT/html/files/openstream.pdf
