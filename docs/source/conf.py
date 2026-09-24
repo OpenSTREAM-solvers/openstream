@@ -20,7 +20,7 @@ if os.environ.get("READTHEDOCS"):
     # If the version type is a tag or branch, use it
     if rtd_version_type == "tag" or rtd_version_type == "branch":
         if rtd_version_name == "latest" or rtd_version_name == "stable":
-            release = f'Latest ({rtd_git_hash[:7]})'
+            release = f'{rtd_version_name.capitalize()} ({rtd_git_hash[:7]})'
         else:
             release = rtd_version_name
 
