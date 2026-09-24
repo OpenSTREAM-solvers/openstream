@@ -5,11 +5,30 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import datetime, os
 
 project = 'OpenSTREAM'
 author = 'The OpenSTREAM Team'
-import datetime
 copyright = f'2024–{datetime.datetime.now().year}, The OpenSTREAM Team'
+
+# Set release from build source
+if os.environ.get("READTHEDOCS"):
+
+    rtd_version_type = os.environ.get("READTHEDOCS_VERSION_TYPE")
+    rtd_version_name = os.environ.get("READTHEDOCS_VERSION_NAME")
+    # If the version type is a tag or branch, use it
+    if rtd_version_type == "tag" or rtd_version_type == "branch":
+        release = rtd_version_name
+
+    # If the version type is external, append PR for pull request
+    elif rtd_version_type == "external":
+        release = f'PR-{rtd_version_name}'
+    # If the version type is unknown, use short git hash
+    elif rtd_version_type == "unknown":
+        rtd_git_hash = os.environ.get("READTHEDOCS_GIT_COMMIT_HASH")
+        release = f'Unknown: #{rtd_git_hash[:6]}'
+else:
+    release = "Local build"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -48,8 +67,6 @@ bibtex_bibfiles = ['my_bib.bib']
 bibtex_reference_style = 'author_year'
 
 # -- MATLAB specific configurations ------------------------------------------
-
-import os
 this_dir = os.path.dirname(os.path.abspath(__file__))
 matlab_src_dir = os.path.abspath(os.path.join(this_dir, '..', '..'))
 
@@ -102,6 +119,7 @@ latex_elements = {
     \definecolor{openstreamlight}{RGB}{120,123,200}   % lighter  ~ for subtitles/rules
     \definecolor{openstreampale}{RGB}{225,226,242}    % pale     ~ for background bands
     ''',
+    'releasename': 'Release:',
     'maketitle': r'''
     \begin{titlepage}
     \centering
@@ -119,7 +137,7 @@ latex_elements = {
 
     \vspace{0.8cm}
     {\large \@date \par}
-
+    {\large \py@release \par}
     \vfill
 
     \includegraphics[width=0.40\textwidth]{logo-transparent.png}\par
