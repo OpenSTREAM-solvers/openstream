@@ -21,7 +21,8 @@ if os.environ.get("READTHEDOCS"):
     if rtd_version_type == "tag" or rtd_version_type == "branch":
         if rtd_version_name == "latest" or rtd_version_name == "stable":
             release = f'Latest ({rtd_git_hash[:7]})'
-        release = rtd_version_name
+        else:
+            release = rtd_version_name
 
     # If the version type is external, append PR for pull request
     elif rtd_version_type == "external":
