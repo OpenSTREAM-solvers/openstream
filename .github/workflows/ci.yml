@@ -93,6 +93,7 @@ jobs:
         with:
           output-detail: verbose
           source-folder: ./openstream
+          select-by-folder: ./openstream/tests
 
       # Upload artifacts
       - name: Upload MATLAB test output
