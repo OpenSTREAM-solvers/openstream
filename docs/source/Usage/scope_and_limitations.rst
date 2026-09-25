@@ -60,8 +60,9 @@ The formulation is therefore most appropriate when:
 
 - Axial transport is dominant.
 - Cross-sectional quantities can be represented using averaged values.
-- Local geometric effects can be represented through effective geometry,
-  loss coefficients, or closure models.
+- Local geometric effects can be represented through loss coefficients or
+  closure models accounting for local effects, such as enhanced droplet
+  deposition downstream of an obstruction.
 - Three-dimensional flow structures are not the principal quantities of
   interest.
 
@@ -83,7 +84,7 @@ Geometric scope
 ---------------
 
 The current solver frameworks are designed for straight channels with one
-or more wall surfaces.
+or more wall surfaces and a constant cross-sectional area.
 
 Supported representations can include:
 
