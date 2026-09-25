@@ -106,25 +106,25 @@ committed.
 Activate the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-On Windows Command Prompt:
+Windows Command Prompt:
 
 .. code-block:: bat
 
    .venv\Scripts\activate
 
-On Windows PowerShell:
+Windows PowerShell:
 
 .. code-block:: powershell
 
    .\.venv\Scripts\Activate.ps1
 
-On Git Bash, Linux, or macOS:
+Git Bash on Windows:
 
 .. code-block:: bash
 
    source .venv/Scripts/activate
 
-On Linux or macOS, the activation path may instead be:
+Linux or macOS:
 
 .. code-block:: bash
 

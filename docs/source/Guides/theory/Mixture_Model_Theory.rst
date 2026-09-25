@@ -113,7 +113,7 @@ Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations in straight channels
-- Supports uniform and non-uniform wall heat flux distribution
+- Supports uniform and nonuniform wall heat flux distribution
 - Can include thermal non-equilibrium modeling (subcooled boiling or post Critical Heat Flux) via closure models or MRM
 - Allows phase velocity slip using drift flux models
 - Neglects minor contributions such as frictional heating and temporal pressure gradient contributions

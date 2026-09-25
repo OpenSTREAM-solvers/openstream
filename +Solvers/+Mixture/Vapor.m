@@ -145,7 +145,7 @@ classdef Vapor < Solvers.AbstractPhase
         end
 
         function mflux = MFLUX(vapor, zIdx)
-            %MFLUX Vapor mass flux [kg/m^2-s]
+            %MFLUX Vapor mass flux [kg/m^2/s]
 
             if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
             mflux = vapor.W(zIdx)./vapor.mix.inputSet.geometry.AREA;

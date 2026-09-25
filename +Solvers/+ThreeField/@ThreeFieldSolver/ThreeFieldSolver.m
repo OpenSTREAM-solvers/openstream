@@ -99,9 +99,10 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             %INITIALIZESOLVER Initializes solver parameters and constructs film/drop objects.
             %
             % Sets up the solver's internal state using the provided
-            % :class:`Inputs.InputSet` and :class:`Solvers.ThreeField.ThreeFieldSolver`,
-            % This includes initialization of data structures for transient and steady-state
-            % simulations based on the mixture solver solutions.
+            % :class:`Inputs.InputSet` and
+            % :class:`Solvers.ThreeField.ThreeFieldSolver`. This includes
+            % initialization of data structures for transient and
+            % steady-state simulations based on the mixture solver solutions.
             %
             % Operations performed:
             %
@@ -296,7 +297,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % - Enhanced drop deposition is disabled
             % - Uses interpolation for improved convergence
             % - Falls back to ad-hoc update if interpolation fails
-            % - Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
+            % - Updates the film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
 
             options = tfSolver.inputSet.options;
 

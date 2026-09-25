@@ -255,8 +255,8 @@ classdef Base < Solvers.AbstractFilm
 
             % TODO: requires further investigation
             % if base.inputSet.model.POSFILM
-            %     DeltaWLwave = max(0-base.film.wave.WL(zIdx),0);             % [kg/m-s] Wave flow is limited by 0
-            %     DeltaMwave = DeltaWLwave ./ base.DZ;                        % [kg/m^2-s] Wave mass flux
+            %     DeltaWLwave = max(0-base.film.wave.WL(zIdx),0);             % [kg/m/s] Wave flow is limited by 0
+            %     DeltaMwave = DeltaWLwave ./ base.DZ;                        % [kg/m^2/s] Wave mass flux
             %     Mwave = Mwave - DeltaMwave;                                 % Apply to Mwave
             % end
 
@@ -455,10 +455,10 @@ classdef Base < Solvers.AbstractFilm
         end
 
         function tdry = TDRY(base, drop, zIdx)
-            %TDRY Base film dry-out time [s]
+            %TDRY Base film dryout time [s]
             %
-            % Estimates the time of base film dry out under current
-            % evaporation and deposition conditions. Returns zero if dry-out does
+            % Estimates the time of base film dryout under current
+            % evaporation and deposition conditions. Returns zero if dryout does
             % not occur.
             %
             % Inputs:
@@ -477,7 +477,7 @@ classdef Base < Solvers.AbstractFilm
 
             tdry = base.TBASE(zIdx) - Wb.*betaB./per./Ub./DeltaM;
             tdry(DeltaM<=0) = 0;
-            % If dry out doesn't occur, set to 0.
+            % If dryout doesn't occur, set to 0.
             tdry = max(tdry, 0);
         end
 
@@ -530,7 +530,7 @@ classdef Base < Solvers.AbstractFilm
         end
 
         function wminl = WMINL(base, drop, zIdx)
-            %WMINL Minimum base film mass flow rate per perimeter [kg/m-s]
+            %WMINL Minimum base film mass flow rate per perimeter [kg/s/m]
             %
             % Computes the minimum base film mass flow rate normalized by channel
             % perimeter.

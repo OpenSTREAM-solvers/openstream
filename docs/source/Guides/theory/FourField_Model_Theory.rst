@@ -20,14 +20,14 @@ The four-field model serves several key roles within OpenSTREAM:
 - **Non-equilibrium dynamics**: Includes a Boltzmann-type wave number density transport equation to simulate wave formation, merging, and dissipation.
 - **Enhanced predictive capability**: Enables detailed simulation of film dryout, wave-driven mass transport, and hydrodynamic transitions in developing annular flow.
 
-By explicitly modeling disturbance waves and their interactions with other flow fields, the four-field framework offers state-of-the-art capabilities for simulating complex annular flow phenomena, including intermittent film dryout.
+By explicitly modeling disturbance waves and their interactions with other flow fields, the four-field framework offers advanced capabilities for simulating complex annular flow phenomena, including intermittent film dryout.
 
 An overview of the four-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LECORREMODEL` and :cite:t:`LeCorre2025OpenSTREAM`.
 
 Governing equations
 -------------------
 
-The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.
+The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. The annular-flow field equations are numerically solved over the complete channel, but their physical interpretation applies from the modeled onset of annular flow. Upstream values serve as initialization quantities and evolve smoothly toward the prescribed conditions at the onset.
 
 **1. Mass conservation**
 
@@ -105,7 +105,7 @@ Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations in straight channels
-- Supports uniform and non-uniform wall heat flux distribution
+- Supports uniform and nonuniform wall heat flux distribution
 - Models intermittent wave transport and non-equilibrium wave dynamics
 - Includes wave-film exchange and wave number density evolution
 - Assumes thermal equilibrium (no temperature difference between phases)
@@ -115,7 +115,7 @@ Features and assumptions
 Role in OpenSTREAM
 ------------------
 
-The four-field model provides state-of-the-art simulation capabilities for annular two-phase flow, including in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer.
+The four-field model provides an advanced representation of annular two-phase flow, including in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer.
 
 ----
 

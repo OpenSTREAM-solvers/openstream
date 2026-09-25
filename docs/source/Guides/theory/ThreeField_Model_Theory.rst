@@ -20,14 +20,14 @@ The three-field model serves several key roles within OpenSTREAM:
 - **Film and droplet transport**: Captures deposition and entrainment processes critical to predicting film dryout and droplet behavior.
 - **Thermal equilibrium assumption**: Simplifies energy conservation while retaining essential mass and momentum exchanges.
 
-By explicitly modeling the liquid film and droplet fields, the three-field framework enables accurate simulation of saturated annular flow regimes in single channels and supports advanced thermal-hydraulic analysis for various industrial applications.
+By explicitly modeling the liquid film and droplet fields, the three-field framework enables detailed simulation of saturated annular flow regimes in single channels and supports advanced thermal-hydraulic analysis for various industrial applications.
 
 An overview of the three-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LeCorre2025OpenSTREAM`.
 
 Governing equations
 -------------------
 
-The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.
+The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. The annular-flow field equations are numerically solved over the complete channel, but their physical interpretation applies from the modeled onset of annular flow. Upstream values serve as initialization quantities and evolve smoothly toward the prescribed conditions at the onset.
 
 **1. Mass conservation**
 
@@ -90,7 +90,7 @@ Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations in straight channels
-- Supports uniform and non-uniform wall heat flux distribution
+- Supports uniform and nonuniform wall heat flux distribution
 - Applicable up to film dryout
 - Models drop deposition and film entrainment
 - Assumes thermal equilibrium (no temperature difference between phases)
@@ -100,7 +100,7 @@ Features and assumptions
 Role in OpenSTREAM
 ------------------
 
-The three-field model is the preferred framework for simulating annular two-phase flow up to the point of liquid film dryout. It offers detailed modeling of liquid film and droplet dynamics, making it particularly well-suited for advanced thermal-hydraulic analyses in Boiling Water Reactor (BWR) applications.
+The three-field model provides a framework for simulating annular two-phase flow up to the point of liquid film dryout. It offers detailed modeling of liquid film and droplet dynamics, intended for advanced thermal-hydraulic analyses in Boiling Water Reactor (BWR) applications.
 
 ----
 

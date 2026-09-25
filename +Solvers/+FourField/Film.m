@@ -27,7 +27,6 @@ classdef Film < Solvers.AbstractFilm
         TIDX                                                               = 1                    % Time step index [-]
         Z                                                                  = 1.                   % Elevation [m]
         HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
-        %MEVAP        (:,:) double  {mustBeNumeric,mustBeNonpositive}       =-1.                   % Evaporation mass flux [kg/s/m^2]
 
         % Iteration properties
 
@@ -46,9 +45,9 @@ classdef Film < Solvers.AbstractFilm
 
         % Flow properties
 
-        W            %(:,:) double  {mustBeNumeric}                         = 1.                   % Mass flow rate [kg/s]
-        U            %(:,:) double  {mustBeNumeric}                         = 1.                   % Velocity [m/s]
-        H            %(:,:) double  {mustBeNumeric}                         = 1E6                  % Enthalpy [J/kg]
+        W                                                                                         % Mass flow rate [kg/s]
+        U                                                                                         % Velocity [m/s]
+        H                                                                                         % Specific enthalpy [J/kg]
 
     end
 

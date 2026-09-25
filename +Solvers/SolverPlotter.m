@@ -710,7 +710,7 @@ classdef SolverPlotter < handle
         end
 
         function plot(plotters, YData, fieldName, opts)
-            %PLOTZ Method to plot spatial or temporal data (YData) on the current axes
+            %PLOT Method to plot spatial or temporal data (YData) on the current axes
 
             arguments
                 plotters

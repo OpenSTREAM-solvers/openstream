@@ -27,7 +27,9 @@ This is the quickest and easiest way to start exploring what OpenSTREAM can do, 
                 bcFilePath            = './inputs/tutorial1.inp', ...
                 sessionParentDir      = fullfile(pwd,'outputs'), ...
                 overwriteSessionFiles = true, ...
-                LOGMODE               = 'BOTH');        
+                LOGMODE               = 'BOTH');  
+
+    warning on      
 
     % Create a mixture solver object
     mixSolver = MixtureSolver(inputSet);
