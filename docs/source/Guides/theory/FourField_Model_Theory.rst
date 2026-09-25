@@ -27,7 +27,7 @@ An overview of the four-field model implemented in OpenSTREAM is provided below.
 Governing equations
 -------------------
 
-The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. These equations are solved starting from the onset of annular two-phase flow. Upstream of this onset, the solution from the mixture solver is used to initialize the flow fields.
+The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. The annular-flow field equations are numerically solved over the complete channel, but their physical interpretation applies from the modeled onset of annular flow. Upstream values serve as initialization quantities and evolve smoothly toward the prescribed conditions at the onset.
 
 **1. Mass conservation**
 
