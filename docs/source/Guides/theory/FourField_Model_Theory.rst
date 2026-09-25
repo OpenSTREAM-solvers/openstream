@@ -105,7 +105,7 @@ Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations in straight channels
-- Supports uniform and non-uniform wall heat flux distribution
+- Supports uniform and nonuniform wall heat flux distribution
 - Models intermittent wave transport and non-equilibrium wave dynamics
 - Includes wave-film exchange and wave number density evolution
 - Assumes thermal equilibrium (no temperature difference between phases)

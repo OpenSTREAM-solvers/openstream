@@ -125,7 +125,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
         end
 
         function Mevap = MEVAP(absfilm, zIdx)
-            %MEVAP Evaporation mass flux   [kg/s/m^2]
+            %MEVAP Evaporation mass flux   [kg/m^2/s]
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
 

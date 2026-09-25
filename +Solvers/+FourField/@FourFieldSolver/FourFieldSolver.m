@@ -87,9 +87,11 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         function initializeSolver(ffSolver)
             %INITIALIZESOLVER Initializes solver parameters and constructs film, wave, base, and drop objects.
             %
-            % Sets up the solver's internal state using the provided :class:`Inputs.InputSet`
-            % and mixture solver solutions. Includes initialization of data structures for
-            % transient and steady-state simulations.
+            % Sets up the solver's internal state using the provided
+            % :class:`Inputs.InputSet` and
+            % :class:`Solvers.FourField.FourFieldSolver`. This includes
+            % initialization of data structures for transient and
+            % steady-state simulations based on the mixture solver solutions.
             %
             % Operations performed:
             %
@@ -288,7 +290,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % - Enhanced drop deposition is disabled
             % - Uses interpolation for improved convergence
             % - Falls back to ad-hoc update if interpolation fails
-            % - Method update film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
+            % - Updates the film and drop mass flow rates. Use flm.copy() and drp.copy() as input arguments if used in post-process
 
             options = ffSolver.inputSet.options;
 

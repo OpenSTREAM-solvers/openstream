@@ -921,7 +921,7 @@ Numerical convergence
    mesh or smallest time step used in a study is a reference solution and
    should not automatically be treated as exact.
 
-.. dropdown:: Can OpenSTREAM use a non-uniform axial mesh?
+.. dropdown:: Can OpenSTREAM use a nonuniform axial mesh?
    :animate: fade-in-slide-down
    :chevron: right-down
 
@@ -953,7 +953,7 @@ Numerical convergence
    spacing but also increases the number of calculated values and the
    computational effort throughout the domain.
 
-   The absence of a non-uniform mesh option does not necessarily prevent
+   The absence of a nonuniform mesh option does not necessarily prevent
    accurate calculations. A uniform mesh can be adequate when the axial
    behavior is sufficiently smooth or when enough nodes are used to resolve
    the shortest relevant axial length scale. Mesh adequacy should be
@@ -1630,7 +1630,7 @@ Physical scope and limitations
 
    * **Straight channels with constant cross-sectional area.** The current
      geometry represents a straight flow path with constant flow area.
-     Multiple wall perimeters and non-uniform wall heating can be defined,
+     Multiple wall perimeters and nonuniform wall heating can be defined,
      and local perturbations can be represented through dedicated models,
      but continuous geometric variation is not resolved.
 

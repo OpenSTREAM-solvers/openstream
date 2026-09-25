@@ -77,7 +77,7 @@ Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations in straight channels
-- Supports uniform and non-uniform wall heat flux distribution
+- Supports uniform and nonuniform wall heat flux distribution
 - Captures phase-specific velocities and temperatures
 - Includes interfacial mass, momentum, and energy exchange
 - Supports wall boiling

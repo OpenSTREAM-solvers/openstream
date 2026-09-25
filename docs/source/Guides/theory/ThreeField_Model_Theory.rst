@@ -90,7 +90,7 @@ Features and assumptions
 ------------------------
 
 - Supports both steady-state and transient simulations in straight channels
-- Supports uniform and non-uniform wall heat flux distribution
+- Supports uniform and nonuniform wall heat flux distribution
 - Applicable up to film dryout
 - Models drop deposition and film entrainment
 - Assumes thermal equilibrium (no temperature difference between phases)
