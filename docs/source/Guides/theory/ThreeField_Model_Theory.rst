@@ -20,7 +20,7 @@ The three-field model serves several key roles within OpenSTREAM:
 - **Film and droplet transport**: Captures deposition and entrainment processes critical to predicting film dryout and droplet behavior.
 - **Thermal equilibrium assumption**: Simplifies energy conservation while retaining essential mass and momentum exchanges.
 
-By explicitly modeling the liquid film and droplet fields, the three-field framework enables accurate simulation of saturated annular flow regimes in single channels and supports advanced thermal-hydraulic analysis for various industrial applications.
+By explicitly modeling the liquid film and droplet fields, the three-field framework enables detailed simulation of saturated annular flow regimes in single channels and supports advanced thermal-hydraulic analysis for various industrial applications.
 
 An overview of the three-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LeCorre2025OpenSTREAM`.
 
@@ -100,7 +100,7 @@ Features and assumptions
 Role in OpenSTREAM
 ------------------
 
-The three-field model is the preferred framework for simulating annular two-phase flow up to the point of liquid film dryout. It offers detailed modeling of liquid film and droplet dynamics, making it particularly well-suited for advanced thermal-hydraulic analyses in Boiling Water Reactor (BWR) applications.
+The three-field model provides a framework for simulating annular two-phase flow up to the point of liquid film dryout. It offers detailed modeling of liquid film and droplet dynamics, intended for advanced thermal-hydraulic analyses in Boiling Water Reactor (BWR) applications.
 
 ----
 

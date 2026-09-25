@@ -20,7 +20,7 @@ The four-field model serves several key roles within OpenSTREAM:
 - **Non-equilibrium dynamics**: Includes a Boltzmann-type wave number density transport equation to simulate wave formation, merging, and dissipation.
 - **Enhanced predictive capability**: Enables detailed simulation of film dryout, wave-driven mass transport, and hydrodynamic transitions in developing annular flow.
 
-By explicitly modeling disturbance waves and their interactions with other flow fields, the four-field framework offers state-of-the-art capabilities for simulating complex annular flow phenomena, including intermittent film dryout.
+By explicitly modeling disturbance waves and their interactions with other flow fields, the four-field framework offers advanced capabilities for simulating complex annular flow phenomena, including intermittent film dryout.
 
 An overview of the four-field model implemented in OpenSTREAM is provided below. A more detailed derivation and theoretical background can be found in :cite:t:`LECORREMODEL` and :cite:t:`LeCorre2025OpenSTREAM`.
 
@@ -115,7 +115,7 @@ Features and assumptions
 Role in OpenSTREAM
 ------------------
 
-The four-field model provides state-of-the-art simulation capabilities for annular two-phase flow, including in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer.
+The four-field model provides an advanced representation of annular two-phase flow, including in developing flow regions. It captures wave dynamics and their impact on mass and momentum transfer.
 
 ----
 

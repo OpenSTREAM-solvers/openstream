@@ -67,7 +67,7 @@ Getting started
      general workflow can therefore be used to compare different levels of
      physical resolution.
 
-   * **State-of-the-art annular-flow modeling.** The three-field solver separates
+   * **Advanced annular-flow modeling.** The three-field solver separates
      the liquid into wall-film and entrained-droplet fields. The four-field
      solver further separates the liquid film into base-film and
      disturbance-wave fields and includes wave-frequency transport.
