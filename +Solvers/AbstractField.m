@@ -225,14 +225,14 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
 
             % TODO: add type check for srcObj and targetObj
 
-            for i = 1:length(targetObj)
+            for i = 1:numel(targetObj)
                 % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
+                if ~isequal(size(srcObj.Z), size(targetObj(i).Z)) || any(srcObj.Z ~= targetObj(i).Z)    
                     classType = class(srcObj);
                     throw( ...
                         MException( ...
                         'AbstractFieldError:copyFlowPropertiesError', ...
-                        sprintf('Source and target objects (%s) have mismatched spatial meshes', classType) ...
+                        'Source and target objects (%s) have mismatched spatial meshes', classType ...
                         ) ...
                         );
                 end
@@ -242,19 +242,19 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                 for j = 1:length(propNames)
                     % Full copy
                     if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                        targetObj(i).(propNames{j}) = srcObj.(propNames{j});
                     % Partial copy to preserve inlet conditions
                     else
                         % Scalar structs are copied per field
-                        if isstruct(targetObj(1).(propNames{j})) && isscalar(targetObj(1).(propNames{j}))
-                            structFields = fieldnames(targetObj(1).(propNames{j}));
+                        if isstruct(targetObj(i).(propNames{j})) && isscalar(targetObj(i).(propNames{j}))
+                            structFields = fieldnames(targetObj(i).(propNames{j}));
                             for ii = 1:length(structFields)
-                                targetObj(1).(propNames{j}).(structFields{ii})(2:end) = ...
-                                    srcObj.(propNames{j}).(structFields{ii})(2:end);
+                                targetObj(i).(propNames{j}).(structFields{ii})(2:end,:) = ...
+                                    srcObj.(propNames{j}).(structFields{ii})(2:end,:);
                             end
                         % Non-scalar properties are copied as a vector
                         else
-                            targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                            targetObj(1).(propNames{j})(2:end,:) = srcObj.(propNames{j})(2:end,:);
                         end
                     end
                 end

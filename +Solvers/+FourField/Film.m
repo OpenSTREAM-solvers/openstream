@@ -267,11 +267,12 @@ classdef Film < Solvers.AbstractFilm
 
             for i = 1:length(targetObj)
                 % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
+                if ~isequal(size(srcObj.Z), size(targetObj(i).Z)) || any(srcObj.Z ~= targetObj(i).Z)
+                    classType = class(srcObj);
                     throw( ...
                         MException( ...
                         'FilmError:copyFlowPropertiesError', ...
-                        'Source and target objects have mismatched spatial meshes' ...
+                        'Source and target objects (%s) have mismatched spatial meshes', classType ...
                         ) ...
                         );
                 end
@@ -280,7 +281,7 @@ classdef Film < Solvers.AbstractFilm
                 propNames = {'base', 'wave'};
                 for j = 1:length(propNames)
                     % Copy base and wave flow properties
-                    srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}));
+                    srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}), all = opts.all);
                 end
             end
         end

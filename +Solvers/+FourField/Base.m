@@ -586,14 +586,14 @@ classdef Base < Solvers.AbstractFilm
                 opts.all  (1,1) logical = false
             end
 
-            for i = 1:length(targetObj)
-
+            for i = 1:numel(targetObj)
                 % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
+                if ~isequal(size(srcObj.Z), size(targetObj(i).Z)) || any(srcObj.Z ~= targetObj(i).Z)
+                    classType = class(srcObj);
                     throw( ...
                         MException( ...
-                        'FilmError:copyFlowPropertiesError', ...
-                        'Source and target objects have mismatched spatial meshes' ...
+                        'BaseFilmError:copyFlowPropertiesError', ...
+                        'Source and target objects (%s) have mismatched spatial meshes', classType ...
                         ) ...
                         );
                 end
@@ -603,9 +603,9 @@ classdef Base < Solvers.AbstractFilm
                 propNames = {'W','U','H'};
                 for j = 1:length(propNames)
                     if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                        targetObj(i).(propNames{j}) = srcObj.(propNames{j});
                     else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                        targetObj(i).(propNames{j})(2:end,:) = srcObj.(propNames{j})(2:end,:);
                     end
                 end
 
