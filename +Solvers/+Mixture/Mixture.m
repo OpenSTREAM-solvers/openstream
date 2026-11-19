@@ -351,7 +351,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2
                 t = mix.relaxtevap;
             else
-                t = mix.relaxtevap(zIdx);
+                t = mix.relaxtevap(zIdx,:);
             end
         end
 
@@ -370,7 +370,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2
                 t = mix.relaxtcond;
             else
-                t = mix.relaxtcond(zIdx);
+                t = mix.relaxtcond(zIdx,:);
             end
         end
 
@@ -1094,7 +1094,9 @@ classdef Mixture < Solvers.AbstractField
                  case 'VAPOR'
                      % Single-phase vapor
                      hwallbt = mix.vapor.HWALL(twall,zIdx);
-                     Tbv     = mix.vapor.T(zIdx);
+
+                     Tbv = mix.vapor.T(zIdx);
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'DOUGALL'
                      % Dougall-Rohsenow model
 
@@ -1106,8 +1108,10 @@ classdef Mixture < Solvers.AbstractField
                      NU  = 0.023.*REG.^0.8.*PRG.^0.4;                      % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     %Tbv     = repmat(fld.TSAT,length(zIdx),1);
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
+                     hwallbt = repmat(hwallbt,geom.NWALL);
+
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'BISHOP'
                      % Bishop-Sandberg-Tong model
 
@@ -1117,16 +1121,18 @@ classdef Mixture < Solvers.AbstractField
                      RHOGRHOL = RHOG/RHOF;                                 % [-] Saturated vapor to liquid density
 
                      Tf = max(TSAT+10,(TSAT+twall)./2);                    % [K] Vapor film temperature, use TSAT+10 for robustness
-                     hf  = fld.H(Tf);                                      % [J/kg] Vapor film enthalpy 
-                     MUf = fld.MUV(hf);                                    % [Pa.s] Vapor viscosity at film temperature
-                     Kf  = fld.KV(hf);                                     % [Pa.s] Vapor conductivity at film temperature
-                     PRf = fld.PRANDTLV(hf);                               % [-] Gas Prandtl number at film temperature
+                     hf  = reshape(fld.H(Tf),[],geom.NWALL);               % [J/kg] Vapor film enthalpy 
+                     MUf = reshape(fld.MUV(hf),[],geom.NWALL);             % [Pa.s] Vapor viscosity at film temperature
+                     Kf  = reshape(fld.KV(hf),[],geom.NWALL);              % [W/m/K] Vapor conductivity at film temperature
+                     PRf = reshape(fld.PRANDTLV(hf),[],geom.NWALL);        % [-] Gas Prandtl number at film temperature
                      REf = mix.MFLUX(zIdx).*geom.HDIAM./MUf;               % [-] Vapor Reynolds number (based on total mass flux)
 
                      NU = 0.0193.*REf.^0.80.*PRf.^1.23.*RHOGRHOB.^0.68.*RHOGRHOL.^0.068; % [-] Nusselt number
 
                      hwallbt = NU.*Kf./geom.HDIAM;
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
+                     
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'MOECK'
                      % Groeneveld-Moeck model
                      % Note that the Vapor Reynolds number is derived based on the original reference but is equivalent to Dougall-Rohsenow model.
@@ -1140,12 +1146,15 @@ classdef Mixture < Solvers.AbstractField
                      Y   = 1-0.1.*(RHOF/RHOG-1).^0.4.*(1-Xe).^0.4;         % [-]
 
                      Tw  = max(TSAT+10,twall);                             % [K] Vapor wall temperature, use TSAT+10 for robustness                  
-                     PRW = fld.PRANDTLV(fld.H(Tw));                         % [J/kg] Vapor wall Prandtl number at wall temperature
+                     h   = reshape(fld.H(Tw),[],geom.NWALL);               % [J/kg] Vapor wall enthalpy
+                     PRW = reshape(fld.PRANDTLV(h),[],geom.NWALL);         % [J/kg] Vapor wall Prandtl number at wall temperature
 
                      NU  = coef(1).*REG.^coef(2).*PRW.^coef(3).*Y.^coef(4); % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
+                     
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'DELORME'
                      % Groeneveld-Delorme model
                      % TODO: Check Vapor superheat (TVa) does not start at Tsat at CBT
@@ -1170,23 +1179,25 @@ classdef Mixture < Solvers.AbstractField
                      REHOM = mix.MFLUX(zIdx).*geom.HDIAM.*X1./MUG./VFHOM;  % [-] Reynolds number based on HEM
 
                      Xe = max(0,mix.XEQ(zIdx));                            % [-] Equilibrium vapor quality (can be larger than 1)
-                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*Xe+b2.*Xe.^2); % [-]
+                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx,:).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*Xe+b2.*Xe.^2); % [-]
                      Phi = min(pi/2,max(0,Phi));                           % [-] Impose boundaries
 
                      HVa = max(HG,mix.H(zIdx))+HFG.*exp(-tan(Phi)).*exp(-(3.*VFHOM).^(-4)); % [J/kg] Superheated vapor enthalpy
                      Xa  = HFG.*Xe./(HVa-HF);                              % [-] Resulting vapor mass quality
-                     TVa = fld.T(HVa);                                      % [K] Resulting vapor temperature
+                     TVa = reshape(fld.T(HVa),[],geom.NWALL);              % [K] Resulting vapor temperature
 
                      Tf  = max(TSAT+10,(TVa+twall)/2);                     % [K] Film temperature, use TSAT+10 for robustness
-                     Hf  = fld.H(Tf);                                       % [J/kg] Resulting film enthalpy
+                     hf  = reshape(fld.H(Tf),[],geom.NWALL);               % [J/kg] Resulting film enthalpy
+                     MUf = reshape(fld.MUV(hf),[],geom.NWALL);             % [Pa.s] Vapor viscosity at film temperature
+                     Kf  = reshape(fld.KV(hf),[],geom.NWALL);              % [W/m/K] Vapor conductivity at film temperature
+                     PRf = reshape(fld.PRANDTLV(hf),[],geom.NWALL);        % [-] Vapor Prandtl number at film temperature
+                     RHOV = reshape(fld.RHOV(HVa),[],geom.NWALL);          % [kg/m3] Vapor density at vapor temperature
+                     REV  = mix.MFLUX(zIdx).*geom.HDIAM./MUf.*(Xa+(RHOV./RHOF).*(1-Xa)); % [-] Vapor Reynolds number
+                     
+                     NU   = 0.008348.*REV.^0.8774.*PRf.^0.6112;            % [-] Nusselt number
 
-                     RHOV = fld.RHOV(HVa);                                  % [kg/m3] Vapor density at vapor temperature
-                     REV  = mix.MFLUX(zIdx).*geom.HDIAM./fld.MUV(Hf).*(Xa+(RHOV/RHOF).*(1-Xa)); % [-] Vapor Reynolds number
-                     PRF  = fld.PRANDTLV(Hf);                               % [-] Vapor Prandtl number at film temperature
-                     NU   = 0.008348.*REV.^0.8774.*PRF.^0.6112;            % [-] Nusselt number
-
-                     KVF  = fld.KV(Hf);                                     % [W/m/K] Vapor conductivity at film temperature
-                     hwallbt = NU.*(KVF/geom.HDIAM);
+                     hwallbt = NU.*Kf./geom.HDIAM;
+                     
                      Tbv     = TVa;
                  case 'CONDIEIV'
                      % Condie-Bengston IV model
@@ -1197,14 +1208,14 @@ classdef Mixture < Solvers.AbstractField
                      KG = KG/1E3;                                          % [kW/m/K] Vapor conductivity
 
                      Tw  = max(TSAT+10,twall);                             % [K] Vapor wall temperature
-                     PRW = fld.PRANDTLV(fld.H(Tw));                         % [-] Vapor Prandtl number at wall temperature
+                     PRW = reshape(fld.PRANDTLV(fld.H(Tw)),[],geom.NWALL); % [-] Vapor Prandtl number at wall temperature
 
                      hwallbt = 0.00128.*KG.^0.4593.*PRW.^2.2598./geom.HDIAM.^0.8095./(1+Xe).^2.0514.*REG.^(0.6249+0.2043.*log(Xe+1)); % [kW/m^2/K]
                      hwallbt = hwallbt.*1E3;                               % [W/m^2/K]
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
-             end
 
-             Tbv = repmat(Tbv,geom.NWALL);
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
+             end
              
              % Switch to full single-phase vapor
              %TODO: Check how transition should be performed (xeq = 1, min(htc), etc)
@@ -1925,7 +1936,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2
                 t = mix.nearwalltrelax;
             else
-                t = mix.nearwalltrelax(zIdx);
+                t = mix.nearwalltrelax(zIdx,:);
             end
         end
 
@@ -2582,7 +2593,7 @@ classdef Mixture < Solvers.AbstractField
             % CBT flag
             switch model.CBT
                 case InputEnums.CBT.ELEVATION
-                    cbt = mix.Z >= model.CBTELEVATION;                     % CBT indicator based on input elevation
+                    cbt = repmat(mix.Z >= model.CBTELEVATION,1,geom.NWALL); % CBT indicator based on input elevation
 
                 otherwise
                     cbt = mix.HFLUX(1:mix.NZ,:) > chf;                     % CBT indicator based on CHF value
