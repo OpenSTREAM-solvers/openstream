@@ -825,7 +825,7 @@ classdef Vapor < Solvers.AbstractField
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
             geom  = vapor.inputSet.geometry;
-            Fwall = -vapor.VF(liquid,zIdx).*vapor.TAUW(zIdx).*sum(geom.PERIM); % [N/m]
+            Fwall = -vapor.VF(liquid,zIdx).*sum(geom.PERIM.*vapor.TAUW(zIdx),2); % [N/m]
         end
 
         function cd = CD(vapor,liquid,zIdx)
