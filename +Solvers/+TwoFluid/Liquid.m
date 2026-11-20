@@ -295,7 +295,7 @@ classdef Liquid < Solvers.AbstractField
             G = liquid.inputSet.model.G;                                   % [m/s^2]
             Diff_RHO = abs(RHOL-RHOV);                                     % [kg/m^3]
 
-            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(G.*SIGMA./(Diff_RHO)));     % [-]
+            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(SIGMA./(G.*Diff_RHO)));     % [-]
         end
 
     end
@@ -1054,6 +1054,7 @@ classdef Liquid < Solvers.AbstractField
 
                 case InputEnums.DROPDRAG.DISTORTED
                     % Distorted fluid particle (bubbly flow n=2.5)
+                    % TODO: Review the model
                     %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
                     mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
                     cd = liquid.VISC(vapor,zIdx).*Re.*mult;                % [-]

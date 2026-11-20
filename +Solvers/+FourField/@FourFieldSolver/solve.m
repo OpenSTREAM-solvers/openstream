@@ -115,11 +115,7 @@ function solver(solveINIT)
         ffSolver.log('Time %5.2f [s]',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
-        if solveINIT
-            RHOF = fluid.RHOF;                                             % [kg/m^3] Saturated liquid density
-        else
-            RHOF = fluid(tIdx).RHOF;                                       % [kg/m^3] Saturated liquid density
-        end
+        RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
         
         % Update four-field property guesses from previous time step
         base(tIdx-1).copyFlowProperties(base(tIdx));

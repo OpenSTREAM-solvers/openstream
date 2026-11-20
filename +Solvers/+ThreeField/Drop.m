@@ -169,11 +169,11 @@ classdef Drop < Solvers.AbstractField
                     mdep = zeros(length(zIdx),1);
                 case InputEnums.DEPOSITION.GOVAN
                     % Govan & Hewitt drop deposition model
-                    if conc/rhog < 0.3
-                        mdep = 0.18.*conc./sqrt(rhog*hdiam/sig);           % [kg/m^2/s] Deposition mass flux
-                    else
-                        mdep = 0.083.*(conc./rhog).^(-0.65).*conc./sqrt(rhog*hdiam/sig); % [kg/m^2/s] Deposition mass flux
-                    end
+                    cr   = conc./rhog;
+                    base = conc./sqrt(rhog*hdiam/sig);
+                    mdep = 0.18.*base;                                     % [kg/m^2/s] Deposition mass flux, cr < 0.3
+                    hi   = cr >= 0.3;
+                    mdep(hi) = 0.083.*cr(hi).^(-0.65).*base(hi);           % [kg/m^2/s] Deposition mass flux, cr >= 0.3
                 case InputEnums.DEPOSITION.OKAWA
                     % Okawa drop deposition model
                     kd = 0.0632.*(conc./rhog).^-0.5.*sqrt(sig./(rhog.*hdiam));% [m/s] Deposition mass transfer coefficient
@@ -201,8 +201,9 @@ classdef Drop < Solvers.AbstractField
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
             perim = drop.inputSet.geometry.PERIM;                          % [m] Perimeter
+            muf   = drop.fluid.MUF;                                        % [kg/m^3] Saturated liquid viscosity
 
-            re = 4.*drop.W(zIdx)./drop.MU(zIdx)./sum(perim);               % [-]
+            re = 4.*drop.W(zIdx)./muf./sum(perim);                         % [-]
         end
 
         function vr = VR(drop,zIdx)
@@ -322,7 +323,7 @@ classdef Drop < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
-            ai = drop.DENSITY(zIdx).*drop.AREA(zIdx);                      % [m^-1]
+            ai = drop.DENSITY(zIdx).*drop.AREA(zIdx);              fldfkuid        % [m^-1]
         end
 
         function cd = DRAG(drop,zIdx)
@@ -338,10 +339,15 @@ classdef Drop < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
+            model = drop.inputSet.model;
+
+            RHOV = drop.fluid.RHOV(drop.H(zIdx)); 
+            MUV  = drop.fluid.MUV(drop.H(zIdx));
+            RHOF = drop.fluid.RHOF;
+            SIG  = drop.fluid.SIGMA; 
+
             Re = drop.REV(zIdx);
             Re(Re <= 1E-3) = 1E-3;                                         % [-] Avoid division by 0
-
-            model = drop.inputSet.model;
 
             switch model.DROPDRAG
                 case InputEnums.DROPDRAG.CONSTANT
@@ -358,9 +364,11 @@ classdef Drop < Solvers.AbstractField
 
                 case InputEnums.DROPDRAG.DISTORTED
                     % Distorted fluid particle (bubbly flow n=2.5)
+                    % TODO: Review the model
                     %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
-                    mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
-                    cd = liquid.VISCL(zIdx).*Re.*mult;                     % [-]
+                    mult = sqrt(2)/3.*(1-drop.mix.liquid.VF(zIdx)).^2;
+                    Nmu  = MUV./sqrt(RHOV.*SIG.*sqrt(SIG./(model.G.*abs(RHOF-RHOV)))); % [-] viscosity number (same as TwoFluid VISC)
+                    cd = Nmu.*Re.*mult;                                    % [-]
             end
 
             cd = min(cd,1);
@@ -447,7 +455,10 @@ classdef Drop < Solvers.AbstractField
             ent   = -film.MENT(zIdx);                                      % [kg/m^2/s] Film entrainment mass flux
             rhof = drop.fluid.RHOF;                                        % [kg/m^3] Liquid density
 
-            Fent = sum(perim.*(film.U(zIdx,:)-drop.U(zIdx)).*ent,2).*rhof.*drop.U(zIdx)./drop.W(zIdx); % [N/m^3]
+            Wd  = drop.W(zIdx);
+
+            Fent = sum(perim.*(film.U(zIdx,:)-drop.U(zIdx)).*ent,2).*rhof.*drop.U(zIdx)./Wd; % [N/m^3]
+            Fent(Wd == 0) = 0;
 
             Fent = drop.mix.AFDISTR(0,Fent,zIdx);
         end
