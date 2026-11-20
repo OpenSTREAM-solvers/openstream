@@ -94,6 +94,8 @@ function solver(solveINIT)
     model   = twfSolver.inputSet.model;
     options = twfSolver.inputSet.options;
     %geom    = twfSolver.inputSet.geometry;
+
+    Wmin = options.WPHASEMIN;                                              % [kg/s] Phase mass flow rate cut off for momentum and energy exchanges
     
     % Uniform mesh size
     DZ = twfSolver.DZ;    
@@ -169,13 +171,13 @@ function solver(solveINIT)
                     % Full liquid momentum conservation
                         
                         Ftot = liquid(tIdx).FTOT(vapor(tIdx),zIdx);                    % [N/m]
-                        Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
+                        Ftot = Ftot/(Wliter/Uliter); Ftot(Wliter <= Wmin) = 0;         % [m/s^2] Avoid division by 0
                         Ulnew = (Uliter*Ulups + Ulold*DZ/DT + Ftot*DZ)/(Uliter+DZ/DT); % [m/s] Update liquid velocity
-                        Ulnew = min(max(Ulnew,0),1.5*mix(tIdx).liquid.U(zIdx));          % [m/s] Keep within realistic bounds to help convergence
-                        %Ulnew(Wliter <= 1E-3) = liquid(tIdx).USLIP(vapor(tIdx),zIdx);
-                        Ulnew(Wliter <= 1E-3) = Uliter;
+                        Ulnew = min(max(Ulnew,0),1.5*mix(tIdx).liquid.U(zIdx));        % [m/s] Keep within realistic bounds to help convergence
+                        %Ulnew(Wliter <= Wmin) = liquid(tIdx).USLIP(vapor(tIdx),zIdx);
+                        Ulnew(Wliter <= Wmin) = Uliter;
                 end
-                liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew;   % [m/s] Apply relaxation
+                liquid(tIdx).U(zIdx) = (1-options.RELAXUL)*Uliter+options.RELAXUL*Ulnew; % [m/s] Apply relaxation
                 
                 % Vapor momentum conservation
                 %TODO: Add equilibrium and simplified equilibrium options
@@ -191,25 +193,25 @@ function solver(solveINIT)
                     % Full gas momentum conservation
                     
                         Ftot = vapor(tIdx).FTOT(liquid(tIdx),zIdx);                    % [N/m]
-                        Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= 1E-3) = 0;         % [m/s^2] Avoid division by 0
+                        Ftot = Ftot/(Wviter/Uviter); Ftot(Wviter <= Wmin) = 0;         % [m/s^2] Avoid division by 0
                         Uvnew = (Uviter*Uvups + Uvold*DZ/DT + Ftot*DZ)/(Uviter+DZ/DT); % [m/s] Update vapor velocity
-                        Uvnew = min(max(Uvnew,0),1.5*mix(tIdx).vapor.U(zIdx));           % [m/s] Keep within realistic bounds to help convergence
-                        %Uvnew(Wviter <= 1E-3) = vapor(tIdx).USLIP(liquid(tIdx),zIdx);
-                        Uvnew(Wviter <= 1E-3) = Uviter;
+                        Uvnew = min(max(Uvnew,0),1.5*mix(tIdx).vapor.U(zIdx));         % [m/s] Keep within realistic bounds to help convergence
+                        %Uvnew(Wviter <= Wmin) = vapor(tIdx).USLIP(liquid(tIdx),zIdx);
+                        Uvnew(Wviter <= Wmin) = Uviter;
                 end
                 vapor(tIdx).U(zIdx) = (1-options.RELAXUV)*Uviter+options.RELAXUV*Uvnew;    % [m/s] Apply relaxation
                 
                 % Liquid energy conservation
                 Htot = liquid(tIdx).HTOT(vapor(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with liquid
                 Htot = sum(Htot,2);
-                Htot = Htot/(Wliter/Uliter); Htot(Wliter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
+                Htot = Htot/(Wliter/Uliter); Htot(Wliter <= Wmin) = 0;                     % [W/kg] Avoid division by 0
                 Hlnew = (Hlups*Uliter+Hlold*DZ/DT+Htot*DZ)/(Uliter+DZ/DT);                 % [J/kg] Update liquid enthalpy
                 liquid(tIdx).H(zIdx) = (1-options.RELAXHL)*Hliter+options.RELAXHL*Hlnew;   % [J/kg] Apply relaxation
                 
                 % Vapor energy conservation
                 Htot = vapor(tIdx).HTOT(liquid(tIdx),zIdx);                                % [W/m] Linear energy exchange terms with vapor
                 Htot = sum(Htot,2);
-                Htot = Htot/(Wviter/Uviter); Htot(Wviter <= 1E-3) = 0;                     % [W/kg] Avoid division by 0
+                Htot = Htot/(Wviter/Uviter); Htot(Wviter <= Wmin) = 0;                     % [W/kg] Avoid division by 0
                 Hvnew = (Hvups*Uviter+Hvold*DZ/DT+Htot*DZ)/(Uviter+DZ/DT);                 % [J/kg] Update vapor enthalpy
                 vapor(tIdx).H(zIdx) = (1-options.RELAXHV)*Hviter+options.RELAXHV*Hvnew;    % [J/kg] Apply relaxation
                 

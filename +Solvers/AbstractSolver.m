@@ -46,7 +46,7 @@ classdef (Abstract) AbstractSolver < handle
         end
 
         function warning(solver, varargin)
-            %LOG Log warning messages to the session log
+            %WARNING Log warning messages to the session log
 
             solver.inputSet.session.log.warning(varargin{:});
         end
@@ -114,6 +114,32 @@ classdef (Abstract) AbstractSolver < handle
             ITRCell = cell(numel(ITRFields),1);
             ITRCell(:) = {zeros(NZ,1)};                                    % Initialize with zeros
             ITR = cell2struct(ITRCell, ITRFields, 1);                      % Convert cell to struct with fieldnames
+        end
+
+    end
+
+    methods(Access = protected, Hidden = true)
+
+        function checkMixSolverConsistency(solver, mixSolver)
+            %CHECKMIXSOLVERCONSISTENCY Error if mixSolver has a different axial mesh or time grid
+
+            a = solver.inputSet;
+            b = mixSolver.inputSet;
+            if a.geometry.LENGTH ~= b.geometry.LENGTH || ~isequal(a.geometry.PERIM, b.geometry.PERIM) || ...
+                    a.model.NNODES ~= b.model.NNODES || a.options.TSTEP ~= b.options.TSTEP || ...
+                    ~isequal([a.bc.TIME], [b.bc.TIME])
+                msg = 'The provided mixture solver has a different axial mesh, wall definition or time grid.';
+                throwAsCaller(MException(sprintf('OpenSTREAM:%s:InconsistentMixSolver', solver.solverName()),msg));
+            end
+        end
+
+        function checkMixSolverState(solver, mixSolver)
+            %CHECKMIXSOLVERSTATE Warn if the mixture solution is not converged
+
+            import Solvers.SolverState
+            if any(mixSolver.STATE == [SolverState.INITIALSTEPNOTCONVERGED, SolverState.SOLVEDNOTCONVERGED])
+                solver.warning('Mixture solution is not converged (%s). %s results may not be reliable.\n', string(mixSolver.STATE), solver.solverName());
+            end
         end
 
     end

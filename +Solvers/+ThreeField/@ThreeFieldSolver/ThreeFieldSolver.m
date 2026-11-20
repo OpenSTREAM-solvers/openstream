@@ -86,10 +86,16 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % Store mixSolver handle
             tfSolver.mixSolver = mixSolver;
 
+            % Mixture solver inputSet consistency check
+            tfSolver.checkMixSolverConsistency(mixSolver);
+
             % Attempt to solve mixSolver if it is unsolved
             if tfSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
                 tfSolver.mixSolver.solve();
             end
+
+            % Mixture solver convergence check
+            tfSolver.checkMixSolverState(mixSolver);
 
             % Initialize solver parameters
             tfSolver.initializeSolver();

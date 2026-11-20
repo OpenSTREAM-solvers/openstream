@@ -77,7 +77,7 @@ classdef Vapor < Solvers.AbstractField
             % - vapor — :class:`Solvers.TwoFluid.Vapor` object
             % - zIdx   — Axial indices to evaluate (optional)
 
-            if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
+            if nargin < 2, zIdx = (1:vapor(1).NZ).'; end
 
             x = vapor.W(zIdx)./vapor.mix.W(zIdx);                          % [-]
         end
@@ -133,7 +133,7 @@ classdef Vapor < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
-            s = liquid.S(zIdx);                                            % [-]
+            s = liquid.S(vapor,zIdx);                                      % [-]
         end
 
         function area = AREA(vapor,liquid,zIdx)
@@ -204,9 +204,9 @@ classdef Vapor < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
-            RHOL = vapor.fluid.RHOL(vapor.H(zIdx));
-            MUL  = vapor.fluid.MUL(vapor.H(zIdx));
-            VR = liquid.VR(vapor,zIdx);
+            RHOL = vapor.fluid.RHOL(liquid.H(zIdx));                       % [kg/m^3]
+            MUL  = vapor.fluid.MUL(liquid.H(zIdx));                        % [Pa.s]
+            VR = liquid.VR(vapor,zIdx);                                    % [m/s]
 
             rel = RHOL.*abs(VR).*vapor.L(zIdx)./MUL;                       % [-]
         end
@@ -239,12 +239,12 @@ classdef Vapor < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:vapor(1).NZ).'; end
 
-            RHOV = vapor.fluid.RHOV(vapor.H(zIdx));
-            RHOL = vapor.fluid.RHOL(liquid.H(zIdx));
-            MUL  = vapor.fluid.MUL(liquid.H(zIdx));
-            SIGMA = vapor.fluid.SIGMA;
-            G = vapor.inputSet.model.G;
-            Diff_RHO = abs(RHOL-RHOV);
+            RHOV = vapor.fluid.RHOV(vapor.H(zIdx));                        % [kg/m^3]
+            RHOL = vapor.fluid.RHOL(liquid.H(zIdx));                       % [kg/m^3]
+            MUL  = vapor.fluid.MUL(liquid.H(zIdx));                        % [Pa.s]
+            SIGMA = vapor.fluid.SIGMA;                                     % [N/m]
+            G = vapor.inputSet.model.G;                                    % [m/s^2]
+            Diff_RHO = abs(RHOL-RHOV);                                     % [kg/m^3]
 
             visc = MUL./sqrt(RHOL.*SIGMA.*sqrt(SIGMA./(G.*Diff_RHO)));     % [-]
         end
@@ -297,19 +297,6 @@ classdef Vapor < Solvers.AbstractField
             %XTR_ANN Quality at onset of annular flow region
 
             xtr_ann = liquid.XTR_ANN();
-        end
-
-        function xtr_cbt = XTR_CBT(vapor,liquid)
-            %XTR_CBT Quality at Critical Boiling Transition [-]
-            %
-            % Returns the equilibrium quality threshold for the onset of critical boiling transition.
-            %
-            % Inputs:
-            %
-            % - vapor  — :class:`Solvers.TwoFluid.Vapor` object
-            % - liquid — :class:`Solvers.TwoFluid.Liquid` object
-
-            xtr_cbt = liquid.XTR_CBT();
         end
 
         function flowregime = FLOWREGIME(vapor,liquid,zIdx)

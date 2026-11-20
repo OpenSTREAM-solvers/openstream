@@ -252,8 +252,8 @@ classdef Liquid < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
-            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));                      % [kg/m^3]
-            MUV  = liquid.fluid.MUV(liquid.H(zIdx));                       % [Pa.s]
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));                       % [kg/m^3]
+            MUV  = liquid.fluid.MUV(vapor.H(zIdx));                        % [Pa.s]
             VR = liquid.VR(vapor,zIdx);                                    % [m/s]
 
             rev = RHOV.*abs(VR).*liquid.L(zIdx)./MUV;                      % [-]
@@ -581,13 +581,13 @@ classdef Liquid < Solvers.AbstractField
 
                     mix = liquid.mix;
 
-                    UVeq = vapor.U(zIdx);                                  % [m/s] Approximated equilibrium vapor velocity
+                    UVeq = max(vapor.U(zIdx),1E-6);                        % [m/s] Approximated equilibrium vapor velocity
                     %WVeq = mix.W(zIdx).*max(0,mix.XEQ(zIdx));              % [kg/s] Equilibrium vapor mass flow rate
                     WVeq = mix.W(zIdx).*mix.XEQ(zIdx);                     % [kg/s] Equilibrium vapor mass flow rate
                     Wint = -(WVeq-vapor.W(zIdx));                          % [kg/s] Vapor mass deviation from equilibrium
 
-                    Mcond = max(0,Wint./UVeq./mix.RELAXTCOND(zIdx));       % [kg/s/m] Condensation mass transfer (<0)
-                    Mevap = min(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));       % [kg/s/m] Evaporation  mass transfer (>0)
+                    Mcond = max(0,Wint./UVeq./mix.RELAXTCOND(zIdx));       % [kg/s/m] Condensation mass transfer (>0)
+                    Mevap = min(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));       % [kg/s/m] Evaporation  mass transfer (<0)
             end
 
             % Restrict to reasonable bounds

@@ -86,10 +86,16 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             % Store mixSolver handle
             twfSolver.mixSolver = mixSolver;
 
+            % Mixture solver inputSet consistency check
+            twfSolver.checkMixSolverConsistency(mixSolver);
+
             % Attempt to solve mixSolver if it is unsolved
             if twfSolver.mixSolver.STATE == Solvers.SolverState.UNSOLVED
                 twfSolver.mixSolver.solve();
             end
+
+            % Mixture solver convergence check
+            twfSolver.checkMixSolverState(mixSolver);
 
             % Initialize solver parameters
             twfSolver.initializeSolver();
