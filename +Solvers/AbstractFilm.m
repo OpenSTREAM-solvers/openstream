@@ -80,7 +80,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             switch model.ENTRAINMENT
                 case InputEnums.ENTRAINMENT.NONE
                     % Suppress film entrainment
-                    ment = zeros(length(zIdx),1);
+                    ment = zeros(size(Wf));
 
                 case InputEnums.ENTRAINMENT.GOVAN
                     % Govan & Hewitt film entrainment model

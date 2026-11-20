@@ -325,8 +325,8 @@ classdef Wave < Solvers.AbstractFilm
 
             if nargin <3, zIdx = (1:wave(1).NZ).'; end
 
-            deltaU = wave.film.base.U(zIdx) - wave.U(zIdx);                % [m/s]
-            Fbasemass = wave.MBASE(drop,zIdx).*deltaU;
+            deltaU = wave.film.base.U(zIdx,:) - wave.U(zIdx,:);            % [m/s]
+            Fbasemass = wave.MBASE(drop,zIdx).*deltaU;                     % [N/m^2]
 
             Fbasemass = wave.mix.AFDISTR(0,Fbasemass,zIdx);
         end
@@ -362,7 +362,7 @@ classdef Wave < Solvers.AbstractFilm
             rho_vs = wave.fluid.RHOG;                                      % [kg/m^3]
 
             % Difference in wave and vapor velocities
-            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);                    % [m/s]
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx,:);                  % [m/s]
 
             % Eq. 45
             Fdrag = 0.5 .* wave.SHAPEFACTOR(zIdx) .* wave.DRAGCOEF(zIdx) .* rho_vs .* dU.^2;
@@ -390,7 +390,7 @@ classdef Wave < Solvers.AbstractFilm
             rho_vs = wave.fluid.RHOG;                                      % [kg/m^3]
 
             % Difference in wave and vapor velocities
-            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx);                    % [m/s]
+            dU = wave.mix.vapor.U(zIdx) - wave.U(zIdx,:);                  % [m/s]
 
             % Eq. 46
             Fshear = 0.5 .* f_v_w .* rho_vs .* dU.^2;

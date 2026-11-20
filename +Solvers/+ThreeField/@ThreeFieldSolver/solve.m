@@ -165,17 +165,21 @@ function solver(solveINIT)
                         film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx); % [m/s]
                         
                     case InputEnums.MOMENTFILM.FULL
-                    % Full film momentum conservation
-                        thick = max(abs(film(tIdx).THICK(zIdx)),model.THINFILMTHICK);                      % [m] Film thickness
-                        if thick>model.THINFILMTHICK
-                            Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with film
-                            Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
-                            Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                              % [m/s] Keep within realistic bounds to help convergence
-                            film(tIdx).U(zIdx,:) = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;      % [m/s] Apply relaxation
-                            film(tIdx).U(zIdx,:) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),film(tIdx).U(zIdx,:),zIdx);
-                        else
-                            film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);                     % [m/s] Complete equilibrium model for thin film
+                    % Full film momentum conservation                        
+                        thickAbs = abs(film(tIdx).THICK(zIdx));            % [m] Base film thickness
+                        isThick  = thickAbs > model.THINFILMTHICK;
+                        thick    = max(thickAbs, model.THINFILMTHICK);
+
+                        Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with base
+                        Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
+                        Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                              % [m/s] Keep within realistic bounds to help convergence
+                        Unew = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;                      % [m/s] Apply relaxation
+                        Unew = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),Unew,zIdx);
+                        if ~all(isThick)
+                            Ueq = film(tIdx).UEQUIL(drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
+                            Unew(~isThick) = Ueq(~isThick);
                         end
+                        film(tIdx).U(zIdx,:) = Unew;
                 end
                 
                 % Drop mass conservation

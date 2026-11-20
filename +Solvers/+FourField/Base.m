@@ -316,8 +316,8 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
-            deltaU = base.film.wave.U(zIdx) - base.U(zIdx);
-            Fwavemass = base.MWAVE(drop,zIdx).*deltaU; % [N/m^2]
+            deltaU = base.film.wave.U(zIdx,:) - base.U(zIdx,:);            % [m/s]
+            Fwavemass = base.MWAVE(drop,zIdx).*deltaU;                     % [N/m^2]
 
             Fwavemass = base.mix.AFDISTR(0,Fwavemass,zIdx);
         end

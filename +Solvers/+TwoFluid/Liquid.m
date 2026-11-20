@@ -201,20 +201,20 @@ classdef Liquid < Solvers.AbstractField
                     vrl = liquid.VF(vapor,zIdx).*(vapor.U(zIdx) - liquid.U(zIdx));
                     vr(liquid.VF(vapor,zIdx)<0.5)=vrl(liquid.VF(vapor,zIdx)<0.5);
                 case 'FLOWREGIME'
-                    flowregime = liquid.FLOWREGIME(zIdx);
-                    % bubbly, slug, churn (assume also for dffb)
+                    [~,id] = liquid.FLOWREGIME(zIdx);
+                    flowregime = REGIMES(max(id,[],2));                    % node regime: assumes most advanced across walls
                     RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
                     RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
                     C = 1.2 - 0.2.*sqrt(RHOV./RHOL);
                     vr = (1-C.*(vapor.VF(liquid,zIdx)))./(liquid.VF(vapor,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
 
                     % annular (instead contribution from interfacial shear)
-                    Idann = ismember(flowregime,[REGIMES.ANNULAR]);
+                    Idann  = flowregime == REGIMES.ANNULAR;
                     vr_ann = zeros(size(zIdx));
                     vr(Idann) = vr_ann(Idann);
 
                     % dffb (dispersed liquid)
-                    Iddffb = ismember(flowregime,[REGIMES.DFFB]);
+                    Iddffb = flowregime == REGIMES.DFFB;
                     vr_dffb = (1-C.*(liquid.VF(vapor,zIdx)))./(vapor.VF(liquid,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
                     vr(Iddffb) = vr_dffb(Iddffb);
             end
@@ -392,7 +392,7 @@ classdef Liquid < Solvers.AbstractField
 
             import Solvers.TwoFluid.REGIMES;
 
-            id = zeros(liquid.NZ,geom.NWALL);                              % Liquid (initialization)
+            id = zeros(numel(zIdx),geom.NWALL);                            % Liquid (initialization)
             id(XEQ > liquid.XTR_SUB) = 1;                                  % bubbly_subcooled
             id(XEQ > liquid.XTR_SAT) = 2;                                  % bubbly_saturated
             id(XEQ > liquid.XTR_ITM) = 3;                                  % intermediate

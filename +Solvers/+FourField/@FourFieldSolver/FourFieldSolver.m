@@ -469,7 +469,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'ylabel'   , 'Mass flow rate [kg/s]');
                     plotter.plot(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                              );
                     plotter.plot(drp.W(opts.zIdx)                            ,'Drop'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plot(flm.W(opts.zIdx)                            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.W(opts.zIdx,:)                          ,'Film'    ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.wave.W(opts.zIdx,:)                     ,'Wave'    ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.base.W(opts.zIdx,:)                     ,'Base'    ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.base.WMIN(drp,opts.zIdx)                 ,'Base min','XData',zaf,'subset',zafIdx);
@@ -524,7 +524,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'xlabel'   ,   'Axial position [m]', ...
                         'ylabel'   , 'Field velocity [m/s]');
                     plotter.plot(drp.U(opts.zIdx)       ,'Drop' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plot(flm.U(opts.zIdx)       ,'Film' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.U(opts.zIdx,:)     ,'Film' ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.wave.U(opts.zIdx,:),'Wave' ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.base.U(opts.zIdx,:),'Base' ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(mix.vapor.U(opts.zIdx) ,'Vapor'                            );
