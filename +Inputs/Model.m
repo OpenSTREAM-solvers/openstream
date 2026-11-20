@@ -68,7 +68,8 @@ classdef Model < Inputs.Input
 
         % Mixture near-wall models
 
-        NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1)}  = 0.5                             % Near-wall mass flow distribution ratio [-]
+        NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1,"exclusive")} ...
+                                                                           = 0.5                             % Near-wall mass flow distribution ratio, 0 < ratio < 1 [-]
         NEARWALLEQOAF    (1,1) logical                                     = false                           % Near-wall equilibrium at onset of annular two-phase flow
         NEARWALLH        (1,1) InputEnums.NEARWALLH                        = 'RATIO'                         % Near-wall equilibrium enthalpy model selected from :class:`InputEnums.NEARWALLH`
         NEARWALLHRATIO   (1,1) double  {mustBePositive}                    = 1.0                             % Near-wall equilibrium enthalpy ratio [-]

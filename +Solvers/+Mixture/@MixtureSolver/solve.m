@@ -84,6 +84,9 @@ function solver(solveINIT)
         mix = mixSolver.mixture;
         fluid   = mixSolver.fluid;
     end
+
+    % set SOLVED flag to SOLVECONVERGED
+    mixSolver.STATE = SolverState.SOLVEDCONVERGED;
     
     % Shortcut to inputSet objects
     model   = mixSolver.inputSet.model;
@@ -226,7 +229,7 @@ function solver(solveINIT)
                 dW = abs((mix(tIdx).W(zIdx)-Witer));                       % [kg/s] Mass flow rate error between inner iterations
                 dP = abs((mix(tIdx).P(zIdx)-Piter));                       % [Pa]   Pressure error between inner iterations
                 dH = abs((mix(tIdx).H(zIdx)-Hiter));                       % [J/kg] Enthalpy error between inner iterations
-                if all([dW < options.ERRORW, dP < options.ERRORP, dH < options.ERRORH, dWv < options.ERRORW, dHv < options.ERRORH])
+                if all([dW < options.ERRORW, dP < options.ERRORP, dH < options.ERRORH, dWv < options.ERRORW.*geom.RWALL, dHv < options.ERRORH])
                     break;
                 elseif itr == options.MAXITER
                     % set SOLVED flag to SOLVEDNOTCONVERGED
@@ -316,7 +319,7 @@ function solver(solveINIT)
         timeDW  = max(abs((mix(tIdx).W - mix(tIdx-1).W)));
         timeDP  = max(abs((mix(tIdx).P - mix(tIdx-1).P)));
         timeDH  = max(abs((mix(tIdx).H - mix(tIdx-1).H)));
-        timeDWv = max(abs((mix(tIdx).MRM.WV - mix(tIdx-1).MRM.WV)),[],'all');
+        timeDWv = max(abs((mix(tIdx).MRM.WV - mix(tIdx-1).MRM.WV)./geom.RWALL),[],'all'); % Normalized by wall fraction for consistency
         timeDHv = max(abs((mix(tIdx).MRM.HV - mix(tIdx-1).MRM.HV)),[],'all');
         
         if solveINIT
