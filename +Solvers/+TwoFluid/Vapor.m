@@ -871,7 +871,7 @@ classdef Vapor < Solvers.AbstractField
                     %cd = 24./Re.*(1+0.1.*Re.^(0.75));
                     cd = 24./Re.*(1+0.15.*Re.^(0.687));
 
-                case InputEnums.BUBBLEDRAG.DISTORDED
+                case InputEnums.BUBBLEDRAG.DISTORTED
                     % Distorted fluid particle (bubbly flow n=1)
                     %mult = sqrt(2)/3.*((1+17.67.*(liquid.VF(vapor,zIdx)).^(1.3))./(18.67.*(liquid.VF(vapor,zIdx)).^(1.5))).^2;
                     mult = sqrt(2)/3.*(liquid.VF(vapor,zIdx)).^2;

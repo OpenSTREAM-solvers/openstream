@@ -16,6 +16,6 @@ classdef BUBBLEDRAG
         CONSTANT             % User-defined constant drag coefficient 
         STOKES               % Stokes regime drag model
         VISCOUS              % Viscous regime drag model
-        DISTORDED            % Distorted bubble drag model
+        DISTORTED            % Distorted bubble drag model
     end
 end

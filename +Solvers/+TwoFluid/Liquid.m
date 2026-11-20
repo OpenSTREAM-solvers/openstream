@@ -1052,7 +1052,7 @@ classdef Liquid < Solvers.AbstractField
                     % Viscous model
                     cd = 24./Re.*(1+0.15.*Re.^0.687);                      % [-]
 
-                case InputEnums.DROPDRAG.DISTORDED
+                case InputEnums.DROPDRAG.DISTORTED
                     % Distorted fluid particle (bubbly flow n=2.5)
                     %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
                     mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
