@@ -345,7 +345,7 @@ function solver(solveINIT)
         
         if solveINIT
             % Finish steady state solver when SS convergence criteria are met
-            if all([timeDWLb < options.SSCONVWF , timeDUb < options.SSCONVUF,timeDWLw < options.SSCONVWF , timeDUw < options.SSCONVUF, timeDUd < options.SSCONVUD] )
+            if all([timeDWLb < options.SSCONVWF, timeDUb < options.SSCONVUF,timeDWLw < options.SSCONVWF, timeDUw < options.SSCONVUF, timeDFw < options.SSCONVFW, timeDUd < options.SSCONVUD])
 
                 % Indicate init converged
                 if ~timestepconverged

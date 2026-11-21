@@ -108,10 +108,9 @@ classdef Film < Solvers.AbstractFilm
             %
             % - film — :class:`Solvers.FourField.Film` object
 
-            %TODO: a more appropriate value may be needed for film velocity.
-
-            %u = (film.base.W.*film.base.U + film.wave.W.*film.wave.U)./film.W;
-            u = film.W./(film.base.W./film.base.U + film.wave.W./film.wave.U);
+            tb = film.base.W./film.base.U;  tb(film.base.W==0) = 0;        % [kg/m] Base film term
+            tw = film.wave.W./film.wave.U;  tw(film.wave.W==0) = 0;        % [kg/m] Wave term
+            u  = film.W./(tb + tw);
             u(film.W==0) = film.base.U(film.W==0);
         end
 

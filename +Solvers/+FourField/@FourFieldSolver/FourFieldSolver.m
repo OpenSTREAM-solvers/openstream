@@ -304,8 +304,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
                     Wd(k) = (0.7-double(delta(k-1)>0)*0.4).*W;             % [kg/s] Next guess: 30% or 70% of liquid mass in droplet field (depending on sign of delta)
-                elseif k == 3
-                    Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
                 else
                     if all(diff(delta)./diff(Wd) > 0)
                         % Expected behavior
@@ -324,7 +322,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
                 flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx); % [kg/s] Corresponding film flow distribution (considered uniform)
-                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entrainment mass flow rate
+                delta(k) = drp.MDEP(zIdx,false).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entrainment mass flow rate
                 err = abs(delta(k));
                 if err < errMax, break; end
             end

@@ -317,8 +317,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
                     Wd(k) = (0.7-double(delta(k-1)>0)*0.4).*W;             % [kg/s] Next guess: 30% or 70% of liquid mass in droplet field (depending on sign of delta)
-                %elseif k == 3
-                %    Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
                 else
                     if all(diff(delta)./diff(Wd) > 0)
                         % Expected behavior
