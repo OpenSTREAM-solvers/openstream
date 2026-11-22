@@ -331,7 +331,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
             % Iterate through each field in SOLVERDEPENDENTPROPS
             depPropNames = fields(out.SOLVERDEPENDENTPROPS);
-            for i = length(depPropNames)
+            for i = 1:length(depPropNames)
                 % Name of property
                 depPropName = depPropNames{i};
 
@@ -435,16 +435,16 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     % Regex expression for parsing the input file.
                     entryExpr = {};
                     %   Capture the "END" tag
-                    entryExpr{1} = '(?<PARAMETER>(end|END))';
-                    %   Capture comments, indicated by '#' symbol
-                    entryExpr{2} = '(?<PARAMETER>(#|\/\/|%)).*';
+                    entryExpr{1} = '(?<PARAMETER>END)\s*$';
+                    %   Capture comments, indicated by '#', '//' or '%' symbols
+                    entryExpr{2} = '^\s*(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
-                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[@><=&|()\/\*\[\],\w\s\+\-\.]*)?"*';
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[^"#%!]*)?"*';
                     %   Join parts together and remove spaces (use \s instead).
                     entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
 
                     % Parse file using regex
-                    fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names");
+                    fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names","once");
 
                     % Initalize output struct
                     inputStruct = struct();
@@ -463,7 +463,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                         end
 
                         % Process fileRow depending on PARAMETER value
-                        switch fileRow.PARAMETER
+                        switch upper(string(fileRow.PARAMETER))
                             case "END"
                                 % Increment inputStructEntries
                                 inputStructEntriesCount = inputStructEntriesCount + 1;
@@ -488,6 +488,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                                 end
                                 % Throw warning if field value is empty
                                 valueToSave = '';
+                                fileRow.VALUE = strtrim(fileRow.VALUE);
                                 if strlength(fileRow.VALUE) == 0
                                     % TODO throw warning for empty field value
                                     valueToSave = '';
@@ -602,25 +603,33 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % Close file
             fclose(fid);
         end
-
         function validateFunctionHandleInput(handleString)
-            %VALIDATEFUNCTIONHANDLEINPUT Validates safety of function handle string
+            %VALIDATEFUNCTIONHANDLEINPUT Validates that a function handle string only uses allowed functions
             %
-            % Throws error if restricted keywords are detected
+            % The string must be a single anonymous function. Only its arguments and the
+            % listed elementary functions are allowed; field/method access and nested
+            % handles are rejected.
 
             arguments
                 handleString    {mustBeTextScalar}
             end
 
-            restrictedKeywords = ["eval", "feval", "system", "fopen", "delete", "!", ...
-                "load", "save", "assignin", "clear", "global", "import", ...
-                "java", "py\.", "web", "dir", "cd", "run", "builtin", ...
-                "uigetfile", "input", "persistent", "classdef", "meta\."];
+            allowed = ["pi","exp","log","log10","sqrt","abs","min","max","sin","cos","tan", ...
+                "tanh","floor","ceil","round","sign","ones","zeros","numel","eps","Inf","NaN","interp1"];
 
-            for restrictedKeyword = restrictedKeywords
-                if ~isempty(regexp(handleString, restrictedKeyword, 'once', 'ignorecase'))
-                    error("Unsafe content detected: '%s' in function handle: %s", restrictedKeyword, handleString);
-                end
+            s = char(strtrim(handleString));
+            args = regexp(s, '^@\(([^)]*)\)', 'tokens', 'once');
+            if isempty(args) || count(s,'@') ~= 1 || ~isempty(regexp(s, '(?<!\d)\.[A-Za-z]', 'once'))
+                error('OpenSTREAM:INPUT:unsafeFunctionHandleError', ...
+                    'Function handle must be a single anonymous function without field or method access: %s', s);
+            end
+            allowed = [allowed, strtrim(split(string(args{1}), ","))'];
+
+            names = regexp(regexprep(s, '''[^'']*''', ''), '(?<![\w.])[A-Za-z]\w*', 'match');   % identifiers outside quoted text
+            bad = setdiff(string(names), allowed);
+            if ~isempty(bad)
+                error('OpenSTREAM:INPUT:unsafeFunctionHandleError', ...
+                    'Function handle uses non-allowed name(s) %s: %s', strjoin(bad, ', '), s);
             end
         end
 

@@ -12,9 +12,9 @@ classdef Options < Inputs.Input
         AXIALINTERP      (1,1) string  {mustBeTextScalar}                  = 'next'                % Method for interpolating axial power distribution
         TIMEINTERP       (1,1) string  {mustBeTextScalar}                  = 'linear'              % Method for interpolating time-dependent boundary conditions
         TSTEP            (1,1) double  {mustBeNumeric,mustBePositive}      = 0.1                   % Time step size for transient simulations [s]
-        MAXITER          (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of inner iterations per time step
+        MAXITER          (1,1) double  {mustBeInteger,mustBePositive}      = 100                   % Maximum number of inner iterations per time step
         SSTSTEP          (1,1) double  {mustBeNumeric,mustBePositive}      = 1.0                   % Time step size for steady-state iterations [s]
-        SSMAXITER        (1,1) uint8   {mustBeInteger,mustBePositive}      = 30                    % Maximum number of steady-state iterations
+        SSMAXITER        (1,1) double  {mustBeInteger,mustBePositive}      = 30                    % Maximum number of steady-state iterations
 
         % Mixture solver options
 
@@ -46,13 +46,13 @@ classdef Options < Inputs.Input
 
         % Three-field solver options
 
-        OAFEQUILMAXITER  (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find equilibrium at onset of annular flow
+        OAFEQUILMAXITER  (1,1) double  {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find equilibrium at onset of annular flow
         OAFEQUILTOL      (1,1) double  {mustBeNumeric}                     = 1E-4                  % Target film mass flow rate tolerance to find equilibrium at onset of annular flow [kg/s/m]
-        UDEQUILMAXITER   (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find droplet equilibrium velocity
+        UDEQUILMAXITER   (1,1) double  {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find droplet equilibrium velocity
         UDEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target drop force tolerance to find droplet equilibrium velocity [N/m^3]
-        UFEQUILMAXITER   (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film equilibrium velocity
+        UFEQUILMAXITER   (1,1) double  {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film equilibrium velocity
         UFEQUILTOL       (1,1) double  {mustBeNumeric}                     = 1E-3                  % Target film force tolerance to find film equilibrium velocity [N/m^3]
-        ENTNUMMAXITER    (1,1) uint8   {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film entrainment number
+        ENTNUMMAXITER    (1,1) double  {mustBeInteger,mustBePositive}      = 100                   % Maximum number of iterations to find film entrainment number
         ENTNUMTOL        (1,1) double  {mustBeNumeric}                     = 1E-2                  % Target velocity slip tolerance to find film entrainment number [-]
         ERRORWF          (1,1) double  {mustBeNumeric}                     = 1E-4                  % Film mass flow rate error target in inner iterations [kg/s/m]
         ERRORUF          (1,1) double  {mustBeNumeric}                     = 1E-2                  % Film velocity error target in inner iterations [m/s]
