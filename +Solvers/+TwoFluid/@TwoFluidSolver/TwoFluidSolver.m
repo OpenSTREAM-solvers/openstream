@@ -273,6 +273,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opts.resize    (1,1) double {mustBeNonnegative}                                                                = 0
             end
 
+            plotter = [];
+
             if length(opts.zIdx) < 2
                 twfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
                 return
@@ -528,8 +530,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'ylabel',     'Energy transfer [W/m]');
                     plotter.plot(vap.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
                     plotter.plot(vap.HWALEVAP(liq,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plot(vap.HINTEVAP(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
-                    plotter.plot(vap.HINTCOND(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
+                    plotter.plot(vap.HINTEVAP(liq,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plot(vap.HINTCOND(liq,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                     plotter.plot(vap.HTOT(liq,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
@@ -542,8 +544,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                         'ylabel',      'Energy transfer [W/m]');
                     plotter.plot(liq.HWALHEAT(opts.zIdx)    ,'Wall'                                                    );
                     plotter.plot(liq.HWALEVAP(vap,opts.zIdx),'Evaporation'    ,'DisplayName','Wall evaporation'        );
-                    plotter.plot(liq.HINTEVAP(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial evaporation' );
-                    plotter.plot(liq.HINTCOND(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial condensation');
+                    plotter.plot(liq.HINTEVAP(vap,opts.zIdx),'InterfacialEvap','DisplayName','Interfacial evaporation' );
+                    plotter.plot(liq.HINTCOND(vap,opts.zIdx),'InterfacialCond','DisplayName','Interfacial condensation');
                     plotter.plot(liq.HTOT(vap,opts.zIdx)    ,'Total'                                                   );
                     plotter.legend('show', 'Location', 'best');
                     plotter.xlim([min(z) max(z)]);
@@ -637,6 +639,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
 
             if isempty(opt.wall), opt.wall = 1:twfSolver.inputSet.geometry.NWALL; end
 
+            plotter = [];
+
             model = twfSolver.inputSet.model;
 
             switch opt.solveMode
@@ -657,7 +661,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     bcHFLUX = repmat(twfSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
                     solveMode = '- Null transient';
             end
-
             time = [liq.TIME];
             if length(time) < 2
                 twfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
@@ -833,8 +836,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'ylabel',     'Energy transfer [W/m]');
                 plotter.plot(vap.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
                 plotter.plot(vap.transient('HWALEVAP',liq,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plot(vap.transient('HINTEVAP',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
-                plotter.plot(vap.transient('HINTCOND',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
+                plotter.plot(vap.transient('HINTEVAP',liq,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
+                plotter.plot(vap.transient('HINTCOND',liq,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plot(vap.transient('HTOT'    ,liq,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -846,8 +849,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     'ylabel',      'Energy transfer [W/m]');
                 plotter.plot(liq.transient('HWALHEAT',    'zIdx',zIdx)','Wall'                                                    );
                 plotter.plot(liq.transient('HWALEVAP',vap,'zIdx',zIdx)','Evaporation'    ,'DisplayName','Wall evaporation'        );
-                plotter.plot(liq.transient('HINTEVAP',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial evaporation' );
-                plotter.plot(liq.transient('HINTCOND',vap,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial condensation');
+                plotter.plot(liq.transient('HINTEVAP',vap,'zIdx',zIdx)','InterfacialEvap','DisplayName','Interfacial evaporation' );
+                plotter.plot(liq.transient('HINTCOND',vap,'zIdx',zIdx)','InterfacialCond','DisplayName','Interfacial condensation');
                 plotter.plot(liq.transient('HTOT'    ,vap,'zIdx',zIdx)','Total'                                                   );
                 plotter.legend('show', 'Location', 'best');
                 ymax = max(arrayfun(@(x) max(abs(x.YLim)),plotter.gca))+1E-6;
@@ -873,7 +876,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             if any(ismember({'REGIME','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle', 'Two-phase flow regimes', ...
-                    'xlabel'   ,     'Axial position [m]');
+                    'xlabel'   ,               'Time [s]');
                 plotter.plot(liq.transient('FLOWID','zIdx',zIdx)','Interfacial')
                 labels = arrayfun(@(x) unique(x.FLOWREGIME),liq,'uni',0);
                 labels = strrep(cellstr(unique([labels{:}])),'_',' ');
@@ -886,7 +889,7 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             end
         end
 
-        function plotzt(twfSolver, opt)
+        function fh = plotzt(twfSolver, opt)
             %PLOTZT Plots 2D time/elevation distributions of two-fluid parameters.
             %
             % Generates surface plots of selected two-fluid related parameters
@@ -934,6 +937,8 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
 
+            fh = [];
+
             display = {         'HFLUX',             'W',       'U',       'H',           'X',                 'VF',          'T',                    'INTAREA'};
             label   = {'wall heat flux','mass flow rate','velocity','enthalpy','mass quality','volumetric fraction','temperature','volumetric interfacial area'};
             unit    = {         'W/m^2',          'kg/s',     'm/s',    'J/kg',           '-',                  '-',          'K',                      'm^-^1'};
@@ -964,7 +969,6 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                     liq = twfSolver.liquidInit(opt.tIdx);
                     vap = twfSolver.vaporInit(opt.tIdx);
                     solveMode = '- Null transient';
-                    time = [liq(opt.tIdx).TIME];
             end
             if isempty(opt.wall)
                 opt.wall = 1:twfSolver.inputSet.geometry.NWALL;
@@ -981,19 +985,27 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             for k = opt.wall
                 if ismember('liquid',opt.field)
                     name = ['Time/axial distributions of two-fluid (liquid) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_liq = figure('name',name);
+                    fh.liq = figure('name',name);
                     for i = 1:length(opt.display)
-                        ax_liq(i) = liq.plotzt(opt.display{i},['Liquid ' opt.label{i}],opt.unit{i},k,opt,vap);
+                        if contains(opt.display{i},{'HFLUX','DP'})
+                            ax_liq(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                        else
+                            ax_liq(i) = liq.plotzt(opt.display{i},['Liquid ' opt.label{i}],opt.unit{i},k,opt,vap);
+                        end
                     end
-                    sgtitle(fh_liq,name,'FontSize',18);
+                    sgtitle(fh.liq,name,'FontSize',18);
                 end
                 if ismember('vapor',opt.field)
                     name = ['Time/axial distributions of two-fluid (vapor) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_vap = figure('name',name);
+                    fh.vap = figure('name',name);
                     for i = 1:length(opt.display)
-                        ax_vap(i) = vap.plotzt(opt.display{i},['Vapor '  opt.label{i}],opt.unit{i},k,opt,liq);
+                        if contains(opt.display{i},{'HFLUX','DP'})
+                            ax_liq(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
+                        else
+                            ax_vap(i) = vap.plotzt(opt.display{i},['Vapor '  opt.label{i}],opt.unit{i},k,opt,liq);
+                        end
                     end
-                    sgtitle(fh_vap,name,'FontSize',18);
+                    sgtitle(fh.vap,name,'FontSize',18);
                 end
             end
         end

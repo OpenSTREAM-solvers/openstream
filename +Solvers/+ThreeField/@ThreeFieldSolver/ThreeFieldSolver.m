@@ -391,6 +391,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                 opts.nearWall     (1,1) logical                                                                       = false
             end
 
+            plotter = [];
+
             if length(opts.zIdx) < 2
                 tfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
                 return
@@ -671,6 +673,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             if isempty(opt.wall), opt.wall = 1:tfSolver.inputSet.geometry.NWALL; end
 
+            plotter = [];
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:tfSolver.NTIME; end
@@ -829,7 +833,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             end
         end
 
-        function plotzt(tfSolver, opt)
+        function fh = plotzt(tfSolver, opt)
             %PLOTZT Plots 2D time/elevation distributions of three-field parameters.
             %
             % Generates surface plots of selected three-field related parameters
@@ -860,7 +864,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
 
             arguments
                 tfSolver
-                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U'}
+                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {'HFLUX','W','U'}
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'drop','film'})}                = {'drop','film'}
@@ -877,6 +881,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             if ~iscell(opt.display), opt.display = {opt.display}; end
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
+
+            fh = [];
 
             display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK'};
             label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness'};
@@ -909,7 +915,6 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
                     flm = tfSolver.filmInit(opt.tIdx);
                     solveMode = '- Null transient';
             end
-            time = [drp(opt.tIdx).TIME];
             if isempty(opt.wall)
                 opt.wall = 1:tfSolver.inputSet.geometry.NWALL;
             end
@@ -925,29 +930,29 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             for k = opt.wall
                 if ismember('drop',opt.field)
                     name = ['Time/axial distributions of three-field (drop) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_drp = figure('name',name);
+                    fh.drop = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
+                            ax_drop(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                         elseif contains(opt.display{i},{'WL','THICK'})
                             continue
                         else
-                            ax_drp(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
+                            ax_drop(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
                         end
                     end
-                    sgtitle(fh_drp,name,'FontSize',18);
+                    sgtitle(fh.drop,name,'FontSize',18);
                 end
                 if ismember('film',opt.field)
                     name = ['Time/axial distributions of three-field (film) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_flm = figure('name',name);
+                    fh.film = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
+                            ax_film(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                         else
-                            ax_flm(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
+                            ax_film(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
-                    sgtitle(fh_flm,name,'FontSize',18);
+                    sgtitle(fh.film,name,'FontSize',18);
                 end
             end
         end

@@ -436,6 +436,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opts.nearWall     (1,1) logical                                                              = false
             end
 
+            plotter = [];
+
             if length(opts.zIdx) < 2
                 %TODO: implement/overload logging errors in Session.Log
                 mixSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
@@ -817,6 +819,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
 
             if isempty(opt.wall), opt.wall = 1:mixSolver.inputSet.geometry.NWALL; end
 
+            plotter = [];
+
             model = mixSolver.inputSet.model;
             geom  = mixSolver.inputSet.geometry;
 
@@ -834,7 +838,6 @@ classdef MixtureSolver < Solvers.AbstractSolver
                     bcHFLUX = repmat(mixSolver.boundaryConditions.HFLUX(zIdx,:,1),length(opt.tIdx),1);
                     solveMode = '- Null transient';
             end
-
             time = [mix.TIME];
             if length(time) < 2
                 mixSolver.log('Error: At least 2 time indexes required to plot time series.\n');
@@ -959,7 +962,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Rates of change of enthalpy
-            if any(ismember({'DUDH','ALL'},opt.display))
+            if any(ismember({'DHDT','ALL'},opt.display))
                 plotter.newTile( ...
                     'tileTitle',         'Rates of change of enthalpy', ...
                     'xlabel'   ,                            'Time [s]', ...
@@ -1029,7 +1032,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             if all([any(ismember({'PEE','ALL'},opt.display)) ismember('MRM',model.THERMALNONEQ)])
                 plotter.newTile( ...
                     'tileTitle', 'Vapor energy exchanges', ...
-                    'xlabel'   ,               'Time [m]', ...
+                    'xlabel'   ,               'Time [s]', ...
                     'ylabel'   ,  'Energy exchange [W/m]');
 
                 plotter.plot(mix.transient('HWALHEAT','zIdx',zIdx)','Wall'           ,'DisplayName','Wall heat rate'          );
@@ -1043,7 +1046,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
 
             % Thermal time relaxations
-            if any(ismember({'TRELAX'},opt.display))
+            if all([any(ismember({'TRELAX','ALL'},opt.display)) (ismember('MRM', model.THERMALNONEQ) || opts.nearWall)])
                 plotter.newTile( ...
                     'tileTitle', 'Thermal time relaxations', ...
                     'xlabel'   ,                 'Time [s]', ...
@@ -1114,6 +1117,8 @@ classdef MixtureSolver < Solvers.AbstractSolver
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
 
+            fh = [];
+
             display = {         'HFLUX',             'W',    'DPSUM.Tot',       'U',       'H',                 'X',           'VF',          'T',           'TWALL'};
             label   = {'Wall heat flux','mass flow rate','pressure drop','velocity','enthalpy','steam mass quality','void fraction','temperature','wall temperature'};
             unit    = {         'W/m^2',          'kg/s',           'Pa',     'm/s',    'J/kg',                 '-',            '-',          'K',               'K'};
@@ -1156,15 +1161,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
             for k = opt.wall
                 if ismember('mixture',opt.field)
                     name = ['Time/axial distributions of mixture parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh = figure('name',name);
+                    fh.mix = figure('name',name);
                     for i = 1:length(opt.display)
                         mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                     end
-                    sgtitle(fh,name,'FontSize',18);
+                    sgtitle(fh.mix,name,'FontSize',18);
                 end
                 if ismember('liquid',opt.field)
                     name = ['Time/axial distributions of mixture (liquid) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh = figure('name',name);
+                    fh.liq = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP','TWALL'})
                             mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
@@ -1172,11 +1177,11 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             mix.plotzt(['liquid.' opt.display{i}],['Liquid ' opt.label{i}],opt.unit{i},k,opt);
                         end
                     end
-                    sgtitle(fh,name,'FontSize',18);
+                    sgtitle(fh.liq,name,'FontSize',18);
                 end
                 if ismember('vapor',opt.field)
-                    name = ['Time/axial distributions of mixture (vapor) parameters - ' opt.solveMode ' - Wall ' num2str(k)];
-                    fh = figure('name',name);
+                    name = ['Time/axial distributions of mixture (vapor) parameters - ' solveMode ' - Wall ' num2str(k)];
+                    fh.vap = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP','TWALL'})
                             mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
@@ -1184,7 +1189,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
                             mix.plotzt(['vapor.' opt.display{i}],['Vapor ' opt.label{i}],opt.unit{i},k,opt);
                         end
                     end
-                    sgtitle(fh,name,'FontSize',18);
+                    sgtitle(fh.vap,name,'FontSize',18);
                 end
             end
         end

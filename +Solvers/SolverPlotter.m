@@ -381,7 +381,7 @@ classdef SolverPlotter < handle
                 % Toggle play/pause state
                 if isfield(fh.UserData, 'isPlaying') && fh.UserData.isPlaying
                     fh.UserData.isPlaying = false;
-                    src.String = char(11156);  % Play symbol
+                    src.String = src.UserData.originalSymbol;  
                     return;
                 else
                     fh.UserData.isPlaying = true;
@@ -536,6 +536,7 @@ classdef SolverPlotter < handle
                 vid.Quality = 100;
 
                 % Number of frames
+                plotter   = plotters([plotters.fh] == fh);                 % plotter owning this figure
                 numFrames = length(plotter.ahs(1).Children(end).UserData.Data);
 
                 % Collection of uicontrols
@@ -564,7 +565,7 @@ classdef SolverPlotter < handle
                         drawnow;
                         
                         % capture frame for video
-                        writeVideo(vid, getframe(plotters(idx).fh));
+                        writeVideo(vid, getframe(fh));
 
                     end
                 catch ME
@@ -715,7 +716,7 @@ classdef SolverPlotter < handle
             arguments
                 plotters
                 YData
-                fieldName           = 'WAVE'
+                fieldName           = ''
                 opts.DisplayName    = fieldName
                 opts.subset         = 1:length(plotters(1).Xs)
                 opts.plotOptions    = {}
@@ -759,14 +760,14 @@ classdef SolverPlotter < handle
                         ah.UserData.xlim = xlim(ah);
                     else
                         ah.UserData.xlim = [min(ah.UserData.xlim(1), min(XData)) max(ah.UserData.xlim(2), max(XData))];
-                        if xlim(ah) ~= ah.UserData.xlim
+                        if any(xlim(ah) ~= ah.UserData.xlim)
                             xlim(ah, ah.UserData.xlim);
                         end
                     end
                 else
                     XData = plotter.Xs(opts.subset);
                     ah.UserData.xlim = XData([1 end]);
-                    if xlim(ah) ~= ah.UserData.xlim
+                    if any(xlim(ah) ~= ah.UserData.xlim)
                         xlim(ah, ah.UserData.xlim);
                     end
                 end
@@ -873,6 +874,9 @@ classdef SolverPlotter < handle
                     lh.LineStyle = plotStyles.LineStyle;
                     lh.Marker = plotStyles.Marker;
 
+                    % Plotted data
+                    YData = lh.YData;
+
                     % Store YData if isAnimation
                     if plotter.isAnimation
                         % Store XData and YData
@@ -894,11 +898,7 @@ classdef SolverPlotter < handle
                     drawnow limitrate;
                     new_ylim = ylim(ah);
                 else
-                    % Select YData for current plotter.WallIdx
-                    if size(YData,2) > 1
-                        YData = YData(:,plotter.WallIdx); 
-                    end
-                    new_ylim = [min(ah.UserData.ylim(1), min(YData)) max(ah.UserData.ylim(2), max(YData))];
+                    new_ylim = [min(ah.UserData.ylim(1), min(YData,[],'all')) max(ah.UserData.ylim(2), max(YData,[],'all'))];
                     
                     % TODO: this ylim call seems necessary, but takes a
                     % long time. Consider finding alternative way of
@@ -1107,7 +1107,7 @@ classdef SolverPlotter < handle
                 % Find tiledlayout object
                 layouts = findall(fig, 'Type', 'tiledlayout');
                 if isempty(layouts)
-                    error('OpenSTREAM:FourFieldSolver:NoTitledLayout','RESIZEFIGURE: No tiledlayout found in the current figure.');
+                    error('OpenSTREAM:SolverPlotter:NoTiledLayout','RESIZEFIGURE: No tiledlayout found in the current figure.');
                 end
                 t = layouts(1);
 
@@ -1215,7 +1215,7 @@ classdef SolverPlotter < handle
 
                     % Two-fluid solver
                 case {'INTERFACIAL'}
-                    plotStyle = {colors(1), '-', 'O'};
+                    plotStyle = {colors(1), '-', 'o'};
                 case {'INTERFACIALEVAP'}
                     plotStyle = {colors(1), '-', '.'};
                 case {'INTERFACIALCOND'}
