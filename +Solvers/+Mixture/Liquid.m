@@ -135,7 +135,7 @@ classdef Liquid < Solvers.AbstractPhase
             h = (liquid.mix.H(zIdx)-X.*liquid.mix.vapor.H(zIdx))./(1-X);
 
             fluid = liquid.mix.fluid;
-            h = min(h,fluid.HF);                                           % Constrain solution so that Hl > Hf (no superheated liquid)
+            h = min(h,fluid.HF);                                           % Constrain solution so that Hl <= Hf (no superheated liquid)
             
             % Set to saturated liquid enthalpy in the single-phase vapor region
             singlePhaseIdx = isnan(h) | 1-X < 1E-2;
@@ -199,7 +199,7 @@ classdef Liquid < Solvers.AbstractPhase
                     nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
                 case 'DITTUSBOELTERGEN' 
                     c = model.DITTUSBOELTERCOEF;
-                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+                    nu = c(1).*Re.^c(2).*Pr.^c(3);                         % [-]
                     nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
                 case 'SIEDERTATE'
                     nu = 0.027.*Re.^0.8.*Pr.^(1/3);                        % [-]
@@ -209,7 +209,7 @@ classdef Liquid < Solvers.AbstractPhase
                     nu = nu.*(mub./muw).^0.14;                             % [-] Corrected Nusselt number
                 case 'GNIELINSKI'
                     f = liquid.mix.FWL(zIdx);                              % [-] Wall (Darcy) friction factor
-                    nu = (f./8).*(Re-1000).*Pr./(1+12.7.*(f./8).^(0.5).*(Pr.^(2/3)-1)); % [-]
+                    nu = (f./8).*max(Re-1000,0).*Pr./(1+12.7.*(f./8).^(0.5).*(Pr.^(2/3)-1)); % [-]
                     nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
             end
         end

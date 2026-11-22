@@ -245,7 +245,7 @@ classdef Vapor < Solvers.AbstractPhase
                     nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
                 case 'DITTUSBOELTERGEN' 
                     c = model.DITTUSBOELTERCOEF;
-                    nu = c(1).*Re.^c(2)*Pr.^c(3);                          % [-]
+                    nu = c(1).*Re.^c(2).*Pr.^c(3);                         % [-]
                     nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
                 case 'SIEDERTATE'
                     nu = 0.027.*Re.^0.8.*Pr.^(1/3);                        % [-]
