@@ -73,10 +73,13 @@ classdef Model < Inputs.Input
         NEARWALLEQOAF    (1,1) logical                                     = false                           % Near-wall equilibrium at onset of annular two-phase flow
         NEARWALLH        (1,1) InputEnums.NEARWALLH                        = 'RATIO'                         % Near-wall equilibrium enthalpy model selected from :class:`InputEnums.NEARWALLH`
         NEARWALLHRATIO   (1,1) double  {mustBePositive}                    = 1.0                             % Near-wall equilibrium enthalpy ratio [-]
+        NEARWALLHFILMCOEF (1,2) double  {mustBeNumeric}                    = [900 0.35]                      % Near-wall equilibrium enthalpy film model coefficients [kg/m^2/s,-]
         NEARWALLRELAX    (1,1) InputEnums.NEARWALLRELAX                    = 'QUALITY'                       % Near-wall energy transfer time relaxation model selected from :class:`InputEnums.NEARWALLRELAX`
         NEARWALLRELAXX   (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Near-wall exchange relaxation time thermodynamic quality [-]
         NEARWALLRELAXT   (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Near-wall energy transfer relaxation time array [s]
-        NEARWALLRELAXCOEF (1,3) double  {mustBeNumeric}                    = [0.1E-3 1/3 0.05]               % Near-wall energy transfer time relaxation coefficients for void option
+        NEARWALLRELAXCOEF (1,3) double  {mustBeNumeric}                    = [0.1E-3 1/3 0.05]               % Near-wall energy transfer time relaxation void model coefficients [m,-,-]
+        NEARWALLRELAXFILMCOEF (1,5) double  {mustBeNumeric}                = [0.0541 0.88 0.16 386 2000]     % Near-wall energy transfer time relaxation film model coefficients [s,-,-,-,kg/m^2/s]
+        NEARWALLRELAXFILMTUPS (1,1) double  {mustBePositive}               = 0.13                            % Near-wall energy transfer time relaxation film model upstream of OAF [s]
 
         % Two-fluid solver models
 
@@ -135,7 +138,8 @@ classdef Model < Inputs.Input
         BASEYPLUS        (1,1) double  {mustBePositive}                    = 15                              % Equilibrium base film y+ value [-]
         RELAXTB          (1,1) double  {mustBeNonnegative}                 = 0.2                             % Base film / wave mass exchange relaxation time [s]
 
-        WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 2                               % Base film / wave turbulent mixing coefficient
+        WAVEMIXCOEF      (1,1) double  {mustBeNonnegative}                 = 2                               % Base film / wave turbulent mixing coefficient
+        WAVEMIXMAX       (1,1) double  {mustBePositive}                    = 10                              % Base film / wave maximum turbulent mixing mass flux [kg/m^2/s]
         WAVEFREQUENCY    (1,1) InputEnums.WAVEFREQUENCY                    = 'RELAXATION'                    % Wave number density model selected from :class:`InputEnums.WAVEFREQUENCY`
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'                          % Equilibrium wave Strouhal number model selected from :class:`InputEnums.EQSTROUHAL`
         EQSTROUHALCOEF   (1,3) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]             % Equilibrium wave Strouhal number coefficients [-]

@@ -1815,7 +1815,7 @@ classdef Mixture < Solvers.AbstractField
                     p   = model.RELAXCONDFOCOEF(4);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
 
                     Rel = mix.liquid.RE(zIdx);                             % [-] Liquid Reynolds number
-                    qks = fld.QK/fld.QKMAX;                                  % [-] Kutateladze characteristic heat flux (normalized with maximum value)
+                    qks = fld.QK/fld.QKMAX;                                % [-] Kutateladze characteristic heat flux (normalized with maximum value)
 
                     Fo  = L.*(Re0./Rel).^n.*qks.^p;                        % [-] Empirical model
                     Fo  = max(2E-6,Fo);                                    % [-] Impose lower bound for numerical stability
@@ -1991,7 +1991,7 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function heq = HNEARWALLEQ(mix, zIdx, skipAdjustments)
-            %HNEARWALLEQ Near-wall equilibrium entalpy [J/kg]
+            %HNEARWALLEQ Near-wall equilibrium enthalpy [J/kg]
             %
             % Compute the near-wall equilibrium enthalpy. May be considered
             % away from 1 for annular two-phase -flow
@@ -2016,7 +2016,7 @@ classdef Mixture < Solvers.AbstractField
                     ratio = model.NEARWALLHRATIO;
                 case InputEnums.NEARWALLH.FILM
                     % Mass flux-dependent input for annular two-phase flow
-                    G1 = 900; n = 0.35;                                    % Model constants (TODO: to be moved to model inputs)
+                    G1 = model.NEARWALLHFILMCOEF(1); n = model.NEARWALLHFILMCOEF(2); % Model constants
                     ratio = max(1,(mix.MFLUX(zIdx)./G1).^n);
             end
             heq = ratio.*h;
@@ -2465,7 +2465,7 @@ classdef Mixture < Solvers.AbstractField
                     Press = mix.fluid.PRESSURE;                            % [Pa}
 
                     C1 = 4/(Press/Pcrit-(Press/Pcrit)^2);                  % [-]
-                    K1 = min(0.8,1./(1+exp(-mix.liquid.RE(1)/1E5)));       % [-]
+                    K1 = min(0.8,1./(1+exp(-mix.liquid.RE(1)/1E5)));       % [-] based on Re = liquid Reynolds number at channel inlet (EPRI definition)
 
                     r = (1+1.57.*RHOV./RHOL)./(1-K1);                      % [-]
                     K0 = K1 + (1-K1).*(RHOV./RHOL).^(1/4);                 % [-]
@@ -2625,12 +2625,6 @@ classdef Mixture < Solvers.AbstractField
             %
            
             % TODO: Extend with additional MFBT models as necessary 
-
-
-            %MFBT_CALC Helper function to calculate the Minimum Film Boiling
-            % Transition and CBT flag
-
-            % TODO: Implement additional MFBT correlations
 
             fld   = mix.fluid;
             model = mix.inputSet.model;
@@ -2834,11 +2828,15 @@ classdef Mixture < Solvers.AbstractField
                     RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));             % [kg/m^3] Liquid density
 
                     % Linear model
-                    t0 = 0.0541; Lx = 0.88; Lg = 0.16; Lr = 386; G0 = 2000;% Model constants (TODO: to be moved to model inputs)
+                    t0 = model.NEARWALLRELAXFILMCOEF(1);                   % [s]
+                    Lx = model.NEARWALLRELAXFILMCOEF(2);                   % [-]
+                    Lg = model.NEARWALLRELAXFILMCOEF(3);                   % [-]
+                    Lr = model.NEARWALLRELAXFILMCOEF(4);                   % [-]
+                    G0 = model.NEARWALLRELAXFILMCOEF(5);                   % [kg/m^2/s]
                     t = t0.*(1-Lx.*X).*min(1,1+Lg.*(1-G./G0)).*(1+Lr.*(RHOV./RHOL).^2); % [s] Time relaxation
                     
                     % Behavior upstream OAF
-                    tups = 0.13;                                           % [s] Upstream time relaxation (TODO: to be replaced by relevant model)
+                    tups = model.NEARWALLRELAXFILMTUPS;                    % [s] Upstream time relaxation (TODO: to be replaced by relevant model)
                     t(mix.XEQ(zIdx)<=OAFX) = tups;                         % [s] Upstream OAF adjustment
             end
 

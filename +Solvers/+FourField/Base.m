@@ -154,7 +154,7 @@ classdef Base < Solvers.AbstractFilm
             %MENT Base entrainment mass flux [kg/m^2/s]
             %
             % Placeholder for future implementation if needed. Currently
-            % returns zero entrainment.
+            % returns zero entrainment from base film.
             %
             % Inputs:
             %
@@ -163,7 +163,6 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            % TODO: use coefficient later
             ment =  0.0 .* base.film.MENT(zIdx);
         end
 
@@ -212,10 +211,12 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
+            model = base.inputSet.model;
+
             wave = base.film.wave;
-            Kw_recp = base.inputSet.model.WAVEMIXCOEF;
+            Kw_recp = model.WAVEMIXCOEF;
             Mturb = min(abs(base.WL(zIdx)), wave.WL(zIdx)) ./ Kw_recp ./ wave.WIDTH(zIdx);
-            Mturb = min(Mturb,10);
+            Mturb = min(Mturb,model.WAVEMIXMAX);
             Mturb = base.mix.AFDISTR(0,Mturb,zIdx);
         end
 

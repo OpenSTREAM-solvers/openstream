@@ -27,7 +27,7 @@ An overview of the four-field model implemented in OpenSTREAM is provided below.
 Governing equations
 -------------------
 
-The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. The annular-flow field equations are numerically solved over the complete channel, but their physical interpretation applies from the modeled onset of annular flow. Upstream values serve as initialization quantities and evolve smoothly toward the prescribed conditions at the onset.
+The conservation equations are formulated at the wall level, indexed by :math:`n`, to support multi-wall geometries with different heating rates. The annular-flow field equations are numerically solved over the complete channel, but their physical interpretation applies from the modeled onset of annular flow. Upstream values serve as initialization quantities and evolve smoothly toward the prescribed conditions at the onset. The four-field framework treats entrainment as coming from disturbance waves only, base-film entrainment is hence zero.
 
 **1. Mass conservation**
 
