@@ -18,11 +18,11 @@ classdef SolverPlotter < handle
 
     properties (Access=protected)
 
-        fh                   (1,1)  matlab.ui.Figure                                          % Figure handle
-        th                   (1,1)  matlab.graphics.layout.TiledChartLayout                   % Tiled layout handle
+        fh                          matlab.ui.Figure                                          % Figure handle
+        th                          matlab.graphics.layout.TiledChartLayout                   % Tiled layout handle
         ahs                         matlab.graphics.axis.Axes                                 % Array of axes handles
         isAnimation          (1,1)  logical                                   = false         % Flag indicating if animation is enabled
-        uipanel              (1,1)  matlab.ui.container.Panel                                 % UI Panel handle for animation UI
+        uipanel                     matlab.ui.container.Panel                                 % UI Panel handle for animation UI
         animationTitleFormat (1,1)  string                                    = ""            % Format string for animation title
         animationSeries      (:,1)  {isnumeric}                               = 1             % Series of time steps or frames for animation
 
