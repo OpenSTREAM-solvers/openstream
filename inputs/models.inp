@@ -172,3 +172,11 @@ FLUID         ! Fluid ID                                                   > WAT
 VOID          ! Void fraction model                                        > BESTION
 THERMALNONEQ  ! Thermal non-equilibrium model                              > SAHAZUBER
 END
+
+ID            ! Model ID                                                   > TUTORIAL10 
+NNODES        ! Number of axial nodes                                      > 100 
+FLUID         ! Fluid ID                                                   > WATER 
+THERMALNONEQ  ! Thermal non-equilibrium model                              > MRM 
+CBT           ! Critical boiling transition model                          > ELEVATION 
+CBTELEVATION  ! Critical boiling transition elevation [m]                  > 3.0 
+END
