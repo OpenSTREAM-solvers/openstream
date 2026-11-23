@@ -2537,13 +2537,14 @@ classdef Mixture < Solvers.AbstractField
 
             % CHF
             Pr  = mix.P(end);                                              % [Pa] System pressure
-            G   = mix.MFLUX(1:mix(1).NZ);                                  % [kg/m^2/s] Mass flux
-            XEQ = mix.XEQ(1:mix(1).NZ);                                    % [-] Equilibrium quality
+            G   = mix.MFLUX(zIdx);                                         % [kg/m^2/s] Mass flux
+            XEQ = mix.XEQ(zIdx);                                           % [-] Equilibrium quality
+            Z = mix.Z(zIdx);                                               % [m] Location
             D   = geom.HDIAM;                                              % [m] Diameter
 
             switch model.CBT
                 case {InputEnums.CBT.NONE,InputEnums.CBT.ELEVATION}
-                    chf = nan(mix(1).NZ,geom.NWALL);                       % Skip CHF calculation
+                    chf = nan(numel(zIdx),geom.NWALL);                     % Skip CHF calculation
 
                 case InputEnums.CBT.BIASI
                     % Biasi correlation
@@ -2581,27 +2582,27 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Adjustment factors
-            chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
+            chf = model.CBTMULT(Z).*chf;                                   % Apply user input multiplier
 
             if max(model.KLOC) > 0
-                z0 = mix.KDIST(); z0(mix.Z < model.KLOC(1)) = 1E6;         % [m] Distance from upstream obstruction (inlet effect ignored)
+                z0 = mix.KDIST(zIdx); z0(Z < model.KLOC(1)) = 1E6;         % [m] Distance from upstream obstruction (inlet effect ignored)
                 chf = (1+model.CBTKEFFECT(1).*exp(model.CBTKEFFECT(2).*z0./geom.HDIAM)).*chf; % Apply spacer effect
             end
 
-            mix.chf(zIdx,:) = chf(zIdx,:);                                 % [W/m^2] Critical heat flux
+            mix.chf(zIdx,:) = chf;                                         % [W/m^2] Critical heat flux
 
             % CBT flag
             switch model.CBT
                 case InputEnums.CBT.ELEVATION
-                    cbt = repmat(mix.Z >= model.CBTELEVATION,1,geom.NWALL); % CBT indicator based on input elevation
+                    cbt = repmat(Z >= model.CBTELEVATION,1,geom.NWALL);    % CBT indicator based on input elevation
 
                 otherwise
-                    cbt = mix.HFLUX(1:mix.NZ,:) > chf;                     % CBT indicator based on CHF value
+                    cbt = mix.HFLUX(zIdx,:) > chf;                         % CBT indicator based on CHF value
             end
 
-            %cbt(mix.XEQ>=1,:) = true;                                      % Set cbt to 1 for Xeq >= 1
+            %cbt(mix.XEQ(zIdx)>=1,:) = true;                                % Set cbt to 1 for Xeq >= 1
 
-            mix.cbt(zIdx,:) = cbt(zIdx,:);                                 % [-] CBT flag
+            mix.cbt(zIdx,:) = cbt;                                         % [-] CBT flag
         end
 
         function MFBT_CALC(mix, zIdx)
