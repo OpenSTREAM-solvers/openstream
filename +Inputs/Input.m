@@ -434,8 +434,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
                     % Regex expression for parsing the input file.
                     entryExpr = {};
-                    %   Capture the "END" tag
-                    entryExpr{1} = '(?<PARAMETER>END)\s*$';
+                    %   Capture the "END" tag (anchored at start of line)
+                    entryExpr{1} = '^\s*(?<PARAMETER>END)\s*$';
                     %   Capture comments, indicated by '#', '//' or '%' symbols
                     entryExpr{2} = '^\s*(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
