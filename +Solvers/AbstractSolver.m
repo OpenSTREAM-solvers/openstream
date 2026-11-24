@@ -138,7 +138,7 @@ classdef (Abstract) AbstractSolver < handle
 
             import Solvers.SolverState
             if any(mixSolver.STATE == [SolverState.INITIALSTEPNOTCONVERGED, SolverState.SOLVEDNOTCONVERGED])
-                solver.warning('Mixture solution is not converged (%s). %s results may not be reliable.\n', string(mixSolver.STATE), solver.solverName());
+                solver.warning(sprintf('Mixture solution is not converged (%s). %s results may not be reliable.', string(mixSolver.STATE), solver.solverName()));
             end
         end
 

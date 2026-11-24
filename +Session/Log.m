@@ -119,36 +119,31 @@ classdef Log < handle
 
         function warning(obj, varargin)
             %WARNING Logs warnings using MATLAB's built-in warning mechanism
-            %
-            % Optionally writes to file if warnings are suppressed
 
             import Session.LogMode
 
-            if obj.showWarnings == true
+            % Display on console (and diary, if on)
+            if obj.showWarnings
 
                 % Use built-in warning function
                 builtin('warning', varargin{:});
+            
+            end
 
-                % Since the warning is displayed using the built-in function,
-                % recording-to-file depends on diary on or off.
+            % Write to log file
+            if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+                    obj.LOGMODE == LogMode.BOTH
 
-            else
-                % If LOGTOFILEONLY, open and write to log
-                if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
-                        obj.LOGMODE == LogMode.BOTH
+                % Open the log file
+                obj.openLog();
 
-                    % Open the log file
-                    obj.openLog();
+                % Write warnings to the log
+                builtin('fprintf',obj.LOGFID, 'Warning:\n');
+                builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
 
-                    % Write warnings to the log
-                    builtin('fprintf',obj.LOGFID, 'Warning:\n');
-                    builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
-
-                    % Close the log if keepLogOpen is unset
-                    if ~obj.keepLogOpen
-                        obj.closeLog();
-                    end
-
+                % Close the log if keepLogOpen is unset
+                if ~obj.keepLogOpen
+                    obj.closeLog();
                 end
             end
 
