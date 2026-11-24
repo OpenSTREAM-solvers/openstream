@@ -479,11 +479,12 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
     methods(Access = protected)
 
         function cpObj = copyElement(obj)
-            %COPYELEMENT Override copyElement method to ensure correct references
-            %with properties liquid and vapor during object copying
+            %COPYELEMENT Copy film object
+            %
+            % Shallow copy via AbstractField.copyElement, which also resets the
+            % per-object memoization store. Subclasses extend this as needed.
 
-            % Make a shallow copy of all four properties
-            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj = copyElement@Solvers.AbstractField(obj);
         end
 
     end

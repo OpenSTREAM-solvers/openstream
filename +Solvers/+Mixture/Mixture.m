@@ -2852,23 +2852,18 @@ classdef Mixture < Solvers.AbstractField
     methods(Access = protected, Hidden = true)
 
         function cpObj = copyElement(obj)
-            %COPYELEMENT Creates a deep copy of the Mixture object with updated phase references.
+            %COPYELEMENT Copy Mixture object with its own Liquid and Vapor phases
             %
-            % Overrides the default copy behavior to ensure that the copied
-            % Mixture object correctly reinitializes its associated Liquid
-            % and Vapor phase objects. This is necessary because these phase
-            % objects hold internal references to the Mixture instance.
-            %
-            % Notes:
-            % - Uses matlab.mixin.Copyable base method for shallow copy
-            % - Reconstructs Liquid and Vapor objects to point to the copied mixture
+            % Shallow copy via AbstractField.copyElement, which also resets the
+            % per-object memoization store. The Liquid and Vapor phase objects
+            % hold a reference to their Mixture, so they are rebuilt to point to
+            % the copy. Other references (e.g. inputSet, fluid) are shared.
 
             import Solvers.Mixture.*
 
-            % Make a shallow copy of all four properties
-            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj = copyElement@Solvers.AbstractField(obj);
 
-            % Update liquid and vapor 'mix' property
+            % Rebuild phases so they reference the copied mixture
             cpObj.liquid = Liquid(cpObj);
             cpObj.vapor = Vapor(cpObj);
         end

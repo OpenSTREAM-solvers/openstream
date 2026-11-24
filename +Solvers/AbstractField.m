@@ -17,11 +17,9 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
 
     end
 
-    properties (Access = protected)
+    properties (Access = protected, Transient)
 
-        %memoizedFunctions = dictionary();
-        % Currently using containers.Map() for MATLAB version
-        memoizedFunctions = containers.Map();                              % Memoization store for function handles
+        memoizedFunctions = [];                                            % Per-object memoization store, created on first use
 
     end
 
@@ -143,22 +141,24 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
 
         function out = memoizeFunction(obj, methodStr, methodHandle, varargin)
-            %MEMOIZEDMETHOD Registers and retrieves memoized function handles
+            %MEMOIZEFUNCTION Call methodHandle(varargin{:}) with per-object result caching
             %
-            % Avoids redundant computation by caching results.
+            % Only use for methods whose result depends solely on their input
+            % arguments, not on object properties that change between calls
+            % (e.g. H, W, U during iterations); otherwise stale values are returned.
             %
-            % Adapted from https://stackoverflow.com/a/75037451
+            % Approach based on https://stackoverflow.com/a/75037451
 
-            %For the first call with a particular method, create and
-            %memoize a function handle view of the method
-            if ~isConfigured(obj.memoizedFunctions) || ~obj.memoizedFunctions.isKey(methodStr)
-                fn_method = @(varargin)methodHandle(varargin{:});
-                fn = memoize(fn_method);
-                obj.memoizedFunctions(methodStr) = fn;
+            % On first call for methodStr, create the per-object store
+            % (if needed) and a memoized wrapper
+            if isempty(obj.memoizedFunctions)
+                obj.memoizedFunctions = containers.Map('KeyType','char','ValueType','any');
+            end
+            if ~obj.memoizedFunctions.isKey(methodStr)
+                obj.memoizedFunctions(methodStr) = memoize(methodHandle);
             end
 
-            %For all calls, get the store function handle out of
-            %storage, and use it.
+            % Retrieve the memoized wrapper and call it
             fn = obj.memoizedFunctions(methodStr);
             out = fn(varargin{:});
         end
@@ -259,6 +259,17 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                     end
                 end
             end
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function cpObj = copyElement(obj)
+            %COPYELEMENT Copy without sharing the memoization store
+
+            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj.memoizedFunctions = [];
         end
 
     end

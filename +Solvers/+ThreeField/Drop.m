@@ -613,19 +613,13 @@ classdef Drop < Solvers.AbstractField
     methods(Access = protected)
 
         function cpObj = copyElement(obj)
-            %COPYELEMENT Overrides copyElement method for Drop class
+            %COPYELEMENT Copy drop object
             %
-            % Creates a shallow copy of the Drop object while preserving references
-            % to associated mixture and phase properties.
-            %
-            % Inputs:
-            %
-            % - obj   — :class:`Solvers.ThreeField.Drop` object
+            % Shallow copy via AbstractField.copyElement, which also resets the
+            % per-object memoization store. References to the associated mixture
+            % and fluid objects are preserved (not deep-copied).
 
-            import Solvers.ThreeField.*
-
-            % Make a shallow copy of all four properties
-            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj = copyElement@Solvers.AbstractField(obj);
         end
 
     end

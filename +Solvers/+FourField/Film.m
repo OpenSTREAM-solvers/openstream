@@ -289,25 +289,19 @@ classdef Film < Solvers.AbstractFilm
     methods (Access = protected)
 
         function cp = copyElement(film)
-            %COPYELEMENT Customized copy method for Film object
+            %COPYELEMENT Copy Film object with its own base and wave sub-objects
             %
-            % Creates a deep copy of the Film object, including its base and wave
-            % sub-objects. Updates references so that copied sub-objects point to the
-            % new Film instance.
-            %
-            % Inputs:
-            %
-            % - film — :class:`Solvers.FourField.Film` object
+            % Shallow copy via AbstractFilm/AbstractField.copyElement (resets the
+            % memoization store), then copies the base and wave sub-objects and
+            % points them to the new Film. Other references are shared.
 
             % Shallow copy film
-            cp = copyElement@matlab.mixin.Copyable(film);
+            cp = copyElement@Solvers.AbstractFilm(film);
 
-            % Deep copy of film base and wave
+            % Copy base and wave, and point them to the copied film
             propNames = {'base', 'wave'};
             for j = 1:length(propNames)
-                % Make shallow copy of base and wave
                 cp.(propNames{j}) = copy(cp.(propNames{j}));
-                % Reference film to srcObj
                 cp.(propNames{j}).film = cp;
             end
         end
