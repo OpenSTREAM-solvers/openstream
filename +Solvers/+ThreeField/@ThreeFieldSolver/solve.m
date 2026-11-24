@@ -162,11 +162,11 @@ function solver(solveINIT)
                         
                     case InputEnums.MOMENTFILM.FULL
                     % Full film momentum conservation                        
-                        thickAbs = abs(film(tIdx).THICK(zIdx));            % [m] Base film thickness
+                        thickAbs = abs(film(tIdx).THICK(zIdx));            % [m] Film thickness
                         isThick  = thickAbs > model.THINFILMTHICK;
                         thick    = max(thickAbs, model.THINFILMTHICK);
 
-                        Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with base
+                        Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with film
                         Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
                         Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                              % [m/s] Keep within realistic bounds to help convergence
                         Unew = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;                      % [m/s] Apply relaxation
