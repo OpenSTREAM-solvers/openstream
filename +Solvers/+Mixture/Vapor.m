@@ -255,7 +255,7 @@ classdef Vapor < Solvers.AbstractPhase
                     nu = nu.*(mub./muw).^0.14;                             % [-] Corrected Nusselt number
                 case 'GNIELINSKI'
                     f = vapor.FW(zIdx);                                    % [-] Wall (Darcy) friction factor
-                    nu = (f./8).*(Re-1000).*Pr./(1+12.7.*(f./8).^(0.5).*(Pr.^(2/3)-1));
+                    nu = (f./8).*max(Re-1000,0).*Pr./(1+12.7.*(f./8).^(0.5).*(Pr.^(2/3)-1));
                     nu = repmat(nu,1,geom.NWALL);                          % Expand to all walls
             end
 

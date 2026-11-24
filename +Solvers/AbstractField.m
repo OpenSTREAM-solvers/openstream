@@ -254,7 +254,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                             end
                         % Non-scalar properties are copied as a vector
                         else
-                            targetObj(1).(propNames{j})(2:end,:) = srcObj.(propNames{j})(2:end,:);
+                            targetObj(i).(propNames{j})(2:end,:) = srcObj.(propNames{j})(2:end,:);
                         end
                     end
                 end

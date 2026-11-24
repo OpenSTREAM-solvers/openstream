@@ -1108,7 +1108,7 @@ classdef Mixture < Solvers.AbstractField
                      NU  = 0.023.*REG.^0.8.*PRG.^0.4;                      % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     hwallbt = repmat(hwallbt,geom.NWALL);
+                     hwallbt = repmat(hwallbt,1,geom.NWALL);
 
                      Tbv = max(fld.TSAT,mix.T(zIdx));
                      Tbv = repmat(Tbv,1,geom.NWALL);
@@ -1244,7 +1244,7 @@ classdef Mixture < Solvers.AbstractField
             hsp   = mix.liquid.HWALL(twall,zIdx);                          % [W/m^2/K] Single-phase liquid
             hboil = mix.HWALLBOIL(zIdx);                                   % [W/m^2/K] Boiling
             hwall = max(hsp,hboil);                                        % [W/m^2/K]
-            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),geom.NWALL);         % [K] Saturated vapor temperature
+            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),geom.NWALL);        % [K] Saturated vapor temperature
 
             % Post-CBT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
