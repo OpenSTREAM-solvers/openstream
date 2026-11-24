@@ -170,12 +170,11 @@ classdef Film < Solvers.AbstractFilm
             zIdx = zIdx(:);
 
             perim = film.inputSet.geometry.PERIM;                          % [m] Perimeter
-            eqthick_b = film.base.EQTHICK(zIdx);                           % [kg/s] Base equilibrium thickness
+            eqthick_b = film.base.EQTHICK(zIdx);                           % [kg/s] Base film equilibrium thickness
 
-            Wb = eqthick_b .* film.base.U(zIdx) .* perim .* film.base.fluid.RHOF;  % [kg/s] Base mass flow rate
+            Wb = eqthick_b.*film.base.U(zIdx,:).*perim.*film.fluid.RHOF;   % [kg/s] Base film mass flow rate
             eb = Wb./Wf;
             eb = min(eb,1);
-
         end
 
         function initializeBaseAndWave(film, WIN, ITR)
