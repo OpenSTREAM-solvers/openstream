@@ -1299,7 +1299,7 @@ classdef Mixture < Solvers.AbstractField
                 err = max(abs(twall(:)-twold(:)));
                 if err < MaxErr; break; end
             end
-            if err > MaxErr, fprintf('%s Wall temperature : not converged -> err = %0.4f\n',class(mix), err); end
+            if err > MaxErr, mix.log('%s Wall temperature : not converged -> err = %0.4f\n',class(mix), err); end
             tbulk = Tbl;
             tbulk(idxbt) = Tbv(idxbt);
         end
@@ -2483,7 +2483,7 @@ classdef Mixture < Solvers.AbstractField
                         if err < MaxErr, break; end
                         vf = mix.vf(zIdx);
                     end
-                    if err > MaxErr, fprintf('%s EPRI void model : not converged -> err = %0.4f\n',class(mix), err); end
+                    if err > MaxErr, mix.log('%s EPRI void model : not converged -> err = %0.4f\n',class(mix), err); end
             end
 
             function vf = vfslip(x,S)
