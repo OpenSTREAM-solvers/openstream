@@ -167,7 +167,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             %LOG Log messages to the createdBySolver session log
 
             if isempty(obj.inputSet)
-                disp(varargin{:})
+                fprintf(varargin{:})
             else
                 obj.inputSet.session.log.log(varargin{:});
             end
