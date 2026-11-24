@@ -219,15 +219,13 @@ classdef Model < Inputs.Input
                     % automatically cast to a function_handle. Here, a
                     % validation is first performed to detect restricted
                     % keywords, then converted.
-                    if isa(obj.(objPropname), "function_handle") && isstring(obj.inputStruct.(objPropname))
-
+                    val = obj.inputStruct.(objPropname);
+                    if isa(obj.(objPropname), "function_handle") && (isstring(val) || ischar(val))
                         % Check for insecure keywords in function handle
-                        obj.validateFunctionHandleInput(obj.inputStruct.(objPropname))    ;
-                        obj.(objPropname) = ...
-                            str2func(obj.inputStruct.(objPropname));
+                        obj.validateFunctionHandleInput(val);
+                        obj.(objPropname) = str2func(val);
                     else
-                        obj.(objPropname) = ...
-                            upper(obj.inputStruct.(objPropname));
+                        obj.(objPropname) = upper(val);
                     end
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
