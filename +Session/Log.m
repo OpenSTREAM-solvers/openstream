@@ -100,20 +100,28 @@ classdef Log < handle
 
             if obj.LOGMODE == LogMode.NONE
                 return
-            else
-                if (obj.LOGMODE == LogMode.BOTH || ...
-                        obj.LOGMODE == LogMode.LOGTOFILEONLY) ...
-                        && obj.LOGFID >= 0
-                    obj.openLog();
-                    builtin('fprintf',obj.LOGFID, varargin{:});
-                    if ~obj.keepLogOpen
-                        obj.closeLog();
-                    end
+            end
+            
+            % Write to log file
+            if (obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+                    obj.LOGMODE == LogMode.BOTH)
+
+                % Open the log file
+                obj.openLog();
+
+                % Write to the log
+                builtin('fprintf',obj.LOGFID, varargin{:});
+
+                % Close the log if keepLogOpen is unset
+                if ~obj.keepLogOpen
+                    obj.closeLog();
                 end
-                if (obj.LOGMODE == LogMode.BOTH || ...
-                        obj.LOGMODE == LogMode.LOGTOCONSOLEONLY)
-                    builtin('fprintf',varargin{:});
-                end
+            end
+
+            % Write to console
+            if (obj.LOGMODE == LogMode.LOGTOCONSOLEONLY || ...
+                    obj.LOGMODE == LogMode.BOTH)
+                builtin('fprintf',varargin{:});
             end
         end
 
@@ -124,10 +132,8 @@ classdef Log < handle
 
             % Display on console (and diary, if on)
             if obj.showWarnings
-
                 % Use built-in warning function
-                builtin('warning', varargin{:});
-            
+                builtin('warning', varargin{:});            
             end
 
             % Write to log file
@@ -146,7 +152,6 @@ classdef Log < handle
                     obj.closeLog();
                 end
             end
-
         end
 
         function diaryOff(obj)
