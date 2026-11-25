@@ -116,10 +116,16 @@ function solver(solveINIT)
             MCTold  = mix(tIdx-1).MCT(zIdx);                               % [kg/s] Slip-induced momentum correction at previous time step
             Hold    = mix(tIdx-1).H(zIdx);                                 % [J/kg] Mixture enthalpy at previous time step
             ECTold  = mix(tIdx-1).ECT(zIdx);                               % [J/m] Slip-induced energy correction at previous time step
-            Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
+            Wups    = mix(tIdx).W(zIdx-1);                                 % [kg/s] Mixture mass flow rate at previous node
+            Pups    = mix(tIdx).P(zIdx-1);                                 % [Pa] Pressure at previous node
+            Hups    = mix(tIdx).H(zIdx-1);                                 % [J/kg] Mixture enthalpy at previous node
+
             Wvold   = mix(tIdx-1).MRM.WV(zIdx,:);                          % [kg/s] Relaxed vapor mass flow rate at previous time step
+            Uvold   = mix(tIdx-1).vapor.U(zIdx);                           % [m/s] Vapor velocity at previous time step
             Hvold   = mix(tIdx-1).MRM.HV(zIdx,:);                          % [J/kg] Relaxed vapor enthalpy at previous time step
-            
+            Wvups   = mix(tIdx).MRM.WV(zIdx-1,:);                          % [kg/s] Relaxed vapor mass flow rate at previous node
+            Hvups   = mix(tIdx).MRM.HV(zIdx-1,:);                          % [J/kg] Relaxed vapor enthalpy at previous node
+
             % Inner (point) iterations
             for itr = 1:options.MAXITER
     
@@ -132,16 +138,16 @@ function solver(solveINIT)
                 U     = mix(tIdx).U(zIdx);                                          % [m/s] Mixture velocity
                 
                 % Mixture mass conservation
-                Wnew = (mix(tIdx).W(zIdx-1)+Wold/Uold*DZ/DT)/(1+DZ/U/DT);           % [kg/s] Update mixture mass flow rate
+                Wnew = (Wups+Wold/Uold*DZ/DT)/(1+DZ/U/DT);                          % [kg/s] Update mixture mass flow rate
                 mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew; % [kg/s] Apply relaxation
                 
                 % Mixture momentum conservation
-                Pnew = mix(tIdx).P(zIdx-1) + mix(tIdx).DPTOT(UPold, MCTold, zIdx);  % [Pa] New pressure
+                Pnew = Pups + mix(tIdx).DPTOT(UPold, MCTold, zIdx);                 % [Pa] New pressure
                 mix(tIdx).P(zIdx) = (1-options.RELAXPM)*Piter+options.RELAXPM*Pnew; % [Pa] Apply relaxation
     
                 % Mixture energy conservation
                 dECT = -(mix(tIdx).ECT(zIdx)-ECTold)/DT;                            % [W/m] Time derivative of slip-induced energy correction term
-                Hnew = (mix(tIdx).H(zIdx-1)+DZ./mix(tIdx).W(zIdx)*(dECT+sum(LHGR)) + ...
+                Hnew = (Hups+DZ./mix(tIdx).W(zIdx)*(dECT+sum(LHGR)) + ...
                        Hold/U*DZ/DT)/(1+DZ/U/DT);                                   % [J/kg] Update mixture enthalpy
                 mix(tIdx).H(zIdx) = (1-options.RELAXHM)*Hiter+options.RELAXHM*Hnew; % [J/kg] Apply relaxation
                 
@@ -164,13 +170,13 @@ function solver(solveINIT)
                                 
                                 % Vapor mass conservation
                                 Mvtot = mix(tIdx).MTOT(zIdx);                                              % [kg/s/m] Linear vapor mass transfer rate
-                                Wvnew = Uv.*(mix(tIdx).MRM.WV(zIdx-1,:)+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
+                                Wvnew = Uv.*(Wvups+(Wvold./Uvold./DT+Mvtot).*DZ)./(Uv+DZ/DT);
                                 
                                 % Vapor energy conservation
                                 Hvtot = mix(tIdx).HVTOT(zIdx);                                             % [J/kg/m] Linear vapor enthalpy transfer
                                 Htot  = Hvtot.*Uv;                                                         % [W/kg]
                                 %Htot  = Htot.*double(mix(tIdx).WWALL(zIdx)>mix(tIdx).MRM.WV(zIdx,:));
-                                Hvnew = (Uv.*mix(tIdx).MRM.HV(zIdx-1,:)+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT); % [J/kg] Update vapor enthalpy
+                                Hvnew = (Uv.*Hvups+(Hvold./DT+Htot).*DZ)./(Uv+DZ/DT);                      % [J/kg] Update vapor enthalpy
                                 
                             case 'EXPONENTIAL'
                                 % Exponential time integration method for numerical stability at small relaxation time
@@ -178,7 +184,7 @@ function solver(solveINIT)
                                 % Vapor mass conservation
                                 Mwall  = mix(tIdx).MWALEVAP(zIdx);                                         % [kg/s/m] Linear wall mass evaporation rate
                                 a = Uv./DZ + 1./relaxt;                                                    % [1/s] Total vapor mass response rate coefficient
-                                b = mix(tIdx).MRM.WV(zIdx-1,:)./DZ + Mwall + WVeq./Uv./relaxt;             % [kg/m/s] Source rate for vapor mass per unit axial length
+                                b = Wvups./DZ + Mwall + WVeq./Uv./relaxt;                                  % [kg/m/s] Source rate for vapor mass per unit axial length
                                 Wvnew = Uv.*(Wvold./Uvold.*exp(-a.*DT)-b./a.*expm1(-a.*DT));
                                 
                                 % Vapor energy conservation
@@ -192,10 +198,10 @@ function solver(solveINIT)
                                     case 'BULK'
                                         hl = mix(tIdx).liquid.H(zIdx);                                     % [J/kg] Bulk liquid approach
                                     case 'SATURATED'
-                                        hl = fluid(tIdx).HF;                                                % [J/kg] Saturated liquid approach
+                                        hl = fluid(tIdx).HF;                                               % [J/kg] Saturated liquid approach
                                 end
                                 a = Uv./DZ + D./relaxt;                                                    % [1/s] Total vapor specific enthalpy response rate coefficient
-                                b = Uv.*mix(tIdx).MRM.HV(zIdx-1,:)./DZ + D./relaxt.*hl + Uv.*Hvwall;       % [J/kg/s] Source rate for vapor specific enthalpy
+                                b = Uv.*Hvups./DZ + D./relaxt.*hl + Uv.*Hvwall;                            % [J/kg/s] Source rate for vapor specific enthalpy
                                 Hvnew = Hvold.*exp(-a.*DT)-b./a.*expm1(-a.*DT);
                         end
                         
@@ -206,7 +212,7 @@ function solver(solveINIT)
                         
                         mix(tIdx).MRM.X(zIdx,:)  = mix(tIdx).MRM.WV(zIdx,:)./mix(tIdx).WWALL(zIdx);        % [-] Relaxed vapor quality
                         
-                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                  % [J/kg] Constrain solution so that Hv > Hg (no subcooled vapor)
+                        Hvnew = max(fluid(tIdx).HG,Hvnew);                                                 % [J/kg] Constrain solution so that Hv > Hg (no subcooled vapor)
                         Hvnew = max(mix(tIdx).H(zIdx),Hvnew);                                              % [J/kg] Constrain solution so that Hv > H
                         mix(tIdx).MRM.HV(zIdx,:) = (1-options.RELAXHV).*Hviter+options.RELAXHV.*Hvnew;     % [J/kg] Apply relaxation
                         
@@ -269,7 +275,7 @@ function solver(solveINIT)
             mix(tIdx).MDER.U_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).UP(zIdx)-mix(tIdx).UP(zIdx-1))./DZ; % [m/s^2]  Convective acceleration
             mix(tIdx).MDER.U_t(zIdx) = (mix(tIdx).UP(zIdx)-UPold)./DT;                                   % [m/s^2]  Local acceleration
             mix(tIdx).MDER.U(zIdx)   = mix(tIdx).MDER.U_z(zIdx)+mix(tIdx).MDER.U_t(zIdx);                % [m/s^2]  Total acceleration
-            mix(tIdx).MDER.H_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).H(zIdx)-mix(tIdx).H(zIdx-1))./DZ;   % [J/kg/s] Convective transport of enthalpy
+            mix(tIdx).MDER.H_z(zIdx) = mix(tIdx).U(zIdx).*(mix(tIdx).H(zIdx)-Hups)./DZ;                  % [J/kg/s] Convective transport of enthalpy
             mix(tIdx).MDER.H_t(zIdx) = (mix(tIdx).H(zIdx)-Hold)./DT;                                     % [J/kg/s] Local rate of change of enthalpy
             mix(tIdx).MDER.H(zIdx)   = mix(tIdx).MDER.H_z(zIdx)+mix(tIdx).MDER.H_t(zIdx);                % [J/kg/s] Total rate of change of enthalpy
             

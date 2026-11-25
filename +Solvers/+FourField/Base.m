@@ -341,7 +341,6 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            % TODO: debug syntax
             Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx);              % [N/m^2]
         end
 

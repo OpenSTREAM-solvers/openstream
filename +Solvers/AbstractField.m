@@ -174,7 +174,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
 
         function warning(obj, varargin)
-            %LOG Log warning messages to the createdBySolver session log
+            %WARNING Log warning messages to the createdBySolver session log
 
             if isempty(obj.inputSet)
                 warning(varargin{:})

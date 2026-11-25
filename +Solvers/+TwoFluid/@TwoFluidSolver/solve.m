@@ -113,15 +113,16 @@ function solver(solveINIT)
             Wlold = liquid(tIdx-1).W(zIdx);                                % [kg/s] Liquid mass flow rate at previous time step
             Ulold = liquid(tIdx-1).U(zIdx);                                % [m/s]  Liquid velocity at previous time step
             Hlold = liquid(tIdx-1).H(zIdx);                                % [J/kg] Liquid enthalpy at previous time step
-            Wlups = liquid(tIdx).W(zIdx-1);                                % [kg/s] Liquid mass flow rate upstream
-            Ulups = liquid(tIdx).U(zIdx-1);                                % [m/s]  Liquid velocity upstream
-            Hlups = liquid(tIdx).H(zIdx-1);                                % [J/kg] Liquid enthalpy upstream
+            Wlups = liquid(tIdx).W(zIdx-1);                                % [kg/s] Liquid mass flow rate at previous node
+            Ulups = liquid(tIdx).U(zIdx-1);                                % [m/s]  Liquid velocity at previous node
+            Hlups = liquid(tIdx).H(zIdx-1);                                % [J/kg] Liquid enthalpy at previous node
+
             Wvold = vapor(tIdx-1).W(zIdx);                                 % [kg/s] Vapor mass flow rate at previous time step
             Uvold = vapor(tIdx-1).U(zIdx);                                 % [m/s]  Vapor velocity at previous time step
             Hvold = vapor(tIdx-1).H(zIdx);                                 % [J/kg] Vapor enthalpy at previous time step
-            Wvups = vapor(tIdx).W(zIdx-1);                                 % [kg/s] Vapor mass flow rate upstream
-            Uvups = vapor(tIdx).U(zIdx-1);                                 % [m/s]  Vapor velocity upstream
-            Hvups = vapor(tIdx).H(zIdx-1);                                 % [J/kg] Vapor enthalpy upstream
+            Wvups = vapor(tIdx).W(zIdx-1);                                 % [kg/s] Vapor mass flow rate at previous node
+            Uvups = vapor(tIdx).U(zIdx-1);                                 % [m/s]  Vapor velocity at previous node
+            Hvups = vapor(tIdx).H(zIdx-1);                                 % [J/kg] Vapor enthalpy at previous node
 
             % Inner (point) iterations
             for itr = 1:options.MAXITER
