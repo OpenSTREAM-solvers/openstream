@@ -213,7 +213,6 @@ classdef Log < handle
                 obj
                 opts.keepLogOpen = false         % Keep log open
             end
-            % Update OUTPUTDIR using value from inputSet
 
             if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
                     obj.LOGMODE == Session.LogMode.BOTH) && ...
@@ -221,7 +220,14 @@ classdef Log < handle
 
                 % Create log file
                 obj.logFileName = obj.session.name;
-                obj.LOGFID = fopen(obj.logFilePath(),"a+t");
+                [obj.LOGFID, msg] = fopen(obj.logFilePath(),"a+t");
+
+                % Check that log file was opened successfully
+                if obj.LOGFID == -1
+                    error('OpenSTREAM:Log:openLogError', ...
+                        'Unable to open log file %s: %s', ...
+                        obj.logFilePath(), msg);
+                end
 
                 % Update obj.keepLogOpen if specified
                 if opts.keepLogOpen
