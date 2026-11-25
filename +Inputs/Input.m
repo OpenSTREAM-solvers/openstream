@@ -344,7 +344,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     % Find solver in depProp details
                     if isfield(depProp, solverName)
                         % Identify detail type
-                        if isenum(depProp.(solverName)) || out.(depPropName)
+                        if isenum(depProp.(solverName)) || isnumeric(depProp.(solverName))
                             % Simply replace an enum or numeric value
                             out.(depPropName) = depProp.(solverName);
                         elseif isstruct(depProp.(solverName))
@@ -355,8 +355,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                             % coefficients can be specified and applied
                             % here. This case is not tested.
                         end
-                        % Apply default if
                     elseif isfield(depProp, 'DEFAULT')
+                        % Apply default if solver-specific value is not defined
                         out.(depPropName) = depProp.DEFAULT;
                     end
                 end
