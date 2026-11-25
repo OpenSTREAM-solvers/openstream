@@ -49,7 +49,7 @@ classdef Mixture < Solvers.AbstractField
     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
 
         DZ             (1,1) double  {mustBeNumeric}                       = 0                    % Axial step size [m]
-        fluid                        {isa(fluid,'Inputs.FluidProperties')}                        % :class:`Inputs.FluidProperties` object
+        fluid          Inputs.FluidProperties                                                     % :class:`Inputs.FluidProperties` object
 
     end
 

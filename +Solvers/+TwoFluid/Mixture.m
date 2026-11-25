@@ -21,8 +21,8 @@ classdef Mixture < Solvers.AbstractPhase
         mixture                                                                                   % :class:`Solvers.Mixture.Mixture` object
         liquid                                                                                    % :class:`Solvers.TwoFluid.Liquid` object
         vapor                                                                                     % :class:`Solvers.TwoFluid.Vapor` object
-        inputSet       {isa(inputSet,'Inputs.InputSet')}                                          % :class:`Inputs.InputSet` object
-        fluid          {isa(fluid,'Inputs.FluidProperties')}                                      % :class:`Inputs.FluidProperties` object
+        inputSet       Inputs.InputSet                                                            % :class:`Inputs.InputSet` object
+        fluid          Inputs.FluidProperties                                                     % :class:`Inputs.FluidProperties` object
         NZ                                                                                        % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
 
     end
@@ -41,9 +41,9 @@ classdef Mixture < Solvers.AbstractPhase
             %   vapor   — :class:`Solvers.TwoFluid.Vapor` object
 
             arguments
-                mixture {mustBeA(mixture,'Solvers.Mixture.Mixture')}
-                liquid  {mustBeA(liquid ,'Solvers.TwoFluid.Liquid')}
-                vapor   {mustBeA(vapor  ,'Solvers.TwoFluid.Vapor') }
+                mixture       Solvers.Mixture.Mixture
+                liquid        Solvers.TwoFluid.Liquid
+                vapor         Solvers.TwoFluid.Vapor
             end
 
             mix(1:length(liquid)) = mix;

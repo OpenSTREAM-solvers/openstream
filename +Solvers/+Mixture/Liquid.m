@@ -46,7 +46,7 @@ classdef Liquid < Solvers.AbstractPhase
             % - Assumes each :class:`Solvers.Mixture.Mixture` object is fully initialized
 
             arguments
-                mix {mustBeA(mix, 'Solvers.Mixture.Mixture')}
+                mix       Solvers.Mixture.Mixture
             end
 
             liquid(1:length(mix)) = liquid;

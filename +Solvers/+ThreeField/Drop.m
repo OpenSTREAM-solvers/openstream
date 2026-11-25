@@ -29,14 +29,14 @@ classdef Drop < Solvers.AbstractField
 
         % Mixture
         
-        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}    = NaN                  % :class:`Solvers.Mixture.Mixture` object
+        mix          Solvers.Mixture.Mixture {mustBeScalarOrEmpty}                                % :class:`Solvers.Mixture.Mixture` object
 
     end
 
     properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
 
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}                          % :class:`Inputs.FluidProperties` object
+        fluid        Inputs.FluidProperties                                                       % :class:`Inputs.FluidProperties` object
     
     end
 

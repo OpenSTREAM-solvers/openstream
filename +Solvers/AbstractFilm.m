@@ -7,10 +7,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
 
-        DZ           (1,1) double  {mustBeNumeric}                         =0      % Axial step size [m]
-        %inputSet                   {isa(inputSet,'Inputs.InputSet')}              % :class:`Inputs.InputSet` object containing geometry, model, and boundary conditions
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}           % :class:`Inputs.FluidProperties` object containing fluid thermophysical properties
-        mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % :class:`Solvers.Mixture.Mixture` object of the mixture solver
+        DZ           (1,1) double  {mustBeNumeric}                         =0                    % Axial step size [m]
+        fluid        Inputs.FluidProperties                                                      % :class:`Inputs.FluidProperties` object containing fluid thermophysical properties
+        mix          Solvers.Mixture.Mixture {mustBeScalarOrEmpty}                               % :class:`Solvers.Mixture.Mixture` object of the mixture solver
     end
 
     properties (Access={?Solvers.AbstractField,?Solvers.AbstractSolver})

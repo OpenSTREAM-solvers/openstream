@@ -28,7 +28,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
-        fluid        {isa(fluid,'Inputs.FluidProperties')}                               % Fluid object :class:`Inputs.FluidProperties`
+        fluid        Inputs.FluidProperties                                            % Fluid object :class:`Inputs.FluidProperties`
         boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
 
         mixtureInit                                                                    % Null transient mixture object
@@ -71,7 +71,7 @@ classdef MixtureSolver < Solvers.AbstractSolver
             % - Solver initialization includes time/space discretization, boundary condition interpolation, and mixture object setup.
 
             arguments
-                inputSet            {isa(inputSet,'Inputs.InputSet')}
+                inputSet   (1,1) Inputs.InputSet
             end
 
             % Call abstract class constructor

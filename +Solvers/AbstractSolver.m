@@ -6,7 +6,7 @@ classdef (Abstract) AbstractSolver < handle
     properties (SetAccess=protected, Abstract)
 
         % Input configuration object of type :class:`Inputs.InputSet`
-        inputSet    {isa(inputSet,'Inputs.InputSet')}
+        inputSet    Inputs.InputSet
 
     end
 

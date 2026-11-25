@@ -25,7 +25,7 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
 
     properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
 
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}                              % :class:`Inputs.InputSet` object
+        inputSet     Inputs.InputSet                                       % :class:`Inputs.InputSet` object
 
     end
 

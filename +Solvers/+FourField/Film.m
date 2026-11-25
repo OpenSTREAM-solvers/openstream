@@ -20,24 +20,24 @@ classdef Film < Solvers.AbstractFilm
 
         % Solver state
 
-        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
-        NTIME                                                              = 0                    % Number of time steps [-]
-        TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.options.TSTEP`
-        TIDX                                                               = 1                    % Time step index [-]
-        Z                                                                  = 1.                   % Elevation [m]
-        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
+        NZ                                                                 = 0                     % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        NTIME                                                              = 0                     % Number of time steps [-]
+        TIME                                                               = 0                     % Time series [s]
+        DT                                                                 = 0                     % Time step size [s] from :attr:`Inputs.options.TSTEP`
+        TIDX                                                               = 1                     % Time step index [-]
+        Z                                                                  = 1.                    % Elevation [m]
+        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                    % Film heat flux [W/m^2]
 
         % Iteration properties
 
-        ITR                                                                                       % Iteration tracking
+        ITR                                                                                        % Iteration tracking
 
     end
 
     properties (SetAccess=?Solvers.AbstractSolver)
 
-        wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN                 % :class:`Solvers.FourField.Wave` object
-        base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN                 % :class:`Solvers.FourField.Base` object
+        wave         Solvers.FourField.Wave {mustBeScalarOrEmpty}                                  % :class:`Solvers.FourField.Wave` object
+        base         Solvers.FourField.Base {mustBeScalarOrEmpty}                                  % :class:`Solvers.FourField.Base` object
 
     end
 
@@ -45,9 +45,9 @@ classdef Film < Solvers.AbstractFilm
 
         % Flow properties
 
-        W                                                                                         % Mass flow rate [kg/s]
-        U                                                                                         % Velocity [m/s]
-        H                                                                                         % Specific enthalpy [J/kg]
+        W                                                                                          % Mass flow rate [kg/s]
+        U                                                                                          % Velocity [m/s]
+        H                                                                                          % Specific enthalpy [J/kg]
 
     end
 
@@ -145,7 +145,7 @@ classdef Film < Solvers.AbstractFilm
                 Wf = repmat(Wf,length(zIdx),1);                            % [kg/s]
             end
 
-            if ~isobject(film.wave) || ~isobject(film.base)
+            if isempty(film.wave) || isempty(film.base)
                 error('OpenSTREAM:FourFieldSolver:SolverInitializationRequired','Film.DISTRIBUTEOAFW: base or wave not initialized');
             end
 
@@ -193,8 +193,8 @@ classdef Film < Solvers.AbstractFilm
             %% Constant properties
 
             % Create base, wave and set film reference
-            if ~isobject(film.base), film.base = Solvers.FourField.Base(film); end
-            if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(film); end
+            if isempty(film.base), film.base = Solvers.FourField.Base(film); end
+            if isempty(film.wave), film.wave = Solvers.FourField.Wave(film); end
 
             % Stop if no input arguments (except film)
             if nargin == 1
@@ -301,7 +301,7 @@ classdef Film < Solvers.AbstractFilm
             % Copy base and wave if already created, and point them to the copied film
             propNames = {'base', 'wave'};
             for j = 1:length(propNames)
-                if isobject(cp.(propNames{j}))
+                if ~isempty(cp.(propNames{j}))
                     cp.(propNames{j}) = copy(cp.(propNames{j}));
                     cp.(propNames{j}).film = cp;
                 end

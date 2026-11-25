@@ -27,7 +27,7 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
         Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
 
-        fluid       {isa(fluid,'Inputs.FluidProperties')}                              % Fluid object :class:`Inputs.FluidProperties`
+        fluid        Inputs.FluidProperties                                            % Fluid object :class:`Inputs.FluidProperties`
         boundaryConditions                                                             % Boundary conditions object :class:`Inputs.BoundaryConditions`
 
         filmInit                                                                       % Null transient film object
@@ -76,8 +76,8 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
 
             arguments
-                inputSet            {isa(inputSet,'Inputs.InputSet')}
-                mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
+                inputSet   (1,1) Inputs.InputSet
+                mixSolver  (1,1) Solvers.Mixture.MixtureSolver             = Solvers.Mixture.MixtureSolver(inputSet)
             end
 
             % Call abstract class constructor
