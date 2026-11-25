@@ -536,7 +536,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % Accepts name-value pairs and optional file mode
 
             if mod(length(varargin),2) == 1
-                error('An even number of inputs after filePath is required.');
+                error('OpenSTREAM:Input:invalidInputCount', ...
+                    'An even number of inputs after filePath is required.');
             end
 
             % Gather calling class property names
@@ -551,7 +552,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % Create file to write
             fid = fopen(filePathName,fidMode);
             if fid == -1
-                error('An error occurred while creating %s', filePathName);
+                error('OpenSTREAM:Input:objectCreationError', ...
+                    'An error occurred while creating %s', filePathName);
             end
 
             for idx = 1:length(varargin)/2
