@@ -69,6 +69,9 @@ classdef Base < Solvers.AbstractFilm
                 base.U = repmat(base.U,film.NZ,base.inputSet.geometry.NWALL);
                 base.H = repmat(base.H,film.NZ,base.inputSet.geometry.NWALL);
             end
+
+            % Overload copyable properties
+            base.flowProperties = {'W','U','H'};
         end
 
         function epsilon = EPSILON(base, zIdx)
@@ -566,51 +569,6 @@ classdef Base < Solvers.AbstractFilm
             per = base.inputSet.geometry.PERIM;
 
             thickmin = base.WMIN(drop, zIdx)./(rho_ls.*Ub.*per);
-        end
-
-        function copyFlowProperties(srcObj, targetObj, opts)
-            %COPYFLOWPROPERTIES Copy flow property arrays between Base objects
-            %
-            % Copies selected flow properties (W, U, H) from a source object to one
-            % or more target Base objects. Supports full copy or partial copy
-            % (excluding first axial node) based on options.
-            %
-            % Inputs:
-            %
-            % - srcObj     — Source object containing flow properties
-            % - targetObj  — Array of :class:`Solvers.FourField.Base` objects to update
-            % - opts.all   — Logical flag; if true, copies all axial nodes, otherwise skips the first node (default: false)
-
-            arguments
-                srcObj
-                targetObj (1,:) Solvers.FourField.Base
-                opts.all  (1,1) logical = false
-            end
-
-            for i = 1:numel(targetObj)
-                % Make sure obj meshes match
-                if ~isequal(size(srcObj.Z), size(targetObj(i).Z)) || any(srcObj.Z ~= targetObj(i).Z)
-                    classType = class(srcObj);
-                    throw( ...
-                        MException( ...
-                        'OpenSTREAM:BaseFilm:copyFlowPropertiesError', ...
-                        'Source and target objects (%s) have mismatched spatial meshes', classType ...
-                        ) ...
-                        );
-                end
-
-                % TODO: copy film?
-                % Copy properties
-                propNames = {'W','U','H'};
-                for j = 1:length(propNames)
-                    if opts.all
-                        targetObj(i).(propNames{j}) = srcObj.(propNames{j});
-                    else
-                        targetObj(i).(propNames{j})(2:end,:) = srcObj.(propNames{j})(2:end,:);
-                    end
-                end
-
-            end
         end
 
     end
