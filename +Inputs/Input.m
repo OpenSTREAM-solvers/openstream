@@ -80,10 +80,9 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 opts.id = ''
             end
 
-            % Warning setup
-            previousWarnStruct = warning('query');
-            warning('off','backtrace')
-            objClassName = strrep(upper(class(obj)),'.','_');
+            % Suppress warning backtrace; restored on any exit (incl. errors)
+            previousWarnState = warning('off','backtrace');
+            warnCleanup = onCleanup(@() warning(previousWarnState));
 
             % Default false isValidEntry and defaultUsed
             isSpecifiedEntry = false;
@@ -143,7 +142,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                         case "true"
                             obj.inputStruct.(objPropname) = true;
                         otherwise
-                            error(sprintf('OpenSTREAM:%s:invalidLogicalValueUsedWarning',objClassName), ...
+                            error(sprintf('OpenSTREAM:%s:invalidLogicalValueError',objClassName), ...
                             'String %s given for logical property %s. Aborting.\n', ...
                             inputField, ...
                             objPropname);
@@ -167,8 +166,6 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 end
             end
 
-            % Reset warning state
-            warning(previousWarnStruct);
         end
 
         function [objPropNames_filtered, objPropDefaultValues_filtered, nameValPair] = ...
