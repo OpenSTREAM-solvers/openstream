@@ -439,8 +439,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             plotter = [];
 
             if length(opts.zIdx) < 2
-                %TODO: implement/overload logging errors in Session.Log
-                mixSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                mixSolver.warning( ...
+                    'OpenSTREAM:MixtureSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
 

@@ -230,7 +230,8 @@ classdef BoundaryConditions < Inputs.Input
             end
 
             if length(opt.tIdx) < 2
-                disp('Error: At least 2 time indexes required to plot time series.');
+                warning('OpenSTREAM:BoundaryConditions:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
             obj = obj(opt.tIdx);

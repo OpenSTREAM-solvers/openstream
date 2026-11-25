@@ -377,7 +377,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             plotter = [];
 
             if length(opts.zIdx) < 2
-                ffSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
 

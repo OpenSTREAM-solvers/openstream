@@ -276,7 +276,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             plotter = [];
 
             if length(opts.zIdx) < 2
-                twfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                twfSolver.warning( ...
+                    'OpenSTREAM:TwoFluidSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
 

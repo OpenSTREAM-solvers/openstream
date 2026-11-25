@@ -394,7 +394,9 @@ classdef ThreeFieldSolver < Solvers.AbstractSolver
             plotter = [];
 
             if length(opts.zIdx) < 2
-                tfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                tfSolver.warning( ...
+                    'OpenSTREAM:ThreeFieldSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
 
