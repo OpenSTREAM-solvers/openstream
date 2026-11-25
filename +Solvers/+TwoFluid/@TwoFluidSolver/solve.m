@@ -26,42 +26,32 @@ end
 
 import Solvers.SolverState
 
-% Enable diary
-twfSolver.inputSet.session.log.diaryOn();
-
-% Open log in persistent mode
-twfSolver.inputSet.session.log.openLog('keepLogOpen', true);
-
+% Check solver state before opening any files
 if twfSolver.STATE ~= SolverState.UNSOLVED
-    error('OpenSTREAM:TwoFluidSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
-else
-    twfSolver.log('\n\n-------------------------------------------- Two-fluid solver run initiated --------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-
-        % Continue solving if init converged
-        if twfSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            if length(twfSolver.liquid) > 1
-                twfSolver.log('\t\tSkipping transient solver ...\n');
-            end
-        end
-
-    catch ME
-        twfSolver.inputSet.session.log.closeLog();
-        twfSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
-
-    twfSolver.log('\n-------------------------------------------- Two-fluid solver run completed --------------------------------------------\n\n')
+    error('OpenSTREAM:TwoFluidSolver:SolverInitializationRequired', 'This solver needs to be reinitialized before solving.');
 end
 
-twfSolver.inputSet.session.log.closeLog();
-twfSolver.inputSet.session.log.diaryOff();
-twfSolver.log('Output directory: %s\n\n',twfSolver.inputSet.session.directory);
+% Enable diary and open log in persistent mode. Both are closed
+% automatically when solve exits (normal return, error or Ctrl+C).
+sessionLog = twfSolver.inputSet.session.log;
+sessionLog.diaryOn();
+sessionLog.openLog('keepLogOpen', true);
+logCleanup = onCleanup(@() sessionLog.closeAll());
+
+twfSolver.log('\n\n-------------------------------------------- Two-fluid solver run initiated --------------------------------------------\n')
+
+% Solve init
+solver(true);
+
+% Continue solving if init converged
+if twfSolver.STATE == SolverState.INITIALSTEPCONVERGED
+    solver(false);
+elseif length(twfSolver.mixture) > 1
+    twfSolver.log('\t\tSkipping transient solver ...\n');
+end
+
+twfSolver.log('\n-------------------------------------------- Two-fluid solver run completed --------------------------------------------\n\n')
+twfSolver.log('Output directory: %s\n\n', twfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes

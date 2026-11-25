@@ -26,42 +26,32 @@ end
 
 import Solvers.SolverState
 
-% Enable diary
-tfSolver.inputSet.session.log.diaryOn();
-
-% Open log in persistent mode
-tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
-
+% Check solver state before opening any files
 if tfSolver.STATE ~= SolverState.UNSOLVED
-    error('OpenSTREAM:ThreeFieldSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
-else
-    tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-
-        % Continue solving if init converged
-        if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            if length(tfSolver.film) > 1
-                tfSolver.log('\t\tSkipping transient solver ...\n');
-            end
-        end
-
-    catch ME
-        tfSolver.inputSet.session.log.closeLog();
-        tfSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
-
-    tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
+    error('OpenSTREAM:ThreeFieldSolver:SolverInitializationRequired', 'This solver needs to be reinitialized before solving.');
 end
 
-tfSolver.inputSet.session.log.closeLog();
-tfSolver.inputSet.session.log.diaryOff();
-tfSolver.log('Output directory: %s\n\n',tfSolver.inputSet.session.directory);
+% Enable diary and open log in persistent mode. Both are closed
+% automatically when solve exits (normal return, error or Ctrl+C).
+sessionLog = tfSolver.inputSet.session.log;
+sessionLog.diaryOn();
+sessionLog.openLog('keepLogOpen', true);
+logCleanup = onCleanup(@() sessionLog.closeAll());
+
+tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
+
+% Solve init
+solver(true);
+
+% Continue solving if init converged
+if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
+    solver(false);
+elseif length(tfSolver.mixture) > 1
+    tfSolver.log('\t\tSkipping transient solver ...\n');
+end
+
+tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
+tfSolver.log('Output directory: %s\n\n', tfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes

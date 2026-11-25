@@ -26,43 +26,32 @@ end
 
 import Solvers.SolverState
 
-% Enable diary
-ffSolver.inputSet.session.log.diaryOn();
-
-% Open log in persistent mode
-ffSolver.inputSet.session.log.openLog('keepLogOpen', true);
-
+% Check solver state before opening any files
 if ffSolver.STATE ~= SolverState.UNSOLVED
-    error('OpenSTREAM:FourFieldSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
-else
-    ffSolver.log('\n\n------------------------------------------- Four-field solver run initiated --------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-
-        % Continue solving if init converged
-        if ffSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            if length(ffSolver.film) > 1
-                ffSolver.log('\t\tSkipping transient solver ...\n');
-            end
-        end
-
-    catch ME
-        ffSolver.inputSet.session.log.closeLog();
-        ffSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
-
-    ffSolver.log('\n------------------------------------------- Four-field solver run completed --------------------------------------------\n\n')
+    error('OpenSTREAM:FourFieldSolver:SolverInitializationRequired', 'This solver needs to be reinitialized before solving.');
 end
 
-ffSolver.inputSet.session.log.closeLog();
-ffSolver.inputSet.session.log.diaryOff();
-ffSolver.log('Output directory: %s\n\n',ffSolver.inputSet.session.directory);
+% Enable diary and open log in persistent mode. Both are closed
+% automatically when solve exits (normal return, error or Ctrl+C).
+sessionLog = ffSolver.inputSet.session.log;
+sessionLog.diaryOn();
+sessionLog.openLog('keepLogOpen', true);
+logCleanup = onCleanup(@() sessionLog.closeAll());
 
+ffSolver.log('\n\n------------------------------------------- Four-field solver run initiated --------------------------------------------\n')
+
+% Solve init
+solver(true);
+
+% Continue solving if init converged
+if ffSolver.STATE == SolverState.INITIALSTEPCONVERGED
+    solver(false);
+elseif length(ffSolver.mixture) > 1
+    ffSolver.log('\t\tSkipping transient solver ...\n');
+end
+
+ffSolver.log('\n------------------------------------------- Four-field solver run completed --------------------------------------------\n\n')
+ffSolver.log('Output directory: %s\n\n', ffSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes

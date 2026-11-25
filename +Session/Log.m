@@ -236,6 +236,15 @@ classdef Log < handle
             end
         end
 
+        function closeAll(obj)
+            %CLOSEALL Close the log file and turn off the diary if active
+
+            obj.closeLog();
+            if obj.diaryIsOn
+                obj.diaryOff();
+            end
+        end
+
     end
 
 end

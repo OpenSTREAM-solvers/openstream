@@ -26,42 +26,32 @@ end
 
 import Solvers.SolverState
 
-% Enable diary
-mixSolver.inputSet.session.log.diaryOn();
-
-% Open log in persistent mode
-mixSolver.inputSet.session.log.openLog('keepLogOpen', true);
-
+% Check solver state before opening any files
 if mixSolver.STATE ~= SolverState.UNSOLVED
-    error('OpenSTREAM:MixtureSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
-else
-    mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-    
-        % Continue solving if init converged
-        if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            if length(mixSolver.mixture) > 1
-                mixSolver.log('\t\tSkipping transient solver ...\n');
-            end
-        end
-
-    catch ME
-        mixSolver.inputSet.session.log.closeLog();
-        mixSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
-    
-    mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
+    error('OpenSTREAM:MixtureSolver:SolverInitializationRequired', 'This solver needs to be reinitialized before solving.');
 end
 
-mixSolver.inputSet.session.log.closeLog();
-mixSolver.inputSet.session.log.diaryOff();
-mixSolver.log('Output directory: %s\n\n',mixSolver.inputSet.session.directory);
+% Enable diary and open log in persistent mode. Both are closed
+% automatically when solve exits (normal return, error or Ctrl+C).
+sessionLog = mixSolver.inputSet.session.log;
+sessionLog.diaryOn();
+sessionLog.openLog('keepLogOpen', true);
+logCleanup = onCleanup(@() sessionLog.closeAll());
+
+mixSolver.log('\n\n--------------------------------------------- Mixture solver run initiated ---------------------------------------------\n')
+
+% Solve init
+solver(true);
+
+% Continue solving if init converged
+if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
+    solver(false);
+elseif length(mixSolver.mixture) > 1
+    mixSolver.log('\t\tSkipping transient solver ...\n');
+end
+
+mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
+mixSolver.log('Output directory: %s\n\n', mixSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes
