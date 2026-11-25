@@ -610,18 +610,4 @@ classdef Drop < Solvers.AbstractField
 
     end
 
-    methods(Access = protected)
-
-        function cpObj = copyElement(obj)
-            %COPYELEMENT Copy drop object
-            %
-            % Shallow copy via AbstractField.copyElement, which also resets the
-            % per-object memoization store. References to the associated mixture
-            % and fluid objects are preserved (not deep-copied).
-
-            cpObj = copyElement@Solvers.AbstractField(obj);
-        end
-
-    end
-
 end

@@ -298,11 +298,13 @@ classdef Film < Solvers.AbstractFilm
             % Shallow copy film
             cp = copyElement@Solvers.AbstractFilm(film);
 
-            % Copy base and wave, and point them to the copied film
+            % Copy base and wave if already created, and point them to the copied film
             propNames = {'base', 'wave'};
             for j = 1:length(propNames)
-                cp.(propNames{j}) = copy(cp.(propNames{j}));
-                cp.(propNames{j}).film = cp;
+                if isobject(cp.(propNames{j}))
+                    cp.(propNames{j}) = copy(cp.(propNames{j}));
+                    cp.(propNames{j}).film = cp;
+                end
             end
         end
 

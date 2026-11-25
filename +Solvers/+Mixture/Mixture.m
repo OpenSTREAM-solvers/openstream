@@ -2226,7 +2226,7 @@ classdef Mixture < Solvers.AbstractField
     % MFLUX_CALC, XEQ_CALC, X_CALC, VF_CALC, RHO_CALC: Internal property calculations
     % RELAXTEVAP_CALC, RELAXTCOND_CALC, NEARWALLTRELAX_CALC: Time relaxation calculations
     % sigm: Computes sigmoid function for annular flow
-    % copyElement: Deep copy of mixture object
+    % copyElement: copy with rebuilt liquid/vapor phases
     % timeInterpolate, axialInterpolate: Interpolation utilities
 
     methods(Access = protected, Hidden = true)
