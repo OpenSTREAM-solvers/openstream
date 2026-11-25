@@ -195,12 +195,15 @@ classdef Log < handle
             %
             % Ensures log file and diary are properly closed
 
-            if obj.LOGFID >= 0
-                try
+            try
+                if obj.LOGFID >= 0
                     obj.closeLog();
-                    obj.diaryOff();
-                catch
                 end
+
+                if obj.diaryIsOn
+                    obj.diaryOff();
+                end
+            catch
             end
         end
 
