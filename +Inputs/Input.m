@@ -220,7 +220,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 else
                     % Try to create empty value for the property class type
                     try
-                        defVal = eval(string(objProps(propIdx).Validation.Class.Name) + ".empty");
+                        className = objProps(propIdx).Validation.Class.Name;
+                        defVal = feval(string(className) + ".empty");
                     catch
                         % Silently ignore any resulting error.
                         % There are potentially just too many class types
@@ -542,7 +543,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             callStack = dbstack();
             [~,callClass] = fileparts(callStack(2).file);
             callClass = ['Inputs.' callClass];
-            callClass = eval(['?' callClass]);
+            callClass = meta.class.fromName(callClass);
             descriptionDict = containers.Map( ...
                 {callClass.PropertyList.Name}, ...
                 {callClass.PropertyList.Description});

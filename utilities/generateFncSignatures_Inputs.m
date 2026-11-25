@@ -21,7 +21,6 @@ function jsonSignature = generateFncSignatures_Inputs(metaInputClass)
 % This creates the full content of the functionSignatures.json file, and
 % can be written to the functionSignatures.json file using:
 %
-%   clipboard('copy',jsonStr)
 %   writelines(jsonStr, fullfile(pwd,'resources','functionSignatures.json'));
 %
 
@@ -67,7 +66,8 @@ function jsonSignature = generateFncSignatures_Inputs(metaInputClass)
     propList = metaInputClass.PropertyList;
     
     % Get list of user-facing properties
-    propNames = eval(metaInputClass.Name).listInputProperties();
+    inputObj = feval(metaInputClass.Name);
+    propNames = inputObj.listInputProperties();
     propStructs = struct('name', {}, 'kind', {}, 'type', {}, 'purpose', {});
 
     % Add `filePathName`
