@@ -47,7 +47,7 @@ solver(true);
 if ffSolver.STATE == SolverState.INITIALSTEPCONVERGED
     solver(false);
 elseif length(ffSolver.mixture) > 1
-    ffSolver.log('\t\tSkipping transient solver ...\n');
+    ffSolver.log('                 Skipping transient solver ...\n');
 end
 
 ffSolver.log('\n------------------------------------------- Four-field solver run completed --------------------------------------------\n\n')
@@ -105,7 +105,7 @@ function solver(solveINIT)
     for tIdx = 2:length(film)                                              % Loop over time steps
         
         timestepconverged = true;
-        ffSolver.log('Time %5.2f [s]',film(tIdx).TIME)
+        ffSolver.log('Time %6.2f [s]  ',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
         RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
@@ -139,8 +139,8 @@ function solver(solveINIT)
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
 
-            Wbold = ffSolver.flowInventory(Wbold,Ubold,options.WPHASEMIN); % [kg/m] Base flow inventory at previous node
-            Wwold = ffSolver.flowInventory(Wwold,Uwold,options.WPHASEMIN); % [kg/m] Wave flow inventory at previous node
+            Wbold = ffSolver.flowInventory(Wbold,Ubold,options.WPHASEMIN); % [kg/m] Base flow inventory at previous time step
+            Wwold = ffSolver.flowInventory(Wwold,Uwold,options.WPHASEMIN); % [kg/m] Wave flow inventory at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -329,7 +329,7 @@ function solver(solveINIT)
         maxzIdxs = [maxzIdxb, maxzIdxw];
         [maxN, maxzIdx] = max([maxNb, maxNw]);
         maxzIdx = maxzIdxs(maxzIdx);
-        ffSolver.log(['\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]' lineEnd],maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDFw,maxDUd)
+        ffSolver.log(['max point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]' lineEnd],maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDFw,maxDUd)
         
         % Temporal deviations in W and U
         timeDWLb = max(abs((base(tIdx).WL - base(tIdx-1).WL)),[],'all');
@@ -349,7 +349,7 @@ function solver(solveINIT)
                 end
                 ffSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
-                ffSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
+                ffSolver.log('\n                 STEADY-STATE CONVERGED            max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
     
                 % Replace filmInit and dropInit with subset up to this tIdx
                 ffSolver.filmInit  = ffSolver.filmInit(1:tIdx);
@@ -368,8 +368,8 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 ffSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                ffSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
-                ffSolver.log('\n\t\tIncreasing steady state iterations (options.SSMAXITER) may help.');
+                ffSolver.log('\n                 STEADY-STATE FAILED TO CONVERGE   max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]\r',timeDWLb,timeDUb,timeDWLw,timeDUw,timeDFw,timeDUd)
+                ffSolver.log('\n                 Increasing steady state iterations (options.SSMAXITER) may help.');
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
                 ffSolver.filmInit(end).copyFlowProperties(ffSolver.film(1));

@@ -47,7 +47,7 @@ solver(true);
 if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
     solver(false);
 elseif length(tfSolver.mixture) > 1
-    tfSolver.log('\t\tSkipping transient solver ...\n');
+    tfSolver.log('                 Skipping transient solver ...\n');
 end
 
 tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
@@ -101,7 +101,7 @@ function solver(solveINIT)
     for tIdx = 2:length(film)                                              % Loop over time steps
         
         timestepconverged = true;
-        tfSolver.log('Time %5.2f [s]',film(tIdx).TIME)
+        tfSolver.log('Time %6.2f [s]  ',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
         RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
@@ -121,7 +121,7 @@ function solver(solveINIT)
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
 
-            Ifold = tfSolver.flowInventory(Wfold,Ufold,options.WPHASEMIN); % [kg/m] Film flow inventory at previous node
+            Ifold = tfSolver.flowInventory(Wfold,Ufold,options.WPHASEMIN); % [kg/m] Film flow inventory at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -231,7 +231,7 @@ function solver(solveINIT)
         maxDWL = max(film(tIdx).ITR.DWL,[],'all');
         maxDUf = max(film(tIdx).ITR.DU,[],'all');
         maxDUd = max(drop(tIdx).ITR.DU,[],'all');
-        tfSolver.log(['\tmax point iter = %3d in node %3d, max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]' lineEnd],maxN,maxzIdx,maxDWL,maxDUf,maxDUd)
+        tfSolver.log(['max point iter = %3d in node %3d, max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]' lineEnd],maxN,maxzIdx,maxDWL,maxDUf,maxDUd)
         
         % Temporal deviations in W and U
         timeDWL = max(abs((film(tIdx).WL - film(tIdx-1).WL)),[],'all');
@@ -248,7 +248,7 @@ function solver(solveINIT)
                 end
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
-                tfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                tfSolver.log('\n                 STEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
     
                 % Replace filmInit and dropInit with subset up to this tIdx
                 tfSolver.filmInit = tfSolver.filmInit(1:tIdx);
@@ -267,7 +267,7 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 tfSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                tfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                tfSolver.log('\n                 STEADY-STATE FAILED TO CONVERGE   max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
                 tfSolver.filmInit(end).copyFlowProperties(tfSolver.film(1));

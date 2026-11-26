@@ -47,7 +47,7 @@ solver(true);
 if twfSolver.STATE == SolverState.INITIALSTEPCONVERGED
     solver(false);
 elseif length(twfSolver.mixture) > 1
-    twfSolver.log('\t\tSkipping transient solver ...\n');
+    twfSolver.log('                 Skipping transient solver ...\n');
 end
 
 twfSolver.log('\n-------------------------------------------- Two-fluid solver run completed --------------------------------------------\n\n')
@@ -101,7 +101,7 @@ function solver(solveINIT)
     for tIdx = 2:length(liquid)                                            % Loop over time steps
         
         timestepconverged = true;
-        twfSolver.log('Time %5.2f [s]',liquid(tIdx).TIME)
+        twfSolver.log('Time %6.2f [s]  ',liquid(tIdx).TIME)
 
         DT = liquid(tIdx).DT;                                              % [s] Current time step size
         %RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
@@ -128,8 +128,8 @@ function solver(solveINIT)
             Uvups = vapor(tIdx).U(zIdx-1);                                 % [m/s]  Vapor velocity at previous node
             Hvups = vapor(tIdx).H(zIdx-1);                                 % [J/kg] Vapor enthalpy at previous node
 
-            Ilold = twfSolver.flowInventory(Wlold,Ulold,options.WPHASEMIN);% [kg/m] Liquid flow inventory at previous node
-            Ivold = twfSolver.flowInventory(Wvold,Uvold,options.WPHASEMIN);% [kg/m] Vapor flow inventory at previous node
+            Ilold = twfSolver.flowInventory(Wlold,Ulold,options.WPHASEMIN);% [kg/m] Liquid flow inventory at previous time step
+            Ivold = twfSolver.flowInventory(Wvold,Uvold,options.WPHASEMIN);% [kg/m] Vapor flow inventory at previous time step
 
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -252,7 +252,7 @@ function solver(solveINIT)
         maxDWv = max(vapor(tIdx).ITR.DW);
         maxDUv = max(vapor(tIdx).ITR.DU);
         maxDHv = max(vapor(tIdx).ITR.DH);
-        twfSolver.log(['\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
+        twfSolver.log(['max point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
         
         % Temporal deviations in W, U, and H
         timeDWl = max(abs(liquid(tIdx).W - liquid(tIdx-1).W));
@@ -272,7 +272,7 @@ function solver(solveINIT)
                 end
                 twfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
                 
-                twfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
+                twfSolver.log('\n                 STEADY-STATE CONVERGED            max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
     
                 % Replace mixtureInit with subset up to this tIdx
                 twfSolver.liquidInit = twfSolver.liquidInit(1:tIdx);
@@ -291,7 +291,7 @@ function solver(solveINIT)
             % otherwise, not converged
             else
                 twfSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                twfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
+                twfSolver.log('\n                 STEADY-STATE FAILED TO CONVERGE   max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDWl,timeDWv,timeDUl,timeDUv,timeDHl,timeDHv)
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
                 twfSolver.liquidInit(end).copyFlowProperties(twfSolver.liquid(1));

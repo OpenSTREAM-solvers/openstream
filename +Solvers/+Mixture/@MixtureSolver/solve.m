@@ -47,7 +47,7 @@ solver(true);
 if mixSolver.STATE == SolverState.INITIALSTEPCONVERGED
     solver(false);
 elseif length(mixSolver.mixture) > 1
-    mixSolver.log('\t\tSkipping transient solver ...\n');
+    mixSolver.log('                 Skipping transient solver ...\n');
 end
 
 mixSolver.log('\n--------------------------------------------- Mixture solver run completed ---------------------------------------------\n\n')
@@ -98,7 +98,7 @@ function solver(solveINIT)
     for tIdx = 2:length(mix)                                               % Loop over time steps
         
         timestepconverged = true;
-        mixSolver.log('Time %5.2f [s]',mix(tIdx).TIME)
+        mixSolver.log('Time %6.2f [s]  ',mix(tIdx).TIME)
 
         % Current time step size
         DT = mix(tIdx).DT;                                                 % [s] Current time step size
@@ -128,7 +128,7 @@ function solver(solveINIT)
             Wvups   = mix(tIdx).MRM.WV(zIdx-1,:);                          % [kg/s] Relaxed vapor mass flow rate at previous node
             Hvups   = mix(tIdx).MRM.HV(zIdx-1,:);                          % [J/kg] Relaxed vapor enthalpy at previous node
 
-            Iold    = mixSolver.flowInventory(Wold,Uold,options.WPHASEMIN);% [kg/m] Flow inventory at previous node
+            Iold    = mixSolver.flowInventory(Wold,Uold,options.WPHASEMIN);% [kg/m] Flow inventory at previous time step
 
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -310,9 +310,9 @@ function solver(solveINIT)
         maxDHv = max(mix(tIdx).ITR.DHV,[],'all');
         switch model.THERMALNONEQ
             case 'MRM'
-                mixSolver.log(['\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDW,maxDWv,maxDP,maxDH,maxDHv)
+                mixSolver.log(['max point iter = %3d in node %3d, max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDW,maxDWv,maxDP,maxDH,maxDHv)
             otherwise
-                mixSolver.log(['\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDW,maxDP,maxDH)
+                mixSolver.log(['max point iter = %3d in node %3d, max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDW,maxDP,maxDH)
         end
         
         % Temporal deviations in W, P, and H
@@ -334,9 +334,9 @@ function solver(solveINIT)
                 
                 switch model.THERMALNONEQ
                     case 'MRM'
-                        mixSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDW,timeDWv,timeDP,timeDH,timeDHv)
+                        mixSolver.log('\n                 STEADY-STATE CONVERGED            max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDW,timeDWv,timeDP,timeDH,timeDHv)
                     otherwise
-                        mixSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
+                        mixSolver.log('\n                 STEADY-STATE CONVERGED            max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
                 end
                 
                 % Replace mixtureInit with subset up to this tIdx
@@ -357,9 +357,9 @@ function solver(solveINIT)
                 
                 switch model.THERMALNONEQ
                     case 'MRM'
-                        mixSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDW,timeDWv,timeDP,timeDH,timeDHv)
+                        mixSolver.log('\n                 STEADY-STATE FAILED TO CONVERGE   max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]\r',timeDW,timeDWv,timeDP,timeDH,timeDHv)
                     otherwise
-                        mixSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
+                        mixSolver.log('\n                 STEADY-STATE FAILED TO CONVERGE   max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]\r',timeDW,timeDP,timeDH)
                 end
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
