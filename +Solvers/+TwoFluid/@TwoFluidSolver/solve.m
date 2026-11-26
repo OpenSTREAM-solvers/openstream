@@ -65,7 +65,9 @@ function solver(solveINIT)
         liquid = twfSolver.liquidInit;
         vapor  = twfSolver.vaporInit;
         fluid  = repmat(twfSolver.fluid(1),1,length(liquid));
-        mix    = copy(repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER));
+        % Reuse the converged mixture state for all pseudo-time iterations.
+        % The TwoFluid solver reads this state but does not modify its flow properties.
+        mix = repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER);
     else
         if length(twfSolver.liquid) < 2
             return

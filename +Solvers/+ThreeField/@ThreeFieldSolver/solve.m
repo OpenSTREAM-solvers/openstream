@@ -67,7 +67,9 @@ function solver(solveINIT)
         film = tfSolver.filmInit;
         drop = tfSolver.dropInit;
         fluid = repmat(tfSolver.fluid(1),1,length(film));
-        mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
+        % Reuse the converged mixture state for all pseudo-time iterations.
+        % The ThreeField solver reads this state but does not modify its flow properties.
+        mix = repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER);
     else
         if length(tfSolver.film) < 2
             return

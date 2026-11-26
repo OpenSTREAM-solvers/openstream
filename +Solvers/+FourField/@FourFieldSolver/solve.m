@@ -69,7 +69,9 @@ function solver(solveINIT)
         wave = [film.wave];
         drop = ffSolver.dropInit;
         fluid = repmat(ffSolver.fluid(1),1,length(film));
-        mix = copy(repmat(ffSolver.mixSolver.mixture(1),1,ffSolver.inputSet.options.SSMAXITER));
+        % Reuse the converged mixture state for all pseudo-time iterations.
+        % The FourField solver reads this state but does not modify its flow properties.
+        mix = repmat(ffSolver.mixSolver.mixture(1),1,ffSolver.inputSet.options.SSMAXITER);
     else
         if length(ffSolver.film) < 2
             return
