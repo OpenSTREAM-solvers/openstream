@@ -28,9 +28,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 absfilm.inputSet = inputSet;
                 absfilm.fluid  = fluid;
             end
-
-            % Overload copyable properties
-            %mix.flowProperties = {'W','U','H'};
         end
 
         function wl = WL(absfilm,zIdx)

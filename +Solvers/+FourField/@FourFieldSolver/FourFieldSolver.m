@@ -206,10 +206,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
 
                 % Initialize velocity [m/s]
-                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
                 drp.U = drp.USLIP();                                       % [m/s] Drop velocity
-
-                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drp.H = repmat(fluid.HF,ffSolver.NZ,1);

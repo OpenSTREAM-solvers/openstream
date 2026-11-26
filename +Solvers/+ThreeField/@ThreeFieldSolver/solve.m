@@ -106,8 +106,6 @@ function solver(solveINIT)
         film(tIdx-1).copyFlowProperties(film(tIdx));
         drop(tIdx-1).copyFlowProperties(drop(tIdx));
         
-        %e0 = tfSolver.EQUIL(film(tIdx),drop(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
-        
         % Axial sweep
         for zIdx = 2:tfSolver.NZ                                           % Loop over axial nodes
             
@@ -115,7 +113,7 @@ function solver(solveINIT)
             Ufold = film(tIdx-1).U(zIdx,:);                                % [m/s] Film velocity at previous time step
             Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at previous node
             Ufups = film(tIdx).U(zIdx-1,:);                                % [m/s] Film velocity at previous node
-            
+
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
             
