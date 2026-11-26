@@ -343,9 +343,9 @@ function solver(solveINIT)
         
                 break;
             
-            % otherwise, update next timestep with current flow properties
+            % otherwise, continue to next pseudo-time step
             elseif tIdx < length(mix)
-                mixSolver.mixtureInit(tIdx).copyFlowProperties(mixSolver.mixtureInit(tIdx+1));
+                continue
             
             % otherwise, not converged
             else

@@ -354,11 +354,9 @@ function solver(solveINIT)
                 
                 break;
             
-            % otherwise, update next timestep with current flow properties
+            % otherwise, continue to next pseudo-time step
             elseif tIdx < length(film)
-
-                ffSolver.filmInit(tIdx).copyFlowProperties(ffSolver.filmInit(tIdx+1));
-                ffSolver.dropInit(tIdx).copyFlowProperties(ffSolver.dropInit(tIdx+1));
+                continue
                 
             % otherwise, not converged
             else

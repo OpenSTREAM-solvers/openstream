@@ -277,10 +277,9 @@ function solver(solveINIT)
         
                 break;
             
-            % otherwise, update next timestep with current flow properties
+            % otherwise, continue to next pseudo-time step
             elseif tIdx < length(liquid)
-                twfSolver.liquidInit(tIdx).copyFlowProperties(twfSolver.liquidInit(tIdx+1));
-                twfSolver.vaporInit(tIdx).copyFlowProperties(twfSolver.vaporInit(tIdx+1));
+                continue
                 
             % otherwise, not converged
             else
