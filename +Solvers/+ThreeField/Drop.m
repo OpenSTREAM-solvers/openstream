@@ -601,7 +601,8 @@ classdef Drop < Solvers.AbstractField
                 err = max(abs(Fb),[],'all');
             end
             if ~(err < options.UDEQUILTOL)                                 % Also catches NaN
-                drop.log('\nEquilibrium drop velocity not converged at node(s) %s. \nVolumetric force residual = %g N/m^3.\n', ...
+                drop.warning('OpenSTREAM:ThreeField:EquilibriumDropVelocityNotConverged', ...
+                    'Equilibrium drop velocity did not converge at node(s) %s. Volumetric force residual = %g N/m^3.', ...
                     mat2str(zIdx(:).'), err);
             end
             drop.U(zIdx) = U0;                                             % Restore state (no side effect)

@@ -841,7 +841,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
             end
             time = [mix.TIME];
             if length(time) < 2
-                mixSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                mixSolver.warning( ...
+                    'OpenSTREAM:MixtureSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
             if opt.reverseTime
@@ -1133,7 +1135,9 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.unit    = unit(ismember(display,opt.display));
             end
             if isempty(opt.label) || isempty(opt.unit)
-                mixSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                mixSolver.warning( ...
+                    'OpenSTREAM:MixtureSolver:MissingLabelOrUnits', ...
+                    'Labels and/or units must be specified for the selected parameters.');
                 return
             end
 
@@ -1151,11 +1155,15 @@ classdef MixtureSolver < Solvers.AbstractSolver
                 opt.wall = 1:mixSolver.inputSet.geometry.NWALL;
             end
             if length(opt.zIdx) < 2
-                mixSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                mixSolver.warning( ...
+                    'OpenSTREAM:MixtureSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
             if length(opt.tIdx) < 2
-                mixSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                mixSolver.warning( ...
+                    'OpenSTREAM:MixtureSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
 

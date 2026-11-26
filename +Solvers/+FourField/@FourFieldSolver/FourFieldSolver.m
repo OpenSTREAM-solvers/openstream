@@ -44,7 +44,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
     methods
 
-        solve(tfSolver)
+        solve(ffSolver)
 
     end
 
@@ -323,8 +323,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
 
-            if err > errMax
-                ffSolver.log('\nEquilibrium entrainment ratio at onset of annular flow not converged at node %d after %d iterations. \nLinear mass flux residual = %g kg/s/m; entrained ratio = %g.\n',zIdx,k,err,e0);
+            if ~(err < errMax)
+                ffSolver.warning('OpenSTREAM:FourFieldSolver:EntrainmentRatioNotConverged','Equilibrium entrainment ratio at onset of annular flow did not converge at node %d after %d iterations. Linear mass flux residual = %g kg/s/m; entrained ratio = %g.',zIdx, k,err,e0);
             end
         end
 
@@ -800,7 +800,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             time = [flm.TIME];
             if length(time) < 2
-                ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
             if opt.reverseTime
@@ -1099,7 +1101,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.unit    = unit(ismember(display,opt.display));
             end
             if isempty(opt.label) || isempty(opt.unit)
-                tfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:MissingLabelOrUnits', ...
+                    'Labels and/or units must be specified for the selected parameters.');
                 return
             end
 
@@ -1121,11 +1125,15 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.wall = 1:ffSolver.inputSet.geometry.NWALL;
             end
             if length(opt.zIdx) < 2
-                ffSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
             if length(opt.tIdx) < 2
-                ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
 

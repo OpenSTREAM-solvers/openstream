@@ -665,7 +665,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
             end
             time = [liq.TIME];
             if length(time) < 2
-                twfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                twfSolver.warning( ...
+                    'OpenSTREAM:TwoFluidSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
             if opt.reverseTime
@@ -954,7 +956,9 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.unit    = unit(ismember(display,opt.display));
             end
             if isempty(opt.label) || isempty(opt.unit)
-                twfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                twfSolver.warning( ...
+                    'OpenSTREAM:TwoFluidSolver:MissingLabelOrUnits', ...
+                    'Labels and/or units must be specified for the selected parameters.');
                 return
             end
 
@@ -976,11 +980,15 @@ classdef TwoFluidSolver < Solvers.AbstractSolver
                 opt.wall = 1:twfSolver.inputSet.geometry.NWALL;
             end
             if length(opt.zIdx) < 2
-                twfSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                twfSolver.warning( ...
+                    'OpenSTREAM:TwoFluidSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
             if length(opt.tIdx) < 2
-                twfSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                twfSolver.warning( ...
+                    'OpenSTREAM:TwoFluidSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
 

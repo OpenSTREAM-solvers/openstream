@@ -26,7 +26,7 @@ classdef BoundaryConditions < Inputs.Input
 
     properties (SetAccess=private, GetAccess=private)
 
-        geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}                                    % Geometry object used for consistency checks
+        geometryObj      Inputs.Geometry {mustBeScalarOrEmpty}                                     % Geometry object used for consistency checks
 
     end
 

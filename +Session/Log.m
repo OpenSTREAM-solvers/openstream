@@ -143,9 +143,19 @@ classdef Log < handle
                 % Open the log file
                 obj.openLog();
 
-                % Write warnings to the log
-                builtin('fprintf',obj.LOGFID, 'Warning:\n');
-                builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
+                % Format warning for the log file
+                if numel(varargin) >= 2 && ...
+                        (ischar(varargin{1}) || isStringScalar(varargin{1})) && ...
+                        contains(string(varargin{1}), ':')
+                    warningID = string(varargin{1});
+                    warningMessage = sprintf(varargin{2}, varargin{3:end});
+                    builtin('fprintf', obj.LOGFID, ...
+                        'Warning [%s]: %s\n', warningID, warningMessage);
+                else
+                    warningMessage = sprintf(varargin{:});
+                    builtin('fprintf', obj.LOGFID, ...
+                        'Warning: %s\n', warningMessage);
+                end
 
                 % Close the log if keepLogOpen is unset
                 if ~obj.keepLogOpen

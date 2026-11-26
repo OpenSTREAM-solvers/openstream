@@ -389,7 +389,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 end
             end
             if ~(err < options.ENTNUMTOL)
-                absfilm.log('\nEntrainment number not converged at node(s) %s after %d iterations. \nSlip residual = %g.\n',mat2str(zIdx(:).'),it,err);
+                absfilm.warning('OpenSTREAM:AbstractFilm:EntrainmentNumberNotConverged', ...
+                    'Entrainment number did not converge at node(s) %s after %d iterations. Slip residual = %g [-].', ...
+                    mat2str(zIdx(:).'), it, err);
             end
 
             entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
@@ -463,8 +465,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 err = max(abs(Fb),[],'all');
             end
             if ~(err < options.UFEQUILTOL)                                 % Also catches NaN
-                absfilm.log('\n%s %s not converged at node(s) %s: max force residual = %g N/m^2.\n', ...
-                    class(absfilm), name, mat2str(zIdx(:).'), err);
+                absfilm.warning('OpenSTREAM:AbstractFilm:EquilibriumVelocityNotConverged', ...
+                    '%s did not converge at node(s) %s: max force residual = %g N/m^2.', ...
+                    name, mat2str(zIdx(:).'), err);
             end
             absfilm.U(zIdx,:) = U0;                                        % Restore state (no side effect)
             Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx), Ub, zIdx);
