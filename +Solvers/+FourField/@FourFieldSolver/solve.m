@@ -72,6 +72,7 @@ function solver(solveINIT)
         % Reuse the converged mixture state for all pseudo-time iterations.
         % The FourField solver reads this state but does not modify its flow properties.
         mix = repmat(ffSolver.mixSolver.mixture(1),1,ffSolver.inputSet.options.SSMAXITER);
+        lineEnd = '                    \r';                                % Clear trailing characters and rewrite the steady-state progress line
     else
         if length(ffSolver.film) < 2
             return
@@ -83,6 +84,7 @@ function solver(solveINIT)
         drop = ffSolver.drop;
         fluid = ffSolver.fluid;
         mix = ffSolver.mixSolver.mixture;
+        lineEnd = '\n';                                                    % Finish the transient time-step line and preserve it
     end
     
     % set SOLVED flag to SOLVECONVERGED
@@ -327,7 +329,7 @@ function solver(solveINIT)
         maxzIdxs = [maxzIdxb, maxzIdxw];
         [maxN, maxzIdx] = max([maxNb, maxNw]);
         maxzIdx = maxzIdxs(maxzIdx);
-        ffSolver.log('\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]                    \r',maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDFw,maxDUd)
+        ffSolver.log(['\tmax point iter = %3d in node %3d, max errors: Wb = %.7f [kg/s/m], Ub = %.5f [m/s], Ww = %.7f [kg/s/m], Uw = %.5f [m/s], Fw = %.5f [Hz], Ud = %.5f [m/s]' lineEnd],maxN,maxzIdx,maxDWLb,maxDUb,maxDWLw,maxDUw,maxDFw,maxDUd)
         
         % Temporal deviations in W and U
         timeDWLb = max(abs((base(tIdx).WL - base(tIdx-1).WL)),[],'all');

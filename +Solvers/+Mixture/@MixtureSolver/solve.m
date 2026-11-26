@@ -65,14 +65,16 @@ function solver(solveINIT)
     if solveINIT
         mixSolver.log('\nSolve steady-state ...\n');
         mix = mixSolver.mixtureInit;
-        fluid   = repmat(mixSolver.fluid(1),1,length(mix));
+        fluid = repmat(mixSolver.fluid(1),1,length(mix));
+        lineEnd = '                    \r';                                % Clear trailing characters and rewrite the steady-state progress line
     else
         if length(mixSolver.mixture) < 2
             return
         end
         mixSolver.log('\nSolve transient ...\n');
         mix = mixSolver.mixture;
-        fluid   = mixSolver.fluid;
+        fluid = mixSolver.fluid;
+        lineEnd = '\n';                                                    % Finish the transient time-step line and preserve it
     end
 
     % set SOLVED flag to SOLVECONVERGED
@@ -308,9 +310,9 @@ function solver(solveINIT)
         maxDHv = max(mix(tIdx).ITR.DHV,[],'all');
         switch model.THERMALNONEQ
             case 'MRM'
-                mixSolver.log('\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]                    \r',maxN,maxzIdx,maxDW,maxDWv,maxDP,maxDH,maxDHv)
+                mixSolver.log(['\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], Wv = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg], Hv = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDW,maxDWv,maxDP,maxDH,maxDHv)
             otherwise
-                mixSolver.log('\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]                    \r',maxN,maxzIdx,maxDW,maxDP,maxDH)
+                mixSolver.log(['\tmax point iter = %3d in node %3d, max errors: W = %.7f [kg/s], P = %.5f [Pa], H = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDW,maxDP,maxDH)
         end
         
         % Temporal deviations in W, P, and H

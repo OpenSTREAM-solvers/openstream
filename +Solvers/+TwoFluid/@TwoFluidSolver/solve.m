@@ -68,6 +68,7 @@ function solver(solveINIT)
         % Reuse the converged mixture state for all pseudo-time iterations.
         % The TwoFluid solver reads this state but does not modify its flow properties.
         mix = repmat(twfSolver.mixSolver.mixture(1),1,twfSolver.inputSet.options.SSMAXITER);
+        lineEnd = '                    \r';                                % Clear trailing characters and rewrite the steady-state progress line
     else
         if length(twfSolver.liquid) < 2
             return
@@ -77,6 +78,7 @@ function solver(solveINIT)
         vapor  = twfSolver.vapor;
         fluid  = twfSolver.fluid;
         mix    = twfSolver.mixSolver.mixture;
+        lineEnd = '\n';                                                    % Finish the transient time-step line and preserve it
     end
 
     % set SOLVED flag to SOLVECONVERGED
@@ -250,7 +252,7 @@ function solver(solveINIT)
         maxDWv = max(vapor(tIdx).ITR.DW);
         maxDUv = max(vapor(tIdx).ITR.DU);
         maxDHv = max(vapor(tIdx).ITR.DH);
-        twfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]                    \r',maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
+        twfSolver.log(['\tmax point iter = %3d in node %3d, max errors: Wl = %.7f [kg/s], Wv = %.7f [kg/s], Ul = %.7f [m/s], Uv = %.7f [m/s], Hl = %.5f [J/kg], Hv = %.5f [J/kg]' lineEnd],maxN,maxzIdx,maxDWl,maxDWv,maxDUl,maxDUv,maxDHl,maxDHv)
         
         % Temporal deviations in W, U, and H
         timeDWl = max(abs(liquid(tIdx).W - liquid(tIdx-1).W));
@@ -262,7 +264,7 @@ function solver(solveINIT)
         
         if solveINIT
             % Finish steady state solver when SS convergence criteria are met
-            if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH]) % [,timeDU < options.SSCONVU]
+            if all([timeDWl < options.SSCONVW, timeDWv < options.SSCONVW,timeDUl < options.SSCONVU, timeDUv < options.SSCONVU, timeDHl < options.SSCONVH, timeDHv < options.SSCONVH])
                 
                 % Indicate init converged
                 if ~timestepconverged
