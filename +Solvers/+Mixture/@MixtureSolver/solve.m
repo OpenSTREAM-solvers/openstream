@@ -126,6 +126,8 @@ function solver(solveINIT)
             Wvups   = mix(tIdx).MRM.WV(zIdx-1,:);                          % [kg/s] Relaxed vapor mass flow rate at previous node
             Hvups   = mix(tIdx).MRM.HV(zIdx-1,:);                          % [J/kg] Relaxed vapor enthalpy at previous node
 
+            Iold    = mixSolver.flowInventory(Wold,Uold,options.WPHASEMIN);% [kg/m] Flow inventory at previous node
+
             % Inner (point) iterations
             for itr = 1:options.MAXITER
     
@@ -138,7 +140,7 @@ function solver(solveINIT)
                 U     = mix(tIdx).U(zIdx);                                          % [m/s] Mixture velocity
                 
                 % Mixture mass conservation
-                Wnew = (Wups+Wold/Uold*DZ/DT)/(1+DZ/U/DT);                          % [kg/s] Update mixture mass flow rate
+                Wnew = (Wups+Iold*DZ/DT)/(1+DZ/U/DT);                               % [kg/s] Update mixture mass flow rate
                 mix(tIdx).W(zIdx) = (1-options.RELAXWM)*Witer+options.RELAXWM*Wnew; % [kg/s] Apply relaxation
                 
                 % Mixture momentum conservation

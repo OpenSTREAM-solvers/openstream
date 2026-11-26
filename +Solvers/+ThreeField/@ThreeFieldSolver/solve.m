@@ -118,6 +118,8 @@ function solver(solveINIT)
 
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
+
+            Ifold = tfSolver.flowInventory(Wfold,Ufold,options.WPHASEMIN); % [kg/m] Film flow inventory at previous node
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -129,9 +131,9 @@ function solver(solveINIT)
                 Uditer = drop(tIdx).U(zIdx);                               % [m/s] Drop velocity
                 
                 % Film mass conservation
-                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                                            % [kg/s/m^2] Mass exchange terms with film
-                Wfnew = Ufiter.*(Wfups+Wfold./Ufold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT); % [kg/s] Update film mass flow rate
-                film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;          % [kg/s] Apply relaxation
+                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                                              % [kg/s/m^2] Mass exchange terms with film
+                Wfnew = Ufiter.*(Wfups+Ifold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT);          % [kg/s] Update film mass flow rate
+                film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;            % [kg/s] Apply relaxation
 
                 if model.POSFILM
                     film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);    % [kg/s] 

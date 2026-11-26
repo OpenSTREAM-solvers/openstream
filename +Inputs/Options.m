@@ -36,7 +36,7 @@ classdef Options < Inputs.Input
 
         % Two-fluid solver options
 
-        WPHASEMIN        (1,1) double  {mustBeNumeric}                     = 1E-3                  % Phase mass flow rate cut off for momentum and energy exchanges [kg/s]
+        WPHASEMIN        (1,1) double  {mustBeNumeric}                     = 1E-3                  % Minimum phase mass flow rate considered non-negligible [kg/s]
         ERRORU           (1,1) double  {mustBeNumeric}                     = 1E-4                  % Velocity error target in inner iterations [m/s]
         SSCONVU          (1,1) double  {mustBeNumeric}                     = 1E-3                  % Velocity steady-state convergence criterion [m/s]
         RELAXWL          (1,1) double  {mustBeInRange(RELAXWL,0,1)}        = 1                     % Relaxation factor for the liquid mass conservation equation [-]

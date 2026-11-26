@@ -136,6 +136,9 @@ function solver(solveINIT)
             
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
             Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
+
+            Wbold = ffSolver.flowInventory(Wbold,Ubold,options.WPHASEMIN); % [kg/m] Base flow inventory at previous node
+            Wwold = ffSolver.flowInventory(Wwold,Uwold,options.WPHASEMIN); % [kg/m] Wave flow inventory at previous node
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -155,12 +158,12 @@ function solver(solveINIT)
                 % Film mass conservation
                 % Base film mass conservation
                 Mtot_b = base(tIdx).MTOT(drop(tIdx),zIdx);                                              % [kg/s/m^2] Mass exchange terms with base film
-                Wbnew = Ubiter.*(Wbups+Wbold./Ubold.*DZ./DT+geom.PERIM.*Mtot_b.*DZ)./(Ubiter+DZ./DT);   % [kg/s] Update base film mass flow rate
+                Wbnew = Ubiter.*(Wbups+Wbold.*DZ./DT+geom.PERIM.*Mtot_b.*DZ)./(Ubiter+DZ./DT);          % [kg/s] Update base film mass flow rate
                 base(tIdx).W(zIdx,:) = (1-options.RELAXWB).*Wbiter+options.RELAXWB.*Wbnew;              % [kg/s] Apply relaxation
 
                 % Wave mass conservation
                 Mtot_w = wave(tIdx).MTOT(drop(tIdx),zIdx);                                              % [kg/s/m^2] Mass exchange terms with wave
-                Wwnew = Uwiter.*(Wwups+Wwold./Uwold.*DZ./DT+geom.PERIM.*Mtot_w.*DZ)./(Uwiter+DZ./DT);   % [kg/s] Update wave mass flow rate
+                Wwnew = Uwiter.*(Wwups+Wwold.*DZ./DT+geom.PERIM.*Mtot_w.*DZ)./(Uwiter+DZ./DT);          % [kg/s] Update wave mass flow rate
                 wave(tIdx).W(zIdx,:) = (1-options.RELAXWW).*Wwiter+options.RELAXWW.*Wwnew;              % [kg/s] Apply relaxation
 
                 % Enforce non-negative film (POSFILM)

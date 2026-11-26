@@ -126,6 +126,9 @@ function solver(solveINIT)
             Uvups = vapor(tIdx).U(zIdx-1);                                 % [m/s]  Vapor velocity at previous node
             Hvups = vapor(tIdx).H(zIdx-1);                                 % [J/kg] Vapor enthalpy at previous node
 
+            Ilold = twfSolver.flowInventory(Wlold,Ulold,options.WPHASEMIN);% [kg/m] Liquid flow inventory at previous node
+            Ivold = twfSolver.flowInventory(Wvold,Uvold,options.WPHASEMIN);% [kg/m] Vapor flow inventory at previous node
+
             % Inner (point) iterations
             for itr = 1:options.MAXITER
     
@@ -140,13 +143,13 @@ function solver(solveINIT)
                 % Liquid mass conservation
                 Mtot = liquid(tIdx).MTOT(vapor(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with liquid
                 Mtot = sum(Mtot,2);                                                      % [kg/s/m] Lumped approach
-                Wlnew = Uliter*(Wlups+Wlold/Ulold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);         % [kg/s] Update liquid mass flow rate
+                Wlnew = Uliter*(Wlups+Ilold*DZ/DT+Mtot*DZ)/(Uliter+DZ/DT);               % [kg/s] Update liquid mass flow rate
                 liquid(tIdx).W(zIdx) = (1-options.RELAXWL)*Wliter+options.RELAXWL*Wlnew; % [kg/s] Apply relaxation
                 
                 % Vapor mass conservation
                 Mtot = vapor(tIdx).MTOT(liquid(tIdx),zIdx);                              % [kg/s/m] Mass exchange terms with vapor
                 Mtot = sum(Mtot,2);
-                Wvnew = Uviter*(Wvups+Wvold/Uvold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);         % [kg/s] Update vapor mass flow rate
+                Wvnew = Uviter*(Wvups+Ivold*DZ/DT+Mtot*DZ)/(Uviter+DZ/DT);               % [kg/s] Update vapor mass flow rate
                 vapor(tIdx).W(zIdx) = (1-options.RELAXWV)*Wviter+options.RELAXWV*Wvnew;  % [kg/s] Apply relaxation
                 
                 % Liquid momentum conservation

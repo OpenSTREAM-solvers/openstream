@@ -144,5 +144,26 @@ classdef (Abstract) AbstractSolver < handle
 
     end
 
+    methods (Static, Access = protected)
+
+        function inventory = flowInventory(W, U, Wmin)
+            %FLOWINVENTORY Safely evaluate the transient flow inventory W./U
+
+            Umin = 1e-12;                                                   % [m/s] Numerical zero velocity threshold
+
+            inventory = zeros(size(W));
+
+            moving = abs(U) > Umin;
+            inventory(moving) = W(moving)./U(moving);
+
+            inconsistent = ~moving & abs(W) > Wmin;
+            if any(inconsistent, 'all')
+                error('OpenSTREAM:AbstractSolver:ZeroVelocityWithNonzeroFlow', ...
+                    'Nonzero mass flow rate is associated with zero velocity.');
+            end
+        end
+
+end
+
 end
 
