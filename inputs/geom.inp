@@ -2,5 +2,12 @@ ID        ! Channel ID                     > TUTORIAL1
 LENGTH    ! Axial length [m]               > 5.5
 AREA      ! Coolant area [m^2]             > 6.0821e-05
 PERIM     ! Perimeters [m]                 > 0.0276
-ANGLE     ! Angle [rad]                    > 0
+ANGLE     ! Angle [deg]                    > 0
+END
+
+ID        ! Channel ID                     > TUTORIAL10 
+LENGTH    ! Axial length [m]               > 5.5 
+AREA      ! Coolant area [m^2]             > 6.0821e-05 
+PERIM     ! Perimeters [m]                 > 0.0138 0.0138 
+ANGLE     ! Angle [deg]                    > 0 
 END

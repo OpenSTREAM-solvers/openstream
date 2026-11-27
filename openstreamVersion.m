@@ -10,7 +10,7 @@ function [ver, majorVersion,minorVersion,updateVersion] = openstreamVersion()
 %   Example:
 %       [ver, major, minor, update] = openstreamVersion()
 
-ver = "2026.0";
+ver = "2026.1";
 
 ver_parts = strsplit(ver, ".");
 

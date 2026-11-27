@@ -68,14 +68,18 @@ classdef Model < Inputs.Input
 
         % Mixture near-wall models
 
-        NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1)}  = 0.5                             % Near-wall mass flow distribution ratio [-]
+        NEARWALLRATIO    (1,1) double  {mustBeInRange(NEARWALLRATIO,0,1,"exclusive")} ...
+                                                                           = 0.5                             % Near-wall mass flow distribution ratio, 0 < ratio < 1 [-]
         NEARWALLEQOAF    (1,1) logical                                     = false                           % Near-wall equilibrium at onset of annular two-phase flow
         NEARWALLH        (1,1) InputEnums.NEARWALLH                        = 'RATIO'                         % Near-wall equilibrium enthalpy model selected from :class:`InputEnums.NEARWALLH`
         NEARWALLHRATIO   (1,1) double  {mustBePositive}                    = 1.0                             % Near-wall equilibrium enthalpy ratio [-]
+        NEARWALLHFILMCOEF (1,2) double  {mustBeNumeric}                    = [900 0.35]                      % Near-wall equilibrium enthalpy film model coefficients [kg/m^2/s,-]
         NEARWALLRELAX    (1,1) InputEnums.NEARWALLRELAX                    = 'QUALITY'                       % Near-wall energy transfer time relaxation model selected from :class:`InputEnums.NEARWALLRELAX`
         NEARWALLRELAXX   (1,:) double                                      = [-0.5 -0.25 -0.1 0.0 1.0]       % Near-wall exchange relaxation time thermodynamic quality [-]
         NEARWALLRELAXT   (1,:) double                                      = [ 1.0  0.5   0.3 0.1 0.1]       % Near-wall energy transfer relaxation time array [s]
-        NEARWALLRELAXCOEF (1,3) double  {mustBeNumeric}                    = [0.1E-3 1/3 0.05]               % Near-wall energy transfer time relaxation coefficients for void option
+        NEARWALLRELAXCOEF (1,3) double  {mustBeNumeric}                    = [0.1E-3 1/3 0.05]               % Near-wall energy transfer time relaxation void model coefficients [m,-,-]
+        NEARWALLRELAXFILMCOEF (1,5) double  {mustBeNumeric}                = [0.0541 0.88 0.16 386 2000]     % Near-wall energy transfer time relaxation film model coefficients [s,-,-,-,kg/m^2/s]
+        NEARWALLRELAXFILMTUPS (1,1) double  {mustBePositive}               = 0.13                            % Near-wall energy transfer time relaxation film model upstream of OAF [s]
 
         % Two-fluid solver models
 
@@ -134,7 +138,8 @@ classdef Model < Inputs.Input
         BASEYPLUS        (1,1) double  {mustBePositive}                    = 15                              % Equilibrium base film y+ value [-]
         RELAXTB          (1,1) double  {mustBeNonnegative}                 = 0.2                             % Base film / wave mass exchange relaxation time [s]
 
-        WAVEMIXCOEF      (:,1) double  {mustBeNonnegative}                 = 2                               % Base film / wave turbulent mixing coefficient
+        WAVEMIXCOEF      (1,1) double  {mustBeNonnegative}                 = 2                               % Base film / wave turbulent mixing coefficient
+        WAVEMIXMAX       (1,1) double  {mustBePositive}                    = 10                              % Base film / wave maximum turbulent mixing mass flux [kg/m^2/s]
         WAVEFREQUENCY    (1,1) InputEnums.WAVEFREQUENCY                    = 'RELAXATION'                    % Wave number density model selected from :class:`InputEnums.WAVEFREQUENCY`
         EQSTROUHAL       (1,1) InputEnums.EQSTROUHAL                       = 'RISO'                          % Equilibrium wave Strouhal number model selected from :class:`InputEnums.EQSTROUHAL`
         EQSTROUHALCOEF   (1,3) double  {mustBeNumeric}                     = [1.1236E-4 0.5 0.0]             % Equilibrium wave Strouhal number coefficients [-]
@@ -214,15 +219,13 @@ classdef Model < Inputs.Input
                     % automatically cast to a function_handle. Here, a
                     % validation is first performed to detect restricted
                     % keywords, then converted.
-                    if isa(obj.(objPropname), "function_handle") && isstring(obj.inputStruct.(objPropname))
-
+                    val = obj.inputStruct.(objPropname);
+                    if isa(obj.(objPropname), "function_handle") && (isstring(val) || ischar(val))
                         % Check for insecure keywords in function handle
-                        obj.validateFunctionHandleInput(obj.inputStruct.(objPropname))    ;
-                        obj.(objPropname) = ...
-                            str2func(obj.inputStruct.(objPropname));
+                        obj.validateFunctionHandleInput(val);
+                        obj.(objPropname) = str2func(val);
                     else
-                        obj.(objPropname) = ...
-                            upper(obj.inputStruct.(objPropname));
+                        obj.(objPropname) = upper(val);
                     end
                 elseif useDefault
                     defaultValueFieldNames(end+1) = objPropname;
@@ -240,7 +243,7 @@ classdef Model < Inputs.Input
                 defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
                 if nargout == 0
                     warning('OpenSTREAM:Model:defaultValueUsedWarning', ...
-                        '%s\n', ...
+                        '%s', ...
                         defaultValueWarningString);
                 else
                     w = struct('warnID', 'OpenSTREAM:Model:defaultValueUsedWarning', ...
@@ -256,10 +259,11 @@ classdef Model < Inputs.Input
             % If extra fields in obj.inputStruct remain, warn user
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
+                fprintf('\n');
                 warning( ...
-                    '%s: These entries were not used: \n\t %s ', ...
-                    upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
-                    );
+                    'OpenSTREAM:Model:UnusedInputEntries', ...
+                    'These model entries were not used:\n %s', ...
+                    strjoin(remainingInputStructFields, ' '));
                 obj.extra = obj.inputStruct;
             end
 

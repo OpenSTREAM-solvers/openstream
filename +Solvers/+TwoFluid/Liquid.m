@@ -29,15 +29,14 @@ classdef Liquid < Solvers.AbstractField
 
         % Mixture object
 
-        mix         (1,1)          {isa(mix, 'Solvers.TwoFluid.Mixture')}  = NaN                  % :class:`Solvers.TwoFluid.Mixture` object
+        mix         Solvers.TwoFluid.Mixture {mustBeScalarOrEmpty}                                % :class:`Solvers.TwoFluid.Mixture` object
 
     end
 
     properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
 
         DZ          (1,1) double   {mustBeNumeric}                         = 0                    % Axial step size [m]
-        % inputSet                   {isa(inputSet,'Inputs.InputSet')}                              % :class:`Inputs.InputSet` object
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}                          % :class:`Inputs.FluidProperties` object
+        fluid       Inputs.FluidProperties                                                        % :class:`Inputs.FluidProperties` object
 
     end
 
@@ -201,20 +200,20 @@ classdef Liquid < Solvers.AbstractField
                     vrl = liquid.VF(vapor,zIdx).*(vapor.U(zIdx) - liquid.U(zIdx));
                     vr(liquid.VF(vapor,zIdx)<0.5)=vrl(liquid.VF(vapor,zIdx)<0.5);
                 case 'FLOWREGIME'
-                    flowregime = liquid.FLOWREGIME(zIdx);
-                    % bubbly, slug, churn (assume also for dffb)
+                    [~,id] = liquid.FLOWREGIME(zIdx);
+                    flowregime = REGIMES(max(id,[],2));                    % node regime: assumes most advanced across walls
                     RHOV = liquid.fluid.RHOV(vapor.H(zIdx));
                     RHOL = liquid.fluid.RHOL(liquid.H(zIdx));
                     C = 1.2 - 0.2.*sqrt(RHOV./RHOL);
                     vr = (1-C.*(vapor.VF(liquid,zIdx)))./(liquid.VF(vapor,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
 
                     % annular (instead contribution from interfacial shear)
-                    Idann = ismember(flowregime,[REGIMES.ANNULAR]);
+                    Idann  = flowregime == REGIMES.ANNULAR;
                     vr_ann = zeros(size(zIdx));
                     vr(Idann) = vr_ann(Idann);
 
                     % dffb (dispersed liquid)
-                    Iddffb = ismember(flowregime,[REGIMES.DFFB]);
+                    Iddffb = flowregime == REGIMES.DFFB;
                     vr_dffb = (1-C.*(liquid.VF(vapor,zIdx)))./(vapor.VF(liquid,zIdx)).*vapor.U(zIdx) - C.*liquid.U(zIdx);
                     vr(Iddffb) = vr_dffb(Iddffb);
             end
@@ -252,8 +251,8 @@ classdef Liquid < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
-            RHOV = liquid.fluid.RHOV(liquid.H(zIdx));                      % [kg/m^3]
-            MUV  = liquid.fluid.MUV(liquid.H(zIdx));                       % [Pa.s]
+            RHOV = liquid.fluid.RHOV(vapor.H(zIdx));                       % [kg/m^3]
+            MUV  = liquid.fluid.MUV(vapor.H(zIdx));                        % [Pa.s]
             VR = liquid.VR(vapor,zIdx);                                    % [m/s]
 
             rev = RHOV.*abs(VR).*liquid.L(zIdx)./MUV;                      % [-]
@@ -295,7 +294,7 @@ classdef Liquid < Solvers.AbstractField
             G = liquid.inputSet.model.G;                                   % [m/s^2]
             Diff_RHO = abs(RHOL-RHOV);                                     % [kg/m^3]
 
-            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(G.*SIGMA./(Diff_RHO)));     % [-]
+            visc = MUV./sqrt(RHOV.*SIGMA.*sqrt(SIGMA./(G.*Diff_RHO)));     % [-]
         end
 
     end
@@ -392,7 +391,7 @@ classdef Liquid < Solvers.AbstractField
 
             import Solvers.TwoFluid.REGIMES;
 
-            id = zeros(liquid.NZ,geom.NWALL);                              % Liquid (initialization)
+            id = zeros(numel(zIdx),geom.NWALL);                            % Liquid (initialization)
             id(XEQ > liquid.XTR_SUB) = 1;                                  % bubbly_subcooled
             id(XEQ > liquid.XTR_SAT) = 2;                                  % bubbly_saturated
             id(XEQ > liquid.XTR_ITM) = 3;                                  % intermediate
@@ -581,13 +580,13 @@ classdef Liquid < Solvers.AbstractField
 
                     mix = liquid.mix;
 
-                    UVeq = vapor.U(zIdx);                                  % [m/s] Approximated equilibrium vapor velocity
+                    UVeq = max(vapor.U(zIdx),1E-6);                        % [m/s] Approximated equilibrium vapor velocity
                     %WVeq = mix.W(zIdx).*max(0,mix.XEQ(zIdx));              % [kg/s] Equilibrium vapor mass flow rate
                     WVeq = mix.W(zIdx).*mix.XEQ(zIdx);                     % [kg/s] Equilibrium vapor mass flow rate
                     Wint = -(WVeq-vapor.W(zIdx));                          % [kg/s] Vapor mass deviation from equilibrium
 
-                    Mcond = max(0,Wint./UVeq./mix.RELAXTCOND(zIdx));       % [kg/s/m] Condensation mass transfer (<0)
-                    Mevap = min(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));       % [kg/s/m] Evaporation  mass transfer (>0)
+                    Mcond = max(0,Wint./UVeq./mix.RELAXTCOND(zIdx));       % [kg/s/m] Condensation mass transfer (>0)
+                    Mevap = min(0,Wint./UVeq./mix.RELAXTEVAP(zIdx));       % [kg/s/m] Evaporation  mass transfer (<0)
             end
 
             % Restrict to reasonable bounds
@@ -1013,7 +1012,7 @@ classdef Liquid < Solvers.AbstractField
             if nargin < 3, zIdx = (1:liquid(1).NZ).'; end
 
             geom  = liquid.inputSet.geometry;
-            Fwall = -liquid.VF(vapor,zIdx).*liquid.TAUW(zIdx).*sum(geom.PERIM); % [N/m]
+            Fwall = -liquid.VF(vapor,zIdx).*sum(geom.PERIM.*liquid.TAUW(zIdx),2); % [N/m]
         end
 
         function cd = CD(liquid,vapor,zIdx)
@@ -1052,8 +1051,9 @@ classdef Liquid < Solvers.AbstractField
                     % Viscous model
                     cd = 24./Re.*(1+0.15.*Re.^0.687);                      % [-]
 
-                case InputEnums.DROPDRAG.DISTORDED
+                case InputEnums.DROPDRAG.DISTORTED
                     % Distorted fluid particle (bubbly flow n=2.5)
+                    % TODO: Review the model
                     %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
                     mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
                     cd = liquid.VISC(vapor,zIdx).*Re.*mult;                % [-]

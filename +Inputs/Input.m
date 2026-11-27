@@ -58,7 +58,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 if isempty(entryIdx)
                     throw( ...
                         MException( ...
-                        sprintf('OpenSTREAM:INPUT:entryNotFoundError'), ...
+                        'OpenSTREAM:INPUT:entryNotFoundError', ...
                         'Entry with key %s=%s was not found', key, num2str(val)) ...
                         );
                 else
@@ -80,10 +80,9 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 opts.id = ''
             end
 
-            % Warning setup
-            previousWarnStruct = warning('query');
-            warning('off','backtrace')
-            objClassName = strrep(upper(class(obj)),'.','_');
+            % Suppress warning backtrace; restored on any exit (incl. errors)
+            previousWarnState = warning('off','backtrace');
+            warnCleanup = onCleanup(@() warning(previousWarnState));
 
             % Default false isValidEntry and defaultUsed
             isSpecifiedEntry = false;
@@ -143,7 +142,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                         case "true"
                             obj.inputStruct.(objPropname) = true;
                         otherwise
-                            error(sprintf('OpenSTREAM:%s:invalidLogicalValueUsedWarning',objClassName), ...
+                            error(sprintf('OpenSTREAM:%s:invalidLogicalValueError',objClassName), ...
                             'String %s given for logical property %s. Aborting.\n', ...
                             inputField, ...
                             objPropname);
@@ -167,8 +166,6 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 end
             end
 
-            % Reset warning state
-            warning(previousWarnStruct);
         end
 
         function [objPropNames_filtered, objPropDefaultValues_filtered, nameValPair] = ...
@@ -223,7 +220,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 else
                     % Try to create empty value for the property class type
                     try
-                        defVal = eval(string(objProps(propIdx).Validation.Class.Name) + ".empty");
+                        className = objProps(propIdx).Validation.Class.Name;
+                        defVal = feval(string(className) + ".empty");
                     catch
                         % Silently ignore any resulting error.
                         % There are potentially just too many class types
@@ -256,7 +254,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % TODO: Check propNames and propValues size matches
 
             % Init. string array
-            rep = "";
+            %rep = "";
+            rep = strings(0,1);
 
             % Title line
             rep(end+1) = sprintf("Default values were used for the following variables in %s:", upper(class(obj)));
@@ -296,7 +295,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 end
 
                 % Create string
-                rep(end+1) = sprintf(sprintf('%%-%ds: %%s ',propName_max+2), propName, propValue);
+                formatSpec = sprintf('%%-%ds: %%s ', propName_max + 2);
+                rep(end+1) = sprintf(formatSpec, propName, propValue);
 
             end
 
@@ -331,7 +331,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
             % Iterate through each field in SOLVERDEPENDENTPROPS
             depPropNames = fields(out.SOLVERDEPENDENTPROPS);
-            for i = length(depPropNames)
+            for i = 1:length(depPropNames)
                 % Name of property
                 depPropName = depPropNames{i};
 
@@ -347,7 +347,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     % Find solver in depProp details
                     if isfield(depProp, solverName)
                         % Identify detail type
-                        if isenum(depProp.(solverName)) || out.(depPropName)
+                        if isenum(depProp.(solverName)) || isnumeric(depProp.(solverName))
                             % Simply replace an enum or numeric value
                             out.(depPropName) = depProp.(solverName);
                         elseif isstruct(depProp.(solverName))
@@ -358,8 +358,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                             % coefficients can be specified and applied
                             % here. This case is not tested.
                         end
-                        % Apply default if
                     elseif isfield(depProp, 'DEFAULT')
+                        % Apply default if solver-specific value is not defined
                         out.(depPropName) = depProp.DEFAULT;
                     end
                 end
@@ -389,7 +389,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                 % throw an error. The error message needs improvement.
                 % inputStruct = -1;
                 ME_local = MException( ...
-                    sprintf('OpenSTREAM:INPUT:openFileError'), ...
+                    'OpenSTREAM:INPUT:openFileError', ...
                     'Reading file at %s resulted in an error.', filePath ...
                     );
                 rethrow(addCause(ME, ME_local));
@@ -434,17 +434,17 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
 
                     % Regex expression for parsing the input file.
                     entryExpr = {};
-                    %   Capture the "END" tag
-                    entryExpr{1} = '(?<PARAMETER>(end|END))';
-                    %   Capture comments, indicated by '#' symbol
-                    entryExpr{2} = '(?<PARAMETER>(#|\/\/|%)).*';
+                    %   Capture the "END" tag (anchored at start of line)
+                    entryExpr{1} = '^\s*(?<PARAMETER>END)\s*$';
+                    %   Capture comments, indicated by '#', '//' or '%' symbols
+                    entryExpr{2} = '^\s*(?<PARAMETER>(#|\/\/|%)).*';
                     %   Capture PARAMETER ! DESCRIPTION > VALUE
-                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[@><=&|()\/\*\[\],\w\s\+\-\.]*)?"*';
+                    entryExpr{3} = '(?<PARAMETER>[\w]+)?\s*\!\s*(?<DESC>.*?)>\s*"*(?<VALUE>[^"#%!]*)?"*';
                     %   Join parts together and remove spaces (use \s instead).
                     entryExpr = strrep(strjoin(entryExpr,'|'),' ','');
 
                     % Parse file using regex
-                    fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names");
+                    fileStruct = regexpi(fileContent, sprintf('%s',entryExpr),"names","once");
 
                     % Initalize output struct
                     inputStruct = struct();
@@ -463,7 +463,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                         end
 
                         % Process fileRow depending on PARAMETER value
-                        switch fileRow.PARAMETER
+                        switch upper(string(fileRow.PARAMETER))
                             case "END"
                                 % Increment inputStructEntries
                                 inputStructEntriesCount = inputStructEntriesCount + 1;
@@ -479,7 +479,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                                 if ~isempty(inputStructEntryFields) && ismember(fileRow.PARAMETER,inputStructEntryFields)
                                     throw( ...
                                         MException( ...
-                                        sprintf('OpenSTREAM:INPUT:duplicateEntryError'), ...
+                                        'OpenSTREAM:INPUT:duplicateEntryError', ...
                                         'A duplicate of parameter %s was detected on line %d in file %s%s', ...
                                         fileRow.PARAMETER, fileLineIdx, fileName, fileExt) ...
                                         );
@@ -488,6 +488,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                                 end
                                 % Throw warning if field value is empty
                                 valueToSave = '';
+                                fileRow.VALUE = strtrim(fileRow.VALUE);
                                 if strlength(fileRow.VALUE) == 0
                                     % TODO throw warning for empty field value
                                     valueToSave = '';
@@ -511,7 +512,7 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
                     % supported.
                     throw( ...
                         MException( ...
-                        sprintf('OpenSTREAM:INPUT:fileTypeError'), ...
+                        'OpenSTREAM:INPUT:fileTypeError', ...
                         'Input file with extension %s is not supported.', fileExt) ...
                         );
             end
@@ -537,14 +538,15 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % Accepts name-value pairs and optional file mode
 
             if mod(length(varargin),2) == 1
-                error('An even number of inputs after filePath is required.');
+                error('OpenSTREAM:Input:invalidInputCount', ...
+                    'An even number of inputs after filePath is required.');
             end
 
             % Gather calling class property names
             callStack = dbstack();
             [~,callClass] = fileparts(callStack(2).file);
             callClass = ['Inputs.' callClass];
-            callClass = eval(['?' callClass]);
+            callClass = meta.class.fromName(callClass);
             descriptionDict = containers.Map( ...
                 {callClass.PropertyList.Name}, ...
                 {callClass.PropertyList.Description});
@@ -552,7 +554,8 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % Create file to write
             fid = fopen(filePathName,fidMode);
             if fid == -1
-                error('An error occurred while creating %s', filePathName);
+                error('OpenSTREAM:Input:objectCreationError', ...
+                    'An error occurred while creating %s', filePathName);
             end
 
             for idx = 1:length(varargin)/2
@@ -602,25 +605,33 @@ classdef (HandleCompatible) Input < dynamicprops & matlab.mixin.Copyable
             % Close file
             fclose(fid);
         end
-
         function validateFunctionHandleInput(handleString)
-            %VALIDATEFUNCTIONHANDLEINPUT Validates safety of function handle string
+            %VALIDATEFUNCTIONHANDLEINPUT Validates that a function handle string only uses allowed functions
             %
-            % Throws error if restricted keywords are detected
+            % The string must be a single anonymous function. Only its arguments and the
+            % listed elementary functions are allowed; field/method access and nested
+            % handles are rejected.
 
             arguments
                 handleString    {mustBeTextScalar}
             end
 
-            restrictedKeywords = ["eval", "feval", "system", "fopen", "delete", "!", ...
-                "load", "save", "assignin", "clear", "global", "import", ...
-                "java", "py\.", "web", "dir", "cd", "run", "builtin", ...
-                "uigetfile", "input", "persistent", "classdef", "meta\."];
+            allowed = ["pi","exp","log","log10","sqrt","abs","min","max","sin","cos","tan", ...
+                "tanh","floor","ceil","round","sign","ones","zeros","numel","eps","Inf","NaN","interp1"];
 
-            for restrictedKeyword = restrictedKeywords
-                if ~isempty(regexp(handleString, restrictedKeyword, 'once', 'ignorecase'))
-                    error("Unsafe content detected: '%s' in function handle: %s", restrictedKeyword, handleString);
-                end
+            s = char(strtrim(handleString));
+            args = regexp(s, '^@\(([^)]*)\)', 'tokens', 'once');
+            if isempty(args) || count(s,'@') ~= 1 || ~isempty(regexp(s, '(?<!\d)\.[A-Za-z]', 'once'))
+                error('OpenSTREAM:INPUT:unsafeFunctionHandleError', ...
+                    'Function handle must be a single anonymous function without field or method access: %s', s);
+            end
+            allowed = [allowed, strtrim(split(string(args{1}), ","))'];
+
+            names = regexp(regexprep(s, '''[^'']*''', ''), '(?<![\w.])[A-Za-z]\w*', 'match');   % identifiers outside quoted text
+            bad = setdiff(string(names), allowed);
+            if ~isempty(bad)
+                error('OpenSTREAM:INPUT:unsafeFunctionHandleError', ...
+                    'Function handle uses non-allowed name(s) %s: %s', strjoin(bad, ', '), s);
             end
         end
 

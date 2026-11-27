@@ -69,6 +69,9 @@ classdef Base < Solvers.AbstractFilm
                 base.U = repmat(base.U,film.NZ,base.inputSet.geometry.NWALL);
                 base.H = repmat(base.H,film.NZ,base.inputSet.geometry.NWALL);
             end
+
+            % Overload copyable properties
+            base.flowProperties = {'W','U','H'};
         end
 
         function epsilon = EPSILON(base, zIdx)
@@ -154,7 +157,7 @@ classdef Base < Solvers.AbstractFilm
             %MENT Base entrainment mass flux [kg/m^2/s]
             %
             % Placeholder for future implementation if needed. Currently
-            % returns zero entrainment.
+            % returns zero entrainment from base film.
             %
             % Inputs:
             %
@@ -163,7 +166,6 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            % TODO: use coefficient later
             ment =  0.0 .* base.film.MENT(zIdx);
         end
 
@@ -212,10 +214,12 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
+            model = base.inputSet.model;
+
             wave = base.film.wave;
-            Kw_recp = base.inputSet.model.WAVEMIXCOEF;
+            Kw_recp = model.WAVEMIXCOEF;
             Mturb = min(abs(base.WL(zIdx)), wave.WL(zIdx)) ./ Kw_recp ./ wave.WIDTH(zIdx);
-            Mturb = min(Mturb,10);
+            Mturb = min(Mturb,model.WAVEMIXMAX);
             Mturb = base.mix.AFDISTR(0,Mturb,zIdx);
         end
 
@@ -316,8 +320,8 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 3, zIdx = (1:base(1).NZ).'; end
 
-            deltaU = base.film.wave.U(zIdx) - base.U(zIdx);
-            Fwavemass = base.MWAVE(drop,zIdx).*deltaU; % [N/m^2]
+            deltaU = base.film.wave.U(zIdx,:) - base.U(zIdx,:);            % [m/s]
+            Fwavemass = base.MWAVE(drop,zIdx).*deltaU;                     % [N/m^2]
 
             Fwavemass = base.mix.AFDISTR(0,Fwavemass,zIdx);
         end
@@ -337,7 +341,6 @@ classdef Base < Solvers.AbstractFilm
 
             if nargin < 2, zIdx = (1:base(1).NZ).'; end
 
-            % TODO: debug syntax
             Fbasevapor = base.BETA(zIdx).* base.FVAPOR(zIdx);              % [N/m^2]
         end
 
@@ -565,51 +568,6 @@ classdef Base < Solvers.AbstractFilm
             per = base.inputSet.geometry.PERIM;
 
             thickmin = base.WMIN(drop, zIdx)./(rho_ls.*Ub.*per);
-        end
-
-        function copyFlowProperties(srcObj, targetObj, opts)
-            %COPYFLOWPROPERTIES Copy flow property arrays between Base objects
-            %
-            % Copies selected flow properties (W, U, H) from a source object to one
-            % or more target Base objects. Supports full copy or partial copy
-            % (excluding first axial node) based on options.
-            %
-            % Inputs:
-            %
-            % - srcObj     — Source object containing flow properties
-            % - targetObj  — Array of :class:`Solvers.FourField.Base` objects to update
-            % - opts.all   — Logical flag; if true, copies all axial nodes, otherwise skips the first node (default: false)
-
-            arguments
-                srcObj
-                targetObj (1,:) Solvers.FourField.Base
-                opts.all  (1,1) logical = false
-            end
-
-            for i = 1:length(targetObj)
-
-                % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
-                    throw( ...
-                        MException( ...
-                        'FilmError:copyFlowPropertiesError', ...
-                        'Source and target objects have mismatched spatial meshes' ...
-                        ) ...
-                        );
-                end
-
-                % TODO: copy film?
-                % Copy properties
-                propNames = {'W','U','H'};
-                for j = 1:length(propNames)
-                    if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
-                    else
-                        targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
-                    end
-                end
-
-            end
         end
 
     end

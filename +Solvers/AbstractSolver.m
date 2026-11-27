@@ -6,7 +6,7 @@ classdef (Abstract) AbstractSolver < handle
     properties (SetAccess=protected, Abstract)
 
         % Input configuration object of type :class:`Inputs.InputSet`
-        inputSet    {isa(inputSet,'Inputs.InputSet')}
+        inputSet    Inputs.InputSet
 
     end
 
@@ -46,7 +46,7 @@ classdef (Abstract) AbstractSolver < handle
         end
 
         function warning(solver, varargin)
-            %LOG Log warning messages to the session log
+            %WARNING Log warning messages to the session log
 
             solver.inputSet.session.log.warning(varargin{:});
         end
@@ -86,7 +86,7 @@ classdef (Abstract) AbstractSolver < handle
             save(outputFile,'-struct','dataStruct');
 
             if opts.showpath
-                fprintf('\nOutput file saved to %s\n\n',outputFile)
+                solver.log('\nOutput file saved to %s\n\n',outputFile)
             end
         end
 
@@ -117,6 +117,53 @@ classdef (Abstract) AbstractSolver < handle
         end
 
     end
+
+    methods(Access = protected, Hidden = true)
+
+        function checkMixSolverConsistency(solver, mixSolver)
+            %CHECKMIXSOLVERCONSISTENCY Error if mixSolver has a different axial mesh or time grid
+
+            a = solver.inputSet;
+            b = mixSolver.inputSet;
+            if a.geometry.LENGTH ~= b.geometry.LENGTH || ~isequal(a.geometry.PERIM, b.geometry.PERIM) || ...
+                    a.model.NNODES ~= b.model.NNODES || a.options.TSTEP ~= b.options.TSTEP || ...
+                    ~isequal([a.bc.TIME], [b.bc.TIME])
+                msg = 'The provided mixture solver has a different axial mesh, wall definition or time grid.';
+                throwAsCaller(MException(sprintf('OpenSTREAM:%s:InconsistentMixSolver', solver.solverName()),msg));
+            end
+        end
+
+        function checkMixSolverState(solver, mixSolver)
+            %CHECKMIXSOLVERSTATE Warn if the mixture solution is not converged
+
+            import Solvers.SolverState
+            if any(mixSolver.STATE == [SolverState.INITIALSTEPNOTCONVERGED, SolverState.SOLVEDNOTCONVERGED])
+                solver.warning('Mixture solution is not converged (%s). %s results may not be reliable.', string(mixSolver.STATE), solver.solverName());
+            end
+        end
+
+    end
+
+    methods (Static, Access = protected)
+
+        function inventory = flowInventory(W, U, Wmin)
+            %FLOWINVENTORY Safely evaluate the transient flow inventory W./U
+
+            Umin = 1e-12;                                                   % [m/s] Numerical zero velocity threshold
+
+            inventory = zeros(size(W));
+
+            moving = abs(U) > Umin;
+            inventory(moving) = W(moving)./U(moving);
+
+            inconsistent = ~moving & abs(W) > Wmin;
+            if any(inconsistent, 'all')
+                error('OpenSTREAM:AbstractSolver:ZeroVelocityWithNonzeroFlow', ...
+                    'Nonzero mass flow rate is associated with zero velocity.');
+            end
+        end
+
+end
 
 end
 

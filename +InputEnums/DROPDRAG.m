@@ -16,6 +16,6 @@ classdef DROPDRAG
         CONSTANT             % User-defined constant drag coefficient
         STOKES               % Stokes regime drag model
         VISCOUS              % Viscous regime drag model
-        DISTORDED            % Distorted droplet drag model
+        DISTORTED            % Distorted droplet drag model
     end
 end

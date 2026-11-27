@@ -26,42 +26,32 @@ end
 
 import Solvers.SolverState
 
-% Enable diary
-tfSolver.inputSet.session.log.diaryOn();
-
-% Open log in persistent mode
-tfSolver.inputSet.session.log.openLog('keepLogOpen', true);
-
+% Check solver state before opening any files
 if tfSolver.STATE ~= SolverState.UNSOLVED
-    error('OpenSTREAM:ThreeFieldSolver:SolverInitializationRequired','This solver needs to be reinitialized before solving.');
-else
-    tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
-
-    try
-        % Solve init
-        solver(true);
-
-        % Continue solving if init converged
-        if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
-            solver(false);
-        else
-            if length(tfSolver.film) > 1
-                tfSolver.log('\t\tSkipping transient solver ...\n');
-            end
-        end
-
-    catch ME
-        tfSolver.inputSet.session.log.closeLog();
-        tfSolver.inputSet.session.log.diaryOff();
-        rethrow(ME)
-    end
-
-    tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
+    error('OpenSTREAM:ThreeFieldSolver:SolverInitializationRequired', 'This solver needs to be reinitialized before solving.');
 end
 
-tfSolver.inputSet.session.log.closeLog();
-tfSolver.inputSet.session.log.diaryOff();
-tfSolver.log('Output directory: %s\n\n',tfSolver.inputSet.session.directory);
+% Enable diary and open log in persistent mode. Both are closed
+% automatically when solve exits (normal return, error or Ctrl+C).
+sessionLog = tfSolver.inputSet.session.log;
+sessionLog.diaryOn();
+sessionLog.openLog('keepLogOpen', true);
+logCleanup = onCleanup(@() sessionLog.closeAll());
+
+tfSolver.log('\n\n------------------------------------------- Three-field solver run initiated -------------------------------------------\n')
+
+% Solve init
+solver(true);
+
+% Continue solving if init converged
+if tfSolver.STATE == SolverState.INITIALSTEPCONVERGED
+    solver(false);
+elseif length(tfSolver.mixture) > 1
+    tfSolver.log('                 Skipping transient solver ...\n');
+end
+
+tfSolver.log('\n------------------------------------------- Three-field solver run completed -------------------------------------------\n\n')
+tfSolver.log('Output directory: %s\n\n', tfSolver.inputSet.session.directory);
 
 function solver(solveINIT)
     % Internal solver routine for steady-state and transient modes
@@ -77,7 +67,10 @@ function solver(solveINIT)
         film = tfSolver.filmInit;
         drop = tfSolver.dropInit;
         fluid = repmat(tfSolver.fluid(1),1,length(film));
-        mix = copy(repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER));
+        % Reuse the converged mixture state for all pseudo-time iterations.
+        % The ThreeField solver reads this state but does not modify its flow properties.
+        mix = repmat(tfSolver.mixSolver.mixture(1),1,tfSolver.inputSet.options.SSMAXITER);
+        lineEnd = '                    \r';                                % Clear trailing characters and rewrite the steady-state progress line
     else
         if length(tfSolver.film) < 2
             return
@@ -87,6 +80,7 @@ function solver(solveINIT)
         drop = tfSolver.drop;
         fluid = tfSolver.fluid;
         mix = tfSolver.mixSolver.mixture;
+        lineEnd = '\n';                                                    % Finish the transient time-step line and preserve it
     end
     
     % set SOLVED flag to SOLVECONVERGED
@@ -107,30 +101,27 @@ function solver(solveINIT)
     for tIdx = 2:length(film)                                              % Loop over time steps
         
         timestepconverged = true;
-        tfSolver.log('Time %5.2f [s]',film(tIdx).TIME)
+        tfSolver.log('Time %6.2f [s]  ',film(tIdx).TIME)
         
         DT = film(tIdx).DT;                                                % [s] Current time step size
-        if solveINIT
-            RHOF = fluid.RHOF;                                             % [kg/m^3] Saturated liquid density
-        else
-            RHOF = fluid(tIdx).RHOF;                                       % [kg/m^3] Saturated liquid density
-        end
+        RHOF = fluid(tIdx).RHOF;                                           % [kg/m^3] Saturated liquid density
 
         % Update three-field property guesses from previous time step
         film(tIdx-1).copyFlowProperties(film(tIdx));
         drop(tIdx-1).copyFlowProperties(drop(tIdx));
-        
-        %e0 = tfSolver.EQUIL(film(tIdx),drop(tIdx),mix(tIdx),mix(tIdx).OAFIDX);
         
         % Axial sweep
         for zIdx = 2:tfSolver.NZ                                           % Loop over axial nodes
             
             Wfold = film(tIdx-1).W(zIdx,:);                                % [kg/s] Film mass flow rate at previous time step
             Ufold = film(tIdx-1).U(zIdx,:);                                % [m/s] Film velocity at previous time step
-            Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at previous time step
-            Ufups = film(tIdx).U(zIdx-1,:);                                % [m/s] Film velocity at previous time step
+            Wfups = film(tIdx).W(zIdx-1,:);                                % [kg/s] Film mass flow rate at previous node
+            Ufups = film(tIdx).U(zIdx-1,:);                                % [m/s] Film velocity at previous node
+
             Udold = drop(tIdx-1).U(zIdx);                                  % [m/s] Drop velocity at previous time step
-            Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous time step
+            Udups = drop(tIdx).U(zIdx-1);                                  % [m/s] Drop velocity at previous node
+
+            Ifold = tfSolver.flowInventory(Wfold,Ufold,options.WPHASEMIN); % [kg/m] Film flow inventory at previous time step
             
             % Inner (point) iterations
             for itr = 1:options.MAXITER
@@ -142,9 +133,9 @@ function solver(solveINIT)
                 Uditer = drop(tIdx).U(zIdx);                               % [m/s] Drop velocity
                 
                 % Film mass conservation
-                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                                            % [kg/s/m^2] Mass exchange terms with film
-                Wfnew = Ufiter.*(Wfups+Wfold./Ufold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT); % [kg/s] Update film mass flow rate
-                film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;          % [kg/s] Apply relaxation
+                Mtot = film(tIdx).MTOT(drop(tIdx),zIdx);                                              % [kg/s/m^2] Mass exchange terms with film
+                Wfnew = Ufiter.*(Wfups+Ifold.*DZ./DT+geom.PERIM.*Mtot.*DZ)./(Ufiter+DZ./DT);          % [kg/s] Update film mass flow rate
+                film(tIdx).W(zIdx,:) = (1-options.RELAXWF).*Wfiter+options.RELAXWF.*Wfnew;            % [kg/s] Apply relaxation
 
                 if model.POSFILM
                     film(tIdx).W(zIdx,:) = max(film(tIdx).W(zIdx,:),0);    % [kg/s] 
@@ -165,17 +156,21 @@ function solver(solveINIT)
                         film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx); % [m/s]
                         
                     case InputEnums.MOMENTFILM.FULL
-                    % Full film momentum conservation
-                        thick = max(abs(film(tIdx).THICK(zIdx)),model.THINFILMTHICK);                      % [m] Film thickness
-                        if thick>model.THINFILMTHICK
-                            Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with film
-                            Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
-                            Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                              % [m/s] Keep within realistic bounds to help convergence
-                            film(tIdx).U(zIdx,:) = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;      % [m/s] Apply relaxation
-                            film(tIdx).U(zIdx,:) = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),film(tIdx).U(zIdx,:),zIdx);
-                        else
-                            film(tIdx).U(zIdx,:) = film(tIdx).UEQUIL(drop(tIdx),zIdx);                     % [m/s] Complete equilibrium model for thin film
+                    % Full film momentum conservation                        
+                        thickAbs = abs(film(tIdx).THICK(zIdx));            % [m] Film thickness
+                        isThick  = thickAbs > model.THINFILMTHICK;
+                        thick    = max(thickAbs, model.THINFILMTHICK);
+
+                        Fftot = film(tIdx).FTOT(drop(tIdx),zIdx);                                      % [N/m^2] Momentum exchange terms with film
+                        Unew = (Ufups.*Ufiter+Ufold.*DZ./DT+Fftot.*DZ./(RHOF.*thick))./(Ufiter+DZ/DT); % [m/s] Update velocity
+                        Unew = min(max(Unew,0),mix(tIdx).liquid.U(zIdx));                              % [m/s] Keep within realistic bounds to help convergence
+                        Unew = (1-options.RELAXUF).*Ufiter+options.RELAXUF.*Unew;                      % [m/s] Apply relaxation
+                        Unew = mix(tIdx).AFDISTR(mix(tIdx).liquid.U(zIdx),Unew,zIdx);
+                        if ~all(isThick)
+                            Ueq = film(tIdx).UEQUIL(drop(tIdx),zIdx);      % [m/s] Complete equilibrium model for thin film
+                            Unew(~isThick) = Ueq(~isThick);
                         end
+                        film(tIdx).U(zIdx,:) = Unew;
                 end
                 
                 % Drop mass conservation
@@ -236,7 +231,7 @@ function solver(solveINIT)
         maxDWL = max(film(tIdx).ITR.DWL,[],'all');
         maxDUf = max(film(tIdx).ITR.DU,[],'all');
         maxDUd = max(drop(tIdx).ITR.DU,[],'all');
-        tfSolver.log('\tmax point iter = %3d in node %3d, max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]                    \r',maxN,maxzIdx,maxDWL,maxDUf,maxDUd)
+        tfSolver.log(['max point iter = %3d in node %3d, max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]' lineEnd],maxN,maxzIdx,maxDWL,maxDUf,maxDUd)
         
         % Temporal deviations in W and U
         timeDWL = max(abs((film(tIdx).WL - film(tIdx-1).WL)),[],'all');
@@ -253,7 +248,7 @@ function solver(solveINIT)
                 end
                 tfSolver.STATE = SolverState.INITIALSTEPCONVERGED;
     
-                tfSolver.log('\n\t\tSTEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                tfSolver.log('\n                 STEADY-STATE CONVERGED            max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
     
                 % Replace filmInit and dropInit with subset up to this tIdx
                 tfSolver.filmInit = tfSolver.filmInit(1:tIdx);
@@ -265,15 +260,14 @@ function solver(solveINIT)
                 
                 break;
             
-            % otherwise, update next timestep with current flow properties
+            % otherwise, continue to next pseudo-time step
             elseif tIdx < length(film)
-                tfSolver.filmInit(tIdx).copyFlowProperties(tfSolver.filmInit(tIdx+1));
-                tfSolver.dropInit(tIdx).copyFlowProperties(tfSolver.dropInit(tIdx+1));
+                continue
             
             % otherwise, not converged
             else
                 tfSolver.STATE = SolverState.INITIALSTEPNOTCONVERGED;
-                tfSolver.log('\n\t\tSTEADY-STATE FAILED TO CONVERGE   max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
+                tfSolver.log('\n                 STEADY-STATE FAILED TO CONVERGE   max errors: Wf = %.7f [kg/s/m], Uf = %.5f [m/s], Ud = %.5f [m/s]\r',timeDWL,timeDUf,timeDUd)
                 
                 % Replace first transient time step flow data with steady-state solver solution, regardless of convergence
                 tfSolver.filmInit(end).copyFlowProperties(tfSolver.film(1));

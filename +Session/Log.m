@@ -100,58 +100,72 @@ classdef Log < handle
 
             if obj.LOGMODE == LogMode.NONE
                 return
-            else
-                if (obj.LOGMODE == LogMode.BOTH || ...
-                        obj.LOGMODE == LogMode.LOGTOFILEONLY) ...
-                        && obj.LOGFID >= 0
-                    obj.openLog();
-                    builtin('fprintf',obj.LOGFID, varargin{:});
-                    if ~obj.keepLogOpen
-                        obj.closeLog();
-                    end
+            end
+            
+            % Write to log file
+            if (obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+                    obj.LOGMODE == LogMode.BOTH)
+
+                % Open the log file
+                obj.openLog();
+
+                % Write to the log
+                builtin('fprintf',obj.LOGFID, varargin{:});
+
+                % Close the log if keepLogOpen is unset
+                if ~obj.keepLogOpen
+                    obj.closeLog();
                 end
-                if (obj.LOGMODE == LogMode.BOTH || ...
-                        obj.LOGMODE == LogMode.LOGTOCONSOLEONLY)
-                    builtin('fprintf',varargin{:});
-                end
+            end
+
+            % Write to console
+            if (obj.LOGMODE == LogMode.LOGTOCONSOLEONLY || ...
+                    obj.LOGMODE == LogMode.BOTH)
+                builtin('fprintf',varargin{:});
             end
         end
 
         function warning(obj, varargin)
             %WARNING Logs warnings using MATLAB's built-in warning mechanism
-            %
-            % Optionally writes to file if warnings are suppressed
 
             import Session.LogMode
 
-            if obj.showWarnings == true
-
+            % Display on console (and diary, if on)
+            if obj.showWarnings
                 % Use built-in warning function
-                builtin('warning', varargin{:});
-
-                % Since the warning is displayed using the built-in function,
-                % recording-to-file depends on diary on or off.
-
-            else
-                % If LOGTOFILEONLY, open and write to log
-                if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
-                        obj.LOGMODE == LogMode.BOTH
-
-                    % Open the log file
-                    obj.openLog();
-
-                    % Write warnings to the log
-                    builtin('fprintf',obj.LOGFID, 'Warning:\n');
-                    builtin('fprintf',obj.LOGFID, '%s\n', varargin{:});
-
-                    % Close the log if keepLogOpen is unset
-                    if ~obj.keepLogOpen
-                        obj.closeLog();
-                    end
-
-                end
+                builtin('fprintf', '\n');
+                builtin('warning', varargin{:});            
             end
 
+            % Write to log file
+            if obj.LOGMODE == LogMode.LOGTOFILEONLY || ...
+                    obj.LOGMODE == LogMode.BOTH
+
+                % Open the log file
+                obj.openLog();
+
+                % Start warning on a new separated line
+                builtin('fprintf', obj.LOGFID, '\n');
+
+                % Format warning for the log file
+                if numel(varargin) >= 2 && ...
+                        (ischar(varargin{1}) || isStringScalar(varargin{1})) && ...
+                        contains(string(varargin{1}), ':')
+                    warningID = string(varargin{1});
+                    warningMessage = sprintf(varargin{2}, varargin{3:end});
+                    builtin('fprintf', obj.LOGFID, ...
+                        'Warning [%s]: %s\n', warningID, warningMessage);
+                else
+                    warningMessage = sprintf(varargin{:});
+                    builtin('fprintf', obj.LOGFID, ...
+                        'Warning: %s\n', warningMessage);
+                end
+
+                % Close the log if keepLogOpen is unset
+                if ~obj.keepLogOpen
+                    obj.closeLog();
+                end
+            end
         end
 
         function diaryOff(obj)
@@ -195,12 +209,15 @@ classdef Log < handle
             %
             % Ensures log file and diary are properly closed
 
-            if obj.LOGFID >= 0
-                try
+            try
+                if obj.LOGFID >= 0
                     obj.closeLog();
-                    obj.diaryOff();
-                catch
                 end
+
+                if obj.diaryIsOn
+                    obj.diaryOff();
+                end
+            catch
             end
         end
 
@@ -213,7 +230,6 @@ classdef Log < handle
                 obj
                 opts.keepLogOpen = false         % Keep log open
             end
-            % Update OUTPUTDIR using value from inputSet
 
             if (obj.LOGMODE == Session.LogMode.LOGTOFILEONLY || ...
                     obj.LOGMODE == Session.LogMode.BOTH) && ...
@@ -221,7 +237,14 @@ classdef Log < handle
 
                 % Create log file
                 obj.logFileName = obj.session.name;
-                obj.LOGFID = fopen(obj.logFilePath(),"a+t");
+                [obj.LOGFID, msg] = fopen(obj.logFilePath(),"a+t");
+
+                % Check that log file was opened successfully
+                if obj.LOGFID == -1
+                    error('OpenSTREAM:Log:openLogError', ...
+                        'Unable to open log file %s: %s', ...
+                        obj.logFilePath(), msg);
+                end
 
                 % Update obj.keepLogOpen if specified
                 if opts.keepLogOpen
@@ -238,6 +261,15 @@ classdef Log < handle
 
                 % Reset obj.keepLogOpen
                 obj.keepLogOpen = false;
+            end
+        end
+
+        function closeAll(obj)
+            %CLOSEALL Close the log file and turn off the diary if active
+
+            obj.closeLog();
+            if obj.diaryIsOn
+                obj.diaryOff();
             end
         end
 

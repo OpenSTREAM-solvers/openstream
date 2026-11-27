@@ -19,14 +19,14 @@ classdef BoundaryConditions < Inputs.Input
         HIN              double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Inlet enthalpy [J/kg]
         MFLOW            double  {mustBePositive, mustBeScalarOrEmpty}     = []                    % Mass flow rate [kg/s]
         POWER      (1,1) double  {mustBeNonnegative}                       = 0                     % Total power [W]
-        WMESH      (1,:) double  {mustBePositive}                          = 1                     % Node size distribution [m]
+        WMESH      (1,:) double  {mustBeValidWMESH}                        = 1                     % Node size distribution [m]
         WPOWER     (:,:) double  {mustBeNonnegative}                       = 1                     % Relative power distribution(s) [-]
 
     end
 
     properties (SetAccess=private, GetAccess=private)
 
-        geometryObj (1,1) {isa(geometryObj, 'Inputs.Geometry')}                                    % Geometry object used for consistency checks
+        geometryObj      Inputs.Geometry {mustBeScalarOrEmpty}                                     % Geometry object used for consistency checks
 
     end
 
@@ -100,10 +100,11 @@ classdef BoundaryConditions < Inputs.Input
             % If extra fields in obj.inputStruct remain, warn user
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
+                fprintf('\n');
                 warning( ...
-                    '%s: These entries were not used: \n\t %s ', ...
-                    upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
-                    );
+                    'OpenSTREAM:BoundaryConditions:UnusedInputEntries', ...
+                    'These boundary-condition entries were not used:\n %s', ...
+                    strjoin(remainingInputStructFields, ' '));
                 for i=1:length(obj.inputStruct)
                     objs(i).extra=obj.inputStruct(i);
                 end
@@ -230,7 +231,8 @@ classdef BoundaryConditions < Inputs.Input
             end
 
             if length(opt.tIdx) < 2
-                disp('Error: At least 2 time indexes required to plot time series.');
+                warning('OpenSTREAM:BoundaryConditions:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
             obj = obj(opt.tIdx);
@@ -320,4 +322,13 @@ classdef BoundaryConditions < Inputs.Input
 
     end
 
+end
+
+function mustBeValidWMESH(w)
+    %MUSTBEVALIDWMESH First entry nonnegative (0 defines power at z = 0), others positive
+
+    if isempty(w) || w(1) < 0 || any(w(2:end) <= 0)
+        error('OpenSTREAM:BoundaryConditions:invalidWMESH', ...
+            'WMESH must be positive, except the first entry, which may be 0 to define the power at z = 0.');
+    end
 end

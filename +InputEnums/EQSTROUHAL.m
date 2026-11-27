@@ -11,7 +11,7 @@ classdef EQSTROUHAL
     % - SAWAI    — Based on SAWAI dataset (:cite:t:`LECORREMODEL`)
     % - MFVAL    — MFVAL model (under development)
     % - CUSTOM   — Custom model using user-defined :attr:`Inputs.Model.EQSTROUHALCOEF`
-    % - CSTFRQ   — Custom constant frequency using user-defined :attr:`Inputs.Model.CSTWAVEFREQ`
+    % - CSTFREQ  — Custom constant frequency using user-defined :attr:`Inputs.Model.CSTWAVEFREQ`
 
     enumeration
         RISO                 % RISO dataset model (Le Corre, 2022)

@@ -60,7 +60,7 @@ classdef FluidProperties
 
             arguments
                 P
-                modelObj (1,1)        {isa(modelObj, 'Model')}
+                modelObj (1,1) Inputs.Model
             end
 
             % Import the CoolPropWrapper class

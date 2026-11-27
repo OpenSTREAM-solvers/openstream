@@ -49,7 +49,7 @@ classdef Mixture < Solvers.AbstractField
     properties (SetAccess=?Solvers.AbstractSolver, GetAccess=?Solvers.AbstractPhase)
 
         DZ             (1,1) double  {mustBeNumeric}                       = 0                    % Axial step size [m]
-        fluid                        {isa(fluid,'Inputs.FluidProperties')}                        % :class:`Inputs.FluidProperties` object
+        fluid          Inputs.FluidProperties                                                     % :class:`Inputs.FluidProperties` object
 
     end
 
@@ -351,7 +351,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2
                 t = mix.relaxtevap;
             else
-                t = mix.relaxtevap(zIdx);
+                t = mix.relaxtevap(zIdx,:);
             end
         end
 
@@ -370,7 +370,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2
                 t = mix.relaxtcond;
             else
-                t = mix.relaxtcond(zIdx);
+                t = mix.relaxtcond(zIdx,:);
             end
         end
 
@@ -1094,7 +1094,9 @@ classdef Mixture < Solvers.AbstractField
                  case 'VAPOR'
                      % Single-phase vapor
                      hwallbt = mix.vapor.HWALL(twall,zIdx);
-                     Tbv     = mix.vapor.T(zIdx);
+
+                     Tbv = mix.vapor.T(zIdx);
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'DOUGALL'
                      % Dougall-Rohsenow model
 
@@ -1106,8 +1108,10 @@ classdef Mixture < Solvers.AbstractField
                      NU  = 0.023.*REG.^0.8.*PRG.^0.4;                      % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     %Tbv     = repmat(fld.TSAT,length(zIdx),1);
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
+                     hwallbt = repmat(hwallbt,1,geom.NWALL);
+
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'BISHOP'
                      % Bishop-Sandberg-Tong model
 
@@ -1117,16 +1121,18 @@ classdef Mixture < Solvers.AbstractField
                      RHOGRHOL = RHOG/RHOF;                                 % [-] Saturated vapor to liquid density
 
                      Tf = max(TSAT+10,(TSAT+twall)./2);                    % [K] Vapor film temperature, use TSAT+10 for robustness
-                     hf  = fld.H(Tf);                                      % [J/kg] Vapor film enthalpy 
-                     MUf = fld.MUV(hf);                                    % [Pa.s] Vapor viscosity at film temperature
-                     Kf  = fld.KV(hf);                                     % [Pa.s] Vapor conductivity at film temperature
-                     PRf = fld.PRANDTLV(hf);                               % [-] Gas Prandtl number at film temperature
+                     hf  = reshape(fld.H(Tf),[],geom.NWALL);               % [J/kg] Vapor film enthalpy 
+                     MUf = reshape(fld.MUV(hf),[],geom.NWALL);             % [Pa.s] Vapor viscosity at film temperature
+                     Kf  = reshape(fld.KV(hf),[],geom.NWALL);              % [W/m/K] Vapor conductivity at film temperature
+                     PRf = reshape(fld.PRANDTLV(hf),[],geom.NWALL);        % [-] Gas Prandtl number at film temperature
                      REf = mix.MFLUX(zIdx).*geom.HDIAM./MUf;               % [-] Vapor Reynolds number (based on total mass flux)
 
                      NU = 0.0193.*REf.^0.80.*PRf.^1.23.*RHOGRHOB.^0.68.*RHOGRHOL.^0.068; % [-] Nusselt number
 
                      hwallbt = NU.*Kf./geom.HDIAM;
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
+                     
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'MOECK'
                      % Groeneveld-Moeck model
                      % Note that the Vapor Reynolds number is derived based on the original reference but is equivalent to Dougall-Rohsenow model.
@@ -1140,12 +1146,15 @@ classdef Mixture < Solvers.AbstractField
                      Y   = 1-0.1.*(RHOF/RHOG-1).^0.4.*(1-Xe).^0.4;         % [-]
 
                      Tw  = max(TSAT+10,twall);                             % [K] Vapor wall temperature, use TSAT+10 for robustness                  
-                     PRW = fld.PRANDTLV(fld.H(Tw));                         % [J/kg] Vapor wall Prandtl number at wall temperature
+                     h   = reshape(fld.H(Tw),[],geom.NWALL);               % [J/kg] Vapor wall enthalpy
+                     PRW = reshape(fld.PRANDTLV(h),[],geom.NWALL);         % [J/kg] Vapor wall Prandtl number at wall temperature
 
                      NU  = coef(1).*REG.^coef(2).*PRW.^coef(3).*Y.^coef(4); % [-] Nusselt number
 
                      hwallbt = NU.*(KG/geom.HDIAM);
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
+                     
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
                  case 'DELORME'
                      % Groeneveld-Delorme model
                      % TODO: Check Vapor superheat (TVa) does not start at Tsat at CBT
@@ -1170,23 +1179,25 @@ classdef Mixture < Solvers.AbstractField
                      REHOM = mix.MFLUX(zIdx).*geom.HDIAM.*X1./MUG./VFHOM;  % [-] Reynolds number based on HEM
 
                      Xe = max(0,mix.XEQ(zIdx));                            % [-] Equilibrium vapor quality (can be larger than 1)
-                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*Xe+b2.*Xe.^2); % [-]
+                     Phi = a1.*PRG.^a2.*REHOM.^a3.*(mix.HFLUX(zIdx,:).*geom.HDIAM.*CPG./KG./HFG).^a4.*(b0+b1.*Xe+b2.*Xe.^2); % [-]
                      Phi = min(pi/2,max(0,Phi));                           % [-] Impose boundaries
 
                      HVa = max(HG,mix.H(zIdx))+HFG.*exp(-tan(Phi)).*exp(-(3.*VFHOM).^(-4)); % [J/kg] Superheated vapor enthalpy
                      Xa  = HFG.*Xe./(HVa-HF);                              % [-] Resulting vapor mass quality
-                     TVa = fld.T(HVa);                                      % [K] Resulting vapor temperature
+                     TVa = reshape(fld.T(HVa),[],geom.NWALL);              % [K] Resulting vapor temperature
 
                      Tf  = max(TSAT+10,(TVa+twall)/2);                     % [K] Film temperature, use TSAT+10 for robustness
-                     Hf  = fld.H(Tf);                                       % [J/kg] Resulting film enthalpy
+                     hf  = reshape(fld.H(Tf),[],geom.NWALL);               % [J/kg] Resulting film enthalpy
+                     MUf = reshape(fld.MUV(hf),[],geom.NWALL);             % [Pa.s] Vapor viscosity at film temperature
+                     Kf  = reshape(fld.KV(hf),[],geom.NWALL);              % [W/m/K] Vapor conductivity at film temperature
+                     PRf = reshape(fld.PRANDTLV(hf),[],geom.NWALL);        % [-] Vapor Prandtl number at film temperature
+                     RHOV = reshape(fld.RHOV(HVa),[],geom.NWALL);          % [kg/m3] Vapor density at vapor temperature
+                     REV  = mix.MFLUX(zIdx).*geom.HDIAM./MUf.*(Xa+(RHOV./RHOF).*(1-Xa)); % [-] Vapor Reynolds number
+                     
+                     NU   = 0.008348.*REV.^0.8774.*PRf.^0.6112;            % [-] Nusselt number
 
-                     RHOV = fld.RHOV(HVa);                                  % [kg/m3] Vapor density at vapor temperature
-                     REV  = mix.MFLUX(zIdx).*geom.HDIAM./fld.MUV(Hf).*(Xa+(RHOV/RHOF).*(1-Xa)); % [-] Vapor Reynolds number
-                     PRF  = fld.PRANDTLV(Hf);                               % [-] Vapor Prandtl number at film temperature
-                     NU   = 0.008348.*REV.^0.8774.*PRF.^0.6112;            % [-] Nusselt number
-
-                     KVF  = fld.KV(Hf);                                     % [W/m/K] Vapor conductivity at film temperature
-                     hwallbt = NU.*(KVF/geom.HDIAM);
+                     hwallbt = NU.*Kf./geom.HDIAM;
+                     
                      Tbv     = TVa;
                  case 'CONDIEIV'
                      % Condie-Bengston IV model
@@ -1197,14 +1208,14 @@ classdef Mixture < Solvers.AbstractField
                      KG = KG/1E3;                                          % [kW/m/K] Vapor conductivity
 
                      Tw  = max(TSAT+10,twall);                             % [K] Vapor wall temperature
-                     PRW = fld.PRANDTLV(fld.H(Tw));                         % [-] Vapor Prandtl number at wall temperature
+                     PRW = reshape(fld.PRANDTLV(fld.H(Tw)),[],geom.NWALL); % [-] Vapor Prandtl number at wall temperature
 
                      hwallbt = 0.00128.*KG.^0.4593.*PRW.^2.2598./geom.HDIAM.^0.8095./(1+Xe).^2.0514.*REG.^(0.6249+0.2043.*log(Xe+1)); % [kW/m^2/K]
                      hwallbt = hwallbt.*1E3;                               % [W/m^2/K]
-                     Tbv     = max(fld.TSAT,mix.T(zIdx));
-             end
 
-             Tbv = repmat(Tbv,geom.NWALL);
+                     Tbv = max(fld.TSAT,mix.T(zIdx));
+                     Tbv = repmat(Tbv,1,geom.NWALL);
+             end
              
              % Switch to full single-phase vapor
              %TODO: Check how transition should be performed (xeq = 1, min(htc), etc)
@@ -1233,7 +1244,7 @@ classdef Mixture < Solvers.AbstractField
             hsp   = mix.liquid.HWALL(twall,zIdx);                          % [W/m^2/K] Single-phase liquid
             hboil = mix.HWALLBOIL(zIdx);                                   % [W/m^2/K] Boiling
             hwall = max(hsp,hboil);                                        % [W/m^2/K]
-            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),geom.NWALL);         % [K] Saturated vapor temperature
+            Tbv   = repmat(mix.fluid.TSAT,length(zIdx),geom.NWALL);        % [K] Saturated vapor temperature
 
             % Post-CBT
             idxbt = mix.CBT(zIdx) | mix.MFBT(zIdx);                        % Boiling transition flag
@@ -1288,7 +1299,10 @@ classdef Mixture < Solvers.AbstractField
                 err = max(abs(twall(:)-twold(:)));
                 if err < MaxErr; break; end
             end
-            if err > MaxErr, fprintf('%s Wall temperature : not converged -> err = %0.4f\n',class(mix), err); end
+            if ~(err < MaxErr)
+                mix.warning('OpenSTREAM:Mixture:WallTemperatureNotConverged', ...
+                    'Wall temperature did not converge: residual = %0.4f [K].', err);
+            end
             tbulk = Tbl;
             tbulk(idxbt) = Tbv(idxbt);
         end
@@ -1804,7 +1818,7 @@ classdef Mixture < Solvers.AbstractField
                     p   = model.RELAXCONDFOCOEF(4);                        % [-] Exponent or normalized characteristics hydrodynamic heat flux scale
 
                     Rel = mix.liquid.RE(zIdx);                             % [-] Liquid Reynolds number
-                    qks = fld.QK/fld.QKMAX;                                  % [-] Kutateladze characteristic heat flux (normalized with maximum value)
+                    qks = fld.QK/fld.QKMAX;                                % [-] Kutateladze characteristic heat flux (normalized with maximum value)
 
                     Fo  = L.*(Re0./Rel).^n.*qks.^p;                        % [-] Empirical model
                     Fo  = max(2E-6,Fo);                                    % [-] Impose lower bound for numerical stability
@@ -1925,7 +1939,7 @@ classdef Mixture < Solvers.AbstractField
             if nargin < 2
                 t = mix.nearwalltrelax;
             else
-                t = mix.nearwalltrelax(zIdx);
+                t = mix.nearwalltrelax(zIdx,:);
             end
         end
 
@@ -1980,7 +1994,7 @@ classdef Mixture < Solvers.AbstractField
         end
 
         function heq = HNEARWALLEQ(mix, zIdx, skipAdjustments)
-            %HNEARWALLEQ Near-wall equilibrium entalpy [J/kg]
+            %HNEARWALLEQ Near-wall equilibrium enthalpy [J/kg]
             %
             % Compute the near-wall equilibrium enthalpy. May be considered
             % away from 1 for annular two-phase -flow
@@ -2005,7 +2019,7 @@ classdef Mixture < Solvers.AbstractField
                     ratio = model.NEARWALLHRATIO;
                 case InputEnums.NEARWALLH.FILM
                     % Mass flux-dependent input for annular two-phase flow
-                    G1 = 900; n = 0.35;                                    % Model constants (TODO: to be moved to model inputs)
+                    G1 = model.NEARWALLHFILMCOEF(1); n = model.NEARWALLHFILMCOEF(2); % Model constants
                     ratio = max(1,(mix.MFLUX(zIdx)./G1).^n);
             end
             heq = ratio.*h;
@@ -2215,7 +2229,7 @@ classdef Mixture < Solvers.AbstractField
     % MFLUX_CALC, XEQ_CALC, X_CALC, VF_CALC, RHO_CALC: Internal property calculations
     % RELAXTEVAP_CALC, RELAXTCOND_CALC, NEARWALLTRELAX_CALC: Time relaxation calculations
     % sigm: Computes sigmoid function for annular flow
-    % copyElement: Deep copy of mixture object
+    % copyElement: copy with rebuilt liquid/vapor phases
     % timeInterpolate, axialInterpolate: Interpolation utilities
 
     methods(Access = protected, Hidden = true)
@@ -2454,7 +2468,7 @@ classdef Mixture < Solvers.AbstractField
                     Press = mix.fluid.PRESSURE;                            % [Pa}
 
                     C1 = 4/(Press/Pcrit-(Press/Pcrit)^2);                  % [-]
-                    K1 = min(0.8,1./(1+exp(-mix.liquid.RE(1)/1E5)));       % [-]
+                    K1 = min(0.8,1./(1+exp(-mix.liquid.RE(1)/1E5)));       % [-] based on Re = liquid Reynolds number at channel inlet (EPRI definition)
 
                     r = (1+1.57.*RHOV./RHOL)./(1-K1);                      % [-]
                     K0 = K1 + (1-K1).*(RHOV./RHOL).^(1/4);                 % [-]
@@ -2472,7 +2486,10 @@ classdef Mixture < Solvers.AbstractField
                         if err < MaxErr, break; end
                         vf = mix.vf(zIdx);
                     end
-                    if err > MaxErr, fprintf('%s EPRI void model : not converged -> err = %0.4f\n',class(mix), err); end
+                    if ~(err < MaxErr)
+                        mix.warning('OpenSTREAM:Mixture:EPRIVoidModelNotConverged', ...
+                            'EPRI void model did not converge: residual = %0.4f [-].',err);
+                    end
             end
 
             function vf = vfslip(x,S)
@@ -2526,13 +2543,14 @@ classdef Mixture < Solvers.AbstractField
 
             % CHF
             Pr  = mix.P(end);                                              % [Pa] System pressure
-            G   = mix.MFLUX(1:mix(1).NZ);                                  % [kg/m^2/s] Mass flux
-            XEQ = mix.XEQ(1:mix(1).NZ);                                    % [-] Equilibrium quality
+            G   = mix.MFLUX(zIdx);                                         % [kg/m^2/s] Mass flux
+            XEQ = mix.XEQ(zIdx);                                           % [-] Equilibrium quality
+            Z = mix.Z(zIdx);                                               % [m] Location
             D   = geom.HDIAM;                                              % [m] Diameter
 
             switch model.CBT
                 case {InputEnums.CBT.NONE,InputEnums.CBT.ELEVATION}
-                    chf = nan(mix(1).NZ,geom.NWALL);                       % Skip CHF calculation
+                    chf = nan(numel(zIdx),geom.NWALL);                     % Skip CHF calculation
 
                 case InputEnums.CBT.BIASI
                     % Biasi correlation
@@ -2570,27 +2588,27 @@ classdef Mixture < Solvers.AbstractField
             end
 
             % Adjustment factors
-            chf = model.CBTMULT(mix.Z).*chf;                               % Apply user input multiplier
+            chf = model.CBTMULT(Z).*chf;                                   % Apply user input multiplier
 
             if max(model.KLOC) > 0
-                z0 = mix.KDIST(); z0(mix.Z < model.KLOC(1)) = 1E6;         % [m] Distance from upstream obstruction (inlet effect ignored)
+                z0 = mix.KDIST(zIdx); z0(Z < model.KLOC(1)) = 1E6;         % [m] Distance from upstream obstruction (inlet effect ignored)
                 chf = (1+model.CBTKEFFECT(1).*exp(model.CBTKEFFECT(2).*z0./geom.HDIAM)).*chf; % Apply spacer effect
             end
 
-            mix.chf(zIdx,:) = chf(zIdx,:);                                 % [W/m^2] Critical heat flux
+            mix.chf(zIdx,:) = chf;                                         % [W/m^2] Critical heat flux
 
             % CBT flag
             switch model.CBT
                 case InputEnums.CBT.ELEVATION
-                    cbt = mix.Z >= model.CBTELEVATION;                     % CBT indicator based on input elevation
+                    cbt = repmat(Z >= model.CBTELEVATION,1,geom.NWALL);    % CBT indicator based on input elevation
 
                 otherwise
-                    cbt = mix.HFLUX(1:mix.NZ,:) > chf;                     % CBT indicator based on CHF value
+                    cbt = mix.HFLUX(zIdx,:) > chf;                         % CBT indicator based on CHF value
             end
 
-            %cbt(mix.XEQ>=1,:) = true;                                      % Set cbt to 1 for Xeq >= 1
+            %cbt(mix.XEQ(zIdx)>=1,:) = true;                                % Set cbt to 1 for Xeq >= 1
 
-            mix.cbt(zIdx,:) = cbt(zIdx,:);                                 % [-] CBT flag
+            mix.cbt(zIdx,:) = cbt;                                         % [-] CBT flag
         end
 
         function MFBT_CALC(mix, zIdx)
@@ -2613,12 +2631,6 @@ classdef Mixture < Solvers.AbstractField
             %
            
             % TODO: Extend with additional MFBT models as necessary 
-
-
-            %MFBT_CALC Helper function to calculate the Minimum Film Boiling
-            % Transition and CBT flag
-
-            % TODO: Implement additional MFBT correlations
 
             fld   = mix.fluid;
             model = mix.inputSet.model;
@@ -2822,11 +2834,15 @@ classdef Mixture < Solvers.AbstractField
                     RHOL = mix.fluid.RHOL(mix.liquid.H(zIdx));             % [kg/m^3] Liquid density
 
                     % Linear model
-                    t0 = 0.0541; Lx = 0.88; Lg = 0.16; Lr = 386; G0 = 2000;% Model constants (TODO: to be moved to model inputs)
+                    t0 = model.NEARWALLRELAXFILMCOEF(1);                   % [s]
+                    Lx = model.NEARWALLRELAXFILMCOEF(2);                   % [-]
+                    Lg = model.NEARWALLRELAXFILMCOEF(3);                   % [-]
+                    Lr = model.NEARWALLRELAXFILMCOEF(4);                   % [-]
+                    G0 = model.NEARWALLRELAXFILMCOEF(5);                   % [kg/m^2/s]
                     t = t0.*(1-Lx.*X).*min(1,1+Lg.*(1-G./G0)).*(1+Lr.*(RHOV./RHOL).^2); % [s] Time relaxation
                     
                     % Behavior upstream OAF
-                    tups = 0.13;                                           % [s] Upstream time relaxation (TODO: to be replaced by relevant model)
+                    tups = model.NEARWALLRELAXFILMTUPS;                    % [s] Upstream time relaxation (TODO: to be replaced by relevant model)
                     t(mix.XEQ(zIdx)<=OAFX) = tups;                         % [s] Upstream OAF adjustment
             end
 
@@ -2842,23 +2858,18 @@ classdef Mixture < Solvers.AbstractField
     methods(Access = protected, Hidden = true)
 
         function cpObj = copyElement(obj)
-            %COPYELEMENT Creates a deep copy of the Mixture object with updated phase references.
+            %COPYELEMENT Copy Mixture object with its own Liquid and Vapor phases
             %
-            % Overrides the default copy behavior to ensure that the copied
-            % Mixture object correctly reinitializes its associated Liquid
-            % and Vapor phase objects. This is necessary because these phase
-            % objects hold internal references to the Mixture instance.
-            %
-            % Notes:
-            % - Uses matlab.mixin.Copyable base method for shallow copy
-            % - Reconstructs Liquid and Vapor objects to point to the copied mixture
+            % Shallow copy via AbstractField.copyElement, which also resets the
+            % per-object memoization store. The Liquid and Vapor phase objects
+            % hold a reference to their Mixture, so they are rebuilt to point to
+            % the copy. Other references (e.g. inputSet, fluid) are shared.
 
             import Solvers.Mixture.*
 
-            % Make a shallow copy of all four properties
-            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj = copyElement@Solvers.AbstractField(obj);
 
-            % Update liquid and vapor 'mix' property
+            % Rebuild phases so they reference the copied mixture
             cpObj.liquid = Liquid(cpObj);
             cpObj.vapor = Vapor(cpObj);
         end

@@ -1,6 +1,6 @@
 function jsonSignature = generateFncSignatures_Inputs(metaInputClass)
 % GENERATEFNCSIGNATURES_INPUTS A utility function for generating the code
-% suggestion json file (i.e. resourece/functionSignature.json) for the
+% suggestion json file (i.e. resources/functionSignature.json) for the
 % `writeInputFile` function in Inputs.Input subclasses. 
 %
 % There are two ways to use GENERATEFNCSIGNATURES_INPUTS. The first way is
@@ -9,19 +9,19 @@ function jsonSignature = generateFncSignatures_Inputs(metaInputClass)
 % output is the jsonencoded string of the provided Inputs.Input class
 %
 % The other way of using GENERATEFNCSIGNATURES_INPUTS is to provide a list
-% of metaclass objects that inherit Inputs.Input. 
+% of metaclass objects that inherit Inputs.Input.
+% In MATLAB, from the repository root (the openstream folder):
+%
+%   addpath(pwd, fullfile(pwd,'utilities'));
 %
 %   jsonStr = ...
 %       generateFncSignatures_Inputs( ...
 %           [?Inputs.Model, ?Inputs.Options, ?Inputs.BoundaryConditions, ?Inputs.Geometry]);
 %
 % This creates the full content of the functionSignatures.json file, and
-% can be copied to the clipboard using:
+% can be written to the functionSignatures.json file using:
 %
-%   clipboard('copy',jsonStr)
-%
-% And then pasted and overwrite the contents of
-% resources/functionSignatures.json .
+%   writelines(jsonStr, fullfile(pwd,'resources','functionSignatures.json'));
 %
 
 %   TODO: If more function signatures need to be created in the future,
@@ -66,7 +66,8 @@ function jsonSignature = generateFncSignatures_Inputs(metaInputClass)
     propList = metaInputClass.PropertyList;
     
     % Get list of user-facing properties
-    propNames = eval(metaInputClass.Name).listInputProperties();
+    inputObj = feval(metaInputClass.Name);
+    propNames = inputObj.listInputProperties();
     propStructs = struct('name', {}, 'kind', {}, 'type', {}, 'purpose', {});
 
     % Add `filePathName`

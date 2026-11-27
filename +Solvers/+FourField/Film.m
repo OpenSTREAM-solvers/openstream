@@ -20,24 +20,24 @@ classdef Film < Solvers.AbstractFilm
 
         % Solver state
 
-        NZ                                                                 = 0                    % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
-        NTIME                                                              = 0                    % Number of time steps [-]
-        TIME                                                               = 0                    % Time series [s]
-        DT                                                                 = 0                    % Time step size [s] from :attr:`Inputs.options.TSTEP`
-        TIDX                                                               = 1                    % Time step index [-]
-        Z                                                                  = 1.                   % Elevation [m]
-        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                   % Film heat flux [W/m^2]
+        NZ                                                                 = 0                     % Number of axial steps [-] from :attr:`Inputs.Model.NNODES`
+        NTIME                                                              = 0                     % Number of time steps [-]
+        TIME                                                               = 0                     % Time series [s]
+        DT                                                                 = 0                     % Time step size [s] from :attr:`Inputs.options.TSTEP`
+        TIDX                                                               = 1                     % Time step index [-]
+        Z                                                                  = 1.                    % Elevation [m]
+        HFLUX        (:,:) double  {mustBeNumeric,mustBeNonnegative}       = 1.                    % Film heat flux [W/m^2]
 
         % Iteration properties
 
-        ITR                                                                                       % Iteration tracking
+        ITR                                                                                        % Iteration tracking
 
     end
 
     properties (SetAccess=?Solvers.AbstractSolver)
 
-        wave           (1,1)         {isa(wave,'Solvers.FourField.Wave')}   = NaN                 % :class:`Solvers.FourField.Wave` object
-        base           (1,1)         {isa(base,'Solvers.FourField.Base')}   = NaN                 % :class:`Solvers.FourField.Base` object
+        wave         Solvers.FourField.Wave {mustBeScalarOrEmpty}                                  % :class:`Solvers.FourField.Wave` object
+        base         Solvers.FourField.Base {mustBeScalarOrEmpty}                                  % :class:`Solvers.FourField.Base` object
 
     end
 
@@ -45,9 +45,9 @@ classdef Film < Solvers.AbstractFilm
 
         % Flow properties
 
-        W                                                                                         % Mass flow rate [kg/s]
-        U                                                                                         % Velocity [m/s]
-        H                                                                                         % Specific enthalpy [J/kg]
+        W                                                                                          % Mass flow rate [kg/s]
+        U                                                                                          % Velocity [m/s]
+        H                                                                                          % Specific enthalpy [J/kg]
 
     end
 
@@ -108,10 +108,9 @@ classdef Film < Solvers.AbstractFilm
             %
             % - film — :class:`Solvers.FourField.Film` object
 
-            %TODO: a more appropriate value may be needed for film velocity.
-
-            %u = (film.base.W.*film.base.U + film.wave.W.*film.wave.U)./film.W;
-            u = film.W./(film.base.W./film.base.U + film.wave.W./film.wave.U);
+            tb = film.base.W./film.base.U;  tb(film.base.W==0) = 0;        % [kg/m] Base film term
+            tw = film.wave.W./film.wave.U;  tw(film.wave.W==0) = 0;        % [kg/m] Wave term
+            u  = film.W./(tb + tw);
             u(film.W==0) = film.base.U(film.W==0);
         end
 
@@ -146,7 +145,7 @@ classdef Film < Solvers.AbstractFilm
                 Wf = repmat(Wf,length(zIdx),1);                            % [kg/s]
             end
 
-            if ~isobject(film.wave) || ~isobject(film.base)
+            if isempty(film.wave) || isempty(film.base)
                 error('OpenSTREAM:FourFieldSolver:SolverInitializationRequired','Film.DISTRIBUTEOAFW: base or wave not initialized');
             end
 
@@ -171,12 +170,11 @@ classdef Film < Solvers.AbstractFilm
             zIdx = zIdx(:);
 
             perim = film.inputSet.geometry.PERIM;                          % [m] Perimeter
-            eqthick_b = film.base.EQTHICK(zIdx);                           % [kg/s] Base equilibrium thickness
+            eqthick_b = film.base.EQTHICK(zIdx);                           % [kg/s] Base film equilibrium thickness
 
-            Wb = eqthick_b .* film.base.U(zIdx) .* perim .* film.base.fluid.RHOF;  % [kg/s] Base mass flow rate
+            Wb = eqthick_b.*film.base.U(zIdx,:).*perim.*film.fluid.RHOF;   % [kg/s] Base film mass flow rate
             eb = Wb./Wf;
             eb = min(eb,1);
-
         end
 
         function initializeBaseAndWave(film, WIN, ITR)
@@ -195,8 +193,8 @@ classdef Film < Solvers.AbstractFilm
             %% Constant properties
 
             % Create base, wave and set film reference
-            if ~isobject(film.base), film.base = Solvers.FourField.Base(film); end
-            if ~isobject(film.wave), film.wave = Solvers.FourField.Wave(film); end
+            if isempty(film.base), film.base = Solvers.FourField.Base(film); end
+            if isempty(film.wave), film.wave = Solvers.FourField.Wave(film); end
 
             % Stop if no input arguments (except film)
             if nargin == 1
@@ -267,11 +265,12 @@ classdef Film < Solvers.AbstractFilm
 
             for i = 1:length(targetObj)
                 % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
+                if ~isequal(size(srcObj.Z), size(targetObj(i).Z)) || any(srcObj.Z ~= targetObj(i).Z)
+                    classType = class(srcObj);
                     throw( ...
                         MException( ...
                         'FilmError:copyFlowPropertiesError', ...
-                        'Source and target objects have mismatched spatial meshes' ...
+                        'Source and target objects (%s) have mismatched spatial meshes', classType ...
                         ) ...
                         );
                 end
@@ -280,7 +279,7 @@ classdef Film < Solvers.AbstractFilm
                 propNames = {'base', 'wave'};
                 for j = 1:length(propNames)
                     % Copy base and wave flow properties
-                    srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}));
+                    srcObj.(propNames{j}).copyFlowProperties(targetObj(i).(propNames{j}), all = opts.all);
                 end
             end
         end
@@ -290,26 +289,22 @@ classdef Film < Solvers.AbstractFilm
     methods (Access = protected)
 
         function cp = copyElement(film)
-            %COPYELEMENT Customized copy method for Film object
+            %COPYELEMENT Copy Film object with its own base and wave sub-objects
             %
-            % Creates a deep copy of the Film object, including its base and wave
-            % sub-objects. Updates references so that copied sub-objects point to the
-            % new Film instance.
-            %
-            % Inputs:
-            %
-            % - film — :class:`Solvers.FourField.Film` object
+            % Shallow copy via AbstractFilm/AbstractField.copyElement (resets the
+            % memoization store), then copies the base and wave sub-objects and
+            % points them to the new Film. Other references are shared.
 
             % Shallow copy film
-            cp = copyElement@matlab.mixin.Copyable(film);
+            cp = copyElement@Solvers.AbstractFilm(film);
 
-            % Deep copy of film base and wave
+            % Copy base and wave if already created, and point them to the copied film
             propNames = {'base', 'wave'};
             for j = 1:length(propNames)
-                % Make shallow copy of base and wave
-                cp.(propNames{j}) = copy(cp.(propNames{j}));
-                % Reference film to srcObj
-                cp.(propNames{j}).film = cp;
+                if ~isempty(cp.(propNames{j}))
+                    cp.(propNames{j}) = copy(cp.(propNames{j}));
+                    cp.(propNames{j}).film = cp;
+                end
             end
         end
 

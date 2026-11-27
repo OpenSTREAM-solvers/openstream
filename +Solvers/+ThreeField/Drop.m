@@ -29,14 +29,14 @@ classdef Drop < Solvers.AbstractField
 
         % Mixture
         
-        mix          (1,1)        {isa(mix, 'Solvers.Mixture.Mixture')}    = NaN                  % :class:`Solvers.Mixture.Mixture` object
+        mix          Solvers.Mixture.Mixture {mustBeScalarOrEmpty}                                % :class:`Solvers.Mixture.Mixture` object
 
     end
 
     properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
 
         DZ           (1,1) double  {mustBeNumeric}                         = 0                    % [m] Axial step size
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}                          % :class:`Inputs.FluidProperties` object
+        fluid        Inputs.FluidProperties                                                       % :class:`Inputs.FluidProperties` object
     
     end
 
@@ -169,11 +169,11 @@ classdef Drop < Solvers.AbstractField
                     mdep = zeros(length(zIdx),1);
                 case InputEnums.DEPOSITION.GOVAN
                     % Govan & Hewitt drop deposition model
-                    if conc/rhog < 0.3
-                        mdep = 0.18.*conc./sqrt(rhog*hdiam/sig);           % [kg/m^2/s] Deposition mass flux
-                    else
-                        mdep = 0.083.*(conc./rhog).^(-0.65).*conc./sqrt(rhog*hdiam/sig); % [kg/m^2/s] Deposition mass flux
-                    end
+                    cr   = conc./rhog;
+                    base = conc./sqrt(rhog*hdiam/sig);
+                    mdep = 0.18.*base;                                     % [kg/m^2/s] Deposition mass flux, cr < 0.3
+                    hi   = cr >= 0.3;
+                    mdep(hi) = 0.083.*cr(hi).^(-0.65).*base(hi);           % [kg/m^2/s] Deposition mass flux, cr >= 0.3
                 case InputEnums.DEPOSITION.OKAWA
                     % Okawa drop deposition model
                     kd = 0.0632.*(conc./rhog).^-0.5.*sqrt(sig./(rhog.*hdiam));% [m/s] Deposition mass transfer coefficient
@@ -201,8 +201,9 @@ classdef Drop < Solvers.AbstractField
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
             perim = drop.inputSet.geometry.PERIM;                          % [m] Perimeter
+            muf   = drop.fluid.MUF;                                        % [kg/m^3] Saturated liquid viscosity
 
-            re = 4.*drop.W(zIdx)./drop.MU(zIdx)./sum(perim);               % [-]
+            re = 4.*drop.W(zIdx)./muf./sum(perim);                         % [-]
         end
 
         function vr = VR(drop,zIdx)
@@ -322,7 +323,7 @@ classdef Drop < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
-            ai = drop.DENSITY(zIdx).*drop.AREA(zIdx);                      % [m^-1]
+            ai = drop.DENSITY(zIdx).*drop.AREA(zIdx);              fldfkuid        % [m^-1]
         end
 
         function cd = DRAG(drop,zIdx)
@@ -338,10 +339,15 @@ classdef Drop < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:drop(1).NZ).'; end
 
+            model = drop.inputSet.model;
+
+            RHOV = drop.fluid.RHOV(drop.H(zIdx)); 
+            MUV  = drop.fluid.MUV(drop.H(zIdx));
+            RHOF = drop.fluid.RHOF;
+            SIG  = drop.fluid.SIGMA; 
+
             Re = drop.REV(zIdx);
             Re(Re <= 1E-3) = 1E-3;                                         % [-] Avoid division by 0
-
-            model = drop.inputSet.model;
 
             switch model.DROPDRAG
                 case InputEnums.DROPDRAG.CONSTANT
@@ -356,11 +362,13 @@ classdef Drop < Solvers.AbstractField
                     % Viscous model
                     cd = 24./Re.*(1+0.15.*Re.^0.687);                      % [-]
 
-                case InputEnums.DROPDRAG.DISTORDED
+                case InputEnums.DROPDRAG.DISTORTED
                     % Distorted fluid particle (bubbly flow n=2.5)
+                    % TODO: Review the model
                     %mult = sqrt(2)/3.*((1+17.67.*(1-liquid.VF(vapor,zIdx)).^(2.6))./(18.67.* (1-liquid.VF(vapor,zIdx)).^3)).^2;
-                    mult = sqrt(2)/3.*(1-liquid.VF(vapor,zIdx)).^2;
-                    cd = liquid.VISCL(zIdx).*Re.*mult;                     % [-]
+                    mult = sqrt(2)/3.*(1-drop.mix.liquid.VF(zIdx)).^2;
+                    Nmu  = MUV./sqrt(RHOV.*SIG.*sqrt(SIG./(model.G.*abs(RHOF-RHOV)))); % [-] viscosity number (same as TwoFluid VISC)
+                    cd = Nmu.*Re.*mult;                                    % [-]
             end
 
             cd = min(cd,1);
@@ -447,7 +455,10 @@ classdef Drop < Solvers.AbstractField
             ent   = -film.MENT(zIdx);                                      % [kg/m^2/s] Film entrainment mass flux
             rhof = drop.fluid.RHOF;                                        % [kg/m^3] Liquid density
 
-            Fent = sum(perim.*(film.U(zIdx,:)-drop.U(zIdx)).*ent,2).*rhof.*drop.U(zIdx)./drop.W(zIdx); % [N/m^3]
+            Wd  = drop.W(zIdx);
+
+            Fent = sum(perim.*(film.U(zIdx,:)-drop.U(zIdx)).*ent,2).*rhof.*drop.U(zIdx)./Wd; % [N/m^3]
+            Fent(Wd == 0) = 0;
 
             Fent = drop.mix.AFDISTR(0,Fent,zIdx);
         end
@@ -537,29 +548,7 @@ classdef Drop < Solvers.AbstractField
             if nargin < 3, zIdx = (1:drop(1).NZ).'; end
             if nargin < 4, opt = 0; end                                    % Option for complete or simplified force balance
 
-            options = drop.inputSet.options;
-
-            iter(1).U = drop.U(zIdx);                                      % [m/s]
-            iter(1).Ftot = drop.FTOT(film,zIdx,opt);                       % [N/m^3]
-
-            iter(2).U = iter(1).U+0.1;                                     % [m/s]
-            drop.U(zIdx) = iter(2).U;                                      % [m/s]
-            iter(2).Ftot = drop.FTOT(film,zIdx,opt);% [N/m^3]
-
-            eps = 1.0;
-            for k = 3:options.UDEQUILMAXITER
-                Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot); % [m/s]
-                iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;               % [m/s]
-                drop.U(zIdx) = iter(k).U;                                  % [m/s]
-                iter(k).Ftot = drop.FTOT(film,zIdx,opt);                   % [N/m^3]
-                err = max(abs(iter(k).Ftot),[],'all');                     % [N/m^3]
-                if err < options.UDEQUILTOL, break; end
-            end
-            if err > options.UDEQUILTOL
-                drop.log('\nEquilibrium drop velocity not converged at node %d after %d iterations. \nVolumetric force residual = %g N/m^3.\n',zIdx,k,err);
-            end
-
-            Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx),drop.U(zIdx),zIdx);
+            Uequil = drop.SECANTU(@() drop.FTOT(film,zIdx,opt), zIdx);
         end
 
         function X = X(drop,zIdx)
@@ -582,22 +571,42 @@ classdef Drop < Solvers.AbstractField
 
     end
 
-    methods(Access = protected)
+    methods (Access = private)
 
-        function cpObj = copyElement(obj)
-            %COPYELEMENT Overrides copyElement method for Drop class
+        function Uequil = SECANTU(drop, ftotFcn, zIdx)
+            %SECANTU Secant search for the drop velocity giving zero net force [m/s]
             %
-            % Creates a shallow copy of the Drop object while preserving references
-            % to associated mixture and phase properties.
+            % drop.U(zIdx) is restored on exit; the result is returned only.
             %
             % Inputs:
             %
-            % - obj   — :class:`Solvers.ThreeField.Drop` object
+            % - drop    — :class:`Solvers.ThreeField.Drop` object
+            % - ftotFcn — Function handle returning the total force at the current drop.U [N/m^3]
+            % - zIdx    — Axial indices to evaluate
 
-            import Solvers.ThreeField.*
-
-            % Make a shallow copy of all four properties
-            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            options = drop.inputSet.options;
+            U0 = drop.U(zIdx);
+ 
+            Ua = U0;       Fa = ftotFcn();
+            Ub = U0 + 0.1; drop.U(zIdx) = Ub; Fb = ftotFcn();
+            err = max(abs(Fb),[],'all');                                   % [N/m^3]
+            for k = 3:options.UDEQUILMAXITER
+                if err < options.UDEQUILTOL, break; end
+                dF = Fb - Fa;
+                Un = Ub - Fb.*(Ub - Ua)./dF;                               % [m/s] Secant step
+                stuck = (dF == 0) | ~isfinite(Un);
+                Un(stuck) = Ub(stuck);                                     % Keep last value where secant is undefined
+                Ua = Ub; Fa = Fb;
+                Ub = Un; drop.U(zIdx) = Ub; Fb = ftotFcn();
+                err = max(abs(Fb),[],'all');
+            end
+            if ~(err < options.UDEQUILTOL)                                 % Also catches NaN
+                drop.warning('OpenSTREAM:ThreeField:EquilibriumDropVelocityNotConverged', ...
+                    'Equilibrium drop velocity did not converge at node(s) %s. Volumetric force residual = %g N/m^3.', ...
+                    mat2str(zIdx(:).'), err);
+            end
+            drop.U(zIdx) = U0;                                             % Restore state (no side effect)
+            Uequil = drop.mix.AFDISTR(drop.mix.liquid.U(zIdx), Ub, zIdx);
         end
 
     end

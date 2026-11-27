@@ -27,9 +27,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
         % Z            (:,1) double  {mustBeNumeric}                         = 1.        % Elevation [m]
         % DZ           (1,1) double  {mustBeNumeric}                         = 0         % Axial step size [m]
         %
-        % fluid       {isa(fluid,'Inputs.FluidProperties')}
-        % boundaryConditions
-        %
         % filmInit
         % dropInit
         % film
@@ -47,7 +44,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
     methods
 
-        solve(tfSolver)
+        solve(ffSolver)
 
     end
 
@@ -76,8 +73,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             % - Time/space discretization and boundary condition interpolation initialized by :class:`Solvers.Mixture.MixtureSolver` are used
 
             arguments
-                inputSet            {isa(inputSet,'Inputs.InputSet')}
-                mixSolver           {isa(mixSolver,'Solvers.Mixture.MixtureSolver')} = Solvers.Mixture.MixtureSolver(inputSet)
+                inputSet   (1,1) Inputs.InputSet
+                mixSolver  (1,1) Solvers.Mixture.MixtureSolver             = Solvers.Mixture.MixtureSolver(inputSet)
             end
 
             % Call abstract class constructor
@@ -209,10 +206,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 drp.W = mix.liquid.W-sum(flm.W,2);                         % [kg/s] Recalculate consistent drop flow rate
 
                 % Initialize velocity [m/s]
-                %drp.U = mix.liquid.U;                                      % [m/s] Drop velocity
                 drp.U = drp.USLIP();                                       % [m/s] Drop velocity
-
-                %flm.U = repmat(mix.liquid.U,1,geom.NWALL); % [m/s]
 
                 % Initialize enthalpy [J/kg] by number of spatial nodes, NZ
                 drp.H = repmat(fluid.HF,ffSolver.NZ,1);
@@ -304,8 +298,6 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     Wd(k) = 0.5.*W;                                        % [kg/s] Initial guess: 50% of liquid mass in droplet field
                 elseif k == 2
                     Wd(k) = (0.7-double(delta(k-1)>0)*0.4).*W;             % [kg/s] Next guess: 30% or 70% of liquid mass in droplet field (depending on sign of delta)
-                elseif k == 3
-                    Wd(k) = max(min(interp1(delta,Wd,0,'linear','extrap'),W),0); % [kg/s] Next guess
                 else
                     if all(diff(delta)./diff(Wd) > 0)
                         % Expected behavior
@@ -324,15 +316,15 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 end
                 drp.W(zIdx) = Wd(k);                                       % [kg/s] Update droplet mass flowrate
                 flm.distributeOAFW((W-drp.W(zIdx)).*perim./sum(perim), zIdx); % [kg/s] Corresponding film flow distribution (considered uniform)
-                delta(k) = drp.MDEP(zIdx).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entrainment mass flow rate
+                delta(k) = drp.MDEP(zIdx,false).*sum(perim)+sum(flm.MENT(zIdx).*perim,2); % [kg/s/m] Linear deposition - entrainment mass flow rate
                 err = abs(delta(k));
                 if err < errMax, break; end
             end
             
             e0 = drp.W(zIdx)./W;                                           % [-] Entrained ratio
 
-            if err > errMax
-                ffSolver.log('\nEquilibrium entrainment ratio at onset of annular flow not converged at node %d after %d iterations. \nLinear mass flux residual = %g kg/s/m; entrained ratio = %g.\n',zIdx,k,err,e0);
+            if ~(err < errMax)
+                ffSolver.warning('OpenSTREAM:FourFieldSolver:EntrainmentRatioNotConverged','Equilibrium entrainment ratio at onset of annular flow did not converge at node %d after %d iterations. Linear mass flux residual = %g kg/s/m; entrained ratio = %g.',zIdx, k,err,e0);
             end
         end
 
@@ -379,8 +371,12 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opts.resize       (1,1) double {mustBeNonnegative}                                                                                     = 0
             end
 
+            plotter = [];
+
             if length(opts.zIdx) < 2
-                ffSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
 
@@ -469,7 +465,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'ylabel'   , 'Mass flow rate [kg/s]');
                     plotter.plot(sum([drp.W(opts.zIdx) flm.W(opts.zIdx,:)],2),'Liquid'                              );
                     plotter.plot(drp.W(opts.zIdx)                            ,'Drop'    ,'XData',zaf,'subset',zafIdx);
-                    plotter.plot(flm.W(opts.zIdx)                            ,'Film'    ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.W(opts.zIdx,:)                          ,'Film'    ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.wave.W(opts.zIdx,:)                     ,'Wave'    ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.base.W(opts.zIdx,:)                     ,'Base'    ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.base.WMIN(drp,opts.zIdx)                 ,'Base min','XData',zaf,'subset',zafIdx);
@@ -524,7 +520,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                         'xlabel'   ,   'Axial position [m]', ...
                         'ylabel'   , 'Field velocity [m/s]');
                     plotter.plot(drp.U(opts.zIdx)       ,'Drop' ,'XData',zaf,'subset',zafIdx);
-                    plotter.plot(flm.U(opts.zIdx)       ,'Film' ,'XData',zaf,'subset',zafIdx);
+                    plotter.plot(flm.U(opts.zIdx,:)     ,'Film' ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.wave.U(opts.zIdx,:),'Wave' ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(flm.base.U(opts.zIdx,:),'Base' ,'XData',zaf,'subset',zafIdx);
                     plotter.plot(mix.vapor.U(opts.zIdx) ,'Vapor'                            );
@@ -781,6 +777,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             if isempty(opt.wall), opt.wall = 1:ffSolver.inputSet.geometry.NWALL; end
 
+            plotter = [];
+
             switch opt.solveMode
                 case 'REAL'
                     if isempty(opt.tIdx), opt.tIdx = 1:ffSolver.NTIME; end
@@ -802,7 +800,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             time = [flm.TIME];
             if length(time) < 2
-                ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
             if opt.reverseTime
@@ -1037,7 +1037,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             end
         end
 
-        function plotzt(ffSolver, opt)
+        function fh = plotzt(ffSolver, opt)
             %PLOTZT Plots 2D time/elevation distributions of four-field parameters.
             %
             % Generates surface plots of selected four-field related parameters
@@ -1068,7 +1068,7 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
 
             arguments
                 ffSolver
-                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {         'HFLUX',             'W',       'U','FREQUENCY'}
+                opt.display      {mustBeA(opt.display,{'cell','char'})}                   = {'HFLUX','W','U','FREQUENCY'}
                 opt.label        {mustBeA(opt.label,{'cell','char'})}                     = {}
                 opt.unit         {mustBeA(opt.unit,{'cell','char'})}                      = {}
                 opt.field        {mustBeMember(opt.field,{'drop','film','wave','base'})}  = {'wave','base'}
@@ -1086,6 +1086,8 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
             if ~iscell(opt.label)  , opt.label   = {opt.label}  ; end
             if ~iscell(opt.unit)   , opt.unit    = {opt.unit}   ; end
 
+            fh = [];
+
             display = {         'HFLUX',             'W',                               'WL',       'U',    'THICK','AMPLITUDE','FREQUENCY','SPACING','WIDTH',      'EPSILON',                'BETA',               'BETAP',                'ETA',             'FDRY', 'SHAPEFACTOR'};
             label   = {'wall heat flux','mass flow rate','mass flow rate per unit perimeter','velocity','thickness','amplitude','frequency','spacing','width','mass fraction','interfacial fraction','evaporation fraction','deposition fraction','dry time fraction','shape factor'};
             unit    = {         'W/m^2',          'kg/s',                           'kg/s/m',     'm/s',        'm',        'm',       'Hz',      'm',    'm',            '-',                   '-',                   '-',                  '-',                '-',           '-'};
@@ -1099,7 +1101,9 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                 opt.unit    = unit(ismember(display,opt.display));
             end
             if isempty(opt.label) || isempty(opt.unit)
-                tfSolver.log('Error: Labels and/or units must be specified for the selected parameters.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:MissingLabelOrUnits', ...
+                    'Labels and/or units must be specified for the selected parameters.');
                 return
             end
 
@@ -1117,75 +1121,78 @@ classdef FourFieldSolver < Solvers.ThreeField.ThreeFieldSolver
                     flm = ffSolver.filmInit(opt.tIdx);
                     solveMode = '- Null transient';
             end
-            time = [drp(opt.tIdx).TIME];
             if isempty(opt.wall)
                 opt.wall = 1:ffSolver.inputSet.geometry.NWALL;
             end
             if length(opt.zIdx) < 2
-                ffSolver.log('Error: At least 2 axial indexes required to plot axial distributions.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientAxialIndexes', ...
+                    'At least 2 axial indexes are required to plot axial distributions.');
                 return
             end
             if length(opt.tIdx) < 2
-                ffSolver.log('Error: At least 2 time indexes required to plot time series.\n');
+                ffSolver.warning( ...
+                    'OpenSTREAM:FourFieldSolver:InsufficientTimeIndexes', ...
+                    'At least 2 time indexes are required to plot time series.');
                 return
             end
 
             for k = opt.wall
                 if ismember('drop',opt.field)
                     name = ['Time/axial distributions of four-field (drop) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_drp = figure('name',name);
+                    fh.drop = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_drp(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
+                            ax_drop(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                         elseif contains(opt.display{i},{'WL','THICK','AMPLITUDE','FREQUENCY','SPACING','WIDTH','EPSILON','BETA','BETAP','ETA','FDRY','SHAPEFACTOR'})
                             continue
                         else
-                            ax_drp(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
+                            ax_drop(i) = drp.plotzt(opt.display{i},['Drop '    opt.label{i}],opt.unit{i},k,opt,flm,opt.annular);
                         end
                     end
-                    sgtitle(fh_drp,name,'FontSize',18);
+                    sgtitle(fh.drop,name,'FontSize',18);
                 end
                 if ismember('film',opt.field)
                     name = ['Time/axial distributions of four-field (film) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_flm = figure('name',name);
+                    fh.film = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_flm(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
+                            ax_film(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                         elseif contains(opt.display{i},{'AMPLITUDE','FREQUENCY','SPACING','WIDTH','EPSILON','BETA','BETAP','ETA','FDRY','SHAPEFACTOR'})
                             continue
                         else
-                            ax_flm(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
+                            ax_film(i) = flm.plotzt(opt.display{i},['Film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
-                    sgtitle(fh_flm,name,'FontSize',18);
+                    sgtitle(fh.film,name,'FontSize',18);
                 end
                 if ismember('wave',opt.field)
                     name = ['Time/axial distributions of four-field (wave) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_wav = figure('name',name);
+                    fh.wave = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_wav(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
+                            ax_wave(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                         elseif contains(opt.display{i},{'FDRY'})
                             continue
                         else
-                            ax_wav(i) = flm.plotzt(['wave.' opt.display{i}],['Wave '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
+                            ax_wave(i) = flm.plotzt(['wave.' opt.display{i}],['Wave '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
-                    sgtitle(fh_wav,name,'FontSize',18);
+                    sgtitle(fh.wave,name,'FontSize',18);
                 end
                 if ismember('base',opt.field)
                     name = ['Time/axial distributions of four-field (base) parameters ' solveMode ' - Wall ' num2str(k)];
-                    fh_bas = figure('name',name);
+                    fh.base = figure('name',name);
                     for i = 1:length(opt.display)
                         if contains(opt.display{i},{'HFLUX','DP'})
-                            ax_bas(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt,[],0,time);
+                            ax_base(i) = mix.plotzt(opt.display{i},['Mixture ' opt.label{i}],opt.unit{i},k,opt);
                         elseif contains(opt.display{i},{'AMPLITUDE','FREQUENCY','SPACING','WIDTH','SHAPEFACTOR'})
                             continue
                         else
-                            ax_bas(i) = flm.plotzt(['base.' opt.display{i}],['Base film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
+                            ax_base(i) = flm.plotzt(['base.' opt.display{i}],['Base film '    opt.label{i}],opt.unit{i},k,opt,drp,opt.annular);
                         end
                     end
-                    sgtitle(fh_bas,name,'FontSize',18);
+                    sgtitle(fh.base,name,'FontSize',18);
                 end
             end
         end

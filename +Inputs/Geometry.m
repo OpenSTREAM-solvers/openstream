@@ -77,10 +77,11 @@ classdef Geometry < Inputs.Input
             % If extra fields in obj.inputStruct remain, warn user
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
+                fprintf('\n');
                 warning( ...
-                    '%s: These entries were not used: \n\t %s ', ...
-                    upper(class(obj)), sprintf('%s ',remainingInputStructFields{:}) ...
-                    );
+                    'OpenSTREAM:Geometry:UnusedInputEntries', ...
+                    'These geometry entries were not used:\n %s', ...
+                    strjoin(remainingInputStructFields, ' '));
                 obj.extra = obj.inputStruct;
             end
 
@@ -89,7 +90,7 @@ classdef Geometry < Inputs.Input
                 defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
                 if nargout == 0
                     warning('OpenSTREAM:Geometry:defaultValueUsedWarning', ...
-                        sprintf('%s\n',defaultValueWarningString));
+                        '%s',defaultValueWarningString);
                 else
                     w = struct('warnID', 'OpenSTREAM:Geometry:defaultValueUsedWarning', ...
                         'msg', defaultValueWarningString);

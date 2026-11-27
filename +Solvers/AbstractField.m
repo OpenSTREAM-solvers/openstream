@@ -17,17 +17,15 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
 
     end
 
-    properties (Access = protected)
+    properties (Access = protected, Transient)
 
-        %memoizedFunctions = dictionary();
-        % Currently using containers.Map() for MATLAB version
-        memoizedFunctions = containers.Map();                              % Memoization store for function handles
+        memoizedFunctions = [];                                            % Per-object memoization store, created on first use
 
     end
 
     properties (Access={?Solvers.AbstractSolver,?Solvers.AbstractPhase, ?Solvers.AbstractField})
 
-        inputSet                   {isa(inputSet,'Inputs.InputSet')}                              % :class:`Inputs.InputSet` object
+        inputSet     Inputs.InputSet                                       % :class:`Inputs.InputSet` object
 
     end
 
@@ -143,22 +141,24 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
         end
 
         function out = memoizeFunction(obj, methodStr, methodHandle, varargin)
-            %MEMOIZEDMETHOD Registers and retrieves memoized function handles
+            %MEMOIZEFUNCTION Call methodHandle(varargin{:}) with per-object result caching
             %
-            % Avoids redundant computation by caching results.
+            % Only use for methods whose result depends solely on their input
+            % arguments, not on object properties that change between calls
+            % (e.g. H, W, U during iterations); otherwise stale values are returned.
             %
-            % Adapted from https://stackoverflow.com/a/75037451
+            % Approach based on https://stackoverflow.com/a/75037451
 
-            %For the first call with a particular method, create and
-            %memoize a function handle view of the method
-            if ~isConfigured(obj.memoizedFunctions) || ~obj.memoizedFunctions.isKey(methodStr)
-                fn_method = @(varargin)methodHandle(varargin{:});
-                fn = memoize(fn_method);
-                obj.memoizedFunctions(methodStr) = fn;
+            % On first call for methodStr, create the per-object store
+            % (if needed) and a memoized wrapper
+            if isempty(obj.memoizedFunctions)
+                obj.memoizedFunctions = containers.Map('KeyType','char','ValueType','any');
+            end
+            if ~obj.memoizedFunctions.isKey(methodStr)
+                obj.memoizedFunctions(methodStr) = memoize(methodHandle);
             end
 
-            %For all calls, get the store function handle out of
-            %storage, and use it.
+            % Retrieve the memoized wrapper and call it
             fn = obj.memoizedFunctions(methodStr);
             out = fn(varargin{:});
         end
@@ -167,14 +167,14 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
             %LOG Log messages to the createdBySolver session log
 
             if isempty(obj.inputSet)
-                disp(varargin{:})
+                fprintf(varargin{:})
             else
                 obj.inputSet.session.log.log(varargin{:});
             end
         end
 
         function warning(obj, varargin)
-            %LOG Log warning messages to the createdBySolver session log
+            %WARNING Log warning messages to the createdBySolver session log
 
             if isempty(obj.inputSet)
                 warning(varargin{:})
@@ -225,14 +225,14 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
 
             % TODO: add type check for srcObj and targetObj
 
-            for i = 1:length(targetObj)
+            for i = 1:numel(targetObj)
                 % Make sure obj meshes match
-                if srcObj.Z ~= targetObj(1).Z
+                if ~isequal(size(srcObj.Z), size(targetObj(i).Z)) || any(srcObj.Z ~= targetObj(i).Z)    
                     classType = class(srcObj);
                     throw( ...
                         MException( ...
-                        'AbstractFieldError:copyFlowPropertiesError', ...
-                        sprintf('Source and target objects (%s) have mismatched spatial meshes', classType) ...
+                        'OpenSTREAM:AbstractField:copyFlowPropertiesError', ...
+                        'Source and target objects (%s) have mismatched spatial meshes', classType ...
                         ) ...
                         );
                 end
@@ -242,23 +242,34 @@ classdef (Abstract) AbstractField < matlab.mixin.Copyable
                 for j = 1:length(propNames)
                     % Full copy
                     if opts.all
-                        targetObj(1).(propNames{j}) = srcObj.(propNames{j});
+                        targetObj(i).(propNames{j}) = srcObj.(propNames{j});
                     % Partial copy to preserve inlet conditions
                     else
                         % Scalar structs are copied per field
-                        if isstruct(targetObj(1).(propNames{j})) && isscalar(targetObj(1).(propNames{j}))
-                            structFields = fieldnames(targetObj(1).(propNames{j}));
+                        if isstruct(targetObj(i).(propNames{j})) && isscalar(targetObj(i).(propNames{j}))
+                            structFields = fieldnames(targetObj(i).(propNames{j}));
                             for ii = 1:length(structFields)
-                                targetObj(1).(propNames{j}).(structFields{ii})(2:end) = ...
-                                    srcObj.(propNames{j}).(structFields{ii})(2:end);
+                                targetObj(i).(propNames{j}).(structFields{ii})(2:end,:) = ...
+                                    srcObj.(propNames{j}).(structFields{ii})(2:end,:);
                             end
                         % Non-scalar properties are copied as a vector
                         else
-                            targetObj(1).(propNames{j})(2:end) = srcObj.(propNames{j})(2:end);
+                            targetObj(i).(propNames{j})(2:end,:) = srcObj.(propNames{j})(2:end,:);
                         end
                     end
                 end
             end
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function cpObj = copyElement(obj)
+            %COPYELEMENT Copy without sharing the memoization store
+
+            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj.memoizedFunctions = [];
         end
 
     end

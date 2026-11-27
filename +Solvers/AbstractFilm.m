@@ -7,10 +7,9 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
     properties (SetAccess={?Solvers.AbstractField,?Solvers.AbstractSolver})
 
-        DZ           (1,1) double  {mustBeNumeric}                         =0      % Axial step size [m]
-        %inputSet                   {isa(inputSet,'Inputs.InputSet')}              % :class:`Inputs.InputSet` object containing geometry, model, and boundary conditions
-        fluid                      {isa(fluid,'Inputs.FluidProperties')}           % :class:`Inputs.FluidProperties` object containing fluid thermophysical properties
-        mix          (1,1)         {isa(mix, 'Solvers.Mixture.Mixture')}   = NaN   % :class:`Solvers.Mixture.Mixture` object of the mixture solver
+        DZ           (1,1) double  {mustBeNumeric}                         =0                    % Axial step size [m]
+        fluid        Inputs.FluidProperties                                                      % :class:`Inputs.FluidProperties` object containing fluid thermophysical properties
+        mix          Solvers.Mixture.Mixture {mustBeScalarOrEmpty}                               % :class:`Solvers.Mixture.Mixture` object of the mixture solver
     end
 
     properties (Access={?Solvers.AbstractField,?Solvers.AbstractSolver})
@@ -29,9 +28,6 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 absfilm.inputSet = inputSet;
                 absfilm.fluid  = fluid;
             end
-
-            % Overload copyable properties
-            %mix.flowProperties = {'W','U','H'};
         end
 
         function wl = WL(absfilm,zIdx)
@@ -80,7 +76,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             switch model.ENTRAINMENT
                 case InputEnums.ENTRAINMENT.NONE
                     % Suppress film entrainment
-                    ment = zeros(length(zIdx),1);
+                    ment = zeros(size(Wf));
 
                 case InputEnums.ENTRAINMENT.GOVAN
                     % Govan & Hewitt film entrainment model
@@ -302,29 +298,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
 
-            options = absfilm.inputSet.options;
-
-            iter(1).U = absfilm.U(zIdx,:);
-            iter(1).Ftot = absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx);
-
-            iter(2).U = iter(1).U+0.1;
-            absfilm.U(zIdx,:)=iter(2).U;
-            iter(2).Ftot = absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx);
-
-            eps = 1.0;
-            for k = 3:options.UFEQUILMAXITER
-                Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
-                iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
-                absfilm.U(zIdx,:)=iter(k).U;
-                iter(k).Ftot = absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx);
-                err = max(abs(iter(k).Ftot),[],'all');
-                if err < options.UFEQUILTOL, break; end
-            end
-            if err > options.UFEQUILTOL
-                fprintf('%s UEQUILS model : not converged -> err=%0.4f\n',class(absfilm), err);
-            end
-
-            Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),absfilm.U(zIdx,:),zIdx);
+            Uequil = absfilm.SECANTU(@() absfilm.FVAPOR(zIdx)+absfilm.FWALL(zIdx), zIdx, 'UEQUILS');
         end
 
         function Uequil = UEQUIL(absfilm,drop,zIdx)
@@ -332,29 +306,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
 
             if nargin < 3, zIdx = (1:absfilm(1).NZ).'; end
 
-            options = absfilm.inputSet.options;
-
-            iter(1).U = absfilm.U(zIdx,:);
-            iter(1).Ftot = absfilm.FTOT(drop,zIdx);
-
-            iter(2).U = iter(1).U+0.1;
-            absfilm.U(zIdx,:)=iter(2).U;
-            iter(2).Ftot = absfilm.FTOT(drop,zIdx);
-
-            eps = 1.0;
-            for k = 3:options.UFEQUILMAXITER
-                Uiter = iter(k-2).U-iter(k-2).Ftot.*(iter(k-1).U-iter(k-2).U)./(iter(k-1).Ftot-iter(k-2).Ftot);
-                iter(k).U = (1-eps).*iter(k-1).U+eps.*Uiter;
-                absfilm.U(zIdx,:)=iter(k).U;
-                iter(k).Ftot = absfilm.FTOT(drop,zIdx);
-                err = max(abs(iter(k).Ftot),[],'all');
-                if err < options.UFEQUILTOL, break; end
-            end
-            if err > options.UFEQUILTOL
-                fprintf('%s UEQUIL model : not converged -> err=%0.4f\n',class(absfilm), err);
-            end
-
-            Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx),absfilm.U(zIdx,:),zIdx);
+            Uequil = absfilm.SECANTU(@() absfilm.FTOT(drop,zIdx), zIdx, 'UEQUIL');
         end
 
         function X = X(absfilm,zIdx)
@@ -366,7 +318,7 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             %
             % Inputs:
             %
-            % - absfilm  — :class:`Solvers.AbstractFilm` object
+            % - absfilm — :class:`Solvers.AbstractFilm` object
             % - zIdx    — Axial indices to evaluate (optional)
 
             if nargin < 2, zIdx = (1:absfilm(1).NZ).'; end
@@ -431,14 +383,15 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
                 delta = (rhog/rhof).*slip.*Wf./max(1e-10,vapor.W(zIdx)).*area./perim; % [m] Film thickness(es)
                 Cv = absfilm.CV_WALLISTHICK_CALC(delta, 0.005);            % [-] Interfacial friction factor, thick=delta, C=0.005
                 newslip = sqrt(Cw./Cv.*(rhof/rhog));                       % [-] Slip formulation
-                err = max(abs((newslip)./(slip)-1));                       % [-] Error
+                err = max(abs((newslip)./(slip)-1),[],'all');              % [-] Error
                 slip = newslip;                                            % [-] Update slip
                 if err < options.ENTNUMTOL; break
                 end
             end
-            if err > options.ENTNUMTOL
-                disp('Okawa correlation : not converged')
-                absfilm.log('\nEntrainment number not converged at node %d after %d iterations. \nSlip residual = %g.\n',zIdx,it,err);
+            if ~(err < options.ENTNUMTOL)
+                absfilm.warning('OpenSTREAM:AbstractFilm:EntrainmentNumberNotConverged', ...
+                    'Entrainment number did not converge at node(s) %s after %d iterations. Slip residual = %g [-].', ...
+                    mat2str(zIdx(:).'), it, err);
             end
 
             entnum = Cv.*rhog.*absfilm.mix.JG(zIdx).^2.*delta./sig;        % [-] Entrainment number
@@ -484,16 +437,53 @@ classdef (Abstract) AbstractFilm < Solvers.AbstractField
             ke = reshape(ke,size(entnum)); n2 = reshape(n2,size(entnum));
         end
 
+        function Uequil = SECANTU(absfilm, ftotFcn, zIdx, name)
+            %SECANTU Secant search for the film velocity giving zero net force [m/s]
+            %
+            % absfilm.U(zIdx,:) is restored on exit; the result is returned only.
+            %
+            % Inputs:
+            %
+            % - absfilm — :class:`Solvers.AbstractFilm` object
+            % - ftotFcn — Function handle returning the total force at the current absfilm.U [N/m^3]
+            % - zIdx    — Axial indices to evaluate
+
+            options = absfilm.inputSet.options;
+            U0 = absfilm.U(zIdx,:);
+
+            Ua = U0;       Fa = ftotFcn();
+            Ub = U0 + 0.1; absfilm.U(zIdx,:) = Ub; Fb = ftotFcn();
+            err = max(abs(Fb),[],'all');                                   % [N/m^3]
+            for k = 3:options.UFEQUILMAXITER
+                if err < options.UFEQUILTOL, break; end
+                dF = Fb - Fa;
+                Un = Ub - Fb.*(Ub - Ua)./dF;                               % [m/s] Secant step
+                stuck = (dF == 0) | ~isfinite(Un);
+                Un(stuck) = Ub(stuck);                                     % Keep last value where secant is undefined
+                Ua = Ub; Fa = Fb;
+                Ub = Un; absfilm.U(zIdx,:) = Ub; Fb = ftotFcn();
+                err = max(abs(Fb),[],'all');
+            end
+            if ~(err < options.UFEQUILTOL)                                 % Also catches NaN
+                absfilm.warning('OpenSTREAM:AbstractFilm:EquilibriumVelocityNotConverged', ...
+                    '%s did not converge at node(s) %s: max force residual = %g N/m^2.', ...
+                    name, mat2str(zIdx(:).'), err);
+            end
+            absfilm.U(zIdx,:) = U0;                                        % Restore state (no side effect)
+            Uequil = absfilm.mix.AFDISTR(absfilm.mix.liquid.U(zIdx), Ub, zIdx);
+        end
+
     end
 
     methods(Access = protected)
 
         function cpObj = copyElement(obj)
-            %COPYELEMENT Override copyElement method to ensure correct references
-            %with properties liquid and vapor during object copying
+            %COPYELEMENT Copy film object
+            %
+            % Shallow copy via AbstractField.copyElement, which also resets the
+            % per-object memoization store. Subclasses extend this as needed.
 
-            % Make a shallow copy of all four properties
-            cpObj = copyElement@matlab.mixin.Copyable(obj);
+            cpObj = copyElement@Solvers.AbstractField(obj);
         end
 
     end
