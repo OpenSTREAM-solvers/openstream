@@ -86,7 +86,7 @@ classdef (Abstract) AbstractSolver < handle
             save(outputFile,'-struct','dataStruct');
 
             if opts.showpath
-                fprintf('\nOutput file saved to %s\n\n',outputFile)
+                solver.log('\nOutput file saved to %s\n\n',outputFile)
             end
         end
 
@@ -138,7 +138,7 @@ classdef (Abstract) AbstractSolver < handle
 
             import Solvers.SolverState
             if any(mixSolver.STATE == [SolverState.INITIALSTEPNOTCONVERGED, SolverState.SOLVEDNOTCONVERGED])
-                solver.warning(sprintf('Mixture solution is not converged (%s). %s results may not be reliable.', string(mixSolver.STATE), solver.solverName()));
+                solver.warning('Mixture solution is not converged (%s). %s results may not be reliable.', string(mixSolver.STATE), solver.solverName());
             end
         end
 

@@ -101,7 +101,8 @@ classdef InputSet
                 % inputObjs is an array for obj.bc in transient situations.
                 for inputObj = inputObjs
                     for warningIdx = 1:length(inputObj.warnings)
-                        obj.session.log.warning(inputObj.warnings(warningIdx).warnID, sprintf("%s\n",inputObj.warnings(warningIdx).msg));
+                        warningMessage = strjoin(string(inputObj.warnings(warningIdx).msg), newline);
+                        obj.session.log.warning(inputObj.warnings(warningIdx).warnID,"%s",warningMessage);
                     end
                 end
             end

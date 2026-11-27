@@ -139,10 +139,11 @@ classdef Options < Inputs.Input
             % If extra fields in obj.inputStruct remain, warn user
             remainingInputStructFields = fieldnames(obj.inputStruct);
             if ~isempty(remainingInputStructFields)
+                fprintf('\n');
                 warning( ...
-                    'Options: These inputs were not used: %s ', ...
-                    remainingInputStructFields{:} ...
-                    );
+                    'OpenSTREAM:Options:UnusedInputEntries', ...
+                    'These option entries were not used:\n %s', ...
+                    strjoin(remainingInputStructFields, ' '));
                 obj.extra = obj.inputStruct;
             end
 
@@ -150,10 +151,10 @@ classdef Options < Inputs.Input
             if ~isempty(defaultValueFieldNames)
                 defaultValueWarningString = obj.defaultValueUsedReport(defaultValueFieldNames, defaultValues);
                 if nargout == 0
-                    warning('Options:defaultValueUsedWarning', ...
-                        sprintf('%s\n',defaultValueWarningString));
+                    warning('OpenSTREAM:Options:defaultValueUsedWarning', ...
+                        '%s',defaultValueWarningString);
                 else
-                    w = struct('warnID', 'Options:defaultValueUsedWarning', ...
+                    w = struct('warnID', 'OpenSTREAM:Options:defaultValueUsedWarning', ...
                         'msg', defaultValueWarningString);
                     if isempty(obj.warnings)
                         obj.warnings = w;
@@ -162,7 +163,6 @@ classdef Options < Inputs.Input
                     end
                 end
             end
-
 
             % Remove dynamic property inputStruct
             inputStructProp = obj.findprop('inputStruct');

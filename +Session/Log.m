@@ -133,6 +133,7 @@ classdef Log < handle
             % Display on console (and diary, if on)
             if obj.showWarnings
                 % Use built-in warning function
+                builtin('fprintf', '\n');
                 builtin('warning', varargin{:});            
             end
 
@@ -142,6 +143,9 @@ classdef Log < handle
 
                 % Open the log file
                 obj.openLog();
+
+                % Start warning on a new separated line
+                builtin('fprintf', obj.LOGFID, '\n');
 
                 % Format warning for the log file
                 if numel(varargin) >= 2 && ...
